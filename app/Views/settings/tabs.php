@@ -25,7 +25,7 @@ $settings_menu = array(
     ),
     "setup" => array(
         array("name" => "custom_fields", "url" => "custom_fields"),
-        array("name" => "client_groups", "url" => "client_groups"),
+        array("name" => "vessel_types", "url" => "vessel_types"),
         array("name" => "tasks", "url" => "task_status"),
     ),
 );
@@ -46,17 +46,17 @@ if (get_setting("module_attendance") == "1") {
 
 $settings_menu["sales_and_prospects"][] = array("name" => "item_categories", "url" => "item_categories");
 
-if (get_setting("module_invoice") == "1") {
-    $settings_menu["sales_and_prospects"][] = array("name" => "invoices", "url" => "settings/invoices");
-}
+// if (get_setting("module_invoice") == "1") {
+//     $settings_menu["sales_and_prospects"][] = array("name" => "invoices", "url" => "settings/invoices");
+// }
 
 if (get_setting("module_order") == "1") {
     $settings_menu["sales_and_prospects"][] = array("name" => "orders", "url" => "settings/orders");
 }
 
-if (get_setting("module_estimate") == "1") {
-    $settings_menu["sales_and_prospects"][] = array("name" => "estimates", "url" => "settings/estimates");
-}
+// if (get_setting("module_estimate") == "1") {
+//     $settings_menu["sales_and_prospects"][] = array("name" => "estimates", "url" => "settings/estimates");
+// }
 
 if (get_setting("module_proposal") == "1") {
     $settings_menu["sales_and_prospects"][] = array("name" => "proposals", "url" => "settings/proposals");
@@ -85,9 +85,9 @@ if (get_setting("module_event") == "1") {
 }
 
 
-if (get_setting("module_expense") == "1") {
-    $settings_menu["setup"][] = array("name" => "expense_categories", "url" => "expense_categories");
-}
+// if (get_setting("module_expense") == "1") {
+//     $settings_menu["setup"][] = array("name" => "expense_categories", "url" => "expense_categories");
+// }
 
 if (get_setting("module_leave") == "1") {
     $settings_menu["setup"][] = array("name" => "leave_types", "url" => "leave_types");
@@ -97,9 +97,9 @@ if (get_setting("module_ticket") == "1") {
     $settings_menu["setup"][] = array("name" => "tickets", "url" => "ticket_types");
 }
 
-if (get_setting("module_lead") == "1") {
-    $settings_menu["setup"][] = array("name" => "leads", "url" => "lead_status");
-}
+// if (get_setting("module_lead") == "1") {
+//     $settings_menu["setup"][] = array("name" => "leads", "url" => "lead_status");
+// }
 
 $settings_menu["setup"][] = array("name" => "gdpr", "url" => "settings/gdpr");
 $settings_menu["setup"][] = array("name" => "pages", "url" => "pages");
