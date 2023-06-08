@@ -1,4 +1,4 @@
-<?php echo form_open(get_uri("client_groups/save"), array("id" => "groups-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("vessel_types/save"), array("id" => "groups-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
@@ -35,7 +35,7 @@
     $(document).ready(function () {
         $("#groups-form").appForm({
             onSuccess: function (result) {
-                $("#client-groups-table").appTable({newData: result.data, dataId: result.id});
+                $("#vessel-types-table").appTable({newData: result.data, dataId: result.id});
             }
         });
         setTimeout(function () {
