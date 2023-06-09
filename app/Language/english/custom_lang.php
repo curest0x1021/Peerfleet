@@ -8,6 +8,7 @@ $lang["add_vessel"] = "Add vessel";
 $lang["edit_vessel"] = "Edit vessel";
 $lang["delete_vessel"] = "Delete vessel";
 $lang["vessel_types"] = "Vessel types";
+$lang["vessel_type"] = "Vessel type";
 $lang["add_vessel_type"] = "Add vessel type";
 $lang["edit_vessel_type"] = "Edit vessel type";
 $lang["delete_vessel_type"] = "Delete vessel type";

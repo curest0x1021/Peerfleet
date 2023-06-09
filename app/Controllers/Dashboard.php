@@ -487,17 +487,17 @@ class Dashboard extends Security_Controller {
             $columns[] = array("events_today");
         }
 
-        if (get_array_value($widgets, "total_due")) {
-            $columns[] = array("total_due");
-        }
+        // if (get_array_value($widgets, "total_due")) {
+        //     $columns[] = array("total_due");
+        // }
 
         if (count($columns) < 4 && get_array_value($widgets, "total_clients")) {
             $columns[] = array("total_clients");
         }
 
-        if (count($columns) < 4 && get_array_value($widgets, "total_leads")) {
-            $columns[] = array("total_leads");
-        }
+        // if (count($columns) < 4 && get_array_value($widgets, "total_leads")) {
+        //     $columns[] = array("total_leads");
+        // }
 
         if (count($columns) < 4 && get_array_value($widgets, "total_contacts")) {
             $columns[] = array("total_contacts");
@@ -543,13 +543,13 @@ class Dashboard extends Security_Controller {
         }
 
 
-        if (get_array_value($widgets, "invoice_overview")) {
-            $columns[] = array("invoice_overview");
-        }
+        // if (get_array_value($widgets, "invoice_overview")) {
+        //     $columns[] = array("invoice_overview");
+        // }
 
-        if (get_array_value($widgets, "income_vs_expenses")) {
-            $columns[] = array("income_vs_expenses");
-        }
+        // if (get_array_value($widgets, "income_vs_expenses")) {
+        //     $columns[] = array("income_vs_expenses");
+        // }
 
 
         if (get_array_value($widgets, "all_tasks_overview")) {
@@ -575,13 +575,13 @@ class Dashboard extends Security_Controller {
             $columns[] = array("my_timesheet_statistics");
         }
 
-        if (get_array_value($widgets, "estimate_sent_statistics")) {
-            $columns[] = array("estimate_sent_statistics");
-        }
+        // if (get_array_value($widgets, "estimate_sent_statistics")) {
+        //     $columns[] = array("estimate_sent_statistics");
+        // }
 
-        if (get_array_value($widgets, "invoice_statistics")) {
-            $columns[] = array("invoice_statistics");
-        }
+        // if (get_array_value($widgets, "invoice_statistics")) {
+        //     $columns[] = array("invoice_statistics");
+        // }
 
         return $columns;
     }

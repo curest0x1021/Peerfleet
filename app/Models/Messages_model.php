@@ -280,7 +280,7 @@ class Messages_model extends Crud_model {
             $where .= " AND $users_table.client_id=$client_id";
         }
 
-        $sql = "SELECT $users_table.id, $users_table.client_id, $users_table.user_type, $users_table.first_name, $users_table.last_name, $clients_table.company_name,
+        $sql = "SELECT $users_table.id, $users_table.client_id, $users_table.user_type, $users_table.first_name, $users_table.last_name, $clients_table.charter_name,
             $users_table.image,  $users_table.job_title, $users_table.last_online
         FROM $users_table
         LEFT JOIN $clients_table ON $clients_table.id = $users_table.client_id AND $clients_table.deleted=0

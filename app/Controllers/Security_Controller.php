@@ -335,15 +335,15 @@ class Security_Controller extends App_Controller {
         }
     }
 
-    protected function _get_groups_dropdown_select2_data($show_header = false) {
-        $client_groups = $this->Client_groups_model->get_all()->getResult();
+    protected function _get_vessel_types_dropdown_select2_data($show_header = false) {
+        $vessel_types = $this->Vessel_types_model->get_all()->getResult();
         $groups_dropdown = array();
 
         if ($show_header) {
-            $groups_dropdown[] = array("id" => "", "text" => "- " . app_lang("client_groups") . " -");
+            $groups_dropdown[] = array("id" => "", "text" => "- " . app_lang("vessel_types") . " -");
         }
 
-        foreach ($client_groups as $group) {
+        foreach ($vessel_types as $group) {
             $groups_dropdown[] = array("id" => $group->id, "text" => $group->title);
         }
         return $groups_dropdown;
