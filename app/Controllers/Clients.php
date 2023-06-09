@@ -1755,20 +1755,6 @@ class Clients extends Security_Controller {
         }
     }
 
-    function contracts($client_id) {
-        $this->access_only_allowed_members();
-
-        if ($client_id) {
-            $view_data["client_info"] = $this->Clients_model->get_one($client_id);
-            $view_data['client_id'] = $client_id;
-
-            $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("contracts", $this->login_user->is_admin, $this->login_user->user_type);
-            $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("contracts", $this->login_user->is_admin, $this->login_user->user_type);
-
-            return $this->template->view("clients/contracts/contracts", $view_data);
-        }
-    }
-
     function clients_list() {
         $this->access_only_allowed_members();
 
@@ -1845,6 +1831,139 @@ class Clients extends Security_Controller {
         );
 
         return $row_data;
+    }
+
+    //load the sea valves view
+    function sea_valves($client_id) {
+        $this->access_only_allowed_members();
+        $this->can_access_this_client($client_id);
+
+        if ($client_id) {
+            $view_data['client_id'] = clean_data($client_id);
+            return $this->template->view("clients/sea_valves/index", $view_data);
+        }
+    }
+
+    function sea_valve_modal_form() {
+        $this->access_only_allowed_members();
+        if (!$this->can_edit_clients()) {
+            app_redirect("forbidden");
+        }
+
+        $view_data['label_column'] = "col-md-3";
+        $view_data['field_column'] = "col-md-9";
+        $view_data["model_info"] = $this->Sea_valves_model->get_one($this->request->getPost('id'));
+        $client_id = $this->request->getPost('client_id') ? $this->request->getPost('client_id') : $view_data['model_info']->client_id;
+        $this->can_access_this_client($client_id);
+
+        $view_data['client_id'] = $client_id;
+
+        return $this->template->view('clients/sea_valves/modal_form', $view_data);
+    }
+
+    function save_sea_valve() {
+        if (!$this->can_edit_clients()) {
+            app_redirect("forbidden");
+        }
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "name" => "required",
+            "norm" => "required",
+            "diameter_nominal" => "required",
+            "pressure_rating" => "required",
+            "length" => "required",
+            "height" => "required",
+            "diameter" => "required"
+        ));
+
+        $id = $this->request->getPost("id");
+
+        $client_id = $this->request->getPost('client_id');
+        $this->can_access_this_client($client_id);
+
+        $data = array(
+            "name" => $this->request->getPost("name"),
+            "description" => $this->request->getPost("description"),
+            "norm" => $this->request->getPost("norm"),
+            "diameter_nominal" => $this->request->getPost("diameter_nominal"),
+            "pressure_rating" => $this->request->getPost("pressure_rating"),
+            "length" => $this->request->getPost("length"),
+            "height" => $this->request->getPost("height"),
+            "diameter" => $this->request->getPost("diameter"),
+        );
+        $data["client_id"] = $client_id;
+
+        $save_id = $this->Sea_valves_model->ci_save($data, $id);
+        if ($save_id) {
+            echo json_encode(array("success" => true, "data" => $this->_row_sea_valve_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+    }
+
+    function delete_sea_valve() {
+        if (!$this->can_edit_clients()) {
+            app_redirect("forbidden");
+        }
+
+        $this->validate_submitted_data(array(
+            "id" => "required|numeric"
+        ));
+
+        $this->access_only_allowed_members();
+
+        $id = $this->request->getPost('id');
+
+        $sea_valve_info = $this->Sea_valves_model->get_one($id);
+        $this->can_access_this_client($sea_valve_info->client_id);
+
+        if ($this->request->getPost('undo')) {
+            if ($this->Sea_valves_model->delete($id, true)) {
+                echo json_encode(array("success" => true, "data" => $this->_row_sea_valve_data($id), "message" => app_lang('record_undone')));
+            } else {
+                echo json_encode(array("success" => false, app_lang('error_occurred')));
+            }
+        } else {
+            if ($this->Sea_valves_model->delete($id)) {
+                echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
+            } else {
+                echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
+            }
+        }
+    }
+
+    function sea_valves_list_data($client_id = 0) {
+        validate_numeric_value($client_id);
+
+        $options['client_id'] = $client_id;
+        $list_data = $this->Sea_valves_model->get_details($options)->getResult();
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_make_sea_valve_row($data);
+        }
+        echo json_encode(array("data" => $result));
+    }
+
+    private function _row_sea_valve_data($id) {
+        $data = $this->Sea_valves_model->get_one($id);
+        return $this->_make_sea_valve_row($data);
+    }
+
+    private function _make_sea_valve_row($data) {
+        $action = modal_anchor(get_uri("clients/sea_valve_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_sea_valve'), "data-post-id" => $data->id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_sea_valve'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("clients/delete_sea_valve"), "data-action" => "delete-confirmation"));
+
+        return array(
+            $data->id,
+            $data->name,
+            $data->norm,
+            $data->diameter_nominal,
+            $data->pressure_rating,
+            $data->length,
+            $data->height,
+            $data->diameter,
+            $action
+        );
     }
 
 }

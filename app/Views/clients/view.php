@@ -42,6 +42,7 @@
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/notes/" . $client_info->id); ?>" data-bs-target="#client-notes"> <?php echo app_lang('notes'); ?></a></li>
                     <?php } ?>
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/files/" . $client_info->id); ?>" data-bs-target="#client-files"><?php echo app_lang('files'); ?></a></li>
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/sea_valves/" . $client_info->id); ?>" data-bs-target="#client-sea-valves"><?php echo app_lang('sea_valves'); ?></a></li>
 
                     <?php
                     $hook_tabs = array();
@@ -61,6 +62,7 @@
                     <div role="tabpanel" class="tab-pane fade" id="client-contacts"></div>
                     <div role="tabpanel" class="tab-pane fade" id="client-tickets"></div>
                     <div role="tabpanel" class="tab-pane fade" id="client-notes"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-sea-valves"></div>
                     <?php foreach ($hook_tabs as $hook_tab) { ?>
                         <div role="tabpanel" class="tab-pane fade" id="<?php echo get_array_value($hook_tab, 'target') ?>"></div>
                     <?php } ?>

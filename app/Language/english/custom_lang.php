@@ -39,5 +39,15 @@ $lang["fleet_overview"] = "Fleet Overview";
 $lang["vessel_name"] = "Vessel name";
 $lang["favorite"] = "Favorite";
 $lang["show_fleet"] = "Show fleet";
+$lang["sea_valves"] = "Sea valves";
+$lang["add_sea_valve"] = "Add see valve";
+$lang["edit_sea_valve"] = "Edit see valve";
+$lang["delete_sea_valve"] = "Delete see valve";
+$lang["norm"] = "Norm";
+$lang["diameter_nominal"] = "Diameter nominal";
+$lang["pressure_rating"] = "Pressure rating";
+$lang["length"] = "Length";
+$lang["height"] = "Height";
+$lang["diameter"] = "Diameter";
 
 return $lang;
