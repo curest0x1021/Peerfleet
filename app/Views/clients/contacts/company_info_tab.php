@@ -2,11 +2,7 @@
     <?php echo form_open(get_uri("clients/save/"), array("id" => "company-form", "class" => "general-form dashed-row white", "role" => "form")); ?>
     <div class="card">
         <div class=" card-header">
-            <?php if ($model_info->type == "person") { ?>
-                <h4> <?php echo app_lang('contact_info'); ?></h4>
-            <?php } else { ?>
-                <h4> <?php echo app_lang('client_info'); ?></h4>
-            <?php } ?>
+            <h4> <?php echo app_lang('vessel_info'); ?></h4>
         </div>
         <div class="card-body">
             <?php echo view("clients/client_form_fields"); ?>

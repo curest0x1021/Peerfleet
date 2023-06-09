@@ -252,21 +252,23 @@ class Clients extends Security_Controller {
         if ($client_id) {
             $options = array("id" => $client_id);
             $client_info = $this->Clients_model->get_details($options)->getRow();
-            if ($client_info && !$client_info->is_lead) {
+            if ($client_info) {
 
                 $view_data = $this->make_access_permissions_view_data();
 
+                $show_own_clients_only_user_id = $this->show_own_clients_only_user_id();
+                $open_tickets = $this->Clients_model->count_total_clients(array("show_own_clients_only_user_id" => $show_own_clients_only_user_id, "filter" => "has_open_tickets"));
+                $total_clients = $this->Clients_model->count_total_clients(array("show_own_clients_only_user_id" => $show_own_clients_only_user_id));
+                $last_announcement = $this->Announcements_model->get_last_announcement();
+                $client_info->open_tickets = $open_tickets;
+                $client_info->total_clients = $total_clients;
+                $client_info->last_announcement = $last_announcement;
+
                 $view_data["show_note_info"] = (get_setting("module_note")) ? true : false;
-                $view_data["show_event_info"] = (get_setting("module_event")) ? true : false;
-
-                $access_info = $this->get_access_info("expense");
-                $view_data["show_expense_info"] = (get_setting("module_expense") && $access_info->access_type == "all") ? true : false;
-
                 $view_data['client_info'] = $client_info;
-
                 $view_data["is_starred"] = strpos($client_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
-
                 $view_data["view_type"] = "";
+                $view_data["tab"] = $tab;
 
                 //even it's hidden, admin can view all information of client
                 $view_data['hidden_menu'] = array("");
@@ -740,15 +742,13 @@ class Clients extends Security_Controller {
             $this->can_access_this_client($client_id);
 
             $view_data['model_info'] = $this->Clients_model->get_one($client_id);
-            $view_data['vessel_types'] = $this->_get_vessel_types_dropdown_select2_data();
-
-            $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("clients", $client_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
             $view_data['label_column'] = "col-md-2";
             $view_data['field_column'] = "col-md-10";
             $view_data['can_edit_clients'] = $this->can_edit_clients();
 
             $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
+            $view_data['types_dropdown'] = $this->_get_vessel_types_dropdown_select2_data();
 
             return $this->template->view('clients/contacts/company_info_tab', $view_data);
         }
@@ -1142,7 +1142,7 @@ class Clients extends Security_Controller {
         $row_data = array(
             $user_avatar,
             $contact_link,
-            anchor(get_uri("clients/view/" . $data->client_id), $client_info->company_name),
+            anchor(get_uri("clients/view/" . $data->client_id), $client_info->charter_name),
             $data->job_title,
             $data->email,
             $data->phone ? $data->phone : "-",
