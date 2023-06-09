@@ -29,5 +29,6 @@ $lang["flag_state"] = "Flag state";
 $lang["port_of_registry"] = "Port of registry";
 $lang["responsible_tsi"] = "Responsible TSI";
 $lang["account_already_exists_for_your_charter_name"] = "Account already exists for your charter name.";
+$lang["vessel_info"] = "Vessel info";
 
 return $lang;

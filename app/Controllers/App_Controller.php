@@ -182,7 +182,7 @@ class App_Controller extends Controller {
             'Checklist_template_model',
             'Checklist_groups_model',
             'Subscriptions_model',
-            'Subscription_items_model'
+            'Subscription_items_model',
         );
     }
 
