@@ -34,5 +34,10 @@ $lang["vessel_info"] = "Vessel info";
 $lang["mobile"] = "Mobile";
 $lang["sat"] = "SAT";
 $lang["iridium_phone"] = "Iridium Phone";
+$lang["total_vessels"] = "Total vessels";
+$lang["fleet_overview"] = "Fleet Overview";
+$lang["vessel_name"] = "Vessel name";
+$lang["favorite"] = "Favorite";
+$lang["show_fleet"] = "Show fleet";
 
 return $lang;

@@ -491,10 +491,6 @@ class Dashboard extends Security_Controller {
         //     $columns[] = array("total_due");
         // }
 
-        if (count($columns) < 4 && get_array_value($widgets, "total_clients")) {
-            $columns[] = array("total_clients");
-        }
-
         // if (count($columns) < 4 && get_array_value($widgets, "total_leads")) {
         //     $columns[] = array("total_leads");
         // }
@@ -542,6 +538,9 @@ class Dashboard extends Security_Controller {
             }
         }
 
+        if (get_array_value($widgets, "total_clients")) {
+            $columns[] = array("total_clients");
+        }
 
         // if (get_array_value($widgets, "invoice_overview")) {
         //     $columns[] = array("invoice_overview");
@@ -570,7 +569,7 @@ class Dashboard extends Security_Controller {
 
 
         if (get_array_value($widgets, "all_timesheets_statistics")) {
-            $columns[] = array("all_timesheets_statistics");
+            // $columns[] = array("all_timesheets_statistics");
         } else if (get_array_value($widgets, "my_timesheet_statistics")) {
             $columns[] = array("my_timesheet_statistics");
         }
