@@ -50,8 +50,10 @@ if ($tab == "total_projects") {
 } else if ($tab == "last_announcement") {
     // $card = "bg-coral";
     // $icon = "compass";
-    if (property_exists($client_info, "last_announcement")) {
+    if (property_exists($client_info, "last_announcement") && !empty($client_info->last_announcement)) {
         $value = $client_info->last_announcement;
+    } else {
+        $value = app_lang("no_announcement_yet");
     }
     $link = get_uri('announcements/index');
 }
