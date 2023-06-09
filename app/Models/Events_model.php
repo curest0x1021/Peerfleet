@@ -168,7 +168,7 @@ class Events_model extends Crud_model {
         $select_labels_data_query = $this->get_labels_data_query();
 
         $sql = "SELECT $events_table.*,
-            CONCAT($users_table.first_name, ' ',$users_table.last_name) AS created_by_name, $users_table.image AS created_by_avatar, $clients_table.company_name, $clients_table.is_lead, $select_labels_data_query
+            CONCAT($users_table.first_name, ' ',$users_table.last_name) AS created_by_name, $users_table.image AS created_by_avatar, $clients_table.charter_name, $select_labels_data_query
         FROM $events_table
         LEFT JOIN $users_table ON $users_table.id = $events_table.created_by
         LEFT JOIN $clients_table ON $clients_table.id = $events_table.client_id    

@@ -93,7 +93,7 @@ class Projects_model extends Crud_model {
 
         $this->db->query('SET SQL_BIG_SELECTS=1');
 
-        $sql = "SELECT $projects_table.*, $clients_table.company_name, $clients_table.currency_symbol,  total_points_table.total_points, completed_points_table.completed_points, $select_labels_data_query $select_custom_fieds
+        $sql = "SELECT $projects_table.*, $clients_table.charter_name, total_points_table.total_points, completed_points_table.completed_points, $select_labels_data_query $select_custom_fieds
         FROM $projects_table
         LEFT JOIN $clients_table ON $clients_table.id= $projects_table.client_id
         LEFT JOIN (SELECT project_id, SUM(points) AS total_points FROM $tasks_table WHERE deleted=0 GROUP BY project_id) AS  total_points_table ON total_points_table.project_id= $projects_table.id
