@@ -713,7 +713,6 @@ class Clients extends Security_Controller {
 
         $this->can_access_this_client($view_data['model_info']->client_id);
 
-        $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("client_contacts", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
         return $this->template->view('clients/contacts/modal_form', $view_data);
     }
 
@@ -786,9 +785,9 @@ class Clients extends Security_Controller {
         $user_data = array(
             "first_name" => $this->request->getPost('first_name'),
             "last_name" => $this->request->getPost('last_name'),
+            "sat" => $this->request->getPost('sat'),
             "phone" => $this->request->getPost('phone'),
-            "skype" => $this->request->getPost('skype'),
-            "job_title" => $this->request->getPost('job_title'),
+            "alternative_phone" => $this->request->getPost('alternative_phone'),
             "gender" => is_null($this->request->getPost('gender')) ? "" : $this->request->getPost('gender'),
             "note" => $this->request->getPost('note')
         );
@@ -1064,16 +1063,11 @@ class Clients extends Security_Controller {
         $this->access_only_allowed_members_or_client_contact($client_id);
         $this->can_access_this_client($client_id);
 
-        $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("client_contacts", $this->login_user->is_admin, $this->login_user->user_type);
-
         $options = array(
             "user_type" => "client",
             "client_id" => $client_id,
-            "custom_fields" => $custom_fields,
             "show_own_clients_only_user_id" => $this->show_own_clients_only_user_id(),
-            "custom_field_filter" => $this->prepare_custom_field_filter_values("client_contacts", $this->login_user->is_admin, $this->login_user->user_type),
             "quick_filter" => $this->request->getPost("quick_filter"),
-            "client_groups" => $this->allowed_client_groups
         );
 
         $all_options = append_server_side_filtering_commmon_params($options);
@@ -1095,7 +1089,7 @@ class Clients extends Security_Controller {
 
         $result_data = array();
         foreach ($list_data as $data) {
-            $result_data[] = $this->_make_contact_row($data, $custom_fields, $hide_primary_contact_label);
+            $result_data[] = $this->_make_contact_row($data, $hide_primary_contact_label);
         }
 
         $result["data"] = $result_data;
@@ -1118,7 +1112,7 @@ class Clients extends Security_Controller {
 
     /* prepare a row of contact list table */
 
-    private function _make_contact_row($data, $custom_fields, $hide_primary_contact_label = false) {
+    private function _make_contact_row($data, $hide_primary_contact_label = false) {
         $image_url = get_avatar($data->image);
         $user_avatar = "<span class='avatar avatar-xs'><img src='$image_url' alt='...'></span>";
         $full_name = $data->first_name . " " . $data->last_name . " ";
@@ -1143,16 +1137,11 @@ class Clients extends Security_Controller {
             $user_avatar,
             $contact_link,
             anchor(get_uri("clients/view/" . $data->client_id), $client_info->charter_name),
-            $data->job_title,
             $data->email,
+            $data->sat ? $data->sat : "-",
             $data->phone ? $data->phone : "-",
-            $data->skype ? $data->skype : "-"
+            $data->alternative_phone ? $data->alternative_phone : "-"
         );
-
-        foreach ($custom_fields as $field) {
-            $cf_id = "cfv_" . $field->id;
-            $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
-        }
 
         $row_data[] = js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_contact'), "class" => "delete", "data-id" => "$data->id", "data-action-url" => get_uri("clients/delete_contact"), "data-action" => "delete"));
 

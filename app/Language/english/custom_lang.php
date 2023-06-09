@@ -3,6 +3,7 @@
 $lang["example"] = "Example";
 
 $lang["vessels"] = "Vessels";
+$lang["vessel"] = "Vessel";
 $lang["import_vessels"] = "Import vessels";
 $lang["add_vessel"] = "Add vessel";
 $lang["edit_vessel"] = "Edit vessel";
@@ -30,5 +31,8 @@ $lang["port_of_registry"] = "Port of registry";
 $lang["responsible_tsi"] = "Responsible TSI";
 $lang["account_already_exists_for_your_charter_name"] = "Account already exists for your charter name.";
 $lang["vessel_info"] = "Vessel info";
+$lang["mobile"] = "Mobile";
+$lang["sat"] = "SAT";
+$lang["iridium_phone"] = "Iridium Phone";
 
 return $lang;

@@ -42,9 +42,9 @@
         </div>
     </div>
     <?php
-//show these filds during new contact creation
+    //show these filds during new contact creation
     if (!$model_info->id) {
-        ?>
+    ?>
         <div class="form-group">
             <div class="row">
                 <label for="email" class="<?php echo $label_column; ?>"><?php echo app_lang('email'); ?></label>
@@ -69,7 +69,23 @@
     <?php } ?>
     <div class="form-group">
         <div class="row">
-            <label for="phone" class="<?php echo $label_column; ?>"><?php echo app_lang('phone'); ?></label>
+            <label for="sat" class="<?php echo $label_column; ?>"><?php echo app_lang('sat'); ?></label>
+            <div class="<?php echo $field_column; ?>">
+                <?php
+                echo form_input(array(
+                    "id" => "sat",
+                    "name" => "sat",
+                    "value" => $model_info->sat ? $model_info->sat : "",
+                    "class" => "form-control",
+                    "placeholder" => app_lang('sat')
+                ));
+                ?>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <label for="phone" class="<?php echo $label_column; ?>"><?php echo app_lang('mobile'); ?></label>
             <div class="<?php echo $field_column; ?>">
                 <?php
                 echo form_input(array(
@@ -77,7 +93,7 @@
                     "name" => "phone",
                     "value" => $model_info->phone ? $model_info->phone : "",
                     "class" => "form-control",
-                    "placeholder" => app_lang('phone')
+                    "placeholder" => app_lang('mobile')
                 ));
                 ?>
             </div>
@@ -85,31 +101,15 @@
     </div>
     <div class="form-group">
         <div class="row">
-            <label for="skype" class="<?php echo $label_column; ?>">Skype</label>
+            <label for="alternative_phone" class="<?php echo $label_column; ?>"><?php echo app_lang('iridium_phone'); ?></label>
             <div class="<?php echo $field_column; ?>">
                 <?php
                 echo form_input(array(
-                    "id" => "skype",
-                    "name" => "skype",
-                    "value" => $model_info->skype ? $model_info->skype : "",
+                    "id" => "alternative_phone",
+                    "name" => "alternative_phone",
+                    "value" => $model_info->alternative_phone ? $model_info->alternative_phone : "",
                     "class" => "form-control",
-                    "placeholder" => "Skype"
-                ));
-                ?>
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="row">
-            <label for="job_title" class="<?php echo $label_column; ?>"><?php echo app_lang('job_title'); ?></label>
-            <div class="<?php echo $field_column; ?>">
-                <?php
-                echo form_input(array(
-                    "id" => "job_title",
-                    "name" => "job_title",
-                    "value" => $model_info->job_title,
-                    "class" => "form-control",
-                    "placeholder" => app_lang('job_title')
+                    "placeholder" => app_lang('iridium_phone')
                 ));
                 ?>
             </div>
@@ -124,15 +124,15 @@
                     "id" => "gender_male",
                     "name" => "gender",
                     "class" => "form-check-input",
-                        ), "male", ($model_info->gender == "male") ? true : false);
+                ), "male", ($model_info->gender == "male") ? true : false);
                 ?>
-                <label for="gender_male" class="mr15 p0"><?php echo app_lang('male'); ?></label> 
+                <label for="gender_male" class="mr15 p0"><?php echo app_lang('male'); ?></label>
                 <?php
                 echo form_radio(array(
                     "id" => "gender_female",
                     "name" => "gender",
                     "class" => "form-check-input",
-                        ), "female", ($model_info->gender == "female") ? true : false);
+                ), "female", ($model_info->gender == "female") ? true : false);
                 ?>
                 <label for="gender_female" class="p0 mr15"><?php echo app_lang('female'); ?></label>
                 <?php
@@ -140,21 +140,19 @@
                     "id" => "gender_other",
                     "name" => "gender",
                     "class" => "form-check-input",
-                        ), "other", ($model_info->gender == "other") ? true : false);
+                ), "other", ($model_info->gender == "other") ? true : false);
                 ?>
                 <label for="gender_other" class=""><?php echo app_lang('other'); ?></label>
             </div>
         </div>
     </div>
 
-    <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => $label_column, "field_column" => $field_column)); ?> 
-
     <?php
-//show these filds during new contact creation
-//also check the client login setting
+    //show these filds during new contact creation
+    //also check the client login setting
 
     if (!$model_info->id && !get_setting("disable_client_login")) {
-        ?>
+    ?>
         <div class="form-group">
             <div class="row">
                 <label for="login_password" class="col-md-3"><?php echo app_lang('password'); ?></label>
@@ -189,7 +187,7 @@
         </div>
 
         <div class="form-group ">
-            <div class="col-md-12">  
+            <div class="col-md-12">
                 <?php
                 echo form_checkbox("email_login_details", "1", true, "id='email_login_details' class='form-check-input'");
                 ?> <label for="email_login_details"><?php echo app_lang('email_login_details'); ?></label>
@@ -198,7 +196,7 @@
     <?php } else if ($login_user->is_admin) { ?>
         <div class="form-group ">
             <div class="row">
-                <label for="is_primary_contact"  class="<?php echo $label_column; ?>"><?php echo app_lang('primary_contact'); ?></label>
+                <label for="is_primary_contact" class="<?php echo $label_column; ?>"><?php echo app_lang('primary_contact'); ?></label>
 
                 <div class="<?php echo $field_column; ?>">
                     <?php
@@ -208,7 +206,7 @@
                         $disable = "disabled='disabled'";
                     }
                     echo form_checkbox("is_primary_contact", "1", $model_info->is_primary_contact, "id='is_primary_contact' class='form-check-input mt-2' $disable");
-                    ?> 
+                    ?>
                 </div>
             </div>
         </div>
@@ -216,13 +214,13 @@
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $("#generate_password").click(function () {
+    $(document).ready(function() {
+        $("#generate_password").click(function() {
             $("#login_password").val(getRndomString(8));
         });
-        $("#show_hide_password").click(function () {
+        $("#show_hide_password").click(function() {
             var $target = $("#login_password"),
-                    type = $target.attr("type");
+                type = $target.attr("type");
             if (type === "password") {
                 $(this).attr("title", "<?php echo app_lang("hide_text"); ?>");
                 $(this).html("<span data-feather='eye-off' class='icon-16'></span>");
@@ -236,4 +234,4 @@
             }
         });
     });
-</script>    
+</script>

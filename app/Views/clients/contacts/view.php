@@ -13,48 +13,18 @@
                         <?php if ($client_info->type != "person") { ?>
                             <p> 
                                 <?php
-                                $client_link = anchor(get_uri("clients/view/" . $client_info->id), $client_info->company_name, array("class" => "white-link"));
+                                $client_link = anchor(get_uri("clients/view/" . $client_info->id), $client_info->charter_name, array("class" => "white-link"));
 
                                 if ($login_user->user_type === "client") {
-                                    $client_link = anchor(get_uri("clients/contact_profile/" . $login_user->id . "/company"), $client_info->company_name, array("class" => "white-link"));
+                                    $client_link = anchor(get_uri("clients/contact_profile/" . $login_user->id . "/company"), $client_info->charter_name, array("class" => "white-link"));
                                 }
 
-                                echo app_lang("company_name") . ": <b>" . $client_link . "</b>";
+                                echo app_lang("vessel") . ": <b>" . $client_link . "</b>";
                                 ?>
 
                             </p>
                         <?php } ?>
 
-                        <?php if ($client_info->address) { ?>
-                            <p><?php echo nl2br($client_info->address); ?>
-                                <?php if ($client_info->city) { ?>
-                                    <br /><?php echo $client_info->city; ?>
-                                <?php } ?>
-                                <?php if ($client_info->state) { ?>
-                                    <br /><?php echo $client_info->state; ?>
-                                <?php } ?>
-                                <?php if ($client_info->zip) { ?>
-                                    <br /><?php echo $client_info->zip; ?>
-                                <?php } ?>
-                                <?php if ($client_info->country) { ?>
-                                    <br /><?php echo $client_info->country; ?>
-                                <?php } ?>
-                            </p>
-                            <p>
-                                <?php
-                                if ($client_info->website) {
-                                    $website = to_url($client_info->website);
-                                    echo app_lang("website") . ": " . "<a target='_blank' href='" . $website . "' class='white-link'>$website</a>";
-                                    ?>
-                                <?php } ?>
-                                <?php if ($client_info->vat_number) { ?>
-                                    <br /><?php echo app_lang("vat_number") . ": " . $client_info->vat_number; ?>
-                                <?php } ?>
-                                <?php if ($client_info->gst_number) { ?>
-                                    <br /><?php echo app_lang("gst_number") . ": " . $client_info->gst_number; ?>
-                                <?php } ?>
-                            </p>
-                        <?php } ?>
                     </div>
                 </div>
             </div>

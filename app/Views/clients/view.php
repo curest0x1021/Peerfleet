@@ -28,6 +28,7 @@
                 </div>
 
                 <ul id="client-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs" role="tablist">
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/contacts/" . $client_info->id); ?>" data-bs-target="#client-contacts"> <?php echo app_lang('contacts'); ?></a></li>
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/company_info_tab/" . $client_info->id); ?>" data-bs-target="#client-info"> <?php echo app_lang('vessel_info'); ?></a></li>
 
                     <?php if ($show_project_info) { ?>
@@ -57,6 +58,7 @@
                     <div role="tabpanel" class="tab-pane fade" id="client-projects"></div>
                     <div role="tabpanel" class="tab-pane fade" id="client-files"></div>
                     <div role="tabpanel" class="tab-pane fade" id="client-info"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-contacts"></div>
                     <div role="tabpanel" class="tab-pane fade" id="client-tickets"></div>
                     <div role="tabpanel" class="tab-pane fade" id="client-notes"></div>
                     <?php foreach ($hook_tabs as $hook_tab) { ?>

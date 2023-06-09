@@ -6,7 +6,6 @@
                 <?php
                 if ($can_edit_clients) {
                     echo modal_anchor(get_uri("clients/invitation_modal"), "<i data-feather='mail' class='icon-16'></i> " . app_lang('send_invitation'), array("class" => "btn btn-default", "title" => app_lang('send_invitation'), "data-post-client_id" => $client_id));
-
                     echo modal_anchor(get_uri("clients/add_new_contact_modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_contact'), array("class" => "btn btn-default", "title" => app_lang('add_contact'), "data-post-client_id" => $client_id));
                 }
                 ?>
@@ -14,29 +13,29 @@
         </div>
 
         <div class="table-responsive">
-            <table id="contact-table" class="display" width="100%">            
+            <table id="contact-table" class="display" width="100%">
             </table>
         </div>
     </div>
 <?php } else { ?>
     <div class="card">
         <div class="table-responsive">
-            <table id="contact-table" class="display" width="100%">            
+            <table id="contact-table" class="display" width="100%">
             </table>
         </div>
     </div>
-    <?php
+<?php
 }
 ?>
 
 
 
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
 
-        var showCompanyName = true;
+        var showCharterName = true;
         if ("<?php echo $client_id ?>") {
-            showCompanyName = false;
+            showCharterName = false;
         }
 
         var showOptions = true;
@@ -56,21 +55,57 @@
         $("#contact-table").appTable({
             source: '<?php echo_uri("clients/contacts_list_data/" . $client_id) ?>',
             serverSide: true,
-            filterDropdown: [{name: "quick_filter", class: "w200", options: quick_filters_dropdown}, <?php echo $custom_field_filters; ?>],
-            order: [[1, "asc"]],
-            columns: [
-                {title: '', "class": "w50 text-center"},
-                {title: "<?php echo app_lang("name") ?>", "class": "w150", order_by: "first_name"},
-                {visible: showCompanyName, title: "<?php echo app_lang("client_name") ?>", "class": "w150", order_by: "company_name"},
-                {title: "<?php echo app_lang("job_title") ?>", "class": "w15p", order_by: "job_title"},
-                {title: "<?php echo app_lang("email") ?>", "class": "w20p", order_by: "email"},
-                {title: "<?php echo app_lang("phone") ?>", "class": "w100", order_by: "phone"},
-                {title: 'Skype', "class": "w15p", order_by: "skype"}
-<?php echo $custom_field_headers; ?>,
-                {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w50", visible: showOptions}
+            filterDropdown: [{
+                name: "quick_filter",
+                class: "w200",
+                options: quick_filters_dropdown
+            }, <?php echo $custom_field_filters; ?>],
+            order: [
+                [1, "asc"]
             ],
-            printColumns: combineCustomFieldsColumns([0, 1, 2, 3, 4, 5, 6], '<?php echo $custom_field_headers; ?>'),
-            xlsColumns: combineCustomFieldsColumns([0, 1, 2, 3, 4, 5, 6], '<?php echo $custom_field_headers; ?>')
+            columns: [{
+                    title: '',
+                    "class": "w50 text-center"
+                },
+                {
+                    title: "<?php echo app_lang("name") ?>",
+                    "class": "w150",
+                    order_by: "first_name"
+                },
+                {
+                    visible: showCharterName,
+                    title: "<?php echo app_lang("client_name") ?>",
+                    "class": "w150",
+                    order_by: "charter_name"
+                },
+                {
+                    title: "<?php echo app_lang("email") ?>",
+                    "class": "w20p",
+                    order_by: "email"
+                },
+                {
+                    title: "<?php echo app_lang("sat") ?>",
+                    "class": "w100",
+                    order_by: "sat"
+                },
+                {
+                    title: "<?php echo app_lang("mobile") ?>",
+                    "class": "w100",
+                    order_by: "phone"
+                },
+                {
+                    title: "<?php echo app_lang("iridium_phone") ?>",
+                    "class": "w100",
+                    order_by: "alternative_phone"
+                },
+                {
+                    title: '<i data-feather="menu" class="icon-16"></i>',
+                    "class": "text-center option w50",
+                    visible: showOptions
+                }
+            ],
+            printColumns: [0, 1, 2, 3, 4, 5, 6],
+            xlsColumns: [0, 1, 2, 3, 4, 5, 6]
         });
     });
 </script>
