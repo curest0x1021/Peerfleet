@@ -48,7 +48,11 @@
                         $main_menu_name = app_lang($language_key);
                     }
                 } else {
-                    $main_menu_name = app_lang($main_menu_name);
+                    if ($main_menu_name == 'clients') {
+                        $main_menu_name = app_lang('vessels');
+                    } else {
+                        $main_menu_name = app_lang($main_menu_name);
+                    }
                 }
 
                 $badge = get_array_value($main_menu, "badge");
