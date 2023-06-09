@@ -1820,6 +1820,33 @@ class Clients extends Security_Controller {
         app_redirect('dashboard/view');
     }
 
+    function total_clients_list() {
+        $this->access_only_allowed_members();
+
+        $result = $this->Clients_model->get_total_clients();
+
+        $result_data = array();
+        foreach ($result as $data) {
+            $result_data[] = $this->_make_client_row($data);
+        }
+
+        $result["data"] = $result_data;
+
+        echo json_encode($result);
+    }
+
+    private function _make_client_row($data) {
+        $favorite = empty($data->starred_by) ? "<i data-feather='star' class='icon-16'></i>" : "<i data-feather='star' class='icon-16 icon-fill-warning'></i>";
+        $row_data = array(
+            anchor(get_uri("clients/view/" . $data->id), $data->charter_name),
+            $data->vessel_type,
+            $data->build_series,
+            $favorite
+        );
+
+        return $row_data;
+    }
+
 }
 
 /* End of file clients.php */

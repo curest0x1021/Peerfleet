@@ -264,4 +264,17 @@ class Clients_model extends Crud_model {
         return $this->db->query($sql)->getRow()->total;
     }
 
+    function get_total_clients() {
+        $clients_table = $this->db->prefixTable('clients');
+        $types_table = $this->db->prefixTable('vessel_types');
+
+        $sql = "SELECT $clients_table.id, $clients_table.charter_name, $clients_table.build_series, $clients_table.starred_by, $types_table.title as vessel_type
+        FROM $clients_table
+        JOIN $types_table ON $clients_table.type = $types_table.id
+        WHERE $clients_table.deleted=0";
+
+        $result = $this->db->query($sql)->getResult();
+        return $result;
+    }
+
 }
