@@ -85,6 +85,10 @@
                 $("[data-bs-target='#client-tickets']").trigger("click");
             } else if (tab === "notes") {
                 $("[data-bs-target='#client-notes']").trigger("click");
+            } else if (tab === "files") {
+                $("[data-bs-target='#client-files']").trigger("click");
+            } else if (tab === "sea_valves") {
+                $("[data-bs-target='#client-sea-valves']").trigger("click");
             }
         }, 210);
 

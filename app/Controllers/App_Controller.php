@@ -81,6 +81,10 @@ class App_Controller extends Controller {
     public $Checklist_template_model;
     public $Checklist_groups_model;
     public $Sea_valves_model;
+    public $Cranes_model;
+    public $Cranes_info_model;
+    public $Cranes_history_model;
+    public $Cranes_loadtest_model;
 
     public function __construct() {
         //main template to make frame of this app
@@ -184,7 +188,11 @@ class App_Controller extends Controller {
             'Checklist_groups_model',
             'Subscriptions_model',
             'Subscription_items_model',
-            'Sea_valves_model'
+            'Sea_valves_model',
+            'Cranes_model',
+            'Cranes_info_model',
+            'Cranes_history_model',
+            'Cranes_loadtest_model'
         );
     }
 
