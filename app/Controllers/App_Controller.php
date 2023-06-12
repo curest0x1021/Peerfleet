@@ -85,6 +85,8 @@ class App_Controller extends Controller {
     public $Cranes_info_model;
     public $Cranes_history_model;
     public $Cranes_loadtest_model;
+    public $Critical_spare_parts_model;
+    public $Units_model;
 
     public function __construct() {
         //main template to make frame of this app
@@ -192,7 +194,9 @@ class App_Controller extends Controller {
             'Cranes_model',
             'Cranes_info_model',
             'Cranes_history_model',
-            'Cranes_loadtest_model'
+            'Cranes_loadtest_model',
+            'Critical_spare_parts_model',
+            'Units_model'
         );
     }
 

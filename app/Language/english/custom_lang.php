@@ -76,5 +76,13 @@ $lang["result"] = "Result";
 $lang["add_loadtest"] = "Add load test";
 $lang["edit_loadtest"] = "Edit load test";
 $lang["delete_loadtest"] = "Delete load test";
+$lang["critical_spare_parts"] = "Critical spare parts";
+$lang["items"] = "Items";
+$lang["units"] = "Units";
+$lang["code"] = "Code";
+$lang["add_unit"] = "Add unit";
+$lang["edit_unit"] = "Edit unit";
+$lang["delete_unit"] = "Delete unit";
+$lang["already_exists_unit_code"] = "This code already exists.";
 
 return $lang;
