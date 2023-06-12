@@ -44,37 +44,37 @@ class Cron_job {
         if ($this->_is_hourly_job_runnable()) {
 
 
-            try {
-                $this->create_recurring_invoices();
-            } catch (\Exception $e) {
-                echo $e;
-            }
+            // try {
+            //     $this->create_recurring_invoices();
+            // } catch (\Exception $e) {
+            //     echo $e;
+            // }
 
-            try {
-                $this->create_recurring_expenses();
-            } catch (\Exception $e) {
-                echo $e;
-            }
+            // try {
+            //     $this->create_recurring_expenses();
+            // } catch (\Exception $e) {
+            //     echo $e;
+            // }
 
-            try {
-                $this->send_invoice_due_pre_reminder();
-            } catch (\Exception $e) {
-                echo $e;
-            }
-
-
-            try {
-                $this->send_invoice_due_after_reminder();
-            } catch (\Exception $e) {
-                echo $e;
-            }
+            // try {
+            //     $this->send_invoice_due_pre_reminder();
+            // } catch (\Exception $e) {
+            //     echo $e;
+            // }
 
 
-            try {
-                $this->send_recurring_invoice_creation_reminder();
-            } catch (\Exception $e) {
-                echo $e;
-            }
+            // try {
+            //     $this->send_invoice_due_after_reminder();
+            // } catch (\Exception $e) {
+            //     echo $e;
+            // }
+
+
+            // try {
+            //     $this->send_recurring_invoice_creation_reminder();
+            // } catch (\Exception $e) {
+            //     echo $e;
+            // }
 
 
             try {
@@ -95,11 +95,11 @@ class Cron_job {
                 echo $e;
             }
 
-            try {
-                $this->create_subscription_invoices();
-            } catch (\Exception $e) {
-                echo $e;
-            }
+            // try {
+            //     $this->create_subscription_invoices();
+            // } catch (\Exception $e) {
+            //     echo $e;
+            // }
 
             $this->ci->Settings_model->save_setting("last_hourly_job_time", $this->current_time);
         }

@@ -501,7 +501,7 @@ class Cranes extends Security_Controller {
 
     private function _loadtest_make_row($data) {
         $action = modal_anchor(get_uri("cranes/loadtest_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_loadtest'), "data-post-id" => $data->id, "data-post-client_id" => $data->client_id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_loadtest'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("clients/delete_loadtest"), "data-action" => "delete-confirmation"));
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_loadtest'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("cranes/delete_loadtest"), "data-action" => "delete-confirmation"));
 
         return array(
             $data->id,
