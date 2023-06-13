@@ -27,6 +27,7 @@ $settings_menu = array(
         array("name" => "custom_fields", "url" => "custom_fields"),
         array("name" => "vessel_types", "url" => "vessel_types"),
         array("name" => "units", "url" => "units"),
+        array("name" => "manufacturers", "url" => "manufacturers"),
         array("name" => "tasks", "url" => "task_status"),
     ),
 );

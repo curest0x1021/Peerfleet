@@ -1,28 +1,7 @@
-<?php echo form_open(get_uri("units/save"), array("id" => "unit-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("manufacturers/save"), array("id" => "manufacturer-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
-
-        <div class="form-group">
-            <div class="row">
-                <label for="code" class="<?php echo $label_column; ?>"><?php echo app_lang('code'); ?></label>
-                <div class="<?php echo $field_column; ?>">
-                    <?php
-                    echo form_input(array(
-                        "id" => "code",
-                        "name" => "code",
-                        "value" => $model_info->code ? $model_info->code : "",
-                        "class" => "form-control",
-                        "placeholder" => app_lang('code'),
-                        "autofocus" => true,
-                        "maxlength" => 10,
-                        "data-rule-required" => true,
-                        "data-msg-required" => app_lang("field_required"),
-                    ));
-                    ?>
-                </div>
-            </div>
-        </div>
 
         <div class="form-group">
             <div class="row">
@@ -35,7 +14,8 @@
                         "value" => $model_info->name ? $model_info->name : "",
                         "class" => "form-control",
                         "placeholder" => app_lang('name'),
-                        "maxlength" => 50,
+                        "autofocuse" => true,
+                        "maxlength" => 40,
                         "data-rule-required" => true,
                         "data-msg-required" => app_lang("field_required"),
                     ));
@@ -55,15 +35,15 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#unit-form").appForm({
+        $("#manufacturer-form").appForm({
             onSuccess: function(result) {
                 appAlert.success(result.message, {duration: 10000});
-                $("#unit-table").appTable({ reload: true });
+                $("#manufacturer-table").appTable({ reload: true });
             }
         });
 
         setTimeout(() => {
-            $("#code").focus();
+            $("#name").focus();
         }, 210);
 
     });
