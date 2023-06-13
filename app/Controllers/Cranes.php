@@ -7,8 +7,8 @@ class Cranes extends Security_Controller {
     function __construct() {
         parent::__construct();
 
-        // TODO: check permission
-        $this->init_permission_checker("client");
+        // check permission
+        $this->init_permission_checker("crane");
     }
 
     /* load cranes list view */
@@ -193,10 +193,12 @@ class Cranes extends Security_Controller {
     private function _make_row($data) {
         $name = $data->name;
         $action = "";
-        if (!$data->hasCrane) {
-            $action = modal_anchor(get_uri("cranes/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('add_crane'), "data-post-client_id" => $data->client_id));
-        } else {
-            $name = anchor(get_uri("cranes/view/" . $data->client_id), $data->name);
+        if ($this->can_edit_clients()) {
+            if (!$data->hasCrane) {
+                $action = modal_anchor(get_uri("cranes/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('add_crane'), "data-post-client_id" => $data->client_id));
+            } else {
+                $name = anchor(get_uri("cranes/view/" . $data->client_id), $data->name);
+            }
         }
 
         return array(
