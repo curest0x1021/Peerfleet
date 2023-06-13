@@ -1966,6 +1966,117 @@ class Clients extends Security_Controller {
         );
     }
 
+    //load the warehouses view
+    function warehouses($client_id) {
+        $this->access_only_allowed_members();
+        $this->can_access_this_client($client_id);
+
+        if ($client_id) {
+            $view_data['client_id'] = clean_data($client_id);
+            return $this->template->view("clients/warehouses/index", $view_data);
+        }
+    }
+
+    function warehouse_modal_form() {
+        $this->access_only_allowed_members();
+        if (!$this->can_edit_clients()) {
+            app_redirect("forbidden");
+        }
+
+        $view_data['label_column'] = "col-md-3";
+        $view_data['field_column'] = "col-md-9";
+        $view_data["model_info"] = $this->Warehouses_model->get_one($this->request->getPost('id'));
+        $client_id = $this->request->getPost('client_id') ? $this->request->getPost('client_id') : $view_data['model_info']->client_id;
+        $this->can_access_this_client($client_id);
+
+        $view_data['client_id'] = $client_id;
+
+        return $this->template->view('clients/warehouses/modal_form', $view_data);
+    }
+
+    function save_warehouse() {
+        if (!$this->can_edit_clients()) {
+            app_redirect("forbidden");
+        }
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "code" => "required|max_length[30]",
+            "name" => "required|max_length[50]",
+        ));
+
+        $id = $this->request->getPost("id");
+
+        $client_id = $this->request->getPost('client_id');
+        $this->can_access_this_client($client_id);
+
+        $data = array(
+            "code" => $this->request->getPost("code"),
+            "name" => $this->request->getPost("name"),
+            "address" => $this->request->getPost("address"),
+        );
+        $data["client_id"] = $client_id;
+
+        $save_id = $this->Warehouses_model->ci_save($data, $id);
+        if ($save_id) {
+            echo json_encode(array("success" => true, "data" => $this->_row_warehouse_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+    }
+
+    function delete_warehouse() {
+        if (!$this->can_edit_clients()) {
+            app_redirect("forbidden");
+        }
+
+        $this->validate_submitted_data(array(
+            "id" => "required|numeric"
+        ));
+
+        $this->access_only_allowed_members();
+
+        $id = $this->request->getPost('id');
+
+        $warehouse_info = $this->Warehouses_model->get_one($id);
+        $this->can_access_this_client($warehouse_info->client_id);
+
+        if ($this->Warehouses_model->delete($id)) {
+            echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
+    }
+    }
+
+    function warehouses_list_data($client_id = 0) {
+        validate_numeric_value($client_id);
+
+        $options['client_id'] = $client_id;
+        $list_data = $this->Warehouses_model->get_details($options)->getResult();
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_make_warehouse_row($data);
+        }
+        echo json_encode(array("data" => $result));
+    }
+
+    private function _row_warehouse_data($id) {
+        $data = $this->Warehouses_model->get_one($id);
+        return $this->_make_warehouse_row($data);
+    }
+
+    private function _make_warehouse_row($data) {
+        $action = modal_anchor(get_uri("clients/warehouse_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_warehouse'), "data-post-id" => $data->id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_warehouse'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("clients/delete_warehouse"), "data-action" => "delete-confirmation"));
+
+        return array(
+            $data->id,
+            $data->code,
+            $data->name,
+            $data->address,
+            $action
+        );
+    }
+
 }
 
 /* End of file clients.php */

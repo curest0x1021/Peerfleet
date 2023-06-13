@@ -43,6 +43,7 @@
                     <?php } ?>
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/files/" . $client_info->id); ?>" data-bs-target="#client-files"><?php echo app_lang('files'); ?></a></li>
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/sea_valves/" . $client_info->id); ?>" data-bs-target="#client-sea-valves"><?php echo app_lang('sea_valves'); ?></a></li>
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/warehouses/" . $client_info->id); ?>" data-bs-target="#client-warehouses"><?php echo app_lang('warehouses'); ?></a></li>
 
                     <?php
                     $hook_tabs = array();
@@ -63,6 +64,7 @@
                     <div role="tabpanel" class="tab-pane fade" id="client-tickets"></div>
                     <div role="tabpanel" class="tab-pane fade" id="client-notes"></div>
                     <div role="tabpanel" class="tab-pane fade" id="client-sea-valves"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-warehouses"></div>
                     <?php foreach ($hook_tabs as $hook_tab) { ?>
                         <div role="tabpanel" class="tab-pane fade" id="<?php echo get_array_value($hook_tab, 'target') ?>"></div>
                     <?php } ?>
@@ -89,6 +91,8 @@
                 $("[data-bs-target='#client-files']").trigger("click");
             } else if (tab === "sea_valves") {
                 $("[data-bs-target='#client-sea-valves']").trigger("click");
+            } else if (tab === "warehouses") {
+                $("[data-bs-target='#client-warehouses']").trigger("click");
             }
         }, 210);
 
