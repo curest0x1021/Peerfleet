@@ -349,6 +349,30 @@ class Security_Controller extends App_Controller {
         return $groups_dropdown;
     }
 
+    protected function get_vessels_dropdown($show_header = false) {
+        $vessels = $this->Clients_model->get_all_where(array("deleted" => 0))->getResult();
+        $vessels_dropdown = array();
+
+        if ($show_header) {
+            $vessels_dropdown[] = array("id" => "", "text" => "- " . app_lang("vessel") . " -");
+        }
+
+        foreach ($vessels as $item) {
+            $vessels_dropdown[] = array("id" => $item->id, "text" => $item->charter_name);
+        }
+        return json_encode($vessels_dropdown);
+    }
+
+    protected function critical_spare_parts_dropdown() {
+        $list = $this->Critical_spare_parts_model->get_all_where(array("deleted" => 0))->getResult();
+        $dropdown = array("" => "-");
+
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+        return $dropdown;
+    }
+
     protected function get_clients_and_leads_dropdown($return_json = false) {
         $clients_dropdown = array("" => "-");
         $clients_json_dropdown = array(array("id" => "", "text" => "-"));
