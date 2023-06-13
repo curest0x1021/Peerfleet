@@ -1,4 +1,4 @@
-<?php echo form_open(get_uri("manufacturers/save"), array("id" => "manufacturer-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("ship_equipments/save"), array("id" => "ship-equipment-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
@@ -35,10 +35,10 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#manufacturer-form").appForm({
+        $("#ship-equipment-form").appForm({
             onSuccess: function(result) {
                 appAlert.success(result.message, {duration: 10000});
-                $("#manufacturer-table").appTable({ reload: true });
+                $("#ship-equipment-table").appTable({ reload: true });
             }
         });
 
