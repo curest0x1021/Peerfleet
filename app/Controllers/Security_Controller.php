@@ -91,7 +91,7 @@ class Security_Controller extends App_Controller {
                 } else if ($group === "ticket") {
                     //check the accessable ticket types
                     $info->allowed_ticket_types = $permissions;
-                } else if ($group === "client" || $group === "crane") {
+                } else if ($group === "client" || $group === "crane" || $group === "critical_spare_parts") {
                     //check the accessable client groups
                     $info->allowed_client_groups = $permissions;
                 }
@@ -127,7 +127,7 @@ class Security_Controller extends App_Controller {
     protected function access_only_allowed_members() {
         if ($this->access_type === "all") {
             return true; //can access if user has permission
-        } else if (($this->module_group === "ticket" && ($this->access_type === "specific" || $this->access_type === "assigned_only")) || ($this->module_group === "lead" && $this->access_type === "own") || (($this->module_group === "client" || $this->module_group === "crane") && ($this->access_type === "own" || $this->access_type === "read_only" || $this->access_type === "specific")) || ($this->module_group === "estimate" && $this->access_type === "own")) {
+        } else if (($this->module_group === "ticket" && ($this->access_type === "specific" || $this->access_type === "assigned_only")) || ($this->module_group === "lead" && $this->access_type === "own") || (($this->module_group === "client" || $this->module_group === "crane" || $this->module_group == "critical_spare_parts") && ($this->access_type === "own" || $this->access_type === "read_only" || $this->access_type === "specific")) || ($this->module_group === "estimate" && $this->access_type === "own")) {
             //can access if it's tickets module and user has a pertial access
             //can access if it's leads module and user has access to own leads
             //can access if it's clients module and user has a pertial access
@@ -145,7 +145,7 @@ class Security_Controller extends App_Controller {
             return true; //can access if user has permission
         } else if ($this->module_group === "ticket" && ($this->access_type === "specific" || $this->access_type === "assigned_only")) {
             return true; //can access if it's tickets module and user has a pertial access
-        } else if (($this->module_group === "client" || $this->module_group === "crane") && ($this->access_type === "own" || $this->access_type === "read_only" || $this->access_type === "specific")) {
+        } else if (($this->module_group === "client" || $this->module_group === "crane" || $this->module_group === "critical_spare_parts") && ($this->access_type === "own" || $this->access_type === "read_only" || $this->access_type === "specific")) {
             return true; //can access if it's clients module and user has a pertial access
         } else if ($this->login_user->client_id === $client_id) {
             return true; //can access if client id match 
@@ -698,6 +698,50 @@ class Security_Controller extends App_Controller {
         }
 
         return $projects_dropdown;
+    }
+
+    protected function get_manufacturers_dropdown() {
+        $list = $this->Manufacturers_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
+    protected function get_applicable_machinery_equipments_dropdown() {
+        $list = $this->Applicable_equipments_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
+    protected function get_ship_machinery_equipments_dropdown() {
+        $list = $this->Ship_equipments_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
+    protected function get_units_dropdown() {
+        $list = $this->Units_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->code] = $item->name;
+        }
+
+        return $dropdown;
     }
 
     protected function check_access_to_this_item($item_info) {
