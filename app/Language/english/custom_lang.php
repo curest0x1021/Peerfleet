@@ -97,5 +97,9 @@ $lang["edit_equipment"] = "Edit equipment";
 $lang["delete_equipment"] = "Delete equipment";
 $lang["ship_equipments"] = "Ship machinery equipments";
 $lang["already_exists_equipment_name"] = "This equipment already exists.";
+$lang["warehouses"] = "Warehouses";
+$lang["add_warehouse"] = "Add warehouse";
+$lang["edit_warehouse"] = "Edit warehouse";
+$lang["delete_warehouse"] = "Delete warehouse";
 
 return $lang;
