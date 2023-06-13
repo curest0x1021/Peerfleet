@@ -145,6 +145,170 @@ class Critical_spare_parts extends Security_Controller {
             $actions
         );
     }
+
+    function warehouses_tab() {
+        $this->access_only_allowed_members();
+        $view_data["vessels_dropdown"] = $this->get_vessels_dropdown(true);
+        return $this->template->view("critical_spare_parts/warehouses", $view_data);
+    }
+
+    function warehouses_list_data() {
+        $options = array("client_id" => $this->request->getPost("client_id"));
+        $list_data = $this->Warehouse_spare_model->get_warehouses($options)->getResult();
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_warehouses_make_row($data);
+        }
+
+        echo json_encode(array("data" => $result));
+    }
+
+    private function _warehouses_make_row($data) {
+        return array(
+            $data->id,
+            $data->code,
+            anchor(get_uri("critical_spare_parts/view/" . $data->id), $data->name),
+            anchor(get_uri("clients/view/" . $data->client_id), $data->vessel),
+            $data->total_items,
+            $data->total_quantities,
+            ""
+        );
+    }
+
+    function view($warehouse_id = 0) {
+        $this->access_only_allowed_members();
+        if ($warehouse_id) {
+            $view_data["model_info"] = $this->Warehouse_spare_model->get_warehouses(array("warehouse_id" => $warehouse_id))->getRow();
+            $view_data["warehouse_id"] = $warehouse_id;
+            $view_data["can_edit_items"] = $this->can_edit_items();
+
+            return $this->template->rander("critical_spare_parts/view", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    function ws_modal_form() {
+        if (!$this->can_edit_items()) {
+            app_redirect("forbidden");
+        }
+
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+        ));
+
+        $view_data['model_info'] = $this->Warehouse_spare_model->get_one($this->request->getPost('id'));
+        $view_data["warehouse_id"] = $this->request->getPost("warehouse_id");
+        $view_data["label_column"] = "col-md-3";
+        $view_data["field_column"] = "col-md-9";
+        $view_data["items_dropdown"] = $this->critical_spare_parts_dropdown();
+        $view_data["spare_parts"] = $this->Critical_spare_parts_model->get_details()->getResult();
+
+        return $this->template->view("critical_spare_parts/ws_modal_form", $view_data);
+    }
+
+    function save_ws() {
+        if (!$this->can_edit_items()) {
+            app_redirect("forbidden");
+        }
+
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "warehouse_id" => "required|numeric",
+            "spare_id" => "required|numeric",
+            "quantity" => "required|numeric",
+            "min_stocks" => "required|numeric",
+            "max_stocks" => "required|numeric"
+        ));
+
+        $id = $this->request->getPost('id');
+        $data = array(
+            "warehouse_id" => $this->request->getPost("warehouse_id"),
+            "spare_id" => $this->request->getPost("spare_id"),
+            "quantity" => $this->request->getPost("quantity"),
+            "min_stocks" => $this->request->getPost("min_stocks"),
+            "max_stocks" => $this->request->getPost("max_stocks"),
+        );
+
+        if ($data["quantity"] > $data["max_stocks"]) {
+            echo json_encode(array("success" => false, 'message' => app_lang("quantity_exceeds_max_stocks")));
+            exit();
+        }
+        if ($data["min_stocks"] > $data["max_stocks"]) {
+            echo json_encode(array("success" => false, 'message' => app_lang("min_stocks_should_less_than_max_stocks")));
+            exit();
+        }
+        if ($this->Warehouse_spare_model->is_duplicate_spare_part($data["spare_id"], $data["warehouse_id"], $id)) {
+            echo json_encode(array("success" => false, 'message' => app_lang("already_exists_item")));
+            exit();
+        }
+
+        $save_id = $this->Warehouse_spare_model->ci_save($data, $id);
+        if ($save_id) {
+            echo json_encode(array("success" => true, "data" => $this->_ws_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+    }
+
+    function delete_ws() {
+        if (!$this->can_edit_items()) {
+            app_redirect("forbidden");
+        }
+
+        $this->validate_submitted_data(array(
+            "id" => "required|numeric"
+        ));
+
+        $id = $this->request->getPost('id');
+
+        if ($this->Warehouse_spare_model->delete($id)) {
+            echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
+        }
+    }
+
+    function ws_list_data($warehouse_id) {
+        $list_data = $this->Warehouse_spare_model->get_details(array("warehouse_id" => $warehouse_id))->getResult();
+        $result = array();
+
+        foreach ($list_data as $data) {
+            $result[] = $this->_ws_make_row($data);
+        }
+
+        echo json_encode(array("data" => $result));
+    }
+
+    private function _ws_row_data($id) {
+        $data = $this->Warehouse_spare_model->get_details(array("id" => $id))->getRow();
+        return $this->_ws_make_row($data);
+    }
+
+    private function _ws_make_row($data) {
+        $actions = "";
+        if ($this->can_edit_items()) {
+            $actions = modal_anchor(get_uri("critical_spare_parts/ws_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-warehouse_id" => $data->warehouse_id))
+                    . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("critical_spare_parts/delete_ws"), "data-action" => "delete-confirmation"));
+        }
+
+        return array(
+            $data->id,
+            $data->name,
+            $data->quantity,
+            $data->min_stocks,
+            $data->max_stocks,
+            $data->manufacturer,
+            $data->applicable_equip,
+            $data->ship_equip,
+            $data->unit,
+            $data->part_number,
+            $data->article_number,
+            $data->drawing_number,
+            $data->hs_code,
+            $actions
+        );
+    }
 }
 
 /* End of file notes.php */

@@ -91,6 +91,7 @@ class App_Controller extends Controller {
     public $Applicable_equipments_model;
     public $Ship_equipments_model;
     public $Warehouses_model;
+    public $Warehouse_spare_model;
 
     public function __construct() {
         //main template to make frame of this app
@@ -204,7 +205,8 @@ class App_Controller extends Controller {
             'Manufacturers_model',
             'Applicable_equipments_model',
             'Ship_equipments_model',
-            'Warehouses_model'
+            'Warehouses_model',
+            'Warehouse_spare_model'
         );
     }
 

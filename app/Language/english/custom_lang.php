@@ -109,5 +109,13 @@ $lang["warehouses"] = "Warehouses";
 $lang["add_warehouse"] = "Add warehouse";
 $lang["edit_warehouse"] = "Edit warehouse";
 $lang["delete_warehouse"] = "Delete warehouse";
+$lang["warehouse"] = "Warehouse";
+$lang["total_items"] = "Total items";
+$lang["total_quantities"] = "Total quantities";
+$lang["min_stocks"] = "Min stocks";
+$lang["max_stocks"] = "Max stocks";
+$lang["quantity_exceeds_max_stocks"] = "Quantity exceeds max stocks";
+$lang["already_exists_item"] = "This item already exists.";
+$lang["min_stocks_should_less_than_max_stocks"] = "Min stocks should be less than max stocks";
 
 return $lang;
