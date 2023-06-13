@@ -84,5 +84,11 @@ $lang["add_unit"] = "Add unit";
 $lang["edit_unit"] = "Edit unit";
 $lang["delete_unit"] = "Delete unit";
 $lang["already_exists_unit_code"] = "This code already exists.";
+$lang["manufacturers"] = "Manufacturers";
+$lang["manufacturer"] = "Manufacturer";
+$lang["add_manufacturer"] = "Add manufacturer";
+$lang["edit_manufacturer"] = "Edit manufacturer";
+$lang["delete_manufacturer"] = "Delete manufacturer";
+$lang["already_exists_manufacturer_name"] = "This manufacturer already exists.";
 
 return $lang;
