@@ -25,6 +25,14 @@
                     "class": "all"
                 },
                 {
+                    title: "<?php echo app_lang("cranes") ?>",
+                    "class": "text-center w100"
+                },
+                {
+                    title: "<?php echo app_lang("ropes") ?>",
+                    "class": "text-center w100"
+                },
+                {
                     title: '<i data-feather="menu" class="icon-16"></i>',
                     "class": "text-center option w100",
                 }

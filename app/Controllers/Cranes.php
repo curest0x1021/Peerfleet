@@ -204,6 +204,8 @@ class Cranes extends Security_Controller {
         return array(
             $data->client_id,
             $name,
+            $data->cranes,
+            $data->ropes,
             $action
         );
     }
