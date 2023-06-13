@@ -90,5 +90,12 @@ $lang["add_manufacturer"] = "Add manufacturer";
 $lang["edit_manufacturer"] = "Edit manufacturer";
 $lang["delete_manufacturer"] = "Delete manufacturer";
 $lang["already_exists_manufacturer_name"] = "This manufacturer already exists.";
+$lang["applicable_equipments"] = "Applicable machinery equipments";
+$lang["equipment"] = "Equipment";
+$lang["add_equipment"] = "Add equipment";
+$lang["edit_equipment"] = "Edit equipment";
+$lang["delete_equipment"] = "Delete equipment";
+$lang["ship_equipments"] = "Ship machinery equipments";
+$lang["already_exists_equipment_name"] = "This equipment already exists.";
 
 return $lang;
