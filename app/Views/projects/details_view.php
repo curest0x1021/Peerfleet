@@ -106,18 +106,18 @@ if (!function_exists("make_project_tabs_data")) {
                                 $project_tabs["timesheets"] = "projects/timesheets/" . $project_info->id;
                             }
 
-                            if ($show_invoice_info && $project_info->project_type === "client_project") {
-                                $project_tabs["invoices"] = "projects/invoices/" . $project_info->id;
-                                $project_tabs["payments"] = "projects/payments/" . $project_info->id;
-                            }
+                            // if ($show_invoice_info && $project_info->project_type === "client_project") {
+                            //     $project_tabs["invoices"] = "projects/invoices/" . $project_info->id;
+                            //     $project_tabs["payments"] = "projects/payments/" . $project_info->id;
+                            // }
 
-                            if ($show_expense_info) {
-                                $project_tabs["expenses"] = "projects/expenses/" . $project_info->id;
-                            }
+                            // if ($show_expense_info) {
+                            //     $project_tabs["expenses"] = "projects/expenses/" . $project_info->id;
+                            // }
 
-                            if ($show_contract_info && $project_info->project_type === "client_project") {
-                                $project_tabs["contracts"] = "projects/contracts/" . $project_info->id;
-                            }
+                            // if ($show_contract_info && $project_info->project_type === "client_project") {
+                            //     $project_tabs["contracts"] = "projects/contracts/" . $project_info->id;
+                            // }
 
                             if ($show_ticket_info && $project_info->project_type === "client_project") {
                                 $project_tabs["tickets"] = "projects/tickets/" . $project_info->id;
@@ -158,14 +158,14 @@ if (!function_exists("make_project_tabs_data")) {
                                 $project_tabs["timesheets"] = "projects/timesheets/" . $project_info->id;
                             }
 
-                            if (get_setting("module_invoice")) {
-                                //check left menu settings
-                                $left_menu = get_setting("user_" . $login_user->id . "_left_menu") ? get_setting("user_" . $login_user->id . "_left_menu") : get_setting("default_client_left_menu");
-                                $left_menu = $left_menu ? json_decode(json_encode(@unserialize($left_menu)), true) : false;
-                                if (!$left_menu || in_array("invoices", array_column($left_menu, "name"))) {
-                                    $project_tabs["invoices"] = "projects/invoices/" . $project_info->id . "/" . $login_user->client_id;
-                                }
-                            }
+                            // if (get_setting("module_invoice")) {
+                            //     //check left menu settings
+                            //     $left_menu = get_setting("user_" . $login_user->id . "_left_menu") ? get_setting("user_" . $login_user->id . "_left_menu") : get_setting("default_client_left_menu");
+                            //     $left_menu = $left_menu ? json_decode(json_encode(@unserialize($left_menu)), true) : false;
+                            //     if (!$left_menu || in_array("invoices", array_column($left_menu, "name"))) {
+                            //         $project_tabs["invoices"] = "projects/invoices/" . $project_info->id . "/" . $login_user->client_id;
+                            //     }
+                            // }
 
                             $project_tabs_of_hook_of_client = array();
                             $project_tabs_of_hook_of_client = app_hooks()->apply_filters('app_filter_clients_project_details_tab', $project_tabs_of_hook_of_client, $project_info->id);
@@ -189,10 +189,10 @@ if (!function_exists("make_project_tabs_data")) {
                     <div role="tabpanel" class="tab-pane fade" id="project-customer_feedback-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-notes-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-timesheets-section"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="project-invoices-section"></div>
+                    <!-- <div role="tabpanel" class="tab-pane fade" id="project-invoices-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-payments-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-expenses-section"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="project-contracts-section"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="project-contracts-section"></div> -->
                     <div role="tabpanel" class="tab-pane fade" id="project-tickets-section"></div>
 
                     <?php
