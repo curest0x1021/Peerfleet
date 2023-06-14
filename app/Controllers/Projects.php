@@ -382,7 +382,7 @@ class Projects extends Security_Controller {
             $access_client = $this->get_access_info("client");
             $clients = $this->Clients_model->get_details(array("show_own_clients_only_user_id" => $this->show_own_clients_only_user_id(), "client_groups" => $access_client->allowed_client_groups))->getResult();
             foreach ($clients as $client) {
-                $clients_dropdown[$client->id] = $client->company_name;
+                $clients_dropdown[$client->id] = $client->charter_name;
             }
         }
 
@@ -982,8 +982,8 @@ class Projects extends Security_Controller {
         }
 
         $client_name = "-";
-        if ($data->company_name) {
-            $client_name = anchor(get_uri("clients/view/" . $data->client_id), $data->company_name);
+        if ($data->charter_name) {
+            $client_name = anchor(get_uri("clients/view/" . $data->client_id), $data->charter_name);
         }
 
         $row_data = array(
@@ -1890,8 +1890,8 @@ class Projects extends Security_Controller {
         $task_title = modal_anchor(get_uri("projects/task_view"), $data->task_title, array("title" => app_lang('task_info') . " #$data->task_id", "data-post-id" => $data->task_id, "data-modal-lg" => "1"));
 
         $client_name = "-";
-        if ($data->timesheet_client_company_name) {
-            $client_name = anchor(get_uri("clients/view/" . $data->timesheet_client_id), $data->timesheet_client_company_name);
+        if ($data->timesheet_client_name) {
+            $client_name = anchor(get_uri("clients/view/" . $data->timesheet_client_id), $data->timesheet_client_name);
         }
 
         $duration = convert_seconds_to_time_format($data->hours ? (round(($data->hours * 60), 0) * 60) : (abs(strtotime($end_time) - strtotime($start_time))));
@@ -2030,8 +2030,8 @@ class Projects extends Security_Controller {
             $duration = convert_seconds_to_time_format(abs($data->total_duration));
 
             $client_name = "-";
-            if ($data->timesheet_client_company_name) {
-                $client_name = anchor(get_uri("clients/view/" . $data->timesheet_client_id), $data->timesheet_client_company_name);
+            if ($data->timesheet_client_name) {
+                $client_name = anchor(get_uri("clients/view/" . $data->timesheet_client_id), $data->timesheet_client_name);
             }
 
             $result[] = array(
@@ -4367,8 +4367,6 @@ class Projects extends Security_Controller {
     /* prepare a row of file list table */
 
     private function _make_file_row($data, $custom_fields) {
-        $file_icon = get_file_icon(strtolower(pathinfo($data->file_name, PATHINFO_EXTENSION)));
-
         $image_url = get_avatar($data->uploaded_by_user_image);
         $uploaded_by = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->uploaded_by_user_name";
 
@@ -4376,6 +4374,17 @@ class Projects extends Security_Controller {
             $uploaded_by = get_team_member_profile_link($data->uploaded_by, $uploaded_by);
         } else {
             $uploaded_by = get_client_contact_profile_link($data->uploaded_by, $uploaded_by);
+        }
+
+        $file_name = $data->file_name;
+        if (is_viewable_image_file($file_name)) {
+            $project_file_path = get_setting("project_file_path");
+            $file_info = array("file_name" => $data->project_id . "/" . $data->file_name);
+            $thumbnail = get_source_url_of_file($file_info, $project_file_path, "thumbnail");
+            $show = "<img class='mr10 float-start' src='$thumbnail' alt='$file_name' style='width: 40px; height: 40px;'/>";
+        } else {
+            $file_icon = get_file_icon(strtolower(pathinfo($file_name, PATHINFO_EXTENSION)));
+            $show = "<div data-feather='$file_icon' class='mr10 float-start' style='width: 24px; height: 24px;'></div>";
         }
 
         $description = "<div class='float-start text-wrap'>" .
@@ -4392,7 +4401,7 @@ class Projects extends Security_Controller {
 
         $row_data = array(
             $checkmark,
-            "<div data-feather='$file_icon' class='mr10 float-start'></div>" . $description,
+            "<div class='d-flex align-items-center flex-wrap'>" . $show . $description . "</div>",
             $data->category_name ? $data->category_name : "-",
             convert_file_size($data->file_size),
             $uploaded_by,
