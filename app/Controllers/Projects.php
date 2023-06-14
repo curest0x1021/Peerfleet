@@ -2985,6 +2985,21 @@ class Projects extends Security_Controller {
             }
         }
 
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "title" => "required|max_length[30]",
+            "project_id" => "required",
+            "labels" => "required",
+            "dock_list_number" => "required|max_length[15]",
+            "reference_drawing" => "required|max_length[30]",
+            "location" => "required|max_length[300]",
+            "specification" => "required|max_length[300]",
+            "requisition_number" => "required|max_length[30]",
+            "type" => "required|max_length[30]",
+            "serial_number" => "required|max_length[30]",
+            "pms_scs_number" => "required|max_length[30]"
+        ));
+
         $start_date = $this->request->getPost('start_date');
         $assigned_to = $this->request->getPost('assigned_to');
         $collaborators = $this->request->getPost('collaborators');
@@ -3010,6 +3025,28 @@ class Projects extends Security_Controller {
             "repeat_every" => $repeat_every ? $repeat_every : 0,
             "repeat_type" => $repeat_type ? $repeat_type : NULL,
             "no_of_cycles" => $no_of_cycles ? $no_of_cycles : 0,
+            "dock_list_number" => $this->request->getPost("dock_list_number"),
+            "reference_drawing" => $this->request->getPost("reference_drawing"),
+            "location" => $this->request->getPost("location"),
+            "specification" => $this->request->getPost("specification"),
+            "requisition_number" => $this->request->getPost("requisition_number"),
+            "gas_free_certificate" => $this->request->getPost("gas_free_certificate"),
+            "light" => $this->request->getPost("light"),
+            "ventilation" => $this->request->getPost("ventilation"),
+            "crane_assistance" => $this->request->getPost("crane_assistance"),
+            "cleaning_before" => $this->request->getPost("cleaning_before"),
+            "cleaning_after" => $this->request->getPost("cleaning_after"),
+            "work_permit" => $this->request->getPost("work_permit"),
+            "painting_after_completion" => $this->request->getPost("painting_after_completion"),
+            "parts_on_board" => $this->request->getPost("parts_on_board"),
+            "transport_to_yard_workshop" => $this->request->getPost("transport_to_yard_workshop"),
+            "transport_outside_yard" => $this->request->getPost("transport_outside_yard"),
+            "material_yards_supply" => $this->request->getPost("material_yards_supply"),
+            "material_owners_supply" => $this->request->getPost("material_owners_supply"),
+            "risk_assessment" => $this->request->getPost("risk_assessment"),
+            "type" => $this->request->getPost("type"),
+            "serial_number" => $this->request->getPost("serial_number"),
+            "pms_scs_number" => $this->request->getPost("pms_scs_number"),
         );
 
         if (!$id) {
@@ -3736,6 +3773,8 @@ class Projects extends Security_Controller {
             $data->status_color,
             $check_status,
             $title,
+            $data->dock_list_number,
+            $data->reference_drawing,
             $data->start_date,
             $start_date,
             $data->deadline,
@@ -3743,7 +3782,6 @@ class Projects extends Security_Controller {
             $milestone_title,
             $project_title,
             $assigned_to,
-            $collaborators,
             $status
         );
 

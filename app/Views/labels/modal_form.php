@@ -21,7 +21,7 @@
                                 "name" => "title",
                                 "value" => "",
                                 "class" => "form-control",
-                                "placeholder" => app_lang('label'),
+                                "placeholder" => app_lang('category'),
                                 "autofocus" => true,
                                 "autocomplete" => "off",
                                 "data-rule-required" => true,
