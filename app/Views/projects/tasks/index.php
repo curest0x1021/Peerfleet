@@ -4,7 +4,7 @@
         <div class="title-button-group">
             <?php
             if ($login_user->user_type == "staff" && $can_edit_tasks) {
-                echo modal_anchor(get_uri("labels/modal_form"), "<i data-feather='tag' class='icon-16'></i> " . app_lang('manage_labels'), array("class" => "btn btn-outline-light", "title" => app_lang('manage_labels'), "data-post-type" => "task"));
+                echo modal_anchor(get_uri("labels/modal_form"), "<i data-feather='tag' class='icon-16'></i> " . app_lang('manage_categories'), array("class" => "btn btn-outline-light", "title" => app_lang('manage_categories'), "data-post-type" => "task"));
                 echo modal_anchor("", "<i data-feather='edit' class='icon-16'></i> " . app_lang('batch_update'), array("class" => "btn btn-info text-white hide batch-update-btn", "title" => app_lang('batch_update'), "data-post-project_id" => $project_id));
                 echo js_anchor("<i data-feather='check-square' class='icon-16'></i> " . app_lang("batch_update"), array("class" => "btn btn-outline-light batch-active-btn"));
                 echo js_anchor("<i data-feather='x-square' class='icon-16'></i> " . app_lang("cancel_selection"), array("class" => "hide btn btn-outline-light batch-cancel-btn"));
@@ -91,6 +91,8 @@ foreach ($task_statuses as $status) {
             {visible: false, searchable: false},
             {title: '<?php echo app_lang("id") ?>', "class": idColumnClass, order_by: "id"},
             {title: '<?php echo app_lang("title") ?>', "class": titleColumnClass, order_by: "title"},
+            {title: '<?php echo app_lang("dock_list_number") ?>', visible: showResponsiveOption, order_by: "dock_list_number"},
+            {title: '<?php echo app_lang("reference_drawing") ?>', visible: showResponsiveOption, order_by: "reference_drawing"},
             {visible: false, searchable: false, order_by: "start_date"},
             {title: '<?php echo app_lang("start_date") ?>', "iDataSort": 3, visible: showResponsiveOption, order_by: "start_date"},
             {visible: false, searchable: false, order_by: "deadline"},
@@ -98,13 +100,12 @@ foreach ($task_statuses as $status) {
             {title: '<?php echo app_lang("milestone") ?>', visible: milestoneVisibility, order_by: "milestone"},
             {visible: false, searchable: false},
             {visible: false, searchable: false},
-            {visible: false, searchable: false},
             {title: '<?php echo app_lang("status") ?>', visible: showResponsiveOption, order_by: "status"}
 <?php echo $custom_field_headers; ?>,
             {title: '<i data-feather="menu" class="icon-16"></i>', visible: optionVisibility, "class": "text-center option " + optionColumnClass}
             ],
-            printColumns: combineCustomFieldsColumns([1, 2, 4, 6, 7, 12], '<?php echo $custom_field_headers; ?>'),
-            xlsColumns: combineCustomFieldsColumns([1, 2, 4, 6, 7, 12], '<?php echo $custom_field_headers; ?>'),
+            printColumns: combineCustomFieldsColumns([1, 2, 3, 4, 6, 8, 9, 12], '<?php echo $custom_field_headers; ?>'),
+            xlsColumns: combineCustomFieldsColumns([1, 2, 3, 4, 6, 8, 9, 12], '<?php echo $custom_field_headers; ?>'),
             rowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
             $('td:eq(0)', nRow).attr("style", "border-left:5px solid " + aData[0] + " !important;");
             //add activated sub task filter class
@@ -149,6 +150,8 @@ foreach ($task_statuses as $status) {
             {visible: false, searchable: false},
             {title: '<?php echo app_lang("id") ?>', "class": idColumnClass, order_by: "id"},
             {title: '<?php echo app_lang("title") ?>', "class": titleColumnClass, order_by: "title"},
+            {title: '<?php echo app_lang("dock_list_number") ?>', visible: showResponsiveOption},
+            {title: '<?php echo app_lang("reference_drawing") ?>', visible: showResponsiveOption},
             {visible: false, searchable: false, order_by: "start_date"},
             {title: '<?php echo app_lang("start_date") ?>', "iDataSort": 3, visible: showResponsiveOption, order_by: "start_date"},
             {visible: false, searchable: false, order_by: "deadline"},
@@ -156,13 +159,12 @@ foreach ($task_statuses as $status) {
             {title: '<?php echo app_lang("milestone") ?>', visible: showResponsiveOption, order_by: "milestone"},
             {visible: false, searchable: false},
             {title: '<?php echo app_lang("assigned_to") ?>', "class": "min-w150", visible: showResponsiveOption, order_by: "assigned_to"},
-            {title: '<?php echo app_lang("collaborators") ?>', visible: showResponsiveOption},
             {title: '<?php echo app_lang("status") ?>', visible: showResponsiveOption, order_by: "status"}
 <?php echo $custom_field_headers; ?>,
             {title: '<i data-feather="menu" class="icon-16"></i>', visible: optionVisibility, "class": "text-center option " + optionColumnClass}
             ],
-            printColumns: combineCustomFieldsColumns([1, 2, 4, 6, 7, 9, 10, 12], '<?php echo $custom_field_headers; ?>'),
-            xlsColumns: combineCustomFieldsColumns([1, 2, 4, 6, 8, 9, 10], '<?php echo $custom_field_headers; ?>'),
+            printColumns: combineCustomFieldsColumns([1, 2, 3, 4, 6, 8, 9, 11, 12], '<?php echo $custom_field_headers; ?>'),
+            xlsColumns: combineCustomFieldsColumns([1, 2, 3, 4, 6, 8, 9, 11, 12], '<?php echo $custom_field_headers; ?>'),
             rowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
             $('td:eq(0)', nRow).attr("style", "border-left:5px solid " + aData[0] + " !important;");
             //add activated sub task filter class

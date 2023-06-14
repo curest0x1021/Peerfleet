@@ -4,6 +4,7 @@
 
     $show_in_kanban = get_setting("show_in_kanban");
     $show_in_kanban_items = explode(',', $show_in_kanban);
+    $timeline_file_path = get_setting("timeline_file_path");
 
     foreach ($tasks as $task) {
 
@@ -122,9 +123,22 @@
             $parent_task = "<div class='mt5 text-truncate text-off'>" . $parent_task_id . $task->parent_task_title . "</div>";
         }
 
+        $image = "";
+        $files = unserialize($task->files);
+        if ($files && count($files) > 0) {
+            $imageFiles = array_filter($files, function($k) {
+                return is_viewable_image_file($k["file_name"]);
+            });
+            if (count($imageFiles) > 0) {
+                $thumbnail = get_source_url_of_file($imageFiles[0], $timeline_file_path, "thumbnail");
+                $file_name = $imageFiles[0]["file_name"];
+                $image = "<img src='$thumbnail' alt='$file_name' style='width: 100%;'/>";
+            }
+        }
+
         $item = $exising_items . modal_anchor(get_uri("projects/task_view"), "<span class='avatar'>" .
                         "<img src='" . get_avatar($task->assigned_to_avatar) . "'>" .
-                        "</span>" . $sub_task_icon . $task_id . $task->title . $toggle_sub_task_icon . $batch_operation_checkbox . "<div class='clearfix'>" . $start_date . $end_date . "</div>" . $project_name . $client_name . $kanban_custom_fields_data .
+                        "</span>" . $sub_task_icon . $task_id . $task->title . $toggle_sub_task_icon . $batch_operation_checkbox . "<div class='clearfix'>" . $image . "</div>" .  "<div class='clearfix'>" . $start_date . $end_date . "</div>" . $project_name . $client_name . $kanban_custom_fields_data .
                         $task_labels . $task_checklist_status . $sub_task_status . "<div class='clearfix'></div>" . $parent_task, array("class" => "kanban-item d-block $disable_dragging $unread_comments_class", "data-id" => $task->id, "data-project_id" => $task->project_id, "data-sort" => $task->new_sort, "data-post-id" => $task->id, "title" => app_lang('task_info') . " #$task->id", "data-modal-lg" => "1"));
 
         $columns_data[$task->status_id] = $item;

@@ -22,7 +22,62 @@
                             "value" => $add_type == "multiple" ? "" : $model_info->title,
                             "class" => "form-control",
                             "placeholder" => app_lang('title'),
+                            "maxlength" => 30,
                             "autofocus" => true,
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="project_labels" class=" col-md-3"><?php echo app_lang('category'); ?></label>
+                    <div class=" col-md-9" id="dropdown-apploader-section">
+                        <?php
+                        echo form_input(array(
+                            "id" => "project_labels",
+                            "name" => "labels",
+                            "value" => $model_info->labels,
+                            "class" => "form-control",
+                            "placeholder" => app_lang('category')
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="dock_list_number" class=" col-md-3"><?php echo app_lang('dock_list_number'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "dock_list_number",
+                            "name" => "dock_list_number",
+                            "value" => $add_type == "multiple" ? "" : $model_info->dock_list_number,
+                            "class" => "form-control",
+                            "maxlength" => 15,
+                            "placeholder" => app_lang('dock_list_number'),
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="reference_drawing" class=" col-md-3"><?php echo app_lang('reference_drawing'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "reference_drawing",
+                            "name" => "reference_drawing",
+                            "value" => $add_type == "multiple" ? "" : $model_info->reference_drawing,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('reference_drawing'),
                             "data-rule-required" => true,
                             "data-msg-required" => app_lang("field_required"),
                         ));
@@ -42,6 +97,65 @@
                             "class" => "form-control",
                             "placeholder" => app_lang('description'),
                             "data-rich-text-editor" => true
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="location" class=" col-md-3"><?php echo app_lang('location'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_textarea(array(
+                            "id" => "location",
+                            "name" => "location",
+                            "value" => $add_type == "multiple" ? "" : $model_info->location,
+                            "class" => "form-control",
+                            "placeholder" => app_lang('location'),
+                            "maxlength" => 300,
+                            "data-rich-text-editor" => true,
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="specification" class=" col-md-3"><?php echo app_lang('specification'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_textarea(array(
+                            "id" => "specification",
+                            "name" => "specification",
+                            "value" => $add_type == "multiple" ? "" : $model_info->specification,
+                            "class" => "form-control",
+                            "placeholder" => app_lang('specification_placeholder'),
+                            "maxlength" => 300,
+                            "data-rich-text-editor" => true,
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="requisition_number" class=" col-md-3"><?php echo app_lang('requisition_number'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "requisition_number",
+                            "name" => "requisition_number",
+                            "value" => $add_type == "multiple" ? "" : $model_info->requisition_number,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('requisition_number'),
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
                         ));
                         ?>
                     </div>
@@ -162,22 +276,6 @@
             </div>
             <div class="form-group">
                 <div class="row">
-                    <label for="project_labels" class=" col-md-3"><?php echo app_lang('labels'); ?></label>
-                    <div class=" col-md-9" id="dropdown-apploader-section">
-                        <?php
-                        echo form_input(array(
-                            "id" => "project_labels",
-                            "name" => "labels",
-                            "value" => $model_info->labels,
-                            "class" => "form-control",
-                            "placeholder" => app_lang('labels')
-                        ));
-                        ?>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
                     <label for="start_date" class=" col-md-3"><?php echo app_lang('start_date'); ?></label>
                     <div class=" col-md-9">
                         <?php
@@ -212,6 +310,401 @@
                     </div>
                 </div>
             </div>
+
+            <!-- To be included  -->
+            <div class="form-group">
+                <h4><?php echo app_lang("to_be_included"); ?>:</h4>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row">
+                            <label for="gas_free_certificate" class="col-7"><?php echo app_lang('gas_free_certificate'); ?></label>
+                            <div class="col-5">
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "gas_free_certificate_yes",
+                                    "name" => "gas_free_certificate",
+                                    "class" => "form-check-input",
+                                ), "1", ($model_info->gas_free_certificate == "1") ? true : false);
+                                ?>
+                                <label for="gas_free_certificate_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "gas_free_certificate_no",
+                                    "name" => "gas_free_certificate",
+                                    "class" => "form-check-input",
+                                ), "0", ($model_info->gas_free_certificate == "0") ? true : false);
+                                ?>
+                                <label for="gas_free_certificate_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <label for="painting_after_completion" class="col-7"><?php echo app_lang('painting_after_completion'); ?></label>
+                            <div class="col-5">
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "painting_after_completion_yes",
+                                    "name" => "painting_after_completion",
+                                    "class" => "form-check-input",
+                                ), "1", ($model_info->painting_after_completion == "1") ? true : false);
+                                ?>
+                                <label for="painting_after_completion_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "painting_after_completion_no",
+                                    "name" => "painting_after_completion",
+                                    "class" => "form-check-input",
+                                ), "0", ($model_info->painting_after_completion == "0") ? true : false);
+                                ?>
+                                <label for="painting_after_completion_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <label for="light" class="col-7"><?php echo app_lang('light'); ?></label>
+                            <div class="col-5">
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "light_yes",
+                                    "name" => "light",
+                                    "class" => "form-check-input",
+                                ), "1", ($model_info->light == "1") ? true : false);
+                                ?>
+                                <label for="light_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "light_no",
+                                    "name" => "light",
+                                    "class" => "form-check-input",
+                                ), "0", ($model_info->light == "0") ? true : false);
+                                ?>
+                                <label for="light_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <label for="parts_on_board" class="col-7"><?php echo app_lang('parts_on_board'); ?></label>
+                            <div class="col-5">
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "parts_on_board_yes",
+                                    "name" => "parts_on_board",
+                                    "class" => "form-check-input",
+                                ), "1", ($model_info->parts_on_board == "1") ? true : false);
+                                ?>
+                                <label for="parts_on_board_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "parts_on_board_no",
+                                    "name" => "parts_on_board",
+                                    "class" => "form-check-input",
+                                ), "0", ($model_info->parts_on_board == "0") ? true : false);
+                                ?>
+                                <label for="parts_on_board_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <label for="ventilation" class="col-7"><?php echo app_lang('ventilation'); ?></label>
+                            <div class="col-5">
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "ventilation_yes",
+                                    "name" => "ventilation",
+                                    "class" => "form-check-input",
+                                ), "1", ($model_info->ventilation == "1") ? true : false);
+                                ?>
+                                <label for="ventilation_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "ventilation_no",
+                                    "name" => "ventilation",
+                                    "class" => "form-check-input",
+                                ), "0", ($model_info->ventilation == "0") ? true : false);
+                                ?>
+                                <label for="ventilation_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <label for="transport_to_yard_workshop" class="col-7"><?php echo app_lang('transport_to_yard_workshop'); ?></label>
+                            <div class="col-5">
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "transport_to_yard_workshop_yes",
+                                    "name" => "transport_to_yard_workshop",
+                                    "class" => "form-check-input",
+                                ), "1", ($model_info->transport_to_yard_workshop == "1") ? true : false);
+                                ?>
+                                <label for="transport_to_yard_workshop_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "transport_to_yard_workshop_no",
+                                    "name" => "transport_to_yard_workshop",
+                                    "class" => "form-check-input",
+                                ), "0", ($model_info->transport_to_yard_workshop == "0") ? true : false);
+                                ?>
+                                <label for="transport_to_yard_workshop_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <label for="crane_assistance" class="col-7"><?php echo app_lang('crane_assistance'); ?></label>
+                            <div class="col-5">
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "crane_assistance_yes",
+                                    "name" => "crane_assistance",
+                                    "class" => "form-check-input",
+                                ), "1", ($model_info->crane_assistance == "1") ? true : false);
+                                ?>
+                                <label for="crane_assistance_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "crane_assistance_no",
+                                    "name" => "crane_assistance",
+                                    "class" => "form-check-input",
+                                ), "0", ($model_info->crane_assistance == "0") ? true : false);
+                                ?>
+                                <label for="crane_assistance_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <label for="transport_outside_yard" class="col-7"><?php echo app_lang('transport_outside_yard'); ?></label>
+                            <div class="col-5">
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "transport_outside_yard_yes",
+                                    "name" => "transport_outside_yard",
+                                    "class" => "form-check-input",
+                                ), "1", ($model_info->transport_outside_yard == "1") ? true : false);
+                                ?>
+                                <label for="transport_outside_yard_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "transport_outside_yard_no",
+                                    "name" => "transport_outside_yard",
+                                    "class" => "form-check-input",
+                                ), "0", ($model_info->transport_outside_yard == "0") ? true : false);
+                                ?>
+                                <label for="transport_outside_yard_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <label for="cleaning_before" class="col-7"><?php echo app_lang('cleaning_before'); ?></label>
+                            <div class="col-5">
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "cleaning_before_yes",
+                                    "name" => "cleaning_before",
+                                    "class" => "form-check-input",
+                                ), "1", ($model_info->cleaning_before == "1") ? true : false);
+                                ?>
+                                <label for="cleaning_before_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "cleaning_before_no",
+                                    "name" => "cleaning_before",
+                                    "class" => "form-check-input",
+                                ), "0", ($model_info->cleaning_before == "0") ? true : false);
+                                ?>
+                                <label for="cleaning_before_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <label for="material_yards_supply" class="col-7"><?php echo app_lang('material_yards_supply'); ?></label>
+                            <div class="col-5">
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "material_yards_supply_yes",
+                                    "name" => "material_yards_supply",
+                                    "class" => "form-check-input",
+                                ), "1", ($model_info->material_yards_supply == "1") ? true : false);
+                                ?>
+                                <label for="material_yards_supply_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "material_yards_supply_no",
+                                    "name" => "material_yards_supply",
+                                    "class" => "form-check-input",
+                                ), "0", ($model_info->material_yards_supply == "0") ? true : false);
+                                ?>
+                                <label for="material_yards_supply_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <label for="cleaning_after" class="col-7"><?php echo app_lang('cleaning_after'); ?></label>
+                            <div class="col-5">
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "cleaning_after_yes",
+                                    "name" => "cleaning_after",
+                                    "class" => "form-check-input",
+                                ), "1", ($model_info->cleaning_after == "1") ? true : false);
+                                ?>
+                                <label for="cleaning_after_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "cleaning_after_no",
+                                    "name" => "cleaning_after",
+                                    "class" => "form-check-input",
+                                ), "0", ($model_info->cleaning_after == "0") ? true : false);
+                                ?>
+                                <label for="cleaning_after_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <label for="material_owners_supply" class="col-7"><?php echo app_lang('material_owners_supply'); ?></label>
+                            <div class="col-5">
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "material_owners_supply_yes",
+                                    "name" => "material_owners_supply",
+                                    "class" => "form-check-input",
+                                ), "1", ($model_info->material_owners_supply == "1") ? true : false);
+                                ?>
+                                <label for="material_owners_supply_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "material_owners_supply_no",
+                                    "name" => "material_owners_supply",
+                                    "class" => "form-check-input",
+                                ), "0", ($model_info->material_owners_supply == "0") ? true : false);
+                                ?>
+                                <label for="material_owners_supply_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <label for="work_permit" class="col-7"><?php echo app_lang('work_permit'); ?></label>
+                            <div class="col-5">
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "work_permit_yes",
+                                    "name" => "work_permit",
+                                    "class" => "form-check-input",
+                                ), "1", ($model_info->work_permit == "1") ? true : false);
+                                ?>
+                                <label for="work_permit_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "work_permit_no",
+                                    "name" => "work_permit",
+                                    "class" => "form-check-input",
+                                ), "0", ($model_info->work_permit == "0") ? true : false);
+                                ?>
+                                <label for="work_permit_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <label for="risk_assessment" class="col-7"><?php echo app_lang('risk_assessment'); ?></label>
+                            <div class="col-5">
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "risk_assessment_yes",
+                                    "name" => "risk_assessment",
+                                    "class" => "form-check-input",
+                                ), "1", ($model_info->risk_assessment == "1") ? true : false);
+                                ?>
+                                <label for="risk_assessment_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                <?php
+                                echo form_radio(array(
+                                    "id" => "risk_assessment_no",
+                                    "name" => "risk_assessment",
+                                    "class" => "form-check-input",
+                                ), "0", ($model_info->risk_assessment == "0") ? true : false);
+                                ?>
+                                <label for="risk_assessment_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--  -->
+
+            <!-- Maker informations -->
+            <div>
+                <h4><?php echo app_lang("maker_informations"); ?>:</h4>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="type" class=" col-md-3"><?php echo app_lang('type'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "type",
+                            "name" => "type",
+                            "value" => $add_type == "multiple" ? "" : $model_info->type,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('type'),
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="serial_number" class=" col-md-3"><?php echo app_lang('serial_number'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "serial_number",
+                            "name" => "serial_number",
+                            "value" => $add_type == "multiple" ? "" : $model_info->serial_number,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('serial_number'),
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="pms_scs_number" class=" col-md-3"><?php echo app_lang('pms_scs_number'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "pms_scs_number",
+                            "name" => "pms_scs_number",
+                            "value" => $add_type == "multiple" ? "" : $model_info->pms_scs_number,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('pms_scs_number'),
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <!--  -->
 
             <?php if (get_setting("enable_recurring_option_for_tasks")) { ?>
 
