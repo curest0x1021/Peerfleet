@@ -68,7 +68,7 @@ class Security_Controller extends App_Controller {
         $info->module_group = $group;
 
         //admin users has access to everything
-        if ($this->login_user->is_admin) {
+        if ($this->login_user->is_admin || $group === "client" || $group === "crane" || $group === "critical_spare_parts") {
             $info->access_type = "all";
         } else {
 
@@ -797,6 +797,14 @@ class Security_Controller extends App_Controller {
         }
 
         return json_encode($symbol_array);
+    }
+
+    protected function can_access_own_client($client_id) {
+        if ($this->login_user->user_type == "staff" || $this->login_user->client_id == $client_id) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     protected function can_access_this_client($client_id = 0) {

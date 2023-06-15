@@ -28,12 +28,12 @@ class Cranes extends Security_Controller {
     /* load crane add/edit modal */
     function modal_form() {
         $this->access_only_allowed_members();
-        if (!$this->can_edit_clients()) {
+        $client_id = $this->request->getPost('client_id');
+        if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
 
-        $client_id = $this->request->getPost('client_id');
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
         $this->validate_submitted_data(array(
             "id" => "numeric"
         ));
@@ -50,10 +50,10 @@ class Cranes extends Security_Controller {
     /* insert or update a crane */
     function save() {
         $client_id = $this->request->getPost('client_id');
-        if (!$this->can_edit_clients()) {
+        if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         $cranes = intval($this->request->getPost("cranes"));
         $gangway = $this->request->getPost("gangway");
@@ -193,7 +193,7 @@ class Cranes extends Security_Controller {
     private function _make_row($data) {
         $name = $data->name;
         $action = "";
-        if ($this->can_edit_clients()) {
+        if ($this->can_access_own_client($data->client_id)) {
             if (!$data->hasCrane) {
                 $action = modal_anchor(get_uri("cranes/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('add_crane'), "data-post-client_id" => $data->client_id));
             } else {
@@ -222,7 +222,7 @@ class Cranes extends Security_Controller {
     /* load crane details view */
     function view($client_id, $tab = "") {
         $this->access_only_allowed_members();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         if ($client_id) {
             $model_info = $this->Cranes_model->get_details(array("client_id" => $client_id))->getRow();
@@ -241,7 +241,7 @@ class Cranes extends Security_Controller {
 
     function info_tab($client_id) {
         $this->access_only_allowed_members();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         if ($client_id) {
             $view_data['client_id'] = $client_id;
@@ -306,7 +306,7 @@ class Cranes extends Security_Controller {
 
     function info_list_data($client_id) {
         $this->access_only_allowed_members();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         $list_data = $this->Cranes_info_model->get_details(array("client_id" => $client_id))->getResult();
         $result_data = [];
@@ -334,7 +334,7 @@ class Cranes extends Security_Controller {
 
     function history_tab($client_id) {
         $this->access_only_allowed_members();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         if ($client_id) {
             $view_data["client_id"] = $client_id;
@@ -389,7 +389,7 @@ class Cranes extends Security_Controller {
 
     function history_list_data($client_id) {
         $this->access_only_allowed_members();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         $list_data = $this->Cranes_history_model->get_details($client_id);
         $result_data = [];
@@ -423,7 +423,7 @@ class Cranes extends Security_Controller {
 
     function loadtest_tab($client_id) {
         $this->access_only_allowed_members();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         if ($client_id) {
             $view_data["client_id"] = $client_id;
@@ -504,7 +504,7 @@ class Cranes extends Security_Controller {
 
     function loadtest_list_data($client_id) {
         $this->access_only_allowed_members();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         $list_data = $this->Cranes_loadtest_model->get_details(array("client_id" => $client_id))->getResult();
         $result_data = [];

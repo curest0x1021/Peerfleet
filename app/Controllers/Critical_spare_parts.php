@@ -170,12 +170,18 @@ class Critical_spare_parts extends Security_Controller {
             $icon = '<div style="width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
             $min_stock_items = '<span style="color: #d50000">' . $min_stock_items . '</span>';
         }
+        $name = $data->name;
+        $vessel = $data->vessel;
+        if ($this->can_access_own_client($data->client_id)) {
+            $name = anchor(get_uri("critical_spare_parts/view/" . $data->id), $data->name);
+            $vessel = anchor(get_uri("clients/view/" . $data->client_id), $data->vessel);
+        }
         return array(
             $data->id,
             $icon,
             $data->code,
-            anchor(get_uri("critical_spare_parts/view/" . $data->id), $data->name),
-            anchor(get_uri("clients/view/" . $data->client_id), $data->vessel),
+            $name,
+            $vessel,
             $data->total_items,
             $data->total_quantities,
             $min_stock_items
@@ -183,11 +189,11 @@ class Critical_spare_parts extends Security_Controller {
     }
 
     function view($warehouse_id = 0) {
-        $this->access_only_allowed_members();
+        // $this->access_only_allowed_members();
         if ($warehouse_id) {
             $view_data["model_info"] = $this->Warehouse_spare_model->get_warehouses(array("warehouse_id" => $warehouse_id))->getRow();
             $view_data["warehouse_id"] = $warehouse_id;
-            $view_data["can_edit_items"] = $this->can_edit_items();
+            $view_data["can_edit_items"] = true; // $this->can_edit_items();
 
             return $this->template->rander("critical_spare_parts/view", $view_data);
         } else {
@@ -196,9 +202,9 @@ class Critical_spare_parts extends Security_Controller {
     }
 
     function ws_modal_form() {
-        if (!$this->can_edit_items()) {
-            app_redirect("forbidden");
-        }
+        // if (!$this->can_edit_items()) {
+        //     app_redirect("forbidden");
+        // }
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
@@ -215,9 +221,9 @@ class Critical_spare_parts extends Security_Controller {
     }
 
     function save_ws() {
-        if (!$this->can_edit_items()) {
-            app_redirect("forbidden");
-        }
+        // if (!$this->can_edit_items()) {
+        //     app_redirect("forbidden");
+        // }
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
@@ -281,9 +287,9 @@ class Critical_spare_parts extends Security_Controller {
     }
 
     function delete_ws() {
-        if (!$this->can_edit_items()) {
-            app_redirect("forbidden");
-        }
+        // if (!$this->can_edit_items()) {
+        //     app_redirect("forbidden");
+        // }
 
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
@@ -316,10 +322,10 @@ class Critical_spare_parts extends Security_Controller {
 
     private function _ws_make_row($data) {
         $actions = "";
-        if ($this->can_edit_items()) {
+        // if ($this->can_edit_items()) {
             $actions = modal_anchor(get_uri("critical_spare_parts/ws_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-warehouse_id" => $data->warehouse_id))
                     . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("critical_spare_parts/delete_ws"), "data-action" => "delete-confirmation"));
-        }
+        // }
 
         $icon = "";
         $quantity = $data->quantity;
