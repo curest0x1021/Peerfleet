@@ -136,6 +136,19 @@ class Cron_job {
 
         foreach ($ropes as $rope) {
             log_notification("rope_exchange_required", array("client_id" => $rope->client_id, "crane_id" => $rope->crane_id), "0");
+            // register todo
+            $client = $this->ci->Clients_model->get_one($rope->client_id);
+            $todo_data = array(
+                "title" => app_lang("minimum_item_reached"),
+                "description" => get_uri("cranes/view/" . $rope->crane_id),
+                "created_by" => $client->owner_id,
+                "created_at" => get_current_utc_time()
+            );
+            $this->ci->Todo_model->ci_save($todo_data, null);
+
+            $primary_contact_id = $this->ci->Clients_model->get_primary_contact($rope->client_id);
+            $todo_data["created_by"] = $primary_contact_id;
+            $this->ci->Todo_model->ci_save($todo_data, null);
         }
     }
 
