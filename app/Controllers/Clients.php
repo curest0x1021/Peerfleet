@@ -58,7 +58,7 @@ class Clients extends Security_Controller {
         }
 
         $client_id = $this->request->getPost('id');
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
         $this->validate_submitted_data(array(
             "id" => "numeric"
         ));
@@ -84,7 +84,7 @@ class Clients extends Security_Controller {
             app_redirect("forbidden");
         }
 
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         $this->access_only_allowed_members_or_client_contact($client_id);
 
@@ -173,7 +173,7 @@ class Clients extends Security_Controller {
         ));
 
         $id = $this->request->getPost('id');
-        $this->can_access_this_client($id);
+        $this->can_access_own_client($id);
 
         if ($this->Clients_model->delete_client_and_sub_items($id)) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
@@ -231,8 +231,12 @@ class Clients extends Security_Controller {
         $contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->primary_contact";
         $primary_contact = get_client_contact_profile_link($data->primary_contact_id, $contact);
 
+        $name = $data->charter_name;
+        if ($this->can_access_own_client($data->id)) {
+            $name = anchor(get_uri("clients/view/" . $data->id), $data->charter_name);
+        }
         $row_data = array($data->id,
-            anchor(get_uri("clients/view/" . $data->id), $data->charter_name),
+            $name,
             $data->primary_contact ? $primary_contact : "",
             $data->vessel_type,
             to_decimal_format($data->total_projects)
@@ -247,7 +251,7 @@ class Clients extends Security_Controller {
     /* load client details view */
     function view($client_id = 0, $tab = "") {
         $this->access_only_allowed_members();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         if ($client_id) {
             $options = array("id" => $client_id);
@@ -307,7 +311,7 @@ class Clients extends Security_Controller {
 
     function projects($client_id) {
         $this->access_only_allowed_members();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         $view_data['can_create_projects'] = $this->can_create_projects();
         $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("projects", $this->login_user->is_admin, $this->login_user->user_type);
@@ -321,7 +325,7 @@ class Clients extends Security_Controller {
 
     function tickets($client_id) {
         $this->access_only_allowed_members();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         if ($client_id) {
 
@@ -339,7 +343,7 @@ class Clients extends Security_Controller {
 
     function notes($client_id) {
         $this->access_only_allowed_members();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         if ($client_id) {
             $view_data['client_id'] = clean_data($client_id);
@@ -351,7 +355,7 @@ class Clients extends Security_Controller {
 
     function events($client_id) {
         $this->access_only_allowed_members();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         if ($client_id) {
             $view_data['client_id'] = clean_data($client_id);
@@ -365,7 +369,7 @@ class Clients extends Security_Controller {
 
     function files($client_id, $view_type = "") {
         $this->can_view_files();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         if ($this->login_user->user_type == "client") {
             $client_id = $this->login_user->client_id;
@@ -389,7 +393,7 @@ class Clients extends Security_Controller {
 
         $view_data['model_info'] = $this->General_files_model->get_one($this->request->getPost('id'));
         $client_id = $this->request->getPost('client_id') ? $this->request->getPost('client_id') : $view_data['model_info']->client_id;
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         $view_data['client_id'] = $client_id;
         return $this->template->view('clients/files/modal_form', $view_data);
@@ -406,7 +410,7 @@ class Clients extends Security_Controller {
         ));
 
         $client_id = $this->request->getPost('client_id');
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         $files = $this->request->getPost("files");
         $success = false;
@@ -449,7 +453,7 @@ class Clients extends Security_Controller {
 
     function files_list_data($client_id = 0) {
         $this->can_view_files();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         $options = array("client_id" => $client_id);
         $list_data = $this->General_files_model->get_details($options)->getResult();
@@ -507,7 +511,7 @@ class Clients extends Security_Controller {
                 app_redirect("forbidden");
             }
 
-            $this->can_access_this_client($file_info->client_id);
+            $this->can_access_own_client($file_info->client_id);
 
             $view_data['can_comment_on_files'] = false;
             $file_url = get_source_url_of_file(make_array_of_file($file_info), get_general_file_path("client", $file_info->client_id));
@@ -539,7 +543,7 @@ class Clients extends Security_Controller {
             app_redirect("forbidden");
         }
 
-        $this->can_access_this_client($file_info->client_id);
+        $this->can_access_own_client($file_info->client_id);
 
         //serilize the path
         $file_data = serialize(array(make_array_of_file($file_info)));
@@ -570,7 +574,7 @@ class Clients extends Security_Controller {
             app_redirect("forbidden");
         }
 
-        $this->can_access_this_client($info->client_id);
+        $this->can_access_own_client($info->client_id);
 
         if ($this->General_files_model->delete($id)) {
 
@@ -587,7 +591,7 @@ class Clients extends Security_Controller {
         $this->access_only_allowed_members_or_contact_personally($contact_id);
 
         $view_data['user_info'] = $this->Users_model->get_one($contact_id);
-        $this->can_access_this_client($view_data['user_info']->client_id);
+        $this->can_access_own_client($view_data['user_info']->client_id);
         $view_data['client_info'] = $this->Clients_model->get_one($view_data['user_info']->client_id);
         $view_data['tab'] = clean_data($tab);
         if ($view_data['user_info']->user_type === "client") {
@@ -606,7 +610,7 @@ class Clients extends Security_Controller {
         $this->access_only_allowed_members_or_contact_personally($contact_id);
         $view_data['user_info'] = $this->Users_model->get_one($contact_id);
         $view_data['can_edit_clients'] = $this->can_edit_clients();
-        $this->can_access_this_client($view_data['user_info']->client_id);
+        $this->can_access_own_client($view_data['user_info']->client_id);
         return $this->template->view("users/account_settings", $view_data);
     }
 
@@ -681,7 +685,7 @@ class Clients extends Security_Controller {
 
     function contacts($client_id = 0) {
         $this->access_only_allowed_members();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         if ($client_id) {
             $view_data["client_id"] = clean_data($client_id);
@@ -711,7 +715,7 @@ class Clients extends Security_Controller {
 
         $view_data['add_type'] = $this->request->getPost('add_type');
 
-        $this->can_access_this_client($view_data['model_info']->client_id);
+        $this->can_access_own_client($view_data['model_info']->client_id);
 
         return $this->template->view('clients/contacts/modal_form', $view_data);
     }
@@ -723,7 +727,7 @@ class Clients extends Security_Controller {
             $this->access_only_allowed_members_or_contact_personally($contact_id);
 
             $view_data['model_info'] = $this->Users_model->get_one($contact_id);
-            $this->can_access_this_client($view_data['model_info']->client_id);
+            $this->can_access_own_client($view_data['model_info']->client_id);
             $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("client_contacts", $contact_id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
             $view_data['label_column'] = "col-md-2";
@@ -738,7 +742,7 @@ class Clients extends Security_Controller {
     function company_info_tab($client_id = 0) {
         if ($client_id) {
             $this->access_only_allowed_members_or_client_contact($client_id);
-            $this->can_access_this_client($client_id);
+            $this->can_access_own_client($client_id);
 
             $view_data['model_info'] = $this->Clients_model->get_one($client_id);
 
@@ -760,7 +764,7 @@ class Clients extends Security_Controller {
             $this->access_only_allowed_members_or_contact_personally($contact_id);
 
             $contact_info = $this->Users_model->get_one($contact_id);
-            $this->can_access_this_client($contact_info->client_id);
+            $this->can_access_own_client($contact_info->client_id);
 
             $view_data['user_id'] = clean_data($contact_id);
             $view_data['user_type'] = "client";
@@ -775,7 +779,7 @@ class Clients extends Security_Controller {
     function save_contact() {
         $contact_id = $this->request->getPost('contact_id');
         $client_id = $this->request->getPost('client_id');
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
         if (!$this->can_edit_clients()) {
             app_redirect("forbidden");
         }
@@ -879,7 +883,7 @@ class Clients extends Security_Controller {
         $this->access_only_allowed_members_or_contact_personally($contact_id);
 
         $contact_info = $this->Users_model->get_one($contact_id);
-        $this->can_access_this_client($contact_info->client_id);
+        $this->can_access_own_client($contact_info->client_id);
 
         $id = 0;
 
@@ -919,7 +923,7 @@ class Clients extends Security_Controller {
         $this->access_only_allowed_members_or_contact_personally($user_id);
 
         $contact_info = $this->Users_model->get_one($user_id);
-        $this->can_access_this_client($contact_info->client_id);
+        $this->can_access_own_client($contact_info->client_id);
 
         $this->validate_submitted_data(array(
             "email" => "required|valid_email"
@@ -985,7 +989,7 @@ class Clients extends Security_Controller {
 
         $this->access_only_allowed_members_or_contact_personally($user_id);
         $user_info = $this->Users_model->get_one($user_id);
-        $this->can_access_this_client($user_info->client_id);
+        $this->can_access_own_client($user_info->client_id);
 
         //process the the file which has uploaded by dropzone
         $profile_image = str_replace("~", ":", $this->request->getPost("profile_image"));
@@ -1039,7 +1043,7 @@ class Clients extends Security_Controller {
         $id = $this->request->getPost('id');
 
         $contact_info = $this->Users_model->get_one($id);
-        $this->can_access_this_client($contact_info->client_id);
+        $this->can_access_own_client($contact_info->client_id);
 
         if ($this->request->getPost('undo')) {
             if ($this->Users_model->delete($id, true)) {
@@ -1061,7 +1065,7 @@ class Clients extends Security_Controller {
     function contacts_list_data($client_id = 0) {
 
         $this->access_only_allowed_members_or_client_contact($client_id);
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         $options = array(
             "user_type" => "client",
@@ -1164,7 +1168,7 @@ class Clients extends Security_Controller {
         ));
 
         $client_id = $this->request->getPost('client_id');
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         $this->access_only_allowed_members_or_client_contact($client_id);
 
@@ -1183,7 +1187,7 @@ class Clients extends Security_Controller {
         }
 
         $client_id = $this->request->getPost('client_id');
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         $email = trim($this->request->getPost('email'));
 
@@ -1836,7 +1840,7 @@ class Clients extends Security_Controller {
     //load the sea valves view
     function sea_valves($client_id) {
         $this->access_only_allowed_members();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         if ($client_id) {
             $view_data['client_id'] = clean_data($client_id);
@@ -1846,15 +1850,15 @@ class Clients extends Security_Controller {
 
     function sea_valve_modal_form() {
         $this->access_only_allowed_members();
-        if (!$this->can_edit_clients()) {
-            app_redirect("forbidden");
-        }
+        // if (!$this->can_edit_clients()) {
+        //     app_redirect("forbidden");
+        // }
 
         $view_data['label_column'] = "col-md-3";
         $view_data['field_column'] = "col-md-9";
         $view_data["model_info"] = $this->Sea_valves_model->get_one($this->request->getPost('id'));
         $client_id = $this->request->getPost('client_id') ? $this->request->getPost('client_id') : $view_data['model_info']->client_id;
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         $view_data['client_id'] = $client_id;
 
@@ -1862,9 +1866,9 @@ class Clients extends Security_Controller {
     }
 
     function save_sea_valve() {
-        if (!$this->can_edit_clients()) {
-            app_redirect("forbidden");
-        }
+        // if (!$this->can_edit_clients()) {
+        //     app_redirect("forbidden");
+        // }
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "name" => "required",
@@ -1879,7 +1883,7 @@ class Clients extends Security_Controller {
         $id = $this->request->getPost("id");
 
         $client_id = $this->request->getPost('client_id');
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         $data = array(
             "name" => $this->request->getPost("name"),
@@ -1902,9 +1906,9 @@ class Clients extends Security_Controller {
     }
 
     function delete_sea_valve() {
-        if (!$this->can_edit_clients()) {
-            app_redirect("forbidden");
-        }
+        // if (!$this->can_edit_clients()) {
+        //     app_redirect("forbidden");
+        // }
 
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
@@ -1915,20 +1919,12 @@ class Clients extends Security_Controller {
         $id = $this->request->getPost('id');
 
         $sea_valve_info = $this->Sea_valves_model->get_one($id);
-        $this->can_access_this_client($sea_valve_info->client_id);
+        $this->can_access_own_client($sea_valve_info->client_id);
 
-        if ($this->request->getPost('undo')) {
-            if ($this->Sea_valves_model->delete($id, true)) {
-                echo json_encode(array("success" => true, "data" => $this->_row_sea_valve_data($id), "message" => app_lang('record_undone')));
-            } else {
-                echo json_encode(array("success" => false, app_lang('error_occurred')));
-            }
+        if ($this->Sea_valves_model->delete($id)) {
+            echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
         } else {
-            if ($this->Sea_valves_model->delete($id)) {
-                echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
-            } else {
-                echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
-            }
+            echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
         }
     }
 
@@ -1969,7 +1965,7 @@ class Clients extends Security_Controller {
     //load the warehouses view
     function warehouses($client_id) {
         $this->access_only_allowed_members();
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         if ($client_id) {
             $view_data['client_id'] = clean_data($client_id);
@@ -1978,16 +1974,11 @@ class Clients extends Security_Controller {
     }
 
     function warehouse_modal_form() {
-        $this->access_only_allowed_members();
-        if (!$this->can_edit_clients()) {
-            app_redirect("forbidden");
-        }
-
         $view_data['label_column'] = "col-md-3";
         $view_data['field_column'] = "col-md-9";
         $view_data["model_info"] = $this->Warehouses_model->get_one($this->request->getPost('id'));
         $client_id = $this->request->getPost('client_id') ? $this->request->getPost('client_id') : $view_data['model_info']->client_id;
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         $view_data['client_id'] = $client_id;
 
@@ -1995,9 +1986,6 @@ class Clients extends Security_Controller {
     }
 
     function save_warehouse() {
-        if (!$this->can_edit_clients()) {
-            app_redirect("forbidden");
-        }
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "code" => "required|max_length[30]",
@@ -2007,7 +1995,7 @@ class Clients extends Security_Controller {
         $id = $this->request->getPost("id");
 
         $client_id = $this->request->getPost('client_id');
-        $this->can_access_this_client($client_id);
+        $this->can_access_own_client($client_id);
 
         $data = array(
             "code" => $this->request->getPost("code"),
@@ -2025,20 +2013,14 @@ class Clients extends Security_Controller {
     }
 
     function delete_warehouse() {
-        if (!$this->can_edit_clients()) {
-            app_redirect("forbidden");
-        }
-
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
         ));
 
-        $this->access_only_allowed_members();
-
         $id = $this->request->getPost('id');
 
         $warehouse_info = $this->Warehouses_model->get_one($id);
-        $this->can_access_this_client($warehouse_info->client_id);
+        $this->can_access_own_client($warehouse_info->client_id);
 
         if ($this->Warehouses_model->delete($id)) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
