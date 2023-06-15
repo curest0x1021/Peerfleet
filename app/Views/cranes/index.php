@@ -17,8 +17,11 @@
         $(selector).appTable({
             source: '<?php echo_uri("cranes/list_data") ?>',
             columns: [{
-                    title: "<?php echo app_lang("id") ?>",
-                    "class": "text-center w50 all"
+                    visible: false, searchable: false
+                },
+                {
+                    title: "",
+                    "class": "text-center w25"
                 },
                 {
                     title: "<?php echo app_lang("vessel") ?>",
@@ -26,19 +29,23 @@
                 },
                 {
                     title: "<?php echo app_lang("cranes") ?>",
-                    "class": "text-center w100"
+                    "class": "text-center w15p"
                 },
                 {
                     title: "<?php echo app_lang("ropes") ?>",
-                    "class": "text-center w100"
+                    "class": "text-center w15p"
+                },
+                {
+                    title: "<?php echo app_lang("required_exchange_ropes") ?>",
+                    "class": "text-center w15p"
                 },
                 {
                     title: '<i data-feather="menu" class="icon-16"></i>',
                     "class": "text-center option w100",
                 }
             ],
-            printColumns: [0, 1],
-            xlsColumns: [0, 1]
+            printColumns: [2, 3, 4, 5],
+            xlsColumns: [2, 3, 4, 5]
         });
     };
     $(document).ready(function() {

@@ -201,11 +201,20 @@ class Cranes extends Security_Controller {
             }
         }
 
+        $icon = "";
+        $required_exchanges = $data->required_exchanges;
+        if ($required_exchanges > 0) {
+            $icon = '<div style="width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+            $required_exchanges = '<span style="color: #d50000">' . $required_exchanges . '</span>';
+        }
+
         return array(
             $data->client_id,
+            $icon,
             $name,
             $data->cranes,
             $data->ropes,
+            $required_exchanges,
             $action
         );
     }
@@ -394,9 +403,13 @@ class Cranes extends Security_Controller {
 
     private function _history_make_row($data) {
         $action = modal_anchor(get_uri("cranes/history_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('add_history') . " - " . $data->name, "data-post-rope_id" => $data->rope_id, "data-post-client_id" => $data->client_id));
-
+        $icon = "";
+        if ($data->required_exchanges) {
+            $icon = '<div style="width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+        }
         return array(
             $data->rope_id,
+            $icon,
             $data->name,
             $data->initial,
             $data->first,

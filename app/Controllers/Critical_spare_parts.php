@@ -254,7 +254,10 @@ class Critical_spare_parts extends Security_Controller {
         if ($save_id) {
             if ($data["quantity"] <= $data["min_stocks"]) {
                 // TODO: notification, add todo (private)
-
+                $warehouse_info = $this->Warehouses_model->get_one($data["warehouse_id"]);
+                $notification_option = array("client_id" => $warehouse_info->client_id, "warehouse_id" => $data["warehouse_id"], "warehouse_spare_id" => $save_id);
+                log_notification("csp_minimum_reached", $notification_option, "0");
+                
                 echo json_encode(array("success" => true, "min_stock_reached" => true, "data" => $this->_ws_row_data($save_id), 'id' => $save_id, 'message' => app_lang('minimum_item_reached')));
             } else {
                 echo json_encode(array("success" => true, "min_stock_reached" => false, "data" => $this->_ws_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));

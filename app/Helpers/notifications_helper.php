@@ -228,8 +228,8 @@ if (!function_exists('get_notification_config')) {
 
         $crane_link = function ($options) {
             $url = "";
-            if (isset($options->crane_id)) {
-                $url = get_uri("cranes/view/" . $options->crane_id);
+            if (isset($options->client_id)) {
+                $url = get_uri("cranes/view/" . $options->client_id);
             }
 
             return array("url" => $url);
@@ -497,11 +497,11 @@ if (!function_exists('get_notification_config')) {
                 "info" => $subscription_link
             ),
             "csp_minimum_reached" => array(
-                "notify_to" => array("client_primary_contact", "responsible_owner"),
+                "notify_to" => array("vessel_contact", "responsible_owner"),
                 "info" => $csp_link
             ),
             "rope_exchange_required" => array(
-                "notify_to" => array("responsible_owner"),
+                "notify_to" => array("vessel_contact", "responsible_owner"),
                 "info" => $crane_link
             )
         );
@@ -814,6 +814,27 @@ if (!function_exists('send_notification_emails')) {
             $parser_data["ANNOUNCEMENT_CONTENT"] = $notification->announcement_content;
             $parser_data["USER_NAME"] = $notification->user_name;
             $parser_data["ANNOUNCEMENT_URL"] = $url;
+        } else if ($notification->event == "csp_minimum_reached") {
+            $template_name = "csp_minimum_reached";
+
+            $warehouse_info = $ci->Warehouse_spare_model->get_warehouses(array("warehouse_id" => $notification->warehouse_id))->getRow();
+            $ws_info = $ci->Warehouse_spare_model->get_details(array("id" => $notification->warehouse_spare_id))->getRow();
+
+            $parser_data["VESSEL_TITLE"] = $warehouse_info->vessel;
+            $parser_data["WAREHOUSE_TITLE"] = $warehouse_info->code . ' - ' . $warehouse_info->name;
+            $parser_data["ITEM_TITLE"] = $ws_info->name;
+            $parser_data["QUANTITY"] = $ws_info->quantity;
+            $parser_data["MIN_STOCKS"] = $ws_info->min_stocks;
+            $parser_data["WAREHOUSE_URL"] = $url;
+        } else if ($notification->event == "rope_exchange_required") {
+            $template_name = "rope_exchange_required";
+
+            $crane_info = $ci->Cranes_history_model->get_crane_history($notification->crane_id);
+            $parser_data["VESSEL_TITLE"] = $crane_info->vessel;
+            $parser_data["CRANE_TITLE"] = $crane_info->name;
+            $parser_data["DUE_DATE"] = $crane_info->due_date;
+            $parser_data["LAST_REPLACEMENT"] = $crane_info->last_replacement;
+            $parser_data["CRANE_URL"] = $url;
         } else {
             $template_name = "general_notification";
 

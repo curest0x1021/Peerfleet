@@ -34,7 +34,7 @@
             source: '<?php echo_uri("critical_spare_parts/ws_list_data/" . $warehouse_id) ?>',
             columns: [
                 {visible: false, searchable: false},
-                {title: "", "class": "text-center w30"},
+                {title: "", "class": "text-center w25"},
                 {title: "<?php echo app_lang("item") ?>", class: "w150"},
                 {title: "<?php echo app_lang("quantity") ?>", "class": "text-center w100"},
                 {title: "<?php echo app_lang("min_stocks") ?>", "class": "text-center w100"},
