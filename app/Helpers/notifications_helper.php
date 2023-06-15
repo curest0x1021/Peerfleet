@@ -217,6 +217,24 @@ if (!function_exists('get_notification_config')) {
             return array("url" => $url);
         };
 
+        $csp_link = function ($options) {
+            $url = "";
+            if (isset($options->warehouse_id)) {
+                $url = get_uri("critical_spare_parts/view/" . $options->warehouse_id);
+            }
+
+            return array("url" => $url);
+        };
+
+        $crane_link = function ($options) {
+            $url = "";
+            if (isset($options->crane_id)) {
+                $url = get_uri("cranes/view/" . $options->crane_id);
+            }
+
+            return array("url" => $url);
+        };
+
         $events = array(
             "project_created" => array(
                 "notify_to" => array("client_primary_contact", "client_all_contacts", "team_members", "team"),
@@ -477,6 +495,14 @@ if (!function_exists('get_notification_config')) {
             "subscription_request_sent" => array(
                 "notify_to" => array("client_primary_contact", "client_all_contacts", "team_members", "team"),
                 "info" => $subscription_link
+            ),
+            "csp_minimum_reached" => array(
+                "notify_to" => array("client_primary_contact", "responsible_owner"),
+                "info" => $csp_link
+            ),
+            "rope_exchange_required" => array(
+                "notify_to" => array("responsible_owner"),
+                "info" => $crane_link
             )
         );
 

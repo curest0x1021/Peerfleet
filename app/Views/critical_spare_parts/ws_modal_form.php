@@ -94,7 +94,11 @@
         console.log(spareParts);
         $("#ws-form").appForm({
             onSuccess: function(result) {
-                appAlert.success(result.message, {duration: 10000});
+                if (result.min_stock_reached) {
+                    appAlert.error(result.message, {duration: 10000});
+                } else {
+                    appAlert.success(result.message, {duration: 10000});
+                }
                 $("#ws-table").appTable({newData: result.data, dataId: result.id});
             }
         });
