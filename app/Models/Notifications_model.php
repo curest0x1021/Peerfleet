@@ -906,7 +906,7 @@ class Notifications_model extends Crud_model {
                  $estimate_comments_table.description AS estimate_comment_description,
                  $activity_logs_table.changes AS activity_log_changes, $activity_logs_table.log_type AS activity_log_type,
                  $leave_applications_table.start_date AS leave_start_date, $leave_applications_table.end_date AS leave_end_date,
-                 $invoice_payments_table.invoice_id AS payment_invoice_id, $invoice_payments_table.amount AS payment_amount, (SELECT currency_symbol FROM $clients_table WHERE $clients_table.id=$invoices_table.client_id) AS client_currency_symbol,
+                 $invoice_payments_table.invoice_id AS payment_invoice_id, $invoice_payments_table.amount AS payment_amount,
                  (SELECT CONCAT($users_table.first_name, ' ', $users_table.last_name) FROM $users_table WHERE $users_table.id=$notifications_table.to_user_id) AS to_user_name,
                  FIND_IN_SET($user_id, $notifications_table.read_by) as is_read    
         FROM $notifications_table

@@ -26,10 +26,11 @@ class Warehouse_spare_model extends Crud_model {
             $where .= " AND $warehouse_table.client_id = $client_id";
         }
 
-        $sql = "SELECT $warehouse_table.*, $clients_table.charter_name as vessel, a.total_items, a.total_quantities
+        $sql = "SELECT $warehouse_table.*, $clients_table.charter_name as vessel, a.total_items, a.total_quantities, b.min_stock_items
                 FROM $warehouse_table
                 LEFT JOIN $clients_table ON $clients_table.id = $warehouse_table.client_id
                 LEFT JOIN (SELECT warehouse_id, COUNT(id) as total_items, SUM(quantity) as total_quantities FROM $spare_table GROUP BY warehouse_id) a ON a.warehouse_id = $warehouse_table.id
+                LEFT JOIN (SELECT warehouse_id, COUNT(id) as min_stock_items FROM $spare_table WHERE quantity <= min_stocks GROUP BY warehouse_id) b ON b.warehouse_id = $warehouse_table.id
                 WHERE $warehouse_table.deleted = 0 $where";
 
         return $this->db->query($sql);
@@ -75,6 +76,26 @@ class Warehouse_spare_model extends Crud_model {
         } else {
             return false;
         }
+    }
+
+    function get_minimum_reached_items() {
+        $ws_table = $this->db->prefixTable("warehouse_spare");
+        $warehouse_table = $this->db->prefixTable("warehouses");
+        $spare_table = $this->db->prefixTable("critical_spare_parts");
+        $clients_table = $this->db->prefixTable("clients");
+        $users_table = $this->db->prefixTable("users");
+
+        $sql = "SELECT $ws_table.*, $spare_table.name as item_name, wt.*
+            FROM $ws_table
+            JOIN (
+                SELECT $clients_table.id as vessel_id, $clients_table.charter_name as vessel, CONCAT($warehouse_table.code, ' - ' ,$warehouse_table.name) as warehouse_name, a.email as tsi_email, b.email as primary_email, CONCAT(b.first_name, ' ', b.last_name) AS primary_contact
+                FROM $clients_table
+                LEFT JOIN $users_table a ON a.id = $clients_table.owner_id
+                LEFT JOIN $users_table b ON b.client_id = $clients_table.id
+                RIGHT JOIN $warehouse_table ON $clients_table.id = $warehouse_table.client_id
+            ) wt ON wt.warehouse_id = $ws_table.warehouse_id
+            JOIN $spare_table ON $spare_table.id = $ws_table.spare_id
+            WHERE $ws_table.deleted = 0 AND $ws_table.quantity <= $ws_table.min_stocks";
     }
 
 }

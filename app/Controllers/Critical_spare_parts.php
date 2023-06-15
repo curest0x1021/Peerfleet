@@ -164,14 +164,21 @@ class Critical_spare_parts extends Security_Controller {
     }
 
     private function _warehouses_make_row($data) {
+        $icon = "";
+        $min_stock_items = $data->min_stock_items;
+        if ($min_stock_items > 0) {
+            $icon = '<div style="width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+            $min_stock_items = '<span style="color: #d50000">' . $min_stock_items . '</span>';
+        }
         return array(
             $data->id,
+            $icon,
             $data->code,
             anchor(get_uri("critical_spare_parts/view/" . $data->id), $data->name),
             anchor(get_uri("clients/view/" . $data->client_id), $data->vessel),
             $data->total_items,
             $data->total_quantities,
-            ""
+            $min_stock_items
         );
     }
 
@@ -245,7 +252,13 @@ class Critical_spare_parts extends Security_Controller {
 
         $save_id = $this->Warehouse_spare_model->ci_save($data, $id);
         if ($save_id) {
-            echo json_encode(array("success" => true, "data" => $this->_ws_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+            if ($data["quantity"] <= $data["min_stocks"]) {
+                // TODO: notification, add todo (private)
+
+                echo json_encode(array("success" => true, "min_stock_reached" => true, "data" => $this->_ws_row_data($save_id), 'id' => $save_id, 'message' => app_lang('minimum_item_reached')));
+            } else {
+                echo json_encode(array("success" => true, "min_stock_reached" => false, "data" => $this->_ws_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+            }
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
@@ -292,10 +305,18 @@ class Critical_spare_parts extends Security_Controller {
                     . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("critical_spare_parts/delete_ws"), "data-action" => "delete-confirmation"));
         }
 
+        $icon = "";
+        $quantity = $data->quantity;
+        if ($data->quantity <= $data->min_stocks) {
+            $icon = '<div style="width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+            $quantity = '<span style="color: #d50000">' . $quantity . '</span>';
+        }
+
         return array(
             $data->id,
+            $icon,
             $data->name,
-            $data->quantity,
+            $quantity,
             $data->min_stocks,
             $data->max_stocks,
             $data->manufacturer,
