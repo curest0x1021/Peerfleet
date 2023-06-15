@@ -15,17 +15,18 @@
             order: [[0, "asc"]],
             columns: [
                 {visible: false, searchable: false},
-                {title: '<?php echo app_lang("name") ?>'},
-                {title: '<?php echo app_lang("initial") ?>'},
-                {title: '<?php echo app_lang("1st_replacement") ?>'},
-                {title: '<?php echo app_lang("2nd_replacement") ?>'},
-                {title: '<?php echo app_lang("3rd_replacement") ?>'},
-                {title: '<?php echo app_lang("4th_replacement") ?>'},
-                {title: '<?php echo app_lang("5th_replacement") ?>'},
+                {title: "", class: "text-center, w25"},
+                {title: '<?php echo app_lang("name") ?>', class: "all"},
+                {title: '<?php echo app_lang("initial") ?>', class: "text-center w10"},
+                {title: '<?php echo app_lang("1st_replacement") ?>', class: "text-center w10"},
+                {title: '<?php echo app_lang("2nd_replacement") ?>', class: "text-center w10"},
+                {title: '<?php echo app_lang("3rd_replacement") ?>', class: "text-center w10"},
+                {title: '<?php echo app_lang("4th_replacement") ?>', class: "text-center w10"},
+                {title: '<?php echo app_lang("5th_replacement") ?>', class: "text-center w10"},
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
-            printColumns: [1, 2, 3, 4, 5, 6, 7],
-            xlsColumns: [1, 2, 3, 4, 5, 6, 7]
+            printColumns: [2, 3, 4, 5, 6, 7, 8],
+            xlsColumns: [2, 3, 4, 5, 6, 7, 8]
         });
     });
 </script>

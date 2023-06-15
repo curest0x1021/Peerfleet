@@ -19,13 +19,13 @@
             order: [[2, "asc"]],
             columns: [
                 {visible: false, searchable: false},
-                {title: "", "class": "text-center w30"},
+                {title: "", "class": "text-center w25"},
                 {title: '<?php echo app_lang("code") ?>', class: "text-center w100"},
-                {title: '<?php echo app_lang("warehouse") ?>', class: "all"},
-                {title: '<?php echo app_lang("vessel") ?>', class: "w200"},
-                {title: '<?php echo app_lang("total_items") ?>', class:"text-center w100"},
-                {title: '<?php echo app_lang("total_quantities") ?>', class:"text-center w100"},
-                {title: '<?php echo app_lang("min_stock_items") ?>', class:"text-center w100"}
+                {title: '<?php echo app_lang("name") ?>', class: "all"},
+                {title: '<?php echo app_lang("vessel") ?>', class: "w20p"},
+                {title: '<?php echo app_lang("total_items") ?>', class:"text-center w15p"},
+                {title: '<?php echo app_lang("total_quantities") ?>', class:"text-center w15p"},
+                {title: '<?php echo app_lang("min_stock_items") ?>', class:"text-center w15p"}
             ],
             printColumns: [1, 2, 3, 4],
             xlsColumns: [1, 2, 3, 4]

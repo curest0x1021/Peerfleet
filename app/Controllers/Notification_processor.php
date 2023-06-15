@@ -74,7 +74,10 @@ class Notification_processor extends App_Controller {
             "lead_id" => get_array_value($data, "lead_id"),
             "proposal_id" => get_array_value($data, "proposal_id"),
             "estimate_comment_id" => get_array_value($data, "estimate_comment_id"),
-            "subscription_id" => get_array_value($data, "subscription_id")
+            "subscription_id" => get_array_value($data, "subscription_id"),
+            "warehouse_id" => get_array_value($data, "warehouse_id"),
+            "warehouse_spare_id" => get_array_value($data, "warehouse_spare_id"),
+            "crane_id" => get_array_value($data, "crane_id")
         );
 
         //get data from plugin by persing 'plugin_'

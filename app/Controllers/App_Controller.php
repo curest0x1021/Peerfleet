@@ -80,6 +80,8 @@ class App_Controller extends Controller {
     public $Proposal_items_model;
     public $Checklist_template_model;
     public $Checklist_groups_model;
+    public $Subscriptions_model;
+    public $Subscription_items_model;
     public $Sea_valves_model;
     public $Cranes_model;
     public $Cranes_info_model;

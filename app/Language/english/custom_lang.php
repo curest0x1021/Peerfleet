@@ -29,6 +29,7 @@ $lang["sister"] = "Sister";
 $lang["flag_state"] = "Flag state";
 $lang["port_of_registry"] = "Port of registry";
 $lang["responsible_owner"] = "Responsible owner";
+$lang["vessel_contact"] = "Vessel contact";
 $lang["account_already_exists_for_your_charter_name"] = "Account already exists for your charter name.";
 $lang["vessel_info"] = "Vessel info";
 $lang["mobile"] = "Mobile";
@@ -56,6 +57,7 @@ $lang["edit_crane"] = "Edit crane";
 $lang["delete_crane"] = "Delete crane";
 $lang["ropes"] = "Ropes";
 $lang["rope"] = "Rope";
+$lang["required_exchange_ropes"] = "Required exchange ropes";
 $lang["gangway"] = "Gangway";
 $lang["provision"] = "Provision";
 $lang["swl"] = "SWL";
@@ -146,5 +148,7 @@ $lang["manage_categories"] = "Manage categories";
 
 $lang["csp_minimum_reached"] = "Minimum of critical spare parts reached";
 $lang["rope_exchange_required"] = "Rope exchange required";
+$lang["notification_rope_exchange_required"] = "Rope exchange required";
+$lang["notification_csp_minimum_reached"] = "Minimum of critical spare parts reached";
 
 return $lang;

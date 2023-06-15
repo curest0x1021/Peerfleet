@@ -72,6 +72,12 @@ class Email_templates extends Security_Controller {
             "announcement" => array(
                 "announcement_created" => array("ANNOUNCEMENT_TITLE", "ANNOUNCEMENT_CONTENT", "USER_NAME", "APP_TITLE", "LOGO_URL", "SIGNATURE", "RECIPIENTS_EMAIL_ADDRESS"),
             ),
+            "critical_spare_parts" => array(
+                "csp_minimum_reached" => array("VESSEL_TITLE", "WAREHOUSE_TITLE", "ITEM_TITLE", "QUANTITY", "MIN_STOCKS", "WAREHOUSE_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS")
+            ),
+            "cranes" => array(
+                "rope_exchange_required" => array("VESSEL_TITLE", "CRANE_TITLE", "LAST_REPLACEMENT", "DUE_DATE", "CRANE_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS")
+            ),
             "common" => array(
                 "general_notification" => array("EVENT_TITLE", "EVENT_DETAILS", "APP_TITLE", "COMPANY_NAME", "NOTIFICATION_URL", "LOGO_URL", "SIGNATURE", "TO_USER_NAME", "RECIPIENTS_EMAIL_ADDRESS"),
                 "signature" => array()

@@ -19,6 +19,7 @@ class Cron_job {
         $this->current_time = strtotime(get_current_utc_time());
 
         $this->call_hourly_jobs();
+        $this->call_daily_jobs();
 
         try {
             $this->run_imap();
@@ -109,6 +110,32 @@ class Cron_job {
         $last_hourly_job_time = get_setting('last_hourly_job_time');
         if ($last_hourly_job_time == "" || ($this->current_time > ($last_hourly_job_time * 1 + 3600))) {
             return true;
+        }
+    }
+
+    private function call_daily_jobs() {
+        // wait 1 day for each call of following actions
+        if ($this->_is_daily_job_runnable()) {
+            try {
+                $this->ropes_exchange_due_reminder();
+            } catch (\Exception $e) {
+                echo $e;
+            }
+        }
+    }
+
+    private function _is_daily_job_runnable() {
+        $last_dayly_job_time = get_setting('last_dayly_job_time');
+        if ($last_dayly_job_time == "" || ($this->current_time > ($last_dayly_job_time * 1 + 86400))) {
+            return true;
+        }
+    }
+
+    private function ropes_exchange_due_reminder() {
+        $ropes = $this->ci->Cranes_history_model->get_required_exchange_ropes();
+
+        foreach ($ropes as $rope) {
+            log_notification("rope_exchange_required", array("client_id" => $rope->client_id, "crane_id" => $rope->crane_id), "0");
         }
     }
 
