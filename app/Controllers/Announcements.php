@@ -29,20 +29,20 @@ class Announcements extends Security_Controller {
 
         $view_data['model_info'] = $this->Announcements_model->get_one($id);
         $view_data['share_with'] = $id ? explode(",", $view_data['model_info']->share_with) : array("all_members");
-        $view_data['groups_dropdown'] = json_encode($this->_get_client_groups_dropdown_select2_data());
+        // $view_data['groups_dropdown'] = json_encode($this->_get_client_groups_dropdown_select2_data());
         return $this->template->rander('announcements/modal_form', $view_data);
     }
 
-    private function _get_client_groups_dropdown_select2_data() {
-        $client_groups = $this->Client_groups_model->get_all()->getResult();
-        $groups_dropdown = array();
+    // private function _get_client_groups_dropdown_select2_data() {
+    //     $client_groups = $this->Client_groups_model->get_all()->getResult();
+    //     $groups_dropdown = array();
 
-        foreach ($client_groups as $group) {
-            $groups_dropdown[] = array("id" => "cg:" . $group->id, "text" => $group->title);
-        }
+    //     foreach ($client_groups as $group) {
+    //         $groups_dropdown[] = array("id" => "cg:" . $group->id, "text" => $group->title);
+    //     }
 
-        return $groups_dropdown;
-    }
+    //     return $groups_dropdown;
+    // }
 
     //show a specific announcement
     function view($id = "") {
