@@ -48,10 +48,10 @@ class Events extends Security_Controller {
         $view_data['client_id'] = $this->request->getPost('client_id');
 
         //don't show clients dropdown for lead's estimate editing
-        $client_info = $this->Clients_model->get_one($model_info->client_id);
-        if ($client_info->is_lead) {
-            $view_data['client_id'] = $client_info->id;
-        }
+        // $client_info = $this->Clients_model->get_one($model_info->client_id);
+        // if ($client_info->is_lead) {
+        //     $view_data['client_id'] = $client_info->id;
+        // }
 
         $view_data['model_info'] = $model_info;
         $view_data['members_and_teams_dropdown'] = json_encode(get_team_members_and_teams_select2_data_list(true));

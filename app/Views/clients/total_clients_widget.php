@@ -1,15 +1,15 @@
 <div class="card bg-white">
     <div class="card-header d-flex justify-content-between align-items-center">
         <span><i data-feather="anchor" class="icon-16"></i> &nbsp;<?php echo app_lang('fleet_overview'); ?></span>
-        <span style="font-size: 12px; font-weight: 400;"><?php echo app_lang("total_vessels"); ?>: <b><?php echo $total; ?></b></span>
+        <div class="d-flex align-items-center">
+            <span style="font-size: 12px; font-weight: 400; margin-right: 16px;"><?php echo app_lang("total_vessels"); ?>: <b><?php echo $total; ?></b></span>
+            <button id="show_fleet" class="btn btn-primary"><?php echo app_lang('show_fleet'); ?></button>
+        </div>
     </div>
     <div class="card-body">
         <div class="table-responsive" id="total-clients-widget-table">
             <table id="client-table" class="display" cellspacing="0" width="100%">
             </table>
-        </div>
-        <div class="d-flex justify-content-center">
-            <button id="show_fleet" class="btn btn-primary"><?php echo app_lang('show_fleet'); ?></button>
         </div>
     </div>
 </div>
@@ -18,7 +18,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         initScrollbar('#total-clients-widget-table', {
-            setHeight: 330
+            setHeight: 285
         });
 
         $("#client-table").appTable({
