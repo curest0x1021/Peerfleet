@@ -20,7 +20,7 @@
                 {visible: false, searchable: false},
                 {title: '<?php echo app_lang("code") ?>'},
                 {title: '<?php echo app_lang("name") ?>'},
-                {title: '<?php echo app_lang("address") ?>'},
+                {title: '<?php echo app_lang("location") ?>'},
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
             printColumns: [1, 2, 3],
