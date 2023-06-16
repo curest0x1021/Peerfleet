@@ -387,7 +387,7 @@ class Notifications_model extends Crud_model {
         }
 
         // find responsible owner
-        if (in_array("responsible_owner", $notify_to_terms)) {
+        if (in_array("responsible_person", $notify_to_terms)) {
             if ($client_id) {
                 $where .= " OR ($users_table.id=(SELECT $clients_table.owner_id FROM $clients_table WHERE $clients_table.id=$client_id)) ";
             // } else if ($warehouse_id) {

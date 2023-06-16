@@ -49,8 +49,8 @@
                     order_by: "charter_name"
                 },
                 {
-                    title: "<?php echo app_lang("primary_contact") ?>",
-                    order_by: "primary_contact"
+                    title: "<?php echo app_lang("responsible_person") ?>",
+                    order_by: "responsible_person"
                 },
                 {
                     title: "<?php echo app_lang("vessel_types") ?>",
