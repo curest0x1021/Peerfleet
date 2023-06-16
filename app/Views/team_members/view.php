@@ -66,13 +66,6 @@
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/attendance_info/" . $user_info->id); ?>" data-bs-target="#tab-attendance-info"> <?php echo app_lang('attendance'); ?></a></li>
         <?php } ?>
 
-        <?php if ($show_leave) { ?>
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/leave_info/" . $user_info->id); ?>" data-bs-target="#tab-leave-info"><?php echo app_lang('leaves'); ?></a></li>
-        <?php } ?>
-        <?php if ($show_expense_info) { ?>
-            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/expense_info/" . $user_info->id); ?>" data-bs-target="#tab-expense-info"><?php echo app_lang('expenses'); ?></a></li>
-        <?php } ?>
-
         <?php
         $hook_tabs = array();
         $hook_tabs = app_hooks()->apply_filters('app_filter_staff_profile_ajax_tab', $hook_tabs, $user_info->id);
@@ -99,8 +92,6 @@
         <div role="tabpanel" class="tab-pane fade" id="tab-user-left-menu"></div>
         <div role="tabpanel" class="tab-pane fade" id="tab-projects-info"></div>
         <div role="tabpanel" class="tab-pane fade" id="tab-attendance-info"></div>
-        <div role="tabpanel" class="tab-pane fade" id="tab-leave-info"></div>
-        <div role="tabpanel" class="tab-pane fade" id="tab-expense-info"></div>
         <?php
         foreach ($hook_tabs as $hook_tab) {
             ?>

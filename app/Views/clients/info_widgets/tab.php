@@ -51,11 +51,12 @@ if ($tab == "total_projects") {
     // $card = "bg-coral";
     // $icon = "compass";
     if (property_exists($client_info, "last_announcement") && !empty($client_info->last_announcement)) {
-        $value = $client_info->last_announcement;
+        $value = $client_info->last_announcement->title;
+        $link = get_uri('announcements/view/' . $client_info->last_announcement->id);
     } else {
         $value = app_lang("no_announcement_yet");
+        $link = get_uri('announcements/index');
     }
-    $link = get_uri('announcements/index');
 }
 ?>
 
