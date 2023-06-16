@@ -376,13 +376,13 @@ class Security_Controller extends App_Controller {
     protected function get_clients_and_leads_dropdown($return_json = false) {
         $clients_dropdown = array("" => "-");
         $clients_json_dropdown = array(array("id" => "", "text" => "-"));
-        $clients = $this->Clients_model->get_all_where(array("deleted" => 0), 0, 0, "is_lead")->getResult();
+        $clients = $this->Clients_model->get_all_where(array("deleted" => 0))->getResult();
 
         foreach ($clients as $client) {
-            $company_name = $client->is_lead ? app_lang("lead") . ": " . $client->company_name : $client->company_name;
+            $charter_name = $client->charter_name;
 
-            $clients_dropdown[$client->id] = $company_name;
-            $clients_json_dropdown[] = array("id" => $client->id, "text" => $company_name);
+            $clients_dropdown[$client->id] = $charter_name;
+            $clients_json_dropdown[] = array("id" => $client->id, "text" => $charter_name);
         }
 
         return $return_json ? $clients_json_dropdown : $clients_dropdown;

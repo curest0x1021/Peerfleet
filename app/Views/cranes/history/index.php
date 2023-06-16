@@ -1,6 +1,6 @@
 <div class="card rounded-bottom">
     <div class="tab-title clearfix">
-        <h4><?php echo app_lang('facts_and_figure'); ?></h4>
+        <h4><?php echo app_lang('history'); ?></h4>
     </div>
     <div class="table-responsive">
         <table id="crane-history-table" class="display" cellspacing="0" width="100%">

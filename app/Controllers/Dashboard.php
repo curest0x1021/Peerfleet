@@ -538,10 +538,6 @@ class Dashboard extends Security_Controller {
             }
         }
 
-        if (get_array_value($widgets, "total_clients")) {
-            $columns[] = array("total_clients");
-        }
-
         // if (get_array_value($widgets, "invoice_overview")) {
         //     $columns[] = array("invoice_overview");
         // }
@@ -561,6 +557,10 @@ class Dashboard extends Security_Controller {
             } else {
                 $columns[] = array("team_members_overview");
             }
+        }
+
+        if (get_array_value($widgets, "total_clients")) {
+            $columns[] = array("total_clients");
         }
 
         if (get_array_value($widgets, "ticket_status")) {

@@ -20,7 +20,7 @@
             columns: [
                 {visible: false, searchable: false},
                 {title: "", "class": "text-center w25"},
-                {title: '<?php echo app_lang("code") ?>', class: "text-center w100"},
+                {title: '<?php echo app_lang("code") ?>', class: "w100"},
                 {title: '<?php echo app_lang("name") ?>', class: "all"},
                 {title: '<?php echo app_lang("vessel") ?>', class: "w20p"},
                 {title: '<?php echo app_lang("total_items") ?>', class:"text-center w15p"},
