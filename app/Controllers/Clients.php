@@ -465,8 +465,6 @@ class Clients extends Security_Controller {
     }
 
     private function _make_file_row($data) {
-        $file_icon = get_file_icon(strtolower(pathinfo($data->file_name, PATHINFO_EXTENSION)));
-
         $image_url = get_avatar($data->uploaded_by_user_image);
         $uploaded_by = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->uploaded_by_user_name";
 
@@ -474,6 +472,17 @@ class Clients extends Security_Controller {
             $uploaded_by = get_team_member_profile_link($data->uploaded_by, $uploaded_by);
         } else {
             $uploaded_by = get_client_contact_profile_link($data->uploaded_by, $uploaded_by);
+        }
+
+        $file_name = $data->file_name;
+        if (is_viewable_image_file($file_name)) {
+            $target_path = get_general_file_path("client", $data->client_id);
+            $file_info = array("file_name" => $data->file_name);
+            $thumbnail = get_source_url_of_file($file_info, $target_path, "thumbnail");
+            $show = "<img class='mr10 float-start' src='$thumbnail' alt='$file_name' style='width: 40px; height: 40px;'/>";
+        } else {
+            $file_icon = get_file_icon(strtolower(pathinfo($file_name, PATHINFO_EXTENSION)));
+            $show = "<div data-feather='$file_icon' class='mr10 float-start' style='width: 24px; height: 24px;'></div>";
         }
 
         $description = "<div class='float-start'>" .
@@ -493,7 +502,7 @@ class Clients extends Security_Controller {
 
 
         return array($data->id,
-            "<div data-feather='$file_icon' class='mr10 float-start'></div>" . $description,
+            "<div class='d-flex align-items-center flex-wrap'>" . $show . $description . "</div>",
             convert_file_size($data->file_size),
             $uploaded_by,
             format_to_datetime($data->created_at),
