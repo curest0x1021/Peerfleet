@@ -1835,7 +1835,7 @@ class Clients extends Security_Controller {
     }
 
     private function _make_client_row($data) {
-        $favorite = empty($data->starred_by) ? "<i data-feather='star' class='icon-16'></i>" : "<i data-feather='star' class='icon-16 icon-fill-warning'></i>";
+        $favorite = empty($data->starred_by) ? "<i data-feather='star' class='icon-16' style='color: #ffb822;'></i>" : "<i data-feather='star' class='icon-16 icon-fill-warning' style='color: #ffb822;'></i>";
         $row_data = array(
             anchor(get_uri("clients/view/" . $data->id), $data->charter_name),
             $data->vessel_type,
