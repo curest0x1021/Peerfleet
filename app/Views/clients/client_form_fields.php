@@ -44,7 +44,7 @@
 
 <div class="form-group">
     <div class="row">
-        <label for="owner_id" class="<?php echo $label_column; ?>"><?php echo app_lang('responsible_owner'); ?>
+        <label for="owner_id" class="<?php echo $label_column; ?>"><?php echo app_lang('responsible_person'); ?>
             <span class="help" data-container="body" data-bs-toggle="tooltip" title="<?php echo app_lang('the_person_who_will_manage_this_client') ?>"><i data-feather="help-circle" class="icon-16"></i></span>
         </label>
         <div class="<?php echo $field_column; ?>">
@@ -54,7 +54,7 @@
                 "name" => "owner_id",
                 "value" => $model_info->owner_id ? $model_info->owner_id : $login_user->id,
                 "class" => "form-control",
-                "placeholder" => app_lang('responsible_owner'),
+                "placeholder" => app_lang('responsible_person'),
                 "data-rule-required" => true,
                 "data-msg-required" => app_lang("field_required")
             ));

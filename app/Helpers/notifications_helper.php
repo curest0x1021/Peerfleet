@@ -497,11 +497,11 @@ if (!function_exists('get_notification_config')) {
                 "info" => $subscription_link
             ),
             "csp_minimum_reached" => array(
-                "notify_to" => array("vessel_contact", "responsible_owner"),
+                "notify_to" => array("vessel_contact", "responsible_person"),
                 "info" => $csp_link
             ),
             "rope_exchange_required" => array(
-                "notify_to" => array("vessel_contact", "responsible_owner"),
+                "notify_to" => array("vessel_contact", "responsible_person"),
                 "info" => $crane_link
             )
         );

@@ -227,9 +227,9 @@ class Clients extends Security_Controller {
 
     /* prepare a row of client list table */
     private function _make_row($data) {
-        $image_url = get_avatar($data->contact_avatar);
-        $contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->primary_contact";
-        $primary_contact = get_client_contact_profile_link($data->primary_contact_id, $contact);
+        $image_url = get_avatar($data->owner_avatar);
+        $contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->owner_name";
+        $owner_name = get_client_contact_profile_link($data->owner_id, $contact);
 
         $name = $data->charter_name;
         if ($this->can_access_own_client($data->id)) {
@@ -237,7 +237,7 @@ class Clients extends Security_Controller {
         }
         $row_data = array($data->id,
             $name,
-            $data->primary_contact ? $primary_contact : "",
+            $data->owner_name ? $owner_name : "",
             $data->vessel_type,
             to_decimal_format($data->total_projects)
         );
