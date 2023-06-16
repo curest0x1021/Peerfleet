@@ -2000,7 +2000,7 @@ class Clients extends Security_Controller {
         $data = array(
             "code" => $this->request->getPost("code"),
             "name" => $this->request->getPost("name"),
-            "address" => $this->request->getPost("address"),
+            "location" => $this->request->getPost("location"),
         );
         $data["client_id"] = $client_id;
 
@@ -2054,7 +2054,7 @@ class Clients extends Security_Controller {
             $data->id,
             $data->code,
             $data->name,
-            $data->address,
+            $data->location,
             $action
         );
     }
