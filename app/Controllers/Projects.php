@@ -412,12 +412,12 @@ class Projects extends Security_Controller {
         $estimate_id = $this->request->getPost('estimate_id');
         $status = $this->request->getPost('status');
         $order_id = $this->request->getPost('order_id');
-        $project_type = $this->request->getPost('project_type');
+        $project_type = 'client_project';
 
         $data = array(
             "title" => $this->request->getPost('title'),
             "description" => $this->request->getPost('description'),
-            "client_id" => ($project_type === "internal_project") ? 0 : $this->request->getPost('client_id'),
+            "client_id" => $this->request->getPost('client_id'),
             "start_date" => $this->request->getPost('start_date'),
             "deadline" => $this->request->getPost('deadline'),
             "project_type" => $project_type,

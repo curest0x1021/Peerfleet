@@ -150,5 +150,6 @@ $lang["csp_minimum_reached"] = "Minimum of critical spare parts reached";
 $lang["rope_exchange_required"] = "Rope exchange required";
 $lang["notification_rope_exchange_required"] = "Rope exchange required";
 $lang["notification_csp_minimum_reached"] = "Minimum of critical spare parts reached";
+$lang["budget"] = "Budget";
 
 return $lang;
