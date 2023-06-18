@@ -133,9 +133,9 @@ if ($total_sub_tasks) {
 
                     <div class="col-md-12 mb15">
                         <?php
-                        if ($show_timer) {
-                            echo view("projects/tasks/task_timer");
-                        }
+                        // if ($show_timer) {
+                        //     echo view("projects/tasks/task_timer");
+                        // }
                         ?> 
                     </div>
 

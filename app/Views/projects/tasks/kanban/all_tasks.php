@@ -8,7 +8,8 @@
         <div class="tab-title clearfix no-border">
             <div class="title-button-group">
                 <?php
-                if ($login_user->user_type == "staff") {
+                if ($login_user->user_type == "staff" && $can_edit_tasks) {
+                    echo modal_anchor(get_uri("labels/modal_form"), "<i data-feather='tag' class='icon-16'></i> " . app_lang('manage_categories'), array("class" => "btn btn-outline-light", "title" => app_lang('manage_categories'), "data-post-type" => "task"));
                     echo modal_anchor("", "<i data-feather='edit-2' class='icon-16'></i> " . app_lang('batch_update'), array("class" => "btn btn-info text-white hide batch-update-btn", "title" => app_lang('batch_update')));
                     echo js_anchor("<i data-feather='x' class='icon-16'></i> " . app_lang("cancel_selection"), array("class" => "hide btn btn-default batch-cancel-btn"));
                 }
