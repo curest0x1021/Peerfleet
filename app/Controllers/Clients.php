@@ -1993,7 +1993,7 @@ class Clients extends Security_Controller {
     }
 
     private function _sea_valve_row_data_validation_and_get_error_message($key, $data) {
-        $allowed_headers = $this->_get_allowed_headers();
+        $allowed_headers = $this->_get_allowed_sea_valve_headers();
         $header_value = get_array_value($allowed_headers, $key);
 
         //there has no date field on default import fields
