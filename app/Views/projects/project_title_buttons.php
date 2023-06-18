@@ -34,7 +34,7 @@ if ($can_edit_timesheet_settings || $can_edit_slack_settings || $can_create_proj
     </div>
 <?php } ?>
 <?php
-if ($show_timmer) {
-    echo view("projects/project_timer");
-}
+// if ($show_timmer) {
+//     echo view("projects/project_timer");
+// }
 ?>

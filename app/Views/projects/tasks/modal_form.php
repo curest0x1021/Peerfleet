@@ -38,7 +38,7 @@
                         <?php
                         echo form_input(array(
                             "id" => "project_labels",
-                            "name" => "labels",
+                            "name" => "category",
                             "value" => $model_info->labels,
                             "class" => "form-control",
                             "placeholder" => app_lang('category')
@@ -59,8 +59,6 @@
                             "class" => "form-control",
                             "maxlength" => 15,
                             "placeholder" => app_lang('dock_list_number'),
-                            "data-rule-required" => true,
-                            "data-msg-required" => app_lang("field_required"),
                         ));
                         ?>
                     </div>
@@ -78,8 +76,6 @@
                             "class" => "form-control",
                             "maxlength" => 30,
                             "placeholder" => app_lang('reference_drawing'),
-                            "data-rule-required" => true,
-                            "data-msg-required" => app_lang("field_required"),
                         ));
                         ?>
                     </div>
@@ -115,8 +111,6 @@
                             "placeholder" => app_lang('location'),
                             "maxlength" => 300,
                             "data-rich-text-editor" => true,
-                            "data-rule-required" => true,
-                            "data-msg-required" => app_lang("field_required"),
                         ));
                         ?>
                     </div>
@@ -135,8 +129,6 @@
                             "placeholder" => app_lang('specification_placeholder'),
                             "maxlength" => 300,
                             "data-rich-text-editor" => true,
-                            "data-rule-required" => true,
-                            "data-msg-required" => app_lang("field_required"),
                         ));
                         ?>
                     </div>
@@ -154,8 +146,6 @@
                             "class" => "form-control",
                             "maxlength" => 30,
                             "placeholder" => app_lang('requisition_number'),
-                            "data-rule-required" => true,
-                            "data-msg-required" => app_lang("field_required"),
                         ));
                         ?>
                     </div>
@@ -659,8 +649,6 @@
                             "class" => "form-control",
                             "maxlength" => 30,
                             "placeholder" => app_lang('type'),
-                            "data-rule-required" => true,
-                            "data-msg-required" => app_lang("field_required"),
                         ));
                         ?>
                     </div>
@@ -678,8 +666,6 @@
                             "class" => "form-control",
                             "maxlength" => 30,
                             "placeholder" => app_lang('serial_number'),
-                            "data-rule-required" => true,
-                            "data-msg-required" => app_lang("field_required"),
                         ));
                         ?>
                     </div>
@@ -697,8 +683,6 @@
                             "class" => "form-control",
                             "maxlength" => 30,
                             "placeholder" => app_lang('pms_scs_number'),
-                            "data-rule-required" => true,
-                            "data-msg-required" => app_lang("field_required"),
                         ));
                         ?>
                     </div>

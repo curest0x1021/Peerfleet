@@ -2517,6 +2517,7 @@ class Projects extends Security_Controller {
 
         $view_data['projects_dropdown'] = json_encode($projects_dropdown);
         $view_data['can_create_tasks'] = $this->can_create_tasks(false);
+        $view_data['can_edit_tasks'] = $this->can_edit_tasks();
         $view_data['priorities_dropdown'] = $this->_get_priorities_dropdown_list($priority_id);
 
         return $this->template->rander("projects/tasks/my_tasks", $view_data);
@@ -2548,7 +2549,7 @@ class Projects extends Security_Controller {
 
         $view_data['projects_dropdown'] = json_encode($projects_dropdown);
         $view_data['can_create_tasks'] = $this->can_create_tasks(false);
-
+        $view_data['can_edit_tasks'] = $this->can_edit_tasks();
         $view_data['task_statuses'] = $this->Task_status_model->get_details()->getResult();
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("tasks", $this->login_user->is_admin, $this->login_user->user_type);
 
@@ -2989,15 +2990,15 @@ class Projects extends Security_Controller {
             "id" => "numeric",
             "title" => "required|max_length[30]",
             "project_id" => "required",
-            "labels" => "required",
-            "dock_list_number" => "required|max_length[15]",
-            "reference_drawing" => "required|max_length[30]",
-            "location" => "required|max_length[300]",
-            "specification" => "required|max_length[300]",
-            "requisition_number" => "required|max_length[30]",
-            "type" => "required|max_length[30]",
-            "serial_number" => "required|max_length[30]",
-            "pms_scs_number" => "required|max_length[30]"
+            "category" => "required",
+            "dock_list_number" => "max_length[15]",
+            "reference_drawing" => "max_length[30]",
+            "location" => "max_length[300]",
+            "specification" => "max_length[300]",
+            "requisition_number" => "max_length[30]",
+            "type" => "max_length[30]",
+            "serial_number" => "max_length[30]",
+            "pms_scs_number" => "max_length[30]"
         ));
 
         $start_date = $this->request->getPost('start_date');
@@ -3018,7 +3019,7 @@ class Projects extends Security_Controller {
             "points" => $this->request->getPost('points'),
             "status_id" => $status_id,
             "priority_id" => $priority_id ? $priority_id : 0,
-            "labels" => $this->request->getPost('labels'),
+            "labels" => $this->request->getPost('category'),
             "start_date" => $start_date,
             "deadline" => $this->request->getPost('deadline'),
             "recurring" => $recurring,
