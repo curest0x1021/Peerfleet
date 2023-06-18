@@ -950,7 +950,7 @@ class Projects extends Security_Controller {
         </div>";
         $start_date = is_date_exists($data->start_date) ? format_to_date($data->start_date, false) : "-";
         $dateline = is_date_exists($data->deadline) ? format_to_date($data->deadline, false) : "-";
-        $price = $data->price ? to_currency($data->price, $data->currency_symbol) : "-";
+        $price = $data->price ? to_currency($data->price, '€') : "-";
 
         //has deadline? change the color of date based on status
         if (is_date_exists($data->deadline)) {

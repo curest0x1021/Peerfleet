@@ -40,11 +40,11 @@ if ($tab == "total_projects") {
     } else {
         $link = get_uri('clients/view/' . $client_info->id . '/tickets');
     }
-} else if ($tab == "total_clients") {
+} else if ($tab == "total_vessels") {
     $card = "bg-success";
     $icon = "check-square";
-    if (property_exists($client_info, "total_clients")) {
-        $value = to_decimal_format($client_info->total_clients);
+    if (property_exists($client_info, "total_vessels")) {
+        $value = to_decimal_format($client_info->total_vessels);
     }
     $link = get_uri('clients/index');
 } else if ($tab == "last_announcement") {
