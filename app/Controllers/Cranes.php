@@ -38,11 +38,9 @@ class Cranes extends Security_Controller {
             "id" => "numeric"
         ));
 
-        $view_data["label_column"] = "col-md-3";
-        $view_data["field_column"] = "col-md-9";
+        $view_data["label_column"] = "col-md-4";
+        $view_data["field_column"] = "col-md-8";
         $view_data["client_id"] = $client_id;
-        $cranes_dropdown = ["2" => "2", "3" => 3];
-        $view_data["cranes_dropdown"] = $cranes_dropdown;
 
         return $this->template->view("cranes/modal_form", $view_data);
     }
@@ -55,50 +53,63 @@ class Cranes extends Security_Controller {
         }
         $this->can_access_own_client($client_id);
 
-        $cranes = intval($this->request->getPost("cranes"));
-        $gangway = $this->request->getPost("gangway");
-        $provision = $this->request->getPost("provision");
+        $cranes = array(
+            "crane1" => $this->request->getPost("crane1"),
+            "crane2" => $this->request->getPost("crane2"),
+            "crane3" => $this->request->getPost("crane3"),
+            "gangway" => $this->request->getPost("gangway"),
+            "provision" => $this->request->getPost("provision"),
+            "rescueboat" => $this->request->getPost("rescueboat"),
+            "liferaft" => $this->request->getPost("liferaft"),
+            "freefallboat" => $this->request->getPost("freefallboat")
+        );
 
-        $this->save_ropes($client_id, $cranes, $gangway, $provision);
+        $this->save_ropes($client_id, $cranes);
 
         echo json_encode(array("success" => true, 'message' => app_lang('record_saved')));
     }
 
-    function save_ropes($client_id, $cranes = 2, $gangway = true, $provision = false) {
+    function save_ropes($client_id, $cranes) {
         $data = array();
-        // Crane #1
-        $data[] = array(
-            'client_id' => $client_id,
-            'crane' => 'Crane #1',
-            'rope' => 'Luffing wire'
-        );
-        $data[] = array(
-            'client_id' => $client_id,
-            'crane' => 'Crane #1',
-            'rope' => 'Hoisting wire'
-        );
-        $data[] = array(
-            'client_id' => $client_id,
-            'crane' => 'Crane #1',
-            'rope' => 'Aux. wire'
-        );
-        // Crane #2
-        $data[] = array(
-            'client_id' => $client_id,
-            'crane' => 'Crane #2',
-            'rope' => 'Luffing wire'
-        );
-        $data[] = array(
-            'client_id' => $client_id,
-            'crane' => 'Crane #2',
-            'rope' => 'Hoisting wire'
-        );
-        $data[] = array(
-            'client_id' => $client_id,
-            'crane' => 'Crane #2',
-            'rope' => 'Aux. wire'
-        );
-        if ($cranes == 3) {
+        if ($cranes["crane1"]) {
+            // Crane #1
+            $data[] = array(
+                'client_id' => $client_id,
+                'crane' => 'Crane #1',
+                'rope' => 'Luffing wire'
+            );
+            $data[] = array(
+                'client_id' => $client_id,
+                'crane' => 'Crane #1',
+                'rope' => 'Hoisting wire'
+            );
+            $data[] = array(
+                'client_id' => $client_id,
+                'crane' => 'Crane #1',
+                'rope' => 'Aux. wire'
+            );
+        }
+
+        if ($cranes["crane2"]) {
+            // Crane #2
+            $data[] = array(
+                'client_id' => $client_id,
+                'crane' => 'Crane #2',
+                'rope' => 'Luffing wire'
+            );
+            $data[] = array(
+                'client_id' => $client_id,
+                'crane' => 'Crane #2',
+                'rope' => 'Hoisting wire'
+            );
+            $data[] = array(
+                'client_id' => $client_id,
+                'crane' => 'Crane #2',
+                'rope' => 'Aux. wire'
+            );
+        }
+
+        if ($cranes["crane3"]) {
             // Crane #3
             $data[] = array(
                 'client_id' => $client_id,
@@ -117,8 +128,8 @@ class Cranes extends Security_Controller {
             );
         }
 
-        // Gangway
-        if ($gangway) {
+        if ($cranes["gangway"]) {
+            // Gangway
             $data[] = array(
                 'client_id' => $client_id,
                 'crane' => 'Gangway',
@@ -131,8 +142,8 @@ class Cranes extends Security_Controller {
             );
         }
 
-        // Provision
-        if ($provision) {
+        if ($cranes["provision"]) {
+            // Provision
             $data[] = array(
                 'client_id' => $client_id,
                 'crane' => 'Provision',
@@ -140,36 +151,42 @@ class Cranes extends Security_Controller {
             );
         }
 
-        // Rescueboat
-        $data[] = array(
-            'client_id' => $client_id,
-            'crane' => 'Rescueboat',
-            'rope' => 'L. raft'
-        );
-        $data[] = array(
-            'client_id' => $client_id,
-            'crane' => 'Rescueboat',
-            'rope' => 'Boat + L. raft'
-        );
+        if ($cranes["rescueboat"]) {
+            // Rescueboat
+            $data[] = array(
+                'client_id' => $client_id,
+                'crane' => 'Rescueboat',
+                'rope' => 'L. raft'
+            );
+            $data[] = array(
+                'client_id' => $client_id,
+                'crane' => 'Rescueboat',
+                'rope' => 'Boat + L. raft'
+            );
+        }
 
-        // Liferaft
-        $data[] = array(
-            'client_id' => $client_id,
-            'crane' => 'Liferaft',
-            'rope' => ''
-        );
+        if ($cranes["liferaft"]) {
+            // Liferaft
+            $data[] = array(
+                'client_id' => $client_id,
+                'crane' => 'Liferaft',
+                'rope' => ''
+            );
+        }
 
-        // Freefallboat
-        $data[] = array(
-            'client_id' => $client_id,
-            'crane' => 'Freefallboat',
-            'rope' => '(SB)'
-        );
-        $data[] = array(
-            'client_id' => $client_id,
-            'crane' => 'Freefallboat',
-            'rope' => '(PS)'
-        );
+        if ($cranes["freefallboat"]) {
+            // Freefallboat
+            $data[] = array(
+                'client_id' => $client_id,
+                'crane' => 'Freefallboat',
+                'rope' => '(SB)'
+            );
+            $data[] = array(
+                'client_id' => $client_id,
+                'crane' => 'Freefallboat',
+                'rope' => '(PS)'
+            );
+        }
 
         foreach ($data as $item) {
             $this->Cranes_model->ci_save($item, null);
@@ -445,10 +462,19 @@ class Cranes extends Security_Controller {
         $view_data["field_column"] = "col-md-9";
         $view_data["client_id"] = $client_id;
 
-        $id = $this->request->getPost("id");
         $view_data["model_info"] = $this->Cranes_loadtest_model->get_one($this->request->getPost("id"));
 
         return $this->template->view("cranes/loadtest/modal_form", $view_data);
+    }
+
+    /* upload a post file */
+    function upload_file() {
+        upload_file_to_temp();
+    }
+
+    /* check valid file for client */
+    function validate_file() {
+        return validate_post_file($this->request->getPost("file_name"));
     }
 
     function save_loadtest() {
@@ -473,6 +499,16 @@ class Cranes extends Security_Controller {
             "location" => $this->request->getPost("location"),
         );
 
+        $target_path = getcwd() . "/" . get_general_file_path("cranes", $data["client_id"]);
+        $files_data = move_files_from_temp_dir_to_permanent_dir($target_path);
+        $new_files = unserialize($files_data);
+
+        if ($id) {
+            $model_info = $this->Cranes_loadtest_model->get_one($id);
+            $new_files = update_saved_files($target_path, $model_info->files, $new_files);
+        }
+        $data["files"] = serialize($new_files);
+
         $save_id = $this->Cranes_loadtest_model->ci_save($data, $id);
 
         if ($save_id) {
@@ -494,8 +530,17 @@ class Cranes extends Security_Controller {
         $this->access_only_allowed_members();
 
         $id = $this->request->getPost('id');
+        $model_info = $this->Cranes_loadtest_model->get_one($id);
 
         if ($this->Cranes_loadtest_model->delete($id)) {
+            // delete files
+            if ($model_info->files) {
+                $files = unserialize($model_info->files);
+                $file_path = getcwd() . "/" . get_general_file_path("cranes", $model_info["client_id"]);
+                foreach ($files as $file) {
+                    delete_app_files($file_path, array($file));
+                }
+            }
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
@@ -520,12 +565,29 @@ class Cranes extends Security_Controller {
         $action = modal_anchor(get_uri("cranes/loadtest_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_loadtest'), "data-post-id" => $data->id, "data-post-client_id" => $data->client_id))
                 . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_loadtest'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("cranes/delete_loadtest"), "data-action" => "delete-confirmation"));
 
+        $files_str = "";
+        $files = unserialize($data->files);
+        foreach ($files as $key => $file) {
+            if ($key > 0) {
+                $files_str .= ", ";
+            }
+            $files_str .= anchor(get_uri("cranes/download_file/" . $data->id . "/" .$key), remove_file_prefix($file["file_name"]));
+        }
         return array(
             $data->id,
             $data->test_date,
             $data->result,
             $data->location,
+            $files_str,
             $action
         );
+    }
+
+    function download_file($id, $key) {
+        $model_info = $this->Cranes_loadtest_model->get_one($id);
+        $files = unserialize($model_info->files);
+        $client_id = $model_info->client_id;
+        $file_data = serialize(array($files[$key]));
+        return $this->download_app_files(get_general_file_path("cranes", $client_id), $file_data);
     }
 }
