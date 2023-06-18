@@ -11,9 +11,9 @@
         </div>
     <?php } ?>
 
-    <?php if (!in_array("total_clients", $hidden_menu)) { ?>
+    <?php if (!in_array("total_vessels", $hidden_menu)) { ?>
         <div class="col-md-3 col-sm-6  widget-container">
-            <?php echo view("clients/info_widgets/tab", array("tab" => "total_clients")); ?>
+            <?php echo view("clients/info_widgets/tab", array("tab" => "total_vessels")); ?>
         </div>
     <?php } ?>
 

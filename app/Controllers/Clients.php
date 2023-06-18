@@ -265,7 +265,7 @@ class Clients extends Security_Controller {
                 $total_clients = $this->Clients_model->count_total_clients(array("show_own_clients_only_user_id" => $show_own_clients_only_user_id));
                 $last_announcement = $this->Announcements_model->get_last_announcement();
                 $client_info->open_tickets = $open_tickets;
-                $client_info->total_clients = $total_clients;
+                $client_info->total_vessels = $total_clients;
                 $client_info->last_announcement = $last_announcement;
 
                 $view_data["show_note_info"] = (get_setting("module_note")) ? true : false;
