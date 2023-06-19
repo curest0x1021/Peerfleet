@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use stdClass;
+
 class Clients extends Security_Controller {
 
     function __construct() {
@@ -71,7 +73,7 @@ class Clients extends Security_Controller {
         $view_data['model_info'] = $this->Clients_model->get_one($client_id);
         //prepare vessel types dropdown list
         $view_data['types_dropdown'] = $this->_get_vessel_types_dropdown_select2_data();
-        $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
+        $view_data["team_members_dropdown"] = $this->get_team_members_dropdown(true);
 
         return $this->template->view('clients/modal_form', $view_data);
     }
@@ -759,7 +761,7 @@ class Clients extends Security_Controller {
             $view_data['field_column'] = "col-md-10";
             $view_data['can_edit_clients'] = $this->can_edit_clients();
 
-            $view_data["team_members_dropdown"] = $this->get_team_members_dropdown();
+            $view_data["team_members_dropdown"] = $this->get_team_members_dropdown(true);
             $view_data['types_dropdown'] = $this->_get_vessel_types_dropdown_select2_data();
 
             return $this->template->view('clients/contacts/company_info_tab', $view_data);
@@ -1272,8 +1274,8 @@ class Clients extends Security_Controller {
     private function _prepare_client_data($data_row, $allowed_headers) {
         //prepare client data
         $client_data = array();
-        $client_contact_data = array("user_type" => "client", "is_primary_contact" => 1);
-        $custom_field_values_array = array();
+        $contact_data = array();
+        $vessel_type_data = array();
 
         foreach ($data_row as $row_data_key => $row_data_value) { //row values
             if (!$row_data_value) {
@@ -1281,23 +1283,16 @@ class Clients extends Security_Controller {
             }
 
             $header_key_value = get_array_value($allowed_headers, $row_data_key);
-            if (strpos($header_key_value, 'cf') !== false) { //custom field
-                $explode_header_key_value = explode("-", $header_key_value);
-                $custom_field_id = get_array_value($explode_header_key_value, 1);
-
-                //modify date value
-                $custom_field_info = $this->Custom_fields_model->get_one($custom_field_id);
-                if ($custom_field_info->field_type === "date") {
-                    $row_data_value = $this->_check_valid_date($row_data_value);
-                }
-
-                $custom_field_values_array[$custom_field_id] = $row_data_value;
-            } else if ($header_key_value == "contact_first_name") {
-                $client_contact_data["first_name"] = $row_data_value;
-            } else if ($header_key_value == "contact_last_name") {
-                $client_contact_data["last_name"] = $row_data_value;
-            } else if ($header_key_value == "contact_email") {
-                $client_contact_data["email"] = $row_data_value;
+            if ($header_key_value == "email") {
+                $contact_data["email"] = $row_data_value;
+            } else if ($header_key_value == "sat") {
+                $contact_data["sat"] = $row_data_value;
+            } else if ($header_key_value == "mobile") {
+                $contact_data["phone"] = $row_data_value;
+            } else if ($header_key_value == "iridium_phone") {
+                $contact_data["alternative_phone"] = $row_data_value;
+            } else if ($header_key_value == "type") {
+                $vessel_type_data["title"] = $row_data_value;
             } else {
                 $client_data[$header_key_value] = $row_data_value;
             }
@@ -1305,43 +1300,9 @@ class Clients extends Security_Controller {
 
         return array(
             "client_data" => $client_data,
-            "client_contact_data" => $client_contact_data,
-            "custom_field_values_array" => $custom_field_values_array
+            "contact_data" => $contact_data,
+            "vessel_type_data" => $vessel_type_data
         );
-    }
-
-    private function _get_existing_custom_field_id($title = "") {
-        if (!$title) {
-            return false;
-        }
-
-        $custom_field_data = array(
-            "title" => $title,
-            "related_to" => "clients"
-        );
-
-        $existing = $this->Custom_fields_model->get_one_where(array_merge($custom_field_data, array("deleted" => 0)));
-        if ($existing->id) {
-            return $existing->id;
-        }
-    }
-
-    private function _prepare_headers_for_submit($headers_row, $headers) {
-        foreach ($headers_row as $key => $header) {
-            if (!((count($headers) - 1) < $key)) { //skip default headers
-                continue;
-            }
-
-            //so, it's a custom field
-            //check if there is any custom field existing with the title
-            //add id like cf-3
-            $existing_id = $this->_get_existing_custom_field_id($header);
-            if ($existing_id) {
-                array_push($headers, "cf-$existing_id");
-            }
-        }
-
-        return $headers;
     }
 
     function save_client_from_excel_file() {
@@ -1362,27 +1323,48 @@ class Clients extends Security_Controller {
 
         $allowed_headers = $this->_get_allowed_headers();
         $now = get_current_utc_time();
+        $vessel_types = $this->Vessel_types_model->get_all()->getResult();
 
         foreach ($excel_file as $key => $value) { //rows
-            if ($key === 0) { //first line is headers, modify this for custom fields and continue for the next loop
-                $allowed_headers = $this->_prepare_headers_for_submit($value, $allowed_headers);
+            if ($key === 0) { //first line is headers, continue for the next loop
                 continue;
             }
 
             $client_data_array = $this->_prepare_client_data($value, $allowed_headers);
             $client_data = get_array_value($client_data_array, "client_data");
-            $client_contact_data = get_array_value($client_data_array, "client_contact_data");
-            $custom_field_values_array = get_array_value($client_data_array, "custom_field_values_array");
+            $contact_data = get_array_value($client_data_array, "contact_data");
+            $vessel_type_data = get_array_value($client_data_array, "vessel_type_data");
 
             //couldn't prepare valid data
             if (!($client_data && count($client_data))) {
                 continue;
             }
 
+            // Vessel types
+            $vessel_type = $this->findObjectByTitle($vessel_type_data["title"], $vessel_types);
+            if ($vessel_type) {
+                $client_data["type"] = $vessel_type->id;
+            } else {
+                $m_save_id = $this->Vessel_types_model->ci_save($vessel_type_data);
+                $client_data["type"] = $m_save_id;
+
+                $temp = new stdClass();
+                $temp->id = $m_save_id;
+                $temp->title = $vessel_type_data["title"];
+                $vessel_types[] = $temp;
+            }
+
             //found information about client, add some additional info
+            $client_data["owner_id"] = "";
             $client_data["created_date"] = $now;
             $client_data["created_by"] = $this->login_user->id;
-            $client_contact_data["created_at"] = $now;
+
+            $client_data = clean_data($client_data);
+
+            //check duplicate company name, if found then show an error message
+            if ($this->Clients_model->is_duplicate_charter_name($client_data["charter_name"])) {
+                continue;
+            }
 
             //save client data
             $client_save_id = $this->Clients_model->ci_save($client_data);
@@ -1390,17 +1372,27 @@ class Clients extends Security_Controller {
                 continue;
             }
 
-            //save custom fields
-            $this->_save_custom_fields_of_client($client_save_id, $custom_field_values_array);
-
             //add client id to contact data
-            $client_contact_data["client_id"] = $client_save_id;
-            $this->Users_model->ci_save($client_contact_data);
+            $contact_data["client_id"] = $client_save_id;
+            $contact_data["first_name"] = $client_data["charter_name"];
+            $contact_data["last_name"] = "";
+            $contact_data["is_primary_contact"] = 1;
+            $this->Users_model->ci_save($contact_data);
         }
 
         delete_file_from_directory($temp_file_path . $file_name); //delete temp file
 
         echo json_encode(array('success' => true, 'message' => app_lang("record_saved")));
+    }
+
+    private function findObjectByTitle($title, $arr) {
+        $title = trim($title);
+        foreach ($arr as $item) {
+            if ($title == $item->title) {
+                return $item;
+            }
+        }
+        return false;
     }
 
     private function _save_custom_fields_of_client($client_id, $custom_field_values_array) {
@@ -1424,21 +1416,26 @@ class Clients extends Security_Controller {
 
     private function _get_allowed_headers() {
         return array(
-            "company_name",
-            "contact_first_name",
-            "contact_last_name",
-            "contact_email",
-            "address",
-            "city",
-            "state",
-            "zip",
-            "country",
-            "phone",
-            "website",
-            "vat_number",
-            "client_groups",
-            "currency",
-            "currency_symbol"
+            "charter_name",
+            "christian_name",
+            "type",
+            "imo_number",
+            "call_sign",
+            "offical_number",
+            "class_number",
+            "mmsi",
+            "build_number",
+            "ice_class",
+            "classification_society",
+            "build_yard",
+            "build_series",
+            "sister",
+            "flag_state",
+            "port_of_registry",
+            "email",
+            "sat",
+            "mobile",
+            "iridium_phone"
         );
     }
 
@@ -1461,16 +1458,6 @@ class Clients extends Security_Controller {
                 //the required headers should be on the correct positions
                 //the rest headers will be treated as custom fields
                 //pushed header at last of this loop
-            } else if (((count($allowed_headers) - 1) < $key) && $key_value) {
-                //custom fields headers
-                //check if there is any existing custom field with this title
-                $existing_id = $this->_get_existing_custom_field_id(trim($header, " "));
-                if ($existing_id) {
-                    $header_array["custom_field_id"] = $existing_id;
-                } else {
-                    $header_array["has_error"] = true;
-                    $header_array["custom_field"] = true;
-                }
             } else { //invalid header, flag as red
                 $header_array["has_error"] = true;
             }
@@ -1532,11 +1519,7 @@ class Clients extends Security_Controller {
                         $has_error_class = true;
                         $got_error_header = true;
 
-                        if (get_array_value($row_data, "custom_field")) {
-                            $error_message = app_lang("no_such_custom_field_found");
-                        } else {
-                            $error_message = sprintf(app_lang("import_client_error_header"), app_lang(get_array_value($row_data, "key_value")));
-                        }
+                        $error_message = sprintf(app_lang("import_client_error_header"), app_lang(get_array_value($row_data, "key_value")));
                     }
 
                     array_push($table_data_header_array, array("has_error_class" => $has_error_class, "value" => get_array_value($row_data, "value")));
@@ -1547,16 +1530,15 @@ class Clients extends Security_Controller {
                 }
 
                 $error_message_on_this_row = "<ol class='pl15'>";
-                $has_contact_first_name = get_array_value($value, 1) ? true : false;
 
                 foreach ($value as $key => $row_data) {
                     $has_error_class = false;
 
                     if (!$got_error_header) {
-                        $row_data_validation = $this->_row_data_validation_and_get_error_message($key, $row_data, $has_contact_first_name, $headers);
+                        $row_data_validation = $this->_row_data_validation_and_get_error_message($key, $row_data);
                         if ($row_data_validation) {
                             $has_error_class = true;
-                            $error_message_on_this_row .= "<li>" . $row_data_validation . "</li>";
+                            $error_message_on_this_row .= "<li>" . $row_data . ": " . $row_data_validation . "</li>";
                             $got_error_table_data = true;
                         }
                     }
@@ -1625,47 +1607,19 @@ class Clients extends Security_Controller {
         echo json_encode(array("success" => true, 'table_data' => $table_data, 'got_error' => ($got_error_header || $got_error_table_data) ? true : false));
     }
 
-    private function _row_data_validation_and_get_error_message($key, $data, $has_contact_first_name, $headers = array()) {
+    private function _row_data_validation_and_get_error_message($key, $data) {
         $allowed_headers = $this->_get_allowed_headers();
         $header_value = get_array_value($allowed_headers, $key);
 
-        //company name field is required
-        if ($header_value == "company_name" && !$data) {
-            return app_lang("import_client_error_company_name_field_required");
-        }
-
-        //if there is contact first name then the contact last name and email is required
-        //the email should be unique then
-        if ($has_contact_first_name) {
-            if ($header_value == "contact_last_name" && !$data) {
-                return app_lang("import_client_error_contact_name");
-            }
-
-            if ($header_value == "contact_email") {
-                if ($data) {
-                    if ($this->Users_model->is_email_exists($data)) {
-                        return app_lang("duplicate_email");
-                    }
-                } else {
-                    return app_lang("import_client_error_contact_email");
-                }
-            }
-        }
-
-        //there has no date field on default import fields
-        //check on custom fields
-        if (((count($allowed_headers) - 1) < $key) && $data) {
-            $header_info = get_array_value($headers, $key);
-            $custom_field_info = $this->Custom_fields_model->get_one(get_array_value($header_info, "custom_field_id"));
-            if ($custom_field_info->field_type === "date" && !$this->_check_valid_date($data)) {
-                return app_lang("import_date_error_message");
-            }
+        if (((count($allowed_headers)) > $key) && empty($data)) {
+            $error_message = sprintf(app_lang("import_data_empty_message"), $header_value);
+            return $error_message;
         }
     }
 
     function download_sample_excel_file() {
         $this->access_only_allowed_members();
-        return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => "import-clients-sample.xlsx"))));
+        return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => "import-vessels-sample.xlsx"))));
     }
 
     function gdpr() {
@@ -1997,7 +1951,6 @@ class Clients extends Security_Controller {
         $header_value = get_array_value($allowed_headers, $key);
 
         //there has no date field on default import fields
-        //check on custom fields
         if (((count($allowed_headers) - 1) < $key) && $data) {
             if ($header_value == "description") {
 
@@ -2009,10 +1962,12 @@ class Clients extends Security_Controller {
                     if ($header_value == "name") {
                         if (strlen($data) > 30) {
                             $error_message = sprintf(app_lang("import_data_max_length_error_message"), app_lang($header_value), "30");
+                            return $error_message;
                         }
                     } else {
                         if (strlen($data) > 20) {
                             $error_message = sprintf(app_lang("import_data_max_length_error_message"), app_lang($header_value), "20");
+                            return $error_message;
                         }
                     }
                 }

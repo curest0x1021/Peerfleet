@@ -52,7 +52,7 @@
             echo form_input(array(
                 "id" => "owner_id",
                 "name" => "owner_id",
-                "value" => $model_info->owner_id ? $model_info->owner_id : $login_user->id,
+                "value" => $model_info->owner_id ? $model_info->owner_id : "",
                 "class" => "form-control",
                 "placeholder" => app_lang('responsible_person'),
                 "data-rule-required" => true,
