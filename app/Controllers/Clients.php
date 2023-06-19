@@ -102,11 +102,11 @@ class Clients extends Security_Controller {
             "class_number" => "required|max_length[15]",
             "mmsi" => "required|exact_length[9]",
             "build_number" => "required|max_length[15]",
-            "ice_class" => "required|max_length[5]",
+            // "ice_class" => "required|max_length[5]",
             "classification_society" => "required|max_length[30]",
             "build_yard" => "required|max_length[40]",
             "build_series" => "required|max_length[20]",
-            "sister" => "required|max_length[30]",
+            // "sister" => "required|max_length[30]",
             "flag_state" => "required|max_length[40]",
             "port_of_registry" => "required|max_length[40]"
         ));
@@ -821,7 +821,9 @@ class Clients extends Security_Controller {
             //we'll save following fields only when creating a new contact from this form
             $user_data["client_id"] = $client_id;
             $user_data["email"] = trim($this->request->getPost('email'));
-            $user_data["password"] = password_hash($this->request->getPost("login_password"), PASSWORD_DEFAULT);
+            if ($this->request->getPost("login_password")) {
+                $user_data["password"] = password_hash($this->request->getPost("login_password"), PASSWORD_DEFAULT);
+            }
             $user_data["created_at"] = get_current_utc_time();
 
             //validate duplicate email address
@@ -1371,11 +1373,17 @@ class Clients extends Security_Controller {
             }
 
             //add client id to contact data
-            $contact_data["client_id"] = $client_save_id;
-            $contact_data["first_name"] = $client_data["charter_name"];
-            $contact_data["last_name"] = "";
-            $contact_data["is_primary_contact"] = 1;
-            $this->Users_model->ci_save($contact_data);
+            if (isset($contact_data["email"])) {
+                //validate duplicate email address
+                if ($this->Users_model->is_email_exists($contact_data["email"], 0, $client_id)) {
+                    continue;
+                }
+                $contact_data["client_id"] = $client_save_id;
+                $contact_data["first_name"] = "";
+                $contact_data["last_name"] = "";
+                $contact_data["is_primary_contact"] = 1;
+                $this->Users_model->ci_save($contact_data);
+            }
         }
 
         delete_file_from_directory($temp_file_path . $file_name); //delete temp file
@@ -1610,8 +1618,24 @@ class Clients extends Security_Controller {
         $header_value = get_array_value($allowed_headers, $key);
 
         if (((count($allowed_headers)) > $key) && empty($data)) {
-            $error_message = sprintf(app_lang("import_data_empty_message"), $header_value);
-            return $error_message;
+            if ($header_value == "charter_name" ||
+                $header_value == "christan_name" ||
+                $header_value == "type" ||
+                $header_value == "imo_number" ||
+                $header_value == "call_sign" ||
+                $header_value == "offical_number" ||
+                $header_value == "class_number" ||
+                $header_value == "mmsi" ||
+                $header_value == "build_number" ||
+                $header_value == "classification_society" ||
+                $header_value == "build_yard" ||
+                $header_value == "build_series" ||
+                $header_value == "flat_state" ||
+                $header_value == "port_of_registry"
+            ) {
+                $error_message = sprintf(app_lang("import_data_empty_message"), $header_value);
+                return $error_message;
+            }
         }
     }
 
