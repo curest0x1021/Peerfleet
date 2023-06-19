@@ -132,7 +132,7 @@
             if (count($imageFiles) > 0) {
                 $thumbnail = get_source_url_of_file($imageFiles[0], $timeline_file_path, "thumbnail");
                 $file_name = $imageFiles[0]["file_name"];
-                $image = "<img src='$thumbnail' alt='$file_name' style='width: 100%;'/>";
+                $image = "<img src='$thumbnail' alt='$file_name' style='width: 100%; height: 160px; object-fit: cover;'/>";
             }
         }
 

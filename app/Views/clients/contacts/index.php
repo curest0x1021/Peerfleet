@@ -2,13 +2,17 @@
     <?php echo form_open(get_uri("clients/save_contact/"), array("id" => "contact-form", "class" => "general-form dashed-row white", "role" => "form")); ?>
     <div class="card">
         <div class=" card-header d-flex align-items-center">
-            <h4 class="mr15"> <?php echo app_lang('communication'); ?></h4><?php echo anchor(get_uri("clients/contact_profile/" . $model_info->id . "/general"), "<i data-feather='external-link' class='icon-16'></i>", array("target" => "_blank")); ?>
+            <h4 class="mr15"> <?php echo app_lang('communication'); ?></h4>
+            <?php if ($model_info) {
+                echo anchor(get_uri("clients/contact_profile/" . $model_info->id . "/general"), "<i data-feather='external-link' class='icon-16'></i>", array("target" => "_blank"));
+            }
+            ?>
         </div>
         <div class="card-body">
             <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" />
-            <input type="hidden" name="contact_id" value="<?php echo $model_info->id; ?>" />
-            <input type="hidden" name="first_name" value="<?php echo $model_info->first_name; ?>" />
-            <input type="hidden" name="last_name" value="<?php echo $model_info->last_name; ?>" />
+            <input type="hidden" name="contact_id" value="<?php echo $model_info ? $model_info->id : null; ?>" />
+            <input type="hidden" name="first_name" value="<?php echo $model_info ? $model_info->first_name : null; ?>" />
+            <input type="hidden" name="last_name" value="<?php echo $model_info ? $model_info->last_name : null; ?>" />
 
             <div class="form-group">
                 <div class="row">
@@ -18,7 +22,7 @@
                         echo form_input(array(
                             "id" => "email",
                             "name" => "email",
-                            "value" => $model_info->email,
+                            "value" => $model_info ? $model_info->email : "",
                             "class" => "form-control",
                             "placeholder" => app_lang('email'),
                             "data-rule-email" => true,
@@ -39,7 +43,7 @@
                         echo form_input(array(
                             "id" => "sat",
                             "name" => "sat",
-                            "value" => $model_info->sat ? $model_info->sat : "",
+                            "value" => $model_info ? $model_info->sat : "",
                             "class" => "form-control",
                             "placeholder" => app_lang('sat')
                         ));
@@ -55,7 +59,7 @@
                         echo form_input(array(
                             "id" => "phone",
                             "name" => "phone",
-                            "value" => $model_info->phone ? $model_info->phone : "",
+                            "value" => $model_info ? $model_info->phone : "",
                             "class" => "form-control",
                             "placeholder" => app_lang('mobile')
                         ));
@@ -71,7 +75,7 @@
                         echo form_input(array(
                             "id" => "alternative_phone",
                             "name" => "alternative_phone",
-                            "value" => $model_info->alternative_phone ? $model_info->alternative_phone : "",
+                            "value" => $model_info ? $model_info->alternative_phone : "",
                             "class" => "form-control",
                             "placeholder" => app_lang('iridium_phone')
                         ));
@@ -95,6 +99,9 @@
             isModal: false,
             onSuccess: function (result) {
                 appAlert.success(result.message, {duration: 10000});
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             }
         });
     });

@@ -214,8 +214,6 @@
                 "class" => "form-control",
                 "placeholder" => app_lang('ice_class'),
                 "maxlength" => 5,
-                "data-rule-required" => true,
-                "data-msg-required" => app_lang("field_required")
             ));
             ?>
         </div>
@@ -294,8 +292,6 @@
                 "class" => "form-control",
                 "placeholder" => app_lang('sister'),
                 "maxlength" => 30,
-                "data-rule-required" => true,
-                "data-msg-required" => app_lang("field_required")
             ));
             ?>
         </div>
