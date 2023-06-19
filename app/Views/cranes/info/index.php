@@ -16,7 +16,7 @@
             columns: [
                 {visible: false, searchable: false},
                 {title: '<?php echo app_lang("crane") ?>'},
-                {title: '<?php echo app_lang("rope") ?>'},
+                {title: '<?php echo app_lang("wire") ?>'},
                 {title: '<?php echo app_lang("diameter") . ' in mm' ?>'},
                 {title: '<?php echo app_lang("length") . ' in m' ?>'},
                 {title: '<?php echo app_lang("swl") . ' in mt' ?>'},

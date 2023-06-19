@@ -461,8 +461,12 @@ class Cranes extends Security_Controller {
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
         $view_data["client_id"] = $client_id;
+        $view_data["cranes_dropdown"] = $this->Cranes_model->get_cranes_dropdown($client_id);
 
-        $view_data["model_info"] = $this->Cranes_loadtest_model->get_one($this->request->getPost("id"));
+        $id = $this->request->getPost("id");
+        if ($id) {
+            $view_data["model_info"] = $this->Cranes_loadtest_model->get_details(array("id" => $this->request->getPost("id")))->getRow();
+        }
 
         return $this->template->view("cranes/loadtest/modal_form", $view_data);
     }
@@ -487,6 +491,7 @@ class Cranes extends Security_Controller {
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "client_id" => "required|numeric",
+            "rope_id" => "required|numeric",
             "test_date" => "required",
             "result" => "required",
             "location" => "required"
@@ -494,12 +499,13 @@ class Cranes extends Security_Controller {
 
         $data = array(
             "client_id" => intval($this->request->getPost("client_id")),
+            "rope_id" => intval($this->request->getPost("rope_id")),
             "test_date" => $this->request->getPost("test_date"),
             "result" => $this->request->getPost("result"),
             "location" => $this->request->getPost("location"),
         );
 
-        $target_path = getcwd() . "/" . get_general_file_path("cranes", $data["client_id"]);
+        $target_path = getcwd() . "/" . get_general_file_path("wires", $data["client_id"]);
         $files_data = move_files_from_temp_dir_to_permanent_dir($target_path);
         $new_files = unserialize($files_data);
 
@@ -512,7 +518,7 @@ class Cranes extends Security_Controller {
         $save_id = $this->Cranes_loadtest_model->ci_save($data, $id);
 
         if ($save_id) {
-            echo json_encode(array("success" => true, 'message' => app_lang('record_saved')));
+            echo json_encode(array("success" => true, "data" => $this->_loadtest_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
@@ -536,7 +542,7 @@ class Cranes extends Security_Controller {
             // delete files
             if ($model_info->files) {
                 $files = unserialize($model_info->files);
-                $file_path = getcwd() . "/" . get_general_file_path("cranes", $model_info["client_id"]);
+                $file_path = getcwd() . "/" . get_general_file_path("wires", $model_info["client_id"]);
                 foreach ($files as $file) {
                     delete_app_files($file_path, array($file));
                 }
@@ -561,9 +567,22 @@ class Cranes extends Security_Controller {
         echo json_encode($result);
     }
 
+    function download_loadtest_file($id, $key) {
+        $model_info = $this->Cranes_loadtest_model->get_one($id);
+        $files = unserialize($model_info->files);
+        $client_id = $model_info->client_id;
+        $file_data = serialize(array($files[$key]));
+        return $this->download_app_files(get_general_file_path("wires", $client_id), $file_data);
+    }
+
+    private function _loadtest_row_data($id) {
+        $data = $this->Cranes_loadtest_model->get_details(array("id" => $id))->getRow();
+        return $this->_loadtest_make_row($data);
+    }
+
     private function _loadtest_make_row($data) {
         $action = modal_anchor(get_uri("cranes/loadtest_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_loadtest'), "data-post-id" => $data->id, "data-post-client_id" => $data->client_id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_loadtest'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("cranes/delete_loadtest"), "data-action" => "delete-confirmation"));
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("cranes/delete_loadtest"), "data-action" => "delete-confirmation"));
 
         $files_str = "";
         $files = unserialize($data->files);
@@ -571,11 +590,13 @@ class Cranes extends Security_Controller {
             if ($key > 0) {
                 $files_str .= ", ";
             }
-            $files_str .= anchor(get_uri("cranes/download_file/" . $data->id . "/" .$key), remove_file_prefix($file["file_name"]));
+            $files_str .= anchor(get_uri("cranes/download_loadtest_file/" . $data->id . "/" .$key), remove_file_prefix($file["file_name"]));
         }
         return array(
             $data->id,
             $data->test_date,
+            $data->crane,
+            $data->rope,
             $data->result,
             $data->location,
             $files_str,
@@ -583,11 +604,170 @@ class Cranes extends Security_Controller {
         );
     }
 
-    function download_file($id, $key) {
-        $model_info = $this->Cranes_loadtest_model->get_one($id);
+    function wire_inspection_tab($client_id) {
+        $this->access_only_allowed_members();
+        $this->can_access_own_client($client_id);
+
+        if ($client_id) {
+            $view_data["client_id"] = $client_id;
+            return $this->template->view("cranes/wire_inspection/index", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    function wire_inspection_modal_form() {
+        $this->access_only_allowed_members();
+        if (!$this->can_edit_clients()) {
+            app_redirect("forbidden");
+        }
+
+        $client_id = $this->request->getPost("client_id");
+
+        $view_data["label_column"] = "col-md-3";
+        $view_data["field_column"] = "col-md-9";
+        $view_data["client_id"] = $client_id;
+        $view_data["cranes_dropdown"] = $this->Cranes_model->get_cranes_dropdown($client_id);
+
+        $id = $this->request->getPost("id");
+        if ($id) {
+            $view_data["model_info"] = $this->Cranes_wire_inspection_model->get_details(array("id" => $this->request->getPost("id")))->getRow();
+        }
+
+        return $this->template->view("cranes/wire_inspection/modal_form", $view_data);
+    }
+
+    function save_wire_inspection() {
+        if (!$this->can_edit_clients()) {
+            app_redirect("forbidden");
+        }
+
+        $id = $this->request->getPost("id");
+
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "client_id" => "required|numeric",
+            "rope_id" => "required|numeric",
+            "inspection_date" => "required",
+            "result" => "required",
+            "location" => "required",
+            "next_suggested_inspection" => "required"
+        ));
+
+        $data = array(
+            "client_id" => intval($this->request->getPost("client_id")),
+            "rope_id" => intval($this->request->getPost("rope_id")),
+            "inspection_date" => $this->request->getPost("inspection_date"),
+            "result" => $this->request->getPost("result"),
+            "location" => $this->request->getPost("location"),
+            "next_suggested_inspection" => $this->request->getPost("next_suggested_inspection")
+        );
+
+        $target_path = getcwd() . "/" . get_general_file_path("wires", $data["client_id"]);
+        $files_data = move_files_from_temp_dir_to_permanent_dir($target_path);
+        $new_files = unserialize($files_data);
+
+        if ($id) {
+            $model_info = $this->Cranes_wire_inspection_model->get_one($id);
+            $new_files = update_saved_files($target_path, $model_info->files, $new_files);
+        }
+        $data["files"] = serialize($new_files);
+
+        $save_id = $this->Cranes_wire_inspection_model->ci_save($data, $id);
+
+        if ($save_id) {
+            echo json_encode(array("success" => true, "data" => $this->_wire_inspection_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+    }
+
+    function delete_wire_inspection() {
+        if (!$this->can_edit_clients()) {
+            app_redirect("forbidden");
+        }
+
+        $this->validate_submitted_data(array(
+            "id" => "required|numeric"
+        ));
+
+        $this->access_only_allowed_members();
+
+        $id = $this->request->getPost('id');
+        $model_info = $this->Cranes_wire_inspection_model->get_one($id);
+
+        if ($this->Cranes_wire_inspection_model->delete($id)) {
+            // delete files
+            if ($model_info->files) {
+                $files = unserialize($model_info->files);
+                $file_path = getcwd() . "/" . get_general_file_path("wires", $model_info["client_id"]);
+                foreach ($files as $file) {
+                    delete_app_files($file_path, array($file));
+                }
+            }
+            echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
+        }
+    }
+
+    function wire_inspection_list_data($client_id) {
+        $this->access_only_allowed_members();
+        $this->can_access_own_client($client_id);
+
+        $list_data = $this->Cranes_wire_inspection_model->get_details(array("client_id" => $client_id))->getResult();
+        $result_data = [];
+        foreach ($list_data as $data) {
+            $result_data[] = $this->_wire_inspection_make_row($data);
+        }
+
+        $result["data"] = $result_data;
+        echo json_encode($result);
+    }
+
+    private function _wire_inspection_row_data($id) {
+        $data = $this->Cranes_wire_inspection_model->get_details(array("id" => $id))->getRow();
+        return $this->_wire_inspection_make_row($data);
+    }
+
+    private function _wire_inspection_make_row($data) {
+        $action = modal_anchor(get_uri("cranes/wire_inspection_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_wire_inspection'), "data-post-id" => $data->id, "data-post-client_id" => $data->client_id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("cranes/delete_wire_inspection"), "data-action" => "delete-confirmation"));
+
+        $files_str = "";
+        $files = unserialize($data->files);
+        foreach ($files as $key => $file) {
+            if ($key > 0) {
+                $files_str .= ", ";
+            }
+            $files_str .= anchor(get_uri("cranes/download_wire_inspection_file/" . $data->id . "/" .$key), remove_file_prefix($file["file_name"]));
+        }
+        return array(
+            $data->id,
+            $data->inspection_date,
+            $data->crane,
+            $data->rope,
+            $data->result,
+            $data->location,
+            $data->next_suggested_inspection,
+            $files_str,
+            $action
+        );
+    }
+
+    function download_wire_inspection_file($id, $key) {
+        $model_info = $this->Cranes_wire_inspection_model->get_one($id);
         $files = unserialize($model_info->files);
         $client_id = $model_info->client_id;
         $file_data = serialize(array($files[$key]));
-        return $this->download_app_files(get_general_file_path("cranes", $client_id), $file_data);
+        return $this->download_app_files(get_general_file_path("wires", $client_id), $file_data);
+    }
+
+    function get_ropes_dropdown() {
+        $client_id = $this->request->getPost("client_id");
+        $crane = $this->request->getPost("crane");
+
+        $dropdown = $this->Cranes_model->get_ropes_dropdown($client_id, $crane);
+        echo json_encode($dropdown);
     }
 }
