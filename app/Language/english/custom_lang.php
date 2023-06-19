@@ -166,5 +166,7 @@ $lang["notification_rope_exchange_required"] = "Rope exchange required";
 $lang["notification_csp_minimum_reached"] = "Minimum of critical spare parts reached";
 $lang["budget"] = "Budget";
 $lang["communication"] = "Communication";
+$lang["empty_starred_vessels"] = "To access your favorite vessels quickly, please go to the vessel view and mark the star.";
+
 
 return $lang;
