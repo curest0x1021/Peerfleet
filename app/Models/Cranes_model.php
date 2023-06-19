@@ -46,4 +46,32 @@ class Cranes_model extends Crud_model {
 
         return $this->db->query($sql);
     }
+
+    function get_cranes_dropdown($client_id) {
+        $cranes_table = $this->db->prefixTable("cranes");
+
+        $sql = "SELECT DISTINCT crane FROM $cranes_table WHERE $cranes_table.client_id = $client_id";
+        $list = $this->db->query($sql)->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->crane] = $item->crane;
+        }
+
+        return $dropdown;
+    }
+
+    function get_ropes_dropdown($client_id, $crane) {
+        $cranes_table = $this->db->prefixTable("cranes");
+
+        $sql = "SELECT id, rope FROM $cranes_table WHERE client_id = $client_id AND crane = '$crane'";
+        $list = $this->db->query($sql)->getResult();
+
+        $dropdown = array();
+        foreach ($list as $item) {
+            $dropdown[] = array("id" => $item->id, "text" => $item->rope);
+        }
+
+        return $dropdown;
+    }
 }

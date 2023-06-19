@@ -13,6 +13,7 @@ class Cranes_loadtest_model extends Crud_model {
 
     function get_details($options = array()) {
         $loadtest_table = $this->db->prefixTable("cranes_loadtest");
+        $cranes_table = $this->db->prefixTable("cranes");
 
         $where = "";
         $id = $this->_get_clean_value($options, "id");
@@ -24,10 +25,11 @@ class Cranes_loadtest_model extends Crud_model {
             $where .= " AND $loadtest_table.client_id = $client_id";
         }
 
-        $sql = "SELECT $loadtest_table.*
+        $sql = "SELECT $loadtest_table.*, $cranes_table.crane, $cranes_table.rope
                 FROM $loadtest_table
+                LEFT JOIN $cranes_table ON $cranes_table.id = $loadtest_table.rope_id
                 WHERE deleted=0 $where
-                ORDER BY test_date DESC";
+                ORDER BY $loadtest_table.test_date DESC";
 
         return $this->db->query($sql);
     }

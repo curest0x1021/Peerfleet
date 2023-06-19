@@ -1,7 +1,7 @@
 <div id="page-content" class="page-wrapper clearfix">
     <div class="clearfix grid-button">
         <ul id="crane-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">
-            <li><a role="presentation" data-bs-toggle="tab" class="active show"><?php echo app_lang('cranes'); ?></a></li>
+            <li><a role="presentation" data-bs-toggle="tab" class="active show"><?php echo app_lang('wires'); ?></a></li>
         </ul>
         <div class="card">
             <div class="table-responsive">
@@ -32,11 +32,11 @@
                     "class": "text-center w15p"
                 },
                 {
-                    title: "<?php echo app_lang("ropes") ?>",
+                    title: "<?php echo app_lang("wires") ?>",
                     "class": "text-center w15p"
                 },
                 {
-                    title: "<?php echo app_lang("required_exchange_ropes") ?>",
+                    title: "<?php echo app_lang("required_exchange_wires") ?>",
                     "class": "text-center w15p"
                 },
                 {
