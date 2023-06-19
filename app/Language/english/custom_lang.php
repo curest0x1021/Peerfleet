@@ -32,6 +32,7 @@ $lang["responsible_person"] = "Responsible person";
 $lang["vessel_contact"] = "Vessel contact";
 $lang["account_already_exists_for_your_charter_name"] = "Account already exists for your charter name.";
 $lang["vessel_info"] = "Vessel info";
+$lang["vessel_email"] = "E-Mail (limit 10 MB)";
 $lang["mobile"] = "Mobile";
 $lang["sat"] = "SAT";
 $lang["iridium_phone"] = "Iridium Phone";
@@ -164,5 +165,6 @@ $lang["rope_exchange_required"] = "Rope exchange required";
 $lang["notification_rope_exchange_required"] = "Rope exchange required";
 $lang["notification_csp_minimum_reached"] = "Minimum of critical spare parts reached";
 $lang["budget"] = "Budget";
+$lang["communication"] = "Communication";
 
 return $lang;

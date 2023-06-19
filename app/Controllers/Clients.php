@@ -700,17 +700,13 @@ class Clients extends Security_Controller {
 
         if ($client_id) {
             $view_data["client_id"] = clean_data($client_id);
-            $view_data["view_type"] = "";
-        } else {
-            $view_data["client_id"] = "";
-            $view_data["view_type"] = "list_view";
+            $view_data["model_info"] = $this->Clients_model->get_primary_contact($client_id, true);
+            $view_data["label_column"] = "col-3";
+            $view_data["field_column"] = "col-9";
+
+            $view_data['can_edit_clients'] = $this->can_edit_clients();
+            return $this->template->view("clients/contacts/index", $view_data);
         }
-        $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("client_contacts", $this->login_user->is_admin, $this->login_user->user_type);
-        $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("client_contacts", $this->login_user->is_admin, $this->login_user->user_type);
-
-        $view_data['can_edit_clients'] = $this->can_edit_clients();
-
-        return $this->template->view("clients/contacts/index", $view_data);
     }
 
     /* contact add modal */
@@ -800,17 +796,19 @@ class Clients extends Security_Controller {
         $user_data = array(
             "first_name" => $this->request->getPost('first_name'),
             "last_name" => $this->request->getPost('last_name'),
+            "email" => $this->request->getPost("email"),
             "sat" => $this->request->getPost('sat'),
             "phone" => $this->request->getPost('phone'),
             "alternative_phone" => $this->request->getPost('alternative_phone'),
             "gender" => is_null($this->request->getPost('gender')) ? "" : $this->request->getPost('gender'),
-            "note" => $this->request->getPost('note')
+            // "note" => $this->request->getPost('note')
         );
 
         $this->validate_submitted_data(array(
-            "first_name" => "required",
-            "last_name" => "required",
-            "client_id" => "required|numeric"
+            // "first_name" => "required",
+            // "last_name" => "required",
+            "client_id" => "required|numeric",
+            "email" => "required"
         ));
 
         if (!$contact_id) {
@@ -1951,7 +1949,7 @@ class Clients extends Security_Controller {
         $header_value = get_array_value($allowed_headers, $key);
 
         //there has no date field on default import fields
-        if (((count($allowed_headers) - 1) < $key) && $data) {
+        if (((count($allowed_headers)) > $key) && $data) {
             if ($header_value == "description") {
 
             } else {
@@ -2198,6 +2196,7 @@ class Clients extends Security_Controller {
         return array(
             $data->id,
             $data->name,
+            $data->description,
             $data->norm,
             $data->diameter_nominal,
             $data->pressure_rating,

@@ -24,11 +24,7 @@
         }
 
         var showOption = true;
-        if (("<?php echo $login_user->user_type; ?>" === "client") || ("<?php
-                if (!$show_option) {
-                    echo "0";
-                }
-                ?>" === "0")) {
+        if (("<?php echo $login_user->user_type; ?>" === "client")) {
             showOption = false;
         }
 
