@@ -1,7 +1,8 @@
-<?php //copy from default_lang.php file and update
+<?php
+
+//copy from default_lang.php file and update
 
 $lang["example"] = "Example";
-
 $lang["vessels"] = "Vessels";
 $lang["vessel"] = "Vessel";
 $lang["import_vessels"] = "Import vessels";
@@ -60,9 +61,7 @@ $lang["crane"] = "Crane";
 $lang["add_crane"] = "Add crane";
 $lang["edit_crane"] = "Edit crane";
 $lang["delete_crane"] = "Delete crane";
-$lang["ropes"] = "Ropes";
-$lang["rope"] = "Rope";
-$lang["required_exchange_ropes"] = "Required exchange ropes";
+$lang["required_exchange_wires"] = "Required exchange wires";
 $lang["crane1"] = "Crane #1";
 $lang["crane2"] = "Crane #2";
 $lang["crane3"] = "Crane #3";
@@ -71,9 +70,9 @@ $lang["provision"] = "Provision";
 $lang["rescueboat"] = "Rescueboat";
 $lang["liferaft"] = "Liferaft";
 $lang["freefallboat"] = "Freefallboat";
-$lang["has_1_rope"] = " (has 1 rope)";
-$lang["has_2_ropes"] = " (has 2 ropes)";
-$lang["has_3_ropes"] = " (has 3 ropes)";
+$lang["has_1_wire"] = " (has 1 wire)";
+$lang["has_2_wires"] = " (has 2 wires)";
+$lang["has_3_wires"] = " (has 3 wires)";
 $lang["swl"] = "SWL";
 $lang["initial"] = "Initial";
 $lang["1st_replacement"] = "1st replacement";
@@ -81,7 +80,7 @@ $lang["2nd_replacement"] = "2nd replacement";
 $lang["3rd_replacement"] = "3rd replacement";
 $lang["4th_replacement"] = "4th replacement";
 $lang["5th_replacement"] = "5th replacement";
-$lang["crane_details"] = "Crane details";
+$lang["wire_details"] = "Wire details";
 $lang["facts_and_figure"] = "Facts & figure";
 $lang["add_history"] = "Add history";
 $lang["replacement"] = "Replacement";
@@ -92,7 +91,7 @@ $lang["result"] = "Result";
 $lang["add_loadtest"] = "Add load test";
 $lang["edit_loadtest"] = "Edit load test";
 $lang["delete_loadtest"] = "Delete load test";
-$lang["critical_spare_parts"] = "Critical spare parts";
+$lang["critical_spare_parts"] = "Spare parts";
 $lang["items"] = "Items";
 $lang["part_number"] = "Part number";
 $lang["part_description"] = "Part description";
@@ -159,14 +158,20 @@ $lang["risk_assessment"] = "Risk assessment";
 $lang["serial_number"] = "Serial number";
 $lang["pms_scs_number"] = "PMS/SCS number";
 $lang["manage_categories"] = "Manage categories";
-
-$lang["csp_minimum_reached"] = "Minimum of critical spare parts reached";
-$lang["rope_exchange_required"] = "Rope exchange required";
-$lang["notification_rope_exchange_required"] = "Rope exchange required";
-$lang["notification_csp_minimum_reached"] = "Minimum of critical spare parts reached";
+$lang["csp_minimum_reached"] = "Minimum of spare parts reached";
+$lang["rope_exchange_required"] = "Wire exchange required";
+$lang["notification_rope_exchange_required"] = "Wire exchange required";
+$lang["notification_csp_minimum_reached"] = "Minimum of spare parts reached";
 $lang["budget"] = "Budget";
 $lang["communication"] = "Communication";
 $lang["empty_starred_vessels"] = "To access your favorite vessels quickly, please go to the vessel view and mark the star.";
-
+$lang["wires"] = "Wires";
+$lang["wire"] = "Wire";
+$lang["wire_inspection"] = "Wire inspection";
+$lang["next_suggested_inspection"] = "Next suggested inspection";
+$lang["add_inspection"] = "Add inspection";
+$lang["edit_inspection"] = "Edit inspection";
+$lang["wire_inspection_result"] = "Wire inspection result";
+$lang["inspection_date"] = "Inspection date";
 
 return $lang;
