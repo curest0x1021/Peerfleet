@@ -63,7 +63,7 @@ class App_Controller extends Controller {
     public $Estimate_items_model;
     public $General_files_model;
     public $Todo_model;
-    public $Client_groups_model;
+    public $Vessel_types_model;
     public $Dashboards_model;
     public $Lead_status_model;
     public $Lead_source_model;
@@ -80,6 +80,21 @@ class App_Controller extends Controller {
     public $Proposal_items_model;
     public $Checklist_template_model;
     public $Checklist_groups_model;
+    public $Subscriptions_model;
+    public $Subscription_items_model;
+    public $Sea_valves_model;
+    public $Cranes_model;
+    public $Cranes_info_model;
+    public $Cranes_history_model;
+    public $Cranes_loadtest_model;
+    public $Critical_spare_parts_model;
+    public $Units_model;
+    public $Manufacturers_model;
+    public $Applicable_equipments_model;
+    public $Ship_equipments_model;
+    public $Warehouses_model;
+    public $Warehouse_spare_model;
+    public $Cranes_wire_inspection_model;
 
     public function __construct() {
         //main template to make frame of this app
@@ -164,7 +179,7 @@ class App_Controller extends Controller {
             'Estimate_items_model',
             'General_files_model',
             'Todo_model',
-            'Client_groups_model',
+            'Vessel_types_model',
             'Dashboards_model',
             'Lead_status_model',
             'Lead_source_model',
@@ -182,7 +197,20 @@ class App_Controller extends Controller {
             'Checklist_template_model',
             'Checklist_groups_model',
             'Subscriptions_model',
-            'Subscription_items_model'
+            'Subscription_items_model',
+            'Sea_valves_model',
+            'Cranes_model',
+            'Cranes_info_model',
+            'Cranes_history_model',
+            'Cranes_loadtest_model',
+            'Critical_spare_parts_model',
+            'Units_model',
+            'Manufacturers_model',
+            'Applicable_equipments_model',
+            'Ship_equipments_model',
+            'Warehouses_model',
+            'Warehouse_spare_model',
+            'Cranes_wire_inspection_model'
         );
     }
 

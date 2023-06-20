@@ -24,32 +24,14 @@
             </div>
         </div>
 
-        <?php if ($client_id || $login_user->user_type == "client") { ?>
-            <input type="hidden" name="project_type" value="client_project" />
-        <?php } else { ?>
-            <div class="form-group">
-                <div class="row">
-                    <label for="project_type" class=" col-md-3"><?php echo app_lang('project_type'); ?></label>
-                    <div class=" col-md-9">
-                        <?php
-                        echo form_dropdown("project_type", array(
-                            "client_project" => app_lang("client_project"),
-                            "internal_project" => app_lang("internal_project"),
-                                ), array($model_info->project_type ? $model_info->project_type : "client_project"), "class='select2 validate-hidden' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "' id='project-type-dropdown'");
-                        ?>
-                    </div>
-                </div>
-            </div>
-        <?php } ?>
-
         <?php if ($client_id) { ?>
             <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" />
         <?php } else if ($login_user->user_type == "client") { ?>
             <input type="hidden" name="client_id" value="<?php echo $model_info->client_id; ?>" />
         <?php } else { ?>
-            <div class="form-group <?php echo $model_info->project_type === "internal_project" ? 'hide' : ''; ?>" id="clients-dropdown">
+            <div class="form-group" id="clients-dropdown">
                 <div class="row">
-                    <label for="client_id" class=" col-md-3"><?php echo app_lang('client'); ?></label>
+                    <label for="client_id" class=" col-md-3"><?php echo app_lang('vessel'); ?></label>
                     <div class=" col-md-9">
                         <?php
                         echo form_dropdown("client_id", $clients_dropdown, array($model_info->client_id), "class='select2 validate-hidden' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
@@ -114,7 +96,7 @@
 
         <div class="form-group">
             <div class="row">
-                <label for="price" class=" col-md-3"><?php echo app_lang('price'); ?></label>
+                <label for="price" class=" col-md-3"><?php echo app_lang('budget'); ?></label>
                 <div class=" col-md-9">
                     <?php
                     echo form_input(array(
@@ -122,7 +104,7 @@
                         "name" => "price",
                         "value" => $model_info->price ? to_decimal_format($model_info->price) : "",
                         "class" => "form-control",
-                        "placeholder" => app_lang('price')
+                        "placeholder" => app_lang('budget')
                     ));
                     ?>
                 </div>

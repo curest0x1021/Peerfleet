@@ -183,7 +183,7 @@ class Users_model extends Crud_model {
 
         $available_order_by_list = array(
             "first_name" => $users_table . ".first_name",
-            "company_name" => $clients_table . ".company_name",
+            "charter_name" => $clients_table . ".charter_name",
             "job_title" => $users_table . ".job_title",
             "email" => $users_table . ".email",
             "phone" => $users_table . ".phone",
@@ -208,7 +208,7 @@ class Users_model extends Crud_model {
             $where .= " OR $users_table.email LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR $users_table.phone LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR $users_table.skype LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $clients_table.company_name LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $clients_table.charter_name LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR CONCAT($users_table.first_name, ' ', $users_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
             $where .= $this->get_custom_field_search_query($users_table, "client_contacts", $search_by);
             $where .= " )";
@@ -339,7 +339,7 @@ class Users_model extends Crud_model {
             $where .= " AND $users_table.id !=$exlclude_user";
         }
 
-        $sql = "SELECT $users_table.id,$users_table.client_id, $users_table.user_type, $users_table.first_name, $users_table.last_name, $clients_table.company_name,
+        $sql = "SELECT $users_table.id,$users_table.client_id, $users_table.user_type, $users_table.first_name, $users_table.last_name, $clients_table.charter_name,
             $users_table.image,  $users_table.job_title, $users_table.last_online
         FROM $users_table
         LEFT JOIN $clients_table ON $clients_table.id = $users_table.client_id AND $clients_table.deleted=0
@@ -400,7 +400,7 @@ class Users_model extends Crud_model {
             }
         }
 
-        $sql = "SELECT CONCAT($users_table.first_name, ' ',$users_table.last_name) AS member_name, $users_table.last_online, $users_table.id, $users_table.image, $users_table.job_title, $users_table.user_type, $clients_table.company_name
+        $sql = "SELECT CONCAT($users_table.first_name, ' ',$users_table.last_name) AS member_name, $users_table.last_online, $users_table.id, $users_table.image, $users_table.job_title, $users_table.user_type, $clients_table.charter_name
         FROM $users_table
         LEFT JOIN $clients_table ON $clients_table.id = $users_table.client_id AND $clients_table.deleted=0
         WHERE $users_table.deleted=0 AND $users_table.status='active' $where
@@ -474,7 +474,7 @@ class Users_model extends Crud_model {
         $users_table = $this->db->prefixTable('users');
         $clients_table = $this->db->prefixTable('clients');
 
-        $sql = "SELECT $users_table.id AS user_id, $clients_table.company_name 
+        $sql = "SELECT $users_table.id AS user_id, $clients_table.charter_name 
         FROM $users_table   
         LEFT JOIN $clients_table ON $clients_table.id = $users_table.client_id AND $clients_table.deleted=0
         WHERE $users_table.deleted=0 AND $users_table.email='$email' AND $users_table.status='active' AND $users_table.disable_login=0 AND $users_table.user_type='client' AND $users_table.id!=$id ";

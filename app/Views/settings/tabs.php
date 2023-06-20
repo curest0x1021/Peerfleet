@@ -11,7 +11,7 @@ $settings_menu = array(
         array("name" => "notifications", "url" => "settings/notifications"),
         array("name" => "integration", "url" => "settings/integration"),
         array("name" => "cron_job", "url" => "settings/cron_job"),
-        array("name" => "updates", "url" => "Updates"),
+        // array("name" => "updates", "url" => "Updates"),
     ),
     "access_permission" => array(),
     "client_portal" => array(
@@ -25,7 +25,11 @@ $settings_menu = array(
     ),
     "setup" => array(
         array("name" => "custom_fields", "url" => "custom_fields"),
-        array("name" => "client_groups", "url" => "client_groups"),
+        array("name" => "vessel_types", "url" => "vessel_types"),
+        array("name" => "units", "url" => "units"),
+        array("name" => "manufacturers", "url" => "manufacturers"),
+        array("name" => "applicable_equipments", "url" => "applicable_equipments"),
+        array("name" => "ship_equipments", "url" => "ship_equipments"),
         array("name" => "tasks", "url" => "task_status"),
     ),
 );
@@ -46,17 +50,17 @@ if (get_setting("module_attendance") == "1") {
 
 $settings_menu["sales_and_prospects"][] = array("name" => "item_categories", "url" => "item_categories");
 
-if (get_setting("module_invoice") == "1") {
-    $settings_menu["sales_and_prospects"][] = array("name" => "invoices", "url" => "settings/invoices");
-}
+// if (get_setting("module_invoice") == "1") {
+//     $settings_menu["sales_and_prospects"][] = array("name" => "invoices", "url" => "settings/invoices");
+// }
 
 if (get_setting("module_order") == "1") {
     $settings_menu["sales_and_prospects"][] = array("name" => "orders", "url" => "settings/orders");
 }
 
-if (get_setting("module_estimate") == "1") {
-    $settings_menu["sales_and_prospects"][] = array("name" => "estimates", "url" => "settings/estimates");
-}
+// if (get_setting("module_estimate") == "1") {
+//     $settings_menu["sales_and_prospects"][] = array("name" => "estimates", "url" => "settings/estimates");
+// }
 
 if (get_setting("module_proposal") == "1") {
     $settings_menu["sales_and_prospects"][] = array("name" => "proposals", "url" => "settings/proposals");
@@ -85,9 +89,9 @@ if (get_setting("module_event") == "1") {
 }
 
 
-if (get_setting("module_expense") == "1") {
-    $settings_menu["setup"][] = array("name" => "expense_categories", "url" => "expense_categories");
-}
+// if (get_setting("module_expense") == "1") {
+//     $settings_menu["setup"][] = array("name" => "expense_categories", "url" => "expense_categories");
+// }
 
 if (get_setting("module_leave") == "1") {
     $settings_menu["setup"][] = array("name" => "leave_types", "url" => "leave_types");
@@ -97,9 +101,9 @@ if (get_setting("module_ticket") == "1") {
     $settings_menu["setup"][] = array("name" => "tickets", "url" => "ticket_types");
 }
 
-if (get_setting("module_lead") == "1") {
-    $settings_menu["setup"][] = array("name" => "leads", "url" => "lead_status");
-}
+// if (get_setting("module_lead") == "1") {
+//     $settings_menu["setup"][] = array("name" => "leads", "url" => "lead_status");
+// }
 
 $settings_menu["setup"][] = array("name" => "gdpr", "url" => "settings/gdpr");
 $settings_menu["setup"][] = array("name" => "pages", "url" => "pages");

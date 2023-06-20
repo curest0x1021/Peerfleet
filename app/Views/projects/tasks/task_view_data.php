@@ -44,6 +44,14 @@ if ($total_sub_tasks) {
                     <?php } ?>
 
                     <div class="col-md-12 mb15 mt15">
+                        <strong><?php echo app_lang('dock_list_number') . ": "; ?></strong> <?php echo $model_info->dock_list_number; ?>
+                    </div>
+
+                    <div class="col-md-12 mb15">
+                        <strong><?php echo app_lang('reference_drawing') . ": "; ?></strong> <?php echo $model_info->reference_drawing; ?>
+                    </div>
+
+                    <div class="col-md-12 mb15">
                         <strong><?php echo app_lang('milestone') . ": "; ?></strong> <?php echo get_update_task_info_anchor_data($model_info, "milestone", $can_edit_tasks); ?>
                     </div>
 
@@ -63,7 +71,7 @@ if ($total_sub_tasks) {
                     </div>
 
                     <div class="col-md-12 mb15">
-                        <strong><?php echo app_lang('label') . ": " ?></strong><?php echo get_update_task_info_anchor_data($model_info, "labels", $can_edit_tasks, $labels); ?>
+                        <strong><?php echo app_lang('category') . ": " ?></strong><?php echo get_update_task_info_anchor_data($model_info, "labels", $can_edit_tasks, $labels); ?>
                     </div>
 
                     <div class="col-md-12 mb15">
@@ -125,9 +133,9 @@ if ($total_sub_tasks) {
 
                     <div class="col-md-12 mb15">
                         <?php
-                        if ($show_timer) {
-                            echo view("projects/tasks/task_timer");
-                        }
+                        // if ($show_timer) {
+                        //     echo view("projects/tasks/task_timer");
+                        // }
                         ?> 
                     </div>
 

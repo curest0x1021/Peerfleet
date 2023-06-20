@@ -418,6 +418,7 @@ class Tasks_model extends Crud_model {
         $clients_table = $this->db->prefixTable('clients');
         $notifications_table = $this->db->prefixTable("notifications");
         $checklist_items_table = $this->db->prefixTable('checklist_items');
+        $comments_table = $this->db->prefixTable('project_comments');
 
         $where = "";
 
@@ -526,12 +527,12 @@ class Tasks_model extends Crud_model {
 
         $this->db->query("SET SQL_BIG_SELECTS=1");
 
-        $sql = "SELECT $tasks_table.id, $tasks_table.title, $tasks_table.start_date, $tasks_table.deadline, $tasks_table.sort, IF($tasks_table.sort!=0, $tasks_table.sort, $tasks_table.id) AS new_sort, $tasks_table.assigned_to, $tasks_table.labels, $tasks_table.status_id, $tasks_table.project_id, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS assigned_to_user, $tasks_table.priority_id, $projects.title AS project_title, (SELECT $clients_table.company_name FROM $clients_table WHERE id=(SELECT $projects.client_id FROM $projects WHERE $projects.id=$tasks_table.project_id)) AS client_name, $projects.project_type AS project_type,
+        $sql = "SELECT $tasks_table.id, $tasks_table.title, $tasks_table.start_date, $tasks_table.deadline, $tasks_table.sort, IF($tasks_table.sort!=0, $tasks_table.sort, $tasks_table.id) AS new_sort, $tasks_table.assigned_to, $tasks_table.labels, $tasks_table.status_id, $tasks_table.project_id, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS assigned_to_user, $tasks_table.priority_id, $projects.title AS project_title, (SELECT $clients_table.charter_name FROM $clients_table WHERE id=(SELECT $projects.client_id FROM $projects WHERE $projects.id=$tasks_table.project_id)) AS client_name, $projects.project_type AS project_type,
                 $task_priority_table.title AS priority_title, $task_priority_table.icon AS priority_icon, $task_priority_table.color AS priority_color,
                 $users_table.image as assigned_to_avatar, $tasks_table.parent_task_id, sub_tasks_table.id AS has_sub_tasks, parent_tasks_table.title AS parent_task_title, $notifications_table.id AS unread, 
                 (SELECT COUNT($checklist_items_table.id) FROM $checklist_items_table WHERE $checklist_items_table.deleted=0 AND $checklist_items_table.task_id=$tasks_table.id) AS total_checklist,
                 (SELECT COUNT($checklist_items_table.id) FROM $checklist_items_table WHERE $checklist_items_table.is_checked=1 AND $checklist_items_table.deleted=0 AND $checklist_items_table.task_id=$tasks_table.id) AS total_checklist_checked,
-                COUNT(sub_tasks_table.id) AS total_sub_tasks, completed_sub_tasks_table.total_sub_tasks_done,
+                COUNT(sub_tasks_table.id) AS total_sub_tasks, completed_sub_tasks_table.total_sub_tasks_done, $comments_table.files,
                 $select_labels_data_query
         FROM $tasks_table
         LEFT JOIN (
@@ -555,6 +556,7 @@ class Tasks_model extends Crud_model {
         LEFT JOIN $task_priority_table ON $tasks_table.priority_id = $task_priority_table.id 
         LEFT JOIN $milestones_table ON $tasks_table.milestone_id=$milestones_table.id 
         LEFT JOIN $notifications_table ON $notifications_table.task_id = $tasks_table.id AND $notifications_table.deleted=0 AND $notifications_table.event='project_task_commented' AND !FIND_IN_SET('$unread_status_user_id', $notifications_table.read_by) AND $notifications_table.user_id!=$unread_status_user_id
+        LEFT JOIN $comments_table ON $comments_table.task_id = $tasks_table.id
         $extra_left_join
         WHERE $tasks_table.deleted=0 $where $custom_fields_where 
         GROUP BY $tasks_table.id
