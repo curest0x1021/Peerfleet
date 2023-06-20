@@ -68,7 +68,7 @@ class Security_Controller extends App_Controller {
         $info->module_group = $group;
 
         //admin users has access to everything
-        if ($this->login_user->is_admin) {
+        if ($this->login_user->is_admin || $group === "client" || $group === "crane" || $group === "critical_spare_parts") {
             $info->access_type = "all";
         } else {
 
@@ -91,7 +91,7 @@ class Security_Controller extends App_Controller {
                 } else if ($group === "ticket") {
                     //check the accessable ticket types
                     $info->allowed_ticket_types = $permissions;
-                } else if ($group === "client") {
+                } else if ($group === "client" || $group === "crane" || $group === "critical_spare_parts") {
                     //check the accessable client groups
                     $info->allowed_client_groups = $permissions;
                 }
@@ -127,7 +127,7 @@ class Security_Controller extends App_Controller {
     protected function access_only_allowed_members() {
         if ($this->access_type === "all") {
             return true; //can access if user has permission
-        } else if (($this->module_group === "ticket" && ($this->access_type === "specific" || $this->access_type === "assigned_only")) || ($this->module_group === "lead" && $this->access_type === "own") || ($this->module_group === "client" && ($this->access_type === "own" || $this->access_type === "read_only" || $this->access_type === "specific")) || ($this->module_group === "estimate" && $this->access_type === "own")) {
+        } else if (($this->module_group === "ticket" && ($this->access_type === "specific" || $this->access_type === "assigned_only")) || ($this->module_group === "lead" && $this->access_type === "own") || (($this->module_group === "client" || $this->module_group === "crane" || $this->module_group == "critical_spare_parts") && ($this->access_type === "own" || $this->access_type === "read_only" || $this->access_type === "specific")) || ($this->module_group === "estimate" && $this->access_type === "own")) {
             //can access if it's tickets module and user has a pertial access
             //can access if it's leads module and user has access to own leads
             //can access if it's clients module and user has a pertial access
@@ -145,7 +145,7 @@ class Security_Controller extends App_Controller {
             return true; //can access if user has permission
         } else if ($this->module_group === "ticket" && ($this->access_type === "specific" || $this->access_type === "assigned_only")) {
             return true; //can access if it's tickets module and user has a pertial access
-        } else if ($this->module_group === "client" && ($this->access_type === "own" || $this->access_type === "read_only" || $this->access_type === "specific")) {
+        } else if (($this->module_group === "client" || $this->module_group === "crane" || $this->module_group === "critical_spare_parts") && ($this->access_type === "own" || $this->access_type === "read_only" || $this->access_type === "specific")) {
             return true; //can access if it's clients module and user has a pertial access
         } else if ($this->login_user->client_id === $client_id) {
             return true; //can access if client id match 
@@ -335,30 +335,54 @@ class Security_Controller extends App_Controller {
         }
     }
 
-    protected function _get_groups_dropdown_select2_data($show_header = false) {
-        $client_groups = $this->Client_groups_model->get_all()->getResult();
+    protected function _get_vessel_types_dropdown_select2_data($show_header = false) {
+        $vessel_types = $this->Vessel_types_model->get_all()->getResult();
         $groups_dropdown = array();
 
         if ($show_header) {
-            $groups_dropdown[] = array("id" => "", "text" => "- " . app_lang("client_groups") . " -");
+            $groups_dropdown[] = array("id" => "", "text" => "- " . app_lang("vessel_types") . " -");
         }
 
-        foreach ($client_groups as $group) {
+        foreach ($vessel_types as $group) {
             $groups_dropdown[] = array("id" => $group->id, "text" => $group->title);
         }
         return $groups_dropdown;
     }
 
+    protected function get_vessels_dropdown($show_header = false) {
+        $vessels = $this->Clients_model->get_all_where(array("deleted" => 0))->getResult();
+        $vessels_dropdown = array();
+
+        if ($show_header) {
+            $vessels_dropdown[] = array("id" => "", "text" => "- " . app_lang("vessel") . " -");
+        }
+
+        foreach ($vessels as $item) {
+            $vessels_dropdown[] = array("id" => $item->id, "text" => $item->charter_name);
+        }
+        return json_encode($vessels_dropdown);
+    }
+
+    protected function critical_spare_parts_dropdown() {
+        $list = $this->Critical_spare_parts_model->get_all_where(array("deleted" => 0))->getResult();
+        $dropdown = array("" => "-");
+
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+        return $dropdown;
+    }
+
     protected function get_clients_and_leads_dropdown($return_json = false) {
         $clients_dropdown = array("" => "-");
         $clients_json_dropdown = array(array("id" => "", "text" => "-"));
-        $clients = $this->Clients_model->get_all_where(array("deleted" => 0), 0, 0, "is_lead")->getResult();
+        $clients = $this->Clients_model->get_all_where(array("deleted" => 0))->getResult();
 
         foreach ($clients as $client) {
-            $company_name = $client->is_lead ? app_lang("lead") . ": " . $client->company_name : $client->company_name;
+            $charter_name = $client->charter_name;
 
-            $clients_dropdown[$client->id] = $company_name;
-            $clients_json_dropdown[] = array("id" => $client->id, "text" => $company_name);
+            $clients_dropdown[$client->id] = $charter_name;
+            $clients_json_dropdown[] = array("id" => $client->id, "text" => $charter_name);
         }
 
         return $return_json ? $clients_json_dropdown : $clients_dropdown;
@@ -700,6 +724,50 @@ class Security_Controller extends App_Controller {
         return $projects_dropdown;
     }
 
+    protected function get_manufacturers_dropdown() {
+        $list = $this->Manufacturers_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
+    protected function get_applicable_machinery_equipments_dropdown() {
+        $list = $this->Applicable_equipments_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
+    protected function get_ship_machinery_equipments_dropdown() {
+        $list = $this->Ship_equipments_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
+    protected function get_units_dropdown() {
+        $list = $this->Units_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->code] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
     protected function check_access_to_this_item($item_info) {
         if ($this->login_user->user_type === "client") {
             //check if the item has the availability to show on client portal
@@ -729,6 +797,14 @@ class Security_Controller extends App_Controller {
         }
 
         return json_encode($symbol_array);
+    }
+
+    protected function can_access_own_client($client_id) {
+        if ($this->login_user->user_type == "staff" || $this->login_user->client_id == $client_id) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     protected function can_access_this_client($client_id = 0) {

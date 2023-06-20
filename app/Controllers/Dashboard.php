@@ -477,43 +477,27 @@ class Dashboard extends Security_Controller {
         $row = array();
         $columns = array();
 
-        if (get_array_value($widgets, "clock_in_out")) {
-            $columns[] = array("clock_in_out");
-        }
-
         $columns[] = array("my_open_tasks");
 
-        if (get_array_value($widgets, "events_today")) {
-            $columns[] = array("events_today");
+        if (get_array_value($widgets, "open_projects")) {
+            $columns[] = array("open_projects");
         }
 
-        if (get_array_value($widgets, "total_due")) {
-            $columns[] = array("total_due");
+        if (get_array_value($widgets, "open_tickets")) {
+            $columns[] = array("open_tickets");
         }
 
-        if (count($columns) < 4 && get_array_value($widgets, "total_clients")) {
-            $columns[] = array("total_clients");
-        }
-
-        if (count($columns) < 4 && get_array_value($widgets, "total_leads")) {
-            $columns[] = array("total_leads");
-        }
-
-        if (count($columns) < 4 && get_array_value($widgets, "total_contacts")) {
+        if (count($columns) < 3 && get_array_value($widgets, "total_contacts")) {
             $columns[] = array("total_contacts");
         }
 
 
-        if (count($columns) < 4 && get_array_value($widgets, "new_posts")) {
+        if (count($columns) < 3 && get_array_value($widgets, "new_posts")) {
             $columns[] = array("new_posts");
         }
 
-        if (count($columns) < 4 && get_array_value($widgets, "total_hours_worked")) {
+        if (count($columns) < 3 && get_array_value($widgets, "total_hours_worked")) {
             $columns[] = array("total_hours_worked");
-        }
-
-        if (count($columns) < 4 && get_array_value($widgets, "open_projects")) {
-            $columns[] = array("open_projects");
         }
 
 
@@ -542,46 +526,40 @@ class Dashboard extends Security_Controller {
             }
         }
 
-
-        if (get_array_value($widgets, "invoice_overview")) {
-            $columns[] = array("invoice_overview");
+        if (get_array_value($widgets, "my_tasks_overview")) {
+            $columns[] = array("my_tasks_overview");
         }
-
-        if (get_array_value($widgets, "income_vs_expenses")) {
-            $columns[] = array("income_vs_expenses");
-        }
-
 
         if (get_array_value($widgets, "all_tasks_overview")) {
             $columns[] = array("all_tasks_overview");
         }
 
-        if (get_array_value($widgets, "team_members_overview")) {
-            if (get_array_value($widgets, "last_announcement")) {
-                $columns[] = array("team_members_overview", "last_announcement");
-            } else {
-                $columns[] = array("team_members_overview");
-            }
+        if (get_array_value($widgets, "total_clients")) {
+            $columns[] = array("total_clients");
         }
 
-        if (get_array_value($widgets, "ticket_status")) {
-            $columns[] = array("ticket_status");
-        }
+        // if (get_array_value($widgets, "team_members_overview")) {
+        //     if (get_array_value($widgets, "last_announcement")) {
+        //         $columns[] = array("team_members_overview", "last_announcement");
+        //     } else {
+        //         $columns[] = array("team_members_overview");
+        //     }
+        // }
 
 
-        if (get_array_value($widgets, "all_timesheets_statistics")) {
-            $columns[] = array("all_timesheets_statistics");
-        } else if (get_array_value($widgets, "my_timesheet_statistics")) {
-            $columns[] = array("my_timesheet_statistics");
-        }
+        // if (get_array_value($widgets, "all_timesheets_statistics")) {
+        //     // $columns[] = array("all_timesheets_statistics");
+        // } else if (get_array_value($widgets, "my_timesheet_statistics")) {
+        //     $columns[] = array("my_timesheet_statistics");
+        // }
 
-        if (get_array_value($widgets, "estimate_sent_statistics")) {
-            $columns[] = array("estimate_sent_statistics");
-        }
+        // if (get_array_value($widgets, "estimate_sent_statistics")) {
+        //     $columns[] = array("estimate_sent_statistics");
+        // }
 
-        if (get_array_value($widgets, "invoice_statistics")) {
-            $columns[] = array("invoice_statistics");
-        }
+        // if (get_array_value($widgets, "invoice_statistics")) {
+        //     $columns[] = array("invoice_statistics");
+        // }
 
         return $columns;
     }
@@ -643,17 +621,13 @@ class Dashboard extends Security_Controller {
         $row = array();
         $columns = array();
 
-        $columns[] = array("project_timeline");
-        if (get_array_value($widgets, "events") && get_array_value($widgets, "open_projects_list")) {
-            $columns[] = array("events", "open_projects_list");
-        } else if (get_array_value($widgets, "open_projects_list") && get_array_value($widgets, "starred_projects")) {
-            $columns[] = array("open_projects_list", "starred_projects");
+        $columns[] = array("my_tasks_list");
+        if (get_array_value($widgets, "ticket_status")) {
+            $columns[] = array("ticket_status");
         }
 
-        $columns[] = array("todo_list");
-
         $row["columns"] = $columns;
-        $row["ratio"] = "4-4-4";
+        $row["ratio"] = "6-6";
 
         return $row;
     }
@@ -663,11 +637,18 @@ class Dashboard extends Security_Controller {
         $row = array();
         $columns = array();
 
-        $columns[] = array("my_tasks_list");
-        $columns[] = array("sticky_note");
+        // $columns[] = array("project_timeline");
+        // if (get_array_value($widgets, "events") && get_array_value($widgets, "open_projects_list")) {
+        //     $columns[] = array("events", "open_projects_list");
+        // } else if (get_array_value($widgets, "open_projects_list") && get_array_value($widgets, "starred_projects")) {
+        //     $columns[] = array("open_projects_list", "starred_projects");
+        // }
+
+        $columns[] = array("todo_list");
+        $columns[] = array("sticky_note", "events");
 
         $row["columns"] = $columns;
-        $row["ratio"] = "8-4";
+        $row["ratio"] = "6-6";
 
         return $row;
     }

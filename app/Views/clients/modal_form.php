@@ -30,7 +30,7 @@
 
                 if (result.view === "details" || ticket_id) {
                     if (window.showAddNewModal) {
-                        $addMultipleContactsLink.attr("data-post-client_id", result.id);
+                        $addMultipleContactsLink.attr("data-post-vessel_id", result.id);
                         $addMultipleContactsLink.attr("data-title", "<?php echo app_lang('add_multiple_contacts') ?>");
                         $addMultipleContactsLink.attr("data-post-add_type", "multiple");
 
@@ -42,7 +42,7 @@
                         }, 500);
                     }
                 } else if (window.showAddNewModal) {
-                    $addMultipleContactsLink.attr("data-post-client_id", result.id);
+                    $addMultipleContactsLink.attr("data-post-vessel_id", result.id);
                     $addMultipleContactsLink.attr("data-title", "<?php echo app_lang('add_multiple_contacts') ?>");
                     $addMultipleContactsLink.attr("data-post-add_type", "multiple");
 
@@ -56,7 +56,7 @@
             }
         });
         setTimeout(function () {
-            $("#company_name").focus();
+            $("#charter_name").focus();
         }, 200);
 
         //save and open add new contact member modal
@@ -67,4 +67,4 @@
             $(this).trigger("submit");
         });
     });
-</script>    
+</script>

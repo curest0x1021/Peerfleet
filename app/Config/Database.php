@@ -4,6 +4,10 @@ namespace Config;
 
 use CodeIgniter\Database\Config;
 
+define('DB_HOSTNAME', $_SERVER['DB_HOSTNAME']);
+define('DB_USERNAME', $_SERVER['DB_USERNAME']);
+define('DB_PASSWORD', $_SERVER['DB_PASSWORD']);
+define('DB_DATABASE', $_SERVER['DB_DATABASE']);
 /**
  * Database Configuration
  */
@@ -32,10 +36,10 @@ class Database extends Config
 	 */
 	public $default = [
 		'DSN'      => '',
-		'hostname' => 'localhost',
-		'username' => 'root',
-		'password' => '123456',
-		'database' => 'peerfleet',
+		'hostname' => DB_HOSTNAME,
+		'username' => DB_USERNAME,
+		'password' => DB_PASSWORD,
+		'database' => DB_DATABASE,
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => 'pf_',
 		'pConnect' => false,

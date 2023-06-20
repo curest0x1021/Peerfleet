@@ -10,11 +10,9 @@
                     <?php echo view("projects/project_task_pie_chart"); ?>
                 </div>
 
-                <?php if (get_setting('module_project_timesheet')) { ?>
-                    <div class="col-md-12 col-sm-12">
-                        <?php echo view("projects/widgets/total_hours_worked_widget"); ?>
-                    </div>
-                <?php } ?>
+                <div class="col-md-12 col-sm-12">
+                    <?php echo view("projects/project_description"); ?>
+                </div>
 
                 <div class="col-md-12 col-sm-12 project-custom-fields">
                     <?php echo view('projects/custom_fields_list', array("custom_fields_list" => $custom_fields_list)); ?>
@@ -43,10 +41,6 @@
                         <?php echo view("projects/client_contacts/index"); ?>
                     </div>  
                 <?php } ?>
-
-                <div class="col-md-12 col-sm-12">
-                    <?php echo view("projects/project_description"); ?>
-                </div>
 
             </div>
         </div>

@@ -382,7 +382,7 @@ class Projects extends Security_Controller {
             $access_client = $this->get_access_info("client");
             $clients = $this->Clients_model->get_details(array("show_own_clients_only_user_id" => $this->show_own_clients_only_user_id(), "client_groups" => $access_client->allowed_client_groups))->getResult();
             foreach ($clients as $client) {
-                $clients_dropdown[$client->id] = $client->company_name;
+                $clients_dropdown[$client->id] = $client->charter_name;
             }
         }
 
@@ -412,12 +412,12 @@ class Projects extends Security_Controller {
         $estimate_id = $this->request->getPost('estimate_id');
         $status = $this->request->getPost('status');
         $order_id = $this->request->getPost('order_id');
-        $project_type = $this->request->getPost('project_type');
+        $project_type = 'client_project';
 
         $data = array(
             "title" => $this->request->getPost('title'),
             "description" => $this->request->getPost('description'),
-            "client_id" => ($project_type === "internal_project") ? 0 : $this->request->getPost('client_id'),
+            "client_id" => $this->request->getPost('client_id'),
             "start_date" => $this->request->getPost('start_date'),
             "deadline" => $this->request->getPost('deadline'),
             "project_type" => $project_type,
@@ -950,7 +950,7 @@ class Projects extends Security_Controller {
         </div>";
         $start_date = is_date_exists($data->start_date) ? format_to_date($data->start_date, false) : "-";
         $dateline = is_date_exists($data->deadline) ? format_to_date($data->deadline, false) : "-";
-        $price = $data->price ? to_currency($data->price, $data->currency_symbol) : "-";
+        $price = $data->price ? to_currency($data->price, '€') : "-";
 
         //has deadline? change the color of date based on status
         if (is_date_exists($data->deadline)) {
@@ -982,8 +982,8 @@ class Projects extends Security_Controller {
         }
 
         $client_name = "-";
-        if ($data->company_name) {
-            $client_name = anchor(get_uri("clients/view/" . $data->client_id), $data->company_name);
+        if ($data->charter_name) {
+            $client_name = anchor(get_uri("clients/view/" . $data->client_id), $data->charter_name);
         }
 
         $row_data = array(
@@ -1890,8 +1890,8 @@ class Projects extends Security_Controller {
         $task_title = modal_anchor(get_uri("projects/task_view"), $data->task_title, array("title" => app_lang('task_info') . " #$data->task_id", "data-post-id" => $data->task_id, "data-modal-lg" => "1"));
 
         $client_name = "-";
-        if ($data->timesheet_client_company_name) {
-            $client_name = anchor(get_uri("clients/view/" . $data->timesheet_client_id), $data->timesheet_client_company_name);
+        if ($data->timesheet_client_name) {
+            $client_name = anchor(get_uri("clients/view/" . $data->timesheet_client_id), $data->timesheet_client_name);
         }
 
         $duration = convert_seconds_to_time_format($data->hours ? (round(($data->hours * 60), 0) * 60) : (abs(strtotime($end_time) - strtotime($start_time))));
@@ -2030,8 +2030,8 @@ class Projects extends Security_Controller {
             $duration = convert_seconds_to_time_format(abs($data->total_duration));
 
             $client_name = "-";
-            if ($data->timesheet_client_company_name) {
-                $client_name = anchor(get_uri("clients/view/" . $data->timesheet_client_id), $data->timesheet_client_company_name);
+            if ($data->timesheet_client_name) {
+                $client_name = anchor(get_uri("clients/view/" . $data->timesheet_client_id), $data->timesheet_client_name);
             }
 
             $result[] = array(
@@ -2517,6 +2517,7 @@ class Projects extends Security_Controller {
 
         $view_data['projects_dropdown'] = json_encode($projects_dropdown);
         $view_data['can_create_tasks'] = $this->can_create_tasks(false);
+        $view_data['can_edit_tasks'] = $this->can_edit_tasks();
         $view_data['priorities_dropdown'] = $this->_get_priorities_dropdown_list($priority_id);
 
         return $this->template->rander("projects/tasks/my_tasks", $view_data);
@@ -2548,7 +2549,7 @@ class Projects extends Security_Controller {
 
         $view_data['projects_dropdown'] = json_encode($projects_dropdown);
         $view_data['can_create_tasks'] = $this->can_create_tasks(false);
-
+        $view_data['can_edit_tasks'] = $this->can_edit_tasks();
         $view_data['task_statuses'] = $this->Task_status_model->get_details()->getResult();
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("tasks", $this->login_user->is_admin, $this->login_user->user_type);
 
@@ -2985,6 +2986,21 @@ class Projects extends Security_Controller {
             }
         }
 
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "title" => "required|max_length[30]",
+            "project_id" => "required",
+            "category" => "required",
+            "dock_list_number" => "max_length[15]",
+            "reference_drawing" => "max_length[30]",
+            "location" => "max_length[300]",
+            "specification" => "max_length[300]",
+            "requisition_number" => "max_length[30]",
+            "type" => "max_length[30]",
+            "serial_number" => "max_length[30]",
+            "pms_scs_number" => "max_length[30]"
+        ));
+
         $start_date = $this->request->getPost('start_date');
         $assigned_to = $this->request->getPost('assigned_to');
         $collaborators = $this->request->getPost('collaborators');
@@ -3003,13 +3019,35 @@ class Projects extends Security_Controller {
             "points" => $this->request->getPost('points'),
             "status_id" => $status_id,
             "priority_id" => $priority_id ? $priority_id : 0,
-            "labels" => $this->request->getPost('labels'),
+            "labels" => $this->request->getPost('category'),
             "start_date" => $start_date,
             "deadline" => $this->request->getPost('deadline'),
             "recurring" => $recurring,
             "repeat_every" => $repeat_every ? $repeat_every : 0,
             "repeat_type" => $repeat_type ? $repeat_type : NULL,
             "no_of_cycles" => $no_of_cycles ? $no_of_cycles : 0,
+            "dock_list_number" => $this->request->getPost("dock_list_number"),
+            "reference_drawing" => $this->request->getPost("reference_drawing"),
+            "location" => $this->request->getPost("location"),
+            "specification" => $this->request->getPost("specification"),
+            "requisition_number" => $this->request->getPost("requisition_number"),
+            "gas_free_certificate" => $this->request->getPost("gas_free_certificate"),
+            "light" => $this->request->getPost("light"),
+            "ventilation" => $this->request->getPost("ventilation"),
+            "crane_assistance" => $this->request->getPost("crane_assistance"),
+            "cleaning_before" => $this->request->getPost("cleaning_before"),
+            "cleaning_after" => $this->request->getPost("cleaning_after"),
+            "work_permit" => $this->request->getPost("work_permit"),
+            "painting_after_completion" => $this->request->getPost("painting_after_completion"),
+            "parts_on_board" => $this->request->getPost("parts_on_board"),
+            "transport_to_yard_workshop" => $this->request->getPost("transport_to_yard_workshop"),
+            "transport_outside_yard" => $this->request->getPost("transport_outside_yard"),
+            "material_yards_supply" => $this->request->getPost("material_yards_supply"),
+            "material_owners_supply" => $this->request->getPost("material_owners_supply"),
+            "risk_assessment" => $this->request->getPost("risk_assessment"),
+            "type" => $this->request->getPost("type"),
+            "serial_number" => $this->request->getPost("serial_number"),
+            "pms_scs_number" => $this->request->getPost("pms_scs_number"),
         );
 
         if (!$id) {
@@ -3736,6 +3774,8 @@ class Projects extends Security_Controller {
             $data->status_color,
             $check_status,
             $title,
+            $data->dock_list_number,
+            $data->reference_drawing,
             $data->start_date,
             $start_date,
             $data->deadline,
@@ -3743,7 +3783,6 @@ class Projects extends Security_Controller {
             $milestone_title,
             $project_title,
             $assigned_to,
-            $collaborators,
             $status
         );
 
@@ -4367,8 +4406,6 @@ class Projects extends Security_Controller {
     /* prepare a row of file list table */
 
     private function _make_file_row($data, $custom_fields) {
-        $file_icon = get_file_icon(strtolower(pathinfo($data->file_name, PATHINFO_EXTENSION)));
-
         $image_url = get_avatar($data->uploaded_by_user_image);
         $uploaded_by = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->uploaded_by_user_name";
 
@@ -4376,6 +4413,17 @@ class Projects extends Security_Controller {
             $uploaded_by = get_team_member_profile_link($data->uploaded_by, $uploaded_by);
         } else {
             $uploaded_by = get_client_contact_profile_link($data->uploaded_by, $uploaded_by);
+        }
+
+        $file_name = $data->file_name;
+        if (is_viewable_image_file($file_name)) {
+            $project_file_path = get_setting("project_file_path");
+            $file_info = array("file_name" => $data->project_id . "/" . $data->file_name);
+            $thumbnail = get_source_url_of_file($file_info, $project_file_path, "thumbnail");
+            $show = "<img class='mr10 float-start' src='$thumbnail' alt='$file_name' style='width: 40px; height: 40px;'/>";
+        } else {
+            $file_icon = get_file_icon(strtolower(pathinfo($file_name, PATHINFO_EXTENSION)));
+            $show = "<div data-feather='$file_icon' class='mr10 float-start' style='width: 24px; height: 24px;'></div>";
         }
 
         $description = "<div class='float-start text-wrap'>" .
@@ -4392,7 +4440,7 @@ class Projects extends Security_Controller {
 
         $row_data = array(
             $checkmark,
-            "<div data-feather='$file_icon' class='mr10 float-start'></div>" . $description,
+            "<div class='d-flex align-items-center flex-wrap'>" . $show . $description . "</div>",
             $data->category_name ? $data->category_name : "-",
             convert_file_size($data->file_size),
             $uploaded_by,

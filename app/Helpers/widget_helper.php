@@ -123,7 +123,7 @@ if (!function_exists('announcements_alert_widget')) {
 
         $client_group_ids = "";
         if ($ci->login_user->user_type === "client") {
-            $client_group_ids = $ci->Clients_model->get_one($ci->login_user->client_id)->group_ids;
+            // $client_group_ids = $ci->Clients_model->get_one($ci->login_user->client_id)->group_ids;
         }
 
         $announcements = $ci->Announcements_model->get_unread_announcements($ci->login_user->id, $ci->login_user->user_type, $client_group_ids)->getResult();

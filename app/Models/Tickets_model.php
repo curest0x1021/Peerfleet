@@ -113,7 +113,7 @@ class Tickets_model extends Crud_model {
         $available_order_by_list = array(
             "id" => $tickets_table . ".id",
             "title" => $tickets_table . ".title",
-            "client" => $clients_table . ".company_name",
+            "client" => $clients_table . ".charter_name",
             "project" => "project_title",
             "ticket_type" => "ticket_type",
             "assigned_to" => "assigned_to_user",
@@ -138,7 +138,7 @@ class Tickets_model extends Crud_model {
             $where .= " AND (";
             $where .= " $tickets_table.id LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR $tickets_table.title LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $clients_table.company_name LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $clients_table.charter_name LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR $project_table.title LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR $ticket_types_table.title LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR CONCAT(assigned_table.first_name, ' ',assigned_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
@@ -149,7 +149,7 @@ class Tickets_model extends Crud_model {
 
 
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS $tickets_table.*, $ticket_types_table.title AS ticket_type, $clients_table.company_name, $project_table.title AS project_title, $task_table.title AS task_title,
+        $sql = "SELECT SQL_CALC_FOUND_ROWS $tickets_table.*, $ticket_types_table.title AS ticket_type, $clients_table.charter_name, $project_table.title AS project_title, $task_table.title AS task_title,
               CONCAT(assigned_table.first_name, ' ',assigned_table.last_name) AS assigned_to_user, assigned_table.image as assigned_to_avatar, $select_labels_data_query $select_custom_fieds,
               CONCAT(requested_table.first_name, ' ',requested_table.last_name) AS requested_by_name
         FROM $tickets_table
