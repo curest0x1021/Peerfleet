@@ -22,8 +22,8 @@
     echo $ticket_status;
     ?>
     <?php if ($login_user->user_type === "staff" && $ticket_info->client_id) { ?>
-        <span class="text-off ml15"><?php echo app_lang("client") . ": "; ?></span>
-        <?php echo $ticket_info->company_name ? anchor(get_uri("clients/view/" . $ticket_info->client_id), $ticket_info->company_name) : "-"; ?>
+        <span class="text-off ml15"><?php echo app_lang("vessel") . ": "; ?></span>
+        <?php echo $ticket_info->charter_name ? anchor(get_uri("clients/view/" . $ticket_info->client_id), $ticket_info->charter_name) : "-"; ?>
 
         <?php if ($ticket_info->requested_by) { ?>
             <span class="text-off ml15"><?php echo app_lang("requested_by") . ": "; ?></span>

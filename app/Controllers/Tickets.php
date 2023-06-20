@@ -404,7 +404,7 @@ class Tickets extends Security_Controller {
             $data->id,
             anchor(get_uri("tickets/view/" . $data->id), get_ticket_id($data->id), array("class" => "js-ticket", "data-id" => $data->id, "title" => "")),
             $title,
-            $data->company_name ? anchor(get_uri("clients/view/" . $data->client_id), $data->company_name) : ($data->creator_name . " [" . app_lang("unknown_client") . "]"),
+            $data->charter_name ? anchor(get_uri("clients/view/" . $data->client_id), $data->charter_name) : ($data->creator_name . " [" . app_lang("unknown_client") . "]"),
             $data->project_title ? anchor(get_uri("projects/view/" . $data->project_id), $data->project_title) : "-",
             $data->ticket_type ? $data->ticket_type : "-",
             $assigned_to,
@@ -883,7 +883,7 @@ class Tickets extends Security_Controller {
             validate_numeric_value($ticket_id);
             $this->access_only_allowed_members();
 
-            $view_data['clients_dropdown'] = array("" => "-") + $this->Clients_model->get_dropdown_list(array("company_name"));
+            $view_data['clients_dropdown'] = array("" => "-") + $this->Clients_model->get_dropdown_list(array("charter_name"));
             $view_data['ticket_id'] = $ticket_id;
 
             return $this->template->view("tickets/add_client_modal_form", $view_data);
