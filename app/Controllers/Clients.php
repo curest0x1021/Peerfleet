@@ -1375,7 +1375,7 @@ class Clients extends Security_Controller {
             //add client id to contact data
             if (isset($contact_data["email"])) {
                 //validate duplicate email address
-                if ($this->Users_model->is_email_exists($contact_data["email"], 0, $client_id)) {
+                if ($this->Users_model->is_email_exists($contact_data["email"], 0, $client_save_id)) {
                     continue;
                 }
                 $contact_data["client_id"] = $client_save_id;

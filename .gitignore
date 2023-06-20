@@ -1,1 +1,7 @@
 .env
+/files/general
+/files/profile_images
+/files/project_files
+/files/temp
+/files/timeline_files
+/writable
