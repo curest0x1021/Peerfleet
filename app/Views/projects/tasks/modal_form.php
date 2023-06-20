@@ -22,7 +22,7 @@
                             "value" => $add_type == "multiple" ? "" : $model_info->title,
                             "class" => "form-control",
                             "placeholder" => app_lang('title'),
-                            "maxlength" => 30,
+                            "maxlength" => 60,
                             "autofocus" => true,
                             "data-rule-required" => true,
                             "data-msg-required" => app_lang("field_required"),

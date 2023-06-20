@@ -406,7 +406,8 @@ class Projects extends Security_Controller {
         }
 
         $this->validate_submitted_data(array(
-            "title" => "required"
+            "title" => "required",
+            "client_id" => "required",
         ));
 
         $estimate_id = $this->request->getPost('estimate_id');
@@ -2988,7 +2989,7 @@ class Projects extends Security_Controller {
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
-            "title" => "required|max_length[30]",
+            "title" => "required|max_length[60]",
             "project_id" => "required",
             "category" => "required",
             "dock_list_number" => "max_length[15]",

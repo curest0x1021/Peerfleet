@@ -71,7 +71,7 @@
                 {visible: false, searchable: false, order_by: "id"},
                 {title: '<?php echo app_lang("ticket_id") ?>', "iDataSort": 0, "class": "w10p all", order_by: "id"},
                 {title: '<?php echo app_lang("title") ?>', order_by: "title"},
-                {title: '<?php echo app_lang("client") ?>', "class": "w15p", order_by: "client"},
+                {title: '<?php echo app_lang("vessel") ?>', "class": "w15p", order_by: "client"},
                 {title: '<?php echo app_lang("project") ?>', "class": "w15p", visible: projectVisibility, order_by: "project"},
                 {title: '<?php echo app_lang("ticket_type") ?>', "class": "w10p", order_by: "ticket_type"},
                 {title: '<?php echo app_lang("assigned_to") ?>', "class": "w10p", order_by: "assigned_to"},
