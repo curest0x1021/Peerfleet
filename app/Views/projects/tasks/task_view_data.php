@@ -3,6 +3,8 @@ $progress = 0;
 if ($total_sub_tasks) {
     $progress = round($completed_sub_tasks / $total_sub_tasks * 100);
 }
+$yes_icon = '<i data-feather="check-square" class="icon-16"></i>';
+$no_icon = '<i data-feather="square" class="icon-16"></i>';
 ?>
 
 <div class="row">
@@ -200,6 +202,134 @@ if ($total_sub_tasks) {
                     <div class="col-md-12 mb15">
                         <strong><?php echo app_lang('project') . ": "; ?> </strong> <?php echo anchor(get_uri("projects/view/" . $model_info->project_id), $model_info->project_title); ?>
                     </div>
+
+                    <?php if ($model_info->location) { ?>
+                        <div class="col-md-12 mb15">
+                            <strong><?php echo app_lang('location') . ": "; ?> </strong> <?php echo $model_info->location; ?>
+                        </div>
+                    <?php } ?>
+
+                    <?php if ($model_info->specification) { ?>
+                        <div class="col-md-12 mb15">
+                            <strong><?php echo app_lang('specification') . ": "; ?> </strong> <?php echo $model_info->specification; ?>
+                        </div>
+                    <?php } ?>
+
+                    <?php if ($model_info->requisition_number) { ?>
+                        <div class="col-md-12 mb15">
+                            <strong><?php echo app_lang('requisition_number') . ": "; ?> </strong> <?php echo $model_info->requisition_number; ?>
+                        </div>
+                    <?php } ?>
+
+                    <strong><?php echo app_lang('to_be_included') . ":" ?></strong>
+                    <div class="col-md-12 mb15">
+                        <div class="row">
+                            <div class="col-6 border-bottom">
+                                <div class="row">
+                                    <span class="col-9"><?php echo app_lang('gas_free_certificate') . ": "; ?></span>
+                                    <span class="col-3"><?php echo $model_info->gas_free_certificate ? $yes_icon : $no_icon ?></span>
+                                </div>
+                            </div>
+                            <div class="col-6 border-bottom">
+                                <div class="row">
+                                    <span class="col-9"><?php echo app_lang('painting_after_completion') . ": "; ?></span>
+                                    <span class="col-3"><?php echo $model_info->painting_after_completion ? $yes_icon : $no_icon ?></span>
+                                </div>
+                            </div>
+                            <div class="col-6 border-bottom">
+                                <div class="row">
+                                    <span class="col-9"><?php echo app_lang('light') . ": "; ?></span>
+                                    <span class="col-3"><?php echo $model_info->light ? $yes_icon : $no_icon ?></span>
+                                </div>
+                            </div>
+                            <div class="col-6 border-bottom">
+                                <div class="row">
+                                    <span class="col-9"><?php echo app_lang('parts_on_board') . ": "; ?></span>
+                                    <span class="col-3"><?php echo $model_info->parts_on_board ? $yes_icon : $no_icon ?></span>
+                                </div>
+                            </div>
+                            <div class="col-6 border-bottom">
+                                <div class="row">
+                                    <span class="col-9"><?php echo app_lang('ventilation') . ": "; ?></span>
+                                    <span class="col-3"><?php echo $model_info->ventilation ? $yes_icon : $no_icon ?></span>
+                                </div>
+                            </div>
+                            <div class="col-6 border-bottom">
+                                <div class="row">
+                                    <span class="col-9"><?php echo app_lang('transport_to_yard_workshop') . ": "; ?></span>
+                                    <span class="col-3"><?php echo $model_info->transport_to_yard_workshop ? $yes_icon : $no_icon ?></span>
+                                </div>
+                            </div>
+                            <div class="col-6 border-bottom">
+                                <div class="row">
+                                    <span class="col-9"><?php echo app_lang('crane_assistance') . ": "; ?></span>
+                                    <span class="col-3"><?php echo $model_info->crane_assistance ? $yes_icon : $no_icon ?></span>
+                                </div>
+                            </div>
+                            <div class="col-6 border-bottom">
+                                <div class="row">
+                                    <span class="col-9"><?php echo app_lang('transport_outside_yard') . ": "; ?></span>
+                                    <span class="col-3"><?php echo $model_info->transport_outside_yard ? $yes_icon : $no_icon ?></span>
+                                </div>
+                            </div>
+                            <div class="col-6 border-bottom">
+                                <div class="row">
+                                    <span class="col-9"><?php echo app_lang('cleaning_before') . ": "; ?></span>
+                                    <span class="col-3"><?php echo $model_info->cleaning_before ? $yes_icon : $no_icon ?></span>
+                                </div>
+                            </div>
+                            <div class="col-6 border-bottom">
+                                <div class="row">
+                                    <span class="col-9"><?php echo app_lang('material_yards_supply') . ": "; ?></span>
+                                    <span class="col-3"><?php echo $model_info->material_yards_supply ? $yes_icon : $no_icon ?></span>
+                                </div>
+                            </div>
+                            <div class="col-6 border-bottom">
+                                <div class="row">
+                                    <span class="col-9"><?php echo app_lang('cleaning_after') . ": "; ?></span>
+                                    <span class="col-3"><?php echo $model_info->cleaning_after ? $yes_icon : $no_icon ?></span>
+                                </div>
+                            </div>
+                            <div class="col-6 border-bottom">
+                                <div class="row">
+                                    <span class="col-9"><?php echo app_lang('material_owners_supply') . ": "; ?></span>
+                                    <span class="col-3"><?php echo $model_info->material_owners_supply ? $yes_icon : $no_icon ?></span>
+                                </div>
+                            </div>
+                            <div class="col-6 border-bottom">
+                                <div class="row">
+                                    <span class="col-9"><?php echo app_lang('work_permit') . ": "; ?></span>
+                                    <span class="col-3"><?php echo $model_info->work_permit ? $yes_icon : $no_icon ?></span>
+                                </div>
+                            </div>
+                            <div class="col-6 border-bottom">
+                                <div class="row">
+                                    <span class="col-9"><?php echo app_lang('risk_assessment') . ": "; ?></span>
+                                    <span class="col-3"><?php echo $model_info->risk_assessment ? $yes_icon : $no_icon ?></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <strong><?php echo app_lang('maker_informations') . ":"; ?></strong>
+                    <?php if ($model_info->type) { ?>
+                        <div class="col-md-12 mb15">
+                            <?php echo app_lang('type') . ": "; ?> <?php echo $model_info->type; ?>
+                        </div>
+                    <?php } ?>
+
+                    <?php if ($model_info->serial_number) { ?>
+                        <div class="col-md-12 mb15">
+                            <?php echo app_lang('serial_number') . ": "; ?> <?php echo $model_info->serial_number; ?>
+                        </div>
+                    <?php } ?>
+
+                    <?php if ($model_info->pms_scs_number) { ?>
+                        <div class="col-md-12 mb15">
+                            <?php echo app_lang('pms_scs_number') . ": "; ?> <?php echo $model_info->pms_scs_number; ?>
+                        </div>
+                    <?php } ?>
+
 
                     <?php
                     if (count($custom_fields_list)) {
