@@ -6,11 +6,9 @@
             <button id="show_fleet" class="btn btn-primary"><?php echo app_lang('show_fleet'); ?></button>
         </div>
     </div>
-    <div class="card-body">
-        <div class="table-responsive" id="total-clients-widget-table">
-            <table id="client-table" class="display" cellspacing="0" width="100%">
-            </table>
-        </div>
+    <div class="table-responsive" id="total-clients-widget-table">
+        <table id="client-table" class="display" cellspacing="0" width="100%">
+        </table>
     </div>
 </div>
 
@@ -18,7 +16,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         initScrollbar('#total-clients-widget-table', {
-            setHeight: 285
+            setHeight: 330
         });
 
         $("#client-table").appTable({
@@ -27,10 +25,10 @@
             displayLength: 30,
             responsive: false, //hide responsive (+) icon
             columns: [
-                {title: '<?php echo app_lang("vessel_name") ?>', "class": 'w100'},
-                {title: '<?php echo app_lang("type") ?>'},
-                {title: '<?php echo app_lang("build_series") ?>', "class": 'w80'},
-                {title: '<?php echo app_lang("favorite") ?>', "class": 'text-center w40'},
+                {title: '<?php echo app_lang("vessel_name") ?>', "class": 'w40p'},
+                {title: '<?php echo app_lang("type") ?>', "class": 'w25p'},
+                {title: '<?php echo app_lang("build_series") ?>', "class": 'w20p'},
+                {title: '<?php echo app_lang("favorite") ?>', "class": 'text-center w100'},
             ],
             onInitComplete: function () {
                 $("#client-table_wrapper .datatable-tools").addClass("hide");
