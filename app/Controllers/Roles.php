@@ -44,10 +44,10 @@ class Roles extends Security_Controller {
             $view_data['ticket_types_dropdown'] = json_encode($ticket_types_dropdown);
 
             $client_groups_dropdown = array();
-            $client_groups = $this->Client_groups_model->get_all_where(array("deleted" => 0))->getResult();
-            foreach ($client_groups as $type) {
-                $client_groups_dropdown[] = array("id" => $type->id, "text" => $type->title);
-            }
+            // $client_groups = $this->Client_groups_model->get_all_where(array("deleted" => 0))->getResult();
+            // foreach ($client_groups as $type) {
+            //     $client_groups_dropdown[] = array("id" => $type->id, "text" => $type->title);
+            // }
             $view_data['client_groups_dropdown'] = json_encode($client_groups_dropdown);
 
             $permissions = $view_data['model_info']->permissions ? unserialize($view_data['model_info']->permissions) : "";
