@@ -231,7 +231,7 @@ class Clients extends Security_Controller {
     private function _make_row($data) {
         $image_url = get_avatar($data->owner_avatar);
         $contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->owner_name";
-        $owner_name = get_client_contact_profile_link($data->owner_id, $contact);
+        $owner_name = get_team_member_profile_link($data->owner_id, $contact);
 
         $name = $data->charter_name;
         if ($this->can_access_own_client($data->id)) {
