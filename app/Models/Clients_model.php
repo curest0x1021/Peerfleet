@@ -271,7 +271,8 @@ class Clients_model extends Crud_model {
         $sql = "SELECT $clients_table.id, $clients_table.charter_name, $clients_table.build_series, $clients_table.starred_by, $types_table.title as vessel_type
         FROM $clients_table
         JOIN $types_table ON $clients_table.type = $types_table.id
-        WHERE $clients_table.deleted=0";
+        WHERE $clients_table.deleted=0
+        ORDER BY $clients_table.starred_by DESC";
 
         $result = $this->db->query($sql)->getResult();
         return $result;
