@@ -794,19 +794,13 @@ class Clients extends Security_Controller {
         $this->access_only_allowed_members_or_contact_personally($contact_id);
 
         $user_data = array(
-            "first_name" => $this->request->getPost('first_name'),
-            "last_name" => $this->request->getPost('last_name'),
             "email" => $this->request->getPost("email"),
             "sat" => $this->request->getPost('sat'),
             "phone" => $this->request->getPost('phone'),
             "alternative_phone" => $this->request->getPost('alternative_phone'),
-            "gender" => is_null($this->request->getPost('gender')) ? "" : $this->request->getPost('gender'),
-            // "note" => $this->request->getPost('note')
         );
 
         $this->validate_submitted_data(array(
-            // "first_name" => "required",
-            // "last_name" => "required",
             "client_id" => "required|numeric",
             "email" => "required"
         ));
