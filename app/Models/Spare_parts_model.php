@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
-class Critical_spare_parts_model extends Crud_model {
+class Spare_parts_model extends Crud_model {
 
     protected $table = null;
 
     function __construct() {
-        $this->table = 'critical_spare_parts';
+        $this->table = 'spare_parts';
         parent::__construct($this->table);
     }
 
     function get_details($options = array()) {
-        $spare_table = $this->db->prefixTable("critical_spare_parts");
+        $spare_table = $this->db->prefixTable("spare_parts");
         $manufacturer_table = $this->db->prefixTable("manufacturers");
         $applicable_table = $this->db->prefixTable("applicable_equipments");
         $ship_table = $this->db->prefixTable("ship_equipments");

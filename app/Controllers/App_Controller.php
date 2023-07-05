@@ -87,7 +87,7 @@ class App_Controller extends Controller {
     public $Wires_info_model;
     public $Wires_history_model;
     public $Wires_loadtest_model;
-    public $Critical_spare_parts_model;
+    public $Spare_parts_model;
     public $Units_model;
     public $Manufacturers_model;
     public $Applicable_equipments_model;
@@ -203,7 +203,7 @@ class App_Controller extends Controller {
             'Wires_info_model',
             'Wires_history_model',
             'Wires_loadtest_model',
-            'Critical_spare_parts_model',
+            'Spare_parts_model',
             'Units_model',
             'Manufacturers_model',
             'Applicable_equipments_model',
