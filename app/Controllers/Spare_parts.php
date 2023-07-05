@@ -73,7 +73,7 @@ class Spare_parts extends Security_Controller {
 
     function download_sample_excel_file() {
         $this->access_only_allowed_members();
-        return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => "import-critical-spare-parts-sample.xlsx"))));
+        return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => "import-spare-parts-sample.xlsx"))));
     }
 
     function import_items_modal_form() {
@@ -86,6 +86,7 @@ class Spare_parts extends Security_Controller {
 
     private function _get_allowed_headers() {
         return array(
+            "is_critical",
             "name",
             "manufacturer",
             "applicable_equipment",
@@ -213,7 +214,7 @@ class Spare_parts extends Security_Controller {
                         $has_error_class = true;
                         $got_error_header = true;
 
-                        $error_message = sprintf(app_lang("import_sea_valve_error_header"), app_lang(get_array_value($row_data, "key_value")));
+                        $error_message = sprintf(app_lang("import_error_header"), app_lang(get_array_value($row_data, "key_value")));
                     }
 
                     array_push($table_data_header_array, array("has_error_class" => $has_error_class, "value" => get_array_value($row_data, "value")));
@@ -445,10 +446,30 @@ class Spare_parts extends Security_Controller {
             "part_description" => $this->request->getPost('part_description'),
             "article_number" => $this->request->getPost('article_number'),
             "drawing_number" => $this->request->getPost('drawing_number'),
-            "hs_code" => $this->request->getPost('hs_code')
+            "hs_code" => $this->request->getPost('hs_code'),
+            "is_critical" => $this->request->getPost('is_critical')
         );
 
         $data = clean_data($data);
+
+        $save_id = $this->Spare_parts_model->ci_save($data, $id);
+        if ($save_id) {
+            echo json_encode(array("success" => true, "data" => $this->_items_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+    }
+
+    function save_item_critical($id = 0) {
+        if (!$this->can_edit_items()) {
+            app_redirect("forbidden");
+        }
+
+        validate_numeric_value($id);
+        $is_critical = $this->request->getPost('value');
+
+        $data = $this->Spare_parts_model->get_one($id);
+        $data->is_critical = $is_critical;
 
         $save_id = $this->Spare_parts_model->ci_save($data, $id);
         if ($save_id) {
@@ -479,7 +500,8 @@ class Spare_parts extends Security_Controller {
     function items_list_data() {
         $this->access_only_allowed_members();
 
-        $list_data = $this->Spare_parts_model->get_details(array())->getResult();
+        $is_critical = $this->request->getPost('is_critical') ? implode(",", $this->request->getPost('is_critical')) : '';
+        $list_data = $this->Spare_parts_model->get_details(array('is_critical' => $is_critical))->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_items_make_row($data);
@@ -494,6 +516,17 @@ class Spare_parts extends Security_Controller {
     }
 
     private function _items_make_row($data) {
+        $checkbox_class = "checkbox-blank";
+        if ($data->is_critical) {
+            $checkbox_class = "checkbox-checked";
+        }
+        if ($this->can_edit_items()) {
+            //show changeable status checkbox and link to team members
+            $check_critical = js_anchor("<span class='$checkbox_class mr15 float-start'></span>", array('title' => "", "class" => "js-task", "data-id" => $data->id, "data-value" => $data->is_critical === '1' ? '0' : '1', "data-act" => "update-critical-checkbox"));
+        } else {
+            $check_critical = "<span class='$checkbox_class mr15 float-start'></span>";
+        }
+
         $actions = "";
         if ($this->can_edit_items()) {
             $actions = modal_anchor(get_uri("spare_parts/items_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id))
@@ -502,6 +535,7 @@ class Spare_parts extends Security_Controller {
 
         return array(
             $data->id,
+            $check_critical,
             $data->name,
             $data->manufacturer,
             $data->applicable_equip,
