@@ -500,7 +500,7 @@ if (!function_exists('get_notification_config')) {
                 "notify_to" => array("vessel_contact", "responsible_person"),
                 "info" => $csp_link
             ),
-            "rope_exchange_required" => array(
+            "wire_exchange_required" => array(
                 "notify_to" => array("vessel_contact", "responsible_person"),
                 "info" => $crane_link
             )
@@ -826,15 +826,15 @@ if (!function_exists('send_notification_emails')) {
             $parser_data["QUANTITY"] = $ws_info->quantity;
             $parser_data["MIN_STOCKS"] = $ws_info->min_stocks;
             $parser_data["WAREHOUSE_URL"] = $url;
-        } else if ($notification->event == "rope_exchange_required") {
-            $template_name = "rope_exchange_required";
+        } else if ($notification->event == "wire_exchange_required") {
+            $template_name = "wire_exchange_required";
 
             $crane_info = $ci->Wires_history_model->get_wire_history($notification->crane_id);
             $parser_data["VESSEL_TITLE"] = $crane_info->vessel;
             $parser_data["CRANE_TITLE"] = $crane_info->name;
             $parser_data["DUE_DATE"] = $crane_info->due_date;
             $parser_data["LAST_REPLACEMENT"] = $crane_info->last_replacement;
-            $parser_data["CRANE_URL"] = $url;
+            $parser_data["WIRE_URL"] = $url;
         } else {
             $template_name = "general_notification";
 

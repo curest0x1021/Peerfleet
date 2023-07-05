@@ -135,7 +135,7 @@ class Cron_job {
         $ropes = $this->ci->Wires_history_model->get_required_exchange_wires();
 
         foreach ($ropes as $rope) {
-            log_notification("rope_exchange_required", array("client_id" => $rope->client_id, "crane_id" => $rope->crane_id), "0");
+            log_notification("wire_exchange_required", array("client_id" => $rope->client_id, "crane_id" => $rope->crane_id), "0");
             // register todo
             $client = $this->ci->Clients_model->get_one($rope->client_id);
             $todo_data = array(
