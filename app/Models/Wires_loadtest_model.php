@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
-class Cranes_loadtest_model extends Crud_model {
+class Wires_loadtest_model extends Crud_model {
 
     protected $table = null;
 
     function __construct() {
-        $this->table = 'cranes_loadtest';
+        $this->table = 'wires_loadtest';
         parent::__construct($this->table);
     }
 
     function get_details($options = array()) {
-        $loadtest_table = $this->db->prefixTable("cranes_loadtest");
-        $cranes_table = $this->db->prefixTable("cranes");
+        $loadtest_table = $this->db->prefixTable("wires_loadtest");
+        $wires_table = $this->db->prefixTable("wires");
 
         $where = "";
         $id = $this->_get_clean_value($options, "id");
@@ -25,9 +25,9 @@ class Cranes_loadtest_model extends Crud_model {
             $where .= " AND $loadtest_table.client_id = $client_id";
         }
 
-        $sql = "SELECT $loadtest_table.*, $cranes_table.crane, $cranes_table.rope
+        $sql = "SELECT $loadtest_table.*, $wires_table.crane, $wires_table.wire
                 FROM $loadtest_table
-                LEFT JOIN $cranes_table ON $cranes_table.id = $loadtest_table.rope_id
+                LEFT JOIN $wires_table ON $wires_table.id = $loadtest_table.wire_id
                 WHERE deleted=0 $where
                 ORDER BY $loadtest_table.test_date DESC";
 
