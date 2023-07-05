@@ -44,7 +44,7 @@ $lang["favorite"] = "Favorite";
 $lang["show_fleet"] = "Show fleet";
 $lang["sea_valves"] = "Sea valves";
 $lang["import_sea_valves"] = "Import sea valves";
-$lang["import_sea_valve_error_header"] = "There has an invalid header. The indicated field should be <b>%s</b>.";
+$lang["import_error_header"] = "There has an invalid header. The indicated field should be <b>%s</b>.";
 $lang["import_data_empty_message"] = "<b>%s</b> data is empty";
 $lang["import_data_max_length_error_message"] = "<b>%s</b> data should be less than <b>%s</b>";
 $lang["add_sea_valve"] = "Add see valve";
@@ -173,5 +173,8 @@ $lang["add_inspection"] = "Add inspection";
 $lang["edit_inspection"] = "Edit inspection";
 $lang["wire_inspection_result"] = "Wire inspection result";
 $lang["inspection_date"] = "Inspection date";
+$lang["mark_as_critical"] = "Mark as critical";
+$lang["critical"] = "Critical";
+$lang["non_critical"] = "Non critical";
 
 return $lang;

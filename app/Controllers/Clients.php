@@ -2039,7 +2039,7 @@ class Clients extends Security_Controller {
                         $has_error_class = true;
                         $got_error_header = true;
 
-                        $error_message = sprintf(app_lang("import_sea_valve_error_header"), app_lang(get_array_value($row_data, "key_value")));
+                        $error_message = sprintf(app_lang("import_error_header"), app_lang(get_array_value($row_data, "key_value")));
                     }
 
                     array_push($table_data_header_array, array("has_error_class" => $has_error_class, "value" => get_array_value($row_data, "value")));

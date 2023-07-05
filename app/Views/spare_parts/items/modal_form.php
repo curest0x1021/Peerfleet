@@ -169,6 +169,18 @@
             </div>
         </div>
 
+        <div class="form-group ">
+            <div class="row">
+                <label for="is_critical" class="<?php echo $label_column; ?>"><?php echo app_lang('mark_as_critical'); ?></label>
+
+                <div class="<?php echo $field_column; ?>">
+                    <?php
+                    echo form_checkbox("is_critical", "0", $model_info->is_critical, "id='is_critical' class='form-check-input mt-2'");
+                    ?>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
