@@ -132,7 +132,7 @@ class Cron_job {
     }
 
     private function ropes_exchange_due_reminder() {
-        $ropes = $this->ci->Cranes_history_model->get_required_exchange_ropes();
+        $ropes = $this->ci->Wires_history_model->get_required_exchange_wires();
 
         foreach ($ropes as $rope) {
             log_notification("rope_exchange_required", array("client_id" => $rope->client_id, "crane_id" => $rope->crane_id), "0");
@@ -140,7 +140,7 @@ class Cron_job {
             $client = $this->ci->Clients_model->get_one($rope->client_id);
             $todo_data = array(
                 "title" => app_lang("minimum_item_reached"),
-                "description" => get_uri("cranes/view/" . $rope->crane_id),
+                "description" => get_uri("wires/view/" . $rope->crane_id),
                 "created_by" => $client->owner_id,
                 "created_at" => get_current_utc_time()
             );

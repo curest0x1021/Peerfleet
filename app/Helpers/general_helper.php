@@ -2816,9 +2816,9 @@ if (!function_exists('get_company_logo')) {
  * get rope exchange reminder date
  * @return string
  */
-if (!function_exists('get_rope_exchange_reminder_date')) {
-    function get_rope_exchange_reminder_date() {
-        // The default for the replacement of crane ropes is 8 years
+if (!function_exists('get_wire_exchange_reminder_date')) {
+    function get_wire_exchange_reminder_date() {
+        // The default for the replacement of wires is 8 years
         // 8 months before exchaning ropes
         $reminder_date = date('Y-m-d', strtotime(' - 88 months'));
         return $reminder_date;

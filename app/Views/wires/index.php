@@ -1,11 +1,11 @@
 <div id="page-content" class="page-wrapper clearfix">
     <div class="clearfix grid-button">
-        <ul id="crane-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">
+        <ul id="wire-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">
             <li><a role="presentation" data-bs-toggle="tab" class="active show"><?php echo app_lang('wires'); ?></a></li>
         </ul>
         <div class="card">
             <div class="table-responsive">
-                <table id="crane-table" class="display" cellspacing="0" width="100%">
+                <table id="wire-table" class="display" cellspacing="0" width="100%">
                 </table>
             </div>
         </div>
@@ -13,9 +13,9 @@
 </div>
 
 <script type="text/javascript">
-    loadCranesTable = function(selector) {
+    loadWiresTable = function(selector) {
         $(selector).appTable({
-            source: '<?php echo_uri("cranes/list_data") ?>',
+            source: '<?php echo_uri("wires/list_data") ?>',
             columns: [{
                     visible: false, searchable: false
                 },
@@ -49,6 +49,6 @@
         });
     };
     $(document).ready(function() {
-        loadCranesTable("#crane-table");
+        loadWiresTable("#wire-table");
     });
 </script>
