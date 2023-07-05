@@ -1,4 +1,4 @@
-<?php echo form_open(get_uri("critical_spare_parts/save_ws"), array("id" => "ws-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("spare_parts/save_ws"), array("id" => "ws-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
