@@ -83,10 +83,10 @@ class App_Controller extends Controller {
     public $Subscriptions_model;
     public $Subscription_items_model;
     public $Sea_valves_model;
-    public $Cranes_model;
-    public $Cranes_info_model;
-    public $Cranes_history_model;
-    public $Cranes_loadtest_model;
+    public $Wires_model;
+    public $Wires_info_model;
+    public $Wires_history_model;
+    public $Wires_loadtest_model;
     public $Critical_spare_parts_model;
     public $Units_model;
     public $Manufacturers_model;
@@ -94,7 +94,7 @@ class App_Controller extends Controller {
     public $Ship_equipments_model;
     public $Warehouses_model;
     public $Warehouse_spare_model;
-    public $Cranes_wire_inspection_model;
+    public $Wires_inspection_model;
 
     public function __construct() {
         //main template to make frame of this app
@@ -199,10 +199,10 @@ class App_Controller extends Controller {
             'Subscriptions_model',
             'Subscription_items_model',
             'Sea_valves_model',
-            'Cranes_model',
-            'Cranes_info_model',
-            'Cranes_history_model',
-            'Cranes_loadtest_model',
+            'Wires_model',
+            'Wires_info_model',
+            'Wires_history_model',
+            'Wires_loadtest_model',
             'Critical_spare_parts_model',
             'Units_model',
             'Manufacturers_model',
@@ -210,7 +210,7 @@ class App_Controller extends Controller {
             'Ship_equipments_model',
             'Warehouses_model',
             'Warehouse_spare_model',
-            'Cranes_wire_inspection_model'
+            'Wires_inspection_model'
         );
     }
 

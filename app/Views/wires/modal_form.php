@@ -1,4 +1,4 @@
-<?php echo form_open(get_uri("cranes/save"), array("id" => "crane-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("wires/save"), array("id" => "crane-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" />
@@ -124,7 +124,7 @@
                 appAlert.success(result.message, {
                     duration: 10000
                 });
-                $("#crane-table").appTable({
+                $("#wire-table").appTable({
                     reload: true
                 });
             }

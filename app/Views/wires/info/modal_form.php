@@ -1,9 +1,9 @@
-<?php echo form_open(get_uri("cranes/save_info"), array("id" => "crane-info-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("wires/save_info"), array("id" => "wire-info-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
         <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" />
-        <input type="hidden" name="rope_id" value="<?php echo $rope_id; ?>" />
+        <input type="hidden" name="wire_id" value="<?php echo $wire_id; ?>" />
 
         <div class="form-group">
             <div class="row">
@@ -78,10 +78,10 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#crane-info-form").appForm({
+        $("#wire-info-form").appForm({
             onSuccess: function(result) {
                 appAlert.success(result.message, {duration: 10000});
-                $("#crane-info-table").appTable({ reload: true });
+                $("#wire-info-table").appTable({ reload: true });
             }
         });
 
