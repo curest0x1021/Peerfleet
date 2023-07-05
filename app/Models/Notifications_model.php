@@ -39,7 +39,7 @@ class Notifications_model extends Crud_model {
         $posts_table = $this->db->prefixTable('posts');
         $subscriptions_table = $this->db->prefixTable('subscriptions');
         $warehouse_table = $this->db->prefixTable('warehouses');
-        $cranes_table = $this->db->prefixTable('cranes');
+        $wires_table = $this->db->prefixTable('wires');
 
         $notification_settings = $this->db->query("SELECT * FROM $notification_settings_table WHERE  $notification_settings_table.event='$event' AND ($notification_settings_table.enable_email OR $notification_settings_table.enable_web OR $notification_settings_table.enable_slack)")->getRow();
         if (!$notification_settings) {
@@ -507,7 +507,7 @@ class Notifications_model extends Crud_model {
 
         $crane_info = NULL;
         if ($crane_id) {
-            $crane_info = $this->db->query("SELECT $cranes_table.* FROM $cranes_table WHERE $cranes_table.id=$crane_id")->getRow();
+            $crane_info = $this->db->query("SELECT $wires_table.* FROM $wires_table WHERE $wires_table.id=$crane_id")->getRow();
         }
 
         $web_notify_to = "";
@@ -926,7 +926,7 @@ class Notifications_model extends Crud_model {
         $proposals_table = $this->db->prefixTable('proposals');
         $estimate_comments_table = $this->db->prefixTable('estimate_comments');
         $warehouses_table = $this->db->prefixTable('warehouses');
-        $cranes_table = $this->db->prefixTable('cranes');
+        $wires_table = $this->db->prefixTable('wires');
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS $notifications_table.*, CONCAT($users_table.first_name, ' ', $users_table.last_name) AS user_name, $users_table.image AS user_image,
                  $projects_table.title AS project_title,
@@ -946,7 +946,7 @@ class Notifications_model extends Crud_model {
                  $leave_applications_table.start_date AS leave_start_date, $leave_applications_table.end_date AS leave_end_date,
                  $invoice_payments_table.invoice_id AS payment_invoice_id, $invoice_payments_table.amount AS payment_amount,
                  CONCAT($warehouses_table.code, ' - ', $warehouses_table.name) AS warehouse_title,
-                 CONCAT($cranes_table.crane, ' ', $cranes_table.rope) AS rope_title,
+                 CONCAT($wires_table.crane, ' ', $wires_table.wire) AS wire_title,
                  $clients_table.charter_name AS vessel_title,
                  (SELECT CONCAT($users_table.first_name, ' ', $users_table.last_name) FROM $users_table WHERE $users_table.id=$notifications_table.to_user_id) AS to_user_name,
                  FIND_IN_SET($user_id, $notifications_table.read_by) as is_read    
@@ -970,7 +970,7 @@ class Notifications_model extends Crud_model {
         LEFT JOIN $announcements_table ON $announcements_table.id=$notifications_table.announcement_id
         LEFT JOIN $estimate_comments_table ON $estimate_comments_table.id=$notifications_table.estimate_comment_id
         LEFT JOIN $warehouses_table ON $warehouses_table.id=$notifications_table.warehouse_id
-        LEFT JOIN $cranes_table ON $cranes_table.id=$notifications_table.crane_id
+        LEFT JOIN $wires_table ON $wires_table.id=$notifications_table.crane_id
         LEFT JOIN $clients_table ON $clients_table.id=$notifications_table.client_id
         WHERE $notifications_table.deleted=0 AND FIND_IN_SET($user_id, $notifications_table.notify_to) != 0
         ORDER BY $notifications_table.id DESC LIMIT $offset, $limit";
@@ -1003,7 +1003,7 @@ class Notifications_model extends Crud_model {
         $estimate_comments_table = $this->db->prefixTable('estimate_comments');
         $proposals_table = $this->db->prefixTable('proposals');
         $warehouses_table = $this->db->prefixTable('warehouses');
-        $cranes_table = $this->db->prefixTable('cranes');
+        $wires_table = $this->db->prefixTable('wires');
 
         $sql = "SELECT $notifications_table.*, CONCAT($users_table.first_name, ' ', $users_table.last_name) AS user_name, $users_table.email AS recipients_email_address,
                  $projects_table.title AS project_title,
@@ -1022,7 +1022,7 @@ class Notifications_model extends Crud_model {
                  $leave_applications_table.start_date AS leave_start_date, $leave_applications_table.end_date AS leave_end_date,
                  $proposals_table.public_key AS proposal_public_key,
                  CONCAT($warehouses_table.code, ' - ', $warehouses_table.name) AS warehouse_title,
-                 CONCAT($cranes_table.crane, ' ', $cranes_table.rope) AS rope_title,
+                 CONCAT($wires_table.crane, ' ', $wires_table.wire) AS wire_title,
                  $clients_table.charter_name AS vessel_title,
                  $invoice_payments_table.invoice_id AS payment_invoice_id, $invoice_payments_table.amount AS payment_amount, $invoice_payments_table.note AS manual_payment_note,
                  (SELECT CONCAT($users_table.first_name, ' ', $users_table.last_name) FROM $users_table WHERE $users_table.id=$notifications_table.to_user_id) AS to_user_name,
@@ -1047,7 +1047,7 @@ class Notifications_model extends Crud_model {
         LEFT JOIN $estimate_comments_table ON $estimate_comments_table.id=$notifications_table.estimate_comment_id
         LEFT JOIN $proposals_table ON $proposals_table.id=$notifications_table.proposal_id
         LEFT JOIN $warehouses_table ON $warehouses_table.id=$notifications_table.warehouse_id
-        LEFT JOIN $cranes_table ON $cranes_table.id=$notifications_table.crane_id
+        LEFT JOIN $wires_table ON $wires_table.id=$notifications_table.crane_id
         LEFT JOIN $clients_table ON $clients_table.id=$notifications_table.client_id
         WHERE $notifications_table.id=$notification_id";
 
