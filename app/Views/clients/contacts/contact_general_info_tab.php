@@ -2,7 +2,7 @@
     <?php echo form_open(get_uri("clients/save_contact/"), array("id" => "contact-form", "class" => "general-form dashed-row white", "role" => "form")); ?>
     <div class="card">
         <div class=" card-header">
-            <h4> <?php echo app_lang('general_info'); ?></h4>
+            <h4> <?php echo app_lang('communication'); ?></h4>
         </div>
         <div class="card-body">
             <?php echo view("clients/contacts/contact_general_info_fields"); ?>

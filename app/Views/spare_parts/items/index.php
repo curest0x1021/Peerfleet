@@ -22,9 +22,14 @@
     $(document).ready(function () {
         $("#item-table").appTable({
             source: '<?php echo_uri("spare_parts/items_list_data") ?>',
-            order: [[1, "asc"]],
+            checkBoxes: [
+                {text: '<?php echo app_lang("critical") ?>', name: "is_critical", value: "1", isChecked: false},
+                {text: '<?php echo app_lang("non_critical") ?>', name: "is_critical", value: "0", isChecked: false}
+            ],
+            order: [[1, "desc"]],
             columns: [
                 {visible: false, searchable: false},
+                {title: '<?php echo app_lang("critical") ?>'},
                 {title: '<?php echo app_lang("name") ?>'},
                 {title: '<?php echo app_lang("manufacturer") ?>'},
                 {title: '<?php echo app_lang("applicable_equipment") ?>'},
@@ -34,8 +39,24 @@
                 {title: '<?php echo app_lang("hs_code") ?>'},
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
-            printColumns: [1, 2, 3, 4, 5, 6, 7],
-            xlsColumns: [1, 2, 3, 4, 5, 6, 7]
+            printColumns: [2, 3, 4, 5, 6, 7, 8],
+            xlsColumns: [2, 3, 4, 5, 6, 7, 8]
+        });
+
+        $('body').on('click', '[data-act=update-critical-checkbox]', function () {
+            $(this).find("span").removeClass("checkbox-checked");
+            $(this).find("span").addClass("inline-loader");
+            $.ajax({
+                url: '<?php echo_uri("spare_parts/save_item_critical") ?>/' + $(this).attr('data-id'),
+                type: 'POST',
+                dataType: 'json',
+                data: {value: $(this).attr('data-value')},
+                success: function (response) {
+                    if (response.success) {
+                        $("#item-table").appTable({newData: response.data, dataId: response.id});
+                    }
+                }
+            });
         });
     });
 </script>
