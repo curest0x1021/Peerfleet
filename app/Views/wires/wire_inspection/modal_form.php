@@ -1,4 +1,4 @@
-<?php echo form_open(get_uri("cranes/save_wire_inspection"), array("id" => "inspection-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("wires/save_wire_inspection"), array("id" => "inspection-form", "class" => "general-form", "role" => "form")); ?>
 <div id="wire-inspection-dropzone" class="post-dropzone">
     <div class="modal-body clearfix">
         <div class="container-fluid">
@@ -38,13 +38,13 @@
 
             <div class="form-group">
                 <div class="row">
-                    <label for="rope_id" class="<?php echo $label_column; ?>"><?php echo app_lang("wire"); ?></label>
+                    <label for="wire_id" class="<?php echo $label_column; ?>"><?php echo app_lang("wire"); ?></label>
                     <div class="<?php echo $field_column; ?>">
                         <?php
                             echo form_input(array(
-                                "id" => "rope_id",
-                                "name" => "rope_id",
-                                "value" => isset($model_info) ? $model_info->rope : null,
+                                "id" => "wire_id",
+                                "name" => "wire_id",
+                                "value" => isset($model_info) ? $model_info->wire : null,
                                 "class" => "form-control",
                                 "placeholder" => app_lang("wire"),
                                 "data-rule-required" => true,
@@ -138,8 +138,8 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        var uploadUrl = "<?php echo get_uri("cranes/upload_file"); ?>";
-        var validationUri = "<?php echo get_uri("cranes/validate_file"); ?>";
+        var uploadUrl = "<?php echo get_uri("wires/upload_file"); ?>";
+        var validationUri = "<?php echo get_uri("wires/validate_file"); ?>";
         var client_id = '<?php echo $client_id; ?>';
 
         var dropzone = attachDropzoneWithForm("#wire-inspection-dropzone", uploadUrl, validationUri);
@@ -154,27 +154,27 @@
         setDatePicker("#inspection_date");
         setDatePicker("#next_suggested_inspection");
         $("#crane").select2().on("change", function (e) {
-            loadRopes(client_id, e.val);
+            loadWires(client_id, e.val);
         });
 
         var crane = '<?php echo isset($model_info) ? $model_info->crane : null; ?>';
-        var rope_id = '<?php echo isset($model_info) ? $model_info->rope_id : null; ?>';
-        if (crane && rope_id) {
-            loadRopes(client_id, crane, rope_id);
+        var wire_id = '<?php echo isset($model_info) ? $model_info->wire_id : null; ?>';
+        if (crane && wire_id) {
+            loadWires(client_id, crane, wire_id);
         }
     });
 
-    function loadRopes(client_id, crane, rope_id = 0) {
-        $("#rope_id").select2("destroy");
-        const url = '<?php echo_uri("cranes/get_ropes_dropdown") ?>';
+    function loadWires(client_id, crane, wire_id = 0) {
+        $("#wire_id").select2("destroy");
+        const url = '<?php echo_uri("wires/get_wires_dropdown") ?>';
         $.post(url, { client_id: client_id, crane: crane },
             function(data, status) {
                 if (status == "success") {
-                    $("#rope_id").val("");
-                    $("#rope_id").select2({ data: JSON.parse(data) });
-                    if (rope_id > 0) {
-                        console.log(rope_id)
-                        $("#rope_id").select2("val", rope_id );
+                    $("#wire_id").val("");
+                    $("#wire_id").select2({ data: JSON.parse(data) });
+                    if (wire_id > 0) {
+                        console.log(wire_id)
+                        $("#wire_id").select2("val", wire_id );
                     }
                 }
             });

@@ -229,7 +229,7 @@ if (!function_exists('get_notification_config')) {
         $crane_link = function ($options) {
             $url = "";
             if (isset($options->client_id)) {
-                $url = get_uri("cranes/view/" . $options->client_id);
+                $url = get_uri("wires/view/" . $options->client_id);
             }
 
             return array("url" => $url);
@@ -829,7 +829,7 @@ if (!function_exists('send_notification_emails')) {
         } else if ($notification->event == "rope_exchange_required") {
             $template_name = "rope_exchange_required";
 
-            $crane_info = $ci->Cranes_history_model->get_crane_history($notification->crane_id);
+            $crane_info = $ci->Wires_history_model->get_wire_history($notification->crane_id);
             $parser_data["VESSEL_TITLE"] = $crane_info->vessel;
             $parser_data["CRANE_TITLE"] = $crane_info->name;
             $parser_data["DUE_DATE"] = $crane_info->due_date;
