@@ -41,7 +41,7 @@
             <p class="p10 m0"><label class="badge bg-info large"><strong> <?php echo $user_info->job_title; ?> </strong></label></p> 
         <?php } ?>
 
-        <?php if ($show_cotact_info) { ?>
+        <?php if ($show_cotact_info && $user_info->user_type !== "client") { ?>
             <p class="p10 m0"><i data-feather="mail" class="icon-16"></i> <?php echo $user_info->email ? $user_info->email : "-"; ?></p> 
             <?php if ($user_info->phone || $user_info->skype) { ?>
                 <p class="p10 m0">

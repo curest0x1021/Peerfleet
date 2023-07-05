@@ -33,9 +33,8 @@
 
 
     <ul id="client-contact-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs b-b rounded-0" role="tablist">
-        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/contact_general_info_tab/" . $user_info->id); ?>" data-bs-target="#tab-general-info"> <?php echo app_lang('general_info'); ?></a></li>
-        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/company_info_tab/" . $user_info->client_id); ?>" data-bs-target="#tab-company-info"> <?php echo ($client_info->type == "person") ? app_lang('contact_info') : app_lang('company'); ?></a></li>
-        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/contact_social_links_tab/" . $user_info->id); ?>" data-bs-target="#tab-social-links"> <?php echo app_lang('social_links'); ?></a></li>
+        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/contact_general_info_tab/" . $user_info->id); ?>" data-bs-target="#tab-general-info"> <?php echo app_lang('communication'); ?></a></li>
+        <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/company_info_tab/" . $user_info->client_id); ?>" data-bs-target="#tab-company-info"> <?php echo ($client_info->type == "person") ? app_lang('contact_info') : app_lang('vessel_info'); ?></a></li>
         <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/account_settings/" . $user_info->id); ?>" data-bs-target="#tab-account-settings"> <?php echo app_lang('account_settings'); ?></a></li>
         <?php if ($user_info->id == $login_user->id) { ?>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/my_preferences/" . $user_info->id); ?>" data-bs-target="#tab-my-preferences"> <?php echo app_lang('my_preferences'); ?></a></li>
@@ -63,7 +62,6 @@
         <div role="tabpanel" class="tab-pane fade" id="tab-files"></div>
         <div role="tabpanel" class="tab-pane fade" id="tab-general-info"></div>
         <div role="tabpanel" class="tab-pane fade" id="tab-company-info"></div>
-        <div role="tabpanel" class="tab-pane fade" id="tab-social-links"></div>
         <div role="tabpanel" class="tab-pane fade" id="tab-account-settings"></div>
         <div role="tabpanel" class="tab-pane fade" id="tab-my-preferences"></div>
         <div role="tabpanel" class="tab-pane fade" id="tab-user-left-menu"></div>
@@ -118,8 +116,6 @@
                 $("[data-bs-target='#tab-company-info']").trigger("click");
             } else if (tab === "account") {
                 $("[data-bs-target='#tab-account-settings']").trigger("click");
-            } else if (tab === "social") {
-                $("[data-bs-target='#tab-social-links']").trigger("click");
             } else if (tab === "my_preferences") {
                 $("[data-bs-target='#tab-my-preferences']").trigger("click");
             } else if (tab === "left_menu") {
