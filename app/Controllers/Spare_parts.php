@@ -4,19 +4,19 @@ namespace App\Controllers;
 
 use stdClass;
 
-class Critical_spare_parts extends Security_Controller {
+class Spare_parts extends Security_Controller {
 
     function __construct() {
         parent::__construct();
 
         // check permission
-        $this->init_permission_checker("critical_spare_parts");
+        $this->init_permission_checker("spare_parts");
     }
 
     //load note list view
     function index() {
         $this->access_only_allowed_members();
-        return $this->template->rander("critical_spare_parts/index");
+        return $this->template->rander("spare_parts/index");
     }
 
     //for team members, check only read_only permission here, since other permission will be checked accordingly
@@ -31,7 +31,7 @@ class Critical_spare_parts extends Security_Controller {
     function items_tab() {
         $this->access_only_allowed_members();
         $view_data["can_edit_items"] = $this->can_edit_items();
-        return $this->template->view("critical_spare_parts/items/index", $view_data);
+        return $this->template->view("spare_parts/items/index", $view_data);
     }
 
     function items_modal_form() {
@@ -39,7 +39,7 @@ class Critical_spare_parts extends Security_Controller {
             app_redirect("forbidden");
         }
 
-        $view_data['model_info'] = $this->Critical_spare_parts_model->get_one($this->request->getPost('id'));
+        $view_data['model_info'] = $this->Spare_parts_model->get_one($this->request->getPost('id'));
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
         $view_data["manufacturers_dropdown"] = $this->get_manufacturers_dropdown();
@@ -47,7 +47,7 @@ class Critical_spare_parts extends Security_Controller {
         $view_data["ship_equipments_dropdown"] = $this->get_ship_machinery_equipments_dropdown();
         $view_data["units_dropdown"] = $this->get_units_dropdown();
 
-        return $this->template->view('critical_spare_parts/items/modal_form', $view_data);
+        return $this->template->view('spare_parts/items/modal_form', $view_data);
     }
 
     function upload_excel_file() {
@@ -81,7 +81,7 @@ class Critical_spare_parts extends Security_Controller {
             app_redirect("forbidden");
         }
 
-        return $this->template->view("critical_spare_parts/items/import_modal_form");
+        return $this->template->view("spare_parts/items/import_modal_form");
     }
 
     private function _get_allowed_headers() {
@@ -397,7 +397,7 @@ class Critical_spare_parts extends Security_Controller {
                 $units[] = $temp;
             }
 
-            $this->Critical_spare_parts_model->ci_save($item_data);
+            $this->Spare_parts_model->ci_save($item_data);
         }
 
         delete_file_from_directory($temp_file_path . $file_name); //delete temp file
@@ -450,7 +450,7 @@ class Critical_spare_parts extends Security_Controller {
 
         $data = clean_data($data);
 
-        $save_id = $this->Critical_spare_parts_model->ci_save($data, $id);
+        $save_id = $this->Spare_parts_model->ci_save($data, $id);
         if ($save_id) {
             echo json_encode(array("success" => true, "data" => $this->_items_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
         } else {
@@ -469,7 +469,7 @@ class Critical_spare_parts extends Security_Controller {
 
         $id = $this->request->getPost('id');
 
-        if ($this->Critical_spare_parts_model->delete($id)) {
+        if ($this->Spare_parts_model->delete($id)) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
@@ -479,7 +479,7 @@ class Critical_spare_parts extends Security_Controller {
     function items_list_data() {
         $this->access_only_allowed_members();
 
-        $list_data = $this->Critical_spare_parts_model->get_details(array())->getResult();
+        $list_data = $this->Spare_parts_model->get_details(array())->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_items_make_row($data);
@@ -489,15 +489,15 @@ class Critical_spare_parts extends Security_Controller {
 
     private function _items_row_data($id) {
         $options = array("id" => $id);
-        $data = $this->Critical_spare_parts_model->get_details($options)->getRow();
+        $data = $this->Spare_parts_model->get_details($options)->getRow();
         return $this->_items_make_row($data);
     }
 
     private function _items_make_row($data) {
         $actions = "";
         if ($this->can_edit_items()) {
-            $actions = modal_anchor(get_uri("critical_spare_parts/items_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id))
-                    . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("critical_spare_parts/delete_item"), "data-action" => "delete-confirmation"));
+            $actions = modal_anchor(get_uri("spare_parts/items_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id))
+                    . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("spare_parts/delete_item"), "data-action" => "delete-confirmation"));
         }
 
         return array(
@@ -516,7 +516,7 @@ class Critical_spare_parts extends Security_Controller {
     function warehouses_tab() {
         $this->access_only_allowed_members();
         $view_data["vessels_dropdown"] = $this->get_vessels_dropdown(true);
-        return $this->template->view("critical_spare_parts/warehouses", $view_data);
+        return $this->template->view("spare_parts/warehouses", $view_data);
     }
 
     function warehouses_list_data() {
@@ -540,7 +540,7 @@ class Critical_spare_parts extends Security_Controller {
         $name = $data->name;
         $vessel = $data->vessel;
         if ($this->can_access_own_client($data->client_id)) {
-            $name = anchor(get_uri("critical_spare_parts/view/" . $data->id), $data->name);
+            $name = anchor(get_uri("spare_parts/view/" . $data->id), $data->name);
             $vessel = anchor(get_uri("clients/view/" . $data->client_id), $data->vessel);
         }
         return array(
@@ -562,7 +562,7 @@ class Critical_spare_parts extends Security_Controller {
             $view_data["warehouse_id"] = $warehouse_id;
             $view_data["can_edit_items"] = true; // $this->can_edit_items();
 
-            return $this->template->rander("critical_spare_parts/view", $view_data);
+            return $this->template->rander("spare_parts/view", $view_data);
         } else {
             show_404();
         }
@@ -581,10 +581,10 @@ class Critical_spare_parts extends Security_Controller {
         $view_data["warehouse_id"] = $this->request->getPost("warehouse_id");
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
-        $view_data["items_dropdown"] = $this->critical_spare_parts_dropdown();
-        $view_data["spare_parts"] = $this->Critical_spare_parts_model->get_details()->getResult();
+        $view_data["items_dropdown"] = $this->spare_parts_dropdown();
+        $view_data["spare_parts"] = $this->Spare_parts_model->get_details()->getResult();
 
-        return $this->template->view("critical_spare_parts/ws_modal_form", $view_data);
+        return $this->template->view("spare_parts/ws_modal_form", $view_data);
     }
 
     function save_ws() {
@@ -634,7 +634,7 @@ class Critical_spare_parts extends Security_Controller {
                 $client = $this->Clients_model->get_one($warehouse_info->client_id);
                 $todo_data = array(
                     "title" => app_lang("minimum_item_reached"),
-                    "description" => get_uri("critical_spare_parts/view/" . $data["warehouse_id"]),
+                    "description" => get_uri("spare_parts/view/" . $data["warehouse_id"]),
                     "created_by" => $client->owner_id,
                     "created_at" => get_current_utc_time()
                 );
@@ -690,8 +690,8 @@ class Critical_spare_parts extends Security_Controller {
     private function _ws_make_row($data) {
         $actions = "";
         // if ($this->can_edit_items()) {
-            $actions = modal_anchor(get_uri("critical_spare_parts/ws_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-warehouse_id" => $data->warehouse_id))
-                    . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("critical_spare_parts/delete_ws"), "data-action" => "delete-confirmation"));
+            $actions = modal_anchor(get_uri("spare_parts/ws_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-warehouse_id" => $data->warehouse_id))
+                    . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("spare_parts/delete_ws"), "data-action" => "delete-confirmation"));
         // }
 
         $icon = "";

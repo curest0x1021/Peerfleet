@@ -68,7 +68,7 @@ class Security_Controller extends App_Controller {
         $info->module_group = $group;
 
         //admin users has access to everything
-        if ($this->login_user->is_admin || $group === "client" || $group === "wire" || $group === "critical_spare_parts") {
+        if ($this->login_user->is_admin || $group === "client" || $group === "wire" || $group === "spare_parts") {
             $info->access_type = "all";
         } else {
 
@@ -91,7 +91,7 @@ class Security_Controller extends App_Controller {
                 } else if ($group === "ticket") {
                     //check the accessable ticket types
                     $info->allowed_ticket_types = $permissions;
-                } else if ($group === "client" || $group === "wire" || $group === "critical_spare_parts") {
+                } else if ($group === "client" || $group === "wire" || $group === "spare_parts") {
                     //check the accessable client groups
                     $info->allowed_client_groups = $permissions;
                 }
@@ -127,7 +127,7 @@ class Security_Controller extends App_Controller {
     protected function access_only_allowed_members() {
         if ($this->access_type === "all") {
             return true; //can access if user has permission
-        } else if (($this->module_group === "ticket" && ($this->access_type === "specific" || $this->access_type === "assigned_only")) || ($this->module_group === "lead" && $this->access_type === "own") || (($this->module_group === "client" || $this->module_group === "wire" || $this->module_group == "critical_spare_parts") && ($this->access_type === "own" || $this->access_type === "read_only" || $this->access_type === "specific")) || ($this->module_group === "estimate" && $this->access_type === "own")) {
+        } else if (($this->module_group === "ticket" && ($this->access_type === "specific" || $this->access_type === "assigned_only")) || ($this->module_group === "lead" && $this->access_type === "own") || (($this->module_group === "client" || $this->module_group === "wire" || $this->module_group == "spare_parts") && ($this->access_type === "own" || $this->access_type === "read_only" || $this->access_type === "specific")) || ($this->module_group === "estimate" && $this->access_type === "own")) {
             //can access if it's tickets module and user has a pertial access
             //can access if it's leads module and user has access to own leads
             //can access if it's clients module and user has a pertial access
@@ -145,7 +145,7 @@ class Security_Controller extends App_Controller {
             return true; //can access if user has permission
         } else if ($this->module_group === "ticket" && ($this->access_type === "specific" || $this->access_type === "assigned_only")) {
             return true; //can access if it's tickets module and user has a pertial access
-        } else if (($this->module_group === "client" || $this->module_group === "wire" || $this->module_group === "critical_spare_parts") && ($this->access_type === "own" || $this->access_type === "read_only" || $this->access_type === "specific")) {
+        } else if (($this->module_group === "client" || $this->module_group === "wire" || $this->module_group === "spare_parts") && ($this->access_type === "own" || $this->access_type === "read_only" || $this->access_type === "specific")) {
             return true; //can access if it's clients module and user has a pertial access
         } else if ($this->login_user->client_id === $client_id) {
             return true; //can access if client id match 
@@ -363,8 +363,8 @@ class Security_Controller extends App_Controller {
         return json_encode($vessels_dropdown);
     }
 
-    protected function critical_spare_parts_dropdown() {
-        $list = $this->Critical_spare_parts_model->get_all_where(array("deleted" => 0))->getResult();
+    protected function spare_parts_dropdown() {
+        $list = $this->Spare_parts_model->get_all_where(array("deleted" => 0))->getResult();
         $dropdown = array("" => "-");
 
         foreach ($list as $item) {

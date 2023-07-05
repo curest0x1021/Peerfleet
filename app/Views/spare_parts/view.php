@@ -11,7 +11,7 @@
                         <?php if ($can_edit_items) { ?>
                             <div class="tab-title clearfix no-border">
                                 <div class="title-button-group">
-                                    <?php echo modal_anchor(get_uri("critical_spare_parts/ws_modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_item'), array("class" => "btn btn-default", "title" => app_lang('add_item'), "data-post-warehouse_id" => $model_info->id)); ?>
+                                    <?php echo modal_anchor(get_uri("spare_parts/ws_modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_item'), array("class" => "btn btn-default", "title" => app_lang('add_item'), "data-post-warehouse_id" => $model_info->id)); ?>
                                 </div>
                             </div>
                         <?php } ?>
@@ -31,7 +31,7 @@
 <script type="text/javascript">
     loadCranesTable = function(selector) {
         $(selector).appTable({
-            source: '<?php echo_uri("critical_spare_parts/ws_list_data/" . $warehouse_id) ?>',
+            source: '<?php echo_uri("spare_parts/ws_list_data/" . $warehouse_id) ?>',
             columns: [
                 {visible: false, searchable: false},
                 {title: "", "class": "text-center w25"},
