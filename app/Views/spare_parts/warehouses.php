@@ -12,7 +12,7 @@
 
     loadWarehouseTable = function(selector) {
         $(selector).appTable({
-            source: '<?php echo_uri("critical_spare_parts/warehouses_list_data") ?>',
+            source: '<?php echo_uri("spare_parts/warehouses_list_data") ?>',
             filterDropdown: [
                 {name: "client_id", class: "w200", options: <?php echo $vessels_dropdown; ?>},
             ],

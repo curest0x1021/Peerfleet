@@ -38,7 +38,7 @@ class Warehouse_spare_model extends Crud_model {
 
     function get_details($options = array()) {
         $ws_table = $this->db->prefixTable('warehouse_spare');
-        $spare_table = $this->db->prefixTable("critical_spare_parts");
+        $spare_table = $this->db->prefixTable("spare_parts");
         $manufacturer_table = $this->db->prefixTable("manufacturers");
         $applicable_table = $this->db->prefixTable("applicable_equipments");
         $ship_table = $this->db->prefixTable("ship_equipments");
@@ -81,7 +81,7 @@ class Warehouse_spare_model extends Crud_model {
     function get_minimum_reached_items() {
         $ws_table = $this->db->prefixTable("warehouse_spare");
         $warehouse_table = $this->db->prefixTable("warehouses");
-        $spare_table = $this->db->prefixTable("critical_spare_parts");
+        $spare_table = $this->db->prefixTable("spare_parts");
         $clients_table = $this->db->prefixTable("clients");
         $users_table = $this->db->prefixTable("users");
 

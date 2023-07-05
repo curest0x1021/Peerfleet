@@ -220,7 +220,7 @@ if (!function_exists('get_notification_config')) {
         $csp_link = function ($options) {
             $url = "";
             if (isset($options->warehouse_id)) {
-                $url = get_uri("critical_spare_parts/view/" . $options->warehouse_id);
+                $url = get_uri("spare_parts/view/" . $options->warehouse_id);
             }
 
             return array("url" => $url);

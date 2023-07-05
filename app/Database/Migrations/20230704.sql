@@ -12,3 +12,5 @@ RENAME TABLE `peerfleet`.`pf_cranes_loadtest` TO `peerfleet`.`pf_wires_loadtest`
 
 ALTER TABLE `pf_cranes_wire_inspection` CHANGE `rope_id` `wire_id` INT NOT NULL;
 RENAME TABLE `peerfleet`.`pf_cranes_wire_inspection` TO `peerfleet`.`pf_wires_inspection`;
+
+RENAME TABLE `peerfleet`.`pf_critical_spare_parts` TO `peerfleet`.`pf_spare_parts`;
