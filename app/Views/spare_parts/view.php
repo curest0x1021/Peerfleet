@@ -29,7 +29,7 @@
 </div>
 
 <script type="text/javascript">
-    loadCranesTable = function(selector) {
+    loadWiresTable = function(selector) {
         $(selector).appTable({
             source: '<?php echo_uri("spare_parts/ws_list_data/" . $warehouse_id) ?>',
             columns: [
@@ -54,6 +54,6 @@
         });
     };
     $(document).ready(function() {
-        loadCranesTable("#ws-table");
+        loadWiresTable("#ws-table");
     });
 </script>
