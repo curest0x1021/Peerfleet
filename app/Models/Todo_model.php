@@ -13,6 +13,7 @@ class Todo_model extends Crud_model {
 
     function get_details($options = array()) {
         $todo_table = $this->db->prefixTable('to_do');
+        $checklist_items_table = $this->db->prefixTable('checklist_items');
 
         $where = "";
         $id = $this->_get_clean_value($options, "id");
@@ -34,7 +35,9 @@ class Todo_model extends Crud_model {
 
         $select_labels_data_query = $this->get_labels_data_query();
 
-        $sql = "SELECT $todo_table.*, $select_labels_data_query
+        $sql = "SELECT $todo_table.*, $select_labels_data_query,
+                (SELECT COUNT($checklist_items_table.id) FROM $checklist_items_table WHERE $checklist_items_table.deleted=0 AND $checklist_items_table.todo_id=$todo_table.id) AS total_checklist,
+                (SELECT COUNT($checklist_items_table.id) FROM $checklist_items_table WHERE $checklist_items_table.is_checked=1 AND $checklist_items_table.deleted=0 AND $checklist_items_table.todo_id=$todo_table.id) AS total_checklist_checked
         FROM $todo_table
         WHERE $todo_table.deleted=0 $where";
         return $this->db->query($sql);
@@ -89,7 +92,7 @@ class Todo_model extends Crud_model {
         }
 
         $sql = "SELECT $todo_table.id, $todo_table.title
-        FROM $todo_table  
+        FROM $todo_table
         WHERE $todo_table.deleted=0 AND $todo_table.created_by=$created_by AND $todo_table.title LIKE '%$search%' ESCAPE '!'
         ORDER BY $todo_table.title ASC
         LIMIT 0, 10";
