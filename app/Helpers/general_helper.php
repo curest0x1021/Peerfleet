@@ -2824,3 +2824,17 @@ if (!function_exists('get_wire_exchange_reminder_date')) {
         return $reminder_date;
     }
 }
+
+if (!function_exists('can_edit_this_todo')) {
+
+    function can_edit_this_todo($created_by = 0) {
+        $ci = new Security_Controller(false);
+
+        if ($ci->login_user->id == $created_by) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+}

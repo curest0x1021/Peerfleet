@@ -1,0 +1,10 @@
+.todo_kanban_title {
+  font-weight: 600;
+}
+.todo_kanban_description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* number of lines to show */
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+}

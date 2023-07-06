@@ -63,6 +63,7 @@ class App_Controller extends Controller {
     public $Estimate_items_model;
     public $General_files_model;
     public $Todo_model;
+    public $Todo_status_model;
     public $Vessel_types_model;
     public $Dashboards_model;
     public $Lead_status_model;
@@ -179,6 +180,7 @@ class App_Controller extends Controller {
             'Estimate_items_model',
             'General_files_model',
             'Todo_model',
+            'Todo_status_model',
             'Vessel_types_model',
             'Dashboards_model',
             'Lead_status_model',
