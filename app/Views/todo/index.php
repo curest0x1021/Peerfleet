@@ -25,20 +25,24 @@
 
 
     <div class="card">
-        <div class="page-title clearfix">
-            <h1> <?php echo app_lang('todo') . " (" . app_lang('private') . ")"; ?></h1>
-            <div class="title-button-group">
-                <?php echo modal_anchor(get_uri("labels/modal_form"), "<i data-feather='tag' class='icon-16'></i> " . app_lang('manage_labels'), array("class" => "btn btn-default", "title" => app_lang('manage_labels'), "data-post-type" => "to_do")); ?>
+        <ul class="nav nav-tabs bg-white title" role="tablist">
+            <li class="title-tab"><h4 class="pl15 pt10 pr15"><?php echo app_lang('todo') . " (" . app_lang('private') . ")"; ?></h4></li>
+            <?php echo view("todo/tabs", array("active_tab" => "todo_list")); ?>
+
+            <div class="tab-title clearfix no-border">
+                <div class="title-button-group">
+                    <?php echo modal_anchor(get_uri("labels/modal_form"), "<i data-feather='tag' class='icon-16'></i> " . app_lang('manage_labels'), array("class" => "btn btn-default", "title" => app_lang('manage_labels'), "data-post-type" => "to_do")); ?>
+                </div>
             </div>
-        </div>
+        </ul>
         <div class="table-responsive">
-            <table id="todo-table" class="display" cellspacing="0" width="100%">            
+            <table id="todo-table" class="display" cellspacing="0" width="100%">
             </table>
         </div>
     </div>
 </div>
 
-<?php echo view("todo/helper_js"); ?>
+<?php echo view("todo/list_helper_js"); ?>
 
 <script type="text/javascript">
     $(document).ready(function () {

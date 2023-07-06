@@ -21,6 +21,11 @@ class Todo extends Security_Controller {
         return $this->template->rander("todo/index");
     }
 
+    // load todo kanban view
+    function kanban() {
+        return $this->template->rander("todo/kanban/index");
+    }
+
     function modal_form() {
         $view_data['model_info'] = $this->Todo_model->get_one($this->request->getPost('id'));
 
@@ -109,13 +114,13 @@ class Todo extends Security_Controller {
         $this->validate_access($todo_info);
 
         if ($this->request->getPost('undo')) {
-            if ($this->Todo_model->delete($id, true)) {
+            if ($this->Todo_model->delete_todo_and_sub_items($id, true)) {
                 echo json_encode(array("success" => true, "data" => $this->_row_data($id), "message" => app_lang('record_undone')));
             } else {
                 echo json_encode(array("success" => false, app_lang('error_occurred')));
             }
         } else {
-            if ($this->Todo_model->delete($id)) {
+            if ($this->Todo_model->delete_todo_and_sub_items($id)) {
                 echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
             } else {
                 echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
@@ -185,6 +190,46 @@ class Todo extends Security_Controller {
             modal_anchor(get_uri("todo/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $data->id))
             . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("todo/delete"), "data-action" => "delete"))
         );
+    }
+
+    function kanban_data() {
+        $options = array("created_by" => $this->login_user->id);
+        $view_data["data"] = $this->Todo_model->get_kanban_details($options)->getResult();
+
+        $statuses = $this->Todo_status_model->get_details(array("hide_from_kanban" => 0));
+
+        $view_data["total_columns"] = $statuses->resultID->num_rows;
+        $view_data["columns"] = $statuses->getResult();
+
+        return $this->template->view('todo/kanban/kanban_view', $view_data);
+    }
+
+    function save_todo_sort_and_status() {
+        $this->validate_submitted_data(array(
+            "id" => "required|numeric"
+        ));
+
+        $id = $this->request->getPost('id');
+
+        $todo_info = $this->Todo_model->get_one($id);
+        $this->validate_access($todo_info);
+
+        $data = array(
+            "sort" => $this->request->getPost('sort')
+        );
+
+        $status = $this->request->getPost('status');
+        if ($status) {
+            $data["status"] = $status;
+        }
+
+        $save_id = $this->Todo_model->ci_save($data, $id);
+
+        if ($save_id) {
+            echo json_encode(array("success" => true, "message" => app_lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, app_lang('error_occurred')));
+        }
     }
 
     function view() {

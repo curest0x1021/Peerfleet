@@ -76,7 +76,8 @@
     $(document).ready(function () {
         $("#todo-form").appForm({
             onSuccess: function (result) {
-                $("#todo-table").appTable({newData: result.data, dataId: result.id});
+                // $("#todo-table").appTable({newData: result.data, dataId: result.id});
+                window.location.reload();
             }
         });
         setTimeout(function () {
@@ -86,4 +87,4 @@
 
         setDatePicker("#start_date");
     });
-</script>    
+</script>

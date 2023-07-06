@@ -30,7 +30,7 @@
     </div>
 </div>
 
-<?php echo view("todo/helper_js"); ?>
+<?php echo view("todo/list_helper_js"); ?>
 
 <script type="text/javascript">
     $(document).ready(function () {
