@@ -2565,7 +2565,7 @@ if (!function_exists('show_clients_of_this_client_contact')) {
 
         if (count($clients)) {
             $view_data["clients"] = $clients;
-            $view_data["login_user_company_name"] = $Clients_model->get_one($login_user->client_id)->company_name;
+            $view_data["login_user_company_name"] = $Clients_model->get_one($login_user->client_id)->charter_name;
             echo view("clients/clients_dropdown_of_this_client_contact", $view_data);
         }
     }
