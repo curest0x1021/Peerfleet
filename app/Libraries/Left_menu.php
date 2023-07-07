@@ -289,7 +289,7 @@ class Left_menu {
             if (get_setting("module_lead") == "1" && ($this->ci->login_user->is_admin || $access_lead)) {
                 $sidebar_menu["leads"] = array("name" => "leads", "url" => "leads", "class" => "layers");
             }
-            
+
             if (get_setting("module_subscription") && ($this->ci->login_user->is_admin || $access_subscription)) {
                 $sidebar_menu["subscriptions"] = array("name" => "subscriptions", "url" => "subscriptions", "class" => "repeat");
             }
@@ -488,6 +488,15 @@ class Left_menu {
                 $sidebar_menu["settings"] = array("name" => "settings", "url" => "settings/general", "class" => "settings");
             }
 
+
+            $sidebar_menu["wires"] = array("name" => "wires", "url" => "wires", "class" => "crosshair");
+
+            $inventory_submenu = [];
+            $inventory_submenu[] = array("name" => "spare_parts", "url" => "spare_parts", "class" => "book");
+            $inventory_submenu[] = array("name" => "consumables", "url" => "consumables", "class" => "book");
+            $inventory_submenu[] = array("name" => "warehouses", "url" => "warehouses", "class" => "database");
+            $sidebar_menu["inventory"] = array("name" => "inventory", "url" => "spare_parts", "class" => "book", "submenu" => $inventory_submenu);
+
             $sidebar_menu = app_hooks()->apply_filters('app_filter_staff_left_menu', $sidebar_menu);
         } else {
             //client menu
@@ -562,6 +571,14 @@ class Left_menu {
             if (get_setting("module_knowledge_base") == "1" && !in_array("knowledge_base", $hidden_menu)) {
                 $sidebar_menu[] = array("name" => "knowledge_base", "url" => "knowledge_base", "class" => "help-circle");
             }
+
+            $sidebar_menu[] = array("name" => "wires", "url" => "wires", "class" => "crosshair");
+
+            $inventory_submenu = [];
+            $inventory_submenu[] = array("name" => "spare_parts", "url" => "spare_parts", "class" => "book");
+            $inventory_submenu[] = array("name" => "consumables", "url" => "consumables", "class" => "book");
+            $inventory_submenu[] = array("name" => "warehouses", "url" => "warehouses", "class" => "database");
+            $sidebar_menu[] = array("name" => "inventory", "url" => "spare_parts", "class" => "book", "submenu" => $inventory_submenu);
 
             $sidebar_menu = app_hooks()->apply_filters('app_filter_client_left_menu', $sidebar_menu);
         }

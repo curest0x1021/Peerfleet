@@ -6,7 +6,6 @@ class Consumables extends Security_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->access_only_admin_or_settings_admin();
     }
 
     private function can_edit_items() {
@@ -18,7 +17,8 @@ class Consumables extends Security_Controller {
     }
 
     function index() {
-        return $this->template->rander("consumables/index");
+        $view_data["can_edit_items"] = $this->can_edit_items();
+        return $this->template->rander("consumables/index", $view_data);
     }
 
     function import_modal_form($tab) {
