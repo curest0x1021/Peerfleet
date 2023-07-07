@@ -541,7 +541,6 @@ class Spare_parts extends Security_Controller {
     }
 
     function warehouses_tab() {
-        $this->access_only_allowed_members();
         $view_data["vessels_dropdown"] = $this->get_vessels_dropdown(true);
         return $this->template->view("spare_parts/warehouses", $view_data);
     }
@@ -596,9 +595,9 @@ class Spare_parts extends Security_Controller {
     }
 
     function ws_modal_form() {
-        // if (!$this->can_edit_items()) {
-        //     app_redirect("forbidden");
-        // }
+        if (!$this->can_edit_items()) {
+            app_redirect("forbidden");
+        }
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
@@ -615,9 +614,9 @@ class Spare_parts extends Security_Controller {
     }
 
     function save_ws() {
-        // if (!$this->can_edit_items()) {
-        //     app_redirect("forbidden");
-        // }
+        if (!$this->can_edit_items()) {
+            app_redirect("forbidden");
+        }
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
@@ -681,9 +680,9 @@ class Spare_parts extends Security_Controller {
     }
 
     function delete_ws() {
-        // if (!$this->can_edit_items()) {
-        //     app_redirect("forbidden");
-        // }
+        if (!$this->can_edit_items()) {
+            app_redirect("forbidden");
+        }
 
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
