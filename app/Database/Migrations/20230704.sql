@@ -17,3 +17,11 @@ RENAME TABLE `peerfleet`.`pf_critical_spare_parts` TO `peerfleet`.`pf_spare_part
 
 
 ALTER TABLE `pf_spare_parts` ADD `is_critical` TINYINT(1) NOT NULL DEFAULT '0' AFTER `hs_code`;
+
+ALTER TABLE `pf_to_do` ADD `sort` INT NOT NULL DEFAULT '0' AFTER `start_date`;
+ALTER TABLE `pf_checklist_items` ADD `todo_id` INT NOT NULL DEFAULT '0' AFTER `task_id`;
+
+CREATE TABLE `pf_to_do_status` (`id` INT NOT NULL AUTO_INCREMENT , `title` VARCHAR(50) NOT NULL , `key_name` VARCHAR(50) NOT NULL , `color` VARCHAR(7) NOT NULL , `sort` INT NOT NULL , `hide_from_kanban` TINYINT(1) NOT NULL DEFAULT '0' , `deleted` TINYINT(1) NOT NULL DEFAULT '0' , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+INSERT INTO `pf_to_do_status`(`title`, `key_name`, `color`, `sort`) VALUES
+('To Do', 'to_do', '#F9A52D', 0),
+('Done', 'done', '#00B393', 1);

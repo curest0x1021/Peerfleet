@@ -1,0 +1,2 @@
+<li class="nav-item <?php echo ($active_tab == 'todo_list') ? 'active' : ''; ?>" data-tab="todo_list"><a href="<?php echo_uri('todo'); ?>"><?php echo app_lang("list"); ?></a></li>
+<li class="nav-item <?php echo ($active_tab == 'todo_kanban') ? 'active' : ''; ?>" data-tab="todo_kanban"><a href="<?php echo_uri('todo/kanban'); ?>" ><?php echo app_lang('kanban'); ?></a></li>

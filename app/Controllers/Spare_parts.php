@@ -8,14 +8,10 @@ class Spare_parts extends Security_Controller {
 
     function __construct() {
         parent::__construct();
-
-        // check permission
-        $this->init_permission_checker("spare_parts");
     }
 
     //load note list view
     function index() {
-        $this->access_only_allowed_members();
         return $this->template->rander("spare_parts/index");
     }
 
@@ -29,7 +25,6 @@ class Spare_parts extends Security_Controller {
     }
 
     function items_tab() {
-        $this->access_only_allowed_members();
         $view_data["can_edit_items"] = $this->can_edit_items();
         return $this->template->view("spare_parts/items/index", $view_data);
     }
@@ -51,12 +46,13 @@ class Spare_parts extends Security_Controller {
     }
 
     function upload_excel_file() {
+        if (!$this->can_edit_items()) {
+            app_redirect("forbidden");
+        }
         upload_file_to_temp(true);
     }
 
     function validate_import_file() {
-        $this->access_only_allowed_members();
-
         $file_name = $this->request->getPost("file_name");
         $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
         if (!is_valid_file_to_upload($file_name)) {
@@ -72,7 +68,6 @@ class Spare_parts extends Security_Controller {
     }
 
     function download_sample_excel_file() {
-        $this->access_only_allowed_members();
         return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => "import-spare-parts-sample.xlsx"))));
     }
 
@@ -498,8 +493,6 @@ class Spare_parts extends Security_Controller {
     }
 
     function items_list_data() {
-        $this->access_only_allowed_members();
-
         $is_critical = $this->request->getPost('is_critical') ? implode(",", $this->request->getPost('is_critical')) : '';
         $list_data = $this->Spare_parts_model->get_details(array('is_critical' => $is_critical))->getResult();
         $result = array();

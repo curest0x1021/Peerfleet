@@ -9,13 +9,30 @@
         <div class="col-md-12 mb15">
             <?php
             $date = "";
-            $note_labels = make_labels_view_data($model_info->labels_list);
+            $todo_labels = "";
+            $labels_data = make_labels_view_data($model_info->labels_list);
+            if ($labels_data) {
+                $todo_labels .= "<div class='meta float-start mt5 mr5'>$labels_data</div>";
+            }
+
+            $todo_checklist_status = "";
+            $checklist_label_color = "#6690F4";
+
+            if ($model_info->total_checklist_checked <= 0) {
+                $checklist_label_color = "#E18A00";
+            } else if ($model_info->total_checklist_checked == $model_info->total_checklist) {
+                $checklist_label_color = "#01B392";
+            }
+
+            if ($model_info->total_checklist) {
+                $todo_checklist_status .= "<div class='meta float-start badge rounded-pill mr5' style='background-color:$checklist_label_color'><span data-bs-toggle='tooltip' title='" . app_lang("checklist_status") . "'><i data-feather='check' class='icon-14'></i> $model_info->total_checklist_checked/$model_info->total_checklist</span></div>";
+            }
 
             if (is_date_exists($model_info->start_date)) {
                 $date = format_to_date($model_info->start_date, false);
             }
 
-            echo $note_labels . " " . $date;
+            echo $todo_labels . $todo_checklist_status . "<div class='pt5'>" . $date . "</div>";
             ?>
         </div>
 

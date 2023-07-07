@@ -173,8 +173,16 @@ $lang["add_inspection"] = "Add inspection";
 $lang["edit_inspection"] = "Edit inspection";
 $lang["wire_inspection_result"] = "Wire inspection result";
 $lang["inspection_date"] = "Inspection date";
+
+
+
 $lang["mark_as_critical"] = "Mark as critical";
 $lang["critical"] = "Critical";
 $lang["non_critical"] = "Non critical";
+$lang["inventory"] = "Inventory";
+$lang["consumables"] = "Consumables";
+$lang["chemicals"] = "Chemicals";
+$lang["oils_greases"] = "Oils & Greases";
+$lang["paints"] = "Paints";
 
 return $lang;
