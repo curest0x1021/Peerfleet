@@ -2565,7 +2565,7 @@ if (!function_exists('show_clients_of_this_client_contact')) {
 
         if (count($clients)) {
             $view_data["clients"] = $clients;
-            $view_data["login_user_company_name"] = $Clients_model->get_one($login_user->client_id)->company_name;
+            $view_data["login_user_company_name"] = $Clients_model->get_one($login_user->client_id)->charter_name;
             echo view("clients/clients_dropdown_of_this_client_contact", $view_data);
         }
     }
@@ -2823,4 +2823,18 @@ if (!function_exists('get_wire_exchange_reminder_date')) {
         $reminder_date = date('Y-m-d', strtotime(' - 88 months'));
         return $reminder_date;
     }
+}
+
+if (!function_exists('can_edit_this_todo')) {
+
+    function can_edit_this_todo($created_by = 0) {
+        $ci = new Security_Controller(false);
+
+        if ($ci->login_user->id == $created_by) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
