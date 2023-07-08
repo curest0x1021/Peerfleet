@@ -30,6 +30,7 @@ $settings_menu = array(
         array("name" => "manufacturers", "url" => "manufacturers"),
         array("name" => "applicable_equipments", "url" => "applicable_equipments"),
         array("name" => "ship_equipments", "url" => "ship_equipments"),
+        array("name" => "lifting_gear_types", "url" => "lifting_gear_types"),
         array("name" => "tasks", "url" => "task_status"),
     ),
 );
