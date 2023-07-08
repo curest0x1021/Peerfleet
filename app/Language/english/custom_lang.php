@@ -184,5 +184,15 @@ $lang["consumables"] = "Consumables";
 $lang["chemicals"] = "Chemicals";
 $lang["oils_greases"] = "Oils & Greases";
 $lang["paints"] = "Paints";
+$lang["lifting_gear_manager"] = "Lifting gear manager";
+$lang["lifting_gear_types"] = "Lifting gear types";
+$lang["already_exists_type"] = "This type already exists.";
+$lang["add_type"] = "Add type";
+$lang["edit_type"] = "Edit type";
+$lang["certificate_type"] = "Certificate type";
+$lang["icc"] = "Identified Color Code";
+$lang["shackle_type"] = "Shackle type";
+$lang["misc_lifting_type"] = "Misc. Lifting type";
+$lang["lashing_type"] = "Lashing type";
 
 return $lang;

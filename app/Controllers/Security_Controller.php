@@ -768,6 +768,61 @@ class Security_Controller extends App_Controller {
         return $dropdown;
     }
 
+    protected function get_certificate_types_dropdown() {
+        $list = $this->Certificate_types_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
+    protected function get_identified_color_codes_dropdown() {
+        $list = $this->Color_codes_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
+    protected function get_shackle_types_dropdown() {
+        $list = $this->Shackle_types_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
+    protected function get_misc_types_dropdown() {
+        $list = $this->Misc_types_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
+    protected function get_lashing_types_dropdown() {
+        $list = $this->Lashing_types_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
     protected function check_access_to_this_item($item_info) {
         if ($this->login_user->user_type === "client") {
             //check if the item has the availability to show on client portal
