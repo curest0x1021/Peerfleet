@@ -99,6 +99,11 @@ class App_Controller extends Controller {
     public $Chemicals_model;
     public $Oils_model;
     public $Paints_model;
+    public $Certificate_types_model;
+    public $Color_codes_model;
+    public $Shackle_types_model;
+    public $Misc_types_model;
+    public $Lashing_types_model;
 
     public function __construct() {
         //main template to make frame of this app
@@ -218,7 +223,12 @@ class App_Controller extends Controller {
             'Wires_inspection_model',
             'Chemicals_model',
             'Oils_model',
-            'Paints_model'
+            'Paints_model',
+            'Certificate_types_model',
+            'Color_codes_model',
+            'Shackle_types_model',
+            'Misc_types_model',
+            'Lashing_types_model'
         );
     }
 
