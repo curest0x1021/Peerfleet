@@ -2838,3 +2838,9 @@ if (!function_exists('can_edit_this_todo')) {
     }
 
 }
+
+if (!function_exists('is_valid_date')) {
+    function is_valid_date($date) {
+        return (strtotime($date) !== false);
+    }
+}
