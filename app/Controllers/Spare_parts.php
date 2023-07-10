@@ -431,6 +431,12 @@ class Spare_parts extends Security_Controller {
 
         $id = $this->request->getPost('id');
 
+        $part_description = $this->request->getPost("part_description");
+        if (!empty($part_description)) {
+            $part_description = str_replace('"', '\"', $part_description);
+            $part_description = str_replace("'", "\'", $part_description);
+        }
+
         $data = array(
             "name" => $this->request->getPost('name'),
             "manufacturer_id" => $this->request->getPost('manufacturer_id'),

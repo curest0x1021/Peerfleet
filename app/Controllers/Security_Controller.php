@@ -365,11 +365,12 @@ class Security_Controller extends App_Controller {
 
     protected function spare_parts_dropdown() {
         $list = $this->Spare_parts_model->get_all_where(array("deleted" => 0))->getResult();
-        $dropdown = array("" => "-");
 
+        $dropdown = array("" => "-");
         foreach ($list as $item) {
             $dropdown[$item->id] = $item->name;
         }
+
         return $dropdown;
     }
 
@@ -726,6 +727,17 @@ class Security_Controller extends App_Controller {
 
     protected function get_manufacturers_dropdown() {
         $list = $this->Manufacturers_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
+    protected function get_icc_dropdown() {
+        $list = $this->Color_codes_model->get_all_where(array("deleted" => 0))->getResult();
 
         $dropdown = array("" => "-");
         foreach ($list as $item) {

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+use stdClass;
 
 class Consumables extends Security_Controller {
 

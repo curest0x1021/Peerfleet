@@ -87,11 +87,10 @@
 <?php echo form_close(); ?>
 
 <script type="text/javascript">
-    var sparePars = [];
+    var spareParts = [];
     $(document).ready(function() {
         spareParts = JSON.parse('<?php echo json_encode($spare_parts); ?>');
         const modelInfo = JSON.parse('<?php echo json_encode($model_info);?>');
-        console.log(spareParts);
         $("#ws-form").appForm({
             onSuccess: function(result) {
                 if (result.min_stock_reached) {

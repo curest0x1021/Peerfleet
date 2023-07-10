@@ -104,6 +104,9 @@ class App_Controller extends Controller {
     public $Shackle_types_model;
     public $Misc_types_model;
     public $Lashing_types_model;
+    public $Grommets_model;
+    public $Grommets_loadtest_model;
+    public $Grommets_inspection_model;
 
     public function __construct() {
         //main template to make frame of this app
@@ -228,7 +231,10 @@ class App_Controller extends Controller {
             'Color_codes_model',
             'Shackle_types_model',
             'Misc_types_model',
-            'Lashing_types_model'
+            'Lashing_types_model',
+            'Grommets_model',
+            'Grommets_loadtest_model',
+            'Grommets_inspection_model'
         );
     }
 
