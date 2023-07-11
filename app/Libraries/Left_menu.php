@@ -493,6 +493,7 @@ class Left_menu {
             $lifting_submenu[] = array("name" => "wires", "url" => "wires", "class" => "crosshair");
             $lifting_submenu[] = array("name" => "grommets", "url" => "grommets", "class" => "book");
             $lifting_submenu[] = array("name" => "shackles", "url" => "shackles", "class" => "book");
+            $lifting_submenu[] = array("name" => "misc", "url" => "misc", "class" => "book");
             $lifting_submenu[] = array("name" => "lashing_dunnage", "url" => "lashing_dunnage", "class" => "book");
             $sidebar_menu["lifting_gear_manager"] = array("name" => "lifting_gear_manager", "url" => "wires", "class" => "link", "submenu" => $lifting_submenu);
 
@@ -586,6 +587,7 @@ class Left_menu {
             $lifting_submenu[] = array("name" => "wires", "url" => "wires", "class" => "crosshair");
             $lifting_submenu[] = array("name" => "grommets", "url" => "grommets", "class" => "book");
             $lifting_submenu[] = array("name" => "shackles", "url" => "shackles", "class" => "book");
+            $lifting_submenu[] = array("name" => "misc", "url" => "misc", "class" => "book");
             $lifting_submenu[] = array("name" => "lashing_dunnage", "url" => "lashing_dunnage", "class" => "book");
             $sidebar_menu[] = array("name" => "lifting_gear_manager", "url" => "wires", "class" => "link", "submenu" => $lifting_submenu);
 
