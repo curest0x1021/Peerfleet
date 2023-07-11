@@ -197,6 +197,7 @@ $lang["lashing_type"] = "Lashing Type";
 $lang["grommets"] = "Grommets";
 $lang["grommets_wire_slings"] = "Grommets & Wire Slings";
 $lang["shackles"] = "Shackles";
+$lang["misc"] = "Misc. Lifting Gears";
 $lang["lashing_dunnage"] = "Lashing & Dunnage";
 $lang["shipyards_services"] = "Shipyards & Services";
 $lang["shipyards"] = "Shipyards";
