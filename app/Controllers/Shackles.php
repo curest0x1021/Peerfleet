@@ -5,7 +5,7 @@ namespace App\Controllers;
 use Exception;
 use stdClass;
 
-class Grommets extends Security_Controller
+class Shackles extends Security_Controller
 {
 
     function __construct() {
@@ -13,11 +13,11 @@ class Grommets extends Security_Controller
     }
 
     function index() {
-        return $this->template->rander("grommets/index");
+        return $this->template->rander("shackles/index");
     }
 
     function list_data() {
-        $list_data = $this->Grommets_model->get_details(array())->getResult();
+        $list_data = $this->Shackles_model->get_details(array())->getResult();
 
         $result_data = array();
         foreach ($list_data as $data) {
@@ -32,7 +32,7 @@ class Grommets extends Security_Controller
     private function _make_row($data) {
         $name = $data->name;
         if ($this->can_access_own_client($data->client_id)) {
-            $name = anchor(get_uri("grommets/view/" . $data->client_id), $data->name);
+            $name = anchor(get_uri("shackles/view/" . $data->client_id), $data->name);
         }
 
         return array(
@@ -42,24 +42,24 @@ class Grommets extends Security_Controller
         );
     }
 
-    /* load grommets details view */
+    /* load shackles details view */
     function view($client_id) {
         if ($client_id) {
             $view_data['client_id'] = $client_id;
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
             $view_data['vessel'] = $this->Clients_model->get_one($client_id);
-            return $this->template->rander("grommets/view", $view_data);
+            return $this->template->rander("shackles/view", $view_data);
         } else {
             show_404();
         }
     }
 
-    // Load grommets info tab
+    // Load shackles info tab
     function info_tab($client_id) {
         if ($client_id) {
             $view_data['client_id'] = $client_id;
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
-            return $this->template->view("grommets/info/index", $view_data);
+            return $this->template->view("shackles/info/index", $view_data);
         } else {
             show_404();
         }
@@ -77,10 +77,12 @@ class Grommets extends Security_Controller
             "client_id" => "required",
             "internal_id" => "required",
             "wll" => "required",
-            "wl" => "required",
+            "type_id" => "required",
             "qty" => "required",
             "bl" => "required",
-            "dia" => "required",
+            "iw" => "required",
+            "pd" => "required",
+            "il" => "required",
             "icc_id" => "required",
             "certificate_number" => "required",
             "certificate_type_id" => "required",
@@ -94,10 +96,12 @@ class Grommets extends Security_Controller
             "internal_id" => $this->request->getPost("internal_id"),
             "client_id" => $this->request->getPost("client_id"),
             "wll" => $this->request->getPost("wll"),
-            "wl" => $this->request->getPost("wl"),
+            "type_id" => $this->request->getPost("type_id"),
             "qty" => $this->request->getPost("qty"),
             "bl" => $this->request->getPost("bl"),
-            "dia" => $this->request->getPost("dia"),
+            "iw" => $this->request->getPost("iw"),
+            "pd" => $this->request->getPost("pd"),
+            "il" => $this->request->getPost("il"),
             "icc_id" => $this->request->getPost("icc_id"),
             "certificate_number" => $this->request->getPost("certificate_number"),
             "certificate_type_id" => $this->request->getPost("certificate_type_id"),
@@ -108,7 +112,7 @@ class Grommets extends Security_Controller
             "date_of_discharged" => $this->request->getPost("date_of_discharged"),
         );
 
-        $save_id = $this->Grommets_model->ci_save($data, $id);
+        $save_id = $this->Shackles_model->ci_save($data, $id);
         if ($save_id) {
             echo json_encode(array("success" => true, "data" => $this->_info_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
         } else {
@@ -124,7 +128,7 @@ class Grommets extends Security_Controller
 
         $id = $this->request->getPost('id');
 
-        if ($this->Grommets_model->delete($id)) {
+        if ($this->Shackles_model->delete($id)) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
@@ -132,7 +136,7 @@ class Grommets extends Security_Controller
     }
 
     function info_list_data($client_id) {
-        $list_data = $this->Grommets_model->get_grommets_details(array("client_id" => $client_id))->getResult();
+        $list_data = $this->Shackles_model->get_shackles_details(array("client_id" => $client_id))->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_info_make_row($data);
@@ -141,7 +145,7 @@ class Grommets extends Security_Controller
     }
 
     private function _info_row_data($id) {
-        $row = $this->Grommets_model->get_grommets_details(array("id" => $id))->getRow();
+        $row = $this->Shackles_model->get_shackles_details(array("id" => $id))->getRow();
         return $this->_info_make_row($row);
     }
 
@@ -149,9 +153,9 @@ class Grommets extends Security_Controller
         $internal_id = $data->internal_id;
         $action = "";
         if ($this->can_access_own_client($data->client_id)) {
-            $internal_id = modal_anchor(get_uri("grommets/info_detail_view/" . $data->id), $data->internal_id, array("class" => "edit", "title" => app_lang('grommets_wire_slings'), "data-post-id" => $data->id));
-            $action = modal_anchor(get_uri("grommets/info_modal_form/" . $data->client_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("grommets/delete_info"), "data-action" => "delete"));
+            $internal_id = modal_anchor(get_uri("shackles/info_detail_view/" . $data->id), $data->internal_id, array("class" => "edit", "title" => app_lang('shackles'), "data-post-id" => $data->id));
+            $action = modal_anchor(get_uri("shackles/info_modal_form/" . $data->client_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("shackles/delete_info"), "data-action" => "delete"));
         }
 
         $loadtest_passed = '';
@@ -172,10 +176,12 @@ class Grommets extends Security_Controller
             $data->id,
             $internal_id,
             $data->wll,
-            $data->wl,
+            $data->type_id,
             $data->qty,
             $data->bl,
-            $data->dia,
+            $data->iw,
+            $data->pd,
+            $data->il,
             $data->icc,
             $data->manufacturer,
             $data->supplied_date,
@@ -187,14 +193,14 @@ class Grommets extends Security_Controller
     }
 
     function info_detail_view($id) {
-        $model_info = $this->Grommets_model->get_grommets_details(array("id" => $id))->getRow();
+        $model_info = $this->Shackles_model->get_shackles_details(array("id" => $id))->getRow();
         if (!$this->can_access_own_client($model_info->client_id)) {
             app_redirect("forbidden");
         }
         $view_data["model_info"] = $model_info;
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
-        return $this->template->view("grommets/info/detail_view", $view_data);
+        return $this->template->view("shackles/info/detail_view", $view_data);
     }
 
     function info_modal_form($client_id) {
@@ -203,32 +209,33 @@ class Grommets extends Security_Controller
         }
         $id = $this->request->getPost("id");
         $view_data["client_id"] = $client_id;
-        $view_data["model_info"] = $this->Grommets_model->get_one($id);
+        $view_data["model_info"] = $this->Shackles_model->get_one($id);
         $view_data["label_column"] = "col-md-4";
         $view_data["field_column"] = "col-md-8";
+        $view_data["types_dropdown"] = $this->get_shackle_types_dropdown();
         $view_data["manufacturers_dropdown"] = $this->get_manufacturers_dropdown();
         $view_data["icc_dropdown"] = $this->get_identified_color_codes_dropdown();
         $view_data["certificate_types_dropdown"] = $this->get_certificate_types_dropdown();
 
-        return $this->template->view("grommets/info/modal_form", $view_data);
+        return $this->template->view("shackles/info/modal_form", $view_data);
     }
 
     function get_internal_index() {
         $client_id = $this->request->getPost("client_id");
         $wll = $this->request->getPost("wll");
-        $wl = $this->request->getPost("wl");
-        $new_index = $this->Grommets_model->get_internal_index($client_id, $wll, $wl);
+        $group = $this->request->getPost("group");
+        $new_index = $this->Shackles_model->get_internal_index($client_id, $wll, $group);
 
         echo json_encode(array("new_index" => $new_index));
     }
 
 
-    // Load grommets loadtest tab
+    // Load shackles loadtest tab
     function loadtest_tab($client_id) {
         if ($client_id) {
             $view_data['client_id'] = $client_id;
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
-            return $this->template->view("grommets/loadtest/index", $view_data);
+            return $this->template->view("shackles/loadtest/index", $view_data);
         } else {
             show_404();
         }
@@ -243,13 +250,13 @@ class Grommets extends Security_Controller
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
-            "grommet_id" => "required",
+            "shackle_id" => "required",
             "test_date" => "required",
             "tested_by" => "required"
         ));
 
         $data = array(
-            "grommet_id" => $this->request->getPost("grommet_id"),
+            "shackle_id" => $this->request->getPost("shackle_id"),
             "test_date" => $this->request->getPost("test_date"),
             "tested_by" => $this->request->getPost("tested_by"),
             "location" => $this->request->getPost("location"),
@@ -257,10 +264,10 @@ class Grommets extends Security_Controller
             "remarks" => $this->request->getPost("remarks")
         );
 
-        if (empty($id) && !$this->Grommets_loadtest_model->check_valid_loadtest($data["grommet_id"], $data["test_date"])) {
+        if (empty($id) && !$this->Shackles_loadtest_model->check_valid_loadtest($data["shackle_id"], $data["test_date"])) {
             echo json_encode(array("success" => false, 'message' => app_lang('loadtest_date_invalid')));
         } else {
-            $save_id = $this->Grommets_loadtest_model->ci_save($data, $id);
+            $save_id = $this->Shackles_loadtest_model->ci_save($data, $id);
             if ($save_id) {
                 echo json_encode(array("success" => true, "data" => $this->_loadtest_row_data($save_id, $client_id), "id" => $save_id, 'message' => app_lang('record_saved')));
             } else {
@@ -277,7 +284,7 @@ class Grommets extends Security_Controller
 
         $id = $this->request->getPost('id');
 
-        if ($this->Grommets_loadtest_model->delete($id)) {
+        if ($this->Shackles_loadtest_model->delete($id)) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
@@ -285,7 +292,7 @@ class Grommets extends Security_Controller
     }
 
     function loadtest_list_data($client_id) {
-        $list_data = $this->Grommets_loadtest_model->get_details(array("client_id" => $client_id))->getResult();
+        $list_data = $this->Shackles_loadtest_model->get_details(array("client_id" => $client_id))->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_loadtest_make_row($data, $client_id);
@@ -293,8 +300,8 @@ class Grommets extends Security_Controller
         echo json_encode(array("data" => $result));
     }
 
-    function loadtest_detail_list_data($client_id, $grommet_id) {
-        $list_data = $this->Grommets_loadtest_model->get_history(array("grommet_id" => $grommet_id))->getResult();
+    function loadtest_detail_list_data($client_id, $shackle_id) {
+        $list_data = $this->Shackles_loadtest_model->get_history(array("shackle_id" => $shackle_id))->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_loadtest_make_row($data, $client_id, false);
@@ -303,7 +310,7 @@ class Grommets extends Security_Controller
     }
 
     private function _loadtest_row_data($id, $client_id) {
-        $data = $this->Grommets_loadtest_model->get_one($id);
+        $data = $this->Shackles_loadtest_model->get_one($id);
         return $this->_loadtest_make_row($data, $client_id, false);
     }
 
@@ -315,11 +322,11 @@ class Grommets extends Security_Controller
         $action = "";
         if ($this->can_access_own_client($client_id)) {
             if ($showInternalId) {
-                $internal_id = anchor(get_uri("grommets/loadtest_detail_view/" . $data->grommet_id), $data->internal_id, array("class" => "edit", "title" => app_lang('grommets_wire_slings')));
-                $action = modal_anchor(get_uri("grommets/loadtest_modal_form/" . $data->grommet_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "add", "title" => app_lang('add_item'), "data-post-force_refresh" => true));
+                $internal_id = anchor(get_uri("shackles/loadtest_detail_view/" . $data->shackle_id), $data->internal_id, array("class" => "edit", "title" => app_lang('shackles')));
+                $action = modal_anchor(get_uri("shackles/loadtest_modal_form/" . $data->shackle_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "add", "title" => app_lang('add_item'), "data-post-force_refresh" => true));
             } else {
-                $action = modal_anchor(get_uri("grommets/loadtest_modal_form/" . $data->grommet_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-force_refresh" => false))
-                    . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("grommets/delete_loadtest"), "data-action" => "delete-confirmation"));
+                $action = modal_anchor(get_uri("shackles/loadtest_modal_form/" . $data->shackle_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-force_refresh" => false))
+                    . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("shackles/delete_loadtest"), "data-action" => "delete-confirmation"));
             }
         }
 
@@ -348,37 +355,37 @@ class Grommets extends Security_Controller
         );
     }
 
-    function loadtest_modal_form($grommet_id) {
-        $grommet = $this->Grommets_model->get_one($grommet_id);
-        if (!$this->can_access_own_client($grommet->client_id)) {
+    function loadtest_modal_form($shackle_id) {
+        $shackle = $this->Shackles_model->get_one($shackle_id);
+        if (!$this->can_access_own_client($shackle->client_id)) {
             app_redirect("forbidden");
         }
-        $view_data["model_info"] = $this->Grommets_loadtest_model->get_one($this->request->getPost("id"));
-        $view_data["grommet"] = $grommet;
+        $view_data["model_info"] = $this->Shackles_loadtest_model->get_one($this->request->getPost("id"));
+        $view_data["shackle"] = $shackle;
         $view_data["force_refresh"] = $this->request->getPost("force_refresh");
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
 
-        return $this->template->view("grommets/loadtest/modal_form", $view_data);
+        return $this->template->view("shackles/loadtest/modal_form", $view_data);
     }
 
-    function loadtest_detail_view($grommet_id) {
-        $grommet = $this->Grommets_model->get_one($grommet_id);
-        if (!$this->can_access_own_client($grommet->client_id)) {
+    function loadtest_detail_view($shackle_id) {
+        $shackle = $this->Shackles_model->get_one($shackle_id);
+        if (!$this->can_access_own_client($shackle->client_id)) {
             app_redirect("forbidden");
         }
-        $view_data["grommet"] = $grommet;
+        $view_data["shackle"] = $shackle;
 
-        return $this->template->rander("grommets/loadtest/detail_view", $view_data);
+        return $this->template->rander("shackles/loadtest/detail_view", $view_data);
     }
 
 
-    // Load grommets loadtest tab
+    // Load shackles loadtest tab
     function inspection_tab($client_id) {
         if ($client_id) {
             $view_data['client_id'] = $client_id;
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
-            return $this->template->view("grommets/inspection/index", $view_data);
+            return $this->template->view("shackles/inspection/index", $view_data);
         } else {
             show_404();
         }
@@ -393,13 +400,13 @@ class Grommets extends Security_Controller
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
-            "grommet_id" => "required",
+            "shackle_id" => "required",
             "inspection_date" => "required",
             "inspected_by" => "required"
         ));
 
         $data = array(
-            "grommet_id" => $this->request->getPost("grommet_id"),
+            "shackle_id" => $this->request->getPost("shackle_id"),
             "inspection_date" => $this->request->getPost("inspection_date"),
             "inspected_by" => $this->request->getPost("inspected_by"),
             "location" => $this->request->getPost("location"),
@@ -407,10 +414,10 @@ class Grommets extends Security_Controller
             "remarks" => $this->request->getPost("remarks")
         );
 
-        if (empty($id) && !$this->Grommets_inspection_model->check_valid_inspection($data["grommet_id"], $data["inspection_date"])) {
+        if (empty($id) && !$this->Shackles_inspection_model->check_valid_inspection($data["shackle_id"], $data["inspection_date"])) {
             echo json_encode(array("success" => false, 'message' => app_lang('inspection_date_invalid')));
         } else {
-            $save_id = $this->Grommets_inspection_model->ci_save($data, $id);
+            $save_id = $this->Shackles_inspection_model->ci_save($data, $id);
             if ($save_id) {
                 echo json_encode(array("success" => true, "data" => $this->_inspection_row_data($save_id, $client_id), "id" => $save_id, 'message' => app_lang('record_saved')));
             } else {
@@ -427,7 +434,7 @@ class Grommets extends Security_Controller
 
         $id = $this->request->getPost('id');
 
-        if ($this->Grommets_inspection_model->delete($id)) {
+        if ($this->Shackles_inspection_model->delete($id)) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
@@ -435,7 +442,7 @@ class Grommets extends Security_Controller
     }
 
     function inspection_list_data($client_id) {
-        $list_data = $this->Grommets_inspection_model->get_details(array("client_id" => $client_id))->getResult();
+        $list_data = $this->Shackles_inspection_model->get_details(array("client_id" => $client_id))->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_inspection_make_row($data, $client_id);
@@ -443,8 +450,8 @@ class Grommets extends Security_Controller
         echo json_encode(array("data" => $result));
     }
 
-    function inspection_detail_list_data($client_id, $grommet_id) {
-        $list_data = $this->Grommets_inspection_model->get_history(array("grommet_id" => $grommet_id))->getResult();
+    function inspection_detail_list_data($client_id, $shackle_id) {
+        $list_data = $this->Shackles_inspection_model->get_history(array("shackle_id" => $shackle_id))->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_inspection_make_row($data, $client_id, false);
@@ -453,7 +460,7 @@ class Grommets extends Security_Controller
     }
 
     private function _inspection_row_data($id, $client_id) {
-        $data = $this->Grommets_inspection_model->get_one($id);
+        $data = $this->Shackles_inspection_model->get_one($id);
         return $this->_inspection_make_row($data, $client_id, false);
     }
 
@@ -465,11 +472,11 @@ class Grommets extends Security_Controller
         $action = "";
         if ($this->can_access_own_client($client_id)) {
             if ($showInternalId) {
-                $internal_id = anchor(get_uri("grommets/inspection_detail_view/" . $data->grommet_id), $data->internal_id, array("class" => "edit", "title" => app_lang('grommets_wire_slings')));
-                $action = modal_anchor(get_uri("grommets/inspection_modal_form/" . $data->grommet_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "add", "title" => app_lang('add_item'), "data-post-force_refresh" => true));
+                $internal_id = anchor(get_uri("shackles/inspection_detail_view/" . $data->shackle_id), $data->internal_id, array("class" => "edit", "title" => app_lang('shackles')));
+                $action = modal_anchor(get_uri("shackles/inspection_modal_form/" . $data->shackle_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "add", "title" => app_lang('add_item'), "data-post-force_refresh" => true));
             } else {
-                $action = modal_anchor(get_uri("grommets/inspection_modal_form/" . $data->grommet_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-force_refresh" => false))
-                    . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("grommets/delete_inspection"), "data-action" => "delete-confirmation"));
+                $action = modal_anchor(get_uri("shackles/inspection_modal_form/" . $data->shackle_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-force_refresh" => false))
+                    . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("shackles/delete_inspection"), "data-action" => "delete-confirmation"));
             }
         }
 
@@ -498,34 +505,34 @@ class Grommets extends Security_Controller
         );
     }
 
-    function inspection_modal_form($grommet_id) {
-        $grommet = $this->Grommets_model->get_one($grommet_id);
-        if (!$this->can_access_own_client($grommet->client_id)) {
+    function inspection_modal_form($shackle_id) {
+        $shackle = $this->Shackles_model->get_one($shackle_id);
+        if (!$this->can_access_own_client($shackle->client_id)) {
             app_redirect("forbidden");
         }
-        $view_data["model_info"] = $this->Grommets_inspection_model->get_one($this->request->getPost("id"));
-        $view_data["grommet"] = $grommet;
+        $view_data["model_info"] = $this->Shackles_inspection_model->get_one($this->request->getPost("id"));
+        $view_data["shackle"] = $shackle;
         $view_data["force_refresh"] = $this->request->getPost("force_refresh");
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
 
-        return $this->template->view("grommets/inspection/modal_form", $view_data);
+        return $this->template->view("shackles/inspection/modal_form", $view_data);
     }
 
-    function inspection_detail_view($grommet_id) {
-        $grommet = $this->Grommets_model->get_one($grommet_id);
-        if (!$this->can_access_own_client($grommet->client_id)) {
+    function inspection_detail_view($shackle_id) {
+        $shackle = $this->Shackles_model->get_one($shackle_id);
+        if (!$this->can_access_own_client($shackle->client_id)) {
             app_redirect("forbidden");
         }
-        $view_data["grommet"] = $grommet;
+        $view_data["shackle"] = $shackle;
 
-        return $this->template->rander("grommets/inspection/detail_view", $view_data);
+        return $this->template->rander("shackles/inspection/detail_view", $view_data);
     }
 
     // Import data from excel
     function import_modal_form($client_id) {
         $view_data["client_id"] = $client_id;
-        return $this->template->view("grommets/import_modal_form", $view_data);
+        return $this->template->view("shackles/import_modal_form", $view_data);
     }
 
     function upload_excel_file() {
@@ -548,7 +555,7 @@ class Grommets extends Security_Controller
     }
 
     function download_sample_excel_file() {
-        $file_name = "import-grommets-sample.xlsx";
+        $file_name = "import-shackles-sample.xlsx";
         return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => $file_name))));
     }
 
@@ -556,10 +563,12 @@ class Grommets extends Security_Controller
         return array(
             ["key" => "internal_id", "required" => true],
             ["key" => "wll", "required" => true],
-            ["key" => "wl", "required" => true],
-            ["key" => "qty", "required" => true],
-            ["key" => "bl", "required" => true],
-            ["key" => "dia", "required" => true],
+            ["key" => "type", "required" => true],
+            ["key" => "qty", "required" => false],
+            ["key" => "bl", "required" => false],
+            ["key" => "iw", "required" => false],
+            ["key" => "pd", "required" => false],
+            ["key" => "il", "required" => false],
             ["key" => "icc", "required" => false],
             ["key" => "certificate_number", "required" => true],
             ["key" => "certificate_type", "required" => false],
@@ -635,6 +644,7 @@ class Grommets extends Security_Controller
     private function _prepare_item_data($data_row, $allowed_headers) {
         //prepare data
         $item_data = array();
+        $type_data = array();
         $manufacturer_data = array();
         $icc_data = array();
         $certificate_data = array();
@@ -647,7 +657,9 @@ class Grommets extends Security_Controller
             }
             $row_data_value = trim($row_data_value);
             $header_key_value = get_array_value($allowed_headers, $row_data_key);
-            if ($header_key_value == "manufacturer") {
+            if ($header_key_value == "type") {
+                $type_data["name"] = $row_data_value;
+            } else if ($header_key_value == "manufacturer") {
                 $manufacturer_data["name"] = $row_data_value;
             } else if ($header_key_value == "icc") {
                 $icc_data["name"] = $row_data_value;
@@ -684,6 +696,7 @@ class Grommets extends Security_Controller
 
         return array(
             "item_data" => $item_data,
+            "type_data" => $type_data,
             "manufacturer_data" => $manufacturer_data,
             "icc_data" => $icc_data,
             "certificate_data" => $certificate_data,
@@ -828,13 +841,15 @@ class Grommets extends Security_Controller
 
         $allowed_headers = array_map(function ($h) {
             return $h["key"];
-        }, $this->_get_allowed_headers());;
+        }, $this->_get_allowed_headers());
+
+        $types = $this->Shackle_types_model->get_all()->getResult();
         $manufacturers = $this->Manufacturers_model->get_all()->getResult();
         $iccs = $this->Color_codes_model->get_all()->getResult();
         $certificate_types = $this->Certificate_types_model->get_all()->getResult();
-        $load_tests = $this->Grommets_loadtest_model->get_all()->getResult();
-        $inspections = $this->Grommets_inspection_model->get_all()->getResult();
-        $grommets = $this->Grommets_model->get_data($client_id);
+        $load_tests = $this->Shackles_loadtest_model->get_all()->getResult();
+        $inspections = $this->Shackles_inspection_model->get_all()->getResult();
+        $shackles = $this->Shackles_model->get_data($client_id);
 
         foreach ($excel_file as $key => $value) { //rows
             if ($key === 0) { //first line is headers, continue for the next loop
@@ -843,6 +858,7 @@ class Grommets extends Security_Controller
 
             $data_array = $this->_prepare_item_data($value, $allowed_headers);
             $item_data = get_array_value($data_array, "item_data");
+            $type_data = get_array_value($data_array, "type_data");
             $manufacturer_data = get_array_value($data_array, "manufacturer_data");
             $icc_data = get_array_value($data_array, "icc_data");
             $certificate_data = get_array_value($data_array, "certificate_data");
@@ -855,6 +871,20 @@ class Grommets extends Security_Controller
             }
 
             try {
+                // Shackle type
+                $type = $this->findObjectByName($type_data["name"], $types);
+                if ($type) {
+                    $item_data["type_id"] = $type->id;
+                } else {
+                    $m_save_id = $this->Shackle_types_model->ci_save($type_data);
+                    $item_data["type_id"] = $m_save_id;
+
+                    $temp = new stdClass();
+                    $temp->id = $m_save_id;
+                    $temp->name = $type_data["name"];
+                    $types[] = $temp;
+                }
+
                 // manufacturer
                 $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
                 if ($manufacturer) {
@@ -898,31 +928,31 @@ class Grommets extends Security_Controller
                 }
 
                 $item_data["client_id"] = $client_id;
-                $grommet = $this->findGrommetByInternalId($item_data["internal_id"], $grommets);
-                if ($grommet) {
-                    $save_id = $grommet->id;
+                $shackle = $this->findShackleByInternalId($item_data["internal_id"], $shackles);
+                if ($shackle) {
+                    $save_id = $shackle->id;
                 } else {
-                    $save_id = $this->Grommets_model->ci_save($item_data);
+                    $save_id = $this->Shackles_model->ci_save($item_data);
 
                     $temp = new stdClass();
                     $temp->id = $save_id;
                     $temp->internal_id = $item_data["internal_id"];
-                    $grommets[] = $temp;
+                    $shackles[] = $temp;
                 }
 
                 // Save load tests
                 if (is_valid_date($loadtest_data["initial"]["test_date"])) {
                     $data = array(
-                        "grommet_id" => $save_id,
+                        "shackle_id" => $save_id,
                         "test_date" => date_format(date_create($loadtest_data["initial"]["test_date"]), "Y-m-d"),
                         "tested_by" => $loadtest_data["initial"]["tested_by"],
                         "passed" => $loadtest_data["initial"]["passed"] ?? 0
                     );
                     if ($this->valid_loadtest($save_id, $data["test_date"], $load_tests)) {
-                        $this->Grommets_loadtest_model->ci_save($data);
+                        $this->Shackles_loadtest_model->ci_save($data);
 
                         $temp = new stdClass();
-                        $temp->grommet_id = $save_id;
+                        $temp->shackle_id = $save_id;
                         $temp->test_date = $data["test_date"];
                         $load_tests[] = $temp;
                     }
@@ -930,16 +960,16 @@ class Grommets extends Security_Controller
 
                 if (is_valid_date($loadtest_data["last"]["test_date"])) {
                     $data = array(
-                        "grommet_id" => $save_id,
+                        "shackle_id" => $save_id,
                         "test_date" => date_format(date_create($loadtest_data["last"]["test_date"]), "Y-m-d"),
                         "tested_by" => $loadtest_data["last"]["tested_by"],
                         "passed" => $loadtest_data["last"]["passed"] ?? 0
                     );
                     if ($this->valid_loadtest($save_id, $data["test_date"], $load_tests)) {
-                        $this->Grommets_loadtest_model->ci_save($data);
+                        $this->Shackles_loadtest_model->ci_save($data);
 
                         $temp = new stdClass();
-                        $temp->grommet_id = $save_id;
+                        $temp->shackle_id = $save_id;
                         $temp->test_date = $data["test_date"];
                         $load_tests[] = $temp;
                     }
@@ -948,17 +978,17 @@ class Grommets extends Security_Controller
                 // Save visual inspection
                 if (is_valid_date($inspection_data["inspection_date"])) {
                     $data = array(
-                        "grommet_id" => $save_id,
+                        "shackle_id" => $save_id,
                         "inspection_date" => date_format(date_create($inspection_data["inspection_date"]), "Y-m-d"),
                         "inspected_by" => $inspection_data["inspected_by"],
                         "remarks" => $inspection_data["remarks"],
                         "passed" => $inspection_data["passed"] ?? 0
                     );
                     if ($this->valid_inspection($save_id, $data["inspection_date"], $inspections)) {
-                        $this->Grommets_inspection_model->ci_save($data);
+                        $this->Shackles_inspection_model->ci_save($data);
 
                         $temp = new stdClass();
-                        $temp->grommet_id = $save_id;
+                        $temp->shackle_id = $save_id;
                         $temp->inspection_date = $data["inspection_date"];
                         $inspections[] = $temp;
                     }
@@ -983,27 +1013,27 @@ class Grommets extends Security_Controller
         return false;
     }
 
-    private function findGrommetByInternalId($internal_id, $arr) {
+    private function findShackleByInternalId($internal_id, $arr) {
         foreach ($arr as $item) {
-            if ($internal_id == $item->internal_id) {
+            if ($item->internal_id == $internal_id) {
                 return $item;
             }
         }
         return false;
     }
 
-    private function valid_loadtest($grommet_id, $test_date, $arr) {
+    private function valid_loadtest($shackle_id, $test_date, $arr) {
         foreach ($arr as $item) {
-            if ($grommet_id == $item->grommet_id && $test_date == $item->test_date) {
+            if ($shackle_id == $item->shackle_id && $test_date == $item->test_date) {
                 return false;
             }
         }
         return true;
     }
 
-    private function valid_inspection($grommet_id, $inspection_date, $arr) {
+    private function valid_inspection($shackle_id, $inspection_date, $arr) {
         foreach ($arr as $item) {
-            if ($grommet_id == $item->grommet_id && $inspection_date == $item->inspection_date) {
+            if ($shackle_id == $item->shackle_id && $inspection_date == $item->inspection_date) {
                 return false;
             }
         }

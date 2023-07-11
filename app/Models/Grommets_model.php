@@ -66,9 +66,9 @@ class Grommets_model extends Crud_model {
         return $this->db->query($sql);
     }
 
-    function get_internal_index($client_id) {
+    function get_internal_index($client_id, $wll, $wl) {
         $grommets_table = $this->db->prefixTable("grommets");
-        $sql = "SELECT max(internal_id) as internal_id FROM $grommets_table WHERE client_id=$client_id";
+        $sql = "SELECT max(internal_id) as internal_id FROM $grommets_table WHERE client_id=$client_id AND wll=$wll AND wl=$wl";
         $result = $this->db->query($sql)->getRow();
         if (empty($result->internal_id)) {
             return 1;
@@ -77,6 +77,14 @@ class Grommets_model extends Crud_model {
             $newIndex = intval(end($strs)) + 1;
             return $newIndex;
         }
+    }
+
+    // get id, internal_id only
+    function get_data($client_id) {
+        $grommets_table = $this->db->prefixTable("grommets");
+        $sql = "SELECT id, grommet_id FROM $grommets_table WHERE client_id=$client_id";
+        $result = $this->db->query($sql)->getResult();
+        return $result;
     }
 
 }
