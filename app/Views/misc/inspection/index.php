@@ -1,6 +1,6 @@
 <div class="card">
     <div class="tab-title clearfix">
-        <h4><?php echo app_lang('loadtest'); ?></h4>
+        <h4><?php echo app_lang('visual_inspection'); ?></h4>
     </div>
     <div class="table-responsive">
         <table id="inspection-table" class="display" cellspacing="0" width="100%">

@@ -149,7 +149,7 @@ class Misc extends Security_Controller
         if ($this->can_access_own_client($data->client_id)) {
             $internal_id = modal_anchor(get_uri("misc/info_detail_view/" . $data->id), $data->internal_id, array("class" => "edit", "title" => app_lang('misc'), "data-post-id" => $data->id));
             $action = modal_anchor(get_uri("misc/info_modal_form/" . $data->client_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("misc/delete_info"), "data-action" => "delete"));
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("misc/delete_info"), "data-action" => "delete-confirmation"));
         }
 
         $loadtest_passed = '';

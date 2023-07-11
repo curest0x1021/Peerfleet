@@ -25,7 +25,7 @@ class Shackles_inspection_model extends Crud_model {
             $where .= " AND $shackles_table.client_id = $client_id";
         }
 
-        $sql = "SELECT $shackles_table.internal_id, $shackles_table.id as misc_id, c.id, c.test_date, c.tested_by, c.location, c.passed, c.remarks
+        $sql = "SELECT $shackles_table.internal_id, $shackles_table.id as shackle_id, c.id, c.test_date, c.tested_by, c.location, c.passed, c.remarks
                 FROM $shackles_table
                 LEFT JOIN (
                     SELECT a.* FROM $inspection_table a
