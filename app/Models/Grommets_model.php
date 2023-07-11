@@ -82,7 +82,7 @@ class Grommets_model extends Crud_model {
     // get id, internal_id only
     function get_data($client_id) {
         $grommets_table = $this->db->prefixTable("grommets");
-        $sql = "SELECT id, grommet_id FROM $grommets_table WHERE client_id=$client_id";
+        $sql = "SELECT id, internal_id FROM $grommets_table WHERE client_id=$client_id";
         $result = $this->db->query($sql)->getResult();
         return $result;
     }

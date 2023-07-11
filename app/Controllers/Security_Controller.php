@@ -824,8 +824,8 @@ class Security_Controller extends App_Controller {
         return $dropdown;
     }
 
-    protected function get_lashing_types_dropdown() {
-        $list = $this->Lashing_types_model->get_all_where(array("deleted" => 0))->getResult();
+    protected function get_lashing_category_dropdown() {
+        $list = $this->Lashing_category_model->get_all_where(array("deleted" => 0))->getResult();
 
         $dropdown = array("" => "-");
         foreach ($list as $item) {

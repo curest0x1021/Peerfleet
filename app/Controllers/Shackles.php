@@ -331,10 +331,12 @@ class Shackles extends Security_Controller
         }
 
         $passed = '';
-        if ($data->passed) {
-            $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;"></div>';
-        } else {
-            $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+        if ($data->test_date) {
+            if ($data->passed) {
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;"></div>';
+            } else {
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+            }
         }
 
         $next_test_date = "";
@@ -481,10 +483,12 @@ class Shackles extends Security_Controller
         }
 
         $passed = '';
-        if ($data->passed) {
-            $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;"></div>';
-        } else {
-            $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+        if ($data->inspection_date) {
+            if ($data->passed) {
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;"></div>';
+            } else {
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+            }
         }
 
         $next_inspection_date = "";
@@ -686,9 +690,17 @@ class Shackles extends Security_Controller
             } else if ($header_key_value == "remarks") {
                 $inspection_data["remarks"] = $row_data_value;
             } else if ($header_key_value == "supplied_date") {
-                $item_data[$header_key_value] = date_format(date_create($row_data_value), "Y-m-d");
+                if (is_valid_date($row_data_value)) {
+                    $item_data[$header_key_value] = date_format(date_create($row_data_value), "Y-m-d");
+                } else {
+                    $item_data[$header_key_value] = "";
+                }
             } else if ($header_key_value == "date_of_discharged") {
-                $item_data[$header_key_value] = date_format(date_create($row_data_value), "Y-m-d");
+                if (is_valid_date($row_data_value)) {
+                    $item_data[$header_key_value] = date_format(date_create($row_data_value), "Y-m-d");
+                } else {
+                    $item_data[$header_key_value] = "";
+                }
             } else {
                 $item_data[$header_key_value] = $row_data_value;
             }
@@ -886,45 +898,51 @@ class Shackles extends Security_Controller
                 }
 
                 // manufacturer
-                $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
-                if ($manufacturer) {
-                    $item_data["manufacturer_id"] = $manufacturer->id;
-                } else {
-                    $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
-                    $item_data["manufacturer_id"] = $m_save_id;
+                if (isset($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
+                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
+                    if ($manufacturer) {
+                        $item_data["manufacturer_id"] = $manufacturer->id;
+                    } else {
+                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                        $item_data["manufacturer_id"] = $m_save_id;
 
-                    $temp = new stdClass();
-                    $temp->id = $m_save_id;
-                    $temp->name = $manufacturer_data["name"];
-                    $manufacturers[] = $temp;
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $manufacturer_data["name"];
+                        $manufacturers[] = $temp;
+                    }
                 }
 
                 // Identified color codes
-                $icc = $this->findObjectByName($icc_data["name"], $iccs);
-                if ($icc) {
-                    $item_data["icc_id"] = $icc->id;
-                } else {
-                    $m_save_id = $this->Color_codes_model->ci_save($icc_data);
-                    $item_data["icc_id"] = $m_save_id;
+                if (isset($icc_data["name"]) && $icc_data["name"] != "---") {
+                    $icc = $this->findObjectByName($icc_data["name"], $iccs);
+                    if ($icc) {
+                        $item_data["icc_id"] = $icc->id;
+                    } else {
+                        $m_save_id = $this->Color_codes_model->ci_save($icc_data);
+                        $item_data["icc_id"] = $m_save_id;
 
-                    $temp = new stdClass();
-                    $temp->id = $m_save_id;
-                    $temp->name = $icc_data["name"];
-                    $iccs[] = $temp;
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $icc_data["name"];
+                        $iccs[] = $temp;
+                    }
                 }
 
                 // Certificate types
-                $certificate = $this->findObjectByName($certificate_data["name"], $certificate_types);
-                if ($certificate) {
-                    $item_data["certificate_type_id"] = $certificate->id;
-                } else {
-                    $m_save_id = $this->Certificate_types_model->ci_save($certificate_data);
-                    $item_data["certificate_type_id"] = $m_save_id;
+                if (isset($certificate_data["name"]) && $certificate_data["name"] !== "---") {
+                    $certificate = $this->findObjectByName($certificate_data["name"], $certificate_types);
+                    if ($certificate) {
+                        $item_data["certificate_type_id"] = $certificate->id;
+                    } else {
+                        $m_save_id = $this->Certificate_types_model->ci_save($certificate_data);
+                        $item_data["certificate_type_id"] = $m_save_id;
 
-                    $temp = new stdClass();
-                    $temp->id = $m_save_id;
-                    $temp->name = $certificate_data["name"];
-                    $certificate_types[] = $temp;
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $certificate_data["name"];
+                        $certificate_types[] = $temp;
+                    }
                 }
 
                 $item_data["client_id"] = $client_id;
@@ -941,10 +959,11 @@ class Shackles extends Security_Controller
                 }
 
                 // Save load tests
-                if (is_valid_date($loadtest_data["initial"]["test_date"])) {
+                if (isset($loadtest_data["initial"]["test_date"]) && is_valid_date($loadtest_data["initial"]["test_date"])) {
+                    $test_date = date_format(date_create($loadtest_data["initial"]["test_date"]), "Y-m-d");
                     $data = array(
                         "shackle_id" => $save_id,
-                        "test_date" => date_format(date_create($loadtest_data["initial"]["test_date"]), "Y-m-d"),
+                        "test_date" => $test_date,
                         "tested_by" => $loadtest_data["initial"]["tested_by"],
                         "passed" => $loadtest_data["initial"]["passed"] ?? 0
                     );
@@ -958,10 +977,11 @@ class Shackles extends Security_Controller
                     }
                 }
 
-                if (is_valid_date($loadtest_data["last"]["test_date"])) {
+                if (isset($loadtest_data["last"]["test_date"]) && is_valid_date($loadtest_data["last"]["test_date"])) {
+                    $test_date = date_format(date_create($loadtest_data["last"]["test_date"]), "Y-m-d");
                     $data = array(
                         "shackle_id" => $save_id,
-                        "test_date" => date_format(date_create($loadtest_data["last"]["test_date"]), "Y-m-d"),
+                        "test_date" => $test_date,
                         "tested_by" => $loadtest_data["last"]["tested_by"],
                         "passed" => $loadtest_data["last"]["passed"] ?? 0
                     );
@@ -976,10 +996,11 @@ class Shackles extends Security_Controller
                 }
 
                 // Save visual inspection
-                if (is_valid_date($inspection_data["inspection_date"])) {
+                if (isset($inspection_data["inspection_date"]) && is_valid_date($inspection_data["inspection_date"])) {
+                    $inspection_date = date_format(date_create($inspection_data["inspection_date"]), "Y-m-d");
                     $data = array(
                         "shackle_id" => $save_id,
-                        "inspection_date" => date_format(date_create($inspection_data["inspection_date"]), "Y-m-d"),
+                        "inspection_date" => $inspection_date,
                         "inspected_by" => $inspection_data["inspected_by"],
                         "remarks" => $inspection_data["remarks"],
                         "passed" => $inspection_data["passed"] ?? 0
