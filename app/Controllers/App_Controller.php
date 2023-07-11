@@ -113,6 +113,8 @@ class App_Controller extends Controller {
     public $Misc_model;
     public $Misc_loadtest_model;
     public $Misc_inspection_model;
+    public $Lashing_model;
+    public $Lashing_inspection_model;
 
     public function __construct() {
         //main template to make frame of this app
@@ -246,7 +248,9 @@ class App_Controller extends Controller {
             'Shackles_inspection_model',
             'Misc_model',
             'Misc_loadtest_model',
-            'Misc_inspection_model'
+            'Misc_inspection_model',
+            'Lashing_model',
+            'Lashing_inspection_model'
         );
     }
 
