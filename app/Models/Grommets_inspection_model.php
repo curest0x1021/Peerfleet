@@ -25,7 +25,7 @@ class Grommets_inspection_model extends Crud_model {
             $where .= " AND $grommet_table.client_id = $client_id";
         }
 
-        $sql = "SELECT $grommet_table.internal_id, c.*
+        $sql = "SELECT $grommet_table.internal_id, $grommet_table.id as misc_id, c.id, c.inspection_date, c.inspected_by, c.location, c.passed, c.remarks
                 FROM $grommet_table
                 LEFT JOIN (
                     SELECT a.* FROM $inspection_table a

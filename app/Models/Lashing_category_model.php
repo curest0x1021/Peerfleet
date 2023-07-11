@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-class Lashing_types_model extends Crud_model {
+class Lashing_category_model extends Crud_model {
 
     protected $table = null;
 
     function __construct() {
-        $this->table = 'lashing_types';
+        $this->table = 'lashing_category';
         parent::__construct($this->table);
     }
 
