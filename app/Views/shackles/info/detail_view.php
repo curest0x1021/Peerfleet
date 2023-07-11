@@ -9,14 +9,14 @@
         <div class="form-group row">
             <div class="col-md-4">
                 <p>WLL - Working Load Limit [ts]</p>
-                <p>WL - Working Length [m]</p>
                 <p>BL - Break Load [kN]</p>
-                <p>Dia - Diameter [mm]</p>
-                <p>Internal ID - G-WLL-WL-#</p>
+                <p>IW - Inside Width [mm]</p>
+                <p>PD - Pin Diameter [mm]</p>
+                <p>IL - Inside Length [mm]</p>
+                <p>Internal ID - S-WLL-Group-#</p>
             </div>
             <div class="col-md-8">
-                <img src="<?php echo base_url("assets/images/grommet-01.png"); ?>" alt="Grommet 01"/>
-                <img src="<?php echo base_url("assets/images/grommet-02.png"); ?>" alt="Grommet 02"/>
+                <img src="<?php echo base_url("assets/images/shackles.png"); ?>" style="width: 100%; object-fit: cover;" alt="Shackle"/>
             </div>
         </div>
 
@@ -31,10 +31,10 @@
 
         <div class="row">
             <div class="<?php echo $label_column; ?>">
-                <span>WL (m):</span>
+                <span><?php echo app_lang("type"); ?>:</span>
             </div>
             <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->wl; ?></strong>
+                <strong><?php echo $model_info->type; ?></strong>
             </div>
         </div>
 
@@ -58,10 +58,28 @@
 
         <div class="row">
             <div class="<?php echo $label_column; ?>">
-                <span>Dia (mm):</span>
+                <span>IW (mm):</span>
             </div>
             <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->dia; ?></strong>
+                <strong><?php echo $model_info->iw; ?></strong>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="<?php echo $label_column; ?>">
+                <span>PD (mm):</span>
+            </div>
+            <div class="<?php echo $field_column; ?>">
+                <strong><?php echo $model_info->pd; ?></strong>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="<?php echo $label_column; ?>">
+                <span>IL (mm):</span>
+            </div>
+            <div class="<?php echo $field_column; ?>">
+                <strong><?php echo $model_info->il; ?></strong>
             </div>
         </div>
 
@@ -150,7 +168,7 @@
 
 <div class="modal-footer">
     <?php
-    echo modal_anchor(get_uri("grommets/info_modal_form/" . $model_info->client_id), "<i data-feather='edit-2' class='icon-16'></i> " . app_lang('edit'), array("class" => "btn btn-default", "data-post-id" => $model_info->id, "title" => app_lang('edit_item')));
+    echo modal_anchor(get_uri("shackles/info_modal_form/" . $model_info->client_id), "<i data-feather='edit-2' class='icon-16'></i> " . app_lang('edit'), array("class" => "btn btn-default", "data-post-id" => $model_info->id, "title" => app_lang('edit_item')));
     ?>
     <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
 </div>

@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="col-lg-8">
-                    <?php echo form_open(get_uri("grommets/save_info"), array("id" => "grommet-form", "class" => "general-form", "role" => "form")); ?>
+                    <?php echo form_open(get_uri("shackles/save_info"), array("id" => "shackle-form", "class" => "general-form", "role" => "form")); ?>
                     <div class="clearfix">
                         <div class="container-fluid">
                             <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
@@ -67,21 +67,11 @@
 
                             <div class="form-group row">
                                 <div class="<?php echo $label_column; ?>">
-                                    <span>WL (m):</span>
+                                    <span><?php echo app_lang("type"); ?>:</span>
                                 </div>
                                 <div class="<?php echo $field_column; ?>">
                                     <?php
-                                    echo form_input(array(
-                                        "id" => "wl",
-                                        "name" => "wl",
-                                        "value" => $model_info->wl ? $model_info->wl : "",
-                                        "class" => "form-control",
-                                        "placeholder" => app_lang('wl'),
-                                        "type" => "number",
-                                        "step" => 0.1,
-                                        "data-rule-required" => true,
-                                        "data-msg-required" => app_lang("field_required"),
-                                    ));
+                                    echo form_dropdown("type_id", $types_dropdown, array($model_info->type_id), "class='select2 validate-hidden' id='type_id' data-rule-required='true' data-msg-required='" . app_lang('field_required') . "'");
                                     ?>
                                 </div>
                             </div>
@@ -117,7 +107,7 @@
                                         "name" => "bl",
                                         "value" => $model_info->bl ? $model_info->bl : "",
                                         "class" => "form-control",
-                                        "placeholder" => app_lang('bl'),
+                                        "placeholder" => app_lang("bl"),
                                         "type" => "number",
                                         "data-rule-required" => true,
                                         "data-msg-required" => app_lang("field_required"),
@@ -128,16 +118,56 @@
 
                             <div class="form-group row">
                                 <div class="<?php echo $label_column; ?>">
-                                    <span>Dia (mm):</span>
+                                    <span>IL (mm):</span>
                                 </div>
                                 <div class="<?php echo $field_column; ?>">
                                     <?php
                                     echo form_input(array(
-                                        "id" => "dia",
-                                        "name" => "dia",
-                                        "value" => $model_info->dia ? $model_info->dia : "",
+                                        "id" => "il",
+                                        "name" => "il",
+                                        "value" => $model_info->il ? $model_info->il : "",
                                         "class" => "form-control",
-                                        "placeholder" => app_lang('dia'),
+                                        "placeholder" => app_lang('il'),
+                                        "type" => "number",
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="<?php echo $label_column; ?>">
+                                    <span>PD (mm):</span>
+                                </div>
+                                <div class="<?php echo $field_column; ?>">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "pd",
+                                        "name" => "pd",
+                                        "value" => $model_info->pd ? $model_info->pd : "",
+                                        "class" => "form-control",
+                                        "placeholder" => app_lang('pd'),
+                                        "type" => "number",
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="<?php echo $label_column; ?>">
+                                    <span>IW (mm):</span>
+                                </div>
+                                <div class="<?php echo $field_column; ?>">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "iw",
+                                        "name" => "iw",
+                                        "value" => $model_info->iw ? $model_info->iw : "",
+                                        "class" => "form-control",
+                                        "placeholder" => app_lang('iw'),
                                         "type" => "number",
                                         "data-rule-required" => true,
                                         "data-msg-required" => app_lang("field_required"),
@@ -288,14 +318,14 @@
 <script type="text/javascript">
     $(document).ready(function() {
         const clientId = <?php echo $client_id; ?>;
-        const grommetId = '<?php echo $model_info->id; ?>';
+        const shackleId = '<?php echo $model_info->id; ?>';
 
-        $("#grommet-form").appForm({
+        $("#shackle-form").appForm({
             onSuccess: function(result) {
                 appAlert.success(result.message, {
                     duration: 10000
                 });
-                $("#grommet-table").appTable({
+                $("#shackle-table").appTable({
                     newData: result.data,
                     dataId: result.id
                 });
@@ -306,37 +336,37 @@
         setDatePicker("#supplied_date");
         setDatePicker("#date_of_discharged");
 
-        if (grommetId) {
+        if (shackleId) {
             $("#wll").attr("readonly", true);
-            $("#wl").attr("readonly", true);
+            // $("#wl").attr("readonly", true);
         }
 
-        $("#wll").on("input", (e) => {
-            generateInternalId();
-        });
+        // $("#wll").on("input", (e) => {
+        //     generateInternalId();
+        // });
 
-        $("#wl").on("input", (e) => {
-            generateInternalId();
-        });
+        // $("#wl").on("input", (e) => {
+        //     generateInternalId();
+        // });
 
-        function generateInternalId() {
-            const wll = $("#wll").val();
-            var wl = $("#wl").val();
-            if (clientId && wll && wl) {
-                $.ajax({
-                    url: "<?php echo get_uri('grommets/get_internal_index') ?>",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {client_id: clientId, wll: wll, wl: wl},
-                    success: function (result) {
-                        const { new_index } = result;
+        // function generateInternalId() {
+        //     const wll = $("#wll").val();
+        //     const wl = Math.round(Number($("#wl").val()) * 10);
+        //     if (clientId && wll && wl) {
+        //         $.ajax({
+        //             url: "<?php echo get_uri('shackles/get_internal_index') ?>",
+        //             type: 'POST',
+        //             dataType: 'json',
+        //             data: {client_id: clientId, wll: wll, wl: wl},
+        //             success: function (result) {
+        //                 const { new_index } = result;
 
-                        wl = Math.floor(wl * 10);
-                        const internalId = `G-${wll}-${wl}-${new_index}`;
-                        $("#internal_id").val(internalId);
-                    }
-                });
-            }
-        }
+        //                 wl = Math.floor(wl * 10);
+        //                 const internalId = `G-${wll}-${wl}-${new_index}`;
+        //                 $("#internal_id").val(internalId);
+        //             }
+        //         });
+        //     }
+        // }
     });
 </script>
