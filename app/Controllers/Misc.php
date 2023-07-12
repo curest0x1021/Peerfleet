@@ -99,6 +99,12 @@ class Misc extends Security_Controller
             "type_id" => $this->request->getPost("type_id"),
             "bl" => $this->request->getPost("bl")
         );
+        if (!$main_id) {
+            $main_row = $this->Misc_main_model->get_all_where(array("item_description" => $main_data["item_description"]))->getRow();
+            if ($main_row) {
+                $main_id = $main_row->id;
+            }
+        }
         $m_save_id = $this->Misc_main_model->ci_save($main_data, $main_id);
 
         $data = array(

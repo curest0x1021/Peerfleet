@@ -104,6 +104,12 @@ class Shackles extends Security_Controller
             "pd" => $this->request->getPost("pd"),
             "il" => $this->request->getPost("il")
         );
+        if (!$main_id) {
+            $main_row = $this->Shackles_main_model->get_all_where(array("item_description" => $main_data["item_description"]))->getRow();
+            if ($main_row) {
+                $main_id = $main_row->id;
+            }
+        }
         $m_save_id = $this->Shackles_main_model->ci_save($main_data, $main_id);
 
         $data = array(

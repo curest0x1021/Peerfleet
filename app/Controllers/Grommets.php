@@ -100,6 +100,12 @@ class Grommets extends Security_Controller
             "dia" => $this->request->getPost("dia"),
             "bl" => $this->request->getPost("bl")
         );
+        if (!$main_id) {
+            $main_row = $this->Grommets_main_model->get_all_where(array("item_description" => $main_data["item_description"]))->getRow();
+            if ($main_row) {
+                $main_id = $main_row->id;
+            }
+        }
         $m_save_id = $this->Grommets_main_model->ci_save($main_data, $main_id);
 
         $data = array(
