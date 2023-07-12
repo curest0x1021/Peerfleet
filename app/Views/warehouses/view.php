@@ -6,10 +6,10 @@
                     <h1 class="pl0"><?php echo app_lang('warehouses') . " - " . $model_info->name; ?></h1>
                 </div>
                 <ul id="crane-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs title" role="tablist">
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("warehouses/spares_tab/" . $client_id . "/" . $warehouse_id); ?>" data-bs-target="#warehouse-spares"> <?php echo app_lang('spare_parts'); ?></a></li>
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("warehouses/chemicals_tab/" . $client_id . "/" . $warehouse_id); ?>" data-bs-target="#warehouse-chemicals"> <?php echo app_lang('chemicals'); ?></a></li>
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("warehouses/oils_tab/" . $client_id . "/" . $warehouse_id); ?>" data-bs-target="#warehouse-oils"> <?php echo app_lang('oils_greases'); ?></a></li>
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("warehouses/paints_tab/" . $client_id . "/" . $warehouse_id); ?>" data-bs-target="#warehouse-paints"> <?php echo app_lang('paints'); ?></a></li>
+                    <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("warehouses/spares_tab/" . $client_id . "/" . $warehouse_id); ?>" data-bs-target="#warehouse-spares"> <?php echo app_lang('spare_parts') . $warns["spares"]; ?></a></li>
+                    <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("warehouses/chemicals_tab/" . $client_id . "/" . $warehouse_id); ?>" data-bs-target="#warehouse-chemicals"> <?php echo app_lang('chemicals') . $warns["chemicals"];; ?></a></li>
+                    <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("warehouses/oils_tab/" . $client_id . "/" . $warehouse_id); ?>" data-bs-target="#warehouse-oils"> <?php echo app_lang('oils_greases') . $warns["oils"];; ?></a></li>
+                    <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("warehouses/paints_tab/" . $client_id . "/" . $warehouse_id); ?>" data-bs-target="#warehouse-paints"> <?php echo app_lang('paints') . $warns["paints"];; ?></a></li>
                 </ul>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane fade" id="warehouse-spares"></div>

@@ -30,3 +30,12 @@ CREATE TABLE `pf_lashing_inspection` (`id` INT NOT NULL AUTO_INCREMENT , `lashin
 
 
 RENAME TABLE `pf_warehouse_spare` TO `peerfleet`.`pf_warehouse_spares`;
+
+CREATE TABLE `pf_warehouse_chemicals` (`id` INT NOT NULL AUTO_INCREMENT , `warehouse_id` INT NOT NULL , `chemical_id` INT NOT NULL , `quantity` INT NOT NULL , `min_stocks` INT NULL , `deleted` TINYINT(1) NOT NULL DEFAULT '0' , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+CREATE TABLE `pf_warehouse_oils` (`id` INT NOT NULL AUTO_INCREMENT , `warehouse_id` INT NOT NULL , `oil_id` INT NOT NULL , `quantity` INT NOT NULL , `min_stocks` INT NULL , `deleted` TINYINT(1) NOT NULL DEFAULT '0' , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+CREATE TABLE `pf_warehouse_paints` (`id` INT NOT NULL AUTO_INCREMENT , `warehouse_id` INT NOT NULL , `paint_id` INT NOT NULL , `quantity` INT NOT NULL , `min_stocks` INT NULL , `deleted` TINYINT(1) NOT NULL DEFAULT '0' , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `pf_notifications` CHANGE `warehouse_spare_id` `warehouse_item_id` INT NOT NULL;
+ALTER TABLE `pf_notifications` ADD `warehouse_tab` VARCHAR(20) NOT NULL AFTER `warehouse_item_id`;

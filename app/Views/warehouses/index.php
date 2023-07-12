@@ -28,16 +28,16 @@
             filterDropdown: [
                 {name: "client_id", class: "w200", options: <?php echo $vessels_dropdown; ?>},
             ],
-            order: [[2, "asc"]],
             columns: [
                 {visible: false, searchable: false},
                 {title: "", "class": "text-center w25"},
                 {title: '<?php echo app_lang("code") ?>', class: "w100"},
                 {title: '<?php echo app_lang("name") ?>', class: "all"},
-                {title: '<?php echo app_lang("vessel") ?>', class: "w20p"},
-                {title: '<?php echo app_lang("total_items") ?>', class:"text-center w15p"},
-                {title: '<?php echo app_lang("total_quantities") ?>', class:"text-center w15p"},
-                {title: '<?php echo app_lang("min_stock_items") ?>', class:"text-center w15p"}
+                {title: '<?php echo app_lang("vessel") ?>', class: "w150"},
+                {title: '<?php echo app_lang("spare_parts") ?>', class:"text-center w150"},
+                {title: '<?php echo app_lang("chemicals") ?>', class:"text-center w150"},
+                {title: '<?php echo app_lang("oils_greases") ?>', class:"text-center w150"},
+                {title: '<?php echo app_lang("paints") ?>', class:"text-center w150"}
             ]
         });
     }

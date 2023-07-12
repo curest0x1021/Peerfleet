@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
-class Warehouse_sparess_model extends Crud_model {
+class Warehouse_spares_model extends Crud_model {
 
     protected $table = null;
 
     function __construct() {
-        $this->table = 'warehouse_spares';
+        $this->table = "warehouse_spares";
         parent::__construct($this->table);
     }
 
     function get_details($options = array()) {
-        $ws_table = $this->db->prefixTable('warehouse_spares');
+        $ws_table = $this->db->prefixTable("warehouse_spares");
         $spare_table = $this->db->prefixTable("spare_parts");
         $manufacturer_table = $this->db->prefixTable("manufacturers");
         $applicable_table = $this->db->prefixTable("applicable_equipments");
@@ -44,7 +44,7 @@ class Warehouse_sparess_model extends Crud_model {
         return $this->db->query($sql);
     }
 
-    function is_duplicate_spare_part($spare_id, $warehouse_id, $id) {
+    function is_duplicate_item($spare_id, $warehouse_id, $id) {
         $result = $this->get_all_where(array("spare_id" => $spare_id, "warehouse_id" => $warehouse_id, "deleted" => 0));
         if (count($result->getResult()) && $result->getRow()->id != $id) {
             return $result->getRow();
@@ -70,4 +70,17 @@ class Warehouse_sparess_model extends Crud_model {
         return $dropdown;
     }
 
+    function get_infomation($id) {
+        $ws_table = $this->db->prefixTable("warehouse_spares");
+        $spare_table = $this->db->prefixTable("spare_parts");
+        $warehouse_table = $this->db->prefixTable("warehouses");
+
+        $sql = "SELECT a.*, $spare_table.name, $warehouse_table.code, $warehouse_table.name as warehouse
+                FROM (SELECT * FROM $ws_table WHERE id=$id) a
+                JOIN $spare_table ON $spare_table.id = a.spare_id
+                JOIN $warehouse_table ON $warehouse_table.id = a.warehouse_id";
+
+        $row = $this->db->query($sql)->getRow();
+        return $row;
+    }
 }
