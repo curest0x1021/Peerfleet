@@ -3,7 +3,7 @@
         <h4><?php echo app_lang('spare_parts'); ?></h4>
         <?php if ($can_edit_items) { ?>
             <div class="title-button-group">
-                <?php echo modal_anchor(get_uri("warehouses/import_modal_form"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_items'), array("class" => "btn btn-default", "title" => app_lang('import_items'), "data-post-tabs" => "spares", "data-post-warehouse_id" => $warehouse_id, "data-post-client_id" => $client_id)); ?>
+                <!-- <?php echo modal_anchor(get_uri("warehouses/import_modal_form"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_items'), array("class" => "btn btn-default", "title" => app_lang('import_items'), "data-post-tabs" => "spares", "data-post-warehouse_id" => $warehouse_id, "data-post-client_id" => $client_id)); ?> -->
                 <?php echo modal_anchor(get_uri("warehouses/spares_modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_item'), array("class" => "btn btn-default", "title" => app_lang('add_item'), "data-post-warehouse_id" => $warehouse_id, "data-post-client_id" => $client_id)); ?>
             </div>
         <?php } ?>
