@@ -33,6 +33,7 @@ class Grommets_model extends Crud_model {
 
     function get_grommets_details($options = array()) {
         $grommets_table = $this->db->prefixTable("grommets");
+        $main_table = $this->db->prefixTable("grommets_main");
         $loadtest_table = $this->db->prefixTable("grommets_loadtest");
         $inspection_table = $this->db->prefixTable("grommets_inspection");
         $icc_table = $this->db->prefixTable("color_codes");
@@ -51,8 +52,9 @@ class Grommets_model extends Crud_model {
             $where .= " AND $grommets_table.client_id=$client_id";
         }
 
-        $sql = "SELECT $grommets_table.*, $icc_table.name as icc, $certificate_table.name as certificate_type, $manufacturer_table.name as manufacturer, lt.passed as loadtest_passed, it.passed as inspection_passed, it.remarks
+        $sql = "SELECT $main_table.item_description, $main_table.wll, $main_table.wl, $main_table.dia, $main_table.bl, $grommets_table.*, $icc_table.name as icc, $certificate_table.name as certificate_type, $manufacturer_table.name as manufacturer, lt.passed as loadtest_passed, it.passed as inspection_passed, it.remarks
                 FROM $grommets_table
+                JOIN $main_table ON $main_table.id = $grommets_table.main_id
                 LEFT JOIN (SELECT a.* FROM $loadtest_table a JOIN (SELECT grommet_id, MAX(test_date) as test_date FROM $loadtest_table GROUP BY grommet_id) b ON a.grommet_id = b.grommet_id AND a.test_date = b.test_date) lt
                     ON lt.grommet_id = $grommets_table.id
                 LEFT JOIN (SELECT a.* FROM $inspection_table a JOIN (SELECT grommet_id, MAX(inspection_date) as inspection_date FROM $inspection_table GROUP BY grommet_id) b ON a.grommet_id = b.grommet_id AND a.inspection_date = b.inspection_date) it
@@ -66,17 +68,22 @@ class Grommets_model extends Crud_model {
         return $this->db->query($sql);
     }
 
-    function get_internal_index($client_id, $wll, $wl) {
+    function get_internal_id($client_id, $wll, $wl) {
         $grommets_table = $this->db->prefixTable("grommets");
-        $sql = "SELECT max(internal_id) as internal_id FROM $grommets_table WHERE client_id=$client_id AND wll=$wll AND wl=$wl";
+        $main_table = $this->db->prefixTable("grommets_main");
+        $sql = "SELECT max(internal_id) as internal_id
+                FROM $grommets_table
+                WHERE client_id=$client_id AND main_id=(SELECT id FROM $main_table WHERE wll=$wll AND wl=$wl)
+                GROUP BY $grommets_table.main_id";
         $result = $this->db->query($sql)->getRow();
         if (empty($result->internal_id)) {
-            return 1;
+            $internal_id = "G-" . $wll . "-" . $wl * 10 . "-1";
         } else {
             $strs = explode("-", $result->internal_id);
             $newIndex = intval(end($strs)) + 1;
-            return $newIndex;
+            $internal_id = "G-" . $wll . "-" . $wl * 10 . "-" . $newIndex;
         }
+        return $internal_id;
     }
 
     // get id, internal_id only
