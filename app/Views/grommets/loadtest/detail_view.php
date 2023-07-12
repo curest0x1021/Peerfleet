@@ -34,11 +34,11 @@
             columns: [
                 {visible: false, searchable: false},
                 {visible: false, searchable: false},
-                {title: "<?php echo app_lang("test_date") ?>"},
-                {title: "<?php echo app_lang("tested_by") ?>"},
-                {title: "<?php echo app_lang("location") ?>"},
-                {title: "<?php echo app_lang("passed") ?>", "class": "text-center option: 70"},
-                {title: "<?php echo app_lang("remarks") ?>"},
+                {title: "<?php echo app_lang("test_date") ?>", "class": "w100"},
+                {title: "<?php echo app_lang("tested_by") ?>", "class": "w150"},
+                {title: "<?php echo app_lang("location") ?>", "class": "w150"},
+                {title: "<?php echo app_lang("passed") ?>", "class": "text-center w70"},
+                {title: "<?php echo app_lang("remarks") ?>", "class": "all"},
                 {visible: false, searchable: false},
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],

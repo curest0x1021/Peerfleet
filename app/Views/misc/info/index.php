@@ -20,22 +20,23 @@
             source: '<?php echo_uri("misc/info_list_data/" . $client_id) ?>',
             columns: [
                 {visible: false, searchable: false},
-                {title: "<?php echo app_lang("internal_id") ?>"},
+                {title: "<?php echo app_lang("internal_id") ?>", "class": "w100"},
+                {title: "<?php echo app_lang("description") ?>", "class": "w150"},
                 {title: "WLL (TS)"},
                 {title: "WL (m)"},
                 {title: "<?php echo app_lang("type") ?>"},
-                {title: "Qty"},
                 {title: "BL (kN)"},
+                {title: "Qty"},
                 {title: "<?php echo app_lang("icc") ?>"},
                 {title: "<?php echo app_lang("manufacturer") ?>"},
                 {title: "<?php echo app_lang("delivered") ?>"},
+                {title: "<?php echo app_lang("lifts") ?>"},
                 {title: "<?php echo app_lang("loadtest") ?>", "class": "text-center w50"},
                 {title: "<?php echo app_lang("visual_inspection") ?>", "class": "text-center w50"},
-                {title: "<?php echo app_lang("remarks") ?>"},
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
-            printColumns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-            xlsColumns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            printColumns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            xlsColumns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
         });
     };
     $(document).ready(function() {

@@ -24,7 +24,9 @@
                     <div class="clearfix">
                         <div class="container-fluid">
                             <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
+                            <input type="hidden" name="main_id" value="<?php echo $model_info->main_id; ?>" />
                             <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" />
+
                             <div class="form-group row">
                                 <div class="<?php echo $label_column; ?>">
                                     <span><?php echo app_lang("internal_id"); ?>:</span>
@@ -34,9 +36,27 @@
                                     echo form_input(array(
                                         "id" => "internal_id",
                                         "name" => "internal_id",
-                                        "value" => $model_info->internal_id ? $model_info->internal_id : "",
+                                        "value" => $model_info->internal_id ? $model_info->internal_id : "G-",
                                         "class" => "form-control",
-                                        "placeholder" => app_lang('internal_id'),
+                                        "readonly" => true,
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="<?php echo $label_column; ?>">
+                                    <span><?php echo app_lang("item_description"); ?>:</span>
+                                </div>
+                                <div class="<?php echo $field_column; ?>">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "item_description",
+                                        "name" => "item_description",
+                                        "value" => $main_info->item_description ? $main_info->item_description : "Grommet-",
+                                        "class" => "form-control",
                                         "readonly" => true,
                                         "data-rule-required" => true,
                                         "data-msg-required" => app_lang("field_required"),
@@ -54,7 +74,7 @@
                                     echo form_input(array(
                                         "id" => "wll",
                                         "name" => "wll",
-                                        "value" => $model_info->wll ? $model_info->wll : "",
+                                        "value" => $main_info->wll ? $main_info->wll : "",
                                         "class" => "form-control",
                                         "placeholder" => app_lang('wll'),
                                         "type" => "number",
@@ -74,11 +94,51 @@
                                     echo form_input(array(
                                         "id" => "wl",
                                         "name" => "wl",
-                                        "value" => $model_info->wl ? $model_info->wl : "",
+                                        "value" => $main_info->wl ? $main_info->wl : "",
                                         "class" => "form-control",
                                         "placeholder" => app_lang('wl'),
                                         "type" => "number",
                                         "step" => 0.1,
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="<?php echo $label_column; ?>">
+                                    <span>Dia (mm):</span>
+                                </div>
+                                <div class="<?php echo $field_column; ?>">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "dia",
+                                        "name" => "dia",
+                                        "value" => $main_info->dia ? $main_info->dia : "",
+                                        "class" => "form-control",
+                                        "placeholder" => app_lang('dia'),
+                                        "type" => "number",
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="<?php echo $label_column; ?>">
+                                    <span>BL (kN):</span>
+                                </div>
+                                <div class="<?php echo $field_column; ?>">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "bl",
+                                        "name" => "bl",
+                                        "value" => $main_info->bl ? $main_info->bl : "",
+                                        "class" => "form-control",
+                                        "placeholder" => app_lang('bl'),
+                                        "type" => "number",
                                         "data-rule-required" => true,
                                         "data-msg-required" => app_lang("field_required"),
                                     ));
@@ -98,46 +158,6 @@
                                         "value" => $model_info->qty ? $model_info->qty : "",
                                         "class" => "form-control",
                                         "placeholder" => app_lang('qty'),
-                                        "type" => "number",
-                                        "data-rule-required" => true,
-                                        "data-msg-required" => app_lang("field_required"),
-                                    ));
-                                    ?>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <div class="<?php echo $label_column; ?>">
-                                    <span>BL (kN):</span>
-                                </div>
-                                <div class="<?php echo $field_column; ?>">
-                                    <?php
-                                    echo form_input(array(
-                                        "id" => "bl",
-                                        "name" => "bl",
-                                        "value" => $model_info->bl ? $model_info->bl : "",
-                                        "class" => "form-control",
-                                        "placeholder" => app_lang('bl'),
-                                        "type" => "number",
-                                        "data-rule-required" => true,
-                                        "data-msg-required" => app_lang("field_required"),
-                                    ));
-                                    ?>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <div class="<?php echo $label_column; ?>">
-                                    <span>Dia (mm):</span>
-                                </div>
-                                <div class="<?php echo $field_column; ?>">
-                                    <?php
-                                    echo form_input(array(
-                                        "id" => "dia",
-                                        "name" => "dia",
-                                        "value" => $model_info->dia ? $model_info->dia : "",
-                                        "class" => "form-control",
-                                        "placeholder" => app_lang('dia'),
                                         "type" => "number",
                                         "data-rule-required" => true,
                                         "data-msg-required" => app_lang("field_required"),
@@ -256,6 +276,26 @@
 
                             <div class="form-group row">
                                 <div class="<?php echo $label_column; ?>">
+                                    <span><?php echo app_lang("lifts"); ?>:</span>
+                                </div>
+                                <div class="<?php echo $field_column; ?>">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "lifts",
+                                        "name" => "lifts",
+                                        "value" => $model_info->lifts ? $model_info->lifts : "",
+                                        "class" => "form-control",
+                                        "placeholder" => app_lang('lifts'),
+                                        "type" => "number",
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="<?php echo $label_column; ?>">
                                     <span><?php echo app_lang("date_of_discharged"); ?>:</span>
                                 </div>
                                 <div class="<?php echo $field_column; ?>">
@@ -312,28 +352,33 @@
         }
 
         $("#wll").on("input", (e) => {
+            generateItemDescription();
             generateInternalId();
         });
 
         $("#wl").on("input", (e) => {
+            generateItemDescription();
             generateInternalId();
         });
+
+        function generateItemDescription() {
+            const wll = $("#wll").val();
+            var wl = $("#wl").val();
+            $("#item_description").val(`Grommet--${wll} Ts--${wl}m`);
+        }
 
         function generateInternalId() {
             const wll = $("#wll").val();
             var wl = $("#wl").val();
             if (clientId && wll && wl) {
                 $.ajax({
-                    url: "<?php echo get_uri('grommets/get_internal_index') ?>",
+                    url: "<?php echo get_uri('grommets/get_internal_id') ?>",
                     type: 'POST',
                     dataType: 'json',
                     data: {client_id: clientId, wll: wll, wl: wl},
                     success: function (result) {
-                        const { new_index } = result;
-
-                        wl = Math.floor(wl * 10);
-                        const internalId = `G-${wll}-${wl}-${new_index}`;
-                        $("#internal_id").val(internalId);
+                        const { internal_id } = result;
+                        $("#internal_id").val(internal_id);
                     }
                 });
             }

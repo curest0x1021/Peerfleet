@@ -22,7 +22,16 @@
 
         <div class="row">
             <div class="<?php echo $label_column; ?>">
-                <span>WLL (TS):</span>
+                <span><?php echo app_lang("item_description"); ?>:</span>
+            </div>
+            <div class="<?php echo $field_column; ?>">
+                <strong><?php echo $model_info->item_description; ?></strong>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="<?php echo $label_column; ?>">
+                <span>WLL [TS]:</span>
             </div>
             <div class="<?php echo $field_column; ?>">
                 <strong><?php echo $model_info->wll; ?></strong>
@@ -40,16 +49,7 @@
 
         <div class="row">
             <div class="<?php echo $label_column; ?>">
-                <span>Qty:</span>
-            </div>
-            <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->qty; ?></strong>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="<?php echo $label_column; ?>">
-                <span>BL (kN):</span>
+                <span>BL [kN]:</span>
             </div>
             <div class="<?php echo $field_column; ?>">
                 <strong><?php echo $model_info->bl; ?></strong>
@@ -58,7 +58,7 @@
 
         <div class="row">
             <div class="<?php echo $label_column; ?>">
-                <span>IW (mm):</span>
+                <span>IW [mm]:</span>
             </div>
             <div class="<?php echo $field_column; ?>">
                 <strong><?php echo $model_info->iw; ?></strong>
@@ -67,7 +67,7 @@
 
         <div class="row">
             <div class="<?php echo $label_column; ?>">
-                <span>PD (mm):</span>
+                <span>PD [mm]:</span>
             </div>
             <div class="<?php echo $field_column; ?>">
                 <strong><?php echo $model_info->pd; ?></strong>
@@ -76,10 +76,19 @@
 
         <div class="row">
             <div class="<?php echo $label_column; ?>">
-                <span>IL (mm):</span>
+                <span>IL [mm]:</span>
             </div>
             <div class="<?php echo $field_column; ?>">
                 <strong><?php echo $model_info->il; ?></strong>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="<?php echo $label_column; ?>">
+                <span>Qty:</span>
+            </div>
+            <div class="<?php echo $field_column; ?>">
+                <strong><?php echo $model_info->qty; ?></strong>
             </div>
         </div>
 
@@ -148,6 +157,15 @@
 
         <div class="row">
             <div class="<?php echo $label_column; ?>">
+                <span><?php echo app_lang("lifts"); ?>:</span>
+            </div>
+            <div class="<?php echo $field_column; ?>">
+                <strong><?php echo $model_info->lifts; ?></strong>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="<?php echo $label_column; ?>">
                 <span><?php echo app_lang("date_of_discharged"); ?>:</span>
             </div>
             <div class="<?php echo $field_column; ?>">
@@ -155,14 +173,6 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="<?php echo $label_column; ?>">
-                <span><?php echo app_lang("remarks"); ?>:</span>
-            </div>
-            <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->remarks; ?></strong>
-            </div>
-        </div>
     </div>
 </div>
 

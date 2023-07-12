@@ -15,8 +15,21 @@
                 <p>Internal ID - G-WLL-WL-#</p>
             </div>
             <div class="col-md-8">
-                <img src="<?php echo base_url("assets/images/grommet-01.png"); ?>" alt="Grommet 01"/>
-                <img src="<?php echo base_url("assets/images/grommet-02.png"); ?>" alt="Grommet 02"/>
+                <div>
+                    <img src="<?php echo base_url("assets/images/grommet-01.png"); ?>" alt="Grommet 01" style="width: 100%; object-fit: cover;"/>
+                </div>
+                <div class="mt15">
+                    <img src="<?php echo base_url("assets/images/grommet-02.png"); ?>" alt="Grommet 02" style="width: 100%; object-fit: cover;"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="<?php echo $label_column; ?>">
+                <span><?php echo app_lang("item_description"); ?>:</span>
+            </div>
+            <div class="<?php echo $field_column; ?>">
+                <strong><?php echo $model_info->item_description; ?></strong>
             </div>
         </div>
 
@@ -40,10 +53,10 @@
 
         <div class="row">
             <div class="<?php echo $label_column; ?>">
-                <span>Qty:</span>
+                <span>Dia (mm):</span>
             </div>
             <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->qty; ?></strong>
+                <strong><?php echo $model_info->dia; ?></strong>
             </div>
         </div>
 
@@ -58,10 +71,10 @@
 
         <div class="row">
             <div class="<?php echo $label_column; ?>">
-                <span>Dia (mm):</span>
+                <span>Qty:</span>
             </div>
             <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->dia; ?></strong>
+                <strong><?php echo $model_info->qty; ?></strong>
             </div>
         </div>
 
@@ -130,6 +143,15 @@
 
         <div class="row">
             <div class="<?php echo $label_column; ?>">
+                <span><?php echo app_lang("lifts"); ?>:</span>
+            </div>
+            <div class="<?php echo $field_column; ?>">
+                <strong><?php echo $model_info->lifts; ?></strong>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="<?php echo $label_column; ?>">
                 <span><?php echo app_lang("date_of_discharged"); ?>:</span>
             </div>
             <div class="<?php echo $field_column; ?>">
@@ -137,14 +159,6 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="<?php echo $label_column; ?>">
-                <span><?php echo app_lang("remarks"); ?>:</span>
-            </div>
-            <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->remarks; ?></strong>
-            </div>
-        </div>
     </div>
 </div>
 

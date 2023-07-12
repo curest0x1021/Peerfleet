@@ -238,5 +238,8 @@ $lang["next_inspection_date"] = "Next Inspection Date";
 $lang["loadtest_date_invalid"] = "Test date should be greater than last test date";
 $lang["inspection_date_invalid"] = "Inspection date should be greater than last inspection date";
 $lang["property"] = "Property";
+$lang["lifts"] = "Lifts";
+$lang["item_description"] = "Item description";
+$lang["main_items"] = "Main Items";
 
 return $lang;

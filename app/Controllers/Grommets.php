@@ -75,29 +75,38 @@ class Grommets extends Security_Controller
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "client_id" => "required",
+            "item_description" => "required",
             "internal_id" => "required",
             "wll" => "required",
             "wl" => "required",
+            "dia" => "required",
             "qty" => "required",
             "bl" => "required",
-            "dia" => "required",
             "icc_id" => "required",
             "certificate_number" => "required",
             "certificate_type_id" => "required",
             "manufacturer_id" => "required",
             "tag_marking" => "required",
             "supplied_date" => "required",
-            "supplied_place" => "required"
+            "supplied_place" => "required",
+            "lifts" => "required"
         ));
+
+        $main_id = $this->request->getPost("main_id");
+        $main_data = array(
+            "item_description" => $this->request->getPost("item_description"),
+            "wll" => $this->request->getPost("wll"),
+            "wl" => $this->request->getPost("wl"),
+            "dia" => $this->request->getPost("dia"),
+            "bl" => $this->request->getPost("bl")
+        );
+        $m_save_id = $this->Grommets_main_model->ci_save($main_data, $main_id);
 
         $data = array(
             "internal_id" => $this->request->getPost("internal_id"),
             "client_id" => $this->request->getPost("client_id"),
-            "wll" => $this->request->getPost("wll"),
-            "wl" => $this->request->getPost("wl"),
+            "main_id" => $m_save_id,
             "qty" => $this->request->getPost("qty"),
-            "bl" => $this->request->getPost("bl"),
-            "dia" => $this->request->getPost("dia"),
             "icc_id" => $this->request->getPost("icc_id"),
             "certificate_number" => $this->request->getPost("certificate_number"),
             "certificate_type_id" => $this->request->getPost("certificate_type_id"),
@@ -105,6 +114,7 @@ class Grommets extends Security_Controller
             "manufacturer_id" => $this->request->getPost("manufacturer_id"),
             "supplied_date" => $this->request->getPost("supplied_date"),
             "supplied_place" => $this->request->getPost("supplied_place"),
+            "lifts" => $this->request->getPost("lifts"),
             "date_of_discharged" => $this->request->getPost("date_of_discharged"),
         );
 
@@ -171,17 +181,18 @@ class Grommets extends Security_Controller
         return array(
             $data->id,
             $internal_id,
+            $data->item_description,
             $data->wll,
             $data->wl,
-            $data->qty,
-            $data->bl,
             $data->dia,
+            $data->bl,
+            $data->qty,
             $data->icc,
             $data->manufacturer,
             $data->supplied_date,
+            $data->lifts,
             $loadtest_passed,
             $inspection_passed,
-            $data->remarks,
             $action
         );
     }
@@ -203,7 +214,10 @@ class Grommets extends Security_Controller
         }
         $id = $this->request->getPost("id");
         $view_data["client_id"] = $client_id;
-        $view_data["model_info"] = $this->Grommets_model->get_one($id);
+        $model_info = $this->Grommets_model->get_one($id);
+        $main_info = $this->Grommets_main_model->get_one($model_info->main_id);
+        $view_data["model_info"] = $model_info;
+        $view_data["main_info"] = $main_info;
         $view_data["label_column"] = "col-md-4";
         $view_data["field_column"] = "col-md-8";
         $view_data["manufacturers_dropdown"] = $this->get_manufacturers_dropdown();
@@ -213,13 +227,13 @@ class Grommets extends Security_Controller
         return $this->template->view("grommets/info/modal_form", $view_data);
     }
 
-    function get_internal_index() {
+    function get_internal_id() {
         $client_id = $this->request->getPost("client_id");
         $wll = $this->request->getPost("wll");
         $wl = $this->request->getPost("wl");
-        $new_index = $this->Grommets_model->get_internal_index($client_id, $wll, $wl);
+        $internal_id = $this->Grommets_model->get_internal_id($client_id, $wll, $wl);
 
-        echo json_encode(array("new_index" => $new_index));
+        echo json_encode(array("internal_id" => $internal_id));
     }
 
 
@@ -558,12 +572,13 @@ class Grommets extends Security_Controller
 
     private function _get_allowed_headers() {
         return array(
+            ["key" => "item_description", "required" => true],
             ["key" => "internal_id", "required" => true],
             ["key" => "wll", "required" => true],
             ["key" => "wl", "required" => true],
-            ["key" => "qty", "required" => true],
-            ["key" => "bl", "required" => true],
             ["key" => "dia", "required" => true],
+            ["key" => "bl", "required" => true],
+            ["key" => "qty", "required" => true],
             ["key" => "icc", "required" => false],
             ["key" => "certificate_number", "required" => true],
             ["key" => "certificate_type", "required" => false],
@@ -577,6 +592,7 @@ class Grommets extends Security_Controller
             ["key" => "last_test_authority", "required" => false],
             ["key" => "inspection_date", "required" => false],
             ["key" => "inspection_authority", "required" => false],
+            ["key" => "lifts", "required" => false],
             ["key" => "date_of_discharged", "required" => false],
             ["key" => "remarks", "required" => false],
             ["key" => "initial_test_passed", "required" => false],
@@ -638,6 +654,7 @@ class Grommets extends Security_Controller
 
     private function _prepare_item_data($data_row, $allowed_headers) {
         //prepare data
+        $main_data = array();
         $item_data = array();
         $manufacturer_data = array();
         $icc_data = array();
@@ -651,7 +668,18 @@ class Grommets extends Security_Controller
             }
             $row_data_value = trim($row_data_value);
             $header_key_value = get_array_value($allowed_headers, $row_data_key);
-            if ($header_key_value == "manufacturer") {
+
+            if ($header_key_value == "item_description") {
+                $main_data["item_description"] = $row_data_value;
+            } else if ($header_key_value == "wll") {
+                $main_data["wll"] = $row_data_value;
+            } else if ($header_key_value == "wl") {
+                $main_data["wl"] = $row_data_value;
+            } else if ($header_key_value == "dia") {
+                $main_data["dia"] = $row_data_value;
+            } else if ($header_key_value == "bl") {
+                $main_data["bl"] = $row_data_value;
+            } else if ($header_key_value == "manufacturer") {
                 $manufacturer_data["name"] = $row_data_value;
             } else if ($header_key_value == "icc") {
                 $icc_data["name"] = $row_data_value;
@@ -695,6 +723,7 @@ class Grommets extends Security_Controller
         }
 
         return array(
+            "main_data" => $main_data,
             "item_data" => $item_data,
             "manufacturer_data" => $manufacturer_data,
             "icc_data" => $icc_data,
@@ -840,7 +869,9 @@ class Grommets extends Security_Controller
 
         $allowed_headers = array_map(function ($h) {
             return $h["key"];
-        }, $this->_get_allowed_headers());;
+        }, $this->_get_allowed_headers());
+
+        $mains = $this->Grommets_main_model->get_all()->getResult();
         $manufacturers = $this->Manufacturers_model->get_all()->getResult();
         $iccs = $this->Color_codes_model->get_all()->getResult();
         $certificate_types = $this->Certificate_types_model->get_all()->getResult();
@@ -854,6 +885,7 @@ class Grommets extends Security_Controller
             }
 
             $data_array = $this->_prepare_item_data($value, $allowed_headers);
+            $main_data = get_array_value($data_array, "main_data");
             $item_data = get_array_value($data_array, "item_data");
             $manufacturer_data = get_array_value($data_array, "manufacturer_data");
             $icc_data = get_array_value($data_array, "icc_data");
@@ -913,6 +945,20 @@ class Grommets extends Security_Controller
                         $temp->name = $certificate_data["name"];
                         $certificate_types[] = $temp;
                     }
+                }
+
+                // Grommets main data
+                $main = $this->findMainByItem($main_data["item_description"], $mains);
+                if ($main) {
+                    $item_data["main_id"] = $main->id;
+                } else {
+                    $m_save_id = $this->Grommets_main_model->ci_save($main_data);
+                    $item_data["main_id"] = $m_save_id;
+
+                    $temp = new stdClass();
+                    $temp->id = $m_save_id;
+                    $temp->item_description = $main_data["item_description"];
+                    $mains[] = $temp;
                 }
 
                 $item_data["client_id"] = $client_id;
@@ -998,6 +1044,15 @@ class Grommets extends Security_Controller
         $name = trim(strtolower($name));
         foreach ($arr as $item) {
             if ($name == trim(strtolower($item->name))) {
+                return $item;
+            }
+        }
+        return false;
+    }
+
+    private function findMainByItem($description, $arr) {
+        foreach ($arr as $item) {
+            if ($description == $item->item_description) {
                 return $item;
             }
         }
