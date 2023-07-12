@@ -27,3 +27,6 @@ CREATE TABLE `pf_misc_inspection` (`id` INT NOT NULL AUTO_INCREMENT , `misc_id` 
 
 CREATE TABLE `pf_lashing` (`id` INT NOT NULL AUTO_INCREMENT, `client_id` INT NOT NULL, `no` INT NOT NULL , `category_id` INT NOT NULL , `name` VARCHAR(50) NOT NULL , `description` VARCHAR(250) NULL , `qty` INT NOT NULL , `length` INT NULL , `width` INT NULL , `height` INT NULL , `msl` INT NULL , `bl` INT NULL , `supplied_date` DATE NULL , `supplied_place` VARCHAR(50) NULL , `property` ENUM('SAL','Ship') NOT NULL , `deleted` TINYINT(1) NOT NULL DEFAULT '0' , PRIMARY KEY (`id`)) ENGINE = InnoDB;
 CREATE TABLE `pf_lashing_inspection` (`id` INT NOT NULL AUTO_INCREMENT , `lashing_id` INT NOT NULL , `inspection_date` DATE NULL , `inspected_by` VARCHAR(100) NULL , `location` VARCHAR(250) NULL , `passed` TINYINT(1) NULL DEFAULT '0' , `remarks` TEXT NULL , `files` TEXT NULL , `deleted` TINYINT(1) NOT NULL DEFAULT '0' , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+
+RENAME TABLE `pf_warehouse_spare` TO `peerfleet`.`pf_warehouse_spares`;

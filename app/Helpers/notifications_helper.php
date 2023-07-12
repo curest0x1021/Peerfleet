@@ -817,8 +817,8 @@ if (!function_exists('send_notification_emails')) {
         } else if ($notification->event == "csp_minimum_reached") {
             $template_name = "csp_minimum_reached";
 
-            $warehouse_info = $ci->Warehouse_spare_model->get_warehouses(array("warehouse_id" => $notification->warehouse_id))->getRow();
-            $ws_info = $ci->Warehouse_spare_model->get_details(array("id" => $notification->warehouse_spare_id))->getRow();
+            $warehouse_info = $ci->Warehouse_spares_model->get_warehouses(array("warehouse_id" => $notification->warehouse_id))->getRow();
+            $ws_info = $ci->Warehouse_spares_model->get_details(array("id" => $notification->warehouse_spare_id))->getRow();
 
             $parser_data["VESSEL_TITLE"] = $warehouse_info->vessel;
             $parser_data["WAREHOUSE_TITLE"] = $warehouse_info->code . ' - ' . $warehouse_info->name;
