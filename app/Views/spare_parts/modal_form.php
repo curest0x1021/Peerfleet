@@ -1,4 +1,4 @@
-<?php echo form_open(get_uri("spare_parts/save_item"), array("id" => "item-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("spare_parts/save"), array("id" => "item-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
@@ -175,7 +175,7 @@
 
                 <div class="<?php echo $field_column; ?>">
                     <?php
-                    echo form_checkbox("is_critical", "0", $model_info->is_critical, "id='is_critical' class='form-check-input mt-2'");
+                    echo form_checkbox("is_critical", "1", $model_info->is_critical, "id='is_critical' class='form-check-input mt-2'");
                     ?>
                 </div>
             </div>

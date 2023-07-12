@@ -1,8 +1,9 @@
-<?php echo form_open(get_uri("spare_parts/save_ws"), array("id" => "ws-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("warehouses/save_spare"), array("id" => "spares-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
         <input type="hidden" name="warehouse_id" value="<?php echo $warehouse_id; ?>" />
+        <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" />
 
         <div class="form-group">
             <div class="row">
@@ -48,9 +49,7 @@
                         "value" => $model_info->min_stocks ? $model_info->min_stocks : "",
                         "class" => "form-control",
                         "placeholder" => app_lang('min_stocks'),
-                        "type" => "number",
-                        "data-rule-required" => true,
-                        "data-msg-required" => app_lang("field_required"),
+                        "type" => "number"
                     ));
                     ?>
                 </div>
@@ -68,9 +67,7 @@
                         "value" => $model_info->max_stocks ? $model_info->max_stocks : "",
                         "class" => "form-control",
                         "placeholder" => app_lang('max_stocks'),
-                        "type" => "number",
-                        "data-rule-required" => true,
-                        "data-msg-required" => app_lang("field_required"),
+                        "type" => "number"
                     ));
                     ?>
                 </div>
@@ -91,14 +88,19 @@
     $(document).ready(function() {
         spareParts = JSON.parse('<?php echo json_encode($spare_parts); ?>');
         const modelInfo = JSON.parse('<?php echo json_encode($model_info);?>');
-        $("#ws-form").appForm({
+
+        $("#spares-form").bind("submit", function() {
+            $("#spare_id").prop("disabled", false);
+        });
+
+        $("#spares-form").appForm({
             onSuccess: function(result) {
                 if (result.min_stock_reached) {
                     appAlert.error(result.message, {duration: 10000});
                 } else {
                     appAlert.success(result.message, {duration: 10000});
                 }
-                $("#ws-table").appTable({newData: result.data, dataId: result.id});
+                $("#spares-table").appTable({newData: result.data, dataId: result.id});
             }
         });
 
@@ -107,8 +109,9 @@
             generateInfo(e.target.value);
         });
 
-        if (modelInfo) {
+        if (modelInfo.id) {
             generateInfo(modelInfo.spare_id);
+            $("#spare_id").prop("disabled", true);
         }
 
     });
@@ -126,6 +129,7 @@
                 html += `<div class="row"><label class="col-6"><?php echo app_lang("article_number");?> : </label><span class="col-6">${item.article_number}</span></div>`;
                 html += `<div class="row"><label class="col-6"><?php echo app_lang("drawing_number");?> : </label><span class="col-6">${item.drawing_number}</span></div>`;
                 html += `<div class="row"><label class="col-6"><?php echo app_lang("hs_code");?> : </label><span class="col-6">${item.hs_code}</span></div>`;
+                html += `<div class="row"><label class="col-6"><?php echo app_lang("critical");?> : </label><span class="col-6">${item.is_critical === "1" ? "Yes" : "No"}</span></div>`;
                 html += "</div></div>"
                 $("#item-info").html(html);
             } else {
