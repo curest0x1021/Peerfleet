@@ -363,8 +363,41 @@ class Security_Controller extends App_Controller {
         return json_encode($vessels_dropdown);
     }
 
-    protected function spare_parts_dropdown() {
+    protected function get_spare_parts_dropdown() {
         $list = $this->Spare_parts_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
+    protected function get_chemicals_dropdown() {
+        $list = $this->Chemicals_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
+    protected function get_oils_dropdown() {
+        $list = $this->Oils_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
+    protected function get_paints_dropdown() {
+        $list = $this->Paints_model->get_all_where(array("deleted" => 0))->getResult();
 
         $dropdown = array("" => "-");
         foreach ($list as $item) {

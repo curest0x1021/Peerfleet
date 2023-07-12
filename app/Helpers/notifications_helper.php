@@ -219,8 +219,8 @@ if (!function_exists('get_notification_config')) {
 
         $csp_link = function ($options) {
             $url = "";
-            if (isset($options->warehouse_id)) {
-                $url = get_uri("spare_parts/view/" . $options->warehouse_id);
+            if (isset($options->client_id) && isset($options->warehouse_id)) {
+                $url = get_uri("warehouses/view/" . $options->client_id . "/" . $options->warehouse_id);
             }
 
             return array("url" => $url);
@@ -817,14 +817,23 @@ if (!function_exists('send_notification_emails')) {
         } else if ($notification->event == "csp_minimum_reached") {
             $template_name = "csp_minimum_reached";
 
-            $warehouse_info = $ci->Warehouse_spares_model->get_warehouses(array("warehouse_id" => $notification->warehouse_id))->getRow();
-            $ws_info = $ci->Warehouse_spares_model->get_details(array("id" => $notification->warehouse_spare_id))->getRow();
+            $warehouse_info = $ci->Warehouses_model->get_infomation($notification->warehouse_id);
+            $tab = $notification->warehouse_tab;
+            if ($tab == "chemicals") {
+                $info = $ci->Warehouse_chemicals_model->get_details(array("id" => $notification->warehouse_item_id))->getRow();
+            } else if ($tab == "oils") {
+                $info = $ci->Warehouse_oils_model->get_details(array("id" => $notification->warehouse_item_id))->getRow();
+            } else if ($tab == "paints") {
+                $info = $ci->Warehouse_paints_model->get_details(array("id" => $notification->warehouse_item_id))->getRow();
+            } else {
+                $info = $ci->Warehouse_spares_model->get_details(array("id" => $notification->warehouse_item_id))->getRow();
+            }
 
             $parser_data["VESSEL_TITLE"] = $warehouse_info->vessel;
-            $parser_data["WAREHOUSE_TITLE"] = $warehouse_info->code . ' - ' . $warehouse_info->name;
-            $parser_data["ITEM_TITLE"] = $ws_info->name;
-            $parser_data["QUANTITY"] = $ws_info->quantity;
-            $parser_data["MIN_STOCKS"] = $ws_info->min_stocks;
+            $parser_data["WAREHOUSE_TITLE"] = $warehouse_info->title;
+            $parser_data["ITEM_TITLE"] = $info->name;
+            $parser_data["QUANTITY"] = $info->quantity;
+            $parser_data["MIN_STOCKS"] = $info->min_stocks;
             $parser_data["WAREHOUSE_URL"] = $url;
         } else if ($notification->event == "wire_exchange_required") {
             $template_name = "wire_exchange_required";

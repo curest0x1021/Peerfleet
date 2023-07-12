@@ -30,10 +30,9 @@ class Warehouses extends Security_Controller {
 
     private function _make_row($data) {
         $icon = "";
-        $min_stock_items = $data->min_stock_items;
-        if ($min_stock_items > 0) {
-            $icon = '<div style="width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
-            $min_stock_items = '<span style="color: #d50000">' . $min_stock_items . '</span>';
+        $total = $data->spare_min + $data->chemical_min + $data->oil_min + $data->paint_min;
+        if ($total > 0) {
+            $icon = '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $total . '</span>';
         }
         $name = $data->name;
         $vessel = $data->vessel;
@@ -41,15 +40,37 @@ class Warehouses extends Security_Controller {
             $name = anchor(get_uri("warehouses/view/" . $data->client_id . "/" . $data->id), $data->name);
             $vessel = anchor(get_uri("clients/view/" . $data->client_id), $data->vessel);
         }
+
+        $spare_min = "---";
+        if ($data->spare_min > 0) {
+            $spare_min = '<span style="color: #d50000">' . $data->spare_min . '</span>';
+        }
+
+        $chemical_min = "---";
+        if ($data->chemical_min > 0) {
+            $chemical_min = '<span style="color: #d50000">' . $data->chemical_min . '</span>';
+        }
+
+        $oil_min = "---";
+        if ($data->oil_min > 0) {
+            $oil_min = '<span style="color: #d50000">' . $data->oil_min . '</span>';
+        }
+
+        $paint_min = "---";
+        if ($data->paint_min > 0) {
+            $paint_min = '<span style="color: #d50000">' . $data->paint_min . '</span>';
+        }
+
         return array(
             $data->id,
             $icon,
             $data->code,
             $name,
             $vessel,
-            $data->total_items,
-            $data->total_quantities,
-            $min_stock_items
+            $spare_min . " / " . ($data->spare_total > 0 ? $data->spare_total : "---"),
+            $chemical_min . " / " . ($data->chemical_total > 0 ? $data->chemical_total : "---"),
+            $oil_min . " / " . ($data->oil_total > 0 ? $data->oil_total : "---"),
+            $paint_min . " / " . ($data->paint_total > 0 ? $data->paint_total : "---"),
         );
     }
 
@@ -59,12 +80,42 @@ class Warehouses extends Security_Controller {
             $view_data["client_id"] = $client_id;
             $view_data["warehouse_id"] = $warehouse_id;
 
+            $minstock_items = $this->Warehouses_model->get_minstock_reached_items($warehouse_id);
+            if ($minstock_items->spares > 0) {
+                $warn_spares = '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $minstock_items->spares . '</span>';
+            } else {
+                $warn_spares = "";
+            }
+            if ($minstock_items->chemicals > 0) {
+                $warn_chemicals = '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $minstock_items->chemicals . '</span>';
+            } else {
+                $warn_chemicals = "";
+            }
+            if ($minstock_items->oils > 0) {
+                $warn_oils = '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $minstock_items->oils . '</span>';
+            } else {
+                $warn_oils = "";
+            }
+            if ($minstock_items->paints > 0) {
+                $warn_paints = '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $minstock_items->paints . '</span>';
+            } else {
+                $warn_paints = "";
+            }
+            $view_data["warns"] = array(
+                "spares" => $warn_spares,
+                "chemicals" => $warn_chemicals,
+                "oils" => $warn_oils,
+                "paints" => $warn_paints
+            );
+
             return $this->template->rander("warehouses/view", $view_data);
         } else {
             show_404();
         }
     }
 
+
+    // Spare parts tab
     function spares_tab($client_id, $warehouse_id) {
         $view_data["can_edit_items"] = $this->can_access_own_client($client_id);
         $view_data["warehouse_id"] = $warehouse_id;
@@ -90,7 +141,7 @@ class Warehouses extends Security_Controller {
             $view_data["label_column"] = "col-md-3";
             $view_data["field_column"] = "col-md-9";
             if ($id) {
-                $view_data["items_dropdown"] = $this->spare_parts_dropdown();
+                $view_data["items_dropdown"] = $this->get_spare_parts_dropdown();
             } else {
                 $view_data["items_dropdown"] = $this->Warehouse_spares_model->get_items_dropdown($warehouse_id);
             }
@@ -132,7 +183,7 @@ class Warehouses extends Security_Controller {
             echo json_encode(array("success" => false, 'message' => app_lang("min_stocks_should_less_than_max_stocks")));
             exit();
         }
-        if ($this->Warehouse_spares_model->is_duplicate_spare_part($data["spare_id"], $data["warehouse_id"], $id)) {
+        if ($this->Warehouse_spares_model->is_duplicate_item($data["spare_id"], $data["warehouse_id"], $id)) {
             echo json_encode(array("success" => false, 'message' => app_lang("already_exists_item")));
             exit();
         }
@@ -141,20 +192,24 @@ class Warehouses extends Security_Controller {
         if ($save_id) {
             if ($data["min_stocks"] > 0 && $data["quantity"] <= $data["min_stocks"]) {
                 // TODO: notification, add todo (private)
-                $warehouse_info = $this->Warehouses_model->get_one($data["warehouse_id"]);
-                $notification_option = array("client_id" => $warehouse_info->client_id, "warehouse_id" => $data["warehouse_id"], "warehouse_spare_id" => $save_id);
+                $notification_option = array("client_id" => $client_id, "warehouse_id" => $data["warehouse_id"], "warehouse_item_id" => $save_id, "warehouse_tab" => "spares");
                 log_notification("csp_minimum_reached", $notification_option, "0");
 
-                $client = $this->Clients_model->get_one($warehouse_info->client_id);
+                $client = $this->Clients_model->get_one($client_id);
+                $info = $this->Warehouse_spares_model->get_infomation($save_id);
+                $url = get_uri("warehouses/view/" . $client_id . "/" . $data["warehouse_id"]);
+                $description = "<strong>" . $info->name . "</strong> (" . $info->quantity . " / " . $info->min_stocks . ", " . app_lang("spare_parts") . ") on <strong>" . $info->warehouse . "</strong> (warehouse) has been reached minimum of stocks.<br/>";
+                $description .= '<a href="' . $url . '" target="_blank">' . $url . '</a>';
                 $todo_data = array(
                     "title" => app_lang("minimum_item_reached"),
-                    "description" => get_uri("warehouses/view/" . $client_id . "/" . $data["warehouse_id"]),
+                    "description" => $description,
                     "created_by" => $client->owner_id,
-                    "created_at" => get_current_utc_time()
+                    "created_at" => get_current_utc_time(),
+                    "start_date" => get_current_utc_time("Y-m-d")
                 );
                 $this->Todo_model->ci_save($todo_data, null);
 
-                $primary_contact_id = $this->Clients_model->get_primary_contact($warehouse_info->client_id);
+                $primary_contact_id = $this->Clients_model->get_primary_contact($client_id);
                 $todo_data["created_by"] = $primary_contact_id;
                 $this->Todo_model->ci_save($todo_data, null);
 
@@ -234,6 +289,495 @@ class Warehouses extends Security_Controller {
             $actions
         );
     }
+
+
+    // Chemicals parts tab
+    function chemicals_tab($client_id, $warehouse_id) {
+        $view_data["can_edit_items"] = $this->can_access_own_client($client_id);
+        $view_data["warehouse_id"] = $warehouse_id;
+        $view_data["client_id"] = $client_id;
+        return $this->template->view("warehouses/chemicals/index", $view_data);
+    }
+
+    function chemicals_modal_form() {
+        $client_id = $this->request->getPost("client_id");
+        $warehouse_id = $this->request->getPost("warehouse_id");
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+
+        if ($warehouse_id) {
+            $id = $this->request->getPost('id');
+            $view_data['model_info'] = $this->Warehouse_chemicals_model->get_one($id);
+            $view_data["warehouse_id"] = $warehouse_id;
+            $view_data["client_id"] = $client_id;
+            $view_data["label_column"] = "col-md-3";
+            $view_data["field_column"] = "col-md-9";
+            if ($id) {
+                $view_data["items_dropdown"] = $this->get_chemicals_dropdown();
+            } else {
+                $view_data["items_dropdown"] = $this->Warehouse_chemicals_model->get_items_dropdown($warehouse_id);
+            }
+            $view_data["chemicals"] = $this->Chemicals_model->get_details()->getResult();
+
+            return $this->template->view("warehouses/chemicals/modal_form", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    function save_chemical() {
+        $client_id = $this->request->getPost("client_id");
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "warehouse_id" => "required|numeric",
+            "chemical_id" => "required|numeric",
+            "quantity" => "required|numeric"
+        ));
+
+        $id = $this->request->getPost('id');
+        $data = array(
+            "warehouse_id" => $this->request->getPost("warehouse_id"),
+            "chemical_id" => $this->request->getPost("chemical_id"),
+            "quantity" => $this->request->getPost("quantity"),
+            "min_stocks" => $this->request->getPost("min_stocks")
+        );
+
+        if ($this->Warehouse_chemicals_model->is_duplicate_item($data["chemical_id"], $data["warehouse_id"], $id)) {
+            echo json_encode(array("success" => false, 'message' => app_lang("already_exists_item")));
+            exit();
+        }
+
+        $save_id = $this->Warehouse_chemicals_model->ci_save($data, $id);
+        if ($save_id) {
+            if ($data["min_stocks"] > 0 && $data["quantity"] <= $data["min_stocks"]) {
+                // TODO: notification, add todo (private)
+                $notification_option = array("client_id" => $client_id, "warehouse_id" => $data["warehouse_id"], "warehouse_item_id" => $save_id, "warehouse_tab" => "chemicals");
+                log_notification("csp_minimum_reached", $notification_option, "0");
+
+                $client = $this->Clients_model->get_one($client_id);
+                $info = $this->Warehouse_chemicals_model->get_infomation($save_id);
+                $url = get_uri("warehouses/view/" . $client_id . "/" . $data["warehouse_id"]);
+                $description = "<strong>" . $info->name . "</strong> (" . $info->quantity . " / " . $info->min_stocks . ", " . app_lang("chemicals") . ") on <strong>" . $info->warehouse . "</strong> (warehouse) has been reached minimum of stocks.<br/>";
+                $description .= '<a href="' . $url . '" target="_blank">' . $url . '</a>';
+                $todo_data = array(
+                    "title" => app_lang("minimum_item_reached"),
+                    "description" => $description,
+                    "created_by" => $client->owner_id,
+                    "created_at" => get_current_utc_time(),
+                    "start_date" => get_current_utc_time("Y-m-d")
+                );
+                $this->Todo_model->ci_save($todo_data, null);
+
+                $primary_contact_id = $this->Clients_model->get_primary_contact($client_id);
+                $todo_data["created_by"] = $primary_contact_id;
+                $this->Todo_model->ci_save($todo_data, null);
+
+                echo json_encode(array("success" => true, "min_stock_reached" => true, "data" => $this->_chemical_row_data($client_id, $save_id), 'id' => $save_id, 'message' => app_lang('minimum_item_reached')));
+            } else {
+                echo json_encode(array("success" => true, "min_stock_reached" => false, "data" => $this->_chemical_row_data($client_id, $save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+            }
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+    }
+
+    function delete_chemical() {
+        $this->validate_submitted_data(array(
+            "id" => "required|numeric"
+        ));
+
+        $id = $this->request->getPost('id');
+
+        if ($this->Warehouse_chemicals_model->delete($id)) {
+            echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
+        }
+    }
+
+    function chemicals_list_data($client_id, $warehouse_id) {
+        $list_data = $this->Warehouse_chemicals_model->get_details(array("warehouse_id" => $warehouse_id))->getResult();
+        $result = array();
+
+        foreach ($list_data as $data) {
+            $result[] = $this->_chemical_make_row($client_id, $data);
+        }
+
+        echo json_encode(array("data" => $result));
+    }
+
+    private function _chemical_row_data($client_id, $id) {
+        $data = $this->Warehouse_chemicals_model->get_details(array("id" => $id))->getRow();
+        return $this->_chemical_make_row($client_id, $data);
+    }
+
+    private function _chemical_make_row($client_id, $data) {
+        $actions = "";
+        if ($this->can_access_own_client($client_id)) {
+            $actions = modal_anchor(get_uri("warehouses/chemicals_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-client_id" => $client_id, "data-post-warehouse_id" => $data->warehouse_id))
+                    . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("warehouses/delete_chemical"), "data-action" => "delete-confirmation"));
+        }
+
+        $icon = "";
+        $quantity = $data->quantity;
+        if ($data->quantity <= $data->min_stocks) {
+            $icon = '<div style="width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+            $quantity = '<span style="color: #d50000">' . $quantity . '</span>';
+        }
+
+        $checkbox_class = "checkbox-blank";
+        if ($data->is_critical) {
+            $checkbox_class = "checkbox-checked";
+        }
+        $check_critical = "<span class='$checkbox_class mr15 float-start'></span>";
+
+        return array(
+            $data->id,
+            $icon,
+            $check_critical,
+            $data->name,
+            $quantity,
+            $data->min_stocks > 0 ? $data->min_stocks : "---",
+            $data->manufacturer,
+            $data->unit,
+            $data->part_number,
+            $data->article_number,
+            $data->hs_code,
+            $actions
+        );
+    }
+
+
+
+    // Oils parts tab
+    function oils_tab($client_id, $warehouse_id) {
+        $view_data["can_edit_items"] = $this->can_access_own_client($client_id);
+        $view_data["warehouse_id"] = $warehouse_id;
+        $view_data["client_id"] = $client_id;
+        return $this->template->view("warehouses/oils/index", $view_data);
+    }
+
+    function oils_modal_form() {
+        $client_id = $this->request->getPost("client_id");
+        $warehouse_id = $this->request->getPost("warehouse_id");
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+
+        if ($warehouse_id) {
+            $id = $this->request->getPost('id');
+            $view_data['model_info'] = $this->Warehouse_oils_model->get_one($id);
+            $view_data["warehouse_id"] = $warehouse_id;
+            $view_data["client_id"] = $client_id;
+            $view_data["label_column"] = "col-md-3";
+            $view_data["field_column"] = "col-md-9";
+            if ($id) {
+                $view_data["items_dropdown"] = $this->get_oils_dropdown();
+            } else {
+                $view_data["items_dropdown"] = $this->Warehouse_oils_model->get_items_dropdown($warehouse_id);
+            }
+            $view_data["oils"] = $this->Oils_model->get_details()->getResult();
+
+            return $this->template->view("warehouses/oils/modal_form", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    function save_oil() {
+        $client_id = $this->request->getPost("client_id");
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "warehouse_id" => "required|numeric",
+            "oil_id" => "required|numeric",
+            "quantity" => "required|numeric"
+        ));
+
+        $id = $this->request->getPost('id');
+        $data = array(
+            "warehouse_id" => $this->request->getPost("warehouse_id"),
+            "oil_id" => $this->request->getPost("oil_id"),
+            "quantity" => $this->request->getPost("quantity"),
+            "min_stocks" => $this->request->getPost("min_stocks")
+        );
+
+        if ($this->Warehouse_oils_model->is_duplicate_item($data["oil_id"], $data["warehouse_id"], $id)) {
+            echo json_encode(array("success" => false, 'message' => app_lang("already_exists_item")));
+            exit();
+        }
+
+        $save_id = $this->Warehouse_oils_model->ci_save($data, $id);
+        if ($save_id) {
+            if ($data["min_stocks"] > 0 && $data["quantity"] <= $data["min_stocks"]) {
+                // TODO: notification, add todo (private)
+                $notification_option = array("client_id" => $client_id, "warehouse_id" => $data["warehouse_id"], "warehouse_item_id" => $save_id, "warehouse_tab" => "oils");
+                log_notification("csp_minimum_reached", $notification_option, "0");
+
+                $client = $this->Clients_model->get_one($client_id);
+                $info = $this->Warehouse_oils_model->get_infomation($save_id);
+                $url = get_uri("warehouses/view/" . $client_id . "/" . $data["warehouse_id"]);
+                $description = "<strong>" . $info->name . "</strong> (" . $info->quantity . " / " . $info->min_stocks . ", " . app_lang("oils_greases") . ") on <strong>" . $info->warehouse . "</strong> (warehouse) has been reached minimum of stocks.<br/>";
+                $description .= '<a href="' . $url . '" target="_blank">' . $url . '</a>';
+                $todo_data = array(
+                    "title" => app_lang("minimum_item_reached"),
+                    "description" => $description,
+                    "created_by" => $client->owner_id,
+                    "created_at" => get_current_utc_time(),
+                    "start_date" => get_current_utc_time("Y-m-d")
+                );
+                $this->Todo_model->ci_save($todo_data, null);
+
+                $primary_contact_id = $this->Clients_model->get_primary_contact($client_id);
+                $todo_data["created_by"] = $primary_contact_id;
+                $this->Todo_model->ci_save($todo_data, null);
+
+                echo json_encode(array("success" => true, "min_stock_reached" => true, "data" => $this->_oil_row_data($client_id, $save_id), 'id' => $save_id, 'message' => app_lang('minimum_item_reached')));
+            } else {
+                echo json_encode(array("success" => true, "min_stock_reached" => false, "data" => $this->_oil_row_data($client_id, $save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+            }
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+    }
+
+    function delete_oil() {
+        $this->validate_submitted_data(array(
+            "id" => "required|numeric"
+        ));
+
+        $id = $this->request->getPost('id');
+
+        if ($this->Warehouse_oils_model->delete($id)) {
+            echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
+        }
+    }
+
+    function oils_list_data($client_id, $warehouse_id) {
+        $list_data = $this->Warehouse_oils_model->get_details(array("warehouse_id" => $warehouse_id))->getResult();
+        $result = array();
+
+        foreach ($list_data as $data) {
+            $result[] = $this->_oil_make_row($client_id, $data);
+        }
+
+        echo json_encode(array("data" => $result));
+    }
+
+    private function _oil_row_data($client_id, $id) {
+        $data = $this->Warehouse_oils_model->get_details(array("id" => $id))->getRow();
+        return $this->_oil_make_row($client_id, $data);
+    }
+
+    private function _oil_make_row($client_id, $data) {
+        $actions = "";
+        if ($this->can_access_own_client($client_id)) {
+            $actions = modal_anchor(get_uri("warehouses/oils_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-client_id" => $client_id, "data-post-warehouse_id" => $data->warehouse_id))
+                    . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("warehouses/delete_oil"), "data-action" => "delete-confirmation"));
+        }
+
+        $icon = "";
+        $quantity = $data->quantity;
+        if ($data->quantity <= $data->min_stocks) {
+            $icon = '<div style="width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+            $quantity = '<span style="color: #d50000">' . $quantity . '</span>';
+        }
+
+        $checkbox_class = "checkbox-blank";
+        if ($data->is_critical) {
+            $checkbox_class = "checkbox-checked";
+        }
+        $check_critical = "<span class='$checkbox_class mr15 float-start'></span>";
+
+        return array(
+            $data->id,
+            $icon,
+            $check_critical,
+            $data->name,
+            $quantity,
+            $data->min_stocks > 0 ? $data->min_stocks : "---",
+            $data->manufacturer,
+            $data->unit,
+            $data->part_number,
+            $data->article_number,
+            $data->hs_code,
+            $actions
+        );
+    }
+
+
+
+    // Paints parts tab
+    function paints_tab($client_id, $warehouse_id) {
+        $view_data["can_edit_items"] = $this->can_access_own_client($client_id);
+        $view_data["warehouse_id"] = $warehouse_id;
+        $view_data["client_id"] = $client_id;
+        return $this->template->view("warehouses/paints/index", $view_data);
+    }
+
+    function paints_modal_form() {
+        $client_id = $this->request->getPost("client_id");
+        $warehouse_id = $this->request->getPost("warehouse_id");
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+
+        if ($warehouse_id) {
+            $id = $this->request->getPost('id');
+            $view_data['model_info'] = $this->Warehouse_paints_model->get_one($id);
+            $view_data["warehouse_id"] = $warehouse_id;
+            $view_data["client_id"] = $client_id;
+            $view_data["label_column"] = "col-md-3";
+            $view_data["field_column"] = "col-md-9";
+            if ($id) {
+                $view_data["items_dropdown"] = $this->get_paints_dropdown();
+            } else {
+                $view_data["items_dropdown"] = $this->Warehouse_paints_model->get_items_dropdown($warehouse_id);
+            }
+            $view_data["paints"] = $this->Paints_model->get_details()->getResult();
+
+            return $this->template->view("warehouses/paints/modal_form", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    function save_paint() {
+        $client_id = $this->request->getPost("client_id");
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "warehouse_id" => "required|numeric",
+            "paint_id" => "required|numeric",
+            "quantity" => "required|numeric"
+        ));
+
+        $id = $this->request->getPost('id');
+        $data = array(
+            "warehouse_id" => $this->request->getPost("warehouse_id"),
+            "paint_id" => $this->request->getPost("paint_id"),
+            "quantity" => $this->request->getPost("quantity"),
+            "min_stocks" => $this->request->getPost("min_stocks")
+        );
+
+        if ($this->Warehouse_paints_model->is_duplicate_item($data["paint_id"], $data["warehouse_id"], $id)) {
+            echo json_encode(array("success" => false, 'message' => app_lang("already_exists_item")));
+            exit();
+        }
+
+        $save_id = $this->Warehouse_paints_model->ci_save($data, $id);
+        if ($save_id) {
+            if ($data["min_stocks"] > 0 && $data["quantity"] <= $data["min_stocks"]) {
+                // TODO: notification, add todo (private)
+                $notification_option = array("client_id" => $client_id, "warehouse_id" => $data["warehouse_id"], "warehouse_item_id" => $save_id, "warehouse_tab" => "paints");
+                log_notification("csp_minimum_reached", $notification_option, "0");
+
+                $client = $this->Clients_model->get_one($client_id);
+                $info = $this->Warehouse_paints_model->get_infomation($save_id);
+                $url = get_uri("warehouses/view/" . $client_id . "/" . $data["warehouse_id"]);
+                $description = "<strong>" . $info->name . "</strong> (" . $info->quantity . " / " . $info->min_stocks . ", ". app_lang("paints") . ") on <strong>" . $info->warehouse . "</strong> (warehouse) has been reached minimum of stocks.<br/>";
+                $description .= '<a href="' . $url . '" target="_blank">' . $url . '</a>';
+                $todo_data = array(
+                    "title" => app_lang("minimum_item_reached"),
+                    "description" => $description,
+                    "created_by" => $client->owner_id,
+                    "created_at" => get_current_utc_time(),
+                    "start_date" => get_current_utc_time("Y-m-d")
+                );
+                $this->Todo_model->ci_save($todo_data, null);
+
+                $primary_contact_id = $this->Clients_model->get_primary_contact($client_id);
+                $todo_data["created_by"] = $primary_contact_id;
+                $this->Todo_model->ci_save($todo_data, null);
+
+                echo json_encode(array("success" => true, "min_stock_reached" => true, "data" => $this->_paint_row_data($client_id, $save_id), 'id' => $save_id, 'message' => app_lang('minimum_item_reached')));
+            } else {
+                echo json_encode(array("success" => true, "min_stock_reached" => false, "data" => $this->_paint_row_data($client_id, $save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+            }
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+    }
+
+    function delete_paint() {
+        $this->validate_submitted_data(array(
+            "id" => "required|numeric"
+        ));
+
+        $id = $this->request->getPost('id');
+
+        if ($this->Warehouse_paints_model->delete($id)) {
+            echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
+        }
+    }
+
+    function paints_list_data($client_id, $warehouse_id) {
+        $list_data = $this->Warehouse_paints_model->get_details(array("warehouse_id" => $warehouse_id))->getResult();
+        $result = array();
+
+        foreach ($list_data as $data) {
+            $result[] = $this->_paint_make_row($client_id, $data);
+        }
+
+        echo json_encode(array("data" => $result));
+    }
+
+    private function _paint_row_data($client_id, $id) {
+        $data = $this->Warehouse_paints_model->get_details(array("id" => $id))->getRow();
+        return $this->_paint_make_row($client_id, $data);
+    }
+
+    private function _paint_make_row($client_id, $data) {
+        $actions = "";
+        if ($this->can_access_own_client($client_id)) {
+            $actions = modal_anchor(get_uri("warehouses/paints_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-client_id" => $client_id, "data-post-warehouse_id" => $data->warehouse_id))
+                    . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("warehouses/delete_paint"), "data-action" => "delete-confirmation"));
+        }
+
+        $icon = "";
+        $quantity = $data->quantity;
+        if ($data->quantity <= $data->min_stocks) {
+            $icon = '<div style="width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+            $quantity = '<span style="color: #d50000">' . $quantity . '</span>';
+        }
+
+        $checkbox_class = "checkbox-blank";
+        if ($data->is_critical) {
+            $checkbox_class = "checkbox-checked";
+        }
+        $check_critical = "<span class='$checkbox_class mr15 float-start'></span>";
+
+        return array(
+            $data->id,
+            $icon,
+            $check_critical,
+            $data->name,
+            $quantity,
+            $data->min_stocks > 0 ? $data->min_stocks : "---",
+            $data->manufacturer,
+            $data->unit,
+            $data->part_number,
+            $data->article_number,
+            $data->hs_code,
+            $actions
+        );
+    }
+
 
 
     function import_modal_form() {

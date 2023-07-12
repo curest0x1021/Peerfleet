@@ -72,7 +72,7 @@ class Email_templates extends Security_Controller {
             "announcement" => array(
                 "announcement_created" => array("ANNOUNCEMENT_TITLE", "ANNOUNCEMENT_CONTENT", "USER_NAME", "APP_TITLE", "LOGO_URL", "SIGNATURE", "RECIPIENTS_EMAIL_ADDRESS"),
             ),
-            "spare_parts" => array(
+            "warehouse" => array(
                 "csp_minimum_reached" => array("VESSEL_TITLE", "WAREHOUSE_TITLE", "ITEM_TITLE", "QUANTITY", "MIN_STOCKS", "WAREHOUSE_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS")
             ),
             "wires" => array(
