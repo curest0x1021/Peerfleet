@@ -35,7 +35,7 @@ class Shackles_model extends Crud_model {
                     FROM $shackles_table
                     JOIN (SELECT shackle_id, MAX(test_date) as test_date FROM $loadtest_table WHERE deleted = 0 AND test_date IS NOT NULL GROUP BY shackle_id) b
                         ON $shackles_table.id = b.shackle_id
-                    WHERE b.test_date > '$loadtest_reminder_date'
+                    WHERE b.test_date < '$loadtest_reminder_date'
                     GROUP BY $shackles_table.client_id
                 ) b ON $clients_table.id = b.client_id
                 LEFT JOIN (
@@ -43,7 +43,7 @@ class Shackles_model extends Crud_model {
                     FROM $shackles_table
                     JOIN (SELECT shackle_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 AND inspection_date IS NOT NULL GROUP BY shackle_id) b
                         ON $shackles_table.id = b.shackle_id
-                    WHERE b.inspection_date > '$inspection_reminder_date'
+                    WHERE b.inspection_date < '$inspection_reminder_date'
                     GROUP BY $shackles_table.client_id
                 ) c ON $clients_table.id = c.client_id
                 WHERE $clients_table.deleted = 0 $where

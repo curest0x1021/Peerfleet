@@ -32,7 +32,7 @@ class Lashing extends Security_Controller
     private function _make_row($data) {
         $name = $data->name;
         if ($this->can_access_own_client($data->client_id)) {
-            $name = anchor(get_uri("lashing/view/" . $data->client_id), $data->name);
+            $name = anchor(get_uri("lashing/view/" . $data->client_id . "/" . $data->require_inspections), $data->name);
         }
 
         $total_items = "---";
@@ -53,11 +53,15 @@ class Lashing extends Security_Controller
     }
 
     /* load lashing details view */
-    function view($client_id) {
+    function view($client_id, $require_inspections=0) {
         if ($client_id) {
             $view_data['client_id'] = $client_id;
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
             $view_data['vessel'] = $this->Clients_model->get_one($client_id);
+            $warnning = array(
+                "inspections" => $require_inspections > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_inspections . '</span>' : ""
+            );
+            $view_data['warnning'] = $warnning;
             return $this->template->rander("lashing/view", $view_data);
         } else {
             show_404();
@@ -289,12 +293,17 @@ class Lashing extends Security_Controller
     private function _inspection_make_row($data, $client_id, $showInternalId = true) {
         $name = "";
         if ($showInternalId) {
-            $name = $data->name;
+            $icon = "";
+            $reminder_date = get_visual_inspection_reminder_date();
+            if ($data->inspection_date && $data->inspection_date < $reminder_date) {
+                $icon = '<span style="display: inline-block; width: 8px; height: 8px; background-color: #d50000; border-radius: 4px; margin-right: 4px;"></span>';
+            }
+            $name = $icon . $data->name;
         }
         $action = "";
         if ($this->can_access_own_client($client_id)) {
             if ($showInternalId) {
-                $name = anchor(get_uri("lashing/inspection_detail_view/" . $data->lashing_id), $data->name, array("class" => "edit", "title" => app_lang('lashing')));
+                $name = anchor(get_uri("lashing/inspection_detail_view/" . $data->lashing_id), $name, array("class" => "edit", "title" => app_lang('lashing')));
                 $action = modal_anchor(get_uri("lashing/inspection_modal_form/" . $data->lashing_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "add", "title" => app_lang('add_item'), "data-post-force_refresh" => true));
             } else {
                 $action = modal_anchor(get_uri("lashing/inspection_modal_form/" . $data->lashing_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-force_refresh" => false))

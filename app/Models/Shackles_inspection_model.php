@@ -32,7 +32,7 @@ class Shackles_inspection_model extends Crud_model {
                     JOIN (SELECT shackle_id, MAX(inspection_date) as inspection_date FROM $inspection_table GROUP BY shackle_id) b ON a.shackle_id = b.shackle_id AND a.inspection_date = b.inspection_date
                     ) c ON $shackles_table.id = c.shackle_id
                 WHERE $shackles_table.deleted = 0 $where
-                ORDER BY $shackles_table.internal_id ASC";
+                ORDER BY c.inspection_date ASC, $shackles_table.internal_id ASC";
 
         return $this->db->query($sql);
     }

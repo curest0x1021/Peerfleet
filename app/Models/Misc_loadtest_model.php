@@ -32,7 +32,7 @@ class Misc_loadtest_model extends Crud_model {
                     JOIN (SELECT misc_id, MAX(test_date) as test_date FROM $loadtest_table GROUP BY misc_id) b ON a.misc_id = b.misc_id AND a.test_date = b.test_date
                     ) c ON $misc_table.id = c.misc_id
                 WHERE $misc_table.deleted = 0 $where
-                ORDER BY $misc_table.internal_id ASC";
+                ORDER BY c.test_date ASC, $misc_table.internal_id ASC";
 
         return $this->db->query($sql);
     }
