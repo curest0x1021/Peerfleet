@@ -32,7 +32,7 @@ class Lashing extends Security_Controller
     private function _make_row($data) {
         $name = $data->name;
         if ($this->can_access_own_client($data->client_id)) {
-            $name = anchor(get_uri("lashing/view/" . $data->client_id . "/" . $data->require_inspections), $data->name);
+            $name = anchor(get_uri("lashing/view/" . $data->client_id), $data->name);
         }
 
         $total_items = "---";
@@ -53,11 +53,13 @@ class Lashing extends Security_Controller
     }
 
     /* load lashing details view */
-    function view($client_id, $require_inspections=0) {
+    function view($client_id) {
         if ($client_id) {
             $view_data['client_id'] = $client_id;
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
             $view_data['vessel'] = $this->Clients_model->get_one($client_id);
+            $info = $this->Lashing_model->get_warnning_info($client_id);
+            $require_inspections = ($info && $info->require_inspections) ? $info->require_inspections : 0;
             $warnning = array(
                 "inspections" => $require_inspections > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_inspections . '</span>' : ""
             );

@@ -52,6 +52,32 @@ class Grommets_model extends Crud_model {
         return $this->db->query($sql);
     }
 
+    function get_warnning_info($client_id) {
+        $grommets_table = $this->db->prefixTable("grommets");
+        $loadtest_table = $this->db->prefixTable("grommets_loadtest");
+        $inspection_table = $this->db->prefixTable("grommets_inspection");
+
+        $loadtest_reminder_date = get_loadtest_reminder_date();
+        $inspection_reminder_date = get_visual_inspection_reminder_date();
+
+        $sql = "SELECT SUM(k.require_loadtests) as require_loadtests, SUM(k.require_inspections) as require_inspections
+                FROM (
+                    SELECT COUNT(a.id) as require_loadtests, 0 as require_inspections
+                    FROM (SELECT id FROM $grommets_table WHERE deleted = 0 AND client_id = $client_id) a
+                    JOIN (SELECT grommet_id, MAX(test_date) as test_date FROM $loadtest_table WHERE deleted = 0 AND test_date IS NOT NULL GROUP BY grommet_id) b
+                        ON a.id = b.grommet_id
+                    WHERE b.test_date < '$loadtest_reminder_date'
+                    UNION
+                    SELECT 0 as require_loadtests, COUNT(a.id) as require_inspections
+                    FROM (SELECT id FROM $grommets_table WHERE deleted = 0 AND client_id = $client_id) a
+                    JOIN (SELECT grommet_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 AND inspection_date IS NOT NULL GROUP BY grommet_id) b
+                        ON a.id = b.grommet_id
+                    WHERE b.inspection_date < '$inspection_reminder_date'
+                    ) k";
+
+        return $this->db->query($sql)->getRow();
+    }
+
     function get_grommets_details($options = array()) {
         $grommets_table = $this->db->prefixTable("grommets");
         $main_table = $this->db->prefixTable("grommets_main");
