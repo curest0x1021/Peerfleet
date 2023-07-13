@@ -35,10 +35,25 @@ class Misc extends Security_Controller
             $name = anchor(get_uri("misc/view/" . $data->client_id), $data->name);
         }
 
+        $total_items = "---";
+        $require_loadtests = "---";
+        $require_inspections = "---";
+        if ($data->total_items > 0) {
+            $total_items = $data->total_items;
+        }
+        if ($data->require_loadtests > 0) {
+            $require_loadtests = '<span style="color: #df0000;">' . $data->require_loadtests . '<span>';
+        }
+        if ($data->require_inspections > 0) {
+            $require_inspections = '<span style="color: #df0000;">' . $data->require_inspections . '<span>';
+        }
+
         return array(
             $data->client_id,
             $name,
-            $data->total_items
+            $require_loadtests,
+            $require_inspections,
+            $total_items,
         );
     }
 

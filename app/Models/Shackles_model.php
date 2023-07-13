@@ -14,6 +14,11 @@ class Shackles_model extends Crud_model {
     function get_details($options = array()) {
         $clients_table = $this->db->prefixTable("clients");
         $shackles_table = $this->db->prefixTable("shackles");
+        $loadtest_table = $this->db->prefixTable("shackles_loadtest");
+        $inspection_table = $this->db->prefixTable("shackles_inspection");
+
+        $loadtest_reminder_date = get_loadtest_reminder_date();
+        $inspection_reminder_date = get_visual_inspection_reminder_date();
 
         $where = "";
         $client_id = $this->_get_clean_value($options, "client_id");
@@ -21,10 +26,26 @@ class Shackles_model extends Crud_model {
             $where .= " AND $clients_table.id=$client_id";
         }
 
-        $sql = "SELECT $clients_table.id as client_id, $clients_table.charter_name as name,
-                    COUNT($shackles_table.id) as total_items
+        $sql = "SELECT $clients_table.id as client_id, $clients_table.charter_name as name, a.total_items, b.require_loadtests, c.require_inspections
                 FROM $clients_table
-                LEFT JOIN $shackles_table ON $clients_table.id = $shackles_table.client_id AND $shackles_table.deleted = 0
+                LEFT JOIN (SELECT client_id, COUNT(id) as total_items FROM $shackles_table WHERE deleted = 0 GROUP BY client_id) a
+                    ON $clients_table.id = a.client_id
+                LEFT JOIN (
+                    SELECT $shackles_table.client_id, COUNT($shackles_table.id) as require_loadtests
+                    FROM $shackles_table
+                    JOIN (SELECT shackle_id, MAX(test_date) as test_date FROM $loadtest_table WHERE deleted = 0 AND test_date IS NOT NULL GROUP BY shackle_id) b
+                        ON $shackles_table.id = b.shackle_id
+                    WHERE b.test_date > '$loadtest_reminder_date'
+                    GROUP BY $shackles_table.client_id
+                ) b ON $clients_table.id = b.client_id
+                LEFT JOIN (
+                    SELECT $shackles_table.client_id, COUNT($shackles_table.id) as require_inspections
+                    FROM $shackles_table
+                    JOIN (SELECT shackle_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 AND inspection_date IS NOT NULL GROUP BY shackle_id) b
+                        ON $shackles_table.id = b.shackle_id
+                    WHERE b.inspection_date > '$inspection_reminder_date'
+                    GROUP BY $shackles_table.client_id
+                ) c ON $clients_table.id = c.client_id
                 WHERE $clients_table.deleted = 0 $where
                 GROUP BY $clients_table.id";
 
@@ -106,6 +127,86 @@ class Shackles_model extends Crud_model {
         $sql = "SELECT id, internal_id FROM $shackles_table WHERE client_id=$client_id";
         $result = $this->db->query($sql)->getResult();
         return $result;
+    }
+
+    // get required loadtest reminder items
+    function get_required_loadtest_items() {
+        $shackles_table = $this->db->prefixTable("shackles");
+        $loadtest_table = $this->db->prefixTable("shackles_loadtest");
+
+        $reminder_date = get_loadtest_reminder_date();
+
+        $sql = "SELECT $shackles_table.id as shackle_id, $shackles_table.client_id, a.test_date
+                FROM (
+                    SELECT shackle_id, MAX(test_date) as test_date
+                    FROM $loadtest_table
+                    WHERE deleted = 0 AND test_date IS NOT NULL
+                    GROUP BY shackle_id
+                ) a
+                JOIN $shackles_table ON $shackles_table.id = a.shackle_id
+                WHERE Date(a.test_date) < '$reminder_date'";
+
+        $result = $this->db->query($sql)->getResult();
+        return $result;
+    }
+
+    // get required visual inspection reminder items
+    function get_required_visual_inspection_items() {
+        $shackles_table = $this->db->prefixTable("shackles");
+        $inspection_table = $this->db->prefixTable("shackles_inspection");
+
+        $reminder_date = get_visual_inspection_reminder_date();
+
+        $sql = "SELECT $shackles_table.id as shackle_id, $shackles_table.client_id, a.inspection_date
+                FROM (
+                    SELECT shackle_id, MAX(inspection_date) as inspection_date
+                    FROM $inspection_table
+                    WHERE deleted = 0 AND inspection_date IS NOT NULL
+                    GROUP BY shackle_id
+                ) a
+                JOIN $shackles_table ON $shackles_table.id = a.shackle_id
+                WHERE Date(a.inspection_date) < '$reminder_date'";
+
+        $result = $this->db->query($sql)->getResult();
+        return $result;
+    }
+
+    function get_loadtest_info($shackle_id) {
+        $shackles_table = $this->db->prefixTable("shackles");
+        $main_table = $this->db->prefixTable("shackles_main");
+        $clients_table = $this->db->prefixTable("clients");
+        $loadtest_table = $this->db->prefixTable("shackles_loadtest");
+
+        $sql = "SELECT a.id, $clients_table.charter_name as vessel, CONCAT(a.internal_id, ' (', $main_table.item_description, ')') as name, MAX(b.test_date) as last_test_date
+                FROM (SELECT * FROM $shackles_table WHERE id = $shackle_id) a
+                JOIN $clients_table ON $clients_table.id = a.client_id
+                JOIN $main_table ON $main_table.id = a.main_id
+                LEFT JOIN (SELECT * FROM $loadtest_table WHERE deleted=0 AND shackle_id = $shackle_id AND test_date IS NOT NULL) b
+                    ON a.id = b.shackle_id";
+
+        $row = $this->db->query($sql)->getRow();
+        // Loadtest: 5 years
+        $row->due_date = date("Y-m-d", strtotime($row->last_test_date . ' + 5 years'));
+        return $row;
+    }
+
+    function get_inspection_info($shackle_id) {
+        $shackles_table = $this->db->prefixTable("shackles");
+        $main_table = $this->db->prefixTable("shackles_main");
+        $clients_table = $this->db->prefixTable("clients");
+        $inspection_table = $this->db->prefixTable("shackles_inspection");
+
+        $sql = "SELECT a.id, $clients_table.charter_name as vessel, CONCAT(a.internal_id, ' (', $main_table.item_description, ')') as name, MAX(b.inspection_date) as last_inspection_date
+                FROM (SELECT * FROM $shackles_table WHERE id = $shackle_id) a
+                JOIN $clients_table ON $clients_table.id = a.client_id
+                JOIN $main_table ON $main_table.id = a.main_id
+                LEFT JOIN (SELECT * FROM $inspection_table WHERE deleted=0 AND shackle_id = $shackle_id AND inspection_date IS NOT NULL) b
+                    ON a.id = b.shackle_id";
+
+        $row = $this->db->query($sql)->getRow();
+        // Visual inspection: 12 months
+        $row->due_date = date("Y-m-d", strtotime($row->last_inspection_date . ' + 12 months'));
+        return $row;
     }
 
 }

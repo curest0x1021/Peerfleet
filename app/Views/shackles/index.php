@@ -16,17 +16,12 @@
     loadShacklesTable = function(selector) {
         $(selector).appTable({
             source: '<?php echo_uri("shackles/list_data") ?>',
-            columns: [{
-                    visible: false, searchable: false
-                },
-                {
-                    title: "<?php echo app_lang("vessel") ?>",
-                    "class": "all"
-                },
-                {
-                    title: "<?php echo app_lang("total_items") ?>",
-                    "class": "text-center w150"
-                }
+            columns: [
+                { visible: false, searchable: false },
+                { title: "<?php echo app_lang("vessel") ?>", "class": "all" },
+                { title: "<?php echo app_lang("require_loadtests") ?>", "class": "text-center w15p" },
+                { title: "<?php echo app_lang("require_inspections") ?>", "class": "text-center w15p" },
+                { title: "<?php echo app_lang("total_items") ?>", "class": "text-center w15p" }
             ]
         });
     };

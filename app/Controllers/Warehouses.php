@@ -193,7 +193,7 @@ class Warehouses extends Security_Controller {
             if ($data["min_stocks"] > 0 && $data["quantity"] <= $data["min_stocks"]) {
                 // TODO: notification, add todo (private)
                 $notification_option = array("client_id" => $client_id, "warehouse_id" => $data["warehouse_id"], "warehouse_item_id" => $save_id, "warehouse_tab" => "spares");
-                log_notification("csp_minimum_reached", $notification_option, "0");
+                log_notification("warehouse_item_minimum_reached", $notification_option, "0");
 
                 $client = $this->Clients_model->get_one($client_id);
                 $info = $this->Warehouse_spares_model->get_infomation($save_id);
@@ -357,7 +357,7 @@ class Warehouses extends Security_Controller {
             if ($data["min_stocks"] > 0 && $data["quantity"] <= $data["min_stocks"]) {
                 // TODO: notification, add todo (private)
                 $notification_option = array("client_id" => $client_id, "warehouse_id" => $data["warehouse_id"], "warehouse_item_id" => $save_id, "warehouse_tab" => "chemicals");
-                log_notification("csp_minimum_reached", $notification_option, "0");
+                log_notification("warehouse_item_minimum_reached", $notification_option, "0");
 
                 $client = $this->Clients_model->get_one($client_id);
                 $info = $this->Warehouse_chemicals_model->get_infomation($save_id);
@@ -520,7 +520,7 @@ class Warehouses extends Security_Controller {
             if ($data["min_stocks"] > 0 && $data["quantity"] <= $data["min_stocks"]) {
                 // TODO: notification, add todo (private)
                 $notification_option = array("client_id" => $client_id, "warehouse_id" => $data["warehouse_id"], "warehouse_item_id" => $save_id, "warehouse_tab" => "oils");
-                log_notification("csp_minimum_reached", $notification_option, "0");
+                log_notification("warehouse_item_minimum_reached", $notification_option, "0");
 
                 $client = $this->Clients_model->get_one($client_id);
                 $info = $this->Warehouse_oils_model->get_infomation($save_id);
@@ -683,7 +683,7 @@ class Warehouses extends Security_Controller {
             if ($data["min_stocks"] > 0 && $data["quantity"] <= $data["min_stocks"]) {
                 // TODO: notification, add todo (private)
                 $notification_option = array("client_id" => $client_id, "warehouse_id" => $data["warehouse_id"], "warehouse_item_id" => $save_id, "warehouse_tab" => "paints");
-                log_notification("csp_minimum_reached", $notification_option, "0");
+                log_notification("warehouse_item_minimum_reached", $notification_option, "0");
 
                 $client = $this->Clients_model->get_one($client_id);
                 $info = $this->Warehouse_paints_model->get_infomation($save_id);

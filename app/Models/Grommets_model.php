@@ -14,6 +14,11 @@ class Grommets_model extends Crud_model {
     function get_details($options = array()) {
         $clients_table = $this->db->prefixTable("clients");
         $grommets_table = $this->db->prefixTable("grommets");
+        $loadtest_table = $this->db->prefixTable("grommets_loadtest");
+        $inspection_table = $this->db->prefixTable("grommets_inspection");
+
+        $loadtest_reminder_date = get_loadtest_reminder_date();
+        $inspection_reminder_date = get_visual_inspection_reminder_date();
 
         $where = "";
         $client_id = $this->_get_clean_value($options, "client_id");
@@ -21,10 +26,26 @@ class Grommets_model extends Crud_model {
             $where .= " AND $clients_table.id=$client_id";
         }
 
-        $sql = "SELECT $clients_table.id as client_id, $clients_table.charter_name as name,
-                    COUNT($grommets_table.id) as total_items
+        $sql = "SELECT $clients_table.id as client_id, $clients_table.charter_name as name, a.total_items, b.require_loadtests, c.require_inspections
                 FROM $clients_table
-                LEFT JOIN $grommets_table ON $clients_table.id = $grommets_table.client_id AND $grommets_table.deleted = 0
+                LEFT JOIN (SELECT client_id, COUNT(id) as total_items FROM $grommets_table WHERE deleted = 0 GROUP BY client_id) a
+                    ON $clients_table.id = a.client_id
+                LEFT JOIN (
+                    SELECT $grommets_table.client_id, COUNT($grommets_table.id) as require_loadtests
+                    FROM $grommets_table
+                    JOIN (SELECT grommet_id, MAX(test_date) as test_date FROM $loadtest_table WHERE deleted = 0 AND test_date IS NOT NULL GROUP BY grommet_id) b
+                        ON $grommets_table.id = b.grommet_id
+                    WHERE b.test_date > '$loadtest_reminder_date'
+                    GROUP BY $grommets_table.client_id
+                ) b ON $clients_table.id = b.client_id
+                LEFT JOIN (
+                    SELECT $grommets_table.client_id, COUNT($grommets_table.id) as require_inspections
+                    FROM $grommets_table
+                    JOIN (SELECT grommet_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 AND inspection_date IS NOT NULL GROUP BY grommet_id) b
+                        ON $grommets_table.id = b.grommet_id
+                    WHERE b.inspection_date > '$inspection_reminder_date'
+                    GROUP BY $grommets_table.client_id
+                ) c ON $clients_table.id = c.client_id
                 WHERE $clients_table.deleted = 0 $where
                 GROUP BY $clients_table.id";
 
@@ -94,4 +115,83 @@ class Grommets_model extends Crud_model {
         return $result;
     }
 
+    // get required loadtest reminder items
+    function get_required_loadtest_items() {
+        $grommets_table = $this->db->prefixTable("grommets");
+        $loadtest_table = $this->db->prefixTable("grommets_loadtest");
+
+        $reminder_date = get_loadtest_reminder_date();
+
+        $sql = "SELECT $grommets_table.id as grommet_id, $grommets_table.client_id, a.test_date
+                FROM (
+                    SELECT grommet_id, MAX(test_date) as test_date
+                    FROM $loadtest_table
+                    WHERE deleted = 0 AND test_date IS NOT NULL
+                    GROUP BY grommet_id
+                ) a
+                JOIN $grommets_table ON $grommets_table.id = a.grommet_id
+                WHERE Date(a.test_date) < '$reminder_date'";
+
+        $result = $this->db->query($sql)->getResult();
+        return $result;
+    }
+
+    // get required visual inspection reminder items
+    function get_required_visual_inspection_items() {
+        $grommets_table = $this->db->prefixTable("grommets");
+        $inspection_table = $this->db->prefixTable("grommets_inspection");
+
+        $reminder_date = get_visual_inspection_reminder_date();
+
+        $sql = "SELECT $grommets_table.id as grommet_id, $grommets_table.client_id, a.inspection_date
+                FROM (
+                    SELECT grommet_id, MAX(inspection_date) as inspection_date
+                    FROM $inspection_table
+                    WHERE deleted = 0 AND inspection_date IS NOT NULL
+                    GROUP BY grommet_id
+                ) a
+                JOIN $grommets_table ON $grommets_table.id = a.grommet_id
+                WHERE Date(a.inspection_date) < '$reminder_date'";
+
+        $result = $this->db->query($sql)->getResult();
+        return $result;
+    }
+
+    function get_loadtest_info($grommet_id) {
+        $grommets_table = $this->db->prefixTable("grommets");
+        $main_table = $this->db->prefixTable("grommets_main");
+        $clients_table = $this->db->prefixTable("clients");
+        $loadtest_table = $this->db->prefixTable("grommets_loadtest");
+
+        $sql = "SELECT a.id, $clients_table.charter_name as vessel, CONCAT(a.internal_id, ' (', $main_table.item_description, ')') as name, MAX(b.test_date) as last_test_date
+                FROM (SELECT * FROM $grommets_table WHERE id = $grommet_id) a
+                JOIN $clients_table ON $clients_table.id = a.client_id
+                JOIN $main_table ON $main_table.id = a.main_id
+                LEFT JOIN (SELECT * FROM $loadtest_table WHERE deleted=0 AND grommet_id = $grommet_id AND test_date IS NOT NULL) b
+                    ON a.id = b.grommet_id";
+
+        $row = $this->db->query($sql)->getRow();
+        // Loadtest: 5 years
+        $row->due_date = date("Y-m-d", strtotime($row->last_test_date . ' + 5 years'));
+        return $row;
+    }
+
+    function get_inspection_info($grommet_id) {
+        $grommets_table = $this->db->prefixTable("grommets");
+        $main_table = $this->db->prefixTable("grommets_main");
+        $clients_table = $this->db->prefixTable("clients");
+        $inspection_table = $this->db->prefixTable("grommets_inspection");
+
+        $sql = "SELECT a.id, $clients_table.charter_name as vessel, CONCAT(a.internal_id, ' (', $main_table.item_description, ')') as name, MAX(b.inspection_date) as last_inspection_date
+                FROM (SELECT * FROM $grommets_table WHERE id = $grommet_id) a
+                JOIN $clients_table ON $clients_table.id = a.client_id
+                JOIN $main_table ON $main_table.id = a.main_id
+                LEFT JOIN (SELECT * FROM $inspection_table WHERE deleted=0 AND grommet_id = $grommet_id AND inspection_date IS NOT NULL) b
+                    ON a.id = b.grommet_id";
+
+        $row = $this->db->query($sql)->getRow();
+        // Visual inspection: 12 months
+        $row->due_date = date("Y-m-d", strtotime($row->last_inspection_date . ' + 12 months'));
+        return $row;
+    }
 }

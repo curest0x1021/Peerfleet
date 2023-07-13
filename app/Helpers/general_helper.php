@@ -2825,6 +2825,32 @@ if (!function_exists('get_wire_exchange_reminder_date')) {
     }
 }
 
+/**
+ * get loadtest reminder date
+ * @return string
+ */
+if (!function_exists('get_loadtest_reminder_date')) {
+    function get_loadtest_reminder_date() {
+        // Load Test: 5 years
+        // Reminder: 90 days
+        $reminder_date = date('Y-m-d', strtotime(' - 57 months'));
+        return $reminder_date;
+    }
+}
+
+/**
+ * get visual inspection reminder date
+ * @return string
+ */
+if (!function_exists('get_visual_inspection_reminder_date')) {
+    function get_visual_inspection_reminder_date() {
+        // Visual inspection: 12 months
+        // Reminder: 90 days
+        $reminder_date = date('Y-m-d', strtotime(' - 9 months'));
+        return $reminder_date;
+    }
+}
+
 if (!function_exists('can_edit_this_todo')) {
 
     function can_edit_this_todo($created_by = 0) {
