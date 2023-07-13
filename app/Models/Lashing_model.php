@@ -43,6 +43,21 @@ class Lashing_model extends Crud_model {
         return $this->db->query($sql);
     }
 
+    function get_warnning_info($client_id) {
+        $lashing_table = $this->db->prefixTable("lashing");
+        $inspection_table = $this->db->prefixTable("lashing_inspection");
+
+        $inspection_reminder_date = get_visual_inspection_reminder_date();
+
+        $sql = "SELECT COUNT(a.id) as require_inspections
+                FROM (SELECT id FROM $lashing_table WHERE deleted = 0 AND client_id = $client_id) a
+                JOIN (SELECT lashing_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 AND inspection_date IS NOT NULL GROUP BY lashing_id) b
+                    ON a.id = b.lashing_id
+                WHERE b.inspection_date < '$inspection_reminder_date'";
+
+        return $this->db->query($sql)->getRow();
+    }
+
     function get_lashing_details($options = array()) {
         $lashing_table = $this->db->prefixTable("lashing");
         $category_table = $this->db->prefixTable("lashing_category");
