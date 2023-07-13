@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use stdClass;
+use Exception;
 
 class Warehouses extends Security_Controller {
 
@@ -277,11 +278,11 @@ class Warehouses extends Security_Controller {
             $icon,
             $check_critical,
             $data->name,
+            $data->manufacturer,
             $quantity,
+            $data->unit,
             $data->min_stocks > 0 ? $data->min_stocks : "---",
             $data->max_stocks > 0 ? $data->max_stocks : "---",
-            $data->manufacturer,
-            $data->unit,
             $data->part_number,
             $data->article_number,
             $data->drawing_number,
@@ -441,10 +442,10 @@ class Warehouses extends Security_Controller {
             $icon,
             $check_critical,
             $data->name,
-            $quantity,
-            $data->min_stocks > 0 ? $data->min_stocks : "---",
             $data->manufacturer,
+            $quantity,
             $data->unit,
+            $data->min_stocks > 0 ? $data->min_stocks : "---",
             $data->part_number,
             $data->article_number,
             $data->hs_code,
@@ -604,10 +605,10 @@ class Warehouses extends Security_Controller {
             $icon,
             $check_critical,
             $data->name,
-            $quantity,
-            $data->min_stocks > 0 ? $data->min_stocks : "---",
             $data->manufacturer,
+            $quantity,
             $data->unit,
+            $data->min_stocks > 0 ? $data->min_stocks : "---",
             $data->part_number,
             $data->article_number,
             $data->hs_code,
@@ -767,10 +768,10 @@ class Warehouses extends Security_Controller {
             $icon,
             $check_critical,
             $data->name,
-            $quantity,
-            $data->min_stocks > 0 ? $data->min_stocks : "---",
             $data->manufacturer,
+            $quantity,
             $data->unit,
+            $data->min_stocks > 0 ? $data->min_stocks : "---",
             $data->part_number,
             $data->article_number,
             $data->hs_code,
@@ -783,20 +784,18 @@ class Warehouses extends Security_Controller {
     function import_modal_form() {
         $client_id = $this->request->getPost("client_id");
         $warehouse_id = $this->request->getPost("warehouse_id");
+        $tab = $this->request->getPost("tab");
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
 
         $view_data["client_id"] = $client_id;
         $view_data["warehouse_id"] = $warehouse_id;
+        $view_data["tab"] = $tab;
         return $this->template->view("warehouses/import_modal_form", $view_data);
     }
 
     function upload_excel_file() {
-        $client_id = $this->request->getPost("client_id");
-        if (!$this->can_access_own_client($client_id)) {
-            app_redirect("forbidden");
-        }
         upload_file_to_temp(true);
     }
 
@@ -815,29 +814,88 @@ class Warehouses extends Security_Controller {
         }
     }
 
-    function download_sample_excel_file() {
-        return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => "import-spare-parts-sample.xlsx"))));
+    function download_sample_excel_file($tab) {
+        $file_name = "";
+        if ($tab == "spares") {
+            $file_name = "import-warehouse-spare-parts-sample.xlsx";
+        } else if ($tab == "chemicals") {
+            $file_name = "import-warehouse-chemicals-sample.xlsx";
+        } else if ($tab == "oils") {
+            $file_name = "import-warehouse-oils-sample.xlsx";
+        } else if ($tab == "paints") {
+            $file_name = "import-warehouse-paints-sample.xlsx";
+        }
+        if (!empty($file_name)) {
+            return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => $file_name))));
+        }
     }
 
-    private function _get_allowed_headers() {
-        return array(
-            "is_critical",
-            "name",
-            "manufacturer",
-            "applicable_equipment",
-            "ship_equipment",
-            "unit_code",
-            "unit_name",
-            "part_number",
-            "part_description",
-            "article_number",
-            "drawing_number",
-            "hs_code"
-        );
+    private function _get_allowed_headers($tab) {
+        if ($tab == "spares") {
+            return array(
+                [ "key" => "name", "required" => true ],
+                [ "key" => "manufacturer", "required" => true ],
+                [ "key" => "applicable_equipment", "required" => true ],
+                [ "key" => "ship_equipment", "required" => true ],
+                [ "key" => "quantity", "required" => true ],
+                [ "key" => "unit", "required" => true ],
+                [ "key" => "part_description", "required" => false ],
+                [ "key" => "part_number", "required" => true ],
+                [ "key" => "article_number", "required" => true ],
+                [ "key" => "drawing_number", "required" => true ],
+                [ "key" => "hs_code", "required" => true ],
+                [ "key" => "is_critical", "required" => false ],
+                [ "key" => "min_stocks", "required" => false ],
+                [ "key" => "max_stocks", "required" => false ],
+            );
+        } else if ($tab == "chemicals") {
+            return array(
+                [ "key" => "name", "required" => true ],
+                [ "key" => "manufacturer", "required" => true ],
+                [ "key" => "quantity", "required" => true ],
+                [ "key" => "unit", "required" => true ],
+                [ "key" => "part_description", "required" => false ],
+                [ "key" => "part_number", "required" => true ],
+                [ "key" => "article_number", "required" => true ],
+                [ "key" => "hs_code", "required" => true ],
+                [ "key" => "is_critical", "required" => false ],
+                [ "key" => "min_stocks", "required" => false ],
+            );
+        } else if ($tab == "oils") {
+            return array(
+                [ "key" => "name", "required" => true ],
+                [ "key" => "manufacturer", "required" => true ],
+                [ "key" => "quantity", "required" => true ],
+                [ "key" => "unit", "required" => true ],
+                [ "key" => "part_description", "required" => false ],
+                [ "key" => "part_number", "required" => true ],
+                [ "key" => "article_number", "required" => true ],
+                [ "key" => "hs_code", "required" => true ],
+                [ "key" => "is_critical", "required" => false ],
+                [ "key" => "min_stocks", "required" => false ],
+            );
+        } else if ($tab == "paints") {
+            return array(
+                [ "key" => "name", "required" => true ],
+                [ "key" => "manufacturer", "required" => true ],
+                [ "key" => "quantity", "required" => true ],
+                [ "key" => "unit", "required" => true ],
+                [ "key" => "part_description", "required" => false ],
+                [ "key" => "part_number", "required" => true ],
+                [ "key" => "article_number", "required" => true ],
+                [ "key" => "hs_code", "required" => true ],
+                [ "key" => "is_critical", "required" => false ],
+                [ "key" => "min_stocks", "required" => false ],
+            );
+        } else {
+            return [];
+        }
     }
 
-    private function _store_item_headers_position($headers_row = array()) {
-        $allowed_headers = $this->_get_allowed_headers();
+    private function _store_item_headers_position($tab, $headers_row = array()) {
+        $allowed_headers = array_map(function ($h) {
+            return $h["key"];
+        }, $this->_get_allowed_headers($tab));
 
         //check if all headers are correct and on the right position
         $final_headers = array();
@@ -867,15 +925,19 @@ class Warehouses extends Security_Controller {
         return $final_headers;
     }
 
-    private function _row_data_validation_and_get_error_message($key, $data) {
-        $allowed_headers = $this->_get_allowed_headers();
-        $header_value = get_array_value($allowed_headers, $key);
+    private function _row_data_validation_and_get_error_message($tab, $key, $data) {
+        $allowed_headers = $this->_get_allowed_headers($tab);
+        $header = null;
+        foreach ($allowed_headers as $el) {
+            if ($el["key"] == $key) {
+                $header = $el;
+                break;
+            }
+        }
 
-        //there has no date field on default import fields
-        //check on custom fields
-        if (((count($allowed_headers) - 1) < $key) && $data) {
+        if ($header && $header["required"]) {
             if (empty($data)) {
-                $error_message = sprintf(app_lang("import_data_empty_message"), app_lang($header_value));
+                $error_message = sprintf(app_lang("import_data_empty_message"), app_lang($header["key"]));
                 return $error_message;
             }
         }
@@ -888,6 +950,7 @@ class Warehouses extends Security_Controller {
         $applicable_data = array();
         $ship_data = array();
         $unit_data = array();
+        $warehouse_data = array();
 
         foreach ($data_row as $row_data_key => $row_data_value) { //row values
             if (!$row_data_value) {
@@ -901,10 +964,14 @@ class Warehouses extends Security_Controller {
                 $applicable_data["name"] = $row_data_value;
             } else if ($header_key_value == "ship_equipment") {
                 $ship_data["name"] = $row_data_value;
-            } else if ($header_key_value == "unit_code") {
-                $unit_data["code"] = $row_data_value;
-            } else if ($header_key_value == 'unit_name') {
+            } else if ($header_key_value == 'unit') {
                 $unit_data["name"] = $row_data_value;
+            } else if ($header_key_value == 'quantity') {
+                $warehouse_data["quantity"] = $row_data_value;
+            } else if ($header_key_value == 'min_stocks') {
+                $warehouse_data["min_stocks"] = $row_data_value;
+            } else if ($header_key_value == 'max_stocks') {
+                $warehouse_data["max_stocks"] = $row_data_value;
             } else {
                 $item_data[$header_key_value] = $row_data_value;
             }
@@ -915,11 +982,12 @@ class Warehouses extends Security_Controller {
             "manufacturer_data" => $manufacturer_data,
             "applicable_data" => $applicable_data,
             "ship_data" => $ship_data,
-            "unit_data" => $unit_data
+            "unit_data" => $unit_data,
+            "warehouse_data" => $warehouse_data
         );
     }
 
-    function validate_import_file_data($check_on_submit = false) {
+    function validate_import_file_data($tab, $check_on_submit = false) {
         $table_data = "";
         $error_message = "";
         $headers = array();
@@ -941,7 +1009,7 @@ class Warehouses extends Security_Controller {
 
         foreach ($excel_file as $row_key => $value) {
             if ($row_key == 0) { //validate headers
-                $headers = $this->_store_item_headers_position($value);
+                $headers = $this->_store_item_headers_position($tab, $value);
 
                 foreach ($headers as $row_data) {
                     $has_error_class = false;
@@ -965,7 +1033,7 @@ class Warehouses extends Security_Controller {
                     $has_error_class = false;
 
                     if (!$got_error_header) {
-                        $row_data_validation = $this->_row_data_validation_and_get_error_message($key, $row_data);
+                        $row_data_validation = $this->_row_data_validation_and_get_error_message($tab, $key, $row_data);
                         if ($row_data_validation) {
                             $has_error_class = true;
                             $error_message_on_this_row .= "<li>" . $row_data_validation . "</li>";
@@ -1039,11 +1107,13 @@ class Warehouses extends Security_Controller {
 
     function save_from_excel_file() {
         $client_id = $this->request->getPost("client_id");
+        $tab = $this->request->getPost("tab");
+        $warehouse_id = $this->request->getPost("warehouse_id");
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
 
-        if (!$this->validate_import_file_data(true)) {
+        if (!$this->validate_import_file_data($tab, true)) {
             echo json_encode(array('success' => false, 'message' => app_lang('error_occurred')));
         }
 
@@ -1053,12 +1123,32 @@ class Warehouses extends Security_Controller {
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
         $excel_file = $excel_file->getActiveSheet()->toArray();
+        $allowed_headers = array_map(function ($h) {
+            return $h["key"];
+        }, $this->_get_allowed_headers($tab));
 
-        $allowed_headers = $this->_get_allowed_headers();
+        if ($tab == "spares") {
+            $this->save_spares_from_excel_file($allowed_headers, $excel_file, $warehouse_id);
+        } else if ($tab == "chemicals") {
+            $this->save_chemicals_from_excel_file($allowed_headers, $excel_file, $warehouse_id);
+        } else if ($tab == "oils") {
+            $this->save_oils_from_excel_file($allowed_headers, $excel_file, $warehouse_id);
+        } else if ($tab == "paints") {
+            $this->save_paints_from_excel_file($allowed_headers, $excel_file, $warehouse_id);
+        }
+
+        delete_file_from_directory($temp_file_path . $file_name); //delete temp file
+
+        echo json_encode(array('success' => true, 'message' => app_lang("record_saved")));
+    }
+
+    function save_spares_from_excel_file($allowed_headers, $excel_file, $warehouse_id) {
+        $spare_list = $this->Spare_parts_model->get_all()->getResult();
         $manufacturers = $this->Manufacturers_model->get_all()->getResult();
         $applicable_equipments = $this->Applicable_equipments_model->get_all()->getResult();
         $ship_equipments = $this->Ship_equipments_model->get_all()->getResult();
         $units = $this->Units_model->get_all()->getResult();
+        $warehouse_items_list = $this->Warehouse_spares_model->get_all_where(array("deleted" => 0, "warehouse_id" => $warehouse_id))->getResult();
 
         foreach ($excel_file as $key => $value) { //rows
             if ($key === 0) { //first line is headers, continue for the next loop
@@ -1071,81 +1161,435 @@ class Warehouses extends Security_Controller {
             $applicable_data = get_array_value($data_array, "applicable_data");
             $ship_data = get_array_value($data_array, "ship_data");
             $unit_data = get_array_value($data_array, "unit_data");
+            $warehouse_data = get_array_value($data_array, "warehouse_data");
 
             //couldn't prepare valid data
             if (!($item_data && count($item_data))) {
                 continue;
             }
 
-            // manufacturer
-            $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
-            if ($manufacturer) {
-                $item_data["manufacturer_id"] = $manufacturer->id;
-            } else {
-                $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
-                $item_data["manufacturer_id"] = $m_save_id;
+            try {
+                // manufacturer
+                if (isset($manufacturer_data["name"]) && !empty($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
+                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
+                    if ($manufacturer) {
+                        $item_data["manufacturer_id"] = $manufacturer->id;
+                    } else {
+                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                        $item_data["manufacturer_id"] = $m_save_id;
 
-                $temp = new stdClass();
-                $temp->id = $m_save_id;
-                $temp->name = $manufacturer_data["name"];
-                $manufacturers[] = $temp;
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $manufacturer_data["name"];
+                        $manufacturers[] = $temp;
+                    }
+                }
+
+                // applicable machinery equipments
+                if (isset($applicable_data["name"]) && !empty($applicable_data["name"]) && $applicable_data["name"] !== "---") {
+                    $applicable = $this->findObjectByName($applicable_data["name"], $applicable_equipments);
+                    if ($applicable) {
+                        $item_data["applicable_equip_id"] = $applicable->id;
+                    } else {
+                        $m_save_id = $this->Applicable_equipments_model->ci_save($applicable_data);
+                        $item_data["applicable_equip_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $applicable_data["name"];
+                        $applicable_equipments[] = $temp;
+                    }
+                }
+
+                // ship machinery equipments
+                if (isset($ship_data["name"]) && !empty($ship_data["name"]) && $ship_data["name"] !== "---") {
+                    $ship_item = $this->findObjectByName($ship_data["name"], $ship_equipments);
+                    if ($ship_item) {
+                        $item_data["ship_equip_id"] = $ship_item->id;
+                    } else {
+                        $m_save_id = $this->Ship_equipments_model->ci_save($ship_data);
+                        $item_data["ship_equip_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $ship_data["name"];
+                        $ship_equipments[] = $temp;
+                    }
+                }
+
+                // units
+                if (isset($unit_data["name"]) && !empty($unit_data["name"]) && $unit_data["name"] !== "---") {
+                    $unit = $this->findObjectByName($unit_data["name"], $units);
+                    if ($unit) {
+                        $item_data["unit_id"] = $unit->id;
+                    } else {
+                        $m_save_id = $this->Units_model->ci_save($unit_data);
+                        $item_data["unit_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $unit_data["name"];
+                        $units[] = $temp;
+                    }
+                }
+
+                // Spare parts
+                $spare = $this->findObjectByName($item_data["name"], $spare_list);
+                if ($spare) {
+                    $warehouse_data["spare_id"] = $spare->id;
+                } else {
+                    $m_save_id = $this->Spare_parts_model->ci_save($item_data);
+                    $warehouse_data["spare_id"] = $m_save_id;
+
+                    $temp = new stdClass();
+                    $temp->id = $m_save_id;
+                    $temp->name = $item_data["name"];
+                    $spare_list[] = $temp;
+                }
+
+                // Warehouse-spares
+                if (isset($warehouse_data["quantity"])) {
+                    $warehouse_data["warehouse_id"] = $warehouse_id;
+
+                    $row = $this->findObjectBySpareId($warehouse_data["spare_id"], $warehouse_items_list);
+                    if ($row) {
+                        $this->Warehouse_spares_model->ci_save($warehouse_data, $row->id);
+                    } else {
+                        $m_save_id = $this->Warehouse_spares_model->ci_save($warehouse_data);
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->spare_id = $warehouse_data["spare_id"];
+                        $warehouse_items_list[] = $temp;
+                    }
+                }
+
+            } catch (Exception $e) {
+                print_r($e->getMessage());
+                return;
             }
-
-            // applicable machinery equipments
-            $applicable = $this->findObjectByName($applicable_data["name"], $applicable_equipments);
-            if ($applicable) {
-                $item_data["applicable_equip_id"] = $applicable->id;
-            } else {
-                $m_save_id = $this->Applicable_equipments_model->ci_save($applicable_data);
-                $item_data["applicable_equip_id"] = $m_save_id;
-
-                $temp = new stdClass();
-                $temp->id = $m_save_id;
-                $temp->name = $applicable_data["name"];
-                $applicable_equipments[] = $temp;
-            }
-
-            // ship machinery equipments
-            $ship_item = $this->findObjectByName($ship_data["name"], $ship_equipments);
-            if ($ship_item) {
-                $item_data["ship_equip_id"] = $ship_item->id;
-            } else {
-                $m_save_id = $this->Ship_equipments_model->ci_save($ship_data);
-                $item_data["ship_equip_id"] = $m_save_id;
-
-                $temp = new stdClass();
-                $temp->id = $m_save_id;
-                $temp->name = $ship_data["name"];
-                $ship_equipments[] = $temp;
-            }
-
-            // units
-            $unit = $this->findObjectByName($unit_data["name"], $units);
-            if ($unit) {
-                $item_data["unit_code"] = $unit->code;
-            } else {
-                $m_save_id = $this->Units_model->ci_save($unit_data);
-                $item_data["unit_code"] = $unit_data["code"];
-
-                $temp = new stdClass();
-                $temp->id = $m_save_id;
-                $temp->name = $unit_data["name"];
-                $temp->code = $unit_data["code"];
-                $units[] = $temp;
-            }
-
-            $this->Spare_parts_model->ci_save($item_data);
         }
+    }
 
-        delete_file_from_directory($temp_file_path . $file_name); //delete temp file
+    function save_chemicals_from_excel_file($allowed_headers, $excel_file, $warehouse_id) {
+        $chemical_list = $this->Chemicals_model->get_all()->getResult();
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        $units = $this->Units_model->get_all()->getResult();
+        $warehouse_items_list = $this->Warehouse_chemicals_model->get_all_where(array("deleted" => 0, "warehouse_id" => $warehouse_id))->getResult();
 
-        echo json_encode(array('success' => true, 'message' => app_lang("record_saved")));
+        foreach ($excel_file as $key => $value) { //rows
+            if ($key === 0) { //first line is headers, continue for the next loop
+                continue;
+            }
+
+            $data_array = $this->_prepare_item_data($value, $allowed_headers);
+            $item_data = get_array_value($data_array, "item_data");
+            $manufacturer_data = get_array_value($data_array, "manufacturer_data");
+            $unit_data = get_array_value($data_array, "unit_data");
+            $warehouse_data = get_array_value($data_array, "warehouse_data");
+
+            //couldn't prepare valid data
+            if (!($item_data && count($item_data))) {
+                continue;
+            }
+
+            try {
+                // manufacturer
+                if (isset($manufacturer_data["name"]) && !empty($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
+                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
+                    if ($manufacturer) {
+                        $item_data["manufacturer_id"] = $manufacturer->id;
+                    } else {
+                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                        $item_data["manufacturer_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $manufacturer_data["name"];
+                        $manufacturers[] = $temp;
+                    }
+                }
+
+                // units
+                if (isset($unit_data["name"]) && !empty($unit_data["name"]) && $unit_data["name"] !== "---") {
+                    $unit = $this->findObjectByName($unit_data["name"], $units);
+                    if ($unit) {
+                        $item_data["unit_id"] = $unit->id;
+                    } else {
+                        $m_save_id = $this->Units_model->ci_save($unit_data);
+                        $item_data["unit_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $unit_data["name"];
+                        $units[] = $temp;
+                    }
+                }
+
+                // Chemicals
+                $chemical = $this->findObjectByName($item_data["name"], $chemical_list);
+                if ($chemical) {
+                    $warehouse_data["chemical_id"] = $chemical->id;
+                } else {
+                    $m_save_id = $this->Chemicals_model->ci_save($item_data);
+                    $warehouse_data["chemical_id"] = $m_save_id;
+
+                    $temp = new stdClass();
+                    $temp->id = $m_save_id;
+                    $temp->name = $item_data["name"];
+                    $chemical_list[] = $temp;
+                }
+
+                // Warehouse-chemicals
+                if (isset($warehouse_data["quantity"])) {
+                    $warehouse_data["warehouse_id"] = $warehouse_id;
+
+                    $row = $this->findObjectByChemicalId($warehouse_data["chemical_id"], $warehouse_items_list);
+                    if ($row) {
+                        $this->Warehouse_chemicals_model->ci_save($warehouse_data, $row->id);
+                    } else {
+                        $m_save_id = $this->Warehouse_chemicals_model->ci_save($warehouse_data);
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->chemical_id = $warehouse_data["chemical_id"];
+                        $warehouse_items_list[] = $temp;
+                    }
+                }
+
+            } catch (Exception $e) {
+                print_r($e->getMessage());
+                return;
+            }
+        }
+    }
+
+    function save_oils_from_excel_file($allowed_headers, $excel_file, $warehouse_id) {
+        $oil_list = $this->Oils_model->get_all()->getResult();
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        $units = $this->Units_model->get_all()->getResult();
+        $warehouse_items_list = $this->Warehouse_oils_model->get_all_where(array("deleted" => 0, "warehouse_id" => $warehouse_id))->getResult();
+
+        foreach ($excel_file as $key => $value) { //rows
+            if ($key === 0) { //first line is headers, continue for the next loop
+                continue;
+            }
+
+            $data_array = $this->_prepare_item_data($value, $allowed_headers);
+            $item_data = get_array_value($data_array, "item_data");
+            $manufacturer_data = get_array_value($data_array, "manufacturer_data");
+            $unit_data = get_array_value($data_array, "unit_data");
+            $warehouse_data = get_array_value($data_array, "warehouse_data");
+
+            //couldn't prepare valid data
+            if (!($item_data && count($item_data))) {
+                continue;
+            }
+
+            try {
+                // manufacturer
+                if (isset($manufacturer_data["name"]) && !empty($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
+                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
+                    if ($manufacturer) {
+                        $item_data["manufacturer_id"] = $manufacturer->id;
+                    } else {
+                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                        $item_data["manufacturer_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $manufacturer_data["name"];
+                        $manufacturers[] = $temp;
+                    }
+                }
+
+                // units
+                if (isset($unit_data["name"]) && !empty($unit_data["name"]) && $unit_data["name"] !== "---") {
+                    $unit = $this->findObjectByName($unit_data["name"], $units);
+                    if ($unit) {
+                        $item_data["unit_id"] = $unit->id;
+                    } else {
+                        $m_save_id = $this->Units_model->ci_save($unit_data);
+                        $item_data["unit_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $unit_data["name"];
+                        $units[] = $temp;
+                    }
+                }
+
+                // Oils
+                $oil = $this->findObjectByName($item_data["name"], $oil_list);
+                if ($oil) {
+                    $warehouse_data["oil_id"] = $oil->id;
+                } else {
+                    $m_save_id = $this->Oils_model->ci_save($item_data);
+                    $warehouse_data["oil_id"] = $m_save_id;
+
+                    $temp = new stdClass();
+                    $temp->id = $m_save_id;
+                    $temp->name = $item_data["name"];
+                    $oil_list[] = $temp;
+                }
+
+                // Warehouse-oils
+                if (isset($warehouse_data["quantity"])) {
+                    $warehouse_data["warehouse_id"] = $warehouse_id;
+
+                    $row = $this->findObjectByOilId($warehouse_data["oil_id"], $warehouse_items_list);
+                    if ($row) {
+                        $this->Warehouse_oils_model->ci_save($warehouse_data, $row->id);
+                    } else {
+                        $m_save_id = $this->Warehouse_oils_model->ci_save($warehouse_data);
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->oil_id = $warehouse_data["oil_id"];
+                        $warehouse_items_list[] = $temp;
+                    }
+                }
+
+            } catch (Exception $e) {
+                print_r($e->getMessage());
+                return;
+            }
+        }
+    }
+
+    function save_paints_from_excel_file($allowed_headers, $excel_file, $warehouse_id) {
+        $paint_list = $this->Paints_model->get_all()->getResult();
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        $units = $this->Units_model->get_all()->getResult();
+        $warehouse_items_list = $this->Warehouse_paints_model->get_all_where(array("deleted" => 0, "warehouse_id" => $warehouse_id))->getResult();
+
+        foreach ($excel_file as $key => $value) { //rows
+            if ($key === 0) { //first line is headers, continue for the next loop
+                continue;
+            }
+
+            $data_array = $this->_prepare_item_data($value, $allowed_headers);
+            $item_data = get_array_value($data_array, "item_data");
+            $manufacturer_data = get_array_value($data_array, "manufacturer_data");
+            $unit_data = get_array_value($data_array, "unit_data");
+            $warehouse_data = get_array_value($data_array, "warehouse_data");
+
+            //couldn't prepare valid data
+            if (!($item_data && count($item_data))) {
+                continue;
+            }
+
+            try {
+                // manufacturer
+                if (isset($manufacturer_data["name"]) && !empty($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
+                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
+                    if ($manufacturer) {
+                        $item_data["manufacturer_id"] = $manufacturer->id;
+                    } else {
+                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                        $item_data["manufacturer_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $manufacturer_data["name"];
+                        $manufacturers[] = $temp;
+                    }
+                }
+
+                // units
+                if (isset($unit_data["name"]) && !empty($unit_data["name"]) && $unit_data["name"] !== "---") {
+                    $unit = $this->findObjectByName($unit_data["name"], $units);
+                    if ($unit) {
+                        $item_data["unit_id"] = $unit->id;
+                    } else {
+                        $m_save_id = $this->Units_model->ci_save($unit_data);
+                        $item_data["unit_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $unit_data["name"];
+                        $units[] = $temp;
+                    }
+                }
+
+                // Paints
+                $paint = $this->findObjectByName($item_data["name"], $paint_list);
+                if ($paint) {
+                    $warehouse_data["paint_id"] = $paint->id;
+                } else {
+                    $m_save_id = $this->Paints_model->ci_save($item_data);
+                    $warehouse_data["paint_id"] = $m_save_id;
+
+                    $temp = new stdClass();
+                    $temp->id = $m_save_id;
+                    $temp->name = $item_data["name"];
+                    $paint_list[] = $temp;
+                }
+
+                // Warehouse-paintss
+                if (isset($warehouse_data["quantity"])) {
+                    $warehouse_data["warehouse_id"] = $warehouse_id;
+
+                    $row = $this->findObjectByPaintId($warehouse_data["paint_id"], $warehouse_items_list);
+                    if ($row) {
+                        $this->Warehouse_paints_model->ci_save($warehouse_data, $row->id);
+                    } else {
+                        $m_save_id = $this->Warehouse_paints_model->ci_save($warehouse_data);
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->paint_id = $warehouse_data["paint_id"];
+                        $warehouse_items_list[] = $temp;
+                    }
+                }
+
+            } catch (Exception $e) {
+                print_r($e->getMessage());
+                return;
+            }
+        }
     }
 
     private function findObjectByName($name, $arr) {
         $name = trim($name);
         foreach ($arr as $item) {
             if ($name == $item->name) {
+                return $item;
+            }
+        }
+        return false;
+    }
+
+    private function findObjectBySpareId($spare_id, $arr) {
+        foreach ($arr as $item) {
+            if ($spare_id == $item->spare_id) {
+                return $item;
+            }
+        }
+        return false;
+    }
+
+    private function findObjectByChemicalId($chemical_id, $arr) {
+        foreach ($arr as $item) {
+            if ($chemical_id == $item->chemical_id) {
+                return $item;
+            }
+        }
+        return false;
+    }
+
+    private function findObjectByOilId($oil_id, $arr) {
+        foreach ($arr as $item) {
+            if ($oil_id == $item->oil_id) {
+                return $item;
+            }
+        }
+        return false;
+    }
+
+    private function findObjectByPaintId($paint_id, $arr) {
+        foreach ($arr as $item) {
+            if ($paint_id == $item->paint_id) {
                 return $item;
             }
         }

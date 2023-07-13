@@ -807,7 +807,7 @@ class Security_Controller extends App_Controller {
 
         $dropdown = array("" => "-");
         foreach ($list as $item) {
-            $dropdown[$item->code] = $item->name;
+            $dropdown[$item->id] = $item->name;
         }
 
         return $dropdown;

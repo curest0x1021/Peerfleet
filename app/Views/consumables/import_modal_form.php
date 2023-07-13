@@ -1,4 +1,4 @@
-<?php echo form_open(get_uri("consumables/save_from_excel_file/" . $tab), array("id" => "import-items-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("consumables/save_from_excel_file"), array("id" => "import-items-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix import-items-modal-body">
     <div class="container-fluid">
         <div id="upload-area">
@@ -13,6 +13,7 @@
             ?>
         </div>
         <input type="hidden" name="file_name" id="import_file_name" value="" />
+        <input type="hidden" name="tab" value="<?php echo $tab; ?>" />
         <div id="preview-area"></div>
     </div>
 </div>
