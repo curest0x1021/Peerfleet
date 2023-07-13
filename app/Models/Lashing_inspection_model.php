@@ -32,7 +32,7 @@ class Lashing_inspection_model extends Crud_model {
                     JOIN (SELECT lashing_id, MAX(inspection_date) as inspection_date FROM $inspection_table GROUP BY lashing_id) b ON a.lashing_id = b.lashing_id AND a.inspection_date = b.inspection_date
                     ) c ON $lashing_table.id = c.lashing_id
                 WHERE $lashing_table.deleted = 0 $where
-                ORDER BY $lashing_table.id ASC";
+                ORDER BY c.inspection_date ASC, $lashing_table.id ASC";
 
         return $this->db->query($sql);
     }

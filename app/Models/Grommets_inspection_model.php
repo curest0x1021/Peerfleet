@@ -32,7 +32,7 @@ class Grommets_inspection_model extends Crud_model {
                     JOIN (SELECT grommet_id, MAX(inspection_date) as inspection_date FROM $inspection_table GROUP BY grommet_id) b ON a.grommet_id = b.grommet_id AND a.inspection_date = b.inspection_date
                     ) c ON $grommet_table.id = c.grommet_id
                 WHERE $grommet_table.deleted = 0 $where
-                ORDER BY $grommet_table.internal_id ASC";
+                ORDER BY c.inspection_date ASC, $grommet_table.internal_id ASC";
 
         return $this->db->query($sql);
     }

@@ -32,7 +32,7 @@ class Misc_inspection_model extends Crud_model {
                     JOIN (SELECT misc_id, MAX(inspection_date) as inspection_date FROM $inspection_table GROUP BY misc_id) b ON a.misc_id = b.misc_id AND a.inspection_date = b.inspection_date
                     ) c ON $misc_table.id = c.misc_id
                 WHERE $misc_table.deleted = 0 $where
-                ORDER BY $misc_table.internal_id ASC";
+                ORDER BY c.inspection_date ASC, $misc_table.internal_id ASC";
 
         return $this->db->query($sql);
     }

@@ -32,7 +32,7 @@ class Grommets extends Security_Controller
     private function _make_row($data) {
         $name = $data->name;
         if ($this->can_access_own_client($data->client_id)) {
-            $name = anchor(get_uri("grommets/view/" . $data->client_id), $data->name);
+            $name = anchor(get_uri("grommets/view/" . $data->client_id . "/" . $data->require_loadtests . "/" . $data->require_inspections), $data->name);
         }
 
         $total_items = "---";
@@ -58,11 +58,17 @@ class Grommets extends Security_Controller
     }
 
     /* load grommets details view */
-    function view($client_id) {
+    function view($client_id, $require_loadtests=0, $require_inspections=0) {
         if ($client_id) {
             $view_data['client_id'] = $client_id;
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
             $view_data['vessel'] = $this->Clients_model->get_one($client_id);
+
+            $warnning = array(
+                "loadtests" => $require_loadtests > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_loadtests . '</span>' : "",
+                "inspections" => $require_inspections > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_inspections . '</span>' : ""
+            );
+            $view_data['warnning'] = $warnning;
             return $this->template->rander("grommets/view", $view_data);
         } else {
             show_404();
@@ -345,12 +351,18 @@ class Grommets extends Security_Controller
     private function _loadtest_make_row($data, $client_id, $showInternalId = true) {
         $internal_id = "";
         if ($showInternalId) {
-            $internal_id = $data->internal_id;
+            $icon = "";
+            $reminder_date = get_loadtest_reminder_date();
+            if ($data->test_date && $data->test_date < $reminder_date) {
+                $icon = '<span style="display: inline-block; width: 8px; height: 8px; background-color: #d50000; border-radius: 4px; margin-right: 4px;"></span>';
+            }
+            $internal_id = $icon . $data->internal_id;
+
         }
         $action = "";
         if ($this->can_access_own_client($client_id)) {
             if ($showInternalId) {
-                $internal_id = anchor(get_uri("grommets/loadtest_detail_view/" . $data->grommet_id), $data->internal_id, array("class" => "edit", "title" => app_lang('grommets_wire_slings')));
+                $internal_id = anchor(get_uri("grommets/loadtest_detail_view/" . $data->grommet_id), $internal_id, array("class" => "edit", "title" => app_lang('grommets_wire_slings')));
                 $action = modal_anchor(get_uri("grommets/loadtest_modal_form/" . $data->grommet_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "add", "title" => app_lang('add_item'), "data-post-force_refresh" => true));
             } else {
                 $action = modal_anchor(get_uri("grommets/loadtest_modal_form/" . $data->grommet_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-force_refresh" => false))
@@ -497,12 +509,18 @@ class Grommets extends Security_Controller
     private function _inspection_make_row($data, $client_id, $showInternalId = true) {
         $internal_id = "";
         if ($showInternalId) {
-            $internal_id = $data->internal_id;
+            $icon = "";
+            $reminder_date = get_visual_inspection_reminder_date();
+            if ($data->inspection_date && $data->inspection_date < $reminder_date) {
+                $icon = '<span style="display: inline-block; width: 8px; height: 8px; background-color: #d50000; border-radius: 4px; margin-right: 4px;"></span>';
+            }
+            $internal_id = $icon . $data->internal_id;
+
         }
         $action = "";
         if ($this->can_access_own_client($client_id)) {
             if ($showInternalId) {
-                $internal_id = anchor(get_uri("grommets/inspection_detail_view/" . $data->grommet_id), $data->internal_id, array("class" => "edit", "title" => app_lang('grommets_wire_slings')));
+                $internal_id = anchor(get_uri("grommets/inspection_detail_view/" . $data->grommet_id), $internal_id, array("class" => "edit", "title" => app_lang('grommets_wire_slings')));
                 $action = modal_anchor(get_uri("grommets/inspection_modal_form/" . $data->grommet_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "add", "title" => app_lang('add_item'), "data-post-force_refresh" => true));
             } else {
                 $action = modal_anchor(get_uri("grommets/inspection_modal_form/" . $data->grommet_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-force_refresh" => false))
