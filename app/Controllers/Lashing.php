@@ -35,10 +35,20 @@ class Lashing extends Security_Controller
             $name = anchor(get_uri("lashing/view/" . $data->client_id), $data->name);
         }
 
+        $total_items = "---";
+        $require_inspections = "---";
+        if ($data->total_items > 0) {
+            $total_items = $data->total_items;
+        }
+        if ($data->require_inspections > 0) {
+            $require_inspections = '<span style="color: #df0000;">' . $data->require_inspections . '<span>';
+        }
+
         return array(
             $data->client_id,
             $name,
-            $data->total_items
+            $require_inspections,
+            $total_items,
         );
     }
 

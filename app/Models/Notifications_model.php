@@ -81,6 +81,10 @@ class Notifications_model extends Crud_model {
         $warehouse_item_id = get_array_value($options, "warehouse_item_id");
         $warehouse_tab = get_array_value($options, "warehouse_tab");
         $crane_id = get_array_value($options, "crane_id");
+        $grommet_id = get_array_value($options, "grommet_id");
+        $shackle_id = get_array_value($options, "shackle_id");
+        $misc_id = get_array_value($options, "misc_id");
+        $lashing_id = get_array_value($options, "lashing_id");
 
         $extra_data = array();
 
@@ -617,8 +621,12 @@ class Notifications_model extends Crud_model {
             "subscription_id" => $subscription_id ? $subscription_id : "",
             "warehouse_id" => $warehouse_id ? $warehouse_id : "",
             "warehouse_item_id" => $warehouse_item_id ? $warehouse_item_id : "",
-            "warehouse_tab" => $warehouse_tab ? $warehouse_tab : "spares",
-            "crane_id" => $crane_id ? $crane_id : ""
+            "warehouse_tab" => $warehouse_tab ? $warehouse_tab : "",
+            "crane_id" => $crane_id ? $crane_id : "",
+            "grommet_id" => $grommet_id ? $grommet_id : "",
+            "shackle_id" => $shackle_id ? $shackle_id : "",
+            "misc_id" => $misc_id ? $misc_id : "",
+            "lashing_id" => $lashing_id ? $lashing_id : ""
         );
 
         //get data from plugin by persing 'plugin_'

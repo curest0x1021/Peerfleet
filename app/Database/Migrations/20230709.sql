@@ -39,3 +39,5 @@ CREATE TABLE `pf_warehouse_paints` (`id` INT NOT NULL AUTO_INCREMENT , `warehous
 
 ALTER TABLE `pf_notifications` CHANGE `warehouse_spare_id` `warehouse_item_id` INT NOT NULL;
 ALTER TABLE `pf_notifications` ADD `warehouse_tab` VARCHAR(20) NOT NULL AFTER `warehouse_item_id`;
+ALTER TABLE `pf_notifications` ADD `grommet_id` INT NOT NULL AFTER `crane_id`, ADD `shackle_id` INT NOT NULL AFTER `grommet_id`, ADD `misc_id` INT NOT NULL AFTER `shackle_id`, ADD `lashing_id` INT NOT NULL AFTER `misc_id`;
+
