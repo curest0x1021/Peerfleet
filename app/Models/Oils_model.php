@@ -30,7 +30,7 @@ class Oils_model extends Crud_model {
         $sql = "SELECT $oil_table.*, $manufacturer_table.name as manufacturer, $units_table.name as unit
                 FROM $oil_table
                 LEFT JOIN $manufacturer_table ON $manufacturer_table.id = $oil_table.manufacturer_id
-                LEFT JOIN $units_table ON $units_table.code = $oil_table.unit_code
+                LEFT JOIN $units_table ON $units_table.id = $oil_table.unit_id
                 WHERE $oil_table.deleted = 0 $where
                 ORDER BY $oil_table.is_critical DESC, $oil_table.name ASC";
 

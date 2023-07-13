@@ -37,7 +37,7 @@ class Warehouse_spares_model extends Crud_model {
                     LEFT JOIN $manufacturer_table ON $manufacturer_table.id = $spare_table.manufacturer_id
                     LEFT JOIN $applicable_table ON $applicable_table.id = $spare_table.applicable_equip_id
                     LEFT JOIN $ship_table ON $ship_table.id = $spare_table.ship_equip_id
-                    LEFT JOIN $units_table ON $units_table.code = $spare_table.unit_code
+                    LEFT JOIN $units_table ON $units_table.id = $spare_table.unit_id
                 ) a ON a.id = $ws_table.spare_id
                 WHERE $ws_table.deleted = 0 $where";
 

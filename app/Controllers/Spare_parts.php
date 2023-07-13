@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use Exception;
 use stdClass;
 
 class Spare_parts extends Security_Controller {
@@ -77,23 +78,24 @@ class Spare_parts extends Security_Controller {
 
     private function _get_allowed_headers() {
         return array(
-            "is_critical",
-            "name",
-            "manufacturer",
-            "applicable_equipment",
-            "ship_equipment",
-            "unit_code",
-            "unit_name",
-            "part_number",
-            "part_description",
-            "article_number",
-            "drawing_number",
-            "hs_code"
+            [ "key" => "name", "required" => true ],
+            [ "key" => "manufacturer", "required" => true ],
+            [ "key" => "applicable_equipment", "required" => true ],
+            [ "key" => "ship_equipment", "required" => true ],
+            [ "key" => "unit", "required" => true ],
+            [ "key" => "part_description", "required" => false ],
+            [ "key" => "part_number", "required" => true ],
+            [ "key" => "article_number", "required" => true ],
+            [ "key" => "drawing_number", "required" => true ],
+            [ "key" => "hs_code", "required" => true ],
+            [ "key" => "is_critical", "required" => false ]
         );
     }
 
     private function _store_item_headers_position($headers_row = array()) {
-        $allowed_headers = $this->_get_allowed_headers();
+        $allowed_headers = array_map(function ($h) {
+            return $h["key"];
+        }, $this->_get_allowed_headers());
 
         //check if all headers are correct and on the right position
         $final_headers = array();
@@ -125,13 +127,17 @@ class Spare_parts extends Security_Controller {
 
     private function _row_data_validation_and_get_error_message($key, $data) {
         $allowed_headers = $this->_get_allowed_headers();
-        $header_value = get_array_value($allowed_headers, $key);
+        $header = null;
+        foreach ($allowed_headers as $el) {
+            if ($el["key"] == $key) {
+                $header = $el;
+                break;
+            }
+        }
 
-        //there has no date field on default import fields
-        //check on custom fields
-        if (((count($allowed_headers) - 1) < $key) && $data) {
+        if ($header && $header["required"]) {
             if (empty($data)) {
-                $error_message = sprintf(app_lang("import_data_empty_message"), app_lang($header_value));
+                $error_message = sprintf(app_lang("import_data_empty_message"), app_lang($header["key"]));
                 return $error_message;
             }
         }
@@ -157,9 +163,7 @@ class Spare_parts extends Security_Controller {
                 $applicable_data["name"] = $row_data_value;
             } else if ($header_key_value == "ship_equipment") {
                 $ship_data["name"] = $row_data_value;
-            } else if ($header_key_value == "unit_code") {
-                $unit_data["code"] = $row_data_value;
-            } else if ($header_key_value == 'unit_name') {
+            } else if ($header_key_value == "unit") {
                 $unit_data["name"] = $row_data_value;
             } else {
                 $item_data[$header_key_value] = $row_data_value;
@@ -309,7 +313,11 @@ class Spare_parts extends Security_Controller {
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
         $excel_file = $excel_file->getActiveSheet()->toArray();
 
-        $allowed_headers = $this->_get_allowed_headers();
+        $allowed_headers = array_map(function ($h) {
+            return $h["key"];
+        }, $this->_get_allowed_headers());
+
+        $spare_list = $this->Spare_parts_model->get_all()->getResult();
         $manufacturers = $this->Manufacturers_model->get_all()->getResult();
         $applicable_equipments = $this->Applicable_equipments_model->get_all()->getResult();
         $ship_equipments = $this->Ship_equipments_model->get_all()->getResult();
@@ -332,64 +340,85 @@ class Spare_parts extends Security_Controller {
                 continue;
             }
 
-            // manufacturer
-            $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
-            if ($manufacturer) {
-                $item_data["manufacturer_id"] = $manufacturer->id;
-            } else {
-                $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
-                $item_data["manufacturer_id"] = $m_save_id;
+            try {
+                // manufacturer
+                if (isset($manufacturer_data["name"]) && !empty($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
+                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
+                    if ($manufacturer) {
+                        $item_data["manufacturer_id"] = $manufacturer->id;
+                    } else {
+                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                        $item_data["manufacturer_id"] = $m_save_id;
 
-                $temp = new stdClass();
-                $temp->id = $m_save_id;
-                $temp->name = $manufacturer_data["name"];
-                $manufacturers[] = $temp;
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $manufacturer_data["name"];
+                        $manufacturers[] = $temp;
+                    }
+                }
+
+                // applicable machinery equipments
+                if (isset($applicable_data["name"]) && !empty($applicable_data["name"]) && $applicable_data["name"] !== "---") {
+                    $applicable = $this->findObjectByName($applicable_data["name"], $applicable_equipments);
+                    if ($applicable) {
+                        $item_data["applicable_equip_id"] = $applicable->id;
+                    } else {
+                        $m_save_id = $this->Applicable_equipments_model->ci_save($applicable_data);
+                        $item_data["applicable_equip_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $applicable_data["name"];
+                        $applicable_equipments[] = $temp;
+                    }
+                }
+
+                // ship machinery equipments
+                if (isset($ship_data["name"]) && !empty($ship_data["name"]) && $ship_data["name"] !== "---") {
+                    $ship_item = $this->findObjectByName($ship_data["name"], $ship_equipments);
+                    if ($ship_item) {
+                        $item_data["ship_equip_id"] = $ship_item->id;
+                    } else {
+                        $m_save_id = $this->Ship_equipments_model->ci_save($ship_data);
+                        $item_data["ship_equip_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $ship_data["name"];
+                        $ship_equipments[] = $temp;
+                    }
+                }
+
+                // units
+                if (isset($unit_data["name"]) && !empty($unit_data["name"]) && $unit_data["name"] !== "---") {
+                    $unit = $this->findObjectByName($unit_data["name"], $units);
+                    if ($unit) {
+                        $item_data["unit_id"] = $unit->id;
+                    } else {
+                        $m_save_id = $this->Units_model->ci_save($unit_data);
+                        $item_data["unit_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $unit_data["name"];
+                        $units[] = $temp;
+                    }
+                }
+
+                $spare = $this->findObjectByName($item_data["name"], $spare_list);
+                if (!$spare) {
+                    $m_save_id = $this->Spare_parts_model->ci_save($item_data);
+
+                    $temp = new stdClass();
+                    $temp->id = $m_save_id;
+                    $temp->name = $item_data["name"];
+                    $spare_list[] = $temp;
+                }
+
+            } catch (Exception $e) {
+                print_r($e->getMessage());
+                return;
             }
-
-            // applicable machinery equipments
-            $applicable = $this->findObjectByName($applicable_data["name"], $applicable_equipments);
-            if ($applicable) {
-                $item_data["applicable_equip_id"] = $applicable->id;
-            } else {
-                $m_save_id = $this->Applicable_equipments_model->ci_save($applicable_data);
-                $item_data["applicable_equip_id"] = $m_save_id;
-
-                $temp = new stdClass();
-                $temp->id = $m_save_id;
-                $temp->name = $applicable_data["name"];
-                $applicable_equipments[] = $temp;
-            }
-
-            // ship machinery equipments
-            $ship_item = $this->findObjectByName($ship_data["name"], $ship_equipments);
-            if ($ship_item) {
-                $item_data["ship_equip_id"] = $ship_item->id;
-            } else {
-                $m_save_id = $this->Ship_equipments_model->ci_save($ship_data);
-                $item_data["ship_equip_id"] = $m_save_id;
-
-                $temp = new stdClass();
-                $temp->id = $m_save_id;
-                $temp->name = $ship_data["name"];
-                $ship_equipments[] = $temp;
-            }
-
-            // units
-            $unit = $this->findObjectByName($unit_data["name"], $units);
-            if ($unit) {
-                $item_data["unit_code"] = $unit->code;
-            } else {
-                $m_save_id = $this->Units_model->ci_save($unit_data);
-                $item_data["unit_code"] = $unit_data["code"];
-
-                $temp = new stdClass();
-                $temp->id = $m_save_id;
-                $temp->name = $unit_data["name"];
-                $temp->code = $unit_data["code"];
-                $units[] = $temp;
-            }
-
-            $this->Spare_parts_model->ci_save($item_data);
         }
 
         delete_file_from_directory($temp_file_path . $file_name); //delete temp file
@@ -417,9 +446,8 @@ class Spare_parts extends Security_Controller {
             "manufacturer_id" => "required|numeric",
             "applicable_equip_id" => "required|numeric",
             "ship_equip_id" => "required|numeric",
-            "unit_code" => "required",
+            "unit_id" => "required",
             "part_number" => "required|max_length[30]",
-            "part_description" => "required",
             "article_number" => "required|max_length[30]",
             "drawing_number" => "required|max_length[30]",
             "hs_code" => "required|max_length[10]"
@@ -438,7 +466,7 @@ class Spare_parts extends Security_Controller {
             "manufacturer_id" => $this->request->getPost('manufacturer_id'),
             "applicable_equip_id" => $this->request->getPost('applicable_equip_id'),
             "ship_equip_id" => $this->request->getPost('ship_equip_id'),
-            "unit_code" => $this->request->getPost('unit_code'),
+            "unit_id" => $this->request->getPost('unit_id'),
             "part_number" => $this->request->getPost('part_number'),
             "part_description" => $this->request->getPost('part_description'),
             "article_number" => $this->request->getPost('article_number'),

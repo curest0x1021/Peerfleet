@@ -30,7 +30,7 @@ class Paints_model extends Crud_model {
         $sql = "SELECT $paints_table.*, $manufacturer_table.name as manufacturer, $units_table.name as unit
                 FROM $paints_table
                 LEFT JOIN $manufacturer_table ON $manufacturer_table.id = $paints_table.manufacturer_id
-                LEFT JOIN $units_table ON $units_table.code = $paints_table.unit_code
+                LEFT JOIN $units_table ON $units_table.id = $paints_table.unit_id
                 WHERE $paints_table.deleted = 0 $where
                 ORDER BY $paints_table.is_critical DESC, $paints_table.name ASC";
 
