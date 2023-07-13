@@ -3,7 +3,7 @@
         <h4><?php echo app_lang('oils_greases'); ?></h4>
         <?php if ($can_edit_items) { ?>
             <div class="title-button-group">
-                <!-- <?php echo modal_anchor(get_uri("warehouses/import_modal_form"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_items'), array("class" => "btn btn-default", "title" => app_lang('import_items'), "data-post-tabs" => "oils", "data-post-warehouse_id" => $warehouse_id, "data-post-client_id" => $client_id)); ?> -->
+                <?php echo modal_anchor(get_uri("warehouses/import_modal_form"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_items'), array("class" => "btn btn-default", "title" => app_lang('import_items'), "data-post-tab" => "oils", "data-post-warehouse_id" => $warehouse_id, "data-post-client_id" => $client_id)); ?>
                 <?php echo modal_anchor(get_uri("warehouses/oils_modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_item'), array("class" => "btn btn-default", "title" => app_lang('add_item'), "data-post-warehouse_id" => $warehouse_id, "data-post-client_id" => $client_id)); ?>
             </div>
         <?php } ?>
@@ -23,10 +23,10 @@
                 {title: "", "class": "text-center w25"},
                 {title: "<?php echo app_lang("critical") ?>", "class": "text-center w50"},
                 {title: "<?php echo app_lang("item") ?>", class: "w150"},
-                {title: "<?php echo app_lang("quantity") ?>", "class": "text-center w100"},
-                {title: "<?php echo app_lang("min_stocks") ?>", "class": "text-center w100"},
                 {title: "<?php echo app_lang("manufacturer") ?>"},
+                {title: "<?php echo app_lang("quantity") ?>", "class": "text-center w100"},
                 {title: "<?php echo app_lang("unit") ?>", class: "text-center w100"},
+                {title: "<?php echo app_lang("min_stocks") ?>", "class": "text-center w100"},
                 {title: "<?php echo app_lang("part_number") ?>", class: "text-center w100"},
                 {title: "<?php echo app_lang("article_number") ?>", class: "text-center w100"},
                 {title: "<?php echo app_lang("hs_code") ?>", class: "text-center w100"},

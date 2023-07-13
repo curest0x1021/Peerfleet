@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Controllers;
+
 use stdClass;
+use Exception;
 
 class Consumables extends Security_Controller {
 
@@ -59,7 +61,7 @@ class Consumables extends Security_Controller {
             "id" => "numeric",
             "name" => "required|max_length[40]",
             "manufacturer_id" => "required|numeric",
-            "unit_code" => "required",
+            "unit_id" => "required",
             "part_number" => "required|max_length[30]",
             "part_description" => "required",
             "article_number" => "required|max_length[30]",
@@ -71,7 +73,7 @@ class Consumables extends Security_Controller {
         $data = array(
             "name" => $this->request->getPost('name'),
             "manufacturer_id" => $this->request->getPost('manufacturer_id'),
-            "unit_code" => $this->request->getPost('unit_code'),
+            "unit_id" => $this->request->getPost('unit_id'),
             "part_number" => $this->request->getPost('part_number'),
             "part_description" => $this->request->getPost('part_description'),
             "article_number" => $this->request->getPost('article_number'),
@@ -202,7 +204,7 @@ class Consumables extends Security_Controller {
             "id" => "numeric",
             "name" => "required|max_length[40]",
             "manufacturer_id" => "required|numeric",
-            "unit_code" => "required",
+            "unit_id" => "required",
             "part_number" => "required|max_length[30]",
             "part_description" => "required",
             "article_number" => "required|max_length[30]",
@@ -214,7 +216,7 @@ class Consumables extends Security_Controller {
         $data = array(
             "name" => $this->request->getPost('name'),
             "manufacturer_id" => $this->request->getPost('manufacturer_id'),
-            "unit_code" => $this->request->getPost('unit_code'),
+            "unit_id" => $this->request->getPost('unit_id'),
             "part_number" => $this->request->getPost('part_number'),
             "part_description" => $this->request->getPost('part_description'),
             "article_number" => $this->request->getPost('article_number'),
@@ -345,7 +347,7 @@ class Consumables extends Security_Controller {
             "id" => "numeric",
             "name" => "required|max_length[40]",
             "manufacturer_id" => "required|numeric",
-            "unit_code" => "required",
+            "unit_id" => "required",
             "part_number" => "required|max_length[30]",
             "part_description" => "required",
             "article_number" => "required|max_length[30]",
@@ -357,7 +359,7 @@ class Consumables extends Security_Controller {
         $data = array(
             "name" => $this->request->getPost('name'),
             "manufacturer_id" => $this->request->getPost('manufacturer_id'),
-            "unit_code" => $this->request->getPost('unit_code'),
+            "unit_id" => $this->request->getPost('unit_id'),
             "part_number" => $this->request->getPost('part_number'),
             "part_description" => $this->request->getPost('part_description'),
             "article_number" => $this->request->getPost('article_number'),
@@ -493,20 +495,21 @@ class Consumables extends Security_Controller {
 
     private function _get_allowed_headers() {
         return array(
-            "is_critical",
-            "name",
-            "manufacturer",
-            "unit_code",
-            "unit_name",
-            "part_number",
-            "part_description",
-            "article_number",
-            "hs_code"
+            [ "key" => "name", "required" => true ],
+            [ "key" => "manufacturer", "required" => true ],
+            [ "key" => "unit", "required" => true ],
+            [ "key" => "part_description", "required" => false ],
+            [ "key" => "part_number", "required" => true ],
+            [ "key" => "article_number", "required" => true ],
+            [ "key" => "hs_code", "required" => true ],
+            [ "key" => "is_critical", "required" => false ]
         );
     }
 
     private function _store_item_headers_position($headers_row = array()) {
-        $allowed_headers = $this->_get_allowed_headers();
+        $allowed_headers = array_map(function ($h) {
+            return $h["key"];
+        }, $this->_get_allowed_headers());
 
         //check if all headers are correct and on the right position
         $final_headers = array();
@@ -538,13 +541,17 @@ class Consumables extends Security_Controller {
 
     private function _row_data_validation_and_get_error_message($key, $data) {
         $allowed_headers = $this->_get_allowed_headers();
-        $header_value = get_array_value($allowed_headers, $key);
+        $header = null;
+        foreach ($allowed_headers as $el) {
+            if ($el["key"] == $key) {
+                $header = $el;
+                break;
+            }
+        }
 
-        //there has no date field on default import fields
-        //check on custom fields
-        if (((count($allowed_headers) - 1) < $key) && $data) {
+        if ($header && $header["required"]) {
             if (empty($data)) {
-                $error_message = sprintf(app_lang("import_data_empty_message"), app_lang($header_value));
+                $error_message = sprintf(app_lang("import_data_empty_message"), app_lang($header["key"]));
                 return $error_message;
             }
         }
@@ -564,9 +571,7 @@ class Consumables extends Security_Controller {
             $header_key_value = get_array_value($allowed_headers, $row_data_key);
             if ($header_key_value == "manufacturer") {
                 $manufacturer_data["name"] = $row_data_value;
-            } else if ($header_key_value == "unit_code") {
-                $unit_data["code"] = $row_data_value;
-            } else if ($header_key_value == 'unit_name') {
+            } else if ($header_key_value == 'unit') {
                 $unit_data["name"] = $row_data_value;
             } else {
                 $item_data[$header_key_value] = $row_data_value;
@@ -698,7 +703,7 @@ class Consumables extends Security_Controller {
         echo json_encode(array("success" => true, 'table_data' => $table_data, 'got_error' => ($got_error_header || $got_error_table_data) ? true : false));
     }
 
-    function save_from_excel_file($tab) {
+    function save_from_excel_file() {
         if (!$this->can_edit_items()) {
             app_redirect("forbidden");
         }
@@ -707,6 +712,7 @@ class Consumables extends Security_Controller {
             echo json_encode(array('success' => false, 'message' => app_lang('error_occurred')));
         }
 
+        $tab = $this->request->getPost("tab");
         $file_name = $this->request->getPost('file_name');
         require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
 
@@ -714,7 +720,25 @@ class Consumables extends Security_Controller {
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
         $excel_file = $excel_file->getActiveSheet()->toArray();
 
-        $allowed_headers = $this->_get_allowed_headers();
+        $allowed_headers = array_map(function ($h) {
+            return $h["key"];
+        }, $this->_get_allowed_headers());
+
+        if ($tab == "chemicals") {
+            $this->save_chemicals_from_excel_file($allowed_headers, $excel_file);
+        } else if ($tab == "oils") {
+            $this->save_oils_from_excel_file($allowed_headers, $excel_file);
+        } else if ($tab == "paints") {
+            $this->save_paints_from_excel_file($allowed_headers, $excel_file);
+        }
+
+        delete_file_from_directory($temp_file_path . $file_name); //delete temp file
+
+        echo json_encode(array('success' => true, 'message' => app_lang("record_saved")));
+    }
+
+    function save_chemicals_from_excel_file($allowed_headers, $excel_file) {
+        $chemical_list = $this->Chemicals_model->get_all()->getResult();
         $manufacturers = $this->Manufacturers_model->get_all()->getResult();
         $units = $this->Units_model->get_all()->getResult();
 
@@ -733,47 +757,197 @@ class Consumables extends Security_Controller {
                 continue;
             }
 
-            // manufacturer
-            $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
-            if ($manufacturer) {
-                $item_data["manufacturer_id"] = $manufacturer->id;
-            } else {
-                $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
-                $item_data["manufacturer_id"] = $m_save_id;
+            try {
+                // manufacturer
+                if (isset($manufacturer_data["name"]) && !empty($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
+                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
+                    if ($manufacturer) {
+                        $item_data["manufacturer_id"] = $manufacturer->id;
+                    } else {
+                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                        $item_data["manufacturer_id"] = $m_save_id;
 
-                $temp = new stdClass();
-                $temp->id = $m_save_id;
-                $temp->name = $manufacturer_data["name"];
-                $manufacturers[] = $temp;
-            }
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $manufacturer_data["name"];
+                        $manufacturers[] = $temp;
+                    }
+                }
 
-            // units
-            $unit = $this->findObjectByName($unit_data["name"], $units);
-            if ($unit) {
-                $item_data["unit_code"] = $unit->code;
-            } else {
-                $m_save_id = $this->Units_model->ci_save($unit_data);
-                $item_data["unit_code"] = $unit_data["code"];
+                // units
+                if (isset($unit_data["name"]) && !empty($unit_data["name"]) && $unit_data["name"] !== "---") {
+                    $unit = $this->findObjectByName($unit_data["name"], $units);
+                    if ($unit) {
+                        $item_data["unit_id"] = $unit->id;
+                    } else {
+                        $m_save_id = $this->Units_model->ci_save($unit_data);
+                        $item_data["unit_id"] = $m_save_id;
 
-                $temp = new stdClass();
-                $temp->id = $m_save_id;
-                $temp->name = $unit_data["name"];
-                $temp->code = $unit_data["code"];
-                $units[] = $temp;
-            }
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $unit_data["name"];
+                        $units[] = $temp;
+                    }
+                }
 
-            if ($tab == "chemicals") {
-                $this->Chemicals_model->ci_save($item_data);
-            } else if ($tab == "oils") {
-                $this->Oils_model->ci_save($item_data);
-            } else if ($tab == "paints") {
-                $this->Paints_model->ci_save($item_data);
+                // Chemicals
+                $chemical = $this->findObjectByName($item_data["name"], $chemical_list);
+                if (!$chemical) {
+                    $m_save_id = $this->Chemicals_model->ci_save($item_data);
+
+                    $temp = new stdClass();
+                    $temp->id = $m_save_id;
+                    $temp->name = $item_data["name"];
+                    $chemical_list[] = $temp;
+                }
+
+            } catch (Exception $e) {
+                print_r($e->getMessage());
+                return;
             }
         }
+    }
 
-        delete_file_from_directory($temp_file_path . $file_name); //delete temp file
+    function save_oils_from_excel_file($allowed_headers, $excel_file) {
+        $oil_list = $this->Oils_model->get_all()->getResult();
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        $units = $this->Units_model->get_all()->getResult();
 
-        echo json_encode(array('success' => true, 'message' => app_lang("record_saved")));
+        foreach ($excel_file as $key => $value) { //rows
+            if ($key === 0) { //first line is headers, continue for the next loop
+                continue;
+            }
+
+            $data_array = $this->_prepare_item_data($value, $allowed_headers);
+            $item_data = get_array_value($data_array, "item_data");
+            $manufacturer_data = get_array_value($data_array, "manufacturer_data");
+            $unit_data = get_array_value($data_array, "unit_data");
+
+            //couldn't prepare valid data
+            if (!($item_data && count($item_data))) {
+                continue;
+            }
+
+            try {
+                // manufacturer
+                if (isset($manufacturer_data["name"]) && !empty($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
+                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
+                    if ($manufacturer) {
+                        $item_data["manufacturer_id"] = $manufacturer->id;
+                    } else {
+                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                        $item_data["manufacturer_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $manufacturer_data["name"];
+                        $manufacturers[] = $temp;
+                    }
+                }
+
+                // units
+                if (isset($unit_data["name"]) && !empty($unit_data["name"]) && $unit_data["name"] !== "---") {
+                    $unit = $this->findObjectByName($unit_data["name"], $units);
+                    if ($unit) {
+                        $item_data["unit_id"] = $unit->id;
+                    } else {
+                        $m_save_id = $this->Units_model->ci_save($unit_data);
+                        $item_data["unit_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $unit_data["name"];
+                        $units[] = $temp;
+                    }
+                }
+
+                // Oils
+                $oil = $this->findObjectByName($item_data["name"], $oil_list);
+                if (!$oil) {
+                    $m_save_id = $this->Oils_model->ci_save($item_data);
+
+                    $temp = new stdClass();
+                    $temp->id = $m_save_id;
+                    $temp->name = $item_data["name"];
+                    $oil_list[] = $temp;
+                }
+
+            } catch (Exception $e) {
+                print_r($e->getMessage());
+                return;
+            }
+        }
+    }
+
+    function save_paints_from_excel_file($allowed_headers, $excel_file) {
+        $paint_list = $this->Paints_model->get_all()->getResult();
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        $units = $this->Units_model->get_all()->getResult();
+
+        foreach ($excel_file as $key => $value) { //rows
+            if ($key === 0) { //first line is headers, continue for the next loop
+                continue;
+            }
+
+            $data_array = $this->_prepare_item_data($value, $allowed_headers);
+            $item_data = get_array_value($data_array, "item_data");
+            $manufacturer_data = get_array_value($data_array, "manufacturer_data");
+            $unit_data = get_array_value($data_array, "unit_data");
+
+            //couldn't prepare valid data
+            if (!($item_data && count($item_data))) {
+                continue;
+            }
+
+            try {
+                // manufacturer
+                if (isset($manufacturer_data["name"]) && !empty($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
+                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
+                    if ($manufacturer) {
+                        $item_data["manufacturer_id"] = $manufacturer->id;
+                    } else {
+                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                        $item_data["manufacturer_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $manufacturer_data["name"];
+                        $manufacturers[] = $temp;
+                    }
+                }
+
+                // units
+                if (isset($unit_data["name"]) && !empty($unit_data["name"]) && $unit_data["name"] !== "---") {
+                    $unit = $this->findObjectByName($unit_data["name"], $units);
+                    if ($unit) {
+                        $item_data["unit_id"] = $unit->id;
+                    } else {
+                        $m_save_id = $this->Units_model->ci_save($unit_data);
+                        $item_data["unit_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $unit_data["name"];
+                        $units[] = $temp;
+                    }
+                }
+
+                // Paints
+                $paint = $this->findObjectByName($item_data["name"], $paint_list);
+                if (!$paint) {
+                    $m_save_id = $this->Paints_model->ci_save($item_data);
+
+                    $temp = new stdClass();
+                    $temp->id = $m_save_id;
+                    $temp->name = $item_data["name"];
+                    $paint_list[] = $temp;
+                }
+
+            } catch (Exception $e) {
+                print_r($e->getMessage());
+                return;
+            }
+        }
     }
 
     private function findObjectByName($name, $arr) {
