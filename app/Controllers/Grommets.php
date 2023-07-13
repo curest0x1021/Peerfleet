@@ -1,0 +1,1130 @@
+<?php
+
+namespace App\Controllers;
+
+use Exception;
+use stdClass;
+
+class Grommets extends Security_Controller
+{
+
+    function __construct() {
+        parent::__construct();
+    }
+
+    function index() {
+        return $this->template->rander("grommets/index");
+    }
+
+    function list_data() {
+        $list_data = $this->Grommets_model->get_details(array())->getResult();
+
+        $result_data = array();
+        foreach ($list_data as $data) {
+            $result_data[] = $this->_make_row($data);
+        }
+
+        $result["data"] = $result_data;
+
+        echo json_encode($result);
+    }
+
+    private function _make_row($data) {
+        $name = $data->name;
+        if ($this->can_access_own_client($data->client_id)) {
+            $name = anchor(get_uri("grommets/view/" . $data->client_id), $data->name);
+        }
+
+        $total_items = "---";
+        $require_loadtests = "---";
+        $require_inspections = "---";
+        if ($data->total_items > 0) {
+            $total_items = $data->total_items;
+        }
+        if ($data->require_loadtests > 0) {
+            $require_loadtests = '<span style="color: #df0000;">' . $data->require_loadtests . '<span>';
+        }
+        if ($data->require_inspections > 0) {
+            $require_inspections = '<span style="color: #df0000;">' . $data->require_inspections . '<span>';
+        }
+
+        return array(
+            $data->client_id,
+            $name,
+            $require_loadtests,
+            $require_inspections,
+            $total_items,
+        );
+    }
+
+    /* load grommets details view */
+    function view($client_id) {
+        if ($client_id) {
+            $view_data['client_id'] = $client_id;
+            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
+            $view_data['vessel'] = $this->Clients_model->get_one($client_id);
+
+            $info = $this->Grommets_model->get_warnning_info($client_id);
+            $require_loadtests = ($info && $info->require_loadtests > 0) ? $info->require_loadtests : 0;
+            $require_inspections = ($info && $info->require_inspections > 0) ? $info->require_inspections : 0;
+            $warnning = array(
+                "loadtests" => $require_loadtests > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_loadtests . '</span>' : "",
+                "inspections" => $require_inspections > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_inspections . '</span>' : ""
+            );
+            $view_data['warnning'] = $warnning;
+            return $this->template->rander("grommets/view", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    // Load grommets info tab
+    function info_tab($client_id) {
+        if ($client_id) {
+            $view_data['client_id'] = $client_id;
+            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
+            return $this->template->view("grommets/info/index", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    function save_info() {
+        $id = $this->request->getPost("id");
+        $client_id = $this->request->getPost("client_id");
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "client_id" => "required",
+            "item_description" => "required",
+            "internal_id" => "required",
+            "wll" => "required",
+            "wl" => "required",
+            "dia" => "required",
+            "qty" => "required",
+            "bl" => "required",
+            "icc_id" => "required",
+            "certificate_number" => "required",
+            "certificate_type_id" => "required",
+            "manufacturer_id" => "required",
+            "tag_marking" => "required",
+            "supplied_date" => "required",
+            "supplied_place" => "required",
+            "lifts" => "required"
+        ));
+
+        $main_id = $this->request->getPost("main_id");
+        $main_data = array(
+            "item_description" => $this->request->getPost("item_description"),
+            "wll" => $this->request->getPost("wll"),
+            "wl" => $this->request->getPost("wl"),
+            "dia" => $this->request->getPost("dia"),
+            "bl" => $this->request->getPost("bl")
+        );
+        if (!$main_id) {
+            $main_row = $this->Grommets_main_model->get_all_where(array("item_description" => $main_data["item_description"]))->getRow();
+            if ($main_row) {
+                $main_id = $main_row->id;
+            }
+        }
+        $m_save_id = $this->Grommets_main_model->ci_save($main_data, $main_id);
+
+        $data = array(
+            "internal_id" => $this->request->getPost("internal_id"),
+            "client_id" => $this->request->getPost("client_id"),
+            "main_id" => $m_save_id,
+            "qty" => $this->request->getPost("qty"),
+            "icc_id" => $this->request->getPost("icc_id"),
+            "certificate_number" => $this->request->getPost("certificate_number"),
+            "certificate_type_id" => $this->request->getPost("certificate_type_id"),
+            "tag_marking" => $this->request->getPost("tag_marking"),
+            "manufacturer_id" => $this->request->getPost("manufacturer_id"),
+            "supplied_date" => $this->request->getPost("supplied_date"),
+            "supplied_place" => $this->request->getPost("supplied_place"),
+            "lifts" => $this->request->getPost("lifts"),
+            "date_of_discharged" => $this->request->getPost("date_of_discharged"),
+        );
+
+        $save_id = $this->Grommets_model->ci_save($data, $id);
+        if ($save_id) {
+            echo json_encode(array("success" => true, "data" => $this->_info_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+
+    }
+
+    function delete_info() {
+        $this->validate_submitted_data(array(
+            "id" => "required|numeric"
+        ));
+
+        $id = $this->request->getPost('id');
+
+        if ($this->Grommets_model->delete($id)) {
+            echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
+        }
+    }
+
+    function info_list_data($client_id) {
+        $list_data = $this->Grommets_model->get_grommets_details(array("client_id" => $client_id))->getResult();
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_info_make_row($data);
+        }
+        echo json_encode(array("data" => $result));
+    }
+
+    private function _info_row_data($id) {
+        $row = $this->Grommets_model->get_grommets_details(array("id" => $id))->getRow();
+        return $this->_info_make_row($row);
+    }
+
+    private function _info_make_row($data) {
+        $internal_id = $data->internal_id;
+        $action = "";
+        if ($this->can_access_own_client($data->client_id)) {
+            $internal_id = modal_anchor(get_uri("grommets/info_detail_view/" . $data->id), $data->internal_id, array("class" => "edit", "title" => app_lang('grommets_wire_slings'), "data-post-id" => $data->id));
+            $action = modal_anchor(get_uri("grommets/info_modal_form/" . $data->client_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("grommets/delete_info"), "data-action" => "delete-confirmation"));
+        }
+
+        $loadtest_passed = '';
+        if ($data->loadtest_passed) {
+            $loadtest_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;"></div>';
+        } else {
+            $loadtest_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+        }
+
+        $inspection_passed = '';
+        if ($data->inspection_passed) {
+            $inspection_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;"></div>';
+        } else {
+            $inspection_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+        }
+
+        return array(
+            $data->id,
+            $internal_id,
+            $data->item_description,
+            $data->wll,
+            $data->wl,
+            $data->dia,
+            $data->bl,
+            $data->qty,
+            $data->icc,
+            $data->manufacturer,
+            $data->supplied_date,
+            $data->lifts,
+            $loadtest_passed,
+            $inspection_passed,
+            $action
+        );
+    }
+
+    function info_detail_view($id) {
+        $model_info = $this->Grommets_model->get_grommets_details(array("id" => $id))->getRow();
+        if (!$this->can_access_own_client($model_info->client_id)) {
+            app_redirect("forbidden");
+        }
+        $view_data["model_info"] = $model_info;
+        $view_data["label_column"] = "col-md-3";
+        $view_data["field_column"] = "col-md-9";
+        return $this->template->view("grommets/info/detail_view", $view_data);
+    }
+
+    function info_modal_form($client_id) {
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+        $id = $this->request->getPost("id");
+        $view_data["client_id"] = $client_id;
+        $model_info = $this->Grommets_model->get_one($id);
+        $main_info = $this->Grommets_main_model->get_one($model_info->main_id);
+        $view_data["model_info"] = $model_info;
+        $view_data["main_info"] = $main_info;
+        $view_data["label_column"] = "col-md-4";
+        $view_data["field_column"] = "col-md-8";
+        $view_data["manufacturers_dropdown"] = $this->get_manufacturers_dropdown();
+        $view_data["icc_dropdown"] = $this->get_identified_color_codes_dropdown();
+        $view_data["certificate_types_dropdown"] = $this->get_certificate_types_dropdown();
+
+        return $this->template->view("grommets/info/modal_form", $view_data);
+    }
+
+    function get_internal_id() {
+        $client_id = $this->request->getPost("client_id");
+        $wll = $this->request->getPost("wll");
+        $wl = $this->request->getPost("wl");
+        $internal_id = $this->Grommets_model->get_internal_id($client_id, $wll, $wl);
+
+        echo json_encode(array("internal_id" => $internal_id));
+    }
+
+
+    // Load grommets loadtest tab
+    function loadtest_tab($client_id) {
+        if ($client_id) {
+            $view_data['client_id'] = $client_id;
+            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
+            return $this->template->view("grommets/loadtest/index", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    function save_loadtest() {
+        $client_id = $this->request->getPost("client_id");
+        $id = $this->request->getPost("id");
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "grommet_id" => "required",
+            "test_date" => "required",
+            "tested_by" => "required"
+        ));
+
+        $data = array(
+            "grommet_id" => $this->request->getPost("grommet_id"),
+            "test_date" => $this->request->getPost("test_date"),
+            "tested_by" => $this->request->getPost("tested_by"),
+            "location" => $this->request->getPost("location"),
+            "passed" => $this->request->getPost("passed"),
+            "remarks" => $this->request->getPost("remarks")
+        );
+
+        if (empty($id) && !$this->Grommets_loadtest_model->check_valid_loadtest($data["grommet_id"], $data["test_date"])) {
+            echo json_encode(array("success" => false, 'message' => app_lang('loadtest_date_invalid')));
+        } else {
+            $save_id = $this->Grommets_loadtest_model->ci_save($data, $id);
+            if ($save_id) {
+                echo json_encode(array("success" => true, "data" => $this->_loadtest_row_data($save_id, $client_id), "id" => $save_id, 'message' => app_lang('record_saved')));
+            } else {
+                echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+            }
+        }
+
+    }
+
+    function delete_loadtest() {
+        $this->validate_submitted_data(array(
+            "id" => "required|numeric"
+        ));
+
+        $id = $this->request->getPost('id');
+
+        if ($this->Grommets_loadtest_model->delete($id)) {
+            echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
+        }
+    }
+
+    function loadtest_list_data($client_id) {
+        $list_data = $this->Grommets_loadtest_model->get_details(array("client_id" => $client_id))->getResult();
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_loadtest_make_row($data, $client_id);
+        }
+        echo json_encode(array("data" => $result));
+    }
+
+    function loadtest_detail_list_data($client_id, $grommet_id) {
+        $list_data = $this->Grommets_loadtest_model->get_history(array("grommet_id" => $grommet_id))->getResult();
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_loadtest_make_row($data, $client_id, false);
+        }
+        echo json_encode(array("data" => $result));
+    }
+
+    private function _loadtest_row_data($id, $client_id) {
+        $data = $this->Grommets_loadtest_model->get_one($id);
+        return $this->_loadtest_make_row($data, $client_id, false);
+    }
+
+    private function _loadtest_make_row($data, $client_id, $showInternalId = true) {
+        $internal_id = "";
+        if ($showInternalId) {
+            $icon = "";
+            $reminder_date = get_loadtest_reminder_date();
+            if ($data->test_date && $data->test_date < $reminder_date) {
+                $icon = '<span style="display: inline-block; width: 8px; height: 8px; background-color: #d50000; border-radius: 4px; margin-right: 4px;"></span>';
+            }
+            $internal_id = $icon . $data->internal_id;
+
+        }
+        $action = "";
+        if ($this->can_access_own_client($client_id)) {
+            if ($showInternalId) {
+                $internal_id = anchor(get_uri("grommets/loadtest_detail_view/" . $data->grommet_id), $internal_id, array("class" => "edit", "title" => app_lang('grommets_wire_slings')));
+                $action = modal_anchor(get_uri("grommets/loadtest_modal_form/" . $data->grommet_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "add", "title" => app_lang('add_item'), "data-post-force_refresh" => true));
+            } else {
+                $action = modal_anchor(get_uri("grommets/loadtest_modal_form/" . $data->grommet_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-force_refresh" => false))
+                    . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("grommets/delete_loadtest"), "data-action" => "delete-confirmation"));
+            }
+        }
+
+        $passed = '';
+        if ($data->test_date) {
+            if ($data->passed) {
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;"></div>';
+            } else {
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+            }
+        }
+
+        $next_test_date = "";
+        if ($data->test_date && $showInternalId) {
+            $next_test_date = date('Y-m-d', strtotime($data->test_date. ' + 5 years'));
+        }
+
+        return array(
+            $data->id,
+            $internal_id,
+            $data->test_date,
+            $data->tested_by,
+            $data->location,
+            $passed,
+            $data->remarks,
+            $next_test_date,
+            $action
+        );
+    }
+
+    function loadtest_modal_form($grommet_id) {
+        $grommet = $this->Grommets_model->get_one($grommet_id);
+        if (!$this->can_access_own_client($grommet->client_id)) {
+            app_redirect("forbidden");
+        }
+        $view_data["model_info"] = $this->Grommets_loadtest_model->get_one($this->request->getPost("id"));
+        $view_data["grommet"] = $grommet;
+        $view_data["force_refresh"] = $this->request->getPost("force_refresh");
+        $view_data["label_column"] = "col-md-3";
+        $view_data["field_column"] = "col-md-9";
+
+        return $this->template->view("grommets/loadtest/modal_form", $view_data);
+    }
+
+    function loadtest_detail_view($grommet_id) {
+        $grommet = $this->Grommets_model->get_one($grommet_id);
+        if (!$this->can_access_own_client($grommet->client_id)) {
+            app_redirect("forbidden");
+        }
+        $view_data["grommet"] = $grommet;
+
+        return $this->template->rander("grommets/loadtest/detail_view", $view_data);
+    }
+
+
+    // Load grommets loadtest tab
+    function inspection_tab($client_id) {
+        if ($client_id) {
+            $view_data['client_id'] = $client_id;
+            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
+            return $this->template->view("grommets/inspection/index", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    function save_inspection() {
+        $client_id = $this->request->getPost("client_id");
+        $id = $this->request->getPost("id");
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "grommet_id" => "required",
+            "inspection_date" => "required",
+            "inspected_by" => "required"
+        ));
+
+        $data = array(
+            "grommet_id" => $this->request->getPost("grommet_id"),
+            "inspection_date" => $this->request->getPost("inspection_date"),
+            "inspected_by" => $this->request->getPost("inspected_by"),
+            "location" => $this->request->getPost("location"),
+            "passed" => $this->request->getPost("passed"),
+            "remarks" => $this->request->getPost("remarks")
+        );
+
+        if (empty($id) && !$this->Grommets_inspection_model->check_valid_inspection($data["grommet_id"], $data["inspection_date"])) {
+            echo json_encode(array("success" => false, 'message' => app_lang('inspection_date_invalid')));
+        } else {
+            $save_id = $this->Grommets_inspection_model->ci_save($data, $id);
+            if ($save_id) {
+                echo json_encode(array("success" => true, "data" => $this->_inspection_row_data($save_id, $client_id), "id" => $save_id, 'message' => app_lang('record_saved')));
+            } else {
+                echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+            }
+        }
+
+    }
+
+    function delete_inspection() {
+        $this->validate_submitted_data(array(
+            "id" => "required|numeric"
+        ));
+
+        $id = $this->request->getPost('id');
+
+        if ($this->Grommets_inspection_model->delete($id)) {
+            echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
+        }
+    }
+
+    function inspection_list_data($client_id) {
+        $list_data = $this->Grommets_inspection_model->get_details(array("client_id" => $client_id))->getResult();
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_inspection_make_row($data, $client_id);
+        }
+        echo json_encode(array("data" => $result));
+    }
+
+    function inspection_detail_list_data($client_id, $grommet_id) {
+        $list_data = $this->Grommets_inspection_model->get_history(array("grommet_id" => $grommet_id))->getResult();
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_inspection_make_row($data, $client_id, false);
+        }
+        echo json_encode(array("data" => $result));
+    }
+
+    private function _inspection_row_data($id, $client_id) {
+        $data = $this->Grommets_inspection_model->get_one($id);
+        return $this->_inspection_make_row($data, $client_id, false);
+    }
+
+    private function _inspection_make_row($data, $client_id, $showInternalId = true) {
+        $internal_id = "";
+        if ($showInternalId) {
+            $icon = "";
+            $reminder_date = get_visual_inspection_reminder_date();
+            if ($data->inspection_date && $data->inspection_date < $reminder_date) {
+                $icon = '<span style="display: inline-block; width: 8px; height: 8px; background-color: #d50000; border-radius: 4px; margin-right: 4px;"></span>';
+            }
+            $internal_id = $icon . $data->internal_id;
+
+        }
+        $action = "";
+        if ($this->can_access_own_client($client_id)) {
+            if ($showInternalId) {
+                $internal_id = anchor(get_uri("grommets/inspection_detail_view/" . $data->grommet_id), $internal_id, array("class" => "edit", "title" => app_lang('grommets_wire_slings')));
+                $action = modal_anchor(get_uri("grommets/inspection_modal_form/" . $data->grommet_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "add", "title" => app_lang('add_item'), "data-post-force_refresh" => true));
+            } else {
+                $action = modal_anchor(get_uri("grommets/inspection_modal_form/" . $data->grommet_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-force_refresh" => false))
+                    . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("grommets/delete_inspection"), "data-action" => "delete-confirmation"));
+            }
+        }
+
+        $passed = '';
+        if ($data->inspection_date) {
+            if ($data->passed) {
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;"></div>';
+            } else {
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+            }
+        }
+
+        $next_inspection_date = "";
+        if ($data->inspection_date && $showInternalId) {
+            $next_inspection_date = date('Y-m-d', strtotime($data->inspection_date. ' + 1 years'));
+        }
+
+        return array(
+            $data->id,
+            $internal_id,
+            $data->inspection_date,
+            $data->inspected_by,
+            $data->location,
+            $passed,
+            $data->remarks,
+            $next_inspection_date,
+            $action
+        );
+    }
+
+    function inspection_modal_form($grommet_id) {
+        $grommet = $this->Grommets_model->get_one($grommet_id);
+        if (!$this->can_access_own_client($grommet->client_id)) {
+            app_redirect("forbidden");
+        }
+        $view_data["model_info"] = $this->Grommets_inspection_model->get_one($this->request->getPost("id"));
+        $view_data["grommet"] = $grommet;
+        $view_data["force_refresh"] = $this->request->getPost("force_refresh");
+        $view_data["label_column"] = "col-md-3";
+        $view_data["field_column"] = "col-md-9";
+
+        return $this->template->view("grommets/inspection/modal_form", $view_data);
+    }
+
+    function inspection_detail_view($grommet_id) {
+        $grommet = $this->Grommets_model->get_one($grommet_id);
+        if (!$this->can_access_own_client($grommet->client_id)) {
+            app_redirect("forbidden");
+        }
+        $view_data["grommet"] = $grommet;
+
+        return $this->template->rander("grommets/inspection/detail_view", $view_data);
+    }
+
+    // Import data from excel
+    function import_modal_form($client_id) {
+        $view_data["client_id"] = $client_id;
+        return $this->template->view("grommets/import_modal_form", $view_data);
+    }
+
+    function upload_excel_file() {
+        upload_file_to_temp(true);
+    }
+
+    function validate_import_file() {
+        $file_name = $this->request->getPost("file_name");
+        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        if (!is_valid_file_to_upload($file_name)) {
+            echo json_encode(array("success" => false, 'message' => app_lang('invalid_file_type')));
+            exit();
+        }
+
+        if ($file_ext == "xlsx") {
+            echo json_encode(array("success" => true));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('please_upload_a_excel_file') . " (.xlsx)"));
+        }
+    }
+
+    function download_sample_excel_file() {
+        $file_name = "import-grommets-sample.xlsx";
+        return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => $file_name))));
+    }
+
+    private function _get_allowed_headers() {
+        return array(
+            ["key" => "item_description", "required" => true],
+            ["key" => "internal_id", "required" => true],
+            ["key" => "wll", "required" => true],
+            ["key" => "wl", "required" => true],
+            ["key" => "dia", "required" => true],
+            ["key" => "bl", "required" => true],
+            ["key" => "qty", "required" => true],
+            ["key" => "icc", "required" => false],
+            ["key" => "certificate_number", "required" => true],
+            ["key" => "certificate_type", "required" => false],
+            ["key" => "tag_marking", "required" => false],
+            ["key" => "manufacturer", "required" => false],
+            ["key" => "supplied_date", "required" => true],
+            ["key" => "supplied_place", "required" => false],
+            ["key" => "initial_test_date", "required" => false],
+            ["key" => "initial_test_authority", "required" => false],
+            ["key" => "last_test_date", "required" => false],
+            ["key" => "last_test_authority", "required" => false],
+            ["key" => "inspection_date", "required" => false],
+            ["key" => "inspection_authority", "required" => false],
+            ["key" => "lifts", "required" => false],
+            ["key" => "date_of_discharged", "required" => false],
+            ["key" => "remarks", "required" => false],
+            ["key" => "initial_test_passed", "required" => false],
+            ["key" => "last_test_passed", "required" => false],
+            ["key" => "inspection_passed", "required" => false],
+        );
+    }
+
+    private function _store_item_headers_position($headers_row = array()) {
+        $allowed_headers = array_map(function ($h) {
+            return $h["key"];
+        }, $this->_get_allowed_headers());
+
+        //check if all headers are correct and on the right position
+        $final_headers = array();
+        foreach ($headers_row as $key => $header) {
+            if (!$header) {
+                continue;
+            }
+
+            $key_value = str_replace(' ', '_', strtolower(trim($header, " ")));
+            $header_on_this_position = get_array_value($allowed_headers, $key);
+            $header_array = array("key_value" => $header_on_this_position, "value" => $header);
+
+            if ($header_on_this_position == $key_value) {
+                //allowed headers
+                //the required headers should be on the correct positions
+                //the rest headers will be treated as custom fields
+                //pushed header at last of this loop
+            } else { //invalid header, flag as red
+                $header_array["has_error"] = true;
+            }
+
+            if ($key_value) {
+                array_push($final_headers, $header_array);
+            }
+        }
+
+        return $final_headers;
+    }
+
+    private function _row_data_validation_and_get_error_message($key, $data) {
+        $allowed_headers = $this->_get_allowed_headers();
+        $header = null;
+        foreach ($allowed_headers as $el) {
+            if ($el["key"] == $key) {
+                $header = $el;
+                break;
+            }
+        }
+
+        if ($header && $header["required"]) {
+            if (empty($data)) {
+                $error_message = sprintf(app_lang("import_data_empty_message"), app_lang($header["key"]));
+                return $error_message;
+            }
+        }
+    }
+
+    private function _prepare_item_data($data_row, $allowed_headers) {
+        //prepare data
+        $main_data = array();
+        $item_data = array();
+        $manufacturer_data = array();
+        $icc_data = array();
+        $certificate_data = array();
+        $loadtest_data = array();
+        $inspection_data = array();
+
+        foreach ($data_row as $row_data_key => $row_data_value) { //row values
+            if (!$row_data_value) {
+                continue;
+            }
+            $row_data_value = trim($row_data_value);
+            $header_key_value = get_array_value($allowed_headers, $row_data_key);
+
+            if ($header_key_value == "item_description") {
+                $main_data["item_description"] = $row_data_value;
+            } else if ($header_key_value == "wll") {
+                $main_data["wll"] = $row_data_value;
+            } else if ($header_key_value == "wl") {
+                $main_data["wl"] = $row_data_value;
+            } else if ($header_key_value == "dia") {
+                $main_data["dia"] = $row_data_value;
+            } else if ($header_key_value == "bl") {
+                $main_data["bl"] = $row_data_value;
+            } else if ($header_key_value == "manufacturer") {
+                $manufacturer_data["name"] = $row_data_value;
+            } else if ($header_key_value == "icc") {
+                $icc_data["name"] = $row_data_value;
+            } else if ($header_key_value == "certificate_type") {
+                $certificate_data["name"] = $row_data_value;
+            } else if ($header_key_value == "initial_test_date") {
+                $loadtest_data["initial"]["test_date"] = $row_data_value;
+            } else if ($header_key_value == "initial_test_authority") {
+                $loadtest_data["initial"]["tested_by"] = $row_data_value;
+            } else if ($header_key_value == "initial_test_passed") {
+                $loadtest_data["initial"]["passed"] = $row_data_value;
+            } else if ($header_key_value == "last_test_date") {
+                $loadtest_data["last"]["test_date"] = $row_data_value;
+            } else if ($header_key_value == "last_test_authority") {
+                $loadtest_data["last"]["tested_by"] = $row_data_value;
+            } else if ($header_key_value == "last_test_passed") {
+                $loadtest_data["last"]["passed"] = $row_data_value;
+            } else if ($header_key_value == "inspection_date") {
+                $inspection_data["inspection_date"] = $row_data_value;
+            } else if ($header_key_value == "inspection_authority") {
+                $inspection_data["inspected_by"] = $row_data_value;
+            } else if ($header_key_value == "inspection_passed") {
+                $inspection_data["passed"] = $row_data_value;
+            } else if ($header_key_value == "remarks") {
+                $inspection_data["remarks"] = $row_data_value;
+            } else if ($header_key_value == "supplied_date") {
+                if (is_valid_date($row_data_value)) {
+                    $item_data[$header_key_value] = date_format(date_create($row_data_value), "Y-m-d");
+                } else {
+                    $item_data[$header_key_value] = "";
+                }
+            } else if ($header_key_value == "date_of_discharged") {
+                if (is_valid_date($row_data_value)) {
+                    $item_data[$header_key_value] = date_format(date_create($row_data_value), "Y-m-d");
+                } else {
+                    $item_data[$header_key_value] = "";
+                }
+            } else {
+                $item_data[$header_key_value] = $row_data_value;
+            }
+        }
+
+        return array(
+            "main_data" => $main_data,
+            "item_data" => $item_data,
+            "manufacturer_data" => $manufacturer_data,
+            "icc_data" => $icc_data,
+            "certificate_data" => $certificate_data,
+            "loadtest_data" => $loadtest_data,
+            "inspection_data" => $inspection_data,
+        );
+    }
+
+    function validate_import_file_data($check_on_submit = false) {
+        $table_data = "";
+        $error_message = "";
+        $headers = array();
+        $got_error_header = false; //we've to check the valid headers first, and a single header at a time
+        $got_error_table_data = false;
+
+        $file_name = $this->request->getPost("file_name");
+
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+
+        $temp_file_path = get_setting("temp_file_path");
+        $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
+        $excel_file = $excel_file->getActiveSheet()->toArray();
+
+        $table_data .= '<table class="table table-responsive table-bordered table-hover" style="width: 100%; color: #444;">';
+
+        $table_data_header_array = array();
+        $table_data_body_array = array();
+
+        foreach ($excel_file as $row_key => $value) {
+            if ($row_key == 0) { //validate headers
+                $headers = $this->_store_item_headers_position($value);
+
+                foreach ($headers as $row_data) {
+                    $has_error_class = false;
+                    if (get_array_value($row_data, "has_error") && !$got_error_header) {
+                        $has_error_class = true;
+                        $got_error_header = true;
+
+                        $error_message = sprintf(app_lang("import_error_header"), app_lang(get_array_value($row_data, "key_value")));
+                    }
+
+                    array_push($table_data_header_array, array("has_error_class" => $has_error_class, "value" => get_array_value($row_data, "value")));
+                }
+            } else { //validate data
+                if (!array_filter($value)) {
+                    continue;
+                }
+
+                $error_message_on_this_row = "<ol class='pl15'>";
+
+                foreach ($value as $key => $row_data) {
+                    $has_error_class = false;
+
+                    if (!$got_error_header) {
+                        $row_data_validation = $this->_row_data_validation_and_get_error_message($key, $row_data);
+                        if ($row_data_validation) {
+                            $has_error_class = true;
+                            $error_message_on_this_row .= "<li>" . $row_data_validation . "</li>";
+                            $got_error_table_data = true;
+                        }
+                    }
+
+                    if (count($headers) > $key) {
+                        $table_data_body_array[$row_key][] = array("has_error_class" => $has_error_class, "value" => $row_data);
+                    }
+                }
+
+                $error_message_on_this_row .= "</ol>";
+
+                //error messages for this row
+                if ($got_error_table_data) {
+                    $table_data_body_array[$row_key][] = array("has_error_text" => true, "value" => $error_message_on_this_row);
+                }
+            }
+        }
+
+        //return false if any error found on submitting file
+        if ($check_on_submit) {
+            return ($got_error_header || $got_error_table_data) ? false : true;
+        }
+
+        //add error header if there is any error in table body
+        if ($got_error_table_data) {
+            array_push($table_data_header_array, array("has_error_text" => true, "value" => app_lang("error")));
+        }
+
+        //add headers to table
+        $table_data .= "<tr>";
+        foreach ($table_data_header_array as $table_data_header) {
+            $error_class = get_array_value($table_data_header, "has_error_class") ? "error" : "";
+            $error_text = get_array_value($table_data_header, "has_error_text") ? "text-danger" : "";
+            $value = get_array_value($table_data_header, "value");
+            $table_data .= "<th class='$error_class $error_text'>" . $value . "</th>";
+        }
+        $table_data .= "</tr>";
+
+        //add body data to table
+        foreach ($table_data_body_array as $table_data_body_row) {
+            $table_data .= "<tr>";
+            $error_text = "";
+
+            foreach ($table_data_body_row as $table_data_body_row_data) {
+                $error_class = get_array_value($table_data_body_row_data, "has_error_class") ? "error" : "";
+                $error_text = get_array_value($table_data_body_row_data, "has_error_text") ? "text-danger" : "";
+                $value = get_array_value($table_data_body_row_data, "value");
+                $table_data .= "<td class='$error_class $error_text'>" . $value . "</td>";
+            }
+
+            if ($got_error_table_data && !$error_text) {
+                $table_data .= "<td></td>";
+            }
+
+            $table_data .= "</tr>";
+        }
+
+        //add error message for header
+        if ($error_message) {
+            $total_columns = count($table_data_header_array);
+            $table_data .= "<tr><td class='text-danger' colspan='$total_columns'><i data-feather='alert-triangle' class='icon-16'></i> " . $error_message . "</td></tr>";
+        }
+
+        $table_data .= "</table>";
+
+        echo json_encode(array("success" => true, 'table_data' => $table_data, 'got_error' => ($got_error_header || $got_error_table_data) ? true : false));
+    }
+
+    function save_from_excel_file($client_id) {
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+
+        if (!$this->validate_import_file_data(true)) {
+            echo json_encode(array('success' => false, 'message' => app_lang('error_occurred')));
+        }
+
+        $file_name = $this->request->getPost('file_name');
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+
+        $temp_file_path = get_setting("temp_file_path");
+        $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
+        $excel_file = $excel_file->getActiveSheet()->toArray();
+
+        $allowed_headers = array_map(function ($h) {
+            return $h["key"];
+        }, $this->_get_allowed_headers());
+
+        $mains = $this->Grommets_main_model->get_all()->getResult();
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        $iccs = $this->Color_codes_model->get_all()->getResult();
+        $certificate_types = $this->Certificate_types_model->get_all()->getResult();
+        $load_tests = $this->Grommets_loadtest_model->get_all()->getResult();
+        $inspections = $this->Grommets_inspection_model->get_all()->getResult();
+        $grommets = $this->Grommets_model->get_data($client_id);
+
+        foreach ($excel_file as $key => $value) { //rows
+            if ($key === 0) { //first line is headers, continue for the next loop
+                continue;
+            }
+
+            $data_array = $this->_prepare_item_data($value, $allowed_headers);
+            $main_data = get_array_value($data_array, "main_data");
+            $item_data = get_array_value($data_array, "item_data");
+            $manufacturer_data = get_array_value($data_array, "manufacturer_data");
+            $icc_data = get_array_value($data_array, "icc_data");
+            $certificate_data = get_array_value($data_array, "certificate_data");
+            $loadtest_data = get_array_value($data_array, "loadtest_data");
+            $inspection_data = get_array_value($data_array, "inspection_data");
+
+            //couldn't prepare valid data
+            if (!($item_data && count($item_data))) {
+                continue;
+            }
+
+            try {
+                // manufacturer
+                if (isset($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
+                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
+                    if ($manufacturer) {
+                        $item_data["manufacturer_id"] = $manufacturer->id;
+                    } else {
+                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                        $item_data["manufacturer_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $manufacturer_data["name"];
+                        $manufacturers[] = $temp;
+                    }
+                }
+
+                // Identified color codes
+                if (isset($icc_data["name"]) && $icc_data["name"] != "---") {
+                    $icc = $this->findObjectByName($icc_data["name"], $iccs);
+                    if ($icc) {
+                        $item_data["icc_id"] = $icc->id;
+                    } else {
+                        $m_save_id = $this->Color_codes_model->ci_save($icc_data);
+                        $item_data["icc_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $icc_data["name"];
+                        $iccs[] = $temp;
+                    }
+                }
+
+                // Certificate types
+                if (isset($certificate_data["name"]) && $certificate_data["name"] !== "---") {
+                    $certificate = $this->findObjectByName($certificate_data["name"], $certificate_types);
+                    if ($certificate) {
+                        $item_data["certificate_type_id"] = $certificate->id;
+                    } else {
+                        $m_save_id = $this->Certificate_types_model->ci_save($certificate_data);
+                        $item_data["certificate_type_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $certificate_data["name"];
+                        $certificate_types[] = $temp;
+                    }
+                }
+
+                // Grommets main data
+                $main = $this->findMainByItem($main_data["item_description"], $mains);
+                if ($main) {
+                    $item_data["main_id"] = $main->id;
+                } else {
+                    $m_save_id = $this->Grommets_main_model->ci_save($main_data);
+                    $item_data["main_id"] = $m_save_id;
+
+                    $temp = new stdClass();
+                    $temp->id = $m_save_id;
+                    $temp->item_description = $main_data["item_description"];
+                    $mains[] = $temp;
+                }
+
+                $item_data["client_id"] = $client_id;
+                $grommet = $this->findGrommetByInternalId($item_data["internal_id"], $grommets);
+                if ($grommet) {
+                    $save_id = $grommet->id;
+                } else {
+                    $save_id = $this->Grommets_model->ci_save($item_data);
+
+                    $temp = new stdClass();
+                    $temp->id = $save_id;
+                    $temp->internal_id = $item_data["internal_id"];
+                    $grommets[] = $temp;
+                }
+
+                // Save load tests
+                if (isset($loadtest_data["initial"]["test_date"]) && is_valid_date($loadtest_data["initial"]["test_date"])) {
+                    $test_date = date_format(date_create($loadtest_data["initial"]["test_date"]), "Y-m-d");
+                    $data = array(
+                        "grommet_id" => $save_id,
+                        "test_date" => $test_date,
+                        "tested_by" => $loadtest_data["initial"]["tested_by"],
+                        "passed" => $loadtest_data["initial"]["passed"] ?? 0
+                    );
+                    if ($this->valid_loadtest($save_id, $data["test_date"], $load_tests)) {
+                        $this->Grommets_loadtest_model->ci_save($data);
+
+                        $temp = new stdClass();
+                        $temp->grommet_id = $save_id;
+                        $temp->test_date = $data["test_date"];
+                        $load_tests[] = $temp;
+                    }
+                }
+
+                if (isset($loadtest_data["last"]["test_date"]) && is_valid_date($loadtest_data["last"]["test_date"])) {
+                    $test_date = date_format(date_create($loadtest_data["last"]["test_date"]), "Y-m-d");
+                    $data = array(
+                        "grommet_id" => $save_id,
+                        "test_date" => $test_date,
+                        "tested_by" => $loadtest_data["last"]["tested_by"],
+                        "passed" => $loadtest_data["last"]["passed"] ?? 0
+                    );
+                    if ($this->valid_loadtest($save_id, $data["test_date"], $load_tests)) {
+                        $this->Grommets_loadtest_model->ci_save($data);
+
+                        $temp = new stdClass();
+                        $temp->grommet_id = $save_id;
+                        $temp->test_date = $data["test_date"];
+                        $load_tests[] = $temp;
+                    }
+                }
+
+                // Save visual inspection
+                if (isset($inspection_data["inspection_date"]) && is_valid_date($inspection_data["inspection_date"])) {
+                    $inspection_date = date_format(date_create($inspection_data["inspection_date"]), "Y-m-d");
+                    $data = array(
+                        "grommet_id" => $save_id,
+                        "inspection_date" => $inspection_date,
+                        "inspected_by" => $inspection_data["inspected_by"],
+                        "remarks" => $inspection_data["remarks"],
+                        "passed" => $inspection_data["passed"] ?? 0
+                    );
+                    if ($this->valid_inspection($save_id, $data["inspection_date"], $inspections)) {
+                        $this->Grommets_inspection_model->ci_save($data);
+
+                        $temp = new stdClass();
+                        $temp->grommet_id = $save_id;
+                        $temp->inspection_date = $data["inspection_date"];
+                        $inspections[] = $temp;
+                    }
+                }
+            } catch (Exception $e) {
+                print_r($e);
+            }
+        }
+
+        delete_file_from_directory($temp_file_path . $file_name); //delete temp file
+
+        echo json_encode(array('success' => true, 'message' => app_lang("record_saved")));
+    }
+
+    private function findObjectByName($name, $arr) {
+        $name = trim(strtolower($name));
+        foreach ($arr as $item) {
+            if ($name == trim(strtolower($item->name))) {
+                return $item;
+            }
+        }
+        return false;
+    }
+
+    private function findMainByItem($description, $arr) {
+        foreach ($arr as $item) {
+            if ($description == $item->item_description) {
+                return $item;
+            }
+        }
+        return false;
+    }
+
+    private function findGrommetByInternalId($internal_id, $arr) {
+        foreach ($arr as $item) {
+            if ($internal_id == $item->internal_id) {
+                return $item;
+            }
+        }
+        return false;
+    }
+
+    private function valid_loadtest($grommet_id, $test_date, $arr) {
+        foreach ($arr as $item) {
+            if ($grommet_id == $item->grommet_id && $test_date == $item->test_date) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private function valid_inspection($grommet_id, $inspection_date, $arr) {
+        foreach ($arr as $item) {
+            if ($grommet_id == $item->grommet_id && $inspection_date == $item->inspection_date) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

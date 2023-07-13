@@ -94,7 +94,10 @@ class App_Controller extends Controller {
     public $Applicable_equipments_model;
     public $Ship_equipments_model;
     public $Warehouses_model;
-    public $Warehouse_spare_model;
+    public $Warehouse_chemicals_model;
+    public $Warehouse_oils_model;
+    public $Warehouse_paints_model;
+    public $Warehouse_spares_model;
     public $Wires_inspection_model;
     public $Chemicals_model;
     public $Oils_model;
@@ -103,7 +106,21 @@ class App_Controller extends Controller {
     public $Color_codes_model;
     public $Shackle_types_model;
     public $Misc_types_model;
-    public $Lashing_types_model;
+    public $Lashing_category_model;
+    public $Grommets_main_model;
+    public $Grommets_model;
+    public $Grommets_loadtest_model;
+    public $Grommets_inspection_model;
+    public $Shackles_main_model;
+    public $Shackles_model;
+    public $Shackles_loadtest_model;
+    public $Shackles_inspection_model;
+    public $Misc_main_model;
+    public $Misc_model;
+    public $Misc_loadtest_model;
+    public $Misc_inspection_model;
+    public $Lashing_model;
+    public $Lashing_inspection_model;
 
     public function __construct() {
         //main template to make frame of this app
@@ -219,7 +236,10 @@ class App_Controller extends Controller {
             'Applicable_equipments_model',
             'Ship_equipments_model',
             'Warehouses_model',
-            'Warehouse_spare_model',
+            'Warehouse_chemicals_model',
+            'Warehouse_oils_model',
+            'Warehouse_paints_model',
+            'Warehouse_spares_model',
             'Wires_inspection_model',
             'Chemicals_model',
             'Oils_model',
@@ -228,7 +248,21 @@ class App_Controller extends Controller {
             'Color_codes_model',
             'Shackle_types_model',
             'Misc_types_model',
-            'Lashing_types_model'
+            'Lashing_category_model',
+            'Grommets_main_model',
+            'Grommets_model',
+            'Grommets_loadtest_model',
+            'Grommets_inspection_model',
+            'Shackles_main_model',
+            'Shackles_model',
+            'Shackles_loadtest_model',
+            'Shackles_inspection_model',
+            'Misc_main_model',
+            'Misc_model',
+            'Misc_loadtest_model',
+            'Misc_inspection_model',
+            'Lashing_model',
+            'Lashing_inspection_model'
         );
     }
 

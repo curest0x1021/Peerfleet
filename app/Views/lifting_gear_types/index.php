@@ -15,7 +15,7 @@
                 <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("lifting_gear_types/icc_tab"); ?>" data-bs-target="#icc-tab"> <?php echo app_lang('icc'); ?></a></li>
                 <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("lifting_gear_types/shackles_tab"); ?>" data-bs-target="#shackles-tab"> <?php echo app_lang('shackle_type'); ?></a></li>
                 <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("lifting_gear_types/misc_tab"); ?>" data-bs-target="#misc-tab"> <?php echo app_lang('misc_lifting_type'); ?></a></li>
-                <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("lifting_gear_types/lashing_tab"); ?>" data-bs-target="#lashing-tab"> <?php echo app_lang('lashing_type'); ?></a></li>
+                <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("lifting_gear_types/lashing_tab"); ?>" data-bs-target="#lashing-tab"> <?php echo app_lang('lashing_category'); ?></a></li>
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane fade" id="certificates-tab"></div>

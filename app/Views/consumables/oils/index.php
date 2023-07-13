@@ -2,6 +2,8 @@
     <div class="tab-title clearfix">
         <?php if ($can_edit_items) { ?>
             <div class="title-button-group">
+                <?php echo anchor(get_uri("manufacturers"), app_lang('manufacturers') . " <i data-feather='external-link' class='icon-16'></i>" , array("class" => "mr15", "target" => "_blank")); ?>
+                <?php echo anchor(get_uri("units"), app_lang('units') . " <i data-feather='external-link' class='icon-16'></i>" , array("class" => "mr15", "target" => "_blank")); ?>
                 <?php echo modal_anchor(get_uri("consumables/import_modal_form/oils"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_items'), array("class" => "btn btn-default", "title" => app_lang('import_items'))); ?>
                 <?php echo modal_anchor(get_uri("consumables/oils_modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_item'), array("class" => "btn btn-default", "title" => app_lang('add_item'))); ?>
             </div>

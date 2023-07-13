@@ -219,8 +219,8 @@ if (!function_exists('get_notification_config')) {
 
         $csp_link = function ($options) {
             $url = "";
-            if (isset($options->warehouse_id)) {
-                $url = get_uri("spare_parts/view/" . $options->warehouse_id);
+            if (isset($options->client_id) && isset($options->warehouse_id)) {
+                $url = get_uri("warehouses/view/" . $options->client_id . "/" . $options->warehouse_id);
             }
 
             return array("url" => $url);
@@ -232,6 +232,62 @@ if (!function_exists('get_notification_config')) {
                 $url = get_uri("wires/view/" . $options->client_id);
             }
 
+            return array("url" => $url);
+        };
+
+        $grommet_loadtest_link = function ($option) {
+            $url = "";
+            if (isset($option->grommet_id)) {
+                $url = get_uri("grommets/loadtest_detail_view/" . $option->grommet_id);
+            }
+            return array("url" => $url);
+        };
+
+        $grommet_inspection_link = function ($option) {
+            $url = "";
+            if (isset($option->grommet_id)) {
+                $url = get_uri("grommets/inspection_detail_view/" . $option->grommet_id);
+            }
+            return array("url" => $url);
+        };
+
+        $shackle_loadtest_link = function ($option) {
+            $url = "";
+            if (isset($option->shackle_id)) {
+                $url = get_uri("shackles/loadtest_detail_view/" . $option->shackle_id);
+            }
+            return array("url" => $url);
+        };
+
+        $shackle_inspection_link = function ($option) {
+            $url = "";
+            if (isset($option->shackle_id)) {
+                $url = get_uri("shackles/inspection_detail_view/" . $option->shackle_id);
+            }
+            return array("url" => $url);
+        };
+
+        $misc_loadtest_link = function ($option) {
+            $url = "";
+            if (isset($option->misc_id)) {
+                $url = get_uri("misc/loadtest_detail_view/" . $option->misc_id);
+            }
+            return array("url" => $url);
+        };
+
+        $misc_inspection_link = function ($option) {
+            $url = "";
+            if (isset($option->misc_id)) {
+                $url = get_uri("misc/inspection_detail_view/" . $option->misc_id);
+            }
+            return array("url" => $url);
+        };
+
+        $lashing_inspection_link = function ($option) {
+            $url = "";
+            if (isset($option->inspection_id)) {
+                $url = get_uri("lashing/inspection_detail_view/" . $option->inspection_id);
+            }
             return array("url" => $url);
         };
 
@@ -496,13 +552,41 @@ if (!function_exists('get_notification_config')) {
                 "notify_to" => array("client_primary_contact", "client_all_contacts", "team_members", "team"),
                 "info" => $subscription_link
             ),
-            "csp_minimum_reached" => array(
+            "warehouse_item_minimum_reached" => array(
                 "notify_to" => array("vessel_contact", "responsible_person"),
                 "info" => $csp_link
             ),
             "wire_exchange_required" => array(
                 "notify_to" => array("vessel_contact", "responsible_person"),
                 "info" => $crane_link
+            ),
+            "grommet_loadtest_required" => array(
+                "notify_to" => array("vessel_contact", "responsible_person"),
+                "info" => $grommet_loadtest_link
+            ),
+            "grommet_inspection_required" => array(
+                "notify_to" => array("vessel_contact", "responsible_person"),
+                "info" => $grommet_inspection_link
+            ),
+            "shackle_loadtest_required" => array(
+                "notify_to" => array("vessel_contact", "responsible_person"),
+                "info" => $shackle_loadtest_link
+            ),
+            "shackle_inspection_required" => array(
+                "notify_to" => array("vessel_contact", "responsible_person"),
+                "info" => $shackle_inspection_link
+            ),
+            "misc_loadtest_required" => array(
+                "notify_to" => array("vessel_contact", "responsible_person"),
+                "info" => $misc_loadtest_link
+            ),
+            "misc_inspection_required" => array(
+                "notify_to" => array("vessel_contact", "responsible_person"),
+                "info" => $misc_inspection_link
+            ),
+            "lashing_inspection_required" => array(
+                "notify_to" => array("vessel_contact", "responsible_person"),
+                "info" => $lashing_inspection_link
             )
         );
 
@@ -814,17 +898,26 @@ if (!function_exists('send_notification_emails')) {
             $parser_data["ANNOUNCEMENT_CONTENT"] = $notification->announcement_content;
             $parser_data["USER_NAME"] = $notification->user_name;
             $parser_data["ANNOUNCEMENT_URL"] = $url;
-        } else if ($notification->event == "csp_minimum_reached") {
-            $template_name = "csp_minimum_reached";
+        } else if ($notification->event == "warehouse_item_minimum_reached") {
+            $template_name = "warehouse_item_minimum_reached";
 
-            $warehouse_info = $ci->Warehouse_spare_model->get_warehouses(array("warehouse_id" => $notification->warehouse_id))->getRow();
-            $ws_info = $ci->Warehouse_spare_model->get_details(array("id" => $notification->warehouse_spare_id))->getRow();
+            $warehouse_info = $ci->Warehouses_model->get_infomation($notification->warehouse_id);
+            $tab = $notification->warehouse_tab;
+            if ($tab == "chemicals") {
+                $info = $ci->Warehouse_chemicals_model->get_details(array("id" => $notification->warehouse_item_id))->getRow();
+            } else if ($tab == "oils") {
+                $info = $ci->Warehouse_oils_model->get_details(array("id" => $notification->warehouse_item_id))->getRow();
+            } else if ($tab == "paints") {
+                $info = $ci->Warehouse_paints_model->get_details(array("id" => $notification->warehouse_item_id))->getRow();
+            } else {
+                $info = $ci->Warehouse_spares_model->get_details(array("id" => $notification->warehouse_item_id))->getRow();
+            }
 
             $parser_data["VESSEL_TITLE"] = $warehouse_info->vessel;
-            $parser_data["WAREHOUSE_TITLE"] = $warehouse_info->code . ' - ' . $warehouse_info->name;
-            $parser_data["ITEM_TITLE"] = $ws_info->name;
-            $parser_data["QUANTITY"] = $ws_info->quantity;
-            $parser_data["MIN_STOCKS"] = $ws_info->min_stocks;
+            $parser_data["WAREHOUSE_TITLE"] = $warehouse_info->title;
+            $parser_data["ITEM_TITLE"] = $info->name;
+            $parser_data["QUANTITY"] = $info->quantity;
+            $parser_data["MIN_STOCKS"] = $info->min_stocks;
             $parser_data["WAREHOUSE_URL"] = $url;
         } else if ($notification->event == "wire_exchange_required") {
             $template_name = "wire_exchange_required";
@@ -835,6 +928,69 @@ if (!function_exists('send_notification_emails')) {
             $parser_data["DUE_DATE"] = $crane_info->due_date;
             $parser_data["LAST_REPLACEMENT"] = $crane_info->last_replacement;
             $parser_data["WIRE_URL"] = $url;
+        } else if ($notification->event == "grommet_loadtest_required") {
+            $template_name = "grommet_loadtest_required";
+
+            $info = $ci->Grommets_model->get_loadtest_info($notification->grommet_id);
+            $parser_data["VESSEL_TITLE"] = $info->vessel;
+            $parser_data["GROMMET_TITLE"] = $info->name;
+            $parser_data["DUE_DATE"] = $info->due_date;
+            $parser_data["LAST_TEST_DATE"] = $info->last_test_date;
+            $parser_data["ITEM_URL"] = $url;
+        } else if ($notification->event == "grommet_inspection_required") {
+            $template_name = "grommet_inspection_required";
+
+            $info = $ci->Grommets_model->get_inspection_info($notification->grommet_id);
+            $parser_data["VESSEL_TITLE"] = $info->vessel;
+            $parser_data["GROMMET_TITLE"] = $info->name;
+            $parser_data["DUE_DATE"] = $info->due_date;
+            $parser_data["LAST_INSPECTION_DATE"] = $info->last_inspection_date;
+            $parser_data["ITEM_URL"] = $url;
+        } else if ($notification->event == "shackle_loadtest_required") {
+            $template_name = "shackle_loadtest_required";
+
+            $info = $ci->Shackles_model->get_loadtest_info($notification->shackle_id);
+            $parser_data["VESSEL_TITLE"] = $info->vessel;
+            $parser_data["GROMMET_TITLE"] = $info->name;
+            $parser_data["DUE_DATE"] = $info->due_date;
+            $parser_data["LAST_TEST_DATE"] = $info->last_test_date;
+            $parser_data["ITEM_URL"] = $url;
+        } else if ($notification->event == "shackle_inspection_required") {
+            $template_name = "shackle_inspection_required";
+
+            $info = $ci->Shackles_model->get_inspection_info($notification->shackle_id);
+            $parser_data["VESSEL_TITLE"] = $info->vessel;
+            $parser_data["GROMMET_TITLE"] = $info->name;
+            $parser_data["DUE_DATE"] = $info->due_date;
+            $parser_data["LAST_INSPECTION_DATE"] = $info->last_inspection_date;
+            $parser_data["ITEM_URL"] = $url;
+        } else if ($notification->event == "misc_loadtest_required") {
+            $template_name = "misc_loadtest_required";
+
+            $info = $ci->Misc_model->get_loadtest_info($notification->misc_id);
+            $parser_data["VESSEL_TITLE"] = $info->vessel;
+            $parser_data["GROMMET_TITLE"] = $info->name;
+            $parser_data["DUE_DATE"] = $info->due_date;
+            $parser_data["LAST_TEST_DATE"] = $info->last_test_date;
+            $parser_data["ITEM_URL"] = $url;
+        } else if ($notification->event == "misc_inspection_required") {
+            $template_name = "misc_inspection_required";
+
+            $info = $ci->Misc_model->get_inspection_info($notification->misc_id);
+            $parser_data["VESSEL_TITLE"] = $info->vessel;
+            $parser_data["GROMMET_TITLE"] = $info->name;
+            $parser_data["DUE_DATE"] = $info->due_date;
+            $parser_data["LAST_INSPECTION_DATE"] = $info->last_inspection_date;
+            $parser_data["ITEM_URL"] = $url;
+        } else if ($notification->event == "lashing_inspection_required") {
+            $template_name = "lashing_inspection_required";
+
+            $info = $ci->Lashing_model->get_inspection_info($notification->lashing_id);
+            $parser_data["VESSEL_TITLE"] = $info->vessel;
+            $parser_data["GROMMET_TITLE"] = $info->name;
+            $parser_data["DUE_DATE"] = $info->due_date;
+            $parser_data["LAST_INSPECTION_DATE"] = $info->last_inspection_date;
+            $parser_data["ITEM_URL"] = $url;
         } else {
             $template_name = "general_notification";
 

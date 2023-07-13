@@ -50,7 +50,7 @@ class Wires_history_model extends Crud_model {
         $clients_table = $this->db->prefixTable("clients");
         $history_table = $this->db->prefixTable("wires_history");
 
-        $sql = "SELECT $wires_table.id as wire_id, $wires_table.client_id, CONCAT($wires_table.crane, ' ', $wires_table.wire) as name, $clients_table.charter_name as vessel, MAX($history_table.replacement) as last_replacement
+        $sql = "SELECT $wires_table.id as wire_id, $wires_table.client_id, CONCAT($wires_table.crane, ' - ', $wires_table.wire) as name, $clients_table.charter_name as vessel, MAX($history_table.replacement) as last_replacement
                 FROM $wires_table
                 JOIN $clients_table ON $clients_table.id = $wires_table.client_id
                 LEFT JOIN $history_table ON $wires_table.id = $history_table.wire_id
@@ -58,7 +58,7 @@ class Wires_history_model extends Crud_model {
         $wire = $this->db->query($sql)->getRow();
 
         // The default for the replacement of crane wires is 8 years
-        $wire->due_date = date("Y-m-d", strtotime($wire->last_replacement, ' + 8 years'));
+        $wire->due_date = date("Y-m-d", strtotime($wire->last_replacement . ' + 8 years'));
         return $wire;
     }
 
@@ -71,9 +71,10 @@ class Wires_history_model extends Crud_model {
 
         $sql = "SELECT $wires_table.id as crane_id, $wires_table.client_id, a.last_replacement
                 FROM (
-                    SELECT $history_table.wire_id, $history_table.client_id, MAX($history_table.replacement) as last_replacement
+                    SELECT wire_id, client_id, MAX(replacement) as last_replacement
                     FROM $history_table
-                    GROUP BY $history_table.wire_id
+                    WHERE deleted = 0
+                    GROUP BY wire_id
                 ) a
                 JOIN $wires_table ON $wires_table.id = a.wire_id
                 WHERE Date(a.last_replacement) < '$reminder_date'";

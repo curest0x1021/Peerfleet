@@ -6,34 +6,20 @@ class Wires extends Security_Controller {
 
     function __construct() {
         parent::__construct();
-
-        // check permission
-        $this->init_permission_checker("wire");
     }
 
     /* load wires list view */
     function index() {
-        $this->access_only_allowed_members();
         return $this->template->rander("wires/index");
-    }
-
-    private function can_edit_wires() {
-        if ($this->login_user->is_admin) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /* load crane add/edit modal */
     function modal_form() {
-        $this->access_only_allowed_members();
         $client_id = $this->request->getPost('client_id');
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
 
-        $this->can_access_own_client($client_id);
         $this->validate_submitted_data(array(
             "id" => "numeric"
         ));
@@ -51,7 +37,6 @@ class Wires extends Security_Controller {
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
-        $this->can_access_own_client($client_id);
 
         $cranes = array(
             "crane1" => $this->request->getPost("crane1"),
@@ -194,7 +179,6 @@ class Wires extends Security_Controller {
     }
 
     function list_data() {
-        $this->access_only_allowed_members();
         $list_data = $this->Wires_model->get_details(array())->getResult();
 
         $result_data = array();
@@ -238,8 +222,9 @@ class Wires extends Security_Controller {
 
     /* load crane details view */
     function view($client_id, $tab = "") {
-        $this->access_only_allowed_members();
-        $this->can_access_own_client($client_id);
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
 
         if ($client_id) {
             $model_info = $this->Wires_model->get_details(array("client_id" => $client_id))->getRow();
@@ -257,8 +242,9 @@ class Wires extends Security_Controller {
     }
 
     function info_tab($client_id) {
-        $this->access_only_allowed_members();
-        $this->can_access_own_client($client_id);
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
 
         if ($client_id) {
             $view_data['client_id'] = $client_id;
@@ -269,8 +255,7 @@ class Wires extends Security_Controller {
     }
 
     function info_modal_form() {
-        $this->access_only_allowed_members();
-        if (!$this->can_edit_wires()) {
+        if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
 
@@ -288,7 +273,8 @@ class Wires extends Security_Controller {
     }
 
     function save_info() {
-        if (!$this->can_edit_wires()) {
+        $client_id = $this->request->getPost("client_id");
+        if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
 
@@ -322,9 +308,6 @@ class Wires extends Security_Controller {
     }
 
     function info_list_data($client_id) {
-        $this->access_only_allowed_members();
-        $this->can_access_own_client($client_id);
-
         $list_data = $this->Wires_info_model->get_details(array("client_id" => $client_id))->getResult();
         $result_data = [];
         foreach ($list_data as $data) {
@@ -350,8 +333,9 @@ class Wires extends Security_Controller {
     }
 
     function history_tab($client_id) {
-        $this->access_only_allowed_members();
-        $this->can_access_own_client($client_id);
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
 
         if ($client_id) {
             $view_data["client_id"] = $client_id;
@@ -362,14 +346,12 @@ class Wires extends Security_Controller {
     }
 
     function history_modal_form() {
-        $this->access_only_allowed_members();
-        if (!$this->can_edit_wires()) {
-            app_redirect("forbidden");
-        }
-
         $wire_id = $this->request->getPost("wire_id");
         $client_id = $this->request->getPost("client_id");
 
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
         $view_data["wire_id"] = $wire_id;
@@ -379,7 +361,8 @@ class Wires extends Security_Controller {
     }
 
     function save_history() {
-        if (!$this->can_edit_wires()) {
+        $client_id = $this->request->getPost("client_id");
+        if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
 
@@ -405,9 +388,6 @@ class Wires extends Security_Controller {
     }
 
     function history_list_data($client_id) {
-        $this->access_only_allowed_members();
-        $this->can_access_own_client($client_id);
-
         $list_data = $this->Wires_history_model->get_details($client_id);
         $result_data = [];
         foreach ($list_data as $data) {
@@ -439,8 +419,9 @@ class Wires extends Security_Controller {
     }
 
     function loadtest_tab($client_id) {
-        $this->access_only_allowed_members();
-        $this->can_access_own_client($client_id);
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
 
         if ($client_id) {
             $view_data["client_id"] = $client_id;
@@ -451,12 +432,11 @@ class Wires extends Security_Controller {
     }
 
     function loadtest_modal_form() {
-        $this->access_only_allowed_members();
-        if (!$this->can_edit_wires()) {
+        $client_id = $this->request->getPost("client_id");
+
+        if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
-
-        $client_id = $this->request->getPost("client_id");
 
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
@@ -482,11 +462,12 @@ class Wires extends Security_Controller {
     }
 
     function save_loadtest() {
-        if (!$this->can_edit_wires()) {
+        $id = $this->request->getPost("id");
+        $client_id = $this->request->getPost("client_id");
+
+        if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
-
-        $id = $this->request->getPost("id");
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
@@ -525,15 +506,9 @@ class Wires extends Security_Controller {
     }
 
     function delete_loadtest() {
-        if (!$this->can_edit_wires()) {
-            app_redirect("forbidden");
-        }
-
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
         ));
-
-        $this->access_only_allowed_members();
 
         $id = $this->request->getPost('id');
         $model_info = $this->Wires_loadtest_model->get_one($id);
@@ -554,9 +529,6 @@ class Wires extends Security_Controller {
     }
 
     function loadtest_list_data($client_id) {
-        $this->access_only_allowed_members();
-        $this->can_access_own_client($client_id);
-
         $list_data = $this->Wires_loadtest_model->get_details(array("client_id" => $client_id))->getResult();
         $result_data = [];
         foreach ($list_data as $data) {
@@ -605,8 +577,9 @@ class Wires extends Security_Controller {
     }
 
     function wire_inspection_tab($client_id) {
-        $this->access_only_allowed_members();
-        $this->can_access_own_client($client_id);
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
 
         if ($client_id) {
             $view_data["client_id"] = $client_id;
@@ -617,12 +590,10 @@ class Wires extends Security_Controller {
     }
 
     function wire_inspection_modal_form() {
-        $this->access_only_allowed_members();
-        if (!$this->can_edit_wires()) {
+        $client_id = $this->request->getPost("client_id");
+        if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
-
-        $client_id = $this->request->getPost("client_id");
 
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
@@ -638,11 +609,11 @@ class Wires extends Security_Controller {
     }
 
     function save_wire_inspection() {
-        if (!$this->can_edit_wires()) {
+        $id = $this->request->getPost("id");
+        $client_id = $this->request->getPost("client_id");
+        if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
-
-        $id = $this->request->getPost("id");
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
@@ -683,15 +654,9 @@ class Wires extends Security_Controller {
     }
 
     function delete_wire_inspection() {
-        if (!$this->can_edit_wires()) {
-            app_redirect("forbidden");
-        }
-
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
         ));
-
-        $this->access_only_allowed_members();
 
         $id = $this->request->getPost('id');
         $model_info = $this->Wires_inspection_model->get_one($id);
@@ -712,9 +677,6 @@ class Wires extends Security_Controller {
     }
 
     function wire_inspection_list_data($client_id) {
-        $this->access_only_allowed_members();
-        $this->can_access_own_client($client_id);
-
         $list_data = $this->Wires_inspection_model->get_details(array("client_id" => $client_id))->getResult();
         $result_data = [];
         foreach ($list_data as $data) {
