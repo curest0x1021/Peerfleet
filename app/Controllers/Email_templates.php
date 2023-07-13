@@ -72,11 +72,26 @@ class Email_templates extends Security_Controller {
             "announcement" => array(
                 "announcement_created" => array("ANNOUNCEMENT_TITLE", "ANNOUNCEMENT_CONTENT", "USER_NAME", "APP_TITLE", "LOGO_URL", "SIGNATURE", "RECIPIENTS_EMAIL_ADDRESS"),
             ),
-            "spare_parts" => array(
-                "csp_minimum_reached" => array("VESSEL_TITLE", "WAREHOUSE_TITLE", "ITEM_TITLE", "QUANTITY", "MIN_STOCKS", "WAREHOUSE_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS")
+            "warehouse" => array(
+                "warehouse_item_minimum_reached" => array("VESSEL_TITLE", "WAREHOUSE_TITLE", "ITEM_TITLE", "QUANTITY", "MIN_STOCKS", "WAREHOUSE_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS")
             ),
             "wires" => array(
                 "wire_exchange_required" => array("VESSEL_TITLE", "CRANE_TITLE", "LAST_REPLACEMENT", "DUE_DATE", "WIRE_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS")
+            ),
+            "grommets" => array(
+                "grommet_loadtest_required" => array("VESSEL_TITLE", "GROMMET_TITLE", "LAST_TEST_DATE", "DUE_DATE", "ITEM_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS"),
+                "grommet_inspection_required" => array("VESSEL_TITLE", "GROMMET_TITLE", "LAST_INSPECTION_DATE", "DUE_DATE", "ITEM_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS")
+            ),
+            "shackles" => array(
+                "shackle_loadtest_required" => array("VESSEL_TITLE", "SHACKLE_TITLE", "LAST_TEST_DATE", "DUE_DATE", "ITEM_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS"),
+                "shackle_inspection_required" => array("VESSEL_TITLE", "SHACKLE_TITLE", "LAST_INSPECTION_DATE", "DUE_DATE", "ITEM_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS")
+            ),
+            "misc" => array(
+                "misc_loadtest_required" => array("VESSEL_TITLE", "MISC_TITLE", "LAST_TEST_DATE", "DUE_DATE", "ITEM_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS"),
+                "misc_inspection_required" => array("VESSEL_TITLE", "MISC_TITLE", "LAST_INSPECTION_DATE", "DUE_DATE", "ITEM_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS")
+            ),
+            "lashing" => array(
+                "lashing_inspection_required" => array("VESSEL_TITLE", "LASHING_TITLE", "LAST_INSPECTION_DATE", "DUE_DATE", "ITEM_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS")
             ),
             "common" => array(
                 "general_notification" => array("EVENT_TITLE", "EVENT_DETAILS", "APP_TITLE", "COMPANY_NAME", "NOTIFICATION_URL", "LOGO_URL", "SIGNATURE", "TO_USER_NAME", "RECIPIENTS_EMAIL_ADDRESS"),

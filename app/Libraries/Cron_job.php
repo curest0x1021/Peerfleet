@@ -117,7 +117,14 @@ class Cron_job {
         // wait 1 day for each call of following actions
         if ($this->_is_daily_job_runnable()) {
             try {
-                $this->ropes_exchange_due_reminder();
+                $this->wires_exchange_due_reminder();
+                $this->grommets_loadtest_reminder();
+                $this->grommets_visual_inspection_reminder();
+                $this->shackles_loadtest_reminder();
+                $this->shackles_visual_inspection_reminder();
+                $this->misc_loadtest_reminder();
+                $this->misc_visual_inspection_reminder();
+                $this->lashing_visual_inspection_reminder();
             } catch (\Exception $e) {
                 echo $e;
             }
@@ -131,23 +138,372 @@ class Cron_job {
         }
     }
 
-    private function ropes_exchange_due_reminder() {
-        $ropes = $this->ci->Wires_history_model->get_required_exchange_wires();
+    private function wires_exchange_due_reminder() {
+        $wires = $this->ci->Wires_history_model->get_required_exchange_wires();
 
-        foreach ($ropes as $rope) {
-            log_notification("wire_exchange_required", array("client_id" => $rope->client_id, "crane_id" => $rope->crane_id), "0");
+        $owners = array();
+        $primary_contacts = array();
+        foreach ($wires as $wire) {
+            log_notification("wire_exchange_required", array("client_id" => $wire->client_id, "crane_id" => $wire->crane_id), "0");
             // register todo
-            $client = $this->ci->Clients_model->get_one($rope->client_id);
             $todo_data = array(
-                "title" => app_lang("minimum_item_reached"),
-                "description" => get_uri("wires/view/" . $rope->crane_id),
-                "created_by" => $client->owner_id,
-                "created_at" => get_current_utc_time()
+                "title" => app_lang("wire_exchange_required"),
+                "description" => get_uri("wires/view/" . $wire->client_id),
+                "created_at" => get_current_utc_time(),
+                "start_date" => get_current_utc_time("Y-m-d")
             );
+
+            $item1 = $this->find_item_by_client_id($wire->client_id, $owners);
+            if ($item1) {
+                $todo_data["created_by"] = $item1["owner_id"];
+            } else {
+                $client = $this->ci->Clients_model->get_one($wire->client_id);
+                $todo_data["created_by"] = $client->owner_id;
+
+                $item1[] = array(
+                    "client_id" => $client->id,
+                    "owner_id" => $client->owner_id
+                );
+            }
             $this->ci->Todo_model->ci_save($todo_data, null);
 
-            $primary_contact_id = $this->ci->Clients_model->get_primary_contact($rope->client_id);
-            $todo_data["created_by"] = $primary_contact_id;
+            $item2 = $this->find_item_by_client_id($wire->client_id, $primary_contacts);
+            if ($item2) {
+                $todo_data["created_by"] = $item2["primary_contact_id"];
+            } else {
+                $primary_contact_id = $this->ci->Clients_model->get_primary_contact($wire->client_id);
+                $todo_data["created_by"] = $primary_contact_id;
+
+                $item2[] = array(
+                    "client_id" => $client->id,
+                    "primary_contact_id" => $primary_contact_id
+                );
+            }
+
+            $this->ci->Todo_model->ci_save($todo_data, null);
+        }
+    }
+
+    private function find_item_by_client_id($client_id, $arr) {
+        foreach ($arr as $item) {
+            if ($item["client_id"] == $client_id) {
+                return $item;
+            }
+        }
+        return false;
+    }
+
+    private function grommets_loadtest_reminder() {
+        $list = $this->ci->Grommets_model->get_required_loadtest_items();
+        $owners = array();
+        $primary_contacts = array();
+        foreach ($list as $data) {
+            log_notification("grommet_loadtest_required", array("client_id" => $data->client_id, "grommet_id" => $data->grommet_id), "0");
+            // register todo
+            $todo_data = array(
+                "title" => app_lang("grommet_loadtest_required"),
+                "description" => get_uri("grommets/loadtest_detail_view/" . $data->grommet_id),
+                "created_at" => get_current_utc_time(),
+                "start_date" => get_current_utc_time("Y-m-d")
+            );
+
+            $item1 = $this->find_item_by_client_id($data->client_id, $owners);
+            if ($item1) {
+                $todo_data["created_by"] = $item1["owner_id"];
+            } else {
+                $client = $this->ci->Clients_model->get_one($data->client_id);
+                $todo_data["created_by"] = $client->owner_id;
+
+                $item1[] = array(
+                    "client_id" => $client->id,
+                    "owner_id" => $client->owner_id
+                );
+            }
+            $this->ci->Todo_model->ci_save($todo_data, null);
+
+            $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
+            if ($item2) {
+                $todo_data["created_by"] = $item2["primary_contact_id"];
+            } else {
+                $primary_contact_id = $this->ci->Clients_model->get_primary_contact($data->client_id);
+                $todo_data["created_by"] = $primary_contact_id;
+
+                $item2[] = array(
+                    "client_id" => $client->id,
+                    "primary_contact_id" => $primary_contact_id
+                );
+            }
+
+            $this->ci->Todo_model->ci_save($todo_data, null);
+        }
+    }
+
+    private function grommets_visual_inspection_reminder() {
+        $list = $this->ci->Grommets_model->get_required_visual_inspection_items();
+        $owners = array();
+        $primary_contacts = array();
+        foreach ($list as $data) {
+            log_notification("grommet_inspection_required", array("client_id" => $data->client_id, "grommet_id" => $data->grommet_id), "0");
+            // register todo
+            $todo_data = array(
+                "title" => app_lang("grommet_inspection_required"),
+                "description" => get_uri("grommets/inspection_detail_view/" . $data->grommet_id),
+                "created_at" => get_current_utc_time(),
+                "start_date" => get_current_utc_time("Y-m-d")
+            );
+
+            $item1 = $this->find_item_by_client_id($data->client_id, $owners);
+            if ($item1) {
+                $todo_data["created_by"] = $item1["owner_id"];
+            } else {
+                $client = $this->ci->Clients_model->get_one($data->client_id);
+                $todo_data["created_by"] = $client->owner_id;
+
+                $item1[] = array(
+                    "client_id" => $client->id,
+                    "owner_id" => $client->owner_id
+                );
+            }
+            $this->ci->Todo_model->ci_save($todo_data, null);
+
+            $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
+            if ($item2) {
+                $todo_data["created_by"] = $item2["primary_contact_id"];
+            } else {
+                $primary_contact_id = $this->ci->Clients_model->get_primary_contact($data->client_id);
+                $todo_data["created_by"] = $primary_contact_id;
+
+                $item2[] = array(
+                    "client_id" => $client->id,
+                    "primary_contact_id" => $primary_contact_id
+                );
+            }
+
+            $this->ci->Todo_model->ci_save($todo_data, null);
+        }
+    }
+
+    private function shackles_loadtest_reminder() {
+        $list = $this->ci->Shackles_model->get_required_loadtest_items();
+        $owners = array();
+        $primary_contacts = array();
+        foreach ($list as $data) {
+            log_notification("shackle_loadtest_required", array("client_id" => $data->client_id, "shackle_id" => $data->shackle_id), "0");
+            // register todo
+            $todo_data = array(
+                "title" => app_lang("shackle_loadtest_required"),
+                "description" => get_uri("shackles/loadtest_detail_view/" . $data->shackle_id),
+                "created_at" => get_current_utc_time(),
+                "start_date" => get_current_utc_time("Y-m-d")
+            );
+
+            $item1 = $this->find_item_by_client_id($data->client_id, $owners);
+            if ($item1) {
+                $todo_data["created_by"] = $item1["owner_id"];
+            } else {
+                $client = $this->ci->Clients_model->get_one($data->client_id);
+                $todo_data["created_by"] = $client->owner_id;
+
+                $item1[] = array(
+                    "client_id" => $client->id,
+                    "owner_id" => $client->owner_id
+                );
+            }
+            $this->ci->Todo_model->ci_save($todo_data, null);
+
+            $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
+            if ($item2) {
+                $todo_data["created_by"] = $item2["primary_contact_id"];
+            } else {
+                $primary_contact_id = $this->ci->Clients_model->get_primary_contact($data->client_id);
+                $todo_data["created_by"] = $primary_contact_id;
+
+                $item2[] = array(
+                    "client_id" => $client->id,
+                    "primary_contact_id" => $primary_contact_id
+                );
+            }
+
+            $this->ci->Todo_model->ci_save($todo_data, null);
+        }
+    }
+
+    private function shackles_visual_inspection_reminder() {
+        $list = $this->ci->Shackles_model->get_required_visual_inspection_items();
+        $owners = array();
+        $primary_contacts = array();
+        foreach ($list as $data) {
+            log_notification("shackle_inspection_required", array("client_id" => $data->client_id, "shackle_id" => $data->shackle_id), "0");
+            // register todo
+            $todo_data = array(
+                "title" => app_lang("shackle_inspection_required"),
+                "description" => get_uri("shackles/inspection_detail_view/" . $data->shackle_id),
+                "created_at" => get_current_utc_time(),
+                "start_date" => get_current_utc_time("Y-m-d")
+            );
+
+            $item1 = $this->find_item_by_client_id($data->client_id, $owners);
+            if ($item1) {
+                $todo_data["created_by"] = $item1["owner_id"];
+            } else {
+                $client = $this->ci->Clients_model->get_one($data->client_id);
+                $todo_data["created_by"] = $client->owner_id;
+
+                $item1[] = array(
+                    "client_id" => $client->id,
+                    "owner_id" => $client->owner_id
+                );
+            }
+            $this->ci->Todo_model->ci_save($todo_data, null);
+
+            $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
+            if ($item2) {
+                $todo_data["created_by"] = $item2["primary_contact_id"];
+            } else {
+                $primary_contact_id = $this->ci->Clients_model->get_primary_contact($data->client_id);
+                $todo_data["created_by"] = $primary_contact_id;
+
+                $item2[] = array(
+                    "client_id" => $client->id,
+                    "primary_contact_id" => $primary_contact_id
+                );
+            }
+
+            $this->ci->Todo_model->ci_save($todo_data, null);
+        }
+    }
+
+    private function misc_loadtest_reminder() {
+        $list = $this->ci->Misc_model->get_required_loadtest_items();
+        $owners = array();
+        $primary_contacts = array();
+        foreach ($list as $data) {
+            log_notification("misc_loadtest_required", array("client_id" => $data->client_id, "misc_id" => $data->misc_id), "0");
+            // register todo
+            $todo_data = array(
+                "title" => app_lang("misc_loadtest_required"),
+                "description" => get_uri("misc/loadtest_detail_view/" . $data->misc_id),
+                "created_at" => get_current_utc_time(),
+                "start_date" => get_current_utc_time("Y-m-d")
+            );
+
+            $item1 = $this->find_item_by_client_id($data->client_id, $owners);
+            if ($item1) {
+                $todo_data["created_by"] = $item1["owner_id"];
+            } else {
+                $client = $this->ci->Clients_model->get_one($data->client_id);
+                $todo_data["created_by"] = $client->owner_id;
+
+                $item1[] = array(
+                    "client_id" => $client->id,
+                    "owner_id" => $client->owner_id
+                );
+            }
+            $this->ci->Todo_model->ci_save($todo_data, null);
+
+            $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
+            if ($item2) {
+                $todo_data["created_by"] = $item2["primary_contact_id"];
+            } else {
+                $primary_contact_id = $this->ci->Clients_model->get_primary_contact($data->client_id);
+                $todo_data["created_by"] = $primary_contact_id;
+
+                $item2[] = array(
+                    "client_id" => $client->id,
+                    "primary_contact_id" => $primary_contact_id
+                );
+            }
+
+            $this->ci->Todo_model->ci_save($todo_data, null);
+        }
+    }
+
+    private function misc_visual_inspection_reminder() {
+        $list = $this->ci->Misc_model->get_required_visual_inspection_items();
+        $owners = array();
+        $primary_contacts = array();
+        foreach ($list as $data) {
+            log_notification("misc_inspection_required", array("client_id" => $data->client_id, "misc_id" => $data->misc_id), "0");
+            // register todo
+            $todo_data = array(
+                "title" => app_lang("misc_inspection_required"),
+                "description" => get_uri("misc/inspection_detail_view/" . $data->misc_id),
+                "created_at" => get_current_utc_time(),
+                "start_date" => get_current_utc_time("Y-m-d")
+            );
+
+            $item1 = $this->find_item_by_client_id($data->client_id, $owners);
+            if ($item1) {
+                $todo_data["created_by"] = $item1["owner_id"];
+            } else {
+                $client = $this->ci->Clients_model->get_one($data->client_id);
+                $todo_data["created_by"] = $client->owner_id;
+
+                $item1[] = array(
+                    "client_id" => $client->id,
+                    "owner_id" => $client->owner_id
+                );
+            }
+            $this->ci->Todo_model->ci_save($todo_data, null);
+
+            $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
+            if ($item2) {
+                $todo_data["created_by"] = $item2["primary_contact_id"];
+            } else {
+                $primary_contact_id = $this->ci->Clients_model->get_primary_contact($data->client_id);
+                $todo_data["created_by"] = $primary_contact_id;
+
+                $item2[] = array(
+                    "client_id" => $client->id,
+                    "primary_contact_id" => $primary_contact_id
+                );
+            }
+
+            $this->ci->Todo_model->ci_save($todo_data, null);
+        }
+    }
+
+    private function lashing_visual_inspection_reminder() {
+        $list = $this->ci->Lashing_model->get_required_visual_inspection_items();
+        $owners = array();
+        $primary_contacts = array();
+        foreach ($list as $data) {
+            log_notification("lashing_inspection_required", array("client_id" => $data->client_id, "lashing_id" => $data->lashing_id), "0");
+            // register todo
+            $todo_data = array(
+                "title" => app_lang("lashing_inspection_required"),
+                "description" => get_uri("lashing/inspection_detail_view/" . $data->lashing_id),
+                "created_at" => get_current_utc_time(),
+                "start_date" => get_current_utc_time("Y-m-d")
+            );
+
+            $item1 = $this->find_item_by_client_id($data->client_id, $owners);
+            if ($item1) {
+                $todo_data["created_by"] = $item1["owner_id"];
+            } else {
+                $client = $this->ci->Clients_model->get_one($data->client_id);
+                $todo_data["created_by"] = $client->owner_id;
+
+                $item1[] = array(
+                    "client_id" => $client->id,
+                    "owner_id" => $client->owner_id
+                );
+            }
+            $this->ci->Todo_model->ci_save($todo_data, null);
+
+            $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
+            if ($item2) {
+                $todo_data["created_by"] = $item2["primary_contact_id"];
+            } else {
+                $primary_contact_id = $this->ci->Clients_model->get_primary_contact($data->client_id);
+                $todo_data["created_by"] = $primary_contact_id;
+
+                $item2[] = array(
+                    "client_id" => $client->id,
+                    "primary_contact_id" => $primary_contact_id
+                );
+            }
+
             $this->ci->Todo_model->ci_save($todo_data, null);
         }
     }

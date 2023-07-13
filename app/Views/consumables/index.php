@@ -9,14 +9,6 @@
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("consumables/chemicals_tab"); ?>" data-bs-target="#chemicals-tab"> <?php echo app_lang('chemicals'); ?></a></li>
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("consumables/oils_tab"); ?>" data-bs-target="#oils-tab"> <?php echo app_lang('oils_greases'); ?></a></li>
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("consumables/paints_tab"); ?>" data-bs-target="#paints-tab"> <?php echo app_lang('paints'); ?></a></li>
-                    <?php if ($can_edit_items) { ?>
-                        <div class="tab-title clearfix no-border">
-                            <div class="title-button-group pt15">
-                                <?php echo anchor(get_uri("manufacturers"), app_lang('manufacturers') . " <i data-feather='external-link' class='icon-16'></i>" , array("class" => "mr15", "target" => "_blank")); ?>
-                                <?php echo anchor(get_uri("units"), app_lang('units') . " <i data-feather='external-link' class='icon-16'></i>" , array("class" => "mr15", "target" => "_blank")); ?>
-                            </div>
-                        </div>
-                    <?php } ?>
                 </ul>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane fade" id="chemicals-tab"></div>

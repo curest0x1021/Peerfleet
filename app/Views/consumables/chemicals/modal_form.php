@@ -153,7 +153,7 @@
         $("#chemical-form").appForm({
             onSuccess: function(result) {
                 appAlert.success(result.message, {duration: 10000});
-                $("#chemical-table").appTable({newData: result.data, dataId: result.id});;
+                $("#chemical-table").appTable({newData: result.data, dataId: result.id});
             }
         });
 

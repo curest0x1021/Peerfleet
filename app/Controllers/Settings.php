@@ -374,8 +374,12 @@ class Settings extends Security_Controller {
             array("id" => "subscription", "text" => app_lang("subscription")),
             array("id" => "ticket", "text" => app_lang("ticket")),
             array("id" => "timeline", "text" => app_lang("timeline")),
-            array("id" => "spare_parts", "text" => app_lang("spare_parts")),
-            array("id" => "wire", "text" => app_lang("wire"))
+            array("id" => "warehouse", "text" => app_lang("warehouse")),
+            array("id" => "wire", "text" => app_lang("wire")),
+            array("id" => "grommets", "text" => app_lang("grommets")),
+            array("id" => "shackles", "text" => app_lang("shackles")),
+            array("id" => "misc", "text" => app_lang("misc")),
+            array("id" => "lashing", "text" => app_lang("lashing"))
         );
 
         //get data from hook to show in filter

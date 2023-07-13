@@ -363,13 +363,47 @@ class Security_Controller extends App_Controller {
         return json_encode($vessels_dropdown);
     }
 
-    protected function spare_parts_dropdown() {
+    protected function get_spare_parts_dropdown() {
         $list = $this->Spare_parts_model->get_all_where(array("deleted" => 0))->getResult();
-        $dropdown = array("" => "-");
 
+        $dropdown = array("" => "-");
         foreach ($list as $item) {
             $dropdown[$item->id] = $item->name;
         }
+
+        return $dropdown;
+    }
+
+    protected function get_chemicals_dropdown() {
+        $list = $this->Chemicals_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
+    protected function get_oils_dropdown() {
+        $list = $this->Oils_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
+    protected function get_paints_dropdown() {
+        $list = $this->Paints_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
         return $dropdown;
     }
 
@@ -735,6 +769,17 @@ class Security_Controller extends App_Controller {
         return $dropdown;
     }
 
+    protected function get_icc_dropdown() {
+        $list = $this->Color_codes_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
     protected function get_applicable_machinery_equipments_dropdown() {
         $list = $this->Applicable_equipments_model->get_all_where(array("deleted" => 0))->getResult();
 
@@ -812,8 +857,8 @@ class Security_Controller extends App_Controller {
         return $dropdown;
     }
 
-    protected function get_lashing_types_dropdown() {
-        $list = $this->Lashing_types_model->get_all_where(array("deleted" => 0))->getResult();
+    protected function get_lashing_category_dropdown() {
+        $list = $this->Lashing_category_model->get_all_where(array("deleted" => 0))->getResult();
 
         $dropdown = array("" => "-");
         foreach ($list as $item) {

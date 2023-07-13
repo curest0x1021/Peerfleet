@@ -335,7 +335,7 @@ class Lifting_gear_types extends Security_Controller {
     }
 
     function lashing_modal_form() {
-        $view_data["model_info"] = $this->Lashing_types_model->get_one($this->request->getPost("id"));
+        $view_data["model_info"] = $this->Lashing_category_model->get_one($this->request->getPost("id"));
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
         return $this->template->view('lifting_gear_types/lashing/modal_form', $view_data);
@@ -355,12 +355,12 @@ class Lifting_gear_types extends Security_Controller {
         $data = clean_data($data);
 
         //check duplicate type, if found then show an error message
-        if ($this->Lashing_types_model->is_duplicated($data["name"], $id)) {
+        if ($this->Lashing_category_model->is_duplicated($data["name"], $id)) {
             echo json_encode(array("success" => false, 'message' => app_lang("already_exists_type")));
             exit();
         }
 
-        $save_id = $this->Lashing_types_model->ci_save($data, $id);
+        $save_id = $this->Lashing_category_model->ci_save($data, $id);
         if ($save_id) {
             echo json_encode(array("success" => true, 'data' => $this->_lashing_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
         } else {
@@ -374,7 +374,7 @@ class Lifting_gear_types extends Security_Controller {
         ));
 
         $id = $this->request->getPost("id");
-        if ($this->Lashing_types_model->delete($id)) {
+        if ($this->Lashing_category_model->delete($id)) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
@@ -382,7 +382,7 @@ class Lifting_gear_types extends Security_Controller {
     }
 
     function lashing_list_data() {
-        $list_data = $this->Lashing_types_model->get_all_where(array("deleted" => 0))->getResult();
+        $list_data = $this->Lashing_category_model->get_all_where(array("deleted" => 0))->getResult();
         $result_data = [];
         foreach ($list_data as $data) {
             $result_data[] = $this->_lashing_make_row($data);
@@ -393,7 +393,7 @@ class Lifting_gear_types extends Security_Controller {
     }
 
     private function _lashing_row_data($id) {
-        $data = $this->Lashing_types_model->get_one($id);
+        $data = $this->Lashing_category_model->get_one($id);
         return $this->_lashing_make_row($data);
     }
 
