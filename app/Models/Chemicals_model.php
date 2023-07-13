@@ -30,7 +30,7 @@ class Chemicals_model extends Crud_model {
         $sql = "SELECT $chemial_table.*, $manufacturer_table.name as manufacturer, $units_table.name as unit
                 FROM $chemial_table
                 LEFT JOIN $manufacturer_table ON $manufacturer_table.id = $chemial_table.manufacturer_id
-                LEFT JOIN $units_table ON $units_table.code = $chemial_table.unit_code
+                LEFT JOIN $units_table ON $units_table.id = $chemial_table.unit_id
                 WHERE $chemial_table.deleted = 0 $where
                 ORDER BY $chemial_table.is_critical DESC, $chemial_table.name ASC";
 

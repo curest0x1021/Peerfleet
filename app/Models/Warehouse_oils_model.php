@@ -33,7 +33,7 @@ class Warehouse_oils_model extends Crud_model {
                     SELECT $oils_table.*, $manufacturer_table.name as manufacturer, $units_table.name as unit
                     FROM $oils_table
                     LEFT JOIN $manufacturer_table ON $manufacturer_table.id = $oils_table.manufacturer_id
-                    LEFT JOIN $units_table ON $units_table.code = $oils_table.unit_code
+                    LEFT JOIN $units_table ON $units_table.id = $oils_table.unit_id
                 ) a ON a.id = $wo_table.oil_id
                 WHERE $wo_table.deleted = 0 $where";
 

@@ -33,7 +33,7 @@ class Warehouse_paints_model extends Crud_model {
                     SELECT $paints_table.*, $manufacturer_table.name as manufacturer, $units_table.name as unit
                     FROM $paints_table
                     LEFT JOIN $manufacturer_table ON $manufacturer_table.id = $paints_table.manufacturer_id
-                    LEFT JOIN $units_table ON $units_table.code = $paints_table.unit_code
+                    LEFT JOIN $units_table ON $units_table.id = $paints_table.unit_id
                 ) a ON a.id = $wp_table.paint_id
                 WHERE $wp_table.deleted = 0 $where";
 

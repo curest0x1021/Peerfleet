@@ -33,7 +33,7 @@ class Warehouse_chemicals_model extends Crud_model {
                     SELECT $chemicals_table.*, $manufacturer_table.name as manufacturer, $units_table.name as unit
                     FROM $chemicals_table
                     LEFT JOIN $manufacturer_table ON $manufacturer_table.id = $chemicals_table.manufacturer_id
-                    LEFT JOIN $units_table ON $units_table.code = $chemicals_table.unit_code
+                    LEFT JOIN $units_table ON $units_table.id = $chemicals_table.unit_id
                 ) a ON a.id = $wc_table.chemical_id
                 WHERE $wc_table.deleted = 0 $where";
 
