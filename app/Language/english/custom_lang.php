@@ -173,9 +173,6 @@ $lang["add_inspection"] = "Add inspection";
 $lang["edit_inspection"] = "Edit inspection";
 $lang["wire_inspection_result"] = "Wire inspection result";
 $lang["inspection_date"] = "Inspection date";
-
-
-
 $lang["mark_as_critical"] = "Mark as critical";
 $lang["critical"] = "Critical";
 $lang["non_critical"] = "Non critical";
@@ -257,5 +254,10 @@ $lang["notification_misc_inspection_required"] = "Misc. Lifting Gears visual ins
 $lang["notification_lashing_inspection_required"] = "Lashing & Dunnage visual inspection required";
 $lang["require_loadtests"] = "Require loadtests";
 $lang["require_inspections"] = "Require inspections";
+
+
+
+
+$lang["maker"] = "Maker";
 
 return $lang;

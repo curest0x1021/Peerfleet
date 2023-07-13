@@ -24,8 +24,9 @@ foreach ($task_statuses as $status) {
         });
 
         $('body').on('click', '[data-act=update-task-status-checkbox]', function () {
-            $(this).find("span").removeClass("checkbox-checked");
-            $(this).find("span").addClass("inline-loader");
+            const el = $(this);
+            el.find("span").removeClass("checkbox-checked");
+            el.find("span").addClass("inline-loader");
             $.ajax({
                 url: '<?php echo_uri("projects/save_task_status") ?>/' + $(this).attr('data-id'),
                 type: 'POST',
@@ -34,6 +35,9 @@ foreach ($task_statuses as $status) {
                 success: function (response) {
                     if (response.success) {
                         $("#task-table").appTable({newData: response.data, dataId: response.id});
+                    } else {
+                        appAlert.error(response.message, {duration: 10000});
+                        el.find("span").removeClass("inline-loader");
                     }
                 }
             });
