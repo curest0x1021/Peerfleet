@@ -639,6 +639,23 @@
             </div>
             <div class="form-group">
                 <div class="row">
+                    <label for="maker" class=" col-md-3"><?php echo app_lang('maker'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "maker",
+                            "name" => "maker",
+                            "value" => $add_type == "multiple" ? "" : $model_info->maker,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('maker'),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
                     <label for="type" class=" col-md-3"><?php echo app_lang('type'); ?></label>
                     <div class=" col-md-9">
                         <?php

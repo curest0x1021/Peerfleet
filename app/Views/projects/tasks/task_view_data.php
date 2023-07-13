@@ -312,6 +312,12 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     </div>
 
                     <strong><?php echo app_lang('maker_informations') . ":"; ?></strong>
+                    <?php if ($model_info->maker) { ?>
+                        <div class="col-md-12 mb15">
+                            <?php echo app_lang('maker') . ": "; ?> <?php echo $model_info->maker; ?>
+                        </div>
+                    <?php } ?>
+
                     <?php if ($model_info->type) { ?>
                         <div class="col-md-12 mb15">
                             <?php echo app_lang('type') . ": "; ?> <?php echo $model_info->type; ?>

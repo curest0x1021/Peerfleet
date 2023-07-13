@@ -2997,6 +2997,7 @@ class Projects extends Security_Controller {
             "location" => "max_length[300]",
             "specification" => "max_length[300]",
             "requisition_number" => "max_length[30]",
+            "maker" => "max_length[30]",
             "type" => "max_length[30]",
             "serial_number" => "max_length[30]",
             "pms_scs_number" => "max_length[30]"
@@ -3046,6 +3047,7 @@ class Projects extends Security_Controller {
             "material_yards_supply" => $this->request->getPost("material_yards_supply"),
             "material_owners_supply" => $this->request->getPost("material_owners_supply"),
             "risk_assessment" => $this->request->getPost("risk_assessment"),
+            "maker" => $this->request->getPost("maker"),
             "type" => $this->request->getPost("type"),
             "serial_number" => $this->request->getPost("serial_number"),
             "pms_scs_number" => $this->request->getPost("pms_scs_number"),
