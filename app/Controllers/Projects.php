@@ -3003,6 +3003,8 @@ class Projects extends Security_Controller {
             "pms_scs_number" => "max_length[30]"
         ));
 
+        $points = $this->request->getPost('points') ?? 1;
+        $milestone_id = $this->request->getPost('milestone_id') ?? 0;
         $start_date = $this->request->getPost('start_date');
         $assigned_to = $this->request->getPost('assigned_to');
         $collaborators = $this->request->getPost('collaborators');
@@ -3011,16 +3013,16 @@ class Projects extends Security_Controller {
         $repeat_type = $this->request->getPost('repeat_type');
         $no_of_cycles = $this->request->getPost('no_of_cycles');
         $status_id = $this->request->getPost('status_id');
-        $priority_id = $this->request->getPost('priority_id');
+        $priority_id = $this->request->getPost('priority_id') ?? 0;
 
         $data = array(
             "title" => $this->request->getPost('title'),
             "description" => $this->request->getPost('description'),
             "project_id" => $project_id,
-            "milestone_id" => $this->request->getPost('milestone_id'),
-            "points" => $this->request->getPost('points'),
+            "milestone_id" => $milestone_id,
+            "points" => $points,
             "status_id" => $status_id,
-            "priority_id" => $priority_id ? $priority_id : 0,
+            "priority_id" => $priority_id,
             "labels" => $this->request->getPost('category'),
             "start_date" => $start_date,
             "deadline" => $this->request->getPost('deadline'),
@@ -3773,6 +3775,8 @@ class Projects extends Security_Controller {
             $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_task'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("projects/delete_task"), "data-action" => "delete-confirmation"));
         }
 
+        $link_to_task = get_uri("task_view/index/" . $data->id);
+
         $row_data = array(
             $data->status_color,
             $check_status,
@@ -3783,18 +3787,19 @@ class Projects extends Security_Controller {
             $start_date,
             $data->deadline,
             $deadline_text,
-            $milestone_title,
             $project_title,
             $assigned_to,
-            $status
+            $collaborators,
+            $status,
+            $task_labels,
+            $data->description,
+            $data->location,
+            $data->specification,
+            $data->maker,
+            $data->type,
+            $link_to_task,
+            $options
         );
-
-        foreach ($custom_fields as $field) {
-            $cf_id = "cfv_" . $field->id;
-            $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
-        }
-
-        $row_data[] = $options;
 
         return $row_data;
     }

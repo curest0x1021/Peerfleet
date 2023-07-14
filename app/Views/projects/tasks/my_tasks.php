@@ -27,7 +27,7 @@
 
     <div class="card">
         <div class="table-responsive">
-            <table id="task-table" class="display" cellspacing="0" width="100%">            
+            <table id="task-table" class="display" cellspacing="0" width="100%">
             </table>
         </div>
     </div>
@@ -102,20 +102,27 @@ foreach ($task_statuses as $status) {
                 {visible: false, searchable: false},
                 {title: '<?php echo app_lang("id") ?>', "class": idColumnClass, order_by: "id"},
                 {title: '<?php echo app_lang("title") ?>', "class": titleColumnClass, order_by: "title"},
+                {title: '<?php echo app_lang("dock_list_number") ?>', visible: false},
+                {visible: false, searchable: false},
                 {visible: false, searchable: false, order_by: "start_date"},
-                {title: '<?php echo app_lang("start_date") ?>', "iDataSort": 3, visible: showOption, order_by: "start_date"},
+                {title: '<?php echo app_lang("start_date") ?>', "iDataSort": 5, visible: showOption, order_by: "start_date"},
                 {visible: false, searchable: false, order_by: "deadline"},
-                {title: '<?php echo app_lang("deadline") ?>', "iDataSort": 5, visible: showOption, order_by: "deadline"},
-                {title: '<?php echo app_lang("milestone") ?>', visible: showOption, order_by: "milestone"},
+                {title: '<?php echo app_lang("deadline") ?>', "iDataSort": 7, visible: showOption, order_by: "deadline"},
                 {title: '<?php echo app_lang("project") ?>', visible: showOption, order_by: "project"},
                 {title: '<?php echo app_lang("assigned_to") ?>', "class": "min-w150", visible: showOption, order_by: "assigned_to"},
                 {title: '<?php echo app_lang("collaborators") ?>', visible: showOption},
-                {title: '<?php echo app_lang("status") ?>', visible: showOption, order_by: "status"}
-<?php echo $custom_field_headers; ?>,
+                {title: '<?php echo app_lang("status") ?>', visible: showOption, order_by: "status"},
+                {title: '<?php echo app_lang("category") ?>', visible: false},
+                {title: '<?php echo app_lang("description") ?>', visible: false},
+                {title: '<?php echo app_lang("location") ?>', visible: false},
+                {title: '<?php echo app_lang("specification") ?>', visible: false},
+                {title: '<?php echo app_lang("maker") ?>', visible: false},
+                {title: '<?php echo app_lang("type") ?>', visible: false},
+                {title: '<?php echo app_lang("link_to_task") ?>', visible: false},
                 {visible: false, searchable: false}
             ],
-            printColumns: combineCustomFieldsColumns([1, 2, 4, 6, 7, 8, 9, 10, 12], '<?php echo $custom_field_headers; ?>'),
-            xlsColumns: combineCustomFieldsColumns([1, 2, 4, 6, 7, 8, 9, 10, 12], '<?php echo $custom_field_headers; ?>'),
+            printColumns: [13, 3, 2, 14, 15, 16, 17, 18, 19],
+            xlsColumns: [13, 3, 2, 14, 15, 16, 17, 18, 19],
             rowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $('td:eq(0)', nRow).attr("style", "border-left:5px solid " + aData[0] + " !important;");
 

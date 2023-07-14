@@ -254,5 +254,7 @@ $lang["notification_misc_inspection_required"] = "Mis. Inspection visuelle des e
 $lang["notification_lashing_inspection_required"] = "Inspection visuelle de lashing et de Dunnage requise";
 $lang["require_loadtests"] = "Nécessiter des tests de chargement";
 $lang["require_inspections"] = "Nécessiter des inspections";
+$lang["maker"] = "Fabricant";
+$lang["link_to_task"] = "Lien vers la tâche";
 
 return $lang;

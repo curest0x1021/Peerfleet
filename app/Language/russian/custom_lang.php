@@ -254,5 +254,7 @@ $lang["notification_misc_inspection_required"] = "Разное Требуетс�
 $lang["notification_lashing_inspection_required"] = "Требуется визуальный осмотр или дюннаж";
 $lang["require_loadtests"] = "Требовать нагрузки";
 $lang["require_inspections"] = "Требовать проверки";
+$lang["maker"] = "Производитель";
+$lang["link_to_task"] = "Ссылка на задание";
 
 return $lang;

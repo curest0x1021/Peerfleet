@@ -29,6 +29,11 @@
                                     <div class="clearfix">
                                         <div class="container-fluid">
                                             <div class="row">
+                                                <div class="col-md-12 mb15 mt15">
+                                                    <?php
+                                                    echo "<span class='badge' style='background:$model_info->status_color; '>" . get_update_task_info_anchor_data($model_info, "status", $can_edit_tasks) . "</span>";
+                                                    ?>
+                                                </div>
                                                 <div  class="col-md-12 mb15 task-title-right d-none">
                                                     <strong><?php echo $model_info->title; ?></strong>
                                                 </div>
