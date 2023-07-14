@@ -868,6 +868,17 @@ class Security_Controller extends App_Controller {
         return $dropdown;
     }
 
+    protected function get_country_dropdown() {
+        $list = $this->Country_model->get_all()->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
     protected function check_access_to_this_item($item_info) {
         if ($this->login_user->user_type === "client") {
             //check if the item has the availability to show on client portal

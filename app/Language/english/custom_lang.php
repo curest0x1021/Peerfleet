@@ -257,4 +257,11 @@ $lang["require_inspections"] = "Require inspections";
 $lang["maker"] = "Maker";
 $lang["link_to_task"] = "Link to Task";
 
+
+
+$lang["serviced_ports"] = "Serviced Ports";
+$lang["service_type"] = "Service Type";
+$lang["po_box"] = "P.O. BOX";
+$lang["fax"] = "Fax";
+
 return $lang;
