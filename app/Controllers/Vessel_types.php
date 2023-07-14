@@ -87,7 +87,7 @@ class Vessel_types extends Security_Controller {
     private function _make_row($data) {
         return array($data->title,
             modal_anchor(get_uri("vessel_types/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_vessel_type'), "data-post-id" => $data->id))
-            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_vessel_type'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("vessel_types/delete"), "data-action" => "delete"))
+            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_vessel_type'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("vessel_types/delete"), "data-action" => "delete-confirmation"))
         );
     }
 
