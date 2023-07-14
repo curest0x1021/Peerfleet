@@ -254,10 +254,7 @@ $lang["notification_misc_inspection_required"] = "Misc. Lifting Gears visual ins
 $lang["notification_lashing_inspection_required"] = "Lashing & Dunnage visual inspection required";
 $lang["require_loadtests"] = "Require loadtests";
 $lang["require_inspections"] = "Require inspections";
-
-
-
-
 $lang["maker"] = "Maker";
+$lang["link_to_task"] = "Link to Task";
 
 return $lang;

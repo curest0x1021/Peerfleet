@@ -254,5 +254,7 @@ $lang["notification_misc_inspection_required"] = "Misc. Engranajes de elevación
 $lang["notification_lashing_inspection_required"] = "Se requiere inspección visual de azotes y dunnage";
 $lang["require_loadtests"] = "Requerir Toadtests";
 $lang["require_inspections"] = "Requerir inspecciones";
+$lang["maker"] = "Fabricante";
+$lang["link_to_task"] = "Enlace a la tarea";
 
 return $lang;

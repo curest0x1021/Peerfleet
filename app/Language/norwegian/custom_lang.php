@@ -254,5 +254,7 @@ $lang["notification_misc_inspection_required"] = "Misc. Løfte gir visuell inspe
 $lang["notification_lashing_inspection_required"] = "Surring og dunnage visuell inspeksjon påkrevd";
 $lang["require_loadtests"] = "Krev LoadTests";
 $lang["require_inspections"] = "Krever inspeksjoner";
+$lang["maker"] = "Produsent";
+$lang["link_to_task"] = "Lenke til oppgave";
 
 return $lang;

@@ -254,5 +254,7 @@ $lang["notification_misc_inspection_required"] = "Misc. Hefverwars Visuele inspe
 $lang["notification_lashing_inspection_required"] = "LASHING & DUNNAGE Visuele inspectie vereist";
 $lang["require_loadtests"] = "Loadtests vereisen";
 $lang["require_inspections"] = "Inspecties vereisen";
+$lang["maker"] = "Maker";
+$lang["link_to_task"] = "Link naar taak";
 
 return $lang;

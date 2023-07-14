@@ -254,5 +254,7 @@ $lang["notification_misc_inspection_required"] = "Miser. Visusinspektion des Get
 $lang["notification_lashing_inspection_required"] = "Visuelle Inspektion von Reit- und Dunnage -Untersuchungen erforderlich";
 $lang["require_loadtests"] = "Erfordernis Lasttests";
 $lang["require_inspections"] = "Inspektionen erfordern";
+$lang["maker"] = "Hersteller";
+$lang["link_to_task"] = "Link zur Aufgabe";
 
 return $lang;

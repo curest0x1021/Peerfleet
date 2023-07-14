@@ -254,5 +254,7 @@ $lang["notification_misc_inspection_required"] = "Misc. Sollevamento dell'ispezi
 $lang["notification_lashing_inspection_required"] = "Ispezione visiva sferzante e dunnage richiesta";
 $lang["require_loadtests"] = "Richiedono carichi";
 $lang["require_inspections"] = "Richiedono ispezioni";
+$lang["maker"] = "Creatore";
+$lang["link_to_task"] = "Collegamento all'attività";
 
 return $lang;

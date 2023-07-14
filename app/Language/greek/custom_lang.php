@@ -254,5 +254,7 @@ $lang["notification_misc_inspection_required"] = "Διάφορα. Απαιτεί
 $lang["notification_lashing_inspection_required"] = "Απαιτείται οπτική επιθεώρηση και οπτική επιθεώρηση Dunnage";
 $lang["require_loadtests"] = "Απαιτείται φορτίο";
 $lang["require_inspections"] = "Απαιτούν επιθεωρήσεις";
+$lang["maker"] = "Κατασκευαστής";
+$lang["link_to_task"] = "Σύνδεσμος για εργασία";
 
 return $lang;

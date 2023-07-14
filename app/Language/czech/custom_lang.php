@@ -34,7 +34,7 @@ $lang["vessel_contact"] = "Kontakt plavidla";
 $lang["account_already_exists_for_your_charter_name"] = "Účet již existuje pro vaše charterové jméno.";
 $lang["vessel_info"] = "Informace o plavidle";
 $lang["mobile"] = "mobilní, pohybliví";
-$lang["sat"] = "SAT";
+$lang["sat"] = "Sat";
 $lang["iridium_phone"] = "Iridium telefon";
 $lang["total_vessels"] = "Celkové plavidla";
 $lang["fleet_overview"] = "Přehled flotily";
@@ -254,5 +254,7 @@ $lang["notification_misc_inspection_required"] = "Misc. Vyžaduje se vizuální 
 $lang["notification_lashing_inspection_required"] = "Požadovaná vizuální kontrola mazací a dunnage";
 $lang["require_loadtests"] = "Vyžadují načítání";
 $lang["require_inspections"] = "Vyžadovat inspekce";
+$lang["maker"] = "Výrobce";
+$lang["link_to_task"] = "Odkaz na úkol";
 
 return $lang;

@@ -60,7 +60,7 @@ $lang["required_exchange_wires"] = "Fios de troca necessários";
 $lang["crane1"] = "Crane #1";
 $lang["crane2"] = "Crane #2";
 $lang["crane3"] = "Crane #3";
-$lang["gangway"] = "Gangway";
+$lang["gangway"] = "Caminhão";
 $lang["provision"] = "Provisão";
 $lang["rescueboat"] = "Barco de resgate";
 $lang["liferaft"] = "Bote salva-vidas";
@@ -254,5 +254,7 @@ $lang["notification_misc_inspection_required"] = "Misc. EXTENHO DE EXPERRA INSPE
 $lang["notification_lashing_inspection_required"] = "Lanking & Dunnage Visual Inspeção necessária";
 $lang["require_loadtests"] = "Requer testes de carga";
 $lang["require_inspections"] = "Requer inspeções";
+$lang["maker"] = "criador";
+$lang["link_to_task"] = "Link para a tarefa";
 
 return $lang;
