@@ -263,5 +263,8 @@ $lang["serviced_ports"] = "Serviced Ports";
 $lang["service_type"] = "Service Type";
 $lang["po_box"] = "P.O. BOX";
 $lang["fax"] = "Fax";
+$lang["by_country"] = "By country";
+$lang["by_region"] = "By region";
+$lang["by_sailing_area"] = "By sailing area";
 
 return $lang;

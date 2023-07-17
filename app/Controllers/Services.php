@@ -125,7 +125,7 @@ class Services extends Security_Controller {
         if (strpos($website, "http") !== 0) {
             $website = "https://" . $website;
         }
-        $website = anchor($website, $website, array("target" => "_blank"));
+        $link = anchor($website, "<i data-feather='external-link' class='icon-16'></i>", array("class" => "ml15", "target" => "_blank"));
 
         if ($this->can_edit_items()) {
             $company = anchor(get_uri('services/view/' . $data->id), $company);
@@ -138,7 +138,7 @@ class Services extends Security_Controller {
             $company,
             $data->serviced_ports,
             $data->service_type,
-            $website,
+            $link,
             $data->email,
             $data->phone,
             $data->fax,

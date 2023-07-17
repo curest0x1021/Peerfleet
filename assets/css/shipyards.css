@@ -1,0 +1,114 @@
+@font-face {
+  font-family: "Fontawesome";
+  src: url("../fonts/fontawesome.woff2");
+}
+
+@font-face {
+  font-family: "icomoon";
+  src: url("../fonts/icomoon.ttf");
+}
+
+.shipyard-text {
+  color: #0277bd;
+  font-size: 14px;
+}
+
+.flag-icon-background {
+  border: 1px solid #0277bd;
+}
+
+.flag {
+  width: 20px;
+  height: 16px;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.checkbox, .radio {
+  position: relative;
+  display: block;
+  margin: 10px;
+}
+
+[type='checkbox']:not(:checked), [type='checkbox']:checked {
+  position: absolute;
+  left: -9999px;
+}
+
+[type='checkbox']:not(:checked) + label, [type='checkbox']:checked + label {
+  position: relative;
+  padding-left: 30px;
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 18px;
+  padding-top: 8px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+i.icon-x-large.service-1:before {
+  content: "\e904";
+  color: #0277bd;
+  padding: 0px 5px;
+  font-size: x-large;
+}
+
+i.icon-x-large.service-2:before {
+  content: "\e903";
+  color: #0277bd;
+  padding: 0px 5px;
+  font-size: x-large;
+}
+
+i.icon-x-large.service-3:before {
+  content: "\e905";
+  color: #0277bd;
+  padding: 0px 5px;
+  font-size: x-large;
+}
+
+[type='checkbox']:checked + label:after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+[type='checkbox']:not(:checked) + label:after {
+  opacity: 0;
+  transform: scale(0);
+}
+
+[type='checkbox']:not(:checked) + label:after, [type='checkbox']:checked + label:after {
+  font-family: 'FontAwesome';
+  content: '\f00c';
+  position: absolute;
+  left: 1px;
+  top: 4px;
+  font-size: 22px;
+  color: #0277bd;
+  transition: transform .2s;
+}
+
+[type='checkbox']:not(:checked) + label:before, [type='checkbox']:checked + label:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #999;
+  background: #fff;
+  border-radius: 4px;
+}

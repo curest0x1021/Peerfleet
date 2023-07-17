@@ -124,6 +124,8 @@ class App_Controller extends Controller {
     public $Country_model;
     public $Services_model;
     public $Service_contacts_model;
+    public $Shipyards_model;
+    public $Ports_model;
 
     public function __construct() {
         //main template to make frame of this app
@@ -268,7 +270,9 @@ class App_Controller extends Controller {
             'Lashing_inspection_model',
             'Country_model',
             'Services_model',
-            'Service_contacts_model'
+            'Service_contacts_model',
+            'Shipyards_model',
+            'Ports_model'
         );
     }
 
