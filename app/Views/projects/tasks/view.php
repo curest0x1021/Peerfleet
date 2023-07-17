@@ -232,6 +232,9 @@ $task_link = anchor(get_uri("projects/task_view/$model_info->id"), '<i data-feat
                 success: function (response) {
                     if (response.success) {
                         sub_task_status_checkbox.closest("div").html(response.data);
+                    } else {
+                        appAlert.error(response.message, {duration: 10000});
+                        sub_task_status_checkbox.removeClass("inline-loader");
                     }
                 }
             });
