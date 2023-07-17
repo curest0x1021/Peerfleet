@@ -36,11 +36,11 @@ class Shipyards_model extends Crud_model {
         $shipyard_table = $this->db->prefixTable("shipyards");
         $country_table = $this->db->prefixTable("country");
 
-        $sql = "SELECT a.region as id, MAX($country_table.sub_region) as name
-                FROM (SELECT DISTINCT region FROM $shipyard_table WHERE country_id IS NOT NULL) a
-                JOIN $country_table ON a.region = $country_table.sub_region_id
-                GROUP BY a.region
-                ORDER BY a.region ASC";
+        $sql = "SELECT a.region_id as id, MAX($country_table.sub_region) as name
+                FROM (SELECT DISTINCT region_id FROM $shipyard_table WHERE country_id IS NOT NULL) a
+                JOIN $country_table ON a.region_id = $country_table.sub_region_id
+                GROUP BY a.region_id
+                ORDER BY a.region_id ASC";
 
         return $this->db->query($sql)->getResult();
     }
@@ -76,7 +76,7 @@ class Shipyards_model extends Crud_model {
 
         $region = $this->_get_clean_value($options, "region");
         if ($region) {
-            $where .= " AND $shipyard_table.region = '$region'";
+            $where .= " AND $shipyard_table.region_id = '$region'";
         }
 
         $sailingarea = $this->_get_clean_value($options, "sailingarea");
