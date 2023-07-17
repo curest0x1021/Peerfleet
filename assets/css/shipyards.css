@@ -112,3 +112,14 @@ i.icon-x-large.service-3:before {
   background: #fff;
   border-radius: 4px;
 }
+
+.title-content {
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.gradient-title {
+  color: white;
+  padding: 5px 0px 5px 10px;
+  background: linear-gradient(to right, #0277bd, white);
+}

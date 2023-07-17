@@ -17,20 +17,13 @@ function initMap(companies) {
     clickLinkElement,
     companyIcon,
     companyMarkers,
-    geoFeatures,
-    geoLayers,
-    geojson,
     group,
-    highlightFeature,
     item,
     map,
     mapOptions,
     markersClusterGroup,
     newBuild,
     numeric_array,
-    onEachFeature,
-    resetHighlight,
-    style,
     updateCompanyList,
   center = [20, 0];
   companyIcon = L.icon({
@@ -46,34 +39,8 @@ function initMap(companies) {
     popupAnchor: [0, 0],
   });
   companyMarkers = [];
-  geojson = null;
-  geoFeatures = [];
-  geoLayers = [];
   markersClusterGroup = null;
-  $("#catalogRanking").DataTable({
-    pageLength: 10,
-    bLengthChange: false,
-    scrollCollapse: true,
-    searching: false,
-    bInfo: false,
-    scrollX: true,
-  });
-  $("#catalogRankingNewBuild").DataTable({
-    pageLength: 10,
-    bLengthChange: false,
-    scrollCollapse: true,
-    searching: false,
-    bInfo: false,
-    scrollX: true,
-  });
-  $("#catalogRankingScrappingYards").DataTable({
-    pageLength: 10,
-    bLengthChange: false,
-    scrollCollapse: true,
-    searching: false,
-    bInfo: false,
-    scrollX: true,
-  });
+
   updateCompanyList = function (data, services) {
     var city,
       company,
@@ -91,7 +58,9 @@ function initMap(companies) {
       zIndexOffset;
     i = 0;
     while (i < companyMarkers.length) {
-      map.removeLayer(companyMarkers[i]);
+      if (companyMarkers[i]) {
+        map.removeLayer(companyMarkers[i]);
+      }
       i++;
     }
     if (markersClusterGroup) {
@@ -135,22 +104,19 @@ function initMap(companies) {
           zIndexOffset: zIndexOffset,
         });
         companyMarker.properties = {
-          company: company,
+          id: company.id,
         };
         companyMarker.bindPopup(popupContent);
         companyMarker.on("mouseover", function (e) {
           this.openPopup();
         });
         companyMarker.on("mouseout", function (e) {
-          if (!this.options["clicked"]) {
-            this.closePopup();
-          }
+          this.closePopup();
         });
         companyMarker.on("click", function (e) {
-          this.options["clicked"] = true;
-          this.openPopup();
+          clickLinkElement(this.properties.id);
         });
-        companyMarkers["_" + company.id] = companyMarker;
+        companyMarkers[company.id] = companyMarker;
         markersClusterGroup.addLayer(companyMarker);
       }
       map.addLayer(markersClusterGroup);
@@ -185,65 +151,20 @@ function initMap(companies) {
     }
     return updateCompanyList(companies, services);
   });
-  highlightFeature = function (e, layer) {
-    var dataId;
-    if (e && e.target) {
-      layer = e.target;
-      dataId = e.target.feature.id;
-      if ($('a[data-id="' + dataId + '"]').length <= 0) {
-        return;
-      }
-    }
-    layer.setStyle({
-      weight: 5,
-      color: "#0277bd",
-      opacity: 1,
-      dashArray: "",
-      fillOpacity: 0.7,
-    });
-    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-      layer.bringToFront();
-    }
-  };
-  resetHighlight = function (e, layer) {
-    if (e && e.target) {
-      layer = e.target;
-    }
-    geojson.resetStyle(layer);
-  };
-  clickLinkElement = function (e) {
-    var dataId;
-    dataId = e.target.feature.id;
+
+  clickLinkElement = function (dataId) {
     $('a[data-id="' + dataId + '"]').simulateClick();
   };
-  onEachFeature = function (feature, layer) {
-    geoFeatures[feature.id] = feature;
-    geoLayers[feature.id] = layer;
-    layer.on({
-      mouseover: highlightFeature,
-      mouseout: resetHighlight,
-      click: clickLinkElement,
-    });
-  };
-  $("a[data-id]").hover(
-    function () {
-      if (geoLayers[$(this).attr("data-id")]) {
-        highlightFeature(null, geoLayers[$(this).attr("data-id")]);
-      }
-    },
-    function () {
-      if (geoLayers[$(this).attr("data-id")]) {
-        resetHighlight(null, geoLayers[$(this).attr("data-id")]);
-      }
-    }
-  );
+
   if ($("#map").length <= 0) {
     return;
   }
   mapOptions = {
     maxBounds: L.latLngBounds(L.latLng(-70, -180), L.latLng(75, 180)),
+    gestureHandling: true
   };
   map = L.map("map", mapOptions).setView(center, 2);
+  map.scrollWheelZoom.disable();
   L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     maxZoom: 17,
     minZoom: 2,
@@ -253,14 +174,7 @@ function initMap(companies) {
     accessToken:
       "pk.eyJ1IjoiY2hlbi1tYXJpdGltZWRhdGFzeXN0ZW1zLWNvbSIsImEiOiJjajNlNjduMzkwMHBhMzFzMjJnMGlpZmhvIn0.buGEUU37tesHnaWbKZET1A",
   }).addTo(map);
-  style = {
-    fillColor: "#0277bd",
-    weight: 2,
-    opacity: 0,
-    color: "#0277bd",
-    dashArray: "3",
-    fillOpacity: 0,
-  };
+
   markersClusterGroup = L.markerClusterGroup({
     maxClusterRadius: 10,
   });
