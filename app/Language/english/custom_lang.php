@@ -173,9 +173,6 @@ $lang["add_inspection"] = "Add inspection";
 $lang["edit_inspection"] = "Edit inspection";
 $lang["wire_inspection_result"] = "Wire inspection result";
 $lang["inspection_date"] = "Inspection date";
-
-
-
 $lang["mark_as_critical"] = "Mark as critical";
 $lang["critical"] = "Critical";
 $lang["non_critical"] = "Non critical";
@@ -257,5 +254,35 @@ $lang["notification_misc_inspection_required"] = "Misc. Lifting Gears visual ins
 $lang["notification_lashing_inspection_required"] = "Lashing & Dunnage visual inspection required";
 $lang["require_loadtests"] = "Require loadtests";
 $lang["require_inspections"] = "Require inspections";
+$lang["maker"] = "Maker";
+$lang["link_to_task"] = "Link to Task";
+
+
+
+$lang["serviced_ports"] = "Serviced Ports";
+$lang["service_type"] = "Service Type";
+$lang["po_box"] = "P.O. BOX";
+$lang["fax"] = "Fax";
+$lang["by_country"] = "By country";
+$lang["by_region"] = "By region";
+$lang["by_sailing_area"] = "By sailing area";
+$lang["shipyards_for_repair"] = "Shipyards for Repair";
+$lang["shipyards_for_new_build"] = "Shipyards for New Build";
+$lang["shipyards_for_scrapping"] = "Shipyards for Scrapping";
+$lang["shipyard_name"] = "Shipyard Name";
+$lang["maxLength"] = "Max Length [m]";
+$lang["maxWidth"] = "Max Width [m]";
+$lang["maxDepth"] = "Max Depth [m]";
+$lang["score"] = "Score";
+$lang["docksCount"] = "Docks Count";
+$lang["cranesCount"] = "Cranes Count";
+$lang["dock"] = "Dock";
+$lang["only_new_build"] = "Only New Build";
+$lang["published"] = "Published";
+$lang["street"] = "Street";
+$lang["information"] = "Information";
+$lang["repair"] = "Repair";
+$lang["new_build"] = "New build";
+$lang["scrapping"] = "Scrapping";
 
 return $lang;

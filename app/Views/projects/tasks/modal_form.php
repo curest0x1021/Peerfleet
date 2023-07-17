@@ -163,7 +163,7 @@
                     </div>
                 </div>
             <?php } ?>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <div class="row">
                     <label for="points" class="col-md-3"><?php echo app_lang('points'); ?>
                         <span class="help" data-bs-toggle="tooltip" title="<?php echo app_lang('task_point_help_text'); ?>"><i data-feather="help-circle" class="icon-16"></i></span>
@@ -171,12 +171,12 @@
 
                     <div class="col-md-9">
                         <?php
-                        echo form_dropdown("points", $points_dropdown, array($model_info->points), "class='select2'");
+                        echo form_dropdown("points", $points_dropdown, array($model_info->points), "class='select2' id='points'");
                         ?>
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
+            </div> -->
+            <!-- <div class="form-group">
                 <div class="row">
                     <label for="milestone_id" class=" col-md-3"><?php echo app_lang('milestone'); ?></label>
                     <div class="col-md-9" id="dropdown-apploader-section">
@@ -191,7 +191,7 @@
                         ?>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <?php if ($show_assign_to_dropdown) { ?>
                 <div class="form-group">
@@ -639,6 +639,23 @@
             </div>
             <div class="form-group">
                 <div class="row">
+                    <label for="maker" class=" col-md-3"><?php echo app_lang('maker'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "maker",
+                            "name" => "maker",
+                            "value" => $add_type == "multiple" ? "" : $model_info->maker,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('maker'),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
                     <label for="type" class=" col-md-3"><?php echo app_lang('type'); ?></label>
                     <div class=" col-md-9">
                         <?php
@@ -935,6 +952,6 @@
 
         $('#priority_id').select2({data: <?php echo json_encode($priorities_dropdown); ?>});
     });
-</script>    
+</script>
 
 <?php echo view("projects/tasks/get_related_data_of_project_script"); ?>
