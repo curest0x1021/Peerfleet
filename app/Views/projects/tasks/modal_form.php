@@ -880,7 +880,7 @@
             closeModalOnSuccess: false,
             onSuccess: function (result) {
                 $("#task-table").appTable({newData: result.data, dataId: result.id});
-                $("#reload-kanban-button:visible").trigger("click");
+                $("#reload-kanban-button").trigger("click");
 
                 $("#save_and_show_value").append(result.save_and_show_link);
 
