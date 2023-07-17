@@ -25,7 +25,6 @@ function initMap () {
     k,
     map,
     mapOptions,
-    markersClusterGroup,
     onEachFeature,
     resetHighlight,
     style,
@@ -49,7 +48,7 @@ function initMap () {
   geojson = null;
   geoFeatures = [];
   geoLayers = [];
-  markersClusterGroup = null;
+
   $("a[data-id]").hover(
     function () {
       if (geoLayers[$(this).attr("data-id")]) {
@@ -104,6 +103,7 @@ function initMap () {
   };
   mapOptions = {
     maxBounds: L.latLngBounds(L.latLng(-70, -180), L.latLng(75, 180)),
+    gestureHandling: true
   };
   map = L.map("map", mapOptions).setView(center, 2);
   L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
@@ -117,10 +117,10 @@ function initMap () {
   }).addTo(map);
   style = {
     fillColor: "#0277bd",
-    weight: 2,
-    opacity: 0.5,
+    weight: 1,
+    opacity: 1,
     color: "#0277bd",
-    dashArray: "3",
+    dashArray: "5",
     fillOpacity: 0,
   };
 
