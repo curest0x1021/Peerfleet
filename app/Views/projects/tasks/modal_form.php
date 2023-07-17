@@ -11,6 +11,19 @@
                 <input type="hidden" name="is_clone" value="1" />
             <?php } ?>
 
+            <?php if (!$project_id) { ?>
+                <div class="form-group">
+                    <div class="row">
+                        <label for="project_id" class=" col-md-3"><?php echo app_lang('project'); ?></label>
+                        <div class="col-md-9">
+                            <?php
+                            echo form_dropdown("project_id", $projects_dropdown, array($model_info->project_id), "class='select2 validate-hidden' id='project_id' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+
             <div class="form-group">
                 <div class="row">
                     <label for="title" class=" col-md-3"><?php echo app_lang('title'); ?></label>
@@ -23,7 +36,6 @@
                             "class" => "form-control",
                             "placeholder" => app_lang('title'),
                             "maxlength" => 60,
-                            "autofocus" => true,
                             "data-rule-required" => true,
                             "data-msg-required" => app_lang("field_required"),
                         ));
@@ -33,15 +45,17 @@
             </div>
             <div class="form-group">
                 <div class="row">
-                    <label for="project_labels" class=" col-md-3"><?php echo app_lang('category'); ?></label>
+                    <label for="category" class=" col-md-3"><?php echo app_lang('category'); ?></label>
                     <div class=" col-md-9" id="dropdown-apploader-section">
                         <?php
                         echo form_input(array(
-                            "id" => "project_labels",
+                            "id" => "category",
                             "name" => "category",
                             "value" => $model_info->labels,
                             "class" => "form-control",
-                            "placeholder" => app_lang('category')
+                            "placeholder" => app_lang('category'),
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
                         ));
                         ?>
                     </div>
@@ -151,18 +165,6 @@
                     </div>
                 </div>
             </div>
-            <?php if (!$project_id) { ?>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="project_id" class=" col-md-3"><?php echo app_lang('project'); ?></label>
-                        <div class="col-md-9">
-                            <?php
-                            echo form_dropdown("project_id", $projects_dropdown, array($model_info->project_id), "class='select2 validate-hidden' id='project_id' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
-                            ?>
-                        </div>
-                    </div>
-                </div>
-            <?php } ?>
             <!-- <div class="form-group">
                 <div class="row">
                     <label for="points" class="col-md-3"><?php echo app_lang('points'); ?>
