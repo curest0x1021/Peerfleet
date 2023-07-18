@@ -15,28 +15,36 @@ $.fn.simulateClick = function () {
 function initMap(companies) {
   var center,
     clickLinkElement,
-    companyIcon,
+    repairIcon,
+    newBuildIcon,
+    scrappingIcon,
     companyMarkers,
     group,
     item,
     map,
     mapOptions,
     markersClusterGroup,
-    newBuild,
     numeric_array,
     updateCompanyList,
-  center = [20, 0];
-  companyIcon = L.icon({
-    iconUrl: "/assets/images/dock_dark.png",
-    iconSize: [24, 30],
-    iconAnchor: [12, 15],
-    popupAnchor: [0, 0],
+    center = [20, 0];
+
+  repairIcon = L.icon({
+    iconUrl: "/assets/images/marker_repair.png",
+    iconSize: [32, 32],
+    iconAnchor: [32, 32],
+    popupAnchor: [-16, -32],
   });
-  newBuild = L.icon({
-    iconUrl: "/assets/images/new_build_dark.png",
-    iconSize: [25, 25],
-    iconAnchor: [25, 25],
-    popupAnchor: [0, 0],
+  newBuildIcon = L.icon({
+    iconUrl: "/assets/images/marker_newbuild.png",
+    iconSize: [32, 32],
+    iconAnchor: [32, 32],
+    popupAnchor: [-16, -32],
+  });
+  scrappingIcon = L.icon({
+    iconUrl: "/assets/images/marker_scrapping.png",
+    iconSize: [32, 32],
+    iconAnchor: [32, 32],
+    popupAnchor: [-16, -32],
   });
   companyMarkers = [];
   markersClusterGroup = null;
@@ -86,17 +94,35 @@ function initMap(companies) {
         countryName = company.country ?? "";
         city = company.city ?? "";
         flagIcon = company.country_id ? company.country_id.toLowerCase() : "";
-        popupContent = '<div>'
-        popupContent += '<strong>' + company.name + "</strong>";
-        popupContent += '<div class="d-flex align-items-center mt5">';
-        popupContent += '<div class="flag flag-icon-background fi-' + flagIcon + '"></div>';
-        popupContent += '<span>' + countryName + '</span>';
-        popupContent += '</div></div>';
+        popupContent = `
+          <div class="marker-popup-content">
+            <strong>${company.name}</strong>
+            <hr>
+            <div class="row">
+              <strong class="col-4">Country</strong>
+              <div class="col-8 d-flex align-items-center"><span class="flag flag-icon-background fi-${flagIcon}"></span> ${countryName}</div>
+            </div>
+            <div class="row">
+              <strong class="col-4">Services</strong>
+              <div class="col-8">
+                <img src="/assets/images/repair${company.services.includes("service-2") ? "" : "_disable"}.png" alt="Repairs" />
+                <img src="/assets/images/newbuild${company.services.includes("service-1") ? "" : "_disable"}.png" alt="New Builds" />
+                <img src="/assets/images/scrapping${company.services.includes("service-3") ? "" : "_disable"}.png" alt="Scrapping" />
+              </div>
+            </div>
+            <div class="row">
+              <strong class="col-4">Max Length</strong>
+              <span class="col-8">${company.maxLength ? company.maxLength + " m" : "---"}</span>
+            </div>
+          </div>
+        `;
 
-        if (company.only_new_build === "1") {
-          icon = newBuild;
+        if (company.services.includes("service-3")) {
+          icon = scrappingIcon;
+        } else if (company.services.includes("service-1")) {
+          icon = newBuildIcon;
         } else {
-          icon = companyIcon;
+          icon = repairIcon;
         }
         zIndexOffset = 0;
         companyMarker = L.marker([company.lat, company.lon], {
@@ -116,7 +142,7 @@ function initMap(companies) {
         companyMarker.on("click", function (e) {
           clickLinkElement(this.properties.id);
         });
-        companyMarkers[company.id] = companyMarker;
+        companyMarkers["_" + company.id] = companyMarker;
         markersClusterGroup.addLayer(companyMarker);
       }
       map.addLayer(markersClusterGroup);
@@ -163,12 +189,13 @@ function initMap(companies) {
     maxBounds: L.latLngBounds(L.latLng(-70, -180), L.latLng(75, 180)),
     gestureHandling: true
   };
+
   map = L.map("map", mapOptions).setView(center, 2);
-  map.scrollWheelZoom.disable();
   L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     maxZoom: 17,
     minZoom: 2,
-    id: "mapbox/streets-v11",
+    // id: "mapbox/streets-v11",
+    id: "mapbox/navigation-night-v1",
     tileSize: 512,
     zoomOffset: -1,
     accessToken:
@@ -177,6 +204,9 @@ function initMap(companies) {
 
   markersClusterGroup = L.markerClusterGroup({
     maxClusterRadius: 10,
+    spiderfyOnMaxZoom: false,
+    showCoverageOnHover: false,
+    zoomToBoundsOnClick: false
   });
   updateCompanyList(companies, "service-1;service-2;service-3");
   numeric_array = [];
