@@ -251,7 +251,7 @@ class Tasks_model extends Crud_model {
         $order = "";
         $sort_by_project = $this->_get_clean_value($options, "sort_by_project");
         if ($sort_by_project) {
-            $order = " ORDER BY $tasks_table.project_id ASC";
+            $order = ", $tasks_table.project_id ASC";
         }
 
         $extra_left_join = "";
@@ -297,7 +297,7 @@ class Tasks_model extends Crud_model {
 
         if ($order_by) {
             $order_dir = $this->_get_clean_value($options, "order_dir");
-            $order = " ORDER BY $order_by $order_dir ";
+            $order = ", $order_by $order_dir ";
         }
 
         $search_by = get_array_value($options, "search_by");
@@ -353,7 +353,7 @@ class Tasks_model extends Crud_model {
         $extra_left_join 
         $join_custom_fieds 
         WHERE $tasks_table.deleted=0 $where $custom_fields_where 
-        $order $limit_offset";
+        ORDER BY $tasks_table.path ASC $order $limit_offset";
 
         $raw_query = $this->db->query($sql);
 
@@ -805,6 +805,29 @@ class Tasks_model extends Crud_model {
         }
 
         return true;
+    }
+
+    function get_new_path($parent_task_id = 0) {
+        $tasks_table = $this->db->prefixTable("tasks");
+
+        $sql = "SELECT COUNT(id) as maxCount FROM $tasks_table WHERE parent_task_id = $parent_task_id";
+        $row = $this->db->query($sql)->getRow();
+        if ($row) {
+            $maxCount = $row->maxCount + 1;
+        } else {
+            $maxCount = 1;
+        }
+        $path = sprintf('%05d', $maxCount);
+
+        if ($parent_task_id > 0) {
+            $sql = "SELECT path FROM $tasks_table WHERE id=$parent_task_id";
+            $row = $this->db->query($sql)->getRow();
+            $parent_path = $row->path;
+
+            $path = $parent_path . "_" . $path;
+        }
+
+        return $path;
     }
 
 }
