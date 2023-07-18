@@ -12,25 +12,29 @@
                 <?php echo view("shipyards/tabs"); ?>
                 <div class="tab-content card">
                     <div id="map" style="width: 100%; height: 500px;"></div>
-                    <div id="shipyards-repair" class="mt20">
-                        <h2 class="gradient-title title-content"><?php echo app_lang("shipyards_for_repair"); ?></h2>
-                        <div class="table-responsive">
-                            <table id="repair-table" class="display" cellspacing="0" width="100%">
-                            </table>
+                    <ul id="detail-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs title mt20" role="tablist">
+                        <li id="repair_tab"><a role="presentation" data-bs-toggle="tab" data-bs-target="#repairs-info"> <?php echo app_lang('shipyards_for_repair') . ' (' . count($repair_list) . ')'; ?></a></li>
+                        <li id="newbuild_tab"><a role="presentation" data-bs-toggle="tab" data-bs-target="#newbuilds-info"> <?php echo app_lang('shipyards_for_new_build') . ' (' . count($new_build_list) . ')'; ?></a></li>
+                        <li id="scrapping_tab"><a role="presentation" data-bs-toggle="tab" data-bs-target="#scrapping-info"> <?php echo app_lang('shipyards_for_scrapping') . ' (' . count($scrapping_list) . ')'; ?></a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade" id="repairs-info">
+                            <div class="table-responsive">
+                                <table id="repair-table" class="display" cellspacing="0" width="100%">
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                    <div id="shipyards-new-build" class="mt20">
-                        <h2 class="gradient-title title-content"><?php echo app_lang("shipyards_for_new_build"); ?></h2>
-                        <div class="table-responsive">
-                            <table id="new-build-table" class="display" cellspacing="0" width="100%">
-                            </table>
+                        <div role="tabpanel" class="tab-pane fade" id="newbuilds-info">
+                            <div class="table-responsive">
+                                <table id="new-build-table" class="display" cellspacing="0" width="100%">
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                    <div id="shipyards-scrapping" class="mt20">
-                        <h2 class="gradient-title title-content"><?php echo app_lang("shipyards_for_scrapping"); ?></h2>
-                        <div class="table-responsive">
-                            <table id="scrapping-table" class="display" cellspacing="0" width="100%">
-                            </table>
+                        <div role="tabpanel" class="tab-pane fade" id="scrapping-info">
+                            <div class="table-responsive">
+                                <table id="scrapping-table" class="display" cellspacing="0" width="100%">
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -74,10 +78,11 @@
     loadRepairTable = function() {
         const data = <?php echo json_encode($repair_list); ?>;
         if (data.length > 0) {
-            $("#shipyards-repair").show();
+            $("#repair_tab").show();
             $("#repair-table").DataTable({
                 columns: [
                     { title: '<?php echo app_lang("shipyard_name") ?>'},
+                    { title: '<?php echo app_lang("services") ?>'},
                     { title: '<?php echo app_lang("country") ?>'},
                     { title: '<?php echo app_lang("maxLength") ?>'},
                     { title: '<?php echo app_lang("maxWidth") ?>'},
@@ -91,18 +96,23 @@
                 searching: false,
                 bInfo: false,
             });
+
+            $("#repair-table").on("page.dt", function () {
+                initMap(companies);
+            });
         } else {
-            $("#shipyards-repair").hide();
+            $("#repair_tab").hide();
         }
     };
 
     loadNewBuildTable = function(selector) {
         const data = <?php echo json_encode($new_build_list); ?>;
         if (data.length > 0) {
-            $("#shipyards-new-build").show();
+            $("#newbuild_tab").show();
             $("#new-build-table").DataTable({
                 columns: [
                     { title: '<?php echo app_lang("shipyard_name") ?>'},
+                    { title: '<?php echo app_lang("services") ?>'},
                     { title: '<?php echo app_lang("country") ?>'},
                     { title: '<?php echo app_lang("maxLength") ?>'},
                     { title: '<?php echo app_lang("maxWidth") ?>'},
@@ -117,17 +127,18 @@
                 bInfo: false,
             });
         } else {
-            $("#shipyards-new-build").hide();
+            $("#newbuild_tab").hide();
         }
     };
 
     loadScrappingTable = function(selector) {
         const data = <?php echo json_encode($scrapping_list); ?>;
         if (data.length > 0) {
-            $("#shipyards-scrapping").show();
+            $("#scrapping_tab").show();
             $("#scrapping-table").DataTable({
                 columns: [
                     { title: '<?php echo app_lang("shipyard_name") ?>'},
+                    { title: '<?php echo app_lang("services") ?>'},
                     { title: '<?php echo app_lang("country") ?>'},
                     { title: '<?php echo app_lang("maxLength") ?>'},
                     { title: '<?php echo app_lang("maxWidth") ?>'},
@@ -142,7 +153,7 @@
                 bInfo: false,
             });
         } else {
-            $("#shipyards-scrapping").hide();
+            $("#scrapping_tab").hide();
         }
     };
 </script>
