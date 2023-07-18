@@ -620,7 +620,8 @@ class Projects extends Security_Controller {
         $tasks = $this->Tasks_model->get_all_where(array("project_id" => $project_id, "deleted" => 0, "parent_task_id" => 0))->getResult();
         foreach ($tasks as $task) {
             $task_data = $this->_prepare_new_task_data_on_cloning_project($new_project_id, $milestones_array, $task, $copy_same_assignee_and_collaborators, $copy_tasks_start_date_and_deadline, $move_all_tasks_to_to_do, $change_the_tasks_start_date_and_deadline_based_on_project_start_date, $old_project_info, $project_start_date);
-
+            $path = $this->Tasks_model->get_new_path();
+            $task_data["path"] = $path;
             //add new task
             $new_taks_id = $this->Tasks_model->ci_save($task_data);
 
@@ -637,6 +638,8 @@ class Projects extends Security_Controller {
             $task_data = $this->_prepare_new_task_data_on_cloning_project($new_project_id, $milestones_array, $task, $copy_same_assignee_and_collaborators, $copy_tasks_start_date_and_deadline, $move_all_tasks_to_to_do, $change_the_tasks_start_date_and_deadline_based_on_project_start_date, $old_project_info, $project_start_date);
             //add parent task
             $task_data["parent_task_id"] = $task_ids[$task->parent_task_id];
+            $path = $this->Tasks_model->get_new_path($task_data["parent_task_id"]);
+            $task_data["path"] = $path;
 
             //add new task
             $new_taks_id = $this->Tasks_model->ci_save($task_data);
@@ -3057,6 +3060,8 @@ class Projects extends Security_Controller {
 
         if (!$id) {
             $data["created_date"] = $now;
+            $path = $this->Tasks_model->get_new_path();
+            $data["path"] = $path;
         }
 
         if ($ticket_id) {
@@ -3168,6 +3173,9 @@ class Projects extends Security_Controller {
                         $sub_task_data['status_id'] = 1;
                         $sub_task_data['parent_task_id'] = $save_id;
                         $sub_task_data['created_date'] = $now;
+
+                        $path = $this->Tasks_model->get_new_path($save_id);
+                        $sub_task_data['path'] = $path;
 
                         $sub_task_save_id = $this->Tasks_model->ci_save($sub_task_data);
 
@@ -3284,6 +3292,9 @@ class Projects extends Security_Controller {
         } else {
             $data["assigned_to"] = $this->login_user->id;
         }
+
+        $path = $this->Tasks_model->get_new_path($data["parent_task_id"]);
+        $data["path"] = $path;
 
         $data = clean_data($data);
 
@@ -3675,7 +3686,10 @@ class Projects extends Security_Controller {
 
         if ($data->parent_task_id) {
             //this is a sub task
-            $title = "<span class='sub-task-icon mr5' title='" . app_lang("sub_task") . "'><i data-feather='git-merge' class='icon-14'></i></span>";
+            $paths = explode("_", $data->path);
+            $depth = count($paths) - 1;
+            $margin_left = ($depth * 20) . "px";
+            $title = "<span class='sub-task-icon mr5' style='margin-left: " . $margin_left . ";' title='" . app_lang("sub_task") . "'><i data-feather='git-merge' class='icon-14'></i></span>";
         }
 
         $toggle_sub_task_icon = "";
@@ -5842,6 +5856,8 @@ class Projects extends Security_Controller {
                 continue;
             }
 
+            $path = $this->Tasks_model->get_new_path();
+            $task_data["path"] = $path;
             //save task data
             $task_save_id = $this->Tasks_model->ci_save($task_data);
             if (!$task_save_id) {
