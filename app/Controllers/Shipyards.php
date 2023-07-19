@@ -131,11 +131,17 @@ class Shipyards extends Security_Controller {
     private function _make_row($data) {
         $name = modal_anchor(get_uri("shipyards/modal_form/" . $data->id), $data->name, array("class" => "shipyard-text", "title" => $data->name . " " . app_lang("information"), "data-id" => '_' . $data->id));
 
-        $services = '<div class="shipyard-row">' .
-                        '<img src="/assets/images/repair' . (str_contains($data->services, "service-2") ? '' : '_disable') . '.png" title="Repairs" alt="Repairs"/>' .
-                        '<img src="/assets/images/newbuild' . (str_contains($data->services, "service-1") ? '' : '_disable') . '.png" title="New Builds" alt="New Builds"/>' .
-                        '<img src="/assets/images/scrapping' . (str_contains($data->services, "service-3") ? '' : '_disable') . '.png" title="Scrapping" alt="Scrapping"/>' .
-                    '</div>';
+        $services = '<div class="shipyard-row">';
+        if (str_contains($data->services, "service-2")) {
+            $services .= '<img src="/assets/images/repair.png" title="Repairs" alt="Repairs"/>';
+        }
+        if (str_contains($data->services, "service-1")) {
+            $services .= '<img src="/assets/images/newbuilding.png" title="New Buildings" alt="New Buildings"/>';
+        }
+        if (str_contains($data->services, "service-3")) {
+            $services .= '<img src="/assets/images/recycling.png" title="Recycling" alt="Recycling"/>';
+        }
+        $services .= '</div>';
 
         $country = '<span class="flag flag-icon-background fi-' . strtolower($data->country_id) . '"></span> ' . $data->country;
 
