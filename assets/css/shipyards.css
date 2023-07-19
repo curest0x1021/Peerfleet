@@ -9,12 +9,12 @@
 }
 
 .shipyard-text {
-  color: #0277bd;
+  color: #20446f;
   font-size: 14px;
 }
 
 .flag-icon-background {
-  border: 1px solid #0277bd;
+  border: 1px solid #20446f;
 }
 
 .flag {
@@ -37,6 +37,8 @@
 
 [type='checkbox']:not(:checked) + label, [type='checkbox']:checked + label {
   position: relative;
+  display: flex;
+  align-items: center;
   padding-left: 30px;
   cursor: pointer;
   font-weight: 400;
@@ -62,21 +64,21 @@
 
 i.icon-x-large.service-1:before {
   content: "\e904";
-  color: #0277bd;
+  color: #20446f;
   padding: 0px 5px;
   font-size: x-large;
 }
 
 i.icon-x-large.service-2:before {
   content: "\e903";
-  color: #0277bd;
+  color: #20446f;
   padding: 0px 5px;
   font-size: x-large;
 }
 
 i.icon-x-large.service-3:before {
   content: "\e905";
-  color: #0277bd;
+  color: #20446f;
   padding: 0px 5px;
   font-size: x-large;
 }
@@ -98,7 +100,7 @@ i.icon-x-large.service-3:before {
   left: 1px;
   top: 4px;
   font-size: 22px;
-  color: #0277bd;
+  color: #20446f;
   transition: transform .2s;
 }
 
@@ -121,5 +123,49 @@ i.icon-x-large.service-3:before {
 .gradient-title {
   color: white;
   padding: 5px 0px 5px 10px;
-  background: linear-gradient(to right, #0277bd, white);
+  background: linear-gradient(to right, #20446f, white);
+}
+
+.icon-service {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.shipyard-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shipyard-row img {
+  width: 26px;
+  height: 26px;
+  object-fit: cover;
+}
+
+.marker-popup-content {
+  width: 300px;
+  color: #20446f;
+  font-size: 14px;
+}
+
+.marker-popup-content hr {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  border-top: 4px solid #20446f;
+}
+
+.marker-popup-content .row {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.marker-popup-content img {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  margin-right: 8px;
 }

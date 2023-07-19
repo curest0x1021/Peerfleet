@@ -72,7 +72,7 @@ function initMap () {
     }
     layer.setStyle({
       weight: 5,
-      color: "#0277bd",
+      color: "#ffffff",
       opacity: 1,
       dashArray: "",
       fillOpacity: 0.7,
@@ -109,17 +109,18 @@ function initMap () {
   L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     maxZoom: 17,
     minZoom: 2,
-    id: "mapbox/streets-v11",
+    // id: "mapbox/streets-v11",
+    id: "mapbox/navigation-night-v1",
     tileSize: 512,
     zoomOffset: -1,
     accessToken:
       "pk.eyJ1IjoiY2hlbi1tYXJpdGltZWRhdGFzeXN0ZW1zLWNvbSIsImEiOiJjajNlNjduMzkwMHBhMzFzMjJnMGlpZmhvIn0.buGEUU37tesHnaWbKZET1A",
   }).addTo(map);
   style = {
-    fillColor: "#0277bd",
-    weight: 1,
-    opacity: 1,
-    color: "#0277bd",
+    fillColor: "#ffffff",
+    weight: 2,
+    opacity: 0.5,
+    color: "#ffffff",
     dashArray: "5",
     fillOpacity: 0,
   };

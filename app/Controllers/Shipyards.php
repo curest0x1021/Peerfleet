@@ -129,11 +129,26 @@ class Shipyards extends Security_Controller {
     }
 
     private function _make_row($data) {
-        $name = modal_anchor(get_uri("shipyards/modal_form/" . $data->id), $data->name, array("class" => "shipyard-text", "title" => $data->name . " " . app_lang("information"), "data-id" => $data->id));
+        $name = modal_anchor(get_uri("shipyards/modal_form/" . $data->id), $data->name, array("class" => "shipyard-text", "title" => $data->name . " " . app_lang("information"), "data-id" => '_' . $data->id));
+
+        $services = '<div class="shipyard-row">';
+        if (str_contains($data->services, "service-2")) {
+            $services .= '<img src="/assets/images/repair.png" title="Repairs" alt="Repairs"/>';
+        }
+        if (str_contains($data->services, "service-1")) {
+            $services .= '<img src="/assets/images/newbuilding.png" title="New Buildings" alt="New Buildings"/>';
+        }
+        if (str_contains($data->services, "service-3")) {
+            $services .= '<img src="/assets/images/recycling.png" title="Recycling" alt="Recycling"/>';
+        }
+        $services .= '</div>';
+
+        $country = '<span class="flag flag-icon-background fi-' . strtolower($data->country_id) . '"></span> ' . $data->country;
 
         return array(
             $name,
-            $data->country,
+            $services,
+            $country,
             $data->maxLength,
             $data->maxWidth,
             $data->maxDepth,
