@@ -15,29 +15,66 @@ $.fn.simulateClick = function () {
 function initMap(companies) {
   var center,
     clickLinkElement,
-    companyIcon,
+    repair_icon,
+    newbuilding_icon,
+    recycling_icon,
+    repair_newbuilding_icon,
+    repair_recycling_icon,
+    newbuilding_recycling_icon,
+    triple_icon,
     companyMarkers,
     group,
     item,
     map,
     mapOptions,
     markersClusterGroup,
-    newBuild,
     numeric_array,
     updateCompanyList,
-  center = [20, 0];
-  companyIcon = L.icon({
-    iconUrl: "/assets/images/dock_dark.png",
-    iconSize: [24, 30],
-    iconAnchor: [12, 15],
-    popupAnchor: [0, 0],
+    center = [20, 0];
+
+  repair_icon = L.icon({
+    iconUrl: "/assets/images/repair.png",
+    iconSize: [32, 32],
+    iconAnchor: [32, 32],
+    popupAnchor: [-16, -32],
   });
-  newBuild = L.icon({
-    iconUrl: "/assets/images/new_build_dark.png",
-    iconSize: [25, 25],
-    iconAnchor: [25, 25],
-    popupAnchor: [0, 0],
+  newbuilding_icon = L.icon({
+    iconUrl: "/assets/images/newbuilding.png",
+    iconSize: [32, 32],
+    iconAnchor: [32, 32],
+    popupAnchor: [-16, -32],
   });
+  recycling_icon = L.icon({
+    iconUrl: "/assets/images/recycling.png",
+    iconSize: [32, 32],
+    iconAnchor: [32, 32],
+    popupAnchor: [-16, -32],
+  });
+  repair_newbuilding_icon = L.icon({
+    iconUrl: "/assets/images/repair_newbuilding.png",
+    iconSize: [32, 32],
+    iconAnchor: [32, 32],
+    popupAnchor: [-16, -32],
+  });
+  repair_recycling_icon = L.icon({
+    iconUrl: "/assets/images/repair_recycling.png",
+    iconSize: [32, 32],
+    iconAnchor: [32, 32],
+    popupAnchor: [-16, -32],
+  });
+  newbuilding_recycling_icon = L.icon({
+    iconUrl: "/assets/images/newbuilding_recycling.png",
+    iconSize: [32, 32],
+    iconAnchor: [32, 32],
+    popupAnchor: [-16, -32],
+  });
+  triple_icon = L.icon({
+    iconUrl: "/assets/images/repair_newbuilding_recycling.png",
+    iconSize: [32, 32],
+    iconAnchor: [32, 32],
+    popupAnchor: [-16, -32],
+  });
+
   companyMarkers = [];
   markersClusterGroup = null;
 
@@ -86,18 +123,50 @@ function initMap(companies) {
         countryName = company.country ?? "";
         city = company.city ?? "";
         flagIcon = company.country_id ? company.country_id.toLowerCase() : "";
-        popupContent = '<div>'
-        popupContent += '<strong>' + company.name + "</strong>";
-        popupContent += '<div class="d-flex align-items-center mt5">';
-        popupContent += '<div class="flag flag-icon-background fi-' + flagIcon + '"></div>';
-        popupContent += '<span>' + countryName + '</span>';
-        popupContent += '</div></div>';
-
-        if (company.only_new_build === "1") {
-          icon = newBuild;
-        } else {
-          icon = companyIcon;
+        popupContent = `
+          <div class="marker-popup-content">
+            <strong>${company.name}</strong>
+            <hr>
+            <div class="row">
+              <strong class="col-4">Country</strong>
+              <div class="col-8 d-flex align-items-center"><span class="flag flag-icon-background fi-${flagIcon}"></span> ${countryName}</div>
+            </div>
+            <div class="row">
+              <strong class="col-4">Services</strong>
+              <div class="col-8">`;
+        if (company.services.includes("service-2")) {
+          popupContent += '<img src="/assets/images/repair.png" alt="Repairs" />';
         }
+        if (company.services.includes("service-1")) {
+          popupContent += '<img src="/assets/images/newbuilding.png" alt="New Buildings" />';
+        }
+        if (company.services.includes("service-3")) {
+          popupContent += '<img src="/assets/images/recycling.png" alt="Recycling" />';
+        }
+
+        popupContent += `</div></div>
+            <div class="row">
+              <strong class="col-4">Max Length</strong>
+              <span class="col-8">${company.maxLength ? company.maxLength + " m" : "---"}</span>
+            </div>
+          </div>`;
+
+        if (company.services.includes("service-1") && company.services.includes("service-2") && company.services.includes("service-3")) {
+          icon = triple_icon;
+        } else if (company.services.includes("service-1") && company.services.includes("service-2")) {
+          icon = repair_newbuilding_icon;
+        } else if (company.services.includes("service-1") && company.services.includes("service-3")) {
+          icon = newbuilding_recycling_icon;
+        } else if (company.services.includes("service-2") && company.services.includes("service-3")) {
+          icon = repair_recycling_icon;
+        } else if (company.services.includes("service-1")) {
+          icon = newbuilding_icon;
+        } else if (company.services.includes("service-2")) {
+          icon = repair_icon;
+        } else {
+          icon = recycling_icon;
+        }
+
         zIndexOffset = 0;
         companyMarker = L.marker([company.lat, company.lon], {
           icon: icon,
@@ -116,7 +185,7 @@ function initMap(companies) {
         companyMarker.on("click", function (e) {
           clickLinkElement(this.properties.id);
         });
-        companyMarkers[company.id] = companyMarker;
+        companyMarkers["_" + company.id] = companyMarker;
         markersClusterGroup.addLayer(companyMarker);
       }
       map.addLayer(markersClusterGroup);
@@ -163,12 +232,13 @@ function initMap(companies) {
     maxBounds: L.latLngBounds(L.latLng(-70, -180), L.latLng(75, 180)),
     gestureHandling: true
   };
+
   map = L.map("map", mapOptions).setView(center, 2);
-  map.scrollWheelZoom.disable();
   L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     maxZoom: 17,
     minZoom: 2,
-    id: "mapbox/streets-v11",
+    // id: "mapbox/streets-v11",
+    id: "mapbox/navigation-night-v1",
     tileSize: 512,
     zoomOffset: -1,
     accessToken:
@@ -177,6 +247,9 @@ function initMap(companies) {
 
   markersClusterGroup = L.markerClusterGroup({
     maxClusterRadius: 10,
+    spiderfyOnMaxZoom: false,
+    showCoverageOnHover: false,
+    zoomToBoundsOnClick: false
   });
   updateCompanyList(companies, "service-1;service-2;service-3");
   numeric_array = [];
