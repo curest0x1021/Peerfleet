@@ -139,8 +139,8 @@ i.icon-x-large.service-3:before {
 }
 
 .shipyard-row img {
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
   object-fit: cover;
 }
 
@@ -164,8 +164,8 @@ i.icon-x-large.service-3:before {
 }
 
 .marker-popup-content img {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   object-fit: cover;
   margin-right: 8px;
 }

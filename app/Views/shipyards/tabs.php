@@ -11,11 +11,11 @@
                 </div>
                 <div class="checkbox">
                     <input id="service-1" type="checkbox" name="service-1" checked="checked">
-                    <label for="service-1"><img src="/assets/images/newbuild.png" title="New Builds" class="icon-service"/></label>
+                    <label for="service-1"><img src="/assets/images/newbuilding.png" title="New Buildings" class="icon-service"/></label>
                 </div>
                 <div class="checkbox">
                     <input id="service-3" type="checkbox" name="service-3" checked="checked">
-                    <label for="service-3"><img src="/assets/images/scrapping.png" title="Scrapping" class="icon-service"/></label>
+                    <label for="service-3"><img src="/assets/images/recycling.png" title="Recycling" class="icon-service"/></label>
                 </div>
             </div>
         </div>

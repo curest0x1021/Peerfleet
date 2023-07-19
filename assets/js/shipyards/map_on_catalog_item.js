@@ -15,9 +15,13 @@ $.fn.simulateClick = function () {
 function initMap(companies) {
   var center,
     clickLinkElement,
-    repairIcon,
-    newBuildIcon,
-    scrappingIcon,
+    repair_icon,
+    newbuilding_icon,
+    recycling_icon,
+    repair_newbuilding_icon,
+    repair_recycling_icon,
+    newbuilding_recycling_icon,
+    triple_icon,
     companyMarkers,
     group,
     item,
@@ -28,24 +32,49 @@ function initMap(companies) {
     updateCompanyList,
     center = [20, 0];
 
-  repairIcon = L.icon({
-    iconUrl: "/assets/images/marker_repair.png",
+  repair_icon = L.icon({
+    iconUrl: "/assets/images/repair.png",
     iconSize: [32, 32],
     iconAnchor: [32, 32],
     popupAnchor: [-16, -32],
   });
-  newBuildIcon = L.icon({
-    iconUrl: "/assets/images/marker_newbuild.png",
+  newbuilding_icon = L.icon({
+    iconUrl: "/assets/images/newbuilding.png",
     iconSize: [32, 32],
     iconAnchor: [32, 32],
     popupAnchor: [-16, -32],
   });
-  scrappingIcon = L.icon({
-    iconUrl: "/assets/images/marker_scrapping.png",
+  recycling_icon = L.icon({
+    iconUrl: "/assets/images/recycling.png",
     iconSize: [32, 32],
     iconAnchor: [32, 32],
     popupAnchor: [-16, -32],
   });
+  repair_newbuilding_icon = L.icon({
+    iconUrl: "/assets/images/repair_newbuilding.png",
+    iconSize: [32, 32],
+    iconAnchor: [32, 32],
+    popupAnchor: [-16, -32],
+  });
+  repair_recycling_icon = L.icon({
+    iconUrl: "/assets/images/repair_recycling.png",
+    iconSize: [32, 32],
+    iconAnchor: [32, 32],
+    popupAnchor: [-16, -32],
+  });
+  newbuilding_recycling_icon = L.icon({
+    iconUrl: "/assets/images/newbuilding_recycling.png",
+    iconSize: [32, 32],
+    iconAnchor: [32, 32],
+    popupAnchor: [-16, -32],
+  });
+  triple_icon = L.icon({
+    iconUrl: "/assets/images/repair_newbuilding_recycling.png",
+    iconSize: [32, 32],
+    iconAnchor: [32, 32],
+    popupAnchor: [-16, -32],
+  });
+
   companyMarkers = [];
   markersClusterGroup = null;
 
@@ -104,26 +133,40 @@ function initMap(companies) {
             </div>
             <div class="row">
               <strong class="col-4">Services</strong>
-              <div class="col-8">
-                <img src="/assets/images/repair${company.services.includes("service-2") ? "" : "_disable"}.png" alt="Repairs" />
-                <img src="/assets/images/newbuild${company.services.includes("service-1") ? "" : "_disable"}.png" alt="New Builds" />
-                <img src="/assets/images/scrapping${company.services.includes("service-3") ? "" : "_disable"}.png" alt="Scrapping" />
-              </div>
-            </div>
+              <div class="col-8">`;
+        if (company.services.includes("service-2")) {
+          popupContent += '<img src="/assets/images/repair.png" alt="Repairs" />';
+        }
+        if (company.services.includes("service-1")) {
+          popupContent += '<img src="/assets/images/newbuilding.png" alt="New Buildings" />';
+        }
+        if (company.services.includes("service-3")) {
+          popupContent += '<img src="/assets/images/recycling.png" alt="Recycling" />';
+        }
+
+        popupContent += `</div></div>
             <div class="row">
               <strong class="col-4">Max Length</strong>
               <span class="col-8">${company.maxLength ? company.maxLength + " m" : "---"}</span>
             </div>
-          </div>
-        `;
+          </div>`;
 
-        if (company.services.includes("service-3")) {
-          icon = scrappingIcon;
+        if (company.services.includes("service-1") && company.services.includes("service-2") && company.services.includes("service-3")) {
+          icon = triple_icon;
+        } else if (company.services.includes("service-1") && company.services.includes("service-2")) {
+          icon = repair_newbuilding_icon;
+        } else if (company.services.includes("service-1") && company.services.includes("service-3")) {
+          icon = newbuilding_recycling_icon;
+        } else if (company.services.includes("service-2") && company.services.includes("service-3")) {
+          icon = repair_recycling_icon;
         } else if (company.services.includes("service-1")) {
-          icon = newBuildIcon;
+          icon = newbuilding_icon;
+        } else if (company.services.includes("service-2")) {
+          icon = repair_icon;
         } else {
-          icon = repairIcon;
+          icon = recycling_icon;
         }
+
         zIndexOffset = 0;
         companyMarker = L.marker([company.lat, company.lon], {
           icon: icon,
