@@ -508,7 +508,7 @@ class Projects extends Security_Controller {
 
         $view_data['model_info'] = $this->Projects_model->get_one($project_id);
 
-        $view_data['clients_dropdown'] = $this->Clients_model->get_dropdown_list(array("company_name"), "id", array("is_lead" => 0));
+        $view_data['clients_dropdown'] = $this->Clients_model->get_dropdown_list(array("charter_name"), "id");
 
         $view_data['label_suggestions'] = $this->make_labels_dropdown("project", $view_data['model_info']->labels);
 
