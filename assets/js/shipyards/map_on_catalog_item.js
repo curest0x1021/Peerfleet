@@ -33,43 +33,43 @@ function initMap(companies) {
     center = [20, 0];
 
   repair_icon = L.icon({
-    iconUrl: "/assets/images/repair.png",
+    iconUrl: "/assets/images/shipyards/map_repair.png",
     iconSize: [32, 32],
     iconAnchor: [32, 32],
     popupAnchor: [-16, -32],
   });
   newbuilding_icon = L.icon({
-    iconUrl: "/assets/images/newbuilding.png",
+    iconUrl: "/assets/images/shipyards/map_newbuilding.png",
     iconSize: [32, 32],
     iconAnchor: [32, 32],
     popupAnchor: [-16, -32],
   });
   recycling_icon = L.icon({
-    iconUrl: "/assets/images/recycling.png",
+    iconUrl: "/assets/images/shipyards/map_recycling.png",
     iconSize: [32, 32],
     iconAnchor: [32, 32],
     popupAnchor: [-16, -32],
   });
   repair_newbuilding_icon = L.icon({
-    iconUrl: "/assets/images/repair_newbuilding.png",
+    iconUrl: "/assets/images/shipyards/map_repair_newbuilding.png",
     iconSize: [32, 32],
     iconAnchor: [32, 32],
     popupAnchor: [-16, -32],
   });
   repair_recycling_icon = L.icon({
-    iconUrl: "/assets/images/repair_recycling.png",
+    iconUrl: "/assets/images/shipyards/map_repair_recycling.png",
     iconSize: [32, 32],
     iconAnchor: [32, 32],
     popupAnchor: [-16, -32],
   });
   newbuilding_recycling_icon = L.icon({
-    iconUrl: "/assets/images/newbuilding_recycling.png",
+    iconUrl: "/assets/images/shipyards/map_newbuilding_recycling.png",
     iconSize: [32, 32],
     iconAnchor: [32, 32],
     popupAnchor: [-16, -32],
   });
   triple_icon = L.icon({
-    iconUrl: "/assets/images/repair_newbuilding_recycling.png",
+    iconUrl: "/assets/images/shipyards/map_triple.png",
     iconSize: [32, 32],
     iconAnchor: [32, 32],
     popupAnchor: [-16, -32],
@@ -135,13 +135,13 @@ function initMap(companies) {
               <strong class="col-4">Services</strong>
               <div class="col-8">`;
         if (company.services.includes("service-2")) {
-          popupContent += '<img src="/assets/images/repair.png" alt="Repairs" />';
+          popupContent += '<img src="/assets/images/shipyards/repair.png" alt="Repairs" />';
         }
         if (company.services.includes("service-1")) {
-          popupContent += '<img src="/assets/images/newbuilding.png" alt="New Buildings" />';
+          popupContent += '<img src="/assets/images/shipyards/newbuilding.png" alt="New Buildings" />';
         }
         if (company.services.includes("service-3")) {
-          popupContent += '<img src="/assets/images/recycling.png" alt="Recycling" />';
+          popupContent += '<img src="/assets/images/shipyards/recycling.png" alt="Recycling" />';
         }
 
         popupContent += `</div></div>
