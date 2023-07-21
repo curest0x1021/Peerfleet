@@ -133,13 +133,13 @@ class Shipyards extends Security_Controller {
 
         $services = '<div class="shipyard-row">';
         if (str_contains($data->services, "service-2")) {
-            $services .= '<img src="/assets/images/repair.png" title="Repairs" alt="Repairs"/>';
+            $services .= '<img src="/assets/images/shipyards/repair.png" title="Repairs" alt="Repairs"/>';
         }
         if (str_contains($data->services, "service-1")) {
-            $services .= '<img src="/assets/images/newbuilding.png" title="New Buildings" alt="New Buildings"/>';
+            $services .= '<img src="/assets/images/shipyards/newbuilding.png" title="New Buildings" alt="New Buildings"/>';
         }
         if (str_contains($data->services, "service-3")) {
-            $services .= '<img src="/assets/images/recycling.png" title="Recycling" alt="Recycling"/>';
+            $services .= '<img src="/assets/images/shipyards/recycling.png" title="Recycling" alt="Recycling"/>';
         }
         $services .= '</div>';
 
