@@ -7,15 +7,15 @@
             <div class="title-button-group  d-flex align-items-center">
                 <div class="checkbox">
                     <input id="service-2" type="checkbox" name="service-2" checked="checked">
-                    <label for="service-2"><img src="/assets/images/repair.png" title="Repairs" class="icon-service"/></label>
+                    <label for="service-2"><img src="/assets/images/shipyards/repair.png" title="Repairs" class="icon-service"/></label>
                 </div>
                 <div class="checkbox">
                     <input id="service-1" type="checkbox" name="service-1" checked="checked">
-                    <label for="service-1"><img src="/assets/images/newbuilding.png" title="New Buildings" class="icon-service"/></label>
+                    <label for="service-1"><img src="/assets/images/shipyards/newbuilding.png" title="New Buildings" class="icon-service"/></label>
                 </div>
                 <div class="checkbox">
                     <input id="service-3" type="checkbox" name="service-3" checked="checked">
-                    <label for="service-3"><img src="/assets/images/recycling.png" title="Recycling" class="icon-service"/></label>
+                    <label for="service-3"><img src="/assets/images/shipyards/recycling.png" title="Recycling" class="icon-service"/></label>
                 </div>
             </div>
         </div>
