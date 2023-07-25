@@ -22,7 +22,6 @@ function initMap(companies) {
     repair_recycling_icon,
     newbuilding_recycling_icon,
     triple_icon,
-    companyMarkers,
     group,
     item,
     map,
@@ -174,6 +173,7 @@ function initMap(companies) {
         });
         companyMarker.properties = {
           id: company.id,
+          dataId: "_" + company.id,
         };
         companyMarker.bindPopup(popupContent);
         companyMarker.on("mouseover", function (e) {
@@ -183,29 +183,15 @@ function initMap(companies) {
           this.closePopup();
         });
         companyMarker.on("click", function (e) {
-          clickLinkElement(this.properties.id);
+          clickLinkElement(this.properties.dataId);
         });
-        companyMarkers["_" + company.id] = companyMarker;
+        companyMarkers[companyMarker.properties.dataId] = companyMarker;
         markersClusterGroup.addLayer(companyMarker);
       }
       map.addLayer(markersClusterGroup);
     }
   };
-  $("a[data-id]").hover(
-    function () {
-      if (companyMarkers[$(this).attr("data-id")]) {
-        if (!companyMarkers[$(this).attr("data-id")]._icon) {
-          companyMarkers[$(this).attr("data-id")].__parent.spiderfy();
-        }
-        companyMarkers[$(this).attr("data-id")].openPopup();
-      }
-    },
-    function () {
-      if (companyMarkers[$(this).attr("data-id")]) {
-        companyMarkers[$(this).attr("data-id")].closePopup();
-      }
-    }
-  );
+
   $("input[type=checkbox]").click(function (e) {
     var services;
     services = "";
@@ -261,3 +247,21 @@ function initMap(companies) {
     map.setView(group.getBounds().getCenter(), map.getBoundsZoom(group.getBounds()));
   }
 };
+
+function popover() {
+  $("a[data-id]").hover(
+    function () {
+      if (companyMarkers[$(this).attr("data-id")]) {
+        if (!companyMarkers[$(this).attr("data-id")]._icon) {
+          companyMarkers[$(this).attr("data-id")].__parent.spiderfy();
+        }
+        companyMarkers[$(this).attr("data-id")].openPopup();
+      }
+    },
+    function () {
+      if (companyMarkers[$(this).attr("data-id")]) {
+        companyMarkers[$(this).attr("data-id")].closePopup();
+      }
+    }
+  );
+}
