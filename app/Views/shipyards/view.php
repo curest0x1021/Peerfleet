@@ -3,7 +3,7 @@
 
     $htmlContent = "";
     foreach($companies as $data) {
-        $htmlContent .= modal_anchor(get_uri("shipyards/modal_form/" . $data->id), $data->name, array("data-id" => '_' . $data->id));
+        $htmlContent .= modal_anchor(get_uri("shipyards/modal_form/" . $data->id), $data->name, array("title" => $data->name . " " . app_lang("information"), "data-id" => '_' . $data->id));
     }
 ?>
 
