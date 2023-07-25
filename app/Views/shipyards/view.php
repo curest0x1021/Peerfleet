@@ -1,5 +1,10 @@
 <?php
     $json_str = json_decode(json_encode($companies), true);
+
+    $htmlContent = "";
+    foreach($companies as $data) {
+        $htmlContent .= modal_anchor(get_uri("shipyards/modal_form/" . $data->id), $data->name, array("data-id" => '_' . $data->id));
+    }
 ?>
 
 <div id="page-content" class="clearfix page-content">
@@ -37,6 +42,10 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Temp content area -->
+                    <div style="display: none;">
+                        <?php echo $htmlContent; ?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -66,13 +75,13 @@
 
 <script>
     var companies = [];
+    var companyMakers = [];
     $(document).ready(function() {
         companies = <?php echo json_encode($json_str); ?>;
+        initMap(companies);
         loadRepairTable();
         loadNewBuildTable();
         loadScrappingTable();
-
-        initMap(companies);
     });
 
     loadRepairTable = function() {
@@ -95,10 +104,9 @@
                 scrollCollapse: true,
                 searching: false,
                 bInfo: false,
-            });
-
-            $("#repair-table").on("page.dt", function () {
-                initMap(companies);
+                drawCallback: () => {
+                    popover();
+                }
             });
         } else {
             $("#repair_tab").hide();
@@ -125,6 +133,9 @@
                 scrollCollapse: true,
                 searching: false,
                 bInfo: false,
+                drawCallback: () => {
+                    popover();
+                }
             });
         } else {
             $("#newbuild_tab").hide();
@@ -151,6 +162,9 @@
                 scrollCollapse: true,
                 searching: false,
                 bInfo: false,
+                drawCallback: () => {
+                    popover();
+                }
             });
         } else {
             $("#scrapping_tab").hide();
