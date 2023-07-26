@@ -6,132 +6,144 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="col-md-12">
-                <p>Length - Work Length or Total Length [mm]</p>
-                <p>Width - Width / Diameter [mm]</p>
-                <p>Height - Height [mm]</p>
-                <p>MSL - Max Securing Load [kN]</p>
-                <p>BL - Break Load [kN]</p>
+        <div class="row">
+            <div class="col-md-7">
+                <div class="form-group row">
+                    <div class="col-md-5">
+                        <span>No:</span>
+                    </div>
+                    <div class="col-md-7">
+                        <strong><?php echo $model_info->no; ?></strong>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-5">
+                        <span><?php echo app_lang("category"); ?>:</span>
+                    </div>
+                    <div class="col-md-7">
+                        <strong><?php echo $model_info->category; ?></strong>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-5">
+                        <span><?php echo app_lang("name"); ?>:</span>
+                    </div>
+                    <div class="col-md-7">
+                        <strong><?php echo $model_info->name; ?></strong>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-5">
+                        <span><?php echo app_lang("description"); ?>:</span>
+                    </div>
+                    <div class="col-md-7">
+                        <strong><?php echo $model_info->description; ?></strong>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-5">
+                        <span>Qty:</span>
+                    </div>
+                    <div class="col-md-7">
+                        <strong><?php echo $model_info->qty; ?></strong>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-5">
+                        <span>Length [mm]:</span>
+                    </div>
+                    <div class="col-md-7">
+                        <strong><?php echo $model_info->length; ?></strong>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-5">
+                        <span>Width [mm]:</span>
+                    </div>
+                    <div class="col-md-7">
+                        <strong><?php echo $model_info->width; ?></strong>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-5">
+                        <span>Height [mm]:</span>
+                    </div>
+                    <div class="col-md-7">
+                        <strong><?php echo $model_info->height; ?></strong>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-5">
+                        <span>MSL [kN]:</span>
+                    </div>
+                    <div class="col-md-7">
+                        <strong><?php echo $model_info->msl; ?></strong>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-5">
+                        <span>BL [kN]:</span>
+                    </div>
+                    <div class="col-md-7">
+                        <strong><?php echo $model_info->bl; ?></strong>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-5">
+                        <span><?php echo app_lang("supplied_date"); ?>:</span>
+                    </div>
+                    <div class="col-md-7">
+                        <strong><?php echo $model_info->supplied_date; ?></strong>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-5">
+                        <span><?php echo app_lang("supplied_place"); ?>:</span>
+                    </div>
+                    <div class="col-md-7">
+                        <strong><?php echo $model_info->supplied_place; ?></strong>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-5">
+                        <span><?php echo app_lang("property"); ?>:</span>
+                    </div>
+                    <div class="col-md-7">
+                        <strong><?php echo $model_info->property; ?></strong>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="form-group">
+                    <span>Length - Work Length or Total Length [mm]</span>
+                </div>
+                <div class="form-group">
+                    <span>Width - Width / Diameter [mm]</span>
+                </div>
+                <div class="form-group">
+                    <span>Height - Height [mm]</span>
+                </div>
+                <div class="form-group">
+                    <span>MSL - Max Securing Load [kN]</span>
+                </div>
+                <div class="form-group">
+                    <span>BL - Break Load [kN]</span>
+                </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="<?php echo $label_column; ?>">
-                <span>No.</span>
-            </div>
-            <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->no; ?></strong>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="<?php echo $label_column; ?>">
-                <span><?php echo app_lang("category"); ?></span>
-            </div>
-            <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->category; ?></strong>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="<?php echo $label_column; ?>">
-                <span><?php echo app_lang("name"); ?></span>
-            </div>
-            <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->name; ?></strong>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="<?php echo $label_column; ?>">
-                <span><?php echo app_lang("description"); ?></span>
-            </div>
-            <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->description; ?></strong>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="<?php echo $label_column; ?>">
-                <span>Qty</span>
-            </div>
-            <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->qty; ?></strong>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="<?php echo $label_column; ?>">
-                <span>Length [mm]:</span>
-            </div>
-            <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->length; ?></strong>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="<?php echo $label_column; ?>">
-                <span>Width [mm]:</span>
-            </div>
-            <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->width; ?></strong>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="<?php echo $label_column; ?>">
-                <span>Height [mm]:</span>
-            </div>
-            <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->height; ?></strong>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="<?php echo $label_column; ?>">
-                <span>MSL [kN]:</span>
-            </div>
-            <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->msl; ?></strong>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="<?php echo $label_column; ?>">
-                <span>BL [kN]:</span>
-            </div>
-            <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->bl; ?></strong>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="<?php echo $label_column; ?>">
-                <span><?php echo app_lang("supplied_date"); ?>:</span>
-            </div>
-            <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->supplied_date; ?></strong>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="<?php echo $label_column; ?>">
-                <span><?php echo app_lang("supplied_place"); ?>:</span>
-            </div>
-            <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->supplied_place; ?></strong>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="<?php echo $label_column; ?>">
-                <span><?php echo app_lang("property"); ?>:</span>
-            </div>
-            <div class="<?php echo $field_column; ?>">
-                <strong><?php echo $model_info->property; ?></strong>
-            </div>
-        </div>
     </div>
 </div>
 
