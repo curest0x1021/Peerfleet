@@ -1018,7 +1018,7 @@ class Shackles extends Security_Controller
                 }
 
                 // Shackles main data
-                $main = $this->findMainByItem($main_data["item_description"], $mains);
+                $main = $this->findMainByItem($main_data, $mains);
                 if ($main) {
                     $item_data["main_id"] = $main->id;
                 } else {
@@ -1028,6 +1028,8 @@ class Shackles extends Security_Controller
                     $temp = new stdClass();
                     $temp->id = $m_save_id;
                     $temp->item_description = $main_data["item_description"];
+                    $temp->wll = $main_data["wll"];
+                    $temp->type_id = $main_data["type_id"];
                     $mains[] = $temp;
                 }
 
@@ -1121,9 +1123,9 @@ class Shackles extends Security_Controller
         return false;
     }
 
-    private function findMainByItem($description, $arr) {
+    private function findMainByItem($data, $arr) {
         foreach ($arr as $item) {
-            if ($description == $item->item_description) {
+            if (($data["item_description"] == $item->item_description) || ($data["wll"] == $item->wll && $data["type_id"] == $item->type_id)) {
                 return $item;
             }
         }

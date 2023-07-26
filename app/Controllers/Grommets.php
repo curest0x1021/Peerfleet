@@ -990,7 +990,7 @@ class Grommets extends Security_Controller
                 }
 
                 // Grommets main data
-                $main = $this->findMainByItem($main_data["item_description"], $mains);
+                $main = $this->findMainByItem($main_data, $mains);
                 if ($main) {
                     $item_data["main_id"] = $main->id;
                 } else {
@@ -1000,6 +1000,8 @@ class Grommets extends Security_Controller
                     $temp = new stdClass();
                     $temp->id = $m_save_id;
                     $temp->item_description = $main_data["item_description"];
+                    $temp->wll = $main_data["wll"];
+                    $temp->wl = $main_data["wl"];
                     $mains[] = $temp;
                 }
 
@@ -1092,9 +1094,9 @@ class Grommets extends Security_Controller
         return false;
     }
 
-    private function findMainByItem($description, $arr) {
+    private function findMainByItem($data, $arr) {
         foreach ($arr as $item) {
-            if ($description == $item->item_description) {
+            if (($data["item_description"] == $item->item_description) || ($data["wll"] == $item->wll && $data["wl"] == $item->wl)) {
                 return $item;
             }
         }
