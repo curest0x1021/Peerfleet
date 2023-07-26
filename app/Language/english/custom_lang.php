@@ -256,9 +256,6 @@ $lang["require_loadtests"] = "Require loadtests";
 $lang["require_inspections"] = "Require inspections";
 $lang["maker"] = "Maker";
 $lang["link_to_task"] = "Link to Task";
-
-
-
 $lang["serviced_ports"] = "Serviced Ports";
 $lang["service_type"] = "Service Type";
 $lang["po_box"] = "P.O. BOX";
@@ -284,5 +281,9 @@ $lang["information"] = "Information";
 $lang["repair"] = "Repair";
 $lang["new_build"] = "New build";
 $lang["scrapping"] = "Scrapping";
+
+
+$lang["initial_test"] = "Initial test";
+$lang["initial_test_date"] = "Initial test date";
 
 return $lang;

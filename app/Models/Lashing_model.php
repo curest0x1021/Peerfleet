@@ -34,7 +34,7 @@ class Lashing_model extends Crud_model {
                     FROM $lashing_table
                     JOIN (SELECT lashing_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 AND inspection_date IS NOT NULL GROUP BY lashing_id) b
                         ON $lashing_table.id = b.lashing_id
-                    WHERE b.inspection_date < '$inspection_reminder_date'
+                    WHERE $lashing_table.deleted = 0 AND b.inspection_date < '$inspection_reminder_date'
                     GROUP BY $lashing_table.client_id
                 ) c ON $clients_table.id = c.client_id
                 WHERE $clients_table.deleted = 0 $where

@@ -35,7 +35,7 @@ class Misc_model extends Crud_model {
                     FROM $misc_table
                     JOIN (SELECT misc_id, MAX(test_date) as test_date FROM $loadtest_table WHERE deleted = 0 AND test_date IS NOT NULL GROUP BY misc_id) b
                         ON $misc_table.id = b.misc_id
-                    WHERE b.test_date < '$loadtest_reminder_date'
+                    WHERE $misc_table.deleted = 0 AND b.test_date < '$loadtest_reminder_date'
                     GROUP BY $misc_table.client_id
                 ) b ON $clients_table.id = b.client_id
                 LEFT JOIN (
@@ -43,7 +43,7 @@ class Misc_model extends Crud_model {
                     FROM $misc_table
                     JOIN (SELECT misc_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 AND inspection_date IS NOT NULL GROUP BY misc_id) b
                         ON $misc_table.id = b.misc_id
-                    WHERE b.inspection_date < '$inspection_reminder_date'
+                    WHERE $misc_table.deleted = 0 AND b.inspection_date < '$inspection_reminder_date'
                     GROUP BY $misc_table.client_id
                 ) c ON $clients_table.id = c.client_id
                 WHERE $clients_table.deleted = 0 $where

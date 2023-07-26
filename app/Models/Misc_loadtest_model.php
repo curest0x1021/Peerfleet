@@ -25,8 +25,11 @@ class Misc_loadtest_model extends Crud_model {
             $where .= " AND $misc_table.client_id = $client_id";
         }
 
-        $sql = "SELECT $misc_table.internal_id, $misc_table.id as misc_id, c.id, c.test_date, c.tested_by, c.location, c.passed, c.remarks
+        $sql = "SELECT $misc_table.internal_id, $misc_table.id as misc_id, k.initial_test_date, c.id, c.test_date, c.tested_by, c.location, c.passed, c.remarks
                 FROM $misc_table
+                LEFT JOIN (
+                    SELECT misc_id, test_date as initial_test_date FROM $loadtest_table WHERE initial_test = 1
+                    ) k ON $misc_table.id = k.misc_id
                 LEFT JOIN (
                     SELECT a.* FROM $loadtest_table a
                     JOIN (SELECT misc_id, MAX(test_date) as test_date FROM $loadtest_table GROUP BY misc_id) b ON a.misc_id = b.misc_id AND a.test_date = b.test_date
@@ -65,5 +68,17 @@ class Misc_loadtest_model extends Crud_model {
                 WHERE deleted = 0 AND misc_id = $misc_id AND test_date >= '$test_date'";
         $count = $this->db->query($sql)->resultID->num_rows;
         return $count == 0;
+    }
+
+    function is_allow_initial_test($misc_id, $id = null) {
+        $loadtest_table = $this->db->prefixTable("misc_loadtest");
+
+        $sql = "SELECT * FROM $loadtest_table WHERE misc_id=$misc_id AND initial_test=1";
+        $row = $this->db->query($sql)->getRow();
+        if ($row) {
+            return $row->id == $id;
+        } else {
+            return true;
+        }
     }
 }
