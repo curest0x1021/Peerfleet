@@ -164,7 +164,7 @@
 
 <div class="modal-footer">
     <?php
-    echo modal_anchor(get_uri("misc/info_modal_form/" . $model_info->client_id), "<i data-feather='edit-2' class='icon-16'></i> " . app_lang('edit'), array("class" => "btn btn-default", "data-post-id" => $model_info->id, "title" => app_lang('edit_item')));
+    echo modal_anchor(get_uri("misc/info_modal_form/" . $model_info->client_id . "/" . $model_info->main_id), "<i data-feather='edit-2' class='icon-16'></i> " . app_lang('edit'), array("class" => "btn btn-default", "data-post-id" => $model_info->id, "title" => app_lang('edit_item')));
     ?>
     <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
 </div>

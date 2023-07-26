@@ -24,6 +24,10 @@ class Grommets_loadtest_model extends Crud_model {
         if ($client_id) {
             $where .= " AND $grommet_table.client_id = $client_id";
         }
+        $main_id = $this->_get_clean_value($options, "main_id");
+        if ($main_id) {
+            $where .= " AND $grommet_table.main_id = $main_id";
+        }
 
         $sql = "SELECT $grommet_table.internal_id, $grommet_table.id as grommet_id, k.initial_test_date, c.id, c.test_date, c.tested_by, c.location, c.passed, c.remarks
                 FROM $grommet_table

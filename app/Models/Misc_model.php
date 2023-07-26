@@ -99,6 +99,10 @@ class Misc_model extends Crud_model {
         if ($client_id) {
             $where .= " AND $misc_table.client_id=$client_id";
         }
+        $main_id = $this->_get_clean_value($options, "main_id");
+        if ($main_id) {
+            $where .= " AND $misc_table.main_id=$main_id";
+        }
 
         $sql = "SELECT $main_table.item_description, $main_table.wll, $main_table.wl, $main_table.bl, $misc_table.*, $types_table.name as type, $icc_table.name as icc, $certificate_table.name as certificate_type, $manufacturer_table.name as manufacturer, lt.passed as loadtest_passed, it.passed as inspection_passed, it.remarks
                 FROM $misc_table
@@ -145,6 +149,19 @@ class Misc_model extends Crud_model {
         } else {
             return intval($row->id) + 1;
         }
+    }
+
+    function get_next_internal_id($client_id, $main_id) {
+        $misc_table = $this->db->prefixTable("misc");
+        $sql = "SELECT max(internal_id) as internal_id
+                FROM $misc_table
+                WHERE client_id = $client_id AND main_id = $main_id
+                GROUP BY main_id";
+        $result = $this->db->query($sql)->getRow();
+        $strs = explode("-", $result->internal_id);
+        $newIndex = intval(end($strs)) + 1;
+        $strs[count($strs) - 1] = $newIndex;
+        return implode("-", $strs);
     }
 
     // get id, internal_id only

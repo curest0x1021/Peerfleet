@@ -32,7 +32,7 @@ class Shackles extends Security_Controller
     private function _make_row($data) {
         $name = $data->name;
         if ($this->can_access_own_client($data->client_id)) {
-            $name = anchor(get_uri("shackles/view/" . $data->client_id), $data->name);
+            $name = anchor(get_uri("shackles/main_view/" . $data->client_id), $data->name);
         }
 
         $total_items = "---";
@@ -57,47 +57,35 @@ class Shackles extends Security_Controller
         );
     }
 
-    /* load shackles details view */
-    function view($client_id) {
-        if ($client_id) {
-            $view_data['client_id'] = $client_id;
-            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
-            $view_data['vessel'] = $this->Clients_model->get_one($client_id);
-
-            $info = $this->Shackles_model->get_warnning_info($client_id);
-            $require_loadtests = ($info && $info->require_loadtests > 0) ? $info->require_loadtests : 0;
-            $require_inspections = ($info && $info->require_inspections > 0) ? $info->require_inspections : 0;
-            $warnning = array(
-                "loadtests" => $require_loadtests > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_loadtests . '</span>' : "",
-                "inspections" => $require_inspections > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_inspections . '</span>' : ""
-            );
-            $view_data['warnning'] = $warnning;
-            return $this->template->rander("shackles/view", $view_data);
-        } else {
-            show_404();
-        }
+    function main_view($client_id) {
+        $view_data["client_id"] = $client_id;
+        $view_data["can_edit_items"] = $this->can_access_own_client($client_id);
+        $view_data['vessel'] = $this->Clients_model->get_one($client_id);
+        return $this->template->rander("shackles/main/index", $view_data);
     }
 
-    // Load shackles info tab
-    function info_tab($client_id) {
-        if ($client_id) {
-            $view_data['client_id'] = $client_id;
-            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
-            return $this->template->view("shackles/info/index", $view_data);
-        } else {
-            show_404();
+    function main_modal_form($client_id) {
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
         }
+        $view_data["client_id"] = $client_id;
+        $view_data["label_column"] = "col-md-4";
+        $view_data["field_column"] = "col-md-8";
+        $view_data["types_dropdown"] = $this->get_shackle_types_dropdown();
+        $view_data["manufacturers_dropdown"] = $this->get_manufacturers_dropdown();
+        $view_data["icc_dropdown"] = $this->get_identified_color_codes_dropdown();
+        $view_data["certificate_types_dropdown"] = $this->get_certificate_types_dropdown();
+
+        return $this->template->view("shackles/main/modal_form", $view_data);
     }
 
-    function save_info() {
-        $id = $this->request->getPost("id");
+    function save_main() {
         $client_id = $this->request->getPost("client_id");
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
 
         $this->validate_submitted_data(array(
-            "id" => "numeric",
             "client_id" => "required",
             "item_description" => "required",
             "internal_id" => "required",
@@ -118,7 +106,6 @@ class Shackles extends Security_Controller
             "lifts" => "required"
         ));
 
-        $main_id = $this->request->getPost("main_id");
         $main_data = array(
             "item_description" => $this->request->getPost("item_description"),
             "wll" => $this->request->getPost("wll"),
@@ -128,18 +115,147 @@ class Shackles extends Security_Controller
             "pd" => $this->request->getPost("pd"),
             "il" => $this->request->getPost("il")
         );
-        if (!$main_id) {
-            $main_row = $this->Shackles_main_model->get_all_where(array("item_description" => $main_data["item_description"]))->getRow();
-            if ($main_row) {
-                $main_id = $main_row->id;
-            }
+
+        $main_row = $this->Shackles_main_model->get_all_where(array("item_description" => $main_data["item_description"]))->getRow();
+        if ($main_row) {
+            $m_save_id = $this->Shackles_main_model->ci_save($main_data, $main_row->id);
+        } else {
+            $m_save_id = $this->Shackles_main_model->ci_save($main_data);
         }
-        $m_save_id = $this->Shackles_main_model->ci_save($main_data, $main_id);
 
         $data = array(
             "internal_id" => $this->request->getPost("internal_id"),
             "client_id" => $this->request->getPost("client_id"),
             "main_id" => $m_save_id,
+            "qty" => $this->request->getPost("qty"),
+            "icc_id" => $this->request->getPost("icc_id"),
+            "certificate_number" => $this->request->getPost("certificate_number"),
+            "certificate_type_id" => $this->request->getPost("certificate_type_id"),
+            "tag_marking" => $this->request->getPost("tag_marking"),
+            "manufacturer_id" => $this->request->getPost("manufacturer_id"),
+            "supplied_date" => $this->request->getPost("supplied_date"),
+            "supplied_place" => $this->request->getPost("supplied_place"),
+            "lifts" => $this->request->getPost("lifts"),
+            "date_of_discharged" => $this->request->getPost("date_of_discharged"),
+        );
+
+        $save_id = $this->Shackles_model->ci_save($data);
+        if ($save_id) {
+            echo json_encode(array("success" => true, 'message' => app_lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+
+    }
+
+    function main_list_data($client_id) {
+        $list_data = [];
+        if ($client_id) {
+            $list_data = $this->Shackles_main_model->get_details($client_id);
+        }
+
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_main_make_row($data, $client_id);
+        }
+
+        echo json_encode(array("data" => $result));
+    }
+
+    private function _main_make_row($data, $client_id) {
+        $item = $data->item_description;
+        if ($this->can_access_own_client($client_id)) {
+            $item = anchor(get_uri("shackles/view/" . $client_id . "/" . $data->id), $item);
+        }
+
+        $success_icon = '  <span style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;"></span>';
+        $failed_icon = '  <span style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></span>';
+
+        $load_tests = $data->loadtest_passed . " of " . $data->total_test . " tested";
+        if ($data->loadtest_passed < $data->total_test) {
+            $load_tests .= $failed_icon;
+        } else {
+            $load_tests .= $success_icon;
+        }
+
+        $inspection_tests = $data->inspection_passed . " of " . $data->total_test . " inspected";
+        if ($data->inspection_passed < $data->total_test) {
+            $inspection_tests .= $failed_icon;
+        } else {
+            $inspection_tests .= $success_icon;
+        }
+
+        return array(
+            $data->id,
+            $item,
+            $data->wll,
+            $data->type,
+            $data->qty,
+            $data->bl,
+            $data->iw,
+            $data->pd,
+            $data->il,
+            $data->supplied_place,
+            $data->supplied_date,
+            $inspection_tests,
+            $load_tests
+        );
+    }
+
+    /* load shackles details view */
+    function view($client_id, $main_id) {
+        if ($client_id && $main_id) {
+            $view_data['client_id'] = $client_id;
+            $view_data['main_id'] = $main_id;
+            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
+            $view_data['vessel'] = $this->Clients_model->get_one($client_id);
+            $view_data['main_info'] = $this->Shackles_main_model->get_one($main_id);
+
+            return $this->template->rander("shackles/view", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    // Load shackles info tab
+    function info_tab($client_id, $main_id) {
+        if ($client_id && $main_id) {
+            $view_data['client_id'] = $client_id;
+            $view_data['main_id'] = $main_id;
+            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
+            return $this->template->view("shackles/info/index", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    function save_info() {
+        $id = $this->request->getPost("id");
+        $client_id = $this->request->getPost("client_id");
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "client_id" => "required",
+            "main_id" => "required",
+            "internal_id" => "required",
+            "qty" => "required",
+            "icc_id" => "required",
+            "certificate_number" => "required",
+            "certificate_type_id" => "required",
+            "manufacturer_id" => "required",
+            "tag_marking" => "required",
+            "supplied_date" => "required",
+            "supplied_place" => "required",
+            "lifts" => "required"
+        ));
+
+        $data = array(
+            "internal_id" => $this->request->getPost("internal_id"),
+            "client_id" => $this->request->getPost("client_id"),
+            "main_id" => $this->request->getPost("main_id"),
             "qty" => $this->request->getPost("qty"),
             "icc_id" => $this->request->getPost("icc_id"),
             "certificate_number" => $this->request->getPost("certificate_number"),
@@ -175,8 +291,8 @@ class Shackles extends Security_Controller
         }
     }
 
-    function info_list_data($client_id) {
-        $list_data = $this->Shackles_model->get_shackles_details(array("client_id" => $client_id))->getResult();
+    function info_list_data($client_id, $main_id) {
+        $list_data = $this->Shackles_model->get_shackles_details(array("client_id" => $client_id, "main_id" => $main_id))->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_info_make_row($data);
@@ -194,7 +310,7 @@ class Shackles extends Security_Controller
         $action = "";
         if ($this->can_access_own_client($data->client_id)) {
             $internal_id = modal_anchor(get_uri("shackles/info_detail_view/" . $data->id), $data->internal_id, array("class" => "edit", "title" => app_lang('shackles'), "data-post-id" => $data->id));
-            $action = modal_anchor(get_uri("shackles/info_modal_form/" . $data->client_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id))
+            $action = modal_anchor(get_uri("shackles/info_modal_form/" . $data->client_id . "/" . $data->main_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id))
                 . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("shackles/delete_info"), "data-action" => "delete-confirmation"));
         }
 
@@ -244,14 +360,18 @@ class Shackles extends Security_Controller
         return $this->template->view("shackles/info/detail_view", $view_data);
     }
 
-    function info_modal_form($client_id) {
+    function info_modal_form($client_id, $main_id) {
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
         $id = $this->request->getPost("id");
         $view_data["client_id"] = $client_id;
         $model_info = $this->Shackles_model->get_one($id);
-        $main_info = $this->Shackles_main_model->get_one($model_info->main_id);
+        $main_info = $this->Shackles_main_model->get_one($main_id);
+        if (!$id) {
+            $next_internal_id = $this->Shackles_model->get_next_internal_id($client_id, $main_id);
+            $view_data["next_internal_id"] = $next_internal_id;
+        }
         $view_data["model_info"] = $model_info;
         $view_data["main_info"] = $main_info;
         $view_data["label_column"] = "col-md-4";
@@ -275,9 +395,10 @@ class Shackles extends Security_Controller
 
 
     // Load shackles loadtest tab
-    function loadtest_tab($client_id) {
-        if ($client_id) {
+    function loadtest_tab($client_id, $main_id) {
+        if ($client_id && $main_id) {
             $view_data['client_id'] = $client_id;
+            $view_data['main_id'] = $main_id;
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
             return $this->template->view("shackles/loadtest/index", $view_data);
         } else {
@@ -336,8 +457,8 @@ class Shackles extends Security_Controller
         }
     }
 
-    function loadtest_list_data($client_id) {
-        $list_data = $this->Shackles_loadtest_model->get_details(array("client_id" => $client_id))->getResult();
+    function loadtest_list_data($client_id, $main_id) {
+        $list_data = $this->Shackles_loadtest_model->get_details(array("client_id" => $client_id, "main_id" => $main_id))->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_loadtest_make_row($data, $client_id);
@@ -452,9 +573,10 @@ class Shackles extends Security_Controller
 
 
     // Load shackles loadtest tab
-    function inspection_tab($client_id) {
-        if ($client_id) {
+    function inspection_tab($client_id, $main_id) {
+        if ($client_id && $main_id) {
             $view_data['client_id'] = $client_id;
+            $view_data['main_id'] = $main_id;
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
             return $this->template->view("shackles/inspection/index", $view_data);
         } else {
@@ -512,8 +634,8 @@ class Shackles extends Security_Controller
         }
     }
 
-    function inspection_list_data($client_id) {
-        $list_data = $this->Shackles_inspection_model->get_details(array("client_id" => $client_id))->getResult();
+    function inspection_list_data($client_id, $main_id) {
+        $list_data = $this->Shackles_inspection_model->get_details(array("client_id" => $client_id, "main_id" => $main_id))->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_inspection_make_row($data, $client_id);
