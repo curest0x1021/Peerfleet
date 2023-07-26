@@ -9,6 +9,22 @@
                 <strong><?php echo $misc->internal_id; ?></strong>
             </div>
         </div>
+        <?php if ($allow_initial_test) { ?>
+            <div class="form-group">
+                <div class="row">
+                    <label for="initial_test" class="<?php echo $label_column; ?>"><?php echo app_lang('initial_test'); ?></label>
+                    <div class="<?php echo $field_column; ?>">
+                        <?php
+                        echo form_checkbox(
+                            "initial_test", "1", $model_info->initial_test, "id='initial_test' class='form-check-input'"
+                        );
+                        ?>
+                    </div>
+                </div>
+            </div>
+        <?php } else { ?>
+            <input type="hidden" name="initial_test" value="0" />
+        <?php } ?>
         <div class="form-group row">
             <div class="<?php echo $label_column; ?>">
                 <span><?php echo app_lang("test_date"); ?>:</span>

@@ -298,7 +298,8 @@ class Grommets extends Security_Controller
             "tested_by" => $this->request->getPost("tested_by"),
             "location" => $this->request->getPost("location"),
             "passed" => $this->request->getPost("passed"),
-            "remarks" => $this->request->getPost("remarks")
+            "remarks" => $this->request->getPost("remarks"),
+            "initial_test" => $this->request->getPost("initial_test")
         );
 
         if (empty($id) && !$this->Grommets_loadtest_model->check_valid_loadtest($data["grommet_id"], $data["test_date"])) {
@@ -387,17 +388,34 @@ class Grommets extends Security_Controller
             $next_test_date = date('Y-m-d', strtotime($data->test_date. ' + 5 years'));
         }
 
-        return array(
-            $data->id,
-            $internal_id,
-            $data->test_date,
-            $data->tested_by,
-            $data->location,
-            $passed,
-            $data->remarks,
-            $next_test_date,
-            $action
-        );
+        if ($showInternalId) {
+            return array(
+                $data->id,
+                $internal_id,
+                $data->initial_test_date,
+                $data->test_date,
+                $data->tested_by,
+                $data->location,
+                $passed,
+                $data->remarks,
+                $next_test_date,
+                $action
+            );
+        } else {
+            $initial_test = $data->initial_test == "1" ? "<span class='checkbox-checked mr15 float-start'></span>" : "";
+            return array(
+                $data->id,
+                $internal_id,
+                $initial_test,
+                $data->test_date,
+                $data->tested_by,
+                $data->location,
+                $passed,
+                $data->remarks,
+                $next_test_date,
+                $action
+            );
+        }
     }
 
     function loadtest_modal_form($grommet_id) {
@@ -405,7 +423,9 @@ class Grommets extends Security_Controller
         if (!$this->can_access_own_client($grommet->client_id)) {
             app_redirect("forbidden");
         }
-        $view_data["model_info"] = $this->Grommets_loadtest_model->get_one($this->request->getPost("id"));
+        $id = $this->request->getPost("id");
+        $view_data["model_info"] = $this->Grommets_loadtest_model->get_one($id);
+        $view_data["allow_initial_test"] = $this->Grommets_loadtest_model->is_allow_initial_test($grommet_id, $id);
         $view_data["grommet"] = $grommet;
         $view_data["force_refresh"] = $this->request->getPost("force_refresh");
         $view_data["label_column"] = "col-md-3";
@@ -636,7 +656,8 @@ class Grommets extends Security_Controller
             ["key" => "inspection_authority", "required" => false],
             ["key" => "lifts", "required" => false],
             ["key" => "date_of_discharged", "required" => false],
-            ["key" => "remarks", "required" => false],
+            ["key" => "remarks_load_test", "required" => false],
+            ["key" => "remarks_visual_inspection", "required" => false],
             ["key" => "initial_test_passed", "required" => false],
             ["key" => "last_test_passed", "required" => false],
             ["key" => "inspection_passed", "required" => false],
@@ -739,13 +760,15 @@ class Grommets extends Security_Controller
                 $loadtest_data["last"]["tested_by"] = $row_data_value;
             } else if ($header_key_value == "last_test_passed") {
                 $loadtest_data["last"]["passed"] = $row_data_value;
+            } else if ($header_key_value == "remarks_load_test") {
+                $loadtest_data["last"]["remarks"] = $row_data_value;
             } else if ($header_key_value == "inspection_date") {
                 $inspection_data["inspection_date"] = $row_data_value;
             } else if ($header_key_value == "inspection_authority") {
                 $inspection_data["inspected_by"] = $row_data_value;
             } else if ($header_key_value == "inspection_passed") {
                 $inspection_data["passed"] = $row_data_value;
-            } else if ($header_key_value == "remarks") {
+            } else if ($header_key_value == "remarks_visual_inspection") {
                 $inspection_data["remarks"] = $row_data_value;
             } else if ($header_key_value == "supplied_date") {
                 if (is_valid_date($row_data_value)) {
@@ -1023,9 +1046,10 @@ class Grommets extends Security_Controller
                     $test_date = date_format(date_create($loadtest_data["initial"]["test_date"]), "Y-m-d");
                     $data = array(
                         "grommet_id" => $save_id,
+                        "initial_test" => 1,
                         "test_date" => $test_date,
                         "tested_by" => $loadtest_data["initial"]["tested_by"],
-                        "passed" => $loadtest_data["initial"]["passed"] ?? 0
+                        "passed" => $loadtest_data["initial"]["passed"] == '1' ? 1 : 0
                     );
                     if ($this->valid_loadtest($save_id, $data["test_date"], $load_tests)) {
                         $this->Grommets_loadtest_model->ci_save($data);
@@ -1043,7 +1067,8 @@ class Grommets extends Security_Controller
                         "grommet_id" => $save_id,
                         "test_date" => $test_date,
                         "tested_by" => $loadtest_data["last"]["tested_by"],
-                        "passed" => $loadtest_data["last"]["passed"] ?? 0
+                        "passed" => $loadtest_data["last"]["passed"] == '1' ? 1 : 0,
+                        "remarks" => $loadtest_data["last"]["remarks"]
                     );
                     if ($this->valid_loadtest($save_id, $data["test_date"], $load_tests)) {
                         $this->Grommets_loadtest_model->ci_save($data);
@@ -1062,8 +1087,8 @@ class Grommets extends Security_Controller
                         "grommet_id" => $save_id,
                         "inspection_date" => $inspection_date,
                         "inspected_by" => $inspection_data["inspected_by"],
-                        "remarks" => $inspection_data["remarks"],
-                        "passed" => $inspection_data["passed"] ?? 0
+                        "passed" => $inspection_data["passed"] == '1' ? 1 : 0,
+                        "remarks" => $inspection_data["remarks"]
                     );
                     if ($this->valid_inspection($save_id, $data["inspection_date"], $inspections)) {
                         $this->Grommets_inspection_model->ci_save($data);
