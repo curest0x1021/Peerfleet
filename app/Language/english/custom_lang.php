@@ -223,7 +223,6 @@ $lang["passed"] = "Passed";
 $lang["not_passed"] = "Not passed";
 $lang["load_test_interval"] = "Load Test Interval";
 $lang["visual_inspection_interval"] = "Visual Inspection Interval";
-$lang["grommets_info"] = "Grommets Info";
 $lang["shackles_info"] = "Shackles Info";
 $lang["misc_info"] = "Misc. Lifting Gears Info";
 $lang["lashing_info"] = "Lashing & Dunnage Info";
@@ -285,5 +284,8 @@ $lang["scrapping"] = "Scrapping";
 
 $lang["initial_test"] = "Initial test";
 $lang["initial_test_date"] = "Initial test date";
+$lang["grommets_info"] = "Grommets & Wire Slings Info";
+$lang["supplier"] = "Supplier";
+$lang["delivered_on_board"] = "Delivered on board";
 
 return $lang;

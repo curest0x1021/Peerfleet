@@ -24,6 +24,10 @@ class Shackles_loadtest_model extends Crud_model {
         if ($client_id) {
             $where .= " AND $shackles_table.client_id = $client_id";
         }
+        $main_id = $this->_get_clean_value($options, "main_id");
+        if ($main_id) {
+            $where .= " AND $shackles_table.main_id = $main_id";
+        }
 
         $sql = "SELECT $shackles_table.internal_id, $shackles_table.id as shackle_id, k.initial_test_date, c.id, c.test_date, c.tested_by, c.location, c.passed, c.remarks
                 FROM $shackles_table

@@ -99,6 +99,11 @@ class Grommets_model extends Crud_model {
             $where .= " AND $grommets_table.client_id=$client_id";
         }
 
+        $main_id = $this->_get_clean_value($options, "main_id");
+        if ($main_id) {
+            $where .= " AND $grommets_table.main_id=$main_id";
+        }
+
         $sql = "SELECT $main_table.item_description, $main_table.wll, $main_table.wl, $main_table.dia, $main_table.bl, $grommets_table.*, $icc_table.name as icc, $certificate_table.name as certificate_type, $manufacturer_table.name as manufacturer, lt.passed as loadtest_passed, it.passed as inspection_passed, it.remarks
                 FROM $grommets_table
                 JOIN $main_table ON $main_table.id = $grommets_table.main_id
@@ -121,7 +126,7 @@ class Grommets_model extends Crud_model {
         $sql = "SELECT max(internal_id) as internal_id
                 FROM $grommets_table
                 WHERE client_id=$client_id AND main_id=(SELECT id FROM $main_table WHERE wll=$wll AND wl=$wl)
-                GROUP BY $grommets_table.main_id";
+                GROUP BY main_id";
         $result = $this->db->query($sql)->getRow();
         if (empty($result->internal_id)) {
             $internal_id = "G-" . $wll . "-" . $wl * 10 . "-1";
@@ -131,6 +136,19 @@ class Grommets_model extends Crud_model {
             $internal_id = "G-" . $wll . "-" . $wl * 10 . "-" . $newIndex;
         }
         return $internal_id;
+    }
+
+    function get_next_internal_id($client_id, $main_id) {
+        $grommets_table = $this->db->prefixTable("grommets");
+        $sql = "SELECT max(internal_id) as internal_id
+                FROM $grommets_table
+                WHERE client_id = $client_id AND main_id = $main_id
+                GROUP BY main_id";
+        $result = $this->db->query($sql)->getRow();
+        $strs = explode("-", $result->internal_id);
+        $newIndex = intval(end($strs)) + 1;
+        $strs[count($strs) - 1] = $newIndex;
+        return implode("-", $strs);
     }
 
     // get id, internal_id only

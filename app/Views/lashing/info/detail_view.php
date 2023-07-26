@@ -100,6 +100,24 @@
 
                 <div class="form-group row">
                     <div class="col-md-5">
+                        <span><?php echo app_lang("icc"); ?>:</span>
+                    </div>
+                    <div class="col-md-7">
+                        <strong><?php echo $model_info->icc; ?></strong>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-5">
+                        <span><?php echo app_lang("manufacturer"); ?>:</span>
+                    </div>
+                    <div class="col-md-7">
+                        <strong><?php echo $model_info->manufacturer; ?></strong>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-5">
                         <span><?php echo app_lang("supplied_date"); ?>:</span>
                     </div>
                     <div class="col-md-7">

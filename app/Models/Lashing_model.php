@@ -16,7 +16,6 @@ class Lashing_model extends Crud_model {
         $lashing_table = $this->db->prefixTable("lashing");
         $inspection_table = $this->db->prefixTable("lashing_inspection");
 
-        $loadtest_reminder_date = get_loadtest_reminder_date();
         $inspection_reminder_date = get_visual_inspection_reminder_date();
 
         $where = "";
@@ -61,6 +60,8 @@ class Lashing_model extends Crud_model {
     function get_lashing_details($options = array()) {
         $lashing_table = $this->db->prefixTable("lashing");
         $category_table = $this->db->prefixTable("lashing_category");
+        $icc_table = $this->db->prefixTable("color_codes");
+        $manufacturer_table = $this->db->prefixTable("manufacturers");
 
         $where = "";
 
@@ -74,9 +75,11 @@ class Lashing_model extends Crud_model {
             $where .= " AND $lashing_table.client_id=$client_id";
         }
 
-        $sql = "SELECT $lashing_table.*, $category_table.name as category
+        $sql = "SELECT $lashing_table.*, $category_table.name as category, $icc_table.name as icc, $manufacturer_table.name as manufacturer
                 FROM $lashing_table
                 LEFT JOIN $category_table ON $category_table.id = $lashing_table.category_id
+                LEFT JOIN $icc_table ON $icc_table.id = $lashing_table.icc_id
+                LEFT JOIN $manufacturer_table ON $manufacturer_table.id = $lashing_table.manufacturer_id
                 WHERE $lashing_table.deleted = 0 $where
                 ORDER BY $lashing_table.id ASC";
 

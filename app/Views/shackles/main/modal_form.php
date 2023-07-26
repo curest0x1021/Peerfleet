@@ -20,11 +20,9 @@
                     </div>
                 </div>
                 <div class="col-lg-8">
-                    <?php echo form_open(get_uri("shackles/save_info"), array("id" => "shackle-form", "class" => "general-form", "role" => "form")); ?>
+                    <?php echo form_open(get_uri("shackles/save_main"), array("id" => "shackle-form", "class" => "general-form", "role" => "form")); ?>
                     <div class="clearfix">
                         <div class="container-fluid">
-                            <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
-                            <input type="hidden" name="main_id" value="<?php echo $main_info->id; ?>" />
                             <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" />
 
                             <div class="form-group row">
@@ -36,7 +34,7 @@
                                     echo form_input(array(
                                         "id" => "internal_id",
                                         "name" => "internal_id",
-                                        "value" => $model_info->internal_id ? $model_info->internal_id : $next_internal_id,
+                                        "value" => "S-",
                                         "class" => "form-control",
                                         "placeholder" => app_lang('internal_id'),
                                         "readonly" => true,
@@ -56,9 +54,114 @@
                                     echo form_input(array(
                                         "id" => "item_description",
                                         "name" => "item_description",
-                                        "value" => $main_info->item_description,
                                         "class" => "form-control",
                                         "readonly" => true,
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="<?php echo $label_column; ?>">
+                                    <span>WLL [TS]:</span>
+                                </div>
+                                <div class="<?php echo $field_column; ?>">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "wll",
+                                        "name" => "wll",
+                                        "class" => "form-control",
+                                        "placeholder" => app_lang('wll'),
+                                        "type" => "number",
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="<?php echo $label_column; ?>">
+                                    <span><?php echo app_lang("type"); ?>:</span>
+                                </div>
+                                <div class="<?php echo $field_column; ?>">
+                                    <?php
+                                    echo form_dropdown("type_id", $types_dropdown, array(), "class='select2 validate-hidden' id='type_id' data-rule-required='true' data-msg-required='" . app_lang('field_required') . "'");
+                                    ?>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="<?php echo $label_column; ?>">
+                                    <span>BL [kN]:</span>
+                                </div>
+                                <div class="<?php echo $field_column; ?>">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "bl",
+                                        "name" => "bl",
+                                        "class" => "form-control",
+                                        "placeholder" => app_lang("bl"),
+                                        "type" => "number",
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="<?php echo $label_column; ?>">
+                                    <span>IL [mm]:</span>
+                                </div>
+                                <div class="<?php echo $field_column; ?>">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "il",
+                                        "name" => "il",
+                                        "class" => "form-control",
+                                        "placeholder" => app_lang('il'),
+                                        "type" => "number",
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="<?php echo $label_column; ?>">
+                                    <span>PD [mm]:</span>
+                                </div>
+                                <div class="<?php echo $field_column; ?>">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "pd",
+                                        "name" => "pd",
+                                        "class" => "form-control",
+                                        "placeholder" => app_lang('pd'),
+                                        "type" => "number",
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="<?php echo $label_column; ?>">
+                                    <span>IW [mm]:</span>
+                                </div>
+                                <div class="<?php echo $field_column; ?>">
+                                    <?php
+                                    echo form_input(array(
+                                        "id" => "iw",
+                                        "name" => "iw",
+                                        "class" => "form-control",
+                                        "placeholder" => app_lang('iw'),
+                                        "type" => "number",
                                         "data-rule-required" => true,
                                         "data-msg-required" => app_lang("field_required"),
                                     ));
@@ -75,7 +178,6 @@
                                     echo form_input(array(
                                         "id" => "qty",
                                         "name" => "qty",
-                                        "value" => $model_info->qty ? $model_info->qty : "",
                                         "class" => "form-control",
                                         "placeholder" => app_lang('qty'),
                                         "type" => "number",
@@ -92,7 +194,7 @@
                                 </div>
                                 <div class="<?php echo $field_column; ?>">
                                     <?php
-                                    echo form_dropdown("icc_id", $icc_dropdown, array($model_info->icc_id), "class='select2 validate-hidden' id='icc_id' data-rule-required='true' data-msg-required='" . app_lang('field_required') . "'");
+                                    echo form_dropdown("icc_id", $icc_dropdown, array(), "class='select2 validate-hidden' id='icc_id' data-rule-required='true' data-msg-required='" . app_lang('field_required') . "'");
                                     ?>
                                 </div>
                             </div>
@@ -106,7 +208,6 @@
                                     echo form_input(array(
                                         "id" => "certificate_number",
                                         "name" => "certificate_number",
-                                        "value" => $model_info->certificate_number ? $model_info->certificate_number : "",
                                         "class" => "form-control",
                                         "placeholder" => app_lang('certificate_number'),
                                         "data-rule-required" => true,
@@ -122,7 +223,7 @@
                                 </div>
                                 <div class="<?php echo $field_column; ?>">
                                     <?php
-                                    echo form_dropdown("certificate_type_id", $certificate_types_dropdown, array($model_info->certificate_type_id), "class='select2 validate-hidden' id='certificate_type_id' data-rule-required='true' data-msg-required='" . app_lang('field_required') . "'");
+                                    echo form_dropdown("certificate_type_id", $certificate_types_dropdown, array(), "class='select2 validate-hidden' id='certificate_type_id' data-rule-required='true' data-msg-required='" . app_lang('field_required') . "'");
                                     ?>
                                 </div>
                             </div>
@@ -136,7 +237,6 @@
                                     echo form_input(array(
                                         "id" => "tag_marking",
                                         "name" => "tag_marking",
-                                        "value" => $model_info->tag_marking ? $model_info->tag_marking : "",
                                         "class" => "form-control",
                                         "placeholder" => app_lang('tag_marking'),
                                     ));
@@ -150,7 +250,7 @@
                                 </div>
                                 <div class="<?php echo $field_column; ?>">
                                     <?php
-                                    echo form_dropdown("manufacturer_id", $manufacturers_dropdown, array($model_info->manufacturer_id), "class='select2 validate-hidden' id='manufacturer_id' data-rule-required='true' data-msg-required='" . app_lang('field_required') . "'");
+                                    echo form_dropdown("manufacturer_id", $manufacturers_dropdown, array(), "class='select2 validate-hidden' id='manufacturer_id' data-rule-required='true' data-msg-required='" . app_lang('field_required') . "'");
                                     ?>
                                 </div>
                             </div>
@@ -164,7 +264,6 @@
                                     echo form_input(array(
                                         "id" => "supplied_date",
                                         "name" => "supplied_date",
-                                        "value" => $model_info->supplied_date ? $model_info->supplied_date : "",
                                         "class" => "form-control",
                                         "placeholder" => app_lang('supplied_date'),
                                         "autocomplete" => "off",
@@ -184,7 +283,6 @@
                                     echo form_input(array(
                                         "id" => "supplied_place",
                                         "name" => "supplied_place",
-                                        "value" => $model_info->supplied_place ? $model_info->supplied_place : "",
                                         "class" => "form-control",
                                         "placeholder" => app_lang('supplied_place'),
                                         "data-rule-required" => true,
@@ -203,7 +301,6 @@
                                     echo form_input(array(
                                         "id" => "lifts",
                                         "name" => "lifts",
-                                        "value" => $model_info->lifts ? $model_info->lifts : "",
                                         "class" => "form-control",
                                         "placeholder" => app_lang('lifts'),
                                         "type" => "number",
@@ -223,7 +320,6 @@
                                     echo form_input(array(
                                         "id" => "date_of_discharged",
                                         "name" => "date_of_discharged",
-                                        "value" => $model_info->date_of_discharged ? $model_info->date_of_discharged : "",
                                         "class" => "form-control",
                                         "placeholder" => app_lang('date_of_discharged')
                                     ));
@@ -247,6 +343,8 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        const clientId = <?php echo $client_id; ?>;
+
         $('#shackle-form').bind('submit', function () {
             $('#type_id').prop('disabled', false);
         });
@@ -256,15 +354,47 @@
                 appAlert.success(result.message, {
                     duration: 10000
                 });
-                $("#shackle-table").appTable({
-                    newData: result.data,
-                    dataId: result.id
-                });
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500);
             }
         });
 
         $(".select2").select2();
         setDatePicker("#supplied_date");
         setDatePicker("#date_of_discharged");
+
+        $("#wll").on("input", (e) => {
+            generateItemDescription();
+            generateInternalId();
+        });
+
+        $("#type_id").change(function(e) {
+            generateItemDescription();
+            generateInternalId();
+        });
+
+        function generateItemDescription() {
+            const wll = $("#wll").val();
+            const type = $("#type_id option:selected").text();
+            $("#item_description").val(`${wll} Ts-${type}`);
+        }
+
+        function generateInternalId() {
+            const wll = $("#wll").val();
+            const type_id = $("#type_id").val();
+            if (clientId && wll && type_id) {
+                $.ajax({
+                    url: "<?php echo get_uri('shackles/get_internal_id') ?>",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {client_id: clientId, wll: wll, type_id: type_id},
+                    success: function (result) {
+                        const { internal_id } = result;
+                        $("#internal_id").val(internal_id);
+                    }
+                });
+            }
+        }
     });
 </script>

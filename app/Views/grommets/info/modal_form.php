@@ -24,7 +24,7 @@
                     <div class="clearfix">
                         <div class="container-fluid">
                             <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
-                            <input type="hidden" name="main_id" value="<?php echo $model_info->main_id; ?>" />
+                            <input type="hidden" name="main_id" value="<?php echo $main_info->id; ?>" />
                             <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" />
 
                             <div class="form-group row">
@@ -36,7 +36,7 @@
                                     echo form_input(array(
                                         "id" => "internal_id",
                                         "name" => "internal_id",
-                                        "value" => $model_info->internal_id ? $model_info->internal_id : "G-",
+                                        "value" => $model_info->internal_id ? $model_info->internal_id : $next_internal_id,
                                         "class" => "form-control",
                                         "readonly" => true,
                                         "data-rule-required" => true,
@@ -55,90 +55,9 @@
                                     echo form_input(array(
                                         "id" => "item_description",
                                         "name" => "item_description",
-                                        "value" => $main_info->item_description ? $main_info->item_description : "Grommet-",
+                                        "value" => $main_info->item_description,
                                         "class" => "form-control",
                                         "readonly" => true,
-                                        "data-rule-required" => true,
-                                        "data-msg-required" => app_lang("field_required"),
-                                    ));
-                                    ?>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <div class="<?php echo $label_column; ?>">
-                                    <span>WLL (TS):</span>
-                                </div>
-                                <div class="<?php echo $field_column; ?>">
-                                    <?php
-                                    echo form_input(array(
-                                        "id" => "wll",
-                                        "name" => "wll",
-                                        "value" => $main_info->wll ? $main_info->wll : "",
-                                        "class" => "form-control",
-                                        "placeholder" => app_lang('wll'),
-                                        "type" => "number",
-                                        "data-rule-required" => true,
-                                        "data-msg-required" => app_lang("field_required"),
-                                    ));
-                                    ?>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <div class="<?php echo $label_column; ?>">
-                                    <span>WL (m):</span>
-                                </div>
-                                <div class="<?php echo $field_column; ?>">
-                                    <?php
-                                    echo form_input(array(
-                                        "id" => "wl",
-                                        "name" => "wl",
-                                        "value" => $main_info->wl ? $main_info->wl : "",
-                                        "class" => "form-control",
-                                        "placeholder" => app_lang('wl'),
-                                        "type" => "number",
-                                        "step" => 0.1,
-                                        "data-rule-required" => true,
-                                        "data-msg-required" => app_lang("field_required"),
-                                    ));
-                                    ?>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <div class="<?php echo $label_column; ?>">
-                                    <span>Dia (mm):</span>
-                                </div>
-                                <div class="<?php echo $field_column; ?>">
-                                    <?php
-                                    echo form_input(array(
-                                        "id" => "dia",
-                                        "name" => "dia",
-                                        "value" => $main_info->dia ? $main_info->dia : "",
-                                        "class" => "form-control",
-                                        "placeholder" => app_lang('dia'),
-                                        "type" => "number",
-                                        "data-rule-required" => true,
-                                        "data-msg-required" => app_lang("field_required"),
-                                    ));
-                                    ?>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <div class="<?php echo $label_column; ?>">
-                                    <span>BL (kN):</span>
-                                </div>
-                                <div class="<?php echo $field_column; ?>">
-                                    <?php
-                                    echo form_input(array(
-                                        "id" => "bl",
-                                        "name" => "bl",
-                                        "value" => $main_info->bl ? $main_info->bl : "",
-                                        "class" => "form-control",
-                                        "placeholder" => app_lang('bl'),
-                                        "type" => "number",
                                         "data-rule-required" => true,
                                         "data-msg-required" => app_lang("field_required"),
                                     ));
@@ -327,9 +246,6 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        const clientId = <?php echo $client_id; ?>;
-        const grommetId = '<?php echo $model_info->id; ?>';
-
         $("#grommet-form").appForm({
             onSuccess: function(result) {
                 appAlert.success(result.message, {
@@ -345,43 +261,5 @@
         $(".select2").select2();
         setDatePicker("#supplied_date");
         setDatePicker("#date_of_discharged");
-
-        if (grommetId) {
-            $("#wll").attr("readonly", true);
-            $("#wl").attr("readonly", true);
-        }
-
-        $("#wll").on("input", (e) => {
-            generateItemDescription();
-            generateInternalId();
-        });
-
-        $("#wl").on("input", (e) => {
-            generateItemDescription();
-            generateInternalId();
-        });
-
-        function generateItemDescription() {
-            const wll = $("#wll").val();
-            var wl = $("#wl").val();
-            $("#item_description").val(`Grommet--${wll} Ts--${wl}m`);
-        }
-
-        function generateInternalId() {
-            const wll = $("#wll").val();
-            var wl = $("#wl").val();
-            if (clientId && wll && wl) {
-                $.ajax({
-                    url: "<?php echo get_uri('grommets/get_internal_id') ?>",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {client_id: clientId, wll: wll, wl: wl},
-                    success: function (result) {
-                        const { internal_id } = result;
-                        $("#internal_id").val(internal_id);
-                    }
-                });
-            }
-        }
     });
 </script>
