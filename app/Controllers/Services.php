@@ -71,7 +71,8 @@ class Services extends Security_Controller {
             "address" => $this->request->getPost('address'),
             "city" => $this->request->getPost('city'),
             "po_box" => $this->request->getPost('po_box'),
-            "country_id" => $this->request->getPost('country_id')
+            "country_id" => $this->request->getPost('country_id'),
+            "description" => $this->request->getPost('description')
         );
         $save_id = $this->Services_model->ci_save($data, $id);
         if ($save_id) {
@@ -326,7 +327,8 @@ class Services extends Security_Controller {
             ["key" => "address", "required" => true],
             ["key" => "city", "required" => true],
             ["key" => "po_box", "required" => true],
-            ["key" => "country", "required" => true]
+            ["key" => "country", "required" => true],
+            ["key" => "description", "required" => false]
         );
     }
 
