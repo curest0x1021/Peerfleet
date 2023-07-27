@@ -92,6 +92,85 @@ class Lifting_gear_types extends Security_Controller {
         );
     }
 
+    // Grommet types tab
+    function grommets_tab() {
+        return $this->template->view('lifting_gear_types/grommets/index');
+    }
+
+    function grommet_modal_form() {
+        $view_data["model_info"] = $this->Grommet_types_model->get_one($this->request->getPost("id"));
+        $view_data["label_column"] = "col-md-3";
+        $view_data["field_column"] = "col-md-9";
+        return $this->template->view('lifting_gear_types/grommets/modal_form', $view_data);
+    }
+
+    function save_grommet() {
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "name" => "required|max_length[50]"
+        ));
+
+        $id = $this->request->getPost("id");
+
+        $data = array(
+            "name" => $this->request->getPost("name")
+        );
+        $data = clean_data($data);
+
+        //check duplicate type, if found then show an error message
+        if ($this->Grommet_types_model->is_duplicated($data["name"], $id)) {
+            echo json_encode(array("success" => false, 'message' => app_lang("already_exists_type")));
+            exit();
+        }
+
+        $save_id = $this->Grommet_types_model->ci_save($data, $id);
+        if ($save_id) {
+            echo json_encode(array("success" => true, 'data' => $this->_grommet_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+    }
+
+    function delete_grommet() {
+        $this->validate_submitted_data(array(
+            "id" => "required|numeric"
+        ));
+
+        $id = $this->request->getPost("id");
+        if ($this->Grommet_types_model->delete($id)) {
+            echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
+        }
+    }
+
+    function grommets_list_data() {
+        $list_data = $this->Grommet_types_model->get_all_where(array("deleted" => 0))->getResult();
+        $result_data = [];
+        foreach ($list_data as $data) {
+            $result_data[] = $this->_grommet_make_row($data);
+        }
+
+        $result["data"] = $result_data;
+        echo json_encode($result);
+    }
+
+    private function _grommet_row_data($id) {
+        $data = $this->Grommet_types_model->get_one($id);
+        return $this->_grommet_make_row($data);
+    }
+
+    private function _grommet_make_row($data) {
+        $action = modal_anchor(get_uri("lifting_gear_types/grommet_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_type'), "data-post-id" => $data->id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("lifting_gear_types/delete_shackle"), "data-action" => "delete-confirmation"));
+
+        return array(
+            $data->id,
+            $data->name,
+            $action
+        );
+    }
+
     // Shackle types tab
     function shackles_tab() {
         return $this->template->view('lifting_gear_types/shackles/index');

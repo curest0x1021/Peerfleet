@@ -287,5 +287,6 @@ $lang["initial_test_date"] = "Initial test date";
 $lang["grommets_info"] = "Grommets & Wire Slings Info";
 $lang["supplier"] = "Supplier";
 $lang["delivered_on_board"] = "Delivered on board";
+$lang["grommet_type"] = "Grommet Type";
 
 return $lang;
