@@ -86,6 +86,7 @@ class Grommets_model extends Crud_model {
         $icc_table = $this->db->prefixTable("color_codes");
         $manufacturer_table = $this->db->prefixTable("manufacturers");
         $certificate_table = $this->db->prefixTable("certificate_types");
+        $types_table = $this->db->prefixTable("grommet_types");
 
         $where = "";
 
@@ -104,13 +105,14 @@ class Grommets_model extends Crud_model {
             $where .= " AND $grommets_table.main_id=$main_id";
         }
 
-        $sql = "SELECT $main_table.item_description, $main_table.wll, $main_table.wl, $main_table.dia, $main_table.bl, $grommets_table.*, $icc_table.name as icc, $certificate_table.name as certificate_type, $manufacturer_table.name as manufacturer, lt.passed as loadtest_passed, it.passed as inspection_passed, it.remarks
+        $sql = "SELECT $main_table.item_description, $main_table.wll, $main_table.wl, $main_table.dia, $main_table.bl, $types_table.name as type, $grommets_table.*, $icc_table.name as icc, $certificate_table.name as certificate_type, $manufacturer_table.name as manufacturer, lt.passed as loadtest_passed, it.passed as inspection_passed, it.remarks
                 FROM $grommets_table
                 JOIN $main_table ON $main_table.id = $grommets_table.main_id
                 LEFT JOIN (SELECT a.* FROM $loadtest_table a JOIN (SELECT grommet_id, MAX(test_date) as test_date FROM $loadtest_table GROUP BY grommet_id) b ON a.grommet_id = b.grommet_id AND a.test_date = b.test_date) lt
                     ON lt.grommet_id = $grommets_table.id
                 LEFT JOIN (SELECT a.* FROM $inspection_table a JOIN (SELECT grommet_id, MAX(inspection_date) as inspection_date FROM $inspection_table GROUP BY grommet_id) b ON a.grommet_id = b.grommet_id AND a.inspection_date = b.inspection_date) it
                     ON it.grommet_id = $grommets_table.id
+                LEFT JOIN $types_table ON $types_table.id = $main_table.type_id
                 LEFT JOIN $icc_table ON $icc_table.id = $grommets_table.icc_id
                 LEFT JOIN $manufacturer_table ON $manufacturer_table.id = $grommets_table.manufacturer_id
                 LEFT JOIN $certificate_table ON $certificate_table.id = $grommets_table.certificate_type_id

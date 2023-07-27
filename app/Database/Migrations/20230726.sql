@@ -12,3 +12,5 @@ ALTER TABLE `pf_wires_loadtest` ADD `is_initial` TINYINT(1) NOT NULL DEFAULT '0'
 ALTER TABLE `pf_to_do` ADD `client_id` INT NOT NULL AFTER `created_at`;
 ALTER TABLE `pf_to_do` ADD `priority_id` INT NOT NULL DEFAULT '0' AFTER `status`;
 ALTER TABLE `pf_to_do` ADD `deadline` DATE NULL AFTER `start_date`;
+CREATE TABLE `pf_grommet_types` (`id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(100) NOT NULL , `deleted` TINYINT(1) NOT NULL DEFAULT '0' , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+ALTER TABLE `pf_grommets_main` ADD `type_id` INT NOT NULL AFTER `wl`;
