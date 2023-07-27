@@ -28,7 +28,7 @@ class Wires_info_model extends Crud_model {
         $sql = "SELECT $wires_table.id as wire_id, $wires_table.client_id, $wires_table.crane, $wires_table.wire, $info_table.id, $info_table.diameter, $info_table.length, $info_table.swl
                 FROM $wires_table
                 LEFT JOIN $info_table ON $wires_table.id = $info_table.wire_id
-                WHERE 1=1 $where";
+                WHERE $wires_table.deleted = 0 $where";
 
         return $this->db->query($sql);
     }

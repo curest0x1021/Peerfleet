@@ -28,7 +28,7 @@ class Wires_inspection_model extends Crud_model {
         $sql = "SELECT $inspection_table.*, $wires_table.crane, $wires_table.wire
                 FROM $inspection_table
                 LEFT JOIN $wires_table ON $wires_table.id = $inspection_table.wire_id
-                WHERE deleted=0 $where
+                WHERE $inspection_table.deleted=0 $where
                 ORDER BY $inspection_table.inspection_date DESC";
 
         return $this->db->query($sql);
