@@ -13,6 +13,7 @@
             <ul id="lifting-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs bg-white title" role="tablist">
                 <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("lifting_gear_types/certificates_tab"); ?>" data-bs-target="#certificates-tab"> <?php echo app_lang('certificate_type'); ?></a></li>
                 <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("lifting_gear_types/icc_tab"); ?>" data-bs-target="#icc-tab"> <?php echo app_lang('icc'); ?></a></li>
+                <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("lifting_gear_types/grommets_tab"); ?>" data-bs-target="#grommets-tab"> <?php echo app_lang('grommet_type'); ?></a></li>
                 <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("lifting_gear_types/shackles_tab"); ?>" data-bs-target="#shackles-tab"> <?php echo app_lang('shackle_type'); ?></a></li>
                 <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("lifting_gear_types/misc_tab"); ?>" data-bs-target="#misc-tab"> <?php echo app_lang('misc_lifting_type'); ?></a></li>
                 <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("lifting_gear_types/lashing_tab"); ?>" data-bs-target="#lashing-tab"> <?php echo app_lang('lashing_category'); ?></a></li>
@@ -20,6 +21,7 @@
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane fade" id="certificates-tab"></div>
                 <div role="tabpanel" class="tab-pane fade" id="icc-tab"></div>
+                <div role="tabpanel" class="tab-pane fade" id="grommets-tab"></div>
                 <div role="tabpanel" class="tab-pane fade" id="shackles-tab"></div>
                 <div role="tabpanel" class="tab-pane fade" id="misc-tab"></div>
                 <div role="tabpanel" class="tab-pane fade" id="lashing-tab"></div>
