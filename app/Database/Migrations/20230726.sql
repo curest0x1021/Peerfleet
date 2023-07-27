@@ -9,3 +9,6 @@ ALTER TABLE `pf_wires_info` CHANGE `diameter` `diameter` DECIMAL(10,1) NULL, CHA
 ALTER TABLE `pf_wires_info` ADD `deleted` TINYINT(1) NOT NULL DEFAULT '0' AFTER `swl`;
 ALTER TABLE `pf_wires_history` ADD `is_initial` TINYINT(1) NOT NULL DEFAULT '0' AFTER `replacement`, ADD `deleted` TINYINT(1) NOT NULL DEFAULT '0' AFTER `is_initial`;
 ALTER TABLE `pf_wires_loadtest` ADD `is_initial` TINYINT(1) NOT NULL DEFAULT '0' AFTER `files`;
+ALTER TABLE `pf_to_do` ADD `client_id` INT NOT NULL AFTER `created_at`;
+ALTER TABLE `pf_to_do` ADD `priority_id` INT NOT NULL DEFAULT '0' AFTER `status`;
+ALTER TABLE `pf_to_do` ADD `deadline` DATE NULL AFTER `start_date`;

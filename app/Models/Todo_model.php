@@ -14,6 +14,8 @@ class Todo_model extends Crud_model {
     function get_details($options = array()) {
         $todo_table = $this->db->prefixTable('to_do');
         $checklist_items_table = $this->db->prefixTable('checklist_items');
+        $client_table = $this->db->prefixTable('clients');
+        $priority_table = $this->db->prefixTable('task_priority');
 
         $where = "";
         $id = $this->_get_clean_value($options, "id");
@@ -27,6 +29,15 @@ class Todo_model extends Crud_model {
             $where .= " AND $todo_table.created_by=$created_by";
         }
 
+        $client_id = $this->_get_clean_value($options, "client_id");
+        if ($client_id) {
+            $where .= " AND $todo_table.client_id=$client_id";
+        }
+
+        $priority_id = $this->_get_clean_value($options, "priority_id");
+        if ($priority_id) {
+            $where .= " AND $todo_table.priority_id=$priority_id";
+        }
 
         $status = $this->_get_clean_value($options, "status");
         if ($status) {
@@ -35,17 +46,21 @@ class Todo_model extends Crud_model {
 
         $select_labels_data_query = $this->get_labels_data_query();
 
-        $sql = "SELECT $todo_table.*, $select_labels_data_query,
-                (SELECT COUNT($checklist_items_table.id) FROM $checklist_items_table WHERE $checklist_items_table.deleted=0 AND $checklist_items_table.todo_id=$todo_table.id) AS total_checklist,
-                (SELECT COUNT($checklist_items_table.id) FROM $checklist_items_table WHERE $checklist_items_table.is_checked=1 AND $checklist_items_table.deleted=0 AND $checklist_items_table.todo_id=$todo_table.id) AS total_checklist_checked
-        FROM $todo_table
-        WHERE $todo_table.deleted=0 $where";
+        $sql = "SELECT $todo_table.*, $select_labels_data_query, $client_table.charter_name as vessel, $priority_table.title as priority_title, $priority_table.icon as priority_icon, $priority_table.color as priority_color,
+                    (SELECT COUNT($checklist_items_table.id) FROM $checklist_items_table WHERE $checklist_items_table.deleted=0 AND $checklist_items_table.todo_id=$todo_table.id) AS total_checklist,
+                    (SELECT COUNT($checklist_items_table.id) FROM $checklist_items_table WHERE $checklist_items_table.is_checked=1 AND $checklist_items_table.deleted=0 AND $checklist_items_table.todo_id=$todo_table.id) AS total_checklist_checked
+                FROM $todo_table
+                LEFT JOIN $client_table ON $client_table.id = $todo_table.client_id
+                LEFT JOIN $priority_table ON $priority_table.id = $todo_table.priority_id
+                WHERE $todo_table.deleted=0 $where";
         return $this->db->query($sql);
     }
 
     function get_kanban_details($options = array()) {
         $todo_table = $this->db->prefixTable('to_do');
         $checklist_items_table = $this->db->prefixTable('checklist_items');
+        $client_table = $this->db->prefixTable('clients');
+        $priority_table = $this->db->prefixTable('task_priority');
 
         $where = "";
         $id = $this->_get_clean_value($options, "id");
@@ -58,6 +73,15 @@ class Todo_model extends Crud_model {
             $where .= " AND $todo_table.created_by=$created_by";
         }
 
+        $client_id = $this->_get_clean_value($options, "client_id");
+        if ($client_id) {
+            $where .= " AND $todo_table.client_id=$client_id";
+        }
+
+        $priority_id = $this->_get_clean_value($options, "priority_id");
+        if ($priority_id) {
+            $where .= " AND $todo_table.priority_id=$priority_id";
+        }
 
         $status = $this->_get_clean_value($options, "status");
         if ($status) {
@@ -66,13 +90,16 @@ class Todo_model extends Crud_model {
 
         $select_labels_data_query = $this->get_labels_data_query();
 
-        $sql = "SELECT $todo_table.*, $select_labels_data_query,
-                IF($todo_table.sort!=0, $todo_table.sort, $todo_table.id) AS new_sort,
-                (SELECT COUNT($checklist_items_table.id) FROM $checklist_items_table WHERE $checklist_items_table.deleted=0 AND $checklist_items_table.todo_id=$todo_table.id) AS total_checklist,
-                (SELECT COUNT($checklist_items_table.id) FROM $checklist_items_table WHERE $checklist_items_table.is_checked=1 AND $checklist_items_table.deleted=0 AND $checklist_items_table.todo_id=$todo_table.id) AS total_checklist_checked
-        FROM $todo_table
-        WHERE $todo_table.deleted=0 $where
-        ORDER BY new_sort ASC";
+        $sql = "SELECT $todo_table.*, $select_labels_data_query, $client_table.charter_name as vessel, $priority_table.title as priority_title, $priority_table.icon as priority_icon, $priority_table.color as priority_color,
+                    IF($todo_table.sort!=0, $todo_table.sort, $todo_table.id) AS new_sort,
+                    (SELECT COUNT($checklist_items_table.id) FROM $checklist_items_table WHERE $checklist_items_table.deleted=0 AND $checklist_items_table.todo_id=$todo_table.id) AS total_checklist,
+                    (SELECT COUNT($checklist_items_table.id) FROM $checklist_items_table WHERE $checklist_items_table.is_checked=1 AND $checklist_items_table.deleted=0 AND $checklist_items_table.todo_id=$todo_table.id) AS total_checklist_checked
+                FROM $todo_table
+                LEFT JOIN $client_table ON $client_table.id = $todo_table.client_id
+                LEFT JOIN $priority_table ON $priority_table.id = $todo_table.priority_id
+                WHERE $todo_table.deleted=0 $where
+                ORDER BY new_sort ASC";
+
         return $this->db->query($sql);
     }
 

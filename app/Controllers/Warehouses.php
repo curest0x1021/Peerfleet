@@ -202,7 +202,8 @@ class Warehouses extends Security_Controller {
                 $description = "<strong>" . $info->name . "</strong> (" . $info->quantity . " / " . $info->min_stocks . ", " . app_lang("spare_parts") . ") on <strong>" . $info->warehouse . "</strong> (warehouse) has been reached minimum of stocks.<br/>";
                 $description .= '<a href="' . $url . '" target="_blank">' . $url . '</a>';
                 $todo_data = array(
-                    "title" => app_lang("minimum_item_reached"),
+                    "client_id" => $client_id,
+                    "title" => app_lang("spare_parts") . " - " . app_lang("minimum_item_reached"),
                     "description" => $description,
                     "created_by" => $client->owner_id,
                     "created_at" => get_current_utc_time(),
@@ -366,7 +367,8 @@ class Warehouses extends Security_Controller {
                 $description = "<strong>" . $info->name . "</strong> (" . $info->quantity . " / " . $info->min_stocks . ", " . app_lang("chemicals") . ") on <strong>" . $info->warehouse . "</strong> (warehouse) has been reached minimum of stocks.<br/>";
                 $description .= '<a href="' . $url . '" target="_blank">' . $url . '</a>';
                 $todo_data = array(
-                    "title" => app_lang("minimum_item_reached"),
+                    "client_id" => $client_id,
+                    "title" => app_lang("chemicals") . " - " . app_lang("minimum_item_reached"),
                     "description" => $description,
                     "created_by" => $client->owner_id,
                     "created_at" => get_current_utc_time(),
@@ -529,7 +531,8 @@ class Warehouses extends Security_Controller {
                 $description = "<strong>" . $info->name . "</strong> (" . $info->quantity . " / " . $info->min_stocks . ", " . app_lang("oils_greases") . ") on <strong>" . $info->warehouse . "</strong> (warehouse) has been reached minimum of stocks.<br/>";
                 $description .= '<a href="' . $url . '" target="_blank">' . $url . '</a>';
                 $todo_data = array(
-                    "title" => app_lang("minimum_item_reached"),
+                    "client_id" => $client_id,
+                    "title" => app_lang("oils_greases") . " - " . app_lang("minimum_item_reached"),
                     "description" => $description,
                     "created_by" => $client->owner_id,
                     "created_at" => get_current_utc_time(),
@@ -692,7 +695,8 @@ class Warehouses extends Security_Controller {
                 $description = "<strong>" . $info->name . "</strong> (" . $info->quantity . " / " . $info->min_stocks . ", ". app_lang("paints") . ") on <strong>" . $info->warehouse . "</strong> (warehouse) has been reached minimum of stocks.<br/>";
                 $description .= '<a href="' . $url . '" target="_blank">' . $url . '</a>';
                 $todo_data = array(
-                    "title" => app_lang("minimum_item_reached"),
+                    "client_id" => $client_id,
+                    "title" => app_lang("paints") . " - " . app_lang("minimum_item_reached"),
                     "description" => $description,
                     "created_by" => $client->owner_id,
                     "created_at" => get_current_utc_time(),

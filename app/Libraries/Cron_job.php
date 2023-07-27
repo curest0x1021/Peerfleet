@@ -147,6 +147,7 @@ class Cron_job {
             log_notification("wire_exchange_required", array("client_id" => $wire->client_id, "crane_id" => $wire->crane_id), "0");
             // register todo
             $todo_data = array(
+                "client_id" => $wire->client_id,
                 "title" => app_lang("wire_exchange_required"),
                 "description" => get_uri("wires/view/" . $wire->client_id),
                 "created_at" => get_current_utc_time(),
@@ -201,6 +202,7 @@ class Cron_job {
             log_notification("grommet_loadtest_required", array("client_id" => $data->client_id, "grommet_id" => $data->grommet_id), "0");
             // register todo
             $todo_data = array(
+                "client_id" => $data->client_id,
                 "title" => app_lang("grommet_loadtest_required"),
                 "description" => get_uri("grommets/loadtest_detail_view/" . $data->grommet_id),
                 "created_at" => get_current_utc_time(),
@@ -246,6 +248,7 @@ class Cron_job {
             log_notification("grommet_inspection_required", array("client_id" => $data->client_id, "grommet_id" => $data->grommet_id), "0");
             // register todo
             $todo_data = array(
+                "client_id" => $data->client_id,
                 "title" => app_lang("grommet_inspection_required"),
                 "description" => get_uri("grommets/inspection_detail_view/" . $data->grommet_id),
                 "created_at" => get_current_utc_time(),
@@ -291,6 +294,7 @@ class Cron_job {
             log_notification("shackle_loadtest_required", array("client_id" => $data->client_id, "shackle_id" => $data->shackle_id), "0");
             // register todo
             $todo_data = array(
+                "client_id" => $data->client_id,
                 "title" => app_lang("shackle_loadtest_required"),
                 "description" => get_uri("shackles/loadtest_detail_view/" . $data->shackle_id),
                 "created_at" => get_current_utc_time(),
@@ -336,6 +340,7 @@ class Cron_job {
             log_notification("shackle_inspection_required", array("client_id" => $data->client_id, "shackle_id" => $data->shackle_id), "0");
             // register todo
             $todo_data = array(
+                "client_id" => $data->client_id,
                 "title" => app_lang("shackle_inspection_required"),
                 "description" => get_uri("shackles/inspection_detail_view/" . $data->shackle_id),
                 "created_at" => get_current_utc_time(),
@@ -381,6 +386,7 @@ class Cron_job {
             log_notification("misc_loadtest_required", array("client_id" => $data->client_id, "misc_id" => $data->misc_id), "0");
             // register todo
             $todo_data = array(
+                "client_id" => $data->client_id,
                 "title" => app_lang("misc_loadtest_required"),
                 "description" => get_uri("misc/loadtest_detail_view/" . $data->misc_id),
                 "created_at" => get_current_utc_time(),
@@ -426,6 +432,7 @@ class Cron_job {
             log_notification("misc_inspection_required", array("client_id" => $data->client_id, "misc_id" => $data->misc_id), "0");
             // register todo
             $todo_data = array(
+                "client_id" => $data->client_id,
                 "title" => app_lang("misc_inspection_required"),
                 "description" => get_uri("misc/inspection_detail_view/" . $data->misc_id),
                 "created_at" => get_current_utc_time(),
@@ -471,6 +478,7 @@ class Cron_job {
             log_notification("lashing_inspection_required", array("client_id" => $data->client_id, "lashing_id" => $data->lashing_id), "0");
             // register todo
             $todo_data = array(
+                "client_id" => $data->client_id,
                 "title" => app_lang("lashing_inspection_required"),
                 "description" => get_uri("lashing/inspection_detail_view/" . $data->lashing_id),
                 "created_at" => get_current_utc_time(),
