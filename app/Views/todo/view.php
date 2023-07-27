@@ -8,7 +8,9 @@
 
         <div class="col-md-12 mb15">
             <?php
-            $date = "";
+            $start_date = "";
+            $deadline = "";
+            $priority = "";
             $todo_labels = "";
             $labels_data = make_labels_view_data($model_info->labels_list);
             if ($labels_data) {
@@ -29,11 +31,33 @@
             }
 
             if (is_date_exists($model_info->start_date)) {
-                $date = format_to_date($model_info->start_date, false);
+                $start_date = format_to_date($model_info->start_date, false);
             }
 
-            echo $todo_labels . $todo_checklist_status . "<div class='pt5'>" . $date . "</div>";
+            if (is_date_exists($model_info->deadline)) {
+                $deadline = " - " . format_to_date($model_info->deadline, false);
+            }
+
+            echo $todo_labels . $todo_checklist_status . "<div class='pt5'>" . $start_date . $deadline . "</div>";
             ?>
+        </div>
+
+        <div class="col-md-12 mb15">
+            <span><?php echo app_lang("vessel"); ?>: <strong><?php echo $model_info->vessel; ?></strong></span>
+        </div>
+
+        <div class="col-md-12 mb15">
+            <span><?php echo app_lang("priority"); ?>:
+            <?php
+                $priority = "";
+                if ($model_info->priority_id) {
+                    $priority = " <span class='' title='" . app_lang('priority') . "'>
+                                <span class='sub-task-icon priority-badge' style='background: $model_info->priority_color'><i data-feather='$model_info->priority_icon' class='icon-14'></i></span><span class='small'> $model_info->priority_title</span>
+                        </span>";
+                }
+                echo $priority;
+            ?>
+            </span>
         </div>
 
         <?php if ($model_info->description) { ?>
@@ -43,7 +67,6 @@
                 ?>
             </div>
         <?php } ?>
-
 
     </div>
 </div>

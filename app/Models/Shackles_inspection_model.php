@@ -24,6 +24,10 @@ class Shackles_inspection_model extends Crud_model {
         if ($client_id) {
             $where .= " AND $shackles_table.client_id = $client_id";
         }
+        $main_id = $this->_get_clean_value($options, "main_id");
+        if ($main_id) {
+            $where .= " AND $shackles_table.main_id = $main_id";
+        }
 
         $sql = "SELECT $shackles_table.internal_id, $shackles_table.id as shackle_id, c.id, c.inspection_date, c.inspected_by, c.location, c.passed, c.remarks
                 FROM $shackles_table

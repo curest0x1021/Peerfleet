@@ -35,7 +35,7 @@ class Shackles_model extends Crud_model {
                     FROM $shackles_table
                     JOIN (SELECT shackle_id, MAX(test_date) as test_date FROM $loadtest_table WHERE deleted = 0 AND test_date IS NOT NULL GROUP BY shackle_id) b
                         ON $shackles_table.id = b.shackle_id
-                    WHERE b.test_date < '$loadtest_reminder_date'
+                    WHERE $shackles_table.deleted = 0 AND b.test_date < '$loadtest_reminder_date'
                     GROUP BY $shackles_table.client_id
                 ) b ON $clients_table.id = b.client_id
                 LEFT JOIN (
@@ -43,7 +43,7 @@ class Shackles_model extends Crud_model {
                     FROM $shackles_table
                     JOIN (SELECT shackle_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 AND inspection_date IS NOT NULL GROUP BY shackle_id) b
                         ON $shackles_table.id = b.shackle_id
-                    WHERE b.inspection_date < '$inspection_reminder_date'
+                    WHERE $shackles_table.deleted = 0 AND b.inspection_date < '$inspection_reminder_date'
                     GROUP BY $shackles_table.client_id
                 ) c ON $clients_table.id = c.client_id
                 WHERE $clients_table.deleted = 0 $where
@@ -99,6 +99,10 @@ class Shackles_model extends Crud_model {
         if ($client_id) {
             $where .= " AND $shackles_table.client_id=$client_id";
         }
+        $main_id = $this->_get_clean_value($options, "main_id");
+        if ($main_id) {
+            $where .= " AND $shackles_table.main_id=$main_id";
+        }
 
         $sql = "SELECT $main_table.item_description, $main_table.wll, $main_table.bl, $main_table.iw, $main_table.pd, $main_table.il, $shackles_table.*, $types_table.name as type, $icc_table.name as icc, $certificate_table.name as certificate_type, $manufacturer_table.name as manufacturer, lt.passed as loadtest_passed, it.passed as inspection_passed, it.remarks
                 FROM $shackles_table
@@ -123,7 +127,7 @@ class Shackles_model extends Crud_model {
         $sql = "SELECT max(internal_id) as internal_id, main_id
                 FROM $shackles_table
                 WHERE client_id=$client_id AND main_id=(SELECT id FROM $main_table WHERE wll=$wll AND type_id=$type_id)
-                GROUP BY $shackles_table.main_id";
+                GROUP BY main_id";
         $row = $this->db->query($sql)->getRow();
         if (empty($row->internal_id)) {
             $main_id = $this->get_next_group_id();
@@ -145,6 +149,19 @@ class Shackles_model extends Crud_model {
         } else {
             return intval($row->id) + 1;
         }
+    }
+
+    function get_next_internal_id($client_id, $main_id) {
+        $shackles_table = $this->db->prefixTable("shackles");
+        $sql = "SELECT max(internal_id) as internal_id
+                FROM $shackles_table
+                WHERE client_id = $client_id AND main_id = $main_id
+                GROUP BY main_id";
+        $result = $this->db->query($sql)->getRow();
+        $strs = explode("-", $result->internal_id);
+        $newIndex = intval(end($strs)) + 1;
+        $strs[count($strs) - 1] = $newIndex;
+        return implode("-", $strs);
     }
 
     // get id, internal_id only

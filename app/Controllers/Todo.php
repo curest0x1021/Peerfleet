@@ -5,11 +5,13 @@ namespace App\Controllers;
 class Todo extends Security_Controller {
 
     protected $Checklist_items_model;
+    protected $Task_priority_model;
 
     function __construct() {
         parent::__construct();
 
         $this->Checklist_items_model = model('App\Models\Checklist_items_model');
+        $this->Task_priority_model = model("App\Models\Task_priority_model");
     }
 
     protected function validate_access($todo_info) {
@@ -22,7 +24,9 @@ class Todo extends Security_Controller {
     function index() {
         $this->check_module_availability("module_todo");
 
-        return $this->template->rander("todo/index");
+        $view_data["vessels_dropdown"] = $this->get_vessels_dropdown(true);
+        $view_data["priorities_dropdown"] = $this->_get_priorities_dropdown_list(true);
+        return $this->template->rander("todo/index", $view_data);
     }
 
     // load todo kanban view
@@ -50,6 +54,11 @@ class Todo extends Security_Controller {
             $view_data['has_checklist'] = 0;
         }
 
+        $view_data['label_column'] = 'col-md-3';
+        $view_data['field_column'] = 'col-md-9';
+        $view_data['vessels_dropdown'] = $this->get_vessels_dropdown();
+        $view_data['priorities_dropdown'] = $this->_get_priorities_dropdown_list();
+        $view_data['status_dropdown'] = $this->get_todo_status_dropdown();
         $view_data['label_suggestions'] = $this->make_labels_dropdown("to_do", $view_data['model_info']->labels);
         return $this->template->view('todo/modal_form', $view_data);
     }
@@ -57,7 +66,8 @@ class Todo extends Security_Controller {
     function save() {
         $this->validate_submitted_data(array(
             "id" => "numeric",
-            "title" => "required"
+            "title" => "required",
+            "client_id" => "required"
         ));
 
         $id = $this->request->getPost('id');
@@ -65,9 +75,13 @@ class Todo extends Security_Controller {
         $data = array(
             "title" => $this->request->getPost('title'),
             "description" => $this->request->getPost('description') ? $this->request->getPost('description') : "",
+            "client_id" => $this->request->getPost('client_id'),
+            "status" => $this->request->getPost('status'),
+            "priority_id" => $this->request->getPost('priority_id'),
             "created_by" => $this->login_user->id,
             "labels" => $this->request->getPost('labels') ? $this->request->getPost('labels') : "",
             "start_date" => $this->request->getPost('start_date'),
+            "deadline" => $this->request->getPost('deadline'),
         );
 
         $data = clean_data($data);
@@ -75,6 +89,9 @@ class Todo extends Security_Controller {
         //set null value after cleaning the data
         if (!$data["start_date"]) {
             $data["start_date"] = NULL;
+        }
+        if (!$data["deadline"]) {
+            $data["deadline"] = NULL;
         }
 
         if ($id) {
@@ -149,7 +166,9 @@ class Todo extends Security_Controller {
         $status = $this->request->getPost('status') ? implode(",", $this->request->getPost('status')) : "";
         $options = array(
             "created_by" => $this->login_user->id,
-            "status" => $status
+            "status" => $status,
+            "client_id" => $this->request->getPost("client_id"),
+            "priority_id" => $this->request->getPost("priority_id")
         );
 
         $list_data = $this->Todo_model->get_details($options)->getResult();
@@ -211,13 +230,33 @@ class Todo extends Security_Controller {
             }
         }
 
+        $deadline_text = "";
+        if (is_date_exists($data->deadline)) {
+            $deadline_text = format_to_date($data->deadline, false);
+            if (get_my_local_time("Y-m-d") > $data->deadline && $data->status != "done") {
+                $deadline_text = "<span class='text-danger'>" . $deadline_text . "</span> ";
+            } else if (get_my_local_time("Y-m-d") == $data->deadline && $data->status != "done") {
+                $deadline_text = "<span class='text-warning'>" . $deadline_text . "</span> ";
+            }
+        }
+
+        $priority = "";
+        if ($data->priority_id) {
+            $priority = "<span title='" . app_lang('priority') . "'>
+                            <span class='sub-task-icon priority-badge' style='background: $data->priority_color'><i data-feather='$data->priority_icon' class='icon-14'></i></span><span class='small'> $data->priority_title</span>
+                      </span>";
+        }
 
         return array(
             $status_class,
             "<i class='hide'>" . $data->id . "</i>" . $check_status,
             $title,
+            $data->vessel,
+            $priority,
             $data->start_date,
             $start_date_text,
+            $data->deadline,
+            $deadline_text,
             modal_anchor(get_uri("todo/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit'), "data-post-id" => $data->id))
             . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("todo/delete"), "data-action" => "delete"))
         );
@@ -404,6 +443,21 @@ class Todo extends Security_Controller {
         } else {
             echo json_encode(array("success" => false));
         }
+    }
+
+    private function _get_priorities_dropdown_list($show_header = false) {
+        $priorities = $this->Task_priority_model->get_details()->getResult();
+        $priorities_dropdown = array();
+        if ($show_header) {
+            $priorities_dropdown[] = array("id" => "", "text" => "- " . app_lang("priority") . " -");
+        }
+
+        //if there is any specific priority selected, select only the priority.
+        $selected_status = false;
+        foreach ($priorities as $priority) {
+            $priorities_dropdown[] = array("id" => $priority->id, "text" => $priority->title, "isSelected" => $selected_status);
+        }
+        return json_encode($priorities_dropdown);
     }
 
 }

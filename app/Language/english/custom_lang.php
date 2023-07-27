@@ -191,7 +191,7 @@ $lang["icc"] = "Identified Color Code";
 $lang["shackle_type"] = "Shackle Type";
 $lang["misc_lifting_type"] = "Misc. Lifting Type";
 $lang["lashing_category"] = "Lashing Category";
-$lang["grommets"] = "Grommets";
+$lang["grommets"] = "Grommets & Wire Slings";
 $lang["grommets_wire_slings"] = "Grommets & Wire Slings";
 $lang["shackles"] = "Shackles";
 $lang["misc"] = "Misc. Lifting Gears";
@@ -223,7 +223,6 @@ $lang["passed"] = "Passed";
 $lang["not_passed"] = "Not passed";
 $lang["load_test_interval"] = "Load Test Interval";
 $lang["visual_inspection_interval"] = "Visual Inspection Interval";
-$lang["grommets_info"] = "Grommets Info";
 $lang["shackles_info"] = "Shackles Info";
 $lang["misc_info"] = "Misc. Lifting Gears Info";
 $lang["lashing_info"] = "Lashing & Dunnage Info";
@@ -256,9 +255,6 @@ $lang["require_loadtests"] = "Require loadtests";
 $lang["require_inspections"] = "Require inspections";
 $lang["maker"] = "Maker";
 $lang["link_to_task"] = "Link to Task";
-
-
-
 $lang["serviced_ports"] = "Serviced Ports";
 $lang["service_type"] = "Service Type";
 $lang["po_box"] = "P.O. BOX";
@@ -284,5 +280,13 @@ $lang["information"] = "Information";
 $lang["repair"] = "Repair";
 $lang["new_build"] = "New build";
 $lang["scrapping"] = "Scrapping";
+
+
+$lang["initial_test"] = "Initial test";
+$lang["initial_test_date"] = "Initial test date";
+$lang["grommets_info"] = "Grommets & Wire Slings Info";
+$lang["supplier"] = "Supplier";
+$lang["delivered_on_board"] = "Delivered on board";
+$lang["grommet_type"] = "Grommet Type";
 
 return $lang;

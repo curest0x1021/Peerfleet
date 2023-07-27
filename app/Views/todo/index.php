@@ -48,21 +48,29 @@
     $(document).ready(function () {
         $("#todo-table").appTable({
             source: '<?php echo_uri("todo/list_data") ?>',
+            filterDropdown: [
+                {name: "priority_id", class: "w200", options: <?php echo $priorities_dropdown; ?>},
+                {name: "client_id", class: "w200", options: <?php echo $vessels_dropdown; ?>}
+            ],
             order: [[1, 'desc']],
             columns: [
                 {visible: false, searchable: false},
                 {title: '', "class": "w25 all"},
                 {title: '<?php echo app_lang("title"); ?>', "class": "all"},
+                {title: '<?php echo app_lang("vessel"); ?>', "class": "w150"},
+                {title: '<?php echo app_lang("priority"); ?>', "class": "w80"},
                 {visible: false, searchable: false},
-                {title: '<?php echo app_lang("date"); ?>', "iDataSort": 3, "class": "w200"},
+                {title: '<?php echo app_lang("start_date"); ?>', "iDataSort": 5, "class": "w100"},
+                {visible: false, searchable: false},
+                {title: '<?php echo app_lang("deadline"); ?>', "iDataSort": 7, "class": "w100"},
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
             checkBoxes: [
                 {text: '<?php echo app_lang("to_do") ?>', name: "status", value: "to_do", isChecked: true},
                 {text: '<?php echo app_lang("done") ?>', name: "status", value: "done", isChecked: false}
             ],
-            printColumns: [2, 4],
-            xlsColumns: [2, 4],
+            printColumns: [2, 3, 4, 6, 8],
+            xlsColumns: [2, 3, 4, 6, 8],
             rowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $('td:eq(0)', nRow).addClass(aData[0]);
             }

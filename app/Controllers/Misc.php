@@ -32,7 +32,7 @@ class Misc extends Security_Controller
     private function _make_row($data) {
         $name = $data->name;
         if ($this->can_access_own_client($data->client_id)) {
-            $name = anchor(get_uri("misc/view/" . $data->client_id), $data->name);
+            $name = anchor(get_uri("misc/main_view/" . $data->client_id), $data->name);
         }
 
         $total_items = "---";
@@ -57,47 +57,35 @@ class Misc extends Security_Controller
         );
     }
 
-    /* load misc details view */
-    function view($client_id) {
-        if ($client_id) {
-            $view_data['client_id'] = $client_id;
-            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
-            $view_data['vessel'] = $this->Clients_model->get_one($client_id);
-
-            $info = $this->Misc_model->get_warnning_info($client_id);
-            $require_loadtests = ($info && $info->require_loadtests > 0) ? $info->require_loadtests : 0;
-            $require_inspections = ($info && $info->require_inspections > 0) ? $info->require_inspections : 0;
-            $warnning = array(
-                "loadtests" => $require_loadtests > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_loadtests . '</span>' : "",
-                "inspections" => $require_inspections > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_inspections . '</span>' : ""
-            );
-            $view_data['warnning'] = $warnning;
-            return $this->template->rander("misc/view", $view_data);
-        } else {
-            show_404();
-        }
+    function main_view($client_id) {
+        $view_data["client_id"] = $client_id;
+        $view_data["can_edit_items"] = $this->can_access_own_client($client_id);
+        $view_data['vessel'] = $this->Clients_model->get_one($client_id);
+        return $this->template->rander("misc/main/index", $view_data);
     }
 
-    // Load misc info tab
-    function info_tab($client_id) {
-        if ($client_id) {
-            $view_data['client_id'] = $client_id;
-            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
-            return $this->template->view("misc/info/index", $view_data);
-        } else {
-            show_404();
+    function main_modal_form($client_id) {
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
         }
+        $view_data["client_id"] = $client_id;
+        $view_data["label_column"] = "col-md-4";
+        $view_data["field_column"] = "col-md-8";
+        $view_data["types_dropdown"] = $this->get_misc_types_dropdown();
+        $view_data["manufacturers_dropdown"] = $this->get_manufacturers_dropdown();
+        $view_data["icc_dropdown"] = $this->get_identified_color_codes_dropdown();
+        $view_data["certificate_types_dropdown"] = $this->get_certificate_types_dropdown();
+
+        return $this->template->view("misc/main/modal_form", $view_data);
     }
 
-    function save_info() {
-        $id = $this->request->getPost("id");
+    function save_main() {
         $client_id = $this->request->getPost("client_id");
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
 
         $this->validate_submitted_data(array(
-            "id" => "numeric",
             "client_id" => "required",
             "item_description" => "required",
             "internal_id" => "required",
@@ -115,7 +103,6 @@ class Misc extends Security_Controller
             "supplied_place" => "required"
         ));
 
-        $main_id = $this->request->getPost("main_id");
         $main_data = array(
             "item_description" => $this->request->getPost("item_description"),
             "wll" => $this->request->getPost("wll"),
@@ -123,18 +110,143 @@ class Misc extends Security_Controller
             "type_id" => $this->request->getPost("type_id"),
             "bl" => $this->request->getPost("bl")
         );
-        if (!$main_id) {
-            $main_row = $this->Misc_main_model->get_all_where(array("item_description" => $main_data["item_description"]))->getRow();
-            if ($main_row) {
-                $main_id = $main_row->id;
-            }
+        $main_row = $this->Misc_main_model->get_all_where(array("item_description" => $main_data["item_description"]))->getRow();
+        if ($main_row) {
+            $m_save_id = $this->Misc_main_model->ci_save($main_data, $main_row->id);
+        } else {
+            $m_save_id = $this->Misc_main_model->ci_save($main_data, $main_row->id);
         }
-        $m_save_id = $this->Misc_main_model->ci_save($main_data, $main_id);
 
         $data = array(
             "internal_id" => $this->request->getPost("internal_id"),
             "client_id" => $this->request->getPost("client_id"),
             "main_id" => $m_save_id,
+            "qty" => $this->request->getPost("qty"),
+            "icc_id" => $this->request->getPost("icc_id"),
+            "certificate_number" => $this->request->getPost("certificate_number"),
+            "certificate_type_id" => $this->request->getPost("certificate_type_id"),
+            "tag_marking" => $this->request->getPost("tag_marking"),
+            "manufacturer_id" => $this->request->getPost("manufacturer_id"),
+            "supplied_date" => $this->request->getPost("supplied_date"),
+            "supplied_place" => $this->request->getPost("supplied_place"),
+            "lifts" => $this->request->getPost("lifts"),
+            "date_of_discharged" => $this->request->getPost("date_of_discharged"),
+        );
+
+        $save_id = $this->Misc_model->ci_save($data);
+        if ($save_id) {
+            echo json_encode(array("success" => true, 'message' => app_lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+
+    }
+
+    function main_list_data($client_id) {
+        $list_data = [];
+        if ($client_id) {
+            $list_data = $this->Misc_main_model->get_details($client_id);
+        }
+
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_main_make_row($data, $client_id);
+        }
+
+        echo json_encode(array("data" => $result));
+    }
+
+    private function _main_make_row($data, $client_id) {
+        $item = $data->item_description;
+        if ($this->can_access_own_client($client_id)) {
+            $item = anchor(get_uri("misc/view/" . $client_id . "/" . $data->id), $item);
+        }
+
+        $success_icon = '  <span style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;"></span>';
+        $failed_icon = '  <span style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></span>';
+
+        $load_tests = $data->loadtest_passed . " of " . $data->total_test . " tested";
+        if ($data->loadtest_passed < $data->total_test) {
+            $load_tests .= $failed_icon;
+        } else {
+            $load_tests .= $success_icon;
+        }
+
+        $inspection_tests = $data->inspection_passed . " of " . $data->total_test . " inspected";
+        if ($data->inspection_passed < $data->total_test) {
+            $inspection_tests .= $failed_icon;
+        } else {
+            $inspection_tests .= $success_icon;
+        }
+
+        return array(
+            $data->id,
+            $item,
+            $data->wll,
+            $data->wl,
+            $data->type,
+            $data->qty,
+            $data->bl,
+            $data->supplied_place,
+            $data->supplied_date,
+            $inspection_tests,
+            $load_tests
+        );
+    }
+
+    /* load misc details view */
+    function view($client_id, $main_id) {
+        if ($client_id && $main_id) {
+            $view_data['client_id'] = $client_id;
+            $view_data['main_id'] = $main_id;
+            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
+            $view_data['vessel'] = $this->Clients_model->get_one($client_id);
+            $view_data['main_info'] = $this->Misc_main_model->get_one($main_id);
+
+            return $this->template->rander("misc/view", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    // Load misc info tab
+    function info_tab($client_id, $main_id) {
+        if ($client_id && $main_id) {
+            $view_data['client_id'] = $client_id;
+            $view_data['main_id'] = $main_id;
+            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
+            return $this->template->view("misc/info/index", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    function save_info() {
+        $id = $this->request->getPost("id");
+        $client_id = $this->request->getPost("client_id");
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "client_id" => "required",
+            "main_id" => "required",
+            "internal_id" => "required",
+            "qty" => "required",
+            "icc_id" => "required",
+            "certificate_number" => "required",
+            "certificate_type_id" => "required",
+            "manufacturer_id" => "required",
+            "tag_marking" => "required",
+            "supplied_date" => "required",
+            "supplied_place" => "required"
+        ));
+
+        $data = array(
+            "internal_id" => $this->request->getPost("internal_id"),
+            "client_id" => $this->request->getPost("client_id"),
+            "main_id" => $this->request->getPost("main_id"),
             "qty" => $this->request->getPost("qty"),
             "icc_id" => $this->request->getPost("icc_id"),
             "certificate_number" => $this->request->getPost("certificate_number"),
@@ -170,8 +282,8 @@ class Misc extends Security_Controller
         }
     }
 
-    function info_list_data($client_id) {
-        $list_data = $this->Misc_model->get_misc_details(array("client_id" => $client_id))->getResult();
+    function info_list_data($client_id, $main_id) {
+        $list_data = $this->Misc_model->get_misc_details(array("client_id" => $client_id, "main_id" => $main_id))->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_info_make_row($data);
@@ -189,7 +301,7 @@ class Misc extends Security_Controller
         $action = "";
         if ($this->can_access_own_client($data->client_id)) {
             $internal_id = modal_anchor(get_uri("misc/info_detail_view/" . $data->id), $data->internal_id, array("class" => "edit", "title" => app_lang('misc'), "data-post-id" => $data->id));
-            $action = modal_anchor(get_uri("misc/info_modal_form/" . $data->client_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id))
+            $action = modal_anchor(get_uri("misc/info_modal_form/" . $data->client_id . "/" . $data->main_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id))
                 . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("misc/delete_info"), "data-action" => "delete-confirmation"));
         }
 
@@ -237,14 +349,18 @@ class Misc extends Security_Controller
         return $this->template->view("misc/info/detail_view", $view_data);
     }
 
-    function info_modal_form($client_id) {
+    function info_modal_form($client_id, $main_id) {
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
         $id = $this->request->getPost("id");
         $view_data["client_id"] = $client_id;
         $model_info = $this->Misc_model->get_one($id);
-        $main_info = $this->Misc_main_model->get_one($model_info->main_id);
+        $main_info = $this->Misc_main_model->get_one($main_id);
+        if (!$id) {
+            $next_internal_id = $this->Misc_model->get_next_internal_id($client_id, $main_id);
+            $view_data["next_internal_id"] = $next_internal_id;
+        }
         $view_data["model_info"] = $model_info;
         $view_data["main_info"] = $main_info;
         $view_data["label_column"] = "col-md-4";
@@ -269,9 +385,10 @@ class Misc extends Security_Controller
 
 
     // Load misc loadtest tab
-    function loadtest_tab($client_id) {
-        if ($client_id) {
+    function loadtest_tab($client_id, $main_id) {
+        if ($client_id && $main_id) {
             $view_data['client_id'] = $client_id;
+            $view_data['main_id'] = $main_id;
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
             return $this->template->view("misc/loadtest/index", $view_data);
         } else {
@@ -299,7 +416,8 @@ class Misc extends Security_Controller
             "tested_by" => $this->request->getPost("tested_by"),
             "location" => $this->request->getPost("location"),
             "passed" => $this->request->getPost("passed"),
-            "remarks" => $this->request->getPost("remarks")
+            "remarks" => $this->request->getPost("remarks"),
+            "initial_test" => $this->request->getPost("initial_test")
         );
 
         if (empty($id) && !$this->Misc_loadtest_model->check_valid_loadtest($data["misc_id"], $data["test_date"])) {
@@ -329,8 +447,8 @@ class Misc extends Security_Controller
         }
     }
 
-    function loadtest_list_data($client_id) {
-        $list_data = $this->Misc_loadtest_model->get_details(array("client_id" => $client_id))->getResult();
+    function loadtest_list_data($client_id, $main_id) {
+        $list_data = $this->Misc_loadtest_model->get_details(array("client_id" => $client_id, "main_id" => $main_id))->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_loadtest_make_row($data, $client_id);
@@ -387,17 +505,34 @@ class Misc extends Security_Controller
             $next_test_date = date('Y-m-d', strtotime($data->test_date. ' + 5 years'));
         }
 
-        return array(
-            $data->id,
-            $internal_id,
-            $data->test_date,
-            $data->tested_by,
-            $data->location,
-            $passed,
-            $data->remarks,
-            $next_test_date,
-            $action
-        );
+        if ($showInternalId) {
+            return array(
+                $data->id,
+                $internal_id,
+                $data->initial_test_date,
+                $data->test_date,
+                $data->tested_by,
+                $data->location,
+                $passed,
+                $data->remarks,
+                $next_test_date,
+                $action
+            );
+        } else {
+            $initial_test = $data->initial_test == "1" ? "<span class='checkbox-checked mr15 float-start'></span>" : "";
+            return array(
+                $data->id,
+                $internal_id,
+                $initial_test,
+                $data->test_date,
+                $data->tested_by,
+                $data->location,
+                $passed,
+                $data->remarks,
+                $next_test_date,
+                $action
+            );
+        }
     }
 
     function loadtest_modal_form($misc_id) {
@@ -405,7 +540,9 @@ class Misc extends Security_Controller
         if (!$this->can_access_own_client($misc->client_id)) {
             app_redirect("forbidden");
         }
-        $view_data["model_info"] = $this->Misc_loadtest_model->get_one($this->request->getPost("id"));
+        $id = $this->request->getPost("id");
+        $view_data["model_info"] = $this->Misc_loadtest_model->get_one($id);
+        $view_data["allow_initial_test"] = $this->Misc_loadtest_model->is_allow_initial_test($misc_id, $id);
         $view_data["misc"] = $misc;
         $view_data["force_refresh"] = $this->request->getPost("force_refresh");
         $view_data["label_column"] = "col-md-3";
@@ -426,9 +563,10 @@ class Misc extends Security_Controller
 
 
     // Load misc loadtest tab
-    function inspection_tab($client_id) {
-        if ($client_id) {
+    function inspection_tab($client_id, $main_id) {
+        if ($client_id && $main_id) {
             $view_data['client_id'] = $client_id;
+            $view_data['main_id'] = $main_id;
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
             return $this->template->view("misc/inspection/index", $view_data);
         } else {
@@ -486,8 +624,8 @@ class Misc extends Security_Controller
         }
     }
 
-    function inspection_list_data($client_id) {
-        $list_data = $this->Misc_inspection_model->get_details(array("client_id" => $client_id))->getResult();
+    function inspection_list_data($client_id, $main_id) {
+        $list_data = $this->Misc_inspection_model->get_details(array("client_id" => $client_id, "main_id" => $main_id))->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_inspection_make_row($data, $client_id);
@@ -635,7 +773,8 @@ class Misc extends Security_Controller
             ["key" => "inspection_authority", "required" => false],
             ["key" => "lifts", "required" => false],
             ["key" => "date_of_discharged", "required" => false],
-            ["key" => "remarks", "required" => false],
+            ["key" => "remarks_load_test", "required" => false],
+            ["key" => "remarks_visual_inspection", "required" => false],
             ["key" => "initial_test_passed", "required" => false],
             ["key" => "last_test_passed", "required" => false],
             ["key" => "inspection_passed", "required" => false],
@@ -738,13 +877,15 @@ class Misc extends Security_Controller
                 $loadtest_data["last"]["tested_by"] = $row_data_value;
             } else if ($header_key_value == "last_test_passed") {
                 $loadtest_data["last"]["passed"] = $row_data_value;
+            } else if ($header_key_value == "remarks_load_test") {
+                $loadtest_data["last"]["remarks"] = $row_data_value;
             } else if ($header_key_value == "inspection_date") {
                 $inspection_data["inspection_date"] = $row_data_value;
             } else if ($header_key_value == "inspection_authority") {
                 $inspection_data["inspected_by"] = $row_data_value;
             } else if ($header_key_value == "inspection_passed") {
                 $inspection_data["passed"] = $row_data_value;
-            } else if ($header_key_value == "remarks") {
+            } else if ($header_key_value == "remarks_visual_inspection") {
                 $inspection_data["remarks"] = $row_data_value;
             } else if ($header_key_value == "supplied_date") {
                 if (is_valid_date($row_data_value)) {
@@ -1006,7 +1147,7 @@ class Misc extends Security_Controller
                 }
 
                 // Misc main data
-                $main = $this->findMainByItem($main_data["item_description"], $mains);
+                $main = $this->findMainByItem($main_data, $mains);
                 if ($main) {
                     $item_data["main_id"] = $main->id;
                 } else {
@@ -1016,6 +1157,9 @@ class Misc extends Security_Controller
                     $temp = new stdClass();
                     $temp->id = $m_save_id;
                     $temp->item_description = $main_data["item_description"];
+                    $temp->wll = $main_data["wll"];
+                    $temp->wl = $main_data["wl"];
+                    $temp->type_id = $main_data["type_id"];
                     $mains[] = $temp;
                 }
 
@@ -1037,9 +1181,10 @@ class Misc extends Security_Controller
                     $test_date = date_format(date_create($loadtest_data["initial"]["test_date"]), "Y-m-d");
                     $data = array(
                         "misc_id" => $save_id,
+                        "initial_test" => 1,
                         "test_date" => $test_date,
                         "tested_by" => $loadtest_data["initial"]["tested_by"],
-                        "passed" => $loadtest_data["initial"]["passed"] ?? 0
+                        "passed" => $loadtest_data["initial"]["passed"] == '1' ? 1 : 0
                     );
                     if ($this->valid_loadtest($save_id, $data["test_date"], $load_tests)) {
                         $this->Misc_loadtest_model->ci_save($data);
@@ -1057,7 +1202,8 @@ class Misc extends Security_Controller
                         "misc_id" => $save_id,
                         "test_date" => $test_date,
                         "tested_by" => $loadtest_data["last"]["tested_by"],
-                        "passed" => $loadtest_data["last"]["passed"] ?? 0
+                        "passed" => $loadtest_data["last"]["passed"] == '1' ? 1 : 0,
+                        "remarks" => $loadtest_data["last"]["remarks"]
                     );
                     if ($this->valid_loadtest($save_id, $data["test_date"], $load_tests)) {
                         $this->Misc_loadtest_model->ci_save($data);
@@ -1076,8 +1222,8 @@ class Misc extends Security_Controller
                         "misc_id" => $save_id,
                         "inspection_date" => $inspection_date,
                         "inspected_by" => $inspection_data["inspected_by"],
-                        "remarks" => $inspection_data["remarks"] ?? "",
-                        "passed" => $inspection_data["passed"] ?? 0
+                        "passed" => $inspection_data["passed"] == '1' ? 1 : 0,
+                        "remarks" => $inspection_data["remarks"]
                     );
                     if ($this->valid_inspection($save_id, $data["inspection_date"], $inspections)) {
                         $this->Misc_inspection_model->ci_save($data);
@@ -1109,9 +1255,9 @@ class Misc extends Security_Controller
         return false;
     }
 
-    private function findMainByItem($description, $arr) {
+    private function findMainByItem($data, $arr) {
         foreach ($arr as $item) {
-            if ($description == $item->item_description) {
+            if (($data["item_description"] == $item->item_description) || ($data["wll"] == $item->wll && $data["wl"] == $item->wl && $data["type_id"] == $item->type_id)) {
                 return $item;
             }
         }
