@@ -27,15 +27,16 @@
             columns: [
                 { visible: false, searchable: false },
                 { title: "<?php echo app_lang("item"); ?>", "class": "all" },
-                { title: "WLL [TS]", "class": "text-center w8p" },
-                { title: "WL [m]", "class": "text-center w8p" },
-                { title: "Qty", "class": "text-center w8p" },
-                { title: "BL [kN]", "class": "text-center w8p" },
-                { title: "Dia [mm]", "class": "text-center w8p" },
-                { title: "<?php echo app_lang("supplier"); ?>", "class": "text-center w10p" },
-                { title: "<?php echo app_lang("delivered_on_board") ?>", "class": "text-center w10p" },
-                { title: "<?php echo app_lang("visual_inspection") ?>", "class": "text-center w15p" },
-                { title: "<?php echo app_lang("loadtest") ?>", "class": "text-center w15p" }
+                { title: "WLL [TS]", "class": "text-center w100" },
+                { title: "WL [m]", "class": "text-center w100" },
+                { title: "<?php echo app_lang("type"); ?>", "class": "text-center w100" },
+                { title: "Qty", "class": "text-center w100" },
+                { title: "BL [kN]", "class": "text-center w100" },
+                { title: "Dia [mm]", "class": "text-center w100" },
+                { title: "<?php echo app_lang("supplier"); ?>", "class": "text-center w100" },
+                { title: "<?php echo app_lang("delivered_on_board") ?>", "class": "text-center w100" },
+                { title: "<?php echo app_lang("visual_inspection") ?>", "class": "text-center w150" },
+                { title: "<?php echo app_lang("loadtest") ?>", "class": "text-center w150" }
             ]
         });
     };

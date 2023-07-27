@@ -37,6 +37,15 @@
 
                 <div class="form-group row">
                     <div class="col-md-5">
+                        <span><?php echo app_lang("type"); ?></span>
+                    </div>
+                    <div class="col-md-7">
+                        <strong><?php echo $model_info->type; ?></strong>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-5">
                         <span>Dia (mm):</span>
                     </div>
                     <div class="col-md-7">

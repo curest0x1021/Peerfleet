@@ -24,6 +24,7 @@
                 {title: "<?php echo app_lang("description") ?>", "class": "w150"},
                 {title: "WLL [TS]"},
                 {title: "WL [m]"},
+                { title: "<?php echo app_lang("type"); ?>", "class": "text-center w100" },
                 {title: "Dia [mm]"},
                 {title: "BL [kN]"},
                 {title: "Qty"},

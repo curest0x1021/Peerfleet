@@ -107,6 +107,7 @@ class App_Controller extends Controller {
     public $Shackle_types_model;
     public $Misc_types_model;
     public $Lashing_category_model;
+    public $Grommet_types_model;
     public $Grommets_main_model;
     public $Grommets_model;
     public $Grommets_loadtest_model;
@@ -254,6 +255,7 @@ class App_Controller extends Controller {
             'Shackle_types_model',
             'Misc_types_model',
             'Lashing_category_model',
+            'Grommet_types_model',
             'Grommets_main_model',
             'Grommets_model',
             'Grommets_loadtest_model',

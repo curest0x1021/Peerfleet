@@ -772,6 +772,17 @@ class Security_Controller extends App_Controller {
         return $projects_dropdown;
     }
 
+    protected function get_grommet_types_dropdown() {
+        $list = $this->Grommet_types_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
+    }
+
     protected function get_manufacturers_dropdown() {
         $list = $this->Manufacturers_model->get_all_where(array("deleted" => 0))->getResult();
 
