@@ -29,7 +29,12 @@
         $labels_data = make_labels_view_data($item->labels_list);
 
         if ($labels_data) {
-            $todo_labels .= "<div class='meta float-start mr5'>$labels_data</div>";
+            $todo_labels .= "<div class='meta float-start mr5'>" . $labels_data . "</div>";
+        }
+
+        $priority = "";
+        if ($item->priority_id) {
+            $priority = "<div class='meta float-start mr5' title='" . app_lang('priority') . "'><span class='sub-task-icon priority-badge' style='background: $item->priority_color'><i data-feather='$item->priority_icon' class='icon-14'></i></span><span class='small'> $item->priority_title</span></div>";
         }
 
         $disable_dragging = can_edit_this_todo($item->created_by) ? "" : "disable-dragging";
@@ -39,8 +44,29 @@
             $start_date = "<div class='mt10 font-12 float-start' title='" . app_lang("start_date") . "'><i data-feather='calendar' class='icon-14 text-off mr5'></i> " . format_to_date($item->start_date, false) . "</div>";
         }
 
-        $temp = $exising_items . modal_anchor(get_uri("todo/view"), "<div class='clearfix todo_kanban_title'>" . $item->title . "</div>" . "<div class='clearfix todo_kanban_description'>" . $item->description . "</div>" .  "<div class='clearfix'>" . $start_date . "</div>" .
-                        $todo_labels . $todo_checklist_status . "<div class='clearfix'></div>", array("class" => "kanban-item d-block $disable_dragging", "data-id" => $item->id, "data-sort" => $item->new_sort, "data-post-id" => $item->id, "title" => app_lang('todo') . " #$item->id", "data-modal-lg" => "1"));
+        $deadline_text = "-";
+        if ($item->deadline && is_date_exists($item->deadline)) {
+            $deadline_text = format_to_date($item->deadline, false);
+            if (get_my_local_time("Y-m-d") > $item->deadline && $item->status != "done") {
+                $deadline_text = "<span class='text-danger'>" . $deadline_text . "</span> ";
+            } else if (get_my_local_time("Y-m-d") == $item->deadline && $item->status != "done") {
+                $deadline_text = "<span class='text-warning'>" . $deadline_text . "</span> ";
+            }
+        }
+
+        $end_date = "";
+        if ($item->deadline) {
+            $end_date = "<div class='mt10 font-12 float-end' title='" . app_lang("deadline") . "'><i data-feather='calendar' class='icon-14 text-off mr5'></i> " . $deadline_text . "</div>";
+        }
+
+        $new_item = "<div class='d-block'>";
+        $new_item .= "<div class='clearfix todo_kanban_title'>" . $item->title . "</div>";
+        // $new_item .= "<div class='clearfix todo_kanban_description'>" . $item->description . "</div>";
+        $new_item .= "<div class='clearfix'>" . $start_date . $end_date . "</div>";
+        $new_item .= $todo_labels . $todo_checklist_status . $priority;
+        $new_item .= "</div>";
+
+        $temp = $exising_items . modal_anchor(get_uri("todo/view"), $new_item, array("class" => "kanban-item $disable_dragging", "data-id" => $item->id, "data-sort" => $item->new_sort, "data-post-id" => $item->id, "title" => app_lang('todo') . " #$item->id", "data-modal-lg" => "1"));
 
         $columns_data[$item->status] = $temp;
     }
@@ -49,7 +75,7 @@
     <ul id="kanban-container" class="kanban-container clearfix">
 
         <?php foreach ($columns as $column) { ?>
-            <li class="kanban-col kanban-<?php echo $column->key_name; ?>" >
+            <li class="kanban-col kanban-<?php echo $column->id; ?>" >
                 <div class="kanban-col-title" style="border-bottom: 3px solid <?php echo $column->color ? $column->color : "#2e4053"; ?>;"> <?php echo $column->key_name ? app_lang($column->key_name) : $column->title; ?> <span class="<?php echo $column->id; ?>-todo-count float-end"></span></div>
 
                 <div  id="kanban-item-list-<?php echo $column->key_name; ?>" class="kanban-item-list" data-status="<?php echo $column->key_name; ?>">

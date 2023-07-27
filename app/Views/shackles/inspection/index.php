@@ -11,7 +11,7 @@
 <script type="text/javascript">
     loadInspectionTable = function(selector) {
         $(selector).appTable({
-            source: '<?php echo_uri("shackles/inspection_list_data/" . $client_id) ?>',
+            source: '<?php echo_uri("shackles/inspection_list_data/" . $client_id. "/" . $main_id) ?>',
             columns: [
                 {visible: false, searchable: false},
                 {title: "<?php echo app_lang("internal_id") ?>", "class": "w100"},

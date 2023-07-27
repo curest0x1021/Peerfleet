@@ -363,6 +363,20 @@ class Security_Controller extends App_Controller {
         return json_encode($vessels_dropdown);
     }
 
+    protected function get_todo_status_dropdown($show_header = false) {
+        $status = $this->Todo_status_model->get_all_where(array("deleted" => 0))->getResult();
+        $status_dropdown = array();
+
+        if ($show_header) {
+            $status_dropdown[] = array("id" => "", "text" => "- " . app_lang("status") . " -");
+        }
+
+        foreach ($status as $item) {
+            $status_dropdown[] = array("id" => $item->key_name, "text" => $item->title);
+        }
+        return json_encode($status_dropdown);
+    }
+
     protected function get_spare_parts_dropdown() {
         $list = $this->Spare_parts_model->get_all_where(array("deleted" => 0))->getResult();
 
@@ -756,6 +770,17 @@ class Security_Controller extends App_Controller {
         }
 
         return $projects_dropdown;
+    }
+
+    protected function get_grommet_types_dropdown() {
+        $list = $this->Grommet_types_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+
+        return $dropdown;
     }
 
     protected function get_manufacturers_dropdown() {

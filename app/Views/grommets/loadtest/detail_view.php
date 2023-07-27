@@ -30,10 +30,11 @@
     loadLoadtestDetailTable = function(selector) {
         $(selector).appTable({
             source: '<?php echo_uri("grommets/loadtest_detail_list_data/" . $grommet->client_id . "/" . $grommet->id) ?>',
-            order: [[2, "desc"]],
+            order: [[3, "desc"]],
             columns: [
                 {visible: false, searchable: false},
                 {visible: false, searchable: false},
+                {title: "<?php echo app_lang("initial_test") ?>", "class": "text-center w50"},
                 {title: "<?php echo app_lang("test_date") ?>", "class": "w100"},
                 {title: "<?php echo app_lang("tested_by") ?>", "class": "w150"},
                 {title: "<?php echo app_lang("location") ?>", "class": "w150"},

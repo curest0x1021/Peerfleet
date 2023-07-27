@@ -94,6 +94,8 @@ class Lashing extends Security_Controller
             "category_id" => "required",
             "name" => "required",
             "qty" => "required",
+            "icc_id" => "required",
+            "manufacturer_id" => "required",
             "property" => "required"
         ));
 
@@ -109,6 +111,8 @@ class Lashing extends Security_Controller
             "height" => $this->request->getPost("height"),
             "msl" => $this->request->getPost("msl"),
             "bl" => $this->request->getPost("bl"),
+            "icc_id" => $this->request->getPost("icc_id"),
+            "manufacturer_id" => $this->request->getPost("manufacturer_id"),
             "supplied_date" => $this->request->getPost("supplied_date"),
             "supplied_place" => $this->request->getPost("supplied_place"),
             "property" => $this->request->getPost("property"),
@@ -172,6 +176,8 @@ class Lashing extends Security_Controller
             $data->height,
             $data->msl,
             $data->bl,
+            $data->icc,
+            $data->manufacturer,
             $data->supplied_date,
             $data->supplied_place,
             $data->property,
@@ -203,6 +209,8 @@ class Lashing extends Security_Controller
         $view_data["label_column"] = "col-md-4";
         $view_data["field_column"] = "col-md-8";
         $view_data["category_dropdown"] = $this->get_lashing_category_dropdown();
+        $view_data["manufacturers_dropdown"] = $this->get_manufacturers_dropdown();
+        $view_data["icc_dropdown"] = $this->get_identified_color_codes_dropdown();
 
         return $this->template->view("lashing/info/modal_form", $view_data);
     }
@@ -406,6 +414,8 @@ class Lashing extends Security_Controller
             ["key" => "height", "required" => false],
             ["key" => "msl", "required" => false],
             ["key" => "bl", "required" => false],
+            ["key" => "icc", "required" => false],
+            ["key" => "manufacturer", "required" => false],
             ["key" => "supplied_place", "required" => false],
             ["key" => "supplied_date", "required" => false],
             ["key" => "property", "required" => true],
@@ -472,6 +482,8 @@ class Lashing extends Security_Controller
         $item_data = array();
         $category_data = array();
         $inspection_data = array();
+        $manufacturer_data = array();
+        $icc_data = array();
 
         foreach ($data_row as $row_data_key => $row_data_value) { //row values
             if (!$row_data_value) {
@@ -481,6 +493,10 @@ class Lashing extends Security_Controller
             $header_key_value = get_array_value($allowed_headers, $row_data_key);
             if ($header_key_value == "category") {
                 $category_data["name"] = $row_data_value;
+            } else if ($header_key_value == "manufacturer") {
+                $manufacturer_data["name"] = $row_data_value;
+            } else if ($header_key_value == "icc") {
+                $icc_data["name"] = $row_data_value;
             } else if ($header_key_value == "inspection_date") {
                 $inspection_data["inspection_date"] = $row_data_value;
             } else if ($header_key_value == "inspection_authority") {
@@ -503,6 +519,8 @@ class Lashing extends Security_Controller
         return array(
             "item_data" => $item_data,
             "category_data" => $category_data,
+            "manufacturer_data" => $manufacturer_data,
+            "icc_data" => $icc_data,
             "inspection_data" => $inspection_data,
         );
     }
@@ -646,6 +664,8 @@ class Lashing extends Security_Controller
         }, $this->_get_allowed_headers());
 
         $categories = $this->Lashing_category_model->get_all()->getResult();
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        $iccs = $this->Color_codes_model->get_all()->getResult();
         $inspections = $this->Lashing_inspection_model->get_all()->getResult();
         $lashings = $this->Lashing_model->get_data($client_id);
 
@@ -657,6 +677,8 @@ class Lashing extends Security_Controller
             $data_array = $this->_prepare_item_data($value, $allowed_headers);
             $item_data = get_array_value($data_array, "item_data");
             $category_data = get_array_value($data_array, "category_data");
+            $manufacturer_data = get_array_value($data_array, "manufacturer_data");
+            $icc_data = get_array_value($data_array, "icc_data");
             $inspection_data = get_array_value($data_array, "inspection_data");
 
             //couldn't prepare valid data
@@ -677,6 +699,38 @@ class Lashing extends Security_Controller
                     $temp->id = $m_save_id;
                     $temp->name = $category_data["name"];
                     $categories[] = $temp;
+                }
+
+                // manufacturer
+                if (isset($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
+                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
+                    if ($manufacturer) {
+                        $item_data["manufacturer_id"] = $manufacturer->id;
+                    } else {
+                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                        $item_data["manufacturer_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $manufacturer_data["name"];
+                        $manufacturers[] = $temp;
+                    }
+                }
+
+                // Identified color codes
+                if (isset($icc_data["name"]) && $icc_data["name"] != "---") {
+                    $icc = $this->findObjectByName($icc_data["name"], $iccs);
+                    if ($icc) {
+                        $item_data["icc_id"] = $icc->id;
+                    } else {
+                        $m_save_id = $this->Color_codes_model->ci_save($icc_data);
+                        $item_data["icc_id"] = $m_save_id;
+
+                        $temp = new stdClass();
+                        $temp->id = $m_save_id;
+                        $temp->name = $icc_data["name"];
+                        $iccs[] = $temp;
+                    }
                 }
 
                 $item_data["client_id"] = $client_id;

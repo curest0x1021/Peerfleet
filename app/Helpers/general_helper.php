@@ -2851,6 +2851,19 @@ if (!function_exists('get_visual_inspection_reminder_date')) {
     }
 }
 
+/**
+ * get wires inspection reminder date
+ * @return string
+ */
+if (!function_exists('get_wires_inspection_reminder_date')) {
+    function get_wires_inspection_reminder_date() {
+        // Visual inspection: 12 months
+        // Reminder: 90 days
+        $reminder_date = date('Y-m-d', strtotime(' - 9 months'));
+        return $reminder_date;
+    }
+}
+
 if (!function_exists('can_edit_this_todo')) {
 
     function can_edit_this_todo($created_by = 0) {

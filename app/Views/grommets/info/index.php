@@ -4,7 +4,7 @@
         <?php if ($can_edit_items) { ?>
             <div class="title-button-group">
                 <?php echo anchor(get_uri("lifting_gear_types"), app_lang('lifting_gear_types') . " <i data-feather='external-link' class='icon-16'></i>" , array("class" => "mr15", "target" => "_blank")); ?>
-                <?php echo modal_anchor(get_uri("grommets/info_modal_form/" . $client_id), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_item'), array("class" => "btn btn-default", "title" => app_lang('add_item'))); ?>
+                <?php echo modal_anchor(get_uri("grommets/info_modal_form/" . $client_id . "/" . $main_id), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_item'), array("class" => "btn btn-default", "title" => app_lang('add_item'))); ?>
             </div>
         <?php } ?>
     </div>
@@ -17,13 +17,14 @@
 <script type="text/javascript">
     loadGrommetsTable = function(selector) {
         $(selector).appTable({
-            source: '<?php echo_uri("grommets/info_list_data/" . $client_id) ?>',
+            source: '<?php echo_uri("grommets/info_list_data/" . $client_id . "/" . $main_id) ?>',
             columns: [
                 {visible: false, searchable: false},
                 {title: "<?php echo app_lang("internal_id") ?>", "class": "w100"},
                 {title: "<?php echo app_lang("description") ?>", "class": "w150"},
                 {title: "WLL [TS]"},
                 {title: "WL [m]"},
+                { title: "<?php echo app_lang("type"); ?>", "class": "text-center w100" },
                 {title: "Dia [mm]"},
                 {title: "BL [kN]"},
                 {title: "Qty"},

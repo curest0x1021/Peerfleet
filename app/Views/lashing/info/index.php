@@ -30,13 +30,15 @@
                 {title: "Height [mm]"},
                 {title: "MSL [kN]"},
                 {title: "BL [kN]"},
+                {title: "<?php echo app_lang("icc") ?>"},
+                {title: "<?php echo app_lang("manufacturer") ?>"},
                 {title: "<?php echo app_lang("supplied_date") ?>"},
                 {title: "<?php echo app_lang("supplied_place") ?>"},
                 {title: "<?php echo app_lang("property") ?>"},
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
-            printColumns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-            xlsColumns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+            printColumns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+            xlsColumns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
         });
     };
     $(document).ready(function() {

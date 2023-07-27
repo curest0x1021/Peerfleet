@@ -24,6 +24,10 @@ class Misc_inspection_model extends Crud_model {
         if ($client_id) {
             $where .= " AND $misc_table.client_id = $client_id";
         }
+        $main_id = $this->_get_clean_value($options, "main_id");
+        if ($main_id) {
+            $where .= " AND $misc_table.main_id = $main_id";
+        }
 
         $sql = "SELECT $misc_table.internal_id, $misc_table.id as misc_id, c.id, c.inspection_date, c.inspected_by, c.location, c.passed, c.remarks
                 FROM $misc_table

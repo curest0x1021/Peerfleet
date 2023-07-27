@@ -1,4 +1,4 @@
-<?php echo form_open(get_uri("wires/save_wire_inspection"), array("id" => "inspection-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("wires/save_inspection"), array("id" => "inspection-form", "class" => "general-form", "role" => "form")); ?>
 <div id="wire-inspection-dropzone" class="post-dropzone">
     <div class="modal-body clearfix">
         <div class="container-fluid">
@@ -85,26 +85,6 @@
                             "class" => "form-control",
                             "placeholder" => app_lang('location'),
                             "maxlength" => 255,
-                            "data-rule-required" => true,
-                            "data-msg-required" => app_lang("field_required"),
-                        ));
-                        ?>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="row">
-                    <label for="next_suggested_inspection" class="<?php echo $label_column; ?>"><?php echo app_lang('next_suggested_inspection'); ?></label>
-                    <div class="<?php echo $field_column; ?>">
-                        <?php
-                        echo form_input(array(
-                            "id" => "next_suggested_inspection",
-                            "name" => "next_suggested_inspection",
-                            "class" => "form-control",
-                            "placeholder" => app_lang('next_suggested_inspection'),
-                            "value" => isset($model_info) ? $model_info->next_suggested_inspection : "",
-                            "autocomplete" => "off",
                             "data-rule-required" => true,
                             "data-msg-required" => app_lang("field_required"),
                         ));

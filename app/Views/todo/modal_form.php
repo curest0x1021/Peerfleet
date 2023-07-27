@@ -2,14 +2,15 @@
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
-        <div class="form-group">
-            <div class="col-md-12">
+        <div class="form-group row">
+            <label for="title" class="<?php echo $label_column; ?>"><?php echo app_lang('title'); ?></label>
+            <div class="<?php echo $field_column; ?>">
                 <?php
                 echo form_input(array(
                     "id" => "title",
                     "name" => "title",
                     "value" => $model_info->title,
-                    "class" => "form-control notepad-title",
+                    "class" => "form-control",
                     "placeholder" => app_lang('title'),
                     "autofocus" => true,
                     "data-rule-required" => true,
@@ -18,8 +19,9 @@
                 ?>
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-md-12">
+        <div class="form-group row">
+            <label for="description" class="<?php echo $label_column; ?>"><?php echo app_lang('description'); ?></label>
+            <div class="<?php echo $field_column; ?>">
                 <div class="notepad">
                     <?php
                     echo form_textarea(array(
@@ -34,8 +36,54 @@
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-md-12">
+        <div class="form-group row">
+            <label for="client_id" class="<?php echo $label_column; ?>"><?php echo app_lang('vessel'); ?></label>
+            <div class="<?php echo $field_column; ?>">
+                <?php
+                echo form_input(array(
+                    "id" => "client_id",
+                    "name" => "client_id",
+                    "value" => $model_info->client_id ? $model_info->client_id : "",
+                    "class" => "form-control",
+                    "placeholder" => app_lang('vessel'),
+                    "autocomplete" => "off"
+                ));
+                ?>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="status" class="<?php echo $label_column; ?>"><?php echo app_lang('status'); ?></label>
+            <div class="<?php echo $field_column; ?>">
+                <?php
+                echo form_input(array(
+                    "id" => "status",
+                    "name" => "status",
+                    "value" => $model_info->status ? $model_info->status : "",
+                    "class" => "form-control",
+                    "placeholder" => app_lang('status'),
+                    "autocomplete" => "off"
+                ));
+                ?>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="priority_id" class="<?php echo $label_column; ?>"><?php echo app_lang('priority'); ?></label>
+            <div class="<?php echo $field_column; ?>">
+                <?php
+                echo form_input(array(
+                    "id" => "priority_id",
+                    "name" => "priority_id",
+                    "value" => $model_info->priority_id ? $model_info->priority_id : "",
+                    "class" => "form-control",
+                    "placeholder" => app_lang('priority'),
+                    "autocomplete" => "off"
+                ));
+                ?>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="labels" class="<?php echo $label_column; ?>"><?php echo app_lang('labels'); ?></label>
+            <div class="<?php echo $field_column; ?>">
                 <div class="notepad">
                     <?php
                     echo form_input(array(
@@ -49,15 +97,31 @@
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-md-12">
+        <div class="form-group row">
+            <label for="start_date" class="<?php echo $label_column; ?>"><?php echo app_lang('start_date'); ?></label>
+            <div class="<?php echo $field_column; ?>">
                 <?php
                 echo form_input(array(
                     "id" => "start_date",
                     "name" => "start_date",
                     "value" => is_date_exists($model_info->start_date) ? $model_info->start_date : "",
                     "class" => "form-control",
-                    "placeholder" => app_lang('date'),
+                    "placeholder" => app_lang('start_date'),
+                    "autocomplete" => "off"
+                ));
+                ?>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="deadline" class="<?php echo $label_column; ?>"><?php echo app_lang('deadline'); ?></label>
+            <div class="<?php echo $field_column; ?>">
+                <?php
+                echo form_input(array(
+                    "id" => "deadline",
+                    "name" => "deadline",
+                    "value" => is_date_exists($model_info->deadline) ? $model_info->deadline : "",
+                    "class" => "form-control",
+                    "placeholder" => app_lang('deadline'),
                     "autocomplete" => "off"
                 ));
                 ?>
@@ -124,8 +188,12 @@
             $("#title").focus();
         }, 200);
         $("#todo_labels").select2({multiple: true, data: <?php echo json_encode($label_suggestions); ?>});
+        $("#client_id").select2({ data: <?php echo $vessels_dropdown; ?>});
+        $("#priority_id").select2({ data: <?php echo $priorities_dropdown; ?>});
+        $("#status").select2({ data: <?php echo $status_dropdown; ?>});
 
         setDatePicker("#start_date");
+        setDatePicker("#deadline");
 
         //make the checklist items sortable
         var $selector = $("#checklist-items");

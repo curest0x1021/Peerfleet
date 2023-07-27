@@ -201,6 +201,23 @@
     </div>
 </div>
 
+<div class="form-group row">
+    <div class="<?php echo $label_column; ?>">
+        <span><?php echo app_lang("description"); ?>:</span>
+    </div>
+    <div class="<?php echo $field_column; ?>">
+        <?php
+        echo form_textarea(array(
+            "id" => "description",
+            "name" => "description",
+            "value" => process_images_from_content($model_info->description, false),
+            "placeholder" => app_lang('description'),
+            "class" => "form-control"
+        ));
+        ?>
+    </div>
+</div>
+
 <script type="text/javascript">
     $(document).ready(function() {
         $('#country_id').select2();
