@@ -28,7 +28,7 @@ class Wires_loadtest_model extends Crud_model {
         $sql = "SELECT $loadtest_table.*, $wires_table.crane, $wires_table.wire
                 FROM $loadtest_table
                 LEFT JOIN $wires_table ON $wires_table.id = $loadtest_table.wire_id
-                WHERE deleted=0 $where
+                WHERE $loadtest_table.deleted=0 $where
                 ORDER BY $loadtest_table.test_date DESC";
 
         return $this->db->query($sql);

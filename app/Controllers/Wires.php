@@ -2,6 +2,9 @@
 
 namespace App\Controllers;
 
+use Exception;
+use stdClass;
+
 class Wires extends Security_Controller {
 
     function __construct() {
@@ -248,6 +251,7 @@ class Wires extends Security_Controller {
 
         if ($client_id) {
             $view_data['client_id'] = $client_id;
+            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
             return $this->template->view("wires/info/index", $view_data);
         } else {
             show_404();
@@ -339,6 +343,7 @@ class Wires extends Security_Controller {
 
         if ($client_id) {
             $view_data["client_id"] = $client_id;
+            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
             return $this->template->view("wires/history/index", $view_data);
         } else {
             show_404();
@@ -425,6 +430,7 @@ class Wires extends Security_Controller {
 
         if ($client_id) {
             $view_data["client_id"] = $client_id;
+            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
             return $this->template->view("wires/loadtest/index", $view_data);
         } else {
             show_404();
@@ -558,11 +564,13 @@ class Wires extends Security_Controller {
 
         $files_str = "";
         $files = unserialize($data->files);
-        foreach ($files as $key => $file) {
-            if ($key > 0) {
-                $files_str .= ", ";
+        if (is_array($files)) {
+            foreach ($files as $key => $file) {
+                if ($key > 0) {
+                    $files_str .= ", ";
+                }
+                $files_str .= anchor(get_uri("wires/download_loadtest_file/" . $data->id . "/" .$key), remove_file_prefix($file["file_name"]));
             }
-            $files_str .= anchor(get_uri("wires/download_loadtest_file/" . $data->id . "/" .$key), remove_file_prefix($file["file_name"]));
         }
         return array(
             $data->id,
@@ -576,20 +584,21 @@ class Wires extends Security_Controller {
         );
     }
 
-    function wire_inspection_tab($client_id) {
+    function inspection_tab($client_id) {
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
 
         if ($client_id) {
             $view_data["client_id"] = $client_id;
-            return $this->template->view("wires/wire_inspection/index", $view_data);
+            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
+            return $this->template->view("wires/inspection/index", $view_data);
         } else {
             show_404();
         }
     }
 
-    function wire_inspection_modal_form() {
+    function inspection_modal_form() {
         $client_id = $this->request->getPost("client_id");
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
@@ -605,10 +614,10 @@ class Wires extends Security_Controller {
             $view_data["model_info"] = $this->Wires_inspection_model->get_details(array("id" => $this->request->getPost("id")))->getRow();
         }
 
-        return $this->template->view("wires/wire_inspection/modal_form", $view_data);
+        return $this->template->view("wires/inspection/modal_form", $view_data);
     }
 
-    function save_wire_inspection() {
+    function save_inspection() {
         $id = $this->request->getPost("id");
         $client_id = $this->request->getPost("client_id");
         if (!$this->can_access_own_client($client_id)) {
@@ -621,8 +630,7 @@ class Wires extends Security_Controller {
             "wire_id" => "required|numeric",
             "inspection_date" => "required",
             "result" => "required",
-            "location" => "required",
-            "next_suggested_inspection" => "required"
+            "location" => "required"
         ));
 
         $data = array(
@@ -630,8 +638,7 @@ class Wires extends Security_Controller {
             "wire_id" => intval($this->request->getPost("wire_id")),
             "inspection_date" => $this->request->getPost("inspection_date"),
             "result" => $this->request->getPost("result"),
-            "location" => $this->request->getPost("location"),
-            "next_suggested_inspection" => $this->request->getPost("next_suggested_inspection")
+            "location" => $this->request->getPost("location")
         );
 
         $target_path = getcwd() . "/" . get_general_file_path("wires", $data["client_id"]);
@@ -647,13 +654,13 @@ class Wires extends Security_Controller {
         $save_id = $this->Wires_inspection_model->ci_save($data, $id);
 
         if ($save_id) {
-            echo json_encode(array("success" => true, "data" => $this->_wire_inspection_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+            echo json_encode(array("success" => true, "data" => $this->_inspection_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
     }
 
-    function delete_wire_inspection() {
+    function delete_inspection() {
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
         ));
@@ -676,33 +683,39 @@ class Wires extends Security_Controller {
         }
     }
 
-    function wire_inspection_list_data($client_id) {
+    function inspection_list_data($client_id) {
         $list_data = $this->Wires_inspection_model->get_details(array("client_id" => $client_id))->getResult();
         $result_data = [];
         foreach ($list_data as $data) {
-            $result_data[] = $this->_wire_inspection_make_row($data);
+            $result_data[] = $this->_inspection_make_row($data);
         }
 
         $result["data"] = $result_data;
         echo json_encode($result);
     }
 
-    private function _wire_inspection_row_data($id) {
+    private function _inspection_row_data($id) {
         $data = $this->Wires_inspection_model->get_details(array("id" => $id))->getRow();
-        return $this->_wire_inspection_make_row($data);
+        return $this->_inspection_make_row($data);
     }
 
-    private function _wire_inspection_make_row($data) {
-        $action = modal_anchor(get_uri("wires/wire_inspection_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_wire_inspection'), "data-post-id" => $data->id, "data-post-client_id" => $data->client_id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("wires/delete_wire_inspection"), "data-action" => "delete-confirmation"));
+    private function _inspection_make_row($data) {
+        $action = modal_anchor(get_uri("wires/inspection_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_inspection'), "data-post-id" => $data->id, "data-post-client_id" => $data->client_id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("wires/delete_inspection"), "data-action" => "delete-confirmation"));
 
         $files_str = "";
         $files = unserialize($data->files);
-        foreach ($files as $key => $file) {
-            if ($key > 0) {
-                $files_str .= ", ";
+        if (is_array($files)) {
+            foreach ($files as $key => $file) {
+                if ($key > 0) {
+                    $files_str .= ", ";
+                }
+                $files_str .= anchor(get_uri("wires/download_inspection_file/" . $data->id . "/" .$key), remove_file_prefix($file["file_name"]));
             }
-            $files_str .= anchor(get_uri("wires/download_wire_inspection_file/" . $data->id . "/" .$key), remove_file_prefix($file["file_name"]));
+        }
+        $next_suggested_inspection = "";
+        if ($data->inspection_date) {
+            $next_suggested_inspection = date('Y-m-d', strtotime($data->inspection_date . ' + 12 months'));
         }
         return array(
             $data->id,
@@ -711,13 +724,13 @@ class Wires extends Security_Controller {
             $data->wire,
             $data->result,
             $data->location,
-            $data->next_suggested_inspection,
+            $next_suggested_inspection,
             $files_str,
             $action
         );
     }
 
-    function download_wire_inspection_file($id, $key) {
+    function download_inspection_file($id, $key) {
         $model_info = $this->Wires_inspection_model->get_one($id);
         $files = unserialize($model_info->files);
         $client_id = $model_info->client_id;
@@ -731,5 +744,589 @@ class Wires extends Security_Controller {
 
         $dropdown = $this->Wires_model->get_wires_dropdown($client_id, $crane);
         echo json_encode($dropdown);
+    }
+
+    // Import data from excel
+    function import_modal_form($client_id, $tab) {
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+        $view_data["tab"] = $tab;
+        $view_data["client_id"] = $client_id;
+        return $this->template->view("wires/import_modal_form", $view_data);
+    }
+
+    function upload_excel_file() {
+        upload_file_to_temp(true);
+    }
+
+    function validate_import_file() {
+        $file_name = $this->request->getPost("file_name");
+        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        if (!is_valid_file_to_upload($file_name)) {
+            echo json_encode(array("success" => false, 'message' => app_lang('invalid_file_type')));
+            exit();
+        }
+
+        if ($file_ext == "xlsx") {
+            echo json_encode(array("success" => true));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('please_upload_a_excel_file') . " (.xlsx)"));
+        }
+    }
+
+    function download_sample_excel_file($tab) {
+        $file_name = "";
+        if ($tab == "info") {
+            $file_name = "import-wires-facts-and-figure-sample.xlsx";
+        } else if ($tab == "history") {
+            $file_name = "import-wires-history-sample.xlsx";
+        } else if ($tab == "loadtest") {
+            $file_name = "import-wires-loadtest-sample.xlsx";
+        } else if ($tab == "inspection") {
+            $file_name = "import-wires-inspection-sample.xlsx";
+        }
+        return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => $file_name))));
+    }
+
+    private function _get_allowed_headers($tab) {
+        if ($tab == "info") {
+            return array(
+                [ "key" => "crane", "required" => true ],
+                [ "key" => "wire", "required" => false ],
+                [ "key" => "diameter", "required" => false ],
+                [ "key" => "length", "required" => false ],
+                [ "key" => "swl", "required" => false ]
+            );
+        } else if ($tab == "history") {
+            return array(
+                [ "key" => "crane", "required" => true ],
+                [ "key" => "wire", "required" => false ],
+                [ "key" => "initial", "required" => false ],
+                [ "key" => "1st_replacement", "required" => false ],
+                [ "key" => "2nd_replacement", "required" => false ],
+                [ "key" => "3rd_replacement", "required" => false ],
+                [ "key" => "4th_replacement", "required" => false ],
+                [ "key" => "5th_replacement", "required" => false ],
+            );
+        } else if ($tab == "loadtest") {
+            return array(
+                [ "key" => "crane", "required" => true ],
+                [ "key" => "wire", "required" => false ],
+                [ "key" => "test_date", "required" => false ],
+                [ "key" => "location", "required" => false ],
+                [ "key" => "result", "required" => false ]
+            );
+        } else if ($tab == "inspection") {
+            return array(
+                [ "key" => "crane", "required" => true ],
+                [ "key" => "wire", "required" => false ],
+                [ "key" => "inspection_date", "required" => false ],
+                [ "key" => "location", "required" => false ],
+                [ "key" => "result", "required" => false ]
+            );
+        }
+        return [];
+    }
+
+    private function _store_item_headers_position($tab, $headers_row = array()) {
+        $allowed_headers = array_map(function ($h) {
+            return $h["key"];
+        }, $this->_get_allowed_headers($tab));
+
+        //check if all headers are correct and on the right position
+        $final_headers = array();
+        foreach ($headers_row as $key => $header) {
+            if (!$header) {
+                continue;
+            }
+
+            $key_value = str_replace(' ', '_', strtolower(trim($header, " ")));
+            $header_on_this_position = get_array_value($allowed_headers, $key);
+            $header_array = array("key_value" => $header_on_this_position, "value" => $header);
+
+            if ($header_on_this_position == $key_value) {
+                //allowed headers
+                //the required headers should be on the correct positions
+                //the rest headers will be treated as custom fields
+                //pushed header at last of this loop
+            } else { //invalid header, flag as red
+                $header_array["has_error"] = true;
+            }
+
+            if ($key_value) {
+                array_push($final_headers, $header_array);
+            }
+        }
+
+        return $final_headers;
+    }
+
+    private function _row_data_validation_and_get_error_message($tab, $key, $data) {
+        $allowed_headers = $this->_get_allowed_headers($tab);
+        $header = null;
+        foreach ($allowed_headers as $el) {
+            if ($el["key"] == $key) {
+                $header = $el;
+                break;
+            }
+        }
+
+        if ($header && $header["required"]) {
+            if (empty($data)) {
+                $error_message = sprintf(app_lang("import_data_empty_message"), app_lang($header["key"]));
+                return $error_message;
+            }
+        }
+    }
+
+    private function _prepare_item_data($data_row, $allowed_headers) {
+        //prepare data
+        $item_data = array();
+        $wire_data = array();
+
+        foreach ($data_row as $row_data_key => $row_data_value) { //row values
+            if (!$row_data_value) {
+                continue;
+            }
+
+            $header_key_value = get_array_value($allowed_headers, $row_data_key);
+            if ($header_key_value == "crane") {
+                $wire_data["crane"] = $row_data_value;
+            } else if ($header_key_value == 'wire') {
+                $wire_data["wire"] = $row_data_value;
+            } else {
+                $item_data[$header_key_value] = $row_data_value;
+            }
+        }
+
+        return array(
+            "item_data" => $item_data,
+            "wire_data" => $wire_data
+        );
+    }
+
+    function validate_import_file_data($tab, $check_on_submit = false) {
+        $table_data = "";
+        $error_message = "";
+        $headers = array();
+        $got_error_header = false; //we've to check the valid headers first, and a single header at a time
+        $got_error_table_data = false;
+
+        $file_name = $this->request->getPost("file_name");
+
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+
+        $temp_file_path = get_setting("temp_file_path");
+        $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
+        $excel_file = $excel_file->getActiveSheet()->toArray();
+
+        $table_data .= '<table class="table table-responsive table-bordered table-hover" style="width: 100%; color: #444;">';
+
+        $table_data_header_array = array();
+        $table_data_body_array = array();
+
+        foreach ($excel_file as $row_key => $value) {
+            if ($row_key == 0) { //validate headers
+                $headers = $this->_store_item_headers_position($tab, $value);
+
+                foreach ($headers as $row_data) {
+                    $has_error_class = false;
+                    if (get_array_value($row_data, "has_error") && !$got_error_header) {
+                        $has_error_class = true;
+                        $got_error_header = true;
+
+                        $error_message = sprintf(app_lang("import_error_header"), app_lang(get_array_value($row_data, "key_value")));
+                    }
+
+                    array_push($table_data_header_array, array("has_error_class" => $has_error_class, "value" => get_array_value($row_data, "value")));
+                }
+            } else { //validate data
+                if (!array_filter($value)) {
+                    continue;
+                }
+
+                $error_message_on_this_row = "<ol class='pl15'>";
+
+                foreach ($value as $key => $row_data) {
+                    $has_error_class = false;
+
+                    if (!$got_error_header) {
+                        $row_data_validation = $this->_row_data_validation_and_get_error_message($tab, $key, $row_data);
+                        if ($row_data_validation) {
+                            $has_error_class = true;
+                            $error_message_on_this_row .= "<li>" . $row_data_validation . "</li>";
+                            $got_error_table_data = true;
+                        }
+                    }
+
+                    if (count($headers) > $key) {
+                        $table_data_body_array[$row_key][] = array("has_error_class" => $has_error_class, "value" => $row_data);
+                    }
+                }
+
+                $error_message_on_this_row .= "</ol>";
+
+                //error messages for this row
+                if ($got_error_table_data) {
+                    $table_data_body_array[$row_key][] = array("has_error_text" => true, "value" => $error_message_on_this_row);
+                }
+            }
+        }
+
+        //return false if any error found on submitting file
+        if ($check_on_submit) {
+            return ($got_error_header || $got_error_table_data) ? false : true;
+        }
+
+        //add error header if there is any error in table body
+        if ($got_error_table_data) {
+            array_push($table_data_header_array, array("has_error_text" => true, "value" => app_lang("error")));
+        }
+
+        //add headers to table
+        $table_data .= "<tr>";
+        foreach ($table_data_header_array as $table_data_header) {
+            $error_class = get_array_value($table_data_header, "has_error_class") ? "error" : "";
+            $error_text = get_array_value($table_data_header, "has_error_text") ? "text-danger" : "";
+            $value = get_array_value($table_data_header, "value");
+            $table_data .= "<th class='$error_class $error_text'>" . $value . "</th>";
+        }
+        $table_data .= "</tr>";
+
+        //add body data to table
+        foreach ($table_data_body_array as $table_data_body_row) {
+            $table_data .= "<tr>";
+            $error_text = "";
+
+            foreach ($table_data_body_row as $table_data_body_row_data) {
+                $error_class = get_array_value($table_data_body_row_data, "has_error_class") ? "error" : "";
+                $error_text = get_array_value($table_data_body_row_data, "has_error_text") ? "text-danger" : "";
+                $value = get_array_value($table_data_body_row_data, "value");
+                $table_data .= "<td class='$error_class $error_text'>" . $value . "</td>";
+            }
+
+            if ($got_error_table_data && !$error_text) {
+                $table_data .= "<td></td>";
+            }
+
+            $table_data .= "</tr>";
+        }
+
+        //add error message for header
+        if ($error_message) {
+            $total_columns = count($table_data_header_array);
+            $table_data .= "<tr><td class='text-danger' colspan='$total_columns'><i data-feather='alert-triangle' class='icon-16'></i> " . $error_message . "</td></tr>";
+        }
+
+        $table_data .= "</table>";
+
+        echo json_encode(array("success" => true, 'table_data' => $table_data, 'got_error' => ($got_error_header || $got_error_table_data) ? true : false));
+    }
+
+    function save_from_excel_file() {
+        $client_id = $this->request->getPost("client_id");
+        $tab = $this->request->getPost("tab");
+        $file_name = $this->request->getPost('file_name');
+
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+
+        if (!$this->validate_import_file_data($tab, true)) {
+            echo json_encode(array('success' => false, 'message' => app_lang('error_occurred')));
+        }
+
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+
+        $temp_file_path = get_setting("temp_file_path");
+        $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
+        $excel_file = $excel_file->getActiveSheet()->toArray();
+
+        $allowed_headers = array_map(function ($h) {
+            return $h["key"];
+        }, $this->_get_allowed_headers($tab));
+
+        if ($tab == "info") {
+            $this->_save_wire_info_from_excel_file($client_id, $allowed_headers, $excel_file);
+        } else if ($tab == "history") {
+            $this->_save_wire_history_from_excel_file($client_id, $allowed_headers, $excel_file);
+        } else if ($tab == "loadtest") {
+            $this->_save_wire_loadtest_from_excel_file($client_id, $allowed_headers, $excel_file);
+        } else if ($tab == "inspection") {
+            $this->_save_wire_inspection_from_excel_file($client_id, $allowed_headers, $excel_file);
+        }
+
+        delete_file_from_directory($temp_file_path . $file_name); //delete temp file
+
+        echo json_encode(array('success' => true, 'message' => app_lang("record_saved")));
+    }
+
+    private function _save_wire_info_from_excel_file($client_id, $allowed_headers, $excel_file) {
+        $wire_list = $this->Wires_model->get_all_where(array("client_id" => $client_id))->getResult();
+        $info_list = $this->Wires_info_model->get_all_where(array("client_id" => $client_id))->getResult();
+
+        foreach ($excel_file as $key => $value) { //rows
+            if ($key === 0) { //first line is headers, continue for the next loop
+                continue;
+            }
+
+            $data_array = $this->_prepare_item_data($value, $allowed_headers);
+            $item_data = get_array_value($data_array, "item_data");
+            $wire_data = get_array_value($data_array, "wire_data");
+
+            //couldn't prepare valid data
+            if (!($item_data && count($item_data))) {
+                continue;
+            }
+
+            try {
+                // Wires
+                $wire = $this->_find_wire($wire_data, $wire_list);
+                if ($wire) {
+                    $item_data["wire_id"] = $wire->id;
+                } else {
+                    $wire_data["client_id"] = $client_id;
+                    $m_save_id = $this->Wires_model->ci_save($wire_data);
+                    $item_data["wire_id"] = $m_save_id;
+
+                    $temp = new stdClass();
+                    $temp->id = $m_save_id;
+                    $temp->crane = $wire_data["crane"];
+                    $temp->wire = $wire_data["wire"];
+                    $wire_list[] = $temp;
+                }
+
+                $item_data["client_id"] = $client_id;
+                $wire_info = $this->_find_wire_info($item_data["wire_id"], $info_list);
+                if ($wire_info) {
+                    $this->Wires_info_model->ci_save($item_data, $wire_info->id);
+                } else {
+                    $m_save_id = $this->Wires_info_model->ci_save($item_data);
+
+                    $temp = new stdClass();
+                    $temp->id = $m_save_id;
+                    $temp->wire_id = $item_data["wire_id"];
+                    $info_list[] = $temp;
+                }
+            } catch (Exception $e) {
+                continue;
+            }
+        }
+    }
+
+    private function _save_wire_history_from_excel_file($client_id, $allowed_headers, $excel_file) {
+        $wire_list = $this->Wires_model->get_all_where(array("client_id" => $client_id))->getResult();
+
+        foreach ($excel_file as $key => $value) { //rows
+            if ($key === 0) { //first line is headers, continue for the next loop
+                continue;
+            }
+
+            $data_array = $this->_prepare_item_data($value, $allowed_headers);
+            $item_data = get_array_value($data_array, "item_data");
+            $wire_data = get_array_value($data_array, "wire_data");
+
+            //couldn't prepare valid data
+            if (!($item_data && count($item_data))) {
+                continue;
+            }
+
+            try {
+                // Wires
+                $wire = $this->_find_wire($wire_data, $wire_list);
+                if ($wire) {
+                    $wire_id = $wire->id;
+                } else {
+                    $wire_data["client_id"] = $client_id;
+                    $m_save_id = $this->Wires_model->ci_save($wire_data);
+                    $wire_id = $m_save_id;
+
+                    $temp = new stdClass();
+                    $temp->id = $m_save_id;
+                    $temp->crane = $wire_data["crane"];
+                    $temp->wire = $wire_data["wire"];
+                    $wire_list[] = $temp;
+                }
+
+                // Wires history
+                if (isset($item_data["initial"]) && is_valid_date($item_data["initial"])) {
+                    $replacement = date_format(date_create($item_data["initial"]), "Y-m-d");
+                    $data = array(
+                        "client_id" => $client_id,
+                        "wire_id" => $wire_id,
+                        "replacement" => $replacement,
+                        "is_initial" => 1
+                    );
+                    $this->Wires_history_model->ci_save($data);
+                }
+
+                if (isset($item_data["1st_replacement"]) && is_valid_date($item_data["1st_replacement"])) {
+                    $replacement = date_format(date_create($item_data["1st_replacement"]), "Y-m-d");
+                    $data = array(
+                        "client_id" => $client_id,
+                        "wire_id" => $wire_id,
+                        "replacement" => $replacement
+                    );
+                    $this->Wires_history_model->ci_save($data);
+                }
+
+                if (isset($item_data["2nd_replacement"]) && is_valid_date($item_data["2nd_replacement"])) {
+                    $replacement = date_format(date_create($item_data["2nd_replacement"]), "Y-m-d");
+                    $data = array(
+                        "client_id" => $client_id,
+                        "wire_id" => $wire_id,
+                        "replacement" => $replacement
+                    );
+                    $this->Wires_history_model->ci_save($data);
+                }
+
+                if (isset($item_data["3rd_replacement"]) && is_valid_date($item_data["3rd_replacement"])) {
+                    $replacement = date_format(date_create($item_data["3rd_replacement"]), "Y-m-d");
+                    $data = array(
+                        "client_id" => $client_id,
+                        "wire_id" => $wire_id,
+                        "replacement" => $replacement
+                    );
+                    $this->Wires_history_model->ci_save($data);
+                }
+
+                if (isset($item_data["4th_replacement"]) && is_valid_date($item_data["4th_replacement"])) {
+                    $replacement = date_format(date_create($item_data["4th_replacement"]), "Y-m-d");
+                    $data = array(
+                        "client_id" => $client_id,
+                        "wire_id" => $wire_id,
+                        "replacement" => $replacement
+                    );
+                    $this->Wires_history_model->ci_save($data);
+                }
+
+                if (isset($item_data["5th_replacement"]) && is_valid_date($item_data["5th_replacement"])) {
+                    $replacement = date_format(date_create($item_data["5th_replacement"]), "Y-m-d");
+                    $data = array(
+                        "client_id" => $client_id,
+                        "wire_id" => $wire_id,
+                        "replacement" => $replacement
+                    );
+                    $this->Wires_history_model->ci_save($data);
+                }
+            } catch (Exception $e) {
+                continue;
+            }
+
+        }
+    }
+
+    private function _save_wire_loadtest_from_excel_file($client_id, $allowed_headers, $excel_file) {
+        $wire_list = $this->Wires_model->get_all_where(array("client_id" => $client_id))->getResult();
+
+        foreach ($excel_file as $key => $value) { //rows
+            if ($key === 0) { //first line is headers, continue for the next loop
+                continue;
+            }
+
+            $data_array = $this->_prepare_item_data($value, $allowed_headers);
+            $item_data = get_array_value($data_array, "item_data");
+            $wire_data = get_array_value($data_array, "wire_data");
+
+            //couldn't prepare valid data
+            if (!($item_data && count($item_data))) {
+                continue;
+            }
+
+            try {
+                // Wires
+                $wire = $this->_find_wire($wire_data, $wire_list);
+                if ($wire) {
+                    $item_data["wire_id"] = $wire->id;
+                } else {
+                    $wire_data["client_id"] = $client_id;
+                    $m_save_id = $this->Wires_model->ci_save($wire_data);
+                    $item_data["wire_id"] = $m_save_id;
+
+                    $temp = new stdClass();
+                    $temp->id = $m_save_id;
+                    $temp->crane = $wire_data["crane"];
+                    $temp->wire = $wire_data["wire"];
+                    $wire_list[] = $temp;
+                }
+
+                $item_data["client_id"] = $client_id;
+                if (isset($item_data["test_date"]) && is_valid_date($item_data["test_date"])) {
+                    $test_date = date_format(date_create($item_data["test_date"]), "Y-m-d");
+                    $item_data["test_date"] = $test_date;
+                    $this->Wires_loadtest_model->ci_save($item_data);
+                }
+            } catch (Exception $e) {
+                continue;
+            }
+        }
+    }
+
+    private function _save_wire_inspection_from_excel_file($client_id, $allowed_headers, $excel_file) {
+        $wire_list = $this->Wires_model->get_all_where(array("client_id" => $client_id))->getResult();
+
+        foreach ($excel_file as $key => $value) { //rows
+            if ($key === 0) { //first line is headers, continue for the next loop
+                continue;
+            }
+
+            $data_array = $this->_prepare_item_data($value, $allowed_headers);
+            $item_data = get_array_value($data_array, "item_data");
+            $wire_data = get_array_value($data_array, "wire_data");
+
+            //couldn't prepare valid data
+            if (!($item_data && count($item_data))) {
+                continue;
+            }
+
+            try {
+                // Wires
+                $wire = $this->_find_wire($wire_data, $wire_list);
+                if ($wire) {
+                    $item_data["wire_id"] = $wire->id;
+                } else {
+                    $wire_data["client_id"] = $client_id;
+                    $m_save_id = $this->Wires_model->ci_save($wire_data);
+                    $item_data["wire_id"] = $m_save_id;
+
+                    $temp = new stdClass();
+                    $temp->id = $m_save_id;
+                    $temp->crane = $wire_data["crane"];
+                    $temp->wire = $wire_data["wire"];
+                    $wire_list[] = $temp;
+                }
+
+                $item_data["client_id"] = $client_id;
+                if (isset($item_data["inspection_date"]) && is_valid_date($item_data["inspection_date"])) {
+                    $inspection_date = date_format(date_create($item_data["inspection_date"]), "Y-m-d");
+                    $item_data["inspection_date"] = $inspection_date;
+                    $this->Wires_inspection_model->ci_save($item_data);
+                }
+            } catch (Exception $e) {
+                continue;
+            }
+        }
+    }
+
+    private function _find_wire($data, $arr) {
+        $crane = strtolower(trim($data["crane"]));
+        $wire = $data["wire"] ? strtolower(trim($data["wire"])) : "";
+
+        foreach ($arr as $item) {
+            if (strtolower($item->crane) == $crane && strtolower($item->wire) == $wire) {
+                return $item;
+            }
+        }
+        return false;
+    }
+
+    private function _find_wire_info($wire_id, $arr) {
+        foreach ($arr as $item) {
+            if ($item->wire_id == $wire_id) {
+                return $item;
+            }
+        }
+        return false;
     }
 }
