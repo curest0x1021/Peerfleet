@@ -9,7 +9,7 @@
                 echo form_input(array(
                     "id" => "title",
                     "name" => "title",
-                    "value" => $model_info->title,
+                    "value" => $model_info->title ?? "",
                     "class" => "form-control",
                     "placeholder" => app_lang('title'),
                     "autofocus" => true,
@@ -27,7 +27,7 @@
                     echo form_textarea(array(
                         "id" => "description",
                         "name" => "description",
-                        "value" => process_images_from_content($model_info->description, false),
+                        "value" => $model_info->description ? process_images_from_content($model_info->description, false) : "",
                         "class" => "form-control",
                         "placeholder" => app_lang('description') . "...",
                         "data-rich-text-editor" => true
@@ -89,7 +89,7 @@
                     echo form_input(array(
                         "id" => "todo_labels",
                         "name" => "labels",
-                        "value" => $model_info->labels,
+                        "value" => $model_info->labels ? $model_info->labels : "",
                         "class" => "form-control",
                         "placeholder" => app_lang('labels')
                     ));
@@ -138,7 +138,7 @@
 
 <!--checklist-->
 <?php echo form_open(get_uri("todo/save_checklist_item"), array("id" => "checklist_form", "class" => "general-form", "role" => "form")); ?>
-<div class="m20">
+<div id="todo-checklist" class="m20">
     <div class="pb10 pt10">
         <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count">0</span><span>/</span><span class="chcklists_count"></span>
     </div>
@@ -194,6 +194,11 @@
 
         setDatePicker("#start_date");
         setDatePicker("#deadline");
+
+        const id = '<?php echo $model_info->id; ?>';
+        if (!id) {
+            $("#todo-checklist").hide();
+        }
 
         //make the checklist items sortable
         var $selector = $("#checklist-items");
