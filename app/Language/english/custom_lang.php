@@ -191,7 +191,7 @@ $lang["icc"] = "Identified Color Code";
 $lang["shackle_type"] = "Shackle Type";
 $lang["misc_lifting_type"] = "Misc. Lifting Type";
 $lang["lashing_category"] = "Lashing Category";
-$lang["grommets"] = "Grommets & Wire Slings";
+$lang["grommets"] = "Grommets";
 $lang["grommets_wire_slings"] = "Grommets & Wire Slings";
 $lang["shackles"] = "Shackles";
 $lang["misc"] = "Misc. Lifting Gears";
@@ -288,5 +288,9 @@ $lang["grommets_info"] = "Grommets & Wire Slings Info";
 $lang["supplier"] = "Supplier";
 $lang["delivered_on_board"] = "Delivered on board";
 $lang["grommet_type"] = "Grommet Type";
+$lang["latitude"] = "Latitude";
+$lang["longitude"] = "Longitude";
+$lang["region"] = "Region";
+$lang["sailing_area"] = "Sailing Area";
 
 return $lang;
