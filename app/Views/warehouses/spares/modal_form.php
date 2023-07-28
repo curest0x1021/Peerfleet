@@ -124,15 +124,15 @@
             if (index > -1) {
                 const item = spareParts[index];
                 let html = '<div class="row"><div class="<?php echo $label_column; ?>"></div><div class="<?php echo $field_column; ?>">';
-                html += `<div class="row"><label class="col-6"><?php echo app_lang("manufacturer");?> : </label><span class="col-6">${item.manufacturer}</span></div>`;
-                html += `<div class="row"><label class="col-6"><?php echo app_lang("applicable_equipment");?> : </label><span class="col-6">${item.applicable_equip}</span></div>`;
-                html += `<div class="row"><label class="col-6"><?php echo app_lang("ship_equipment");?> : </label><span class="col-6">${item.ship_equip}</span></div>`;
-                html += `<div class="row"><label class="col-6"><?php echo app_lang("unit");?> : </label><span class="col-6">${item.unit}</span></div>`;
-                html += `<div class="row"><label class="col-6"><?php echo app_lang("part_number");?> : </label><span class="col-6">${item.part_number}</span></div>`;
-                html += `<div class="row"><label class="col-6"><?php echo app_lang("article_number");?> : </label><span class="col-6">${item.article_number}</span></div>`;
-                html += `<div class="row"><label class="col-6"><?php echo app_lang("drawing_number");?> : </label><span class="col-6">${item.drawing_number}</span></div>`;
-                html += `<div class="row"><label class="col-6"><?php echo app_lang("hs_code");?> : </label><span class="col-6">${item.hs_code}</span></div>`;
-                html += `<div class="row"><label class="col-6"><?php echo app_lang("critical");?> : </label><span class="col-6">${item.is_critical === "1" ? "Yes" : "No"}</span></div>`;
+                html += `<div class="row"><label class="col-md-5"><?php echo app_lang("manufacturer");?> : </label><span class="col-md-7">${item.manufacturer}</span></div>`;
+                html += `<div class="row"><label class="col-md-5"><?php echo app_lang("applicable_equipment");?> : </label><span class="col-md-7">${item.applicable_equip}</span></div>`;
+                html += `<div class="row"><label class="col-md-5"><?php echo app_lang("ship_equipment");?> : </label><span class="col-md-7">${item.ship_equip}</span></div>`;
+                html += `<div class="row"><label class="col-md-5"><?php echo app_lang("unit");?> : </label><span class="col-md-7">${item.unit}</span></div>`;
+                html += `<div class="row"><label class="col-md-5"><?php echo app_lang("part_number");?> : </label><span class="col-md-7">${item.part_number}</span></div>`;
+                html += `<div class="row"><label class="col-md-5"><?php echo app_lang("article_number");?> : </label><span class="col-md-7">${item.article_number}</span></div>`;
+                html += `<div class="row"><label class="col-md-5"><?php echo app_lang("drawing_number");?> : </label><span class="col-md-7">${item.drawing_number}</span></div>`;
+                html += `<div class="row"><label class="col-md-5"><?php echo app_lang("hs_code");?> : </label><span class="col-md-7">${item.hs_code}</span></div>`;
+                html += `<div class="row"><label class="col-md-5"><?php echo app_lang("critical");?> : </label><span class="col-md-7">${item.is_critical === "1" ? "Yes" : "No"}</span></div>`;
                 html += "</div></div>"
                 $("#item-info").html(html);
             } else {

@@ -14,7 +14,6 @@ class Warehouse_oils_model extends Crud_model {
     function get_details($options = array()) {
         $wo_table = $this->db->prefixTable('warehouse_oils');
         $oils_table = $this->db->prefixTable("oils");
-        $manufacturer_table = $this->db->prefixTable("manufacturers");
         $units_table = $this->db->prefixTable("units");
 
         $where = "";
@@ -27,12 +26,11 @@ class Warehouse_oils_model extends Crud_model {
             $where .= " AND $wo_table.warehouse_id=$warehouse_id";
         }
 
-        $sql = "SELECT $wo_table.*, a.name, a.hs_code, a.manufacturer, a.unit, a.part_number, a.article_number, a.is_critical
+        $sql = "SELECT $wo_table.*, a.name, a.hs_code, a.manufacturer_id, a.unit, a.part_number, a.article_number, a.is_critical
                 FROM $wo_table
                 JOIN (
-                    SELECT $oils_table.*, $manufacturer_table.name as manufacturer, $units_table.name as unit
+                    SELECT $oils_table.*, $units_table.name as unit
                     FROM $oils_table
-                    LEFT JOIN $manufacturer_table ON $manufacturer_table.id = $oils_table.manufacturer_id
                     LEFT JOIN $units_table ON $units_table.id = $oils_table.unit_id
                 ) a ON a.id = $wo_table.oil_id
                 WHERE $wo_table.deleted = 0 $where";

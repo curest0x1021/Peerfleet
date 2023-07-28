@@ -13,7 +13,6 @@ class Oils_model extends Crud_model {
 
     function get_details($options = array()) {
         $oil_table = $this->db->prefixTable("oils");
-        $manufacturer_table = $this->db->prefixTable("manufacturers");
         $units_table = $this->db->prefixTable("units");
 
         $where = "";
@@ -27,9 +26,8 @@ class Oils_model extends Crud_model {
             $where .= " AND FIND_IN_SET($oil_table.is_critical,'$is_critical')";
         }
 
-        $sql = "SELECT $oil_table.*, $manufacturer_table.name as manufacturer, $units_table.name as unit
+        $sql = "SELECT $oil_table.*, $units_table.name as unit
                 FROM $oil_table
-                LEFT JOIN $manufacturer_table ON $manufacturer_table.id = $oil_table.manufacturer_id
                 LEFT JOIN $units_table ON $units_table.id = $oil_table.unit_id
                 WHERE $oil_table.deleted = 0 $where
                 ORDER BY $oil_table.is_critical DESC, $oil_table.name ASC";
