@@ -14,7 +14,6 @@ class Warehouse_chemicals_model extends Crud_model {
     function get_details($options = array()) {
         $wc_table = $this->db->prefixTable('warehouse_chemicals');
         $chemicals_table = $this->db->prefixTable("chemicals");
-        $manufacturer_table = $this->db->prefixTable("manufacturers");
         $units_table = $this->db->prefixTable("units");
 
         $where = "";
@@ -27,12 +26,11 @@ class Warehouse_chemicals_model extends Crud_model {
             $where .= " AND $wc_table.warehouse_id=$warehouse_id";
         }
 
-        $sql = "SELECT $wc_table.*, a.name, a.hs_code, a.manufacturer, a.unit, a.part_number, a.article_number, a.is_critical
+        $sql = "SELECT $wc_table.*, a.name, a.hs_code, a.manufacturer_id, a.unit, a.part_number, a.article_number, a.is_critical
                 FROM $wc_table
                 JOIN (
-                    SELECT $chemicals_table.*, $manufacturer_table.name as manufacturer, $units_table.name as unit
+                    SELECT $chemicals_table.*, $units_table.name as unit
                     FROM $chemicals_table
-                    LEFT JOIN $manufacturer_table ON $manufacturer_table.id = $chemicals_table.manufacturer_id
                     LEFT JOIN $units_table ON $units_table.id = $chemicals_table.unit_id
                 ) a ON a.id = $wc_table.chemical_id
                 WHERE $wc_table.deleted = 0 $where";

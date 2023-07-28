@@ -34,7 +34,7 @@ class Spare_parts extends Security_Controller {
         $view_data['model_info'] = $this->Spare_parts_model->get_one($this->request->getPost('id'));
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
-        $view_data["manufacturers_dropdown"] = $this->get_manufacturers_dropdown();
+        $view_data["manufacturers_dropdown"] = $this->get_manufacturers_dropdown1();
         $view_data["applicable_equipments_dropdown"] = $this->get_applicable_machinery_equipments_dropdown();
         $view_data["ship_equipments_dropdown"] = $this->get_ship_machinery_equipments_dropdown();
         $view_data["units_dropdown"] = $this->get_units_dropdown();
@@ -80,14 +80,14 @@ class Spare_parts extends Security_Controller {
         return array(
             [ "key" => "name", "required" => true ],
             [ "key" => "manufacturer", "required" => true ],
-            [ "key" => "applicable_equipment", "required" => true ],
-            [ "key" => "ship_equipment", "required" => true ],
+            [ "key" => "applicable_equipment", "required" => false ],
+            [ "key" => "ship_equipment", "required" => false ],
             [ "key" => "unit", "required" => true ],
             [ "key" => "part_description", "required" => false ],
-            [ "key" => "part_number", "required" => true ],
-            [ "key" => "article_number", "required" => true ],
-            [ "key" => "drawing_number", "required" => true ],
-            [ "key" => "hs_code", "required" => true ],
+            [ "key" => "part_number", "required" => false ],
+            [ "key" => "article_number", "required" => false ],
+            [ "key" => "drawing_number", "required" => false ],
+            [ "key" => "hs_code", "required" => false ],
             [ "key" => "is_critical", "required" => false ]
         );
     }
@@ -343,55 +343,76 @@ class Spare_parts extends Security_Controller {
             try {
                 // manufacturer
                 if (isset($manufacturer_data["name"]) && !empty($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
-                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
-                    if ($manufacturer) {
-                        $item_data["manufacturer_id"] = $manufacturer->id;
-                    } else {
-                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
-                        $item_data["manufacturer_id"] = $m_save_id;
+                    $names = explode(",", $manufacturer_data["name"]);
+                    $m_ids = array();
+                    foreach ($names as $name) {
+                        $_item = $this->_findObjectByName($name, $manufacturers);
+                        if ($_item) {
+                            $m_ids[] = $_item->id;
+                        } else {
+                            $manufacturer_data["name"] = trim($name);
+                            $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                            $m_ids[] = $m_save_id;
 
-                        $temp = new stdClass();
-                        $temp->id = $m_save_id;
-                        $temp->name = $manufacturer_data["name"];
-                        $manufacturers[] = $temp;
+                            $temp = new stdClass();
+                            $temp->id = $m_save_id;
+                            $temp->name = trim($name);
+                            $manufacturers[] = $temp;
+                        }
                     }
+
+                    $item_data["manufacturer_id"] = implode(",", $m_ids);
                 }
 
                 // applicable machinery equipments
                 if (isset($applicable_data["name"]) && !empty($applicable_data["name"]) && $applicable_data["name"] !== "---") {
-                    $applicable = $this->findObjectByName($applicable_data["name"], $applicable_equipments);
-                    if ($applicable) {
-                        $item_data["applicable_equip_id"] = $applicable->id;
-                    } else {
-                        $m_save_id = $this->Applicable_equipments_model->ci_save($applicable_data);
-                        $item_data["applicable_equip_id"] = $m_save_id;
+                    $names = explode(",", $applicable_data["name"]);
+                    $m_ids = array();
+                    foreach ($names as $name) {
+                        $_item = $this->_findObjectByName($name, $applicable_equipments);
+                        if ($_item) {
+                            $m_ids[] = $_item->id;
+                        } else {
+                            $applicable_data["name"] = trim($name);
+                            $m_save_id = $this->Applicable_equipments_model->ci_save($applicable_data);
+                            $m_ids[] = $m_save_id;
 
-                        $temp = new stdClass();
-                        $temp->id = $m_save_id;
-                        $temp->name = $applicable_data["name"];
-                        $applicable_equipments[] = $temp;
+                            $temp = new stdClass();
+                            $temp->id = $m_save_id;
+                            $temp->name = trim($name);
+                            $applicable_equipments[] = $temp;
+                        }
                     }
+
+                    $item_data["applicable_equip_id"] = implode(",", $m_ids);
                 }
 
                 // ship machinery equipments
                 if (isset($ship_data["name"]) && !empty($ship_data["name"]) && $ship_data["name"] !== "---") {
-                    $ship_item = $this->findObjectByName($ship_data["name"], $ship_equipments);
-                    if ($ship_item) {
-                        $item_data["ship_equip_id"] = $ship_item->id;
-                    } else {
-                        $m_save_id = $this->Ship_equipments_model->ci_save($ship_data);
-                        $item_data["ship_equip_id"] = $m_save_id;
+                    $names = explode(",", $ship_data["name"]);
+                    $m_ids = array();
+                    foreach ($names as $name) {
+                        $_item = $this->_findObjectByName($name, $ship_equipments);
+                        if ($_item) {
+                            $m_ids[] = $_item->id;
+                        } else {
+                            $ship_data["name"] = trim($name);
+                            $m_save_id = $this->Ship_equipments_model->ci_save($ship_data);
+                            $m_ids[] = $m_save_id;
 
-                        $temp = new stdClass();
-                        $temp->id = $m_save_id;
-                        $temp->name = $ship_data["name"];
-                        $ship_equipments[] = $temp;
+                            $temp = new stdClass();
+                            $temp->id = $m_save_id;
+                            $temp->name = trim($name);
+                            $ship_equipments[] = $temp;
+                        }
                     }
+
+                    $item_data["ship_equip_id"] = implode(",", $m_ids);
                 }
 
                 // units
                 if (isset($unit_data["name"]) && !empty($unit_data["name"]) && $unit_data["name"] !== "---") {
-                    $unit = $this->findObjectByName($unit_data["name"], $units);
+                    $unit = $this->_findObjectByName($unit_data["name"], $units);
                     if ($unit) {
                         $item_data["unit_id"] = $unit->id;
                     } else {
@@ -405,7 +426,7 @@ class Spare_parts extends Security_Controller {
                     }
                 }
 
-                $spare = $this->findObjectByName($item_data["name"], $spare_list);
+                $spare = $this->_findObjectByName($item_data["name"], $spare_list);
                 if (!$spare) {
                     $m_save_id = $this->Spare_parts_model->ci_save($item_data);
 
@@ -426,10 +447,10 @@ class Spare_parts extends Security_Controller {
         echo json_encode(array('success' => true, 'message' => app_lang("record_saved")));
     }
 
-    private function findObjectByName($name, $arr) {
-        $name = trim($name);
+    private function _findObjectByName($name, $arr) {
+        $name = strtolower(trim($name));
         foreach ($arr as $item) {
-            if ($name == $item->name) {
+            if ($name == strtolower($item->name)) {
                 return $item;
             }
         }
@@ -443,14 +464,8 @@ class Spare_parts extends Security_Controller {
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "name" => "required|max_length[40]",
-            "manufacturer_id" => "required|numeric",
-            "applicable_equip_id" => "required|numeric",
-            "ship_equip_id" => "required|numeric",
-            "unit_id" => "required",
-            "part_number" => "required|max_length[30]",
-            "article_number" => "required|max_length[30]",
-            "drawing_number" => "required|max_length[30]",
-            "hs_code" => "required|max_length[10]"
+            "manufacturer_id" => "required",
+            "unit_id" => "required"
         ));
 
         $id = $this->request->getPost('id');
@@ -525,9 +540,12 @@ class Spare_parts extends Security_Controller {
     function list_data() {
         $is_critical = $this->request->getPost('is_critical') ? implode(",", $this->request->getPost('is_critical')) : '';
         $list_data = $this->Spare_parts_model->get_details(array('is_critical' => $is_critical))->getResult();
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        $applicable_equipments = $this->Applicable_equipments_model->get_all()->getResult();
+        $ship_equipments = $this->Ship_equipments_model->get_all()->getResult();
         $result = array();
         foreach ($list_data as $data) {
-            $result[] = $this->_items_make_row($data);
+            $result[] = $this->_items_make_row($data, $manufacturers, $applicable_equipments, $ship_equipments);
         }
         echo json_encode(array("data" => $result));
     }
@@ -535,10 +553,13 @@ class Spare_parts extends Security_Controller {
     private function _items_row_data($id) {
         $options = array("id" => $id);
         $data = $this->Spare_parts_model->get_details($options)->getRow();
-        return $this->_items_make_row($data);
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        $applicable_equipments = $this->Applicable_equipments_model->get_all()->getResult();
+        $ship_equipments = $this->Ship_equipments_model->get_all()->getResult();
+        return $this->_items_make_row($data, $manufacturers, $applicable_equipments, $ship_equipments);
     }
 
-    private function _items_make_row($data) {
+    private function _items_make_row($data, $manufacturers, $applicable_equipments, $ship_equipments) {
         $checkbox_class = "checkbox-blank";
         if ($data->is_critical) {
             $checkbox_class = "checkbox-checked";
@@ -556,19 +577,39 @@ class Spare_parts extends Security_Controller {
                     . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("spare_parts/delete"), "data-action" => "delete-confirmation"));
         }
 
+        $manufacturer = $this->_get_names_by_ids($data->manufacturer_id, $manufacturers);
+        $applicable_equip = $this->_get_names_by_ids($data->applicable_equip_id, $applicable_equipments);
+        $ship_equip = $this->_get_names_by_ids($data->ship_equip_id, $ship_equipments);
+
         return array(
             $data->id,
             $data->is_critical,
             $check_critical,
             $data->name,
-            $data->manufacturer,
-            $data->applicable_equip,
-            $data->ship_equip,
+            $manufacturer,
+            $applicable_equip,
+            $ship_equip,
             $data->unit,
             $data->part_number,
             $data->hs_code,
             $actions
         );
+    }
+
+    private function _get_names_by_ids($ids_str, $arr) {
+        if (empty($ids_str)) {
+            return "";
+        }
+        $ids = explode(",", $ids_str);
+        $filtered_array = array_filter($arr, function ($obj) use ($ids) {
+            return in_array($obj->id, $ids);
+        });
+        if (count($filtered_array) > 0) {
+            $names = array_map(function($val) { return $val->name; }, $filtered_array);
+            return implode(", ", $names);
+        } else {
+            return "";
+        }
     }
 
 }

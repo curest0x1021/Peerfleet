@@ -21,9 +21,12 @@
             columns: [
                 {visible: false, searchable: false},
                 {title: "", "class": "text-center w25"},
+                {title: '<?php echo app_lang("critical") ?>', visible: false},
                 {title: "<?php echo app_lang("critical") ?>", "class": "text-center w50"},
                 {title: "<?php echo app_lang("item") ?>", class: "w150"},
                 {title: "<?php echo app_lang("manufacturer") ?>"},
+                {title: "<?php echo app_lang("applicable_equipment") ?>", visible: false},
+                {title: "<?php echo app_lang("ship_equipment") ?>", visible: false},
                 {title: "<?php echo app_lang("quantity") ?>", "class": "text-center w100"},
                 {title: "<?php echo app_lang("unit") ?>", class: "text-center w100"},
                 {title: "<?php echo app_lang("min_stocks") ?>", "class": "text-center w100"},
@@ -34,8 +37,8 @@
                 {title: "<?php echo app_lang("hs_code") ?>", class: "text-center w100"},
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
-            printColumns: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-            xlsColumns: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            printColumns: [2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+            xlsColumns: [2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
         });
     };
     $(document).ready(function() {
