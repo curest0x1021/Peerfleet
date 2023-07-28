@@ -14,9 +14,6 @@ class Warehouse_spares_model extends Crud_model {
     function get_details($options = array()) {
         $ws_table = $this->db->prefixTable("warehouse_spares");
         $spare_table = $this->db->prefixTable("spare_parts");
-        $manufacturer_table = $this->db->prefixTable("manufacturers");
-        $applicable_table = $this->db->prefixTable("applicable_equipments");
-        $ship_table = $this->db->prefixTable("ship_equipments");
         $units_table = $this->db->prefixTable("units");
 
         $where = "";
@@ -29,14 +26,11 @@ class Warehouse_spares_model extends Crud_model {
             $where .= " AND $ws_table.warehouse_id=$warehouse_id";
         }
 
-        $sql = "SELECT $ws_table.*, a.name, a.hs_code, a.manufacturer, a.applicable_equip, a.ship_equip, a.unit, a.part_number, a.article_number, a.drawing_number, a.is_critical
+        $sql = "SELECT $ws_table.*, a.name, a.hs_code, a.manufacturer_id, a.applicable_equip_id, a.ship_equip_id, a.unit, a.part_number, a.article_number, a.drawing_number, a.is_critical
                 FROM $ws_table
                 JOIN (
-                    SELECT $spare_table.*, $manufacturer_table.name as manufacturer, $applicable_table.name as applicable_equip, $ship_table.name as ship_equip, $units_table.name as unit
+                    SELECT $spare_table.*, $units_table.name as unit
                     FROM $spare_table
-                    LEFT JOIN $manufacturer_table ON $manufacturer_table.id = $spare_table.manufacturer_id
-                    LEFT JOIN $applicable_table ON $applicable_table.id = $spare_table.applicable_equip_id
-                    LEFT JOIN $ship_table ON $ship_table.id = $spare_table.ship_equip_id
                     LEFT JOIN $units_table ON $units_table.id = $spare_table.unit_id
                 ) a ON a.id = $ws_table.spare_id
                 WHERE $ws_table.deleted = 0 $where";

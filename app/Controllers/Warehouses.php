@@ -202,7 +202,21 @@ class Warehouses extends Security_Controller {
             } else {
                 $view_data["items_dropdown"] = $this->Warehouse_spares_model->get_items_dropdown($warehouse_id);
             }
-            $view_data["spare_parts"] = $this->Spare_parts_model->get_details()->getResult();
+
+            $spare_parts = $this->Spare_parts_model->get_details()->getResult();
+            $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+            $applicable_equipments = $this->Applicable_equipments_model->get_all()->getResult();
+            $ship_equipments = $this->Ship_equipments_model->get_all()->getResult();
+            $spare_parts = array_map(function ($item) use ($manufacturers, $applicable_equipments, $ship_equipments) {
+                $manufacturer = $this->_get_names_by_ids($item->manufacturer_id, $manufacturers);
+                $item->manufacturer = $manufacturer;
+                $applicable_equip = $this->_get_names_by_ids($item->applicable_equip_id, $applicable_equipments);
+                $item->applicable_equip = $applicable_equip;
+                $ship_equip = $this->_get_names_by_ids($item->ship_equip_id, $ship_equipments);
+                $item->ship_equip = $ship_equip;
+                return $item;
+            }, $spare_parts);
+            $view_data["spare_parts"] = $spare_parts;
 
             return $this->template->view("warehouses/spares/modal_form", $view_data);
         } else {
@@ -296,10 +310,13 @@ class Warehouses extends Security_Controller {
 
     function spares_list_data($client_id, $warehouse_id) {
         $list_data = $this->Warehouse_spares_model->get_details(array("warehouse_id" => $warehouse_id))->getResult();
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        $applicable_equipments = $this->Applicable_equipments_model->get_all()->getResult();
+        $ship_equipments = $this->Ship_equipments_model->get_all()->getResult();
         $result = array();
 
         foreach ($list_data as $data) {
-            $result[] = $this->_spare_make_row($client_id, $data);
+            $result[] = $this->_spare_make_row($client_id, $data, $manufacturers, $applicable_equipments, $ship_equipments);
         }
 
         echo json_encode(array("data" => $result));
@@ -307,10 +324,13 @@ class Warehouses extends Security_Controller {
 
     private function _spare_row_data($client_id, $id) {
         $data = $this->Warehouse_spares_model->get_details(array("id" => $id))->getRow();
-        return $this->_spare_make_row($client_id, $data);
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        $applicable_equipments = $this->Applicable_equipments_model->get_all()->getResult();
+        $ship_equipments = $this->Ship_equipments_model->get_all()->getResult();
+        return $this->_spare_make_row($client_id, $data, $manufacturers, $applicable_equipments, $ship_equipments);
     }
 
-    private function _spare_make_row($client_id, $data) {
+    private function _spare_make_row($client_id, $data, $manufacturers, $applicable_equipments, $ship_equipments) {
         $actions = "";
         if ($this->can_access_own_client($client_id)) {
             $actions = modal_anchor(get_uri("warehouses/spares_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-client_id" => $client_id, "data-post-warehouse_id" => $data->warehouse_id))
@@ -330,12 +350,19 @@ class Warehouses extends Security_Controller {
         }
         $check_critical = "<span class='$checkbox_class mr15 float-start'></span>";
 
+        $manufacturer = $this->_get_names_by_ids($data->manufacturer_id, $manufacturers);
+        $applicable_equip = $this->_get_names_by_ids($data->applicable_equip_id, $applicable_equipments);
+        $ship_equip = $this->_get_names_by_ids($data->ship_equip_id, $ship_equipments);
+
         return array(
             $data->id,
             $icon,
+            $data->is_critical,
             $check_critical,
             $data->name,
-            $data->manufacturer,
+            $manufacturer,
+            $applicable_equip,
+            $ship_equip,
             $quantity,
             $data->unit,
             $data->min_stocks > 0 ? $data->min_stocks : "---",
@@ -376,7 +403,14 @@ class Warehouses extends Security_Controller {
             } else {
                 $view_data["items_dropdown"] = $this->Warehouse_chemicals_model->get_items_dropdown($warehouse_id);
             }
-            $view_data["chemicals"] = $this->Chemicals_model->get_details()->getResult();
+            $chemicals = $this->Chemicals_model->get_details()->getResult();
+            $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+            $chemicals = array_map(function ($item) use ($manufacturers) {
+                $manufacturer = $this->_get_names_by_ids($item->manufacturer_id, $manufacturers);
+                $item->manufacturer = $manufacturer;
+                return $item;
+            }, $chemicals);
+            $view_data["chemicals"] = $chemicals;
 
             return $this->template->view("warehouses/chemicals/modal_form", $view_data);
         } else {
@@ -461,10 +495,11 @@ class Warehouses extends Security_Controller {
 
     function chemicals_list_data($client_id, $warehouse_id) {
         $list_data = $this->Warehouse_chemicals_model->get_details(array("warehouse_id" => $warehouse_id))->getResult();
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
         $result = array();
 
         foreach ($list_data as $data) {
-            $result[] = $this->_chemical_make_row($client_id, $data);
+            $result[] = $this->_chemical_make_row($client_id, $data, $manufacturers);
         }
 
         echo json_encode(array("data" => $result));
@@ -472,10 +507,11 @@ class Warehouses extends Security_Controller {
 
     private function _chemical_row_data($client_id, $id) {
         $data = $this->Warehouse_chemicals_model->get_details(array("id" => $id))->getRow();
-        return $this->_chemical_make_row($client_id, $data);
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        return $this->_chemical_make_row($client_id, $data, $manufacturers);
     }
 
-    private function _chemical_make_row($client_id, $data) {
+    private function _chemical_make_row($client_id, $data, $manufacturers) {
         $actions = "";
         if ($this->can_access_own_client($client_id)) {
             $actions = modal_anchor(get_uri("warehouses/chemicals_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-client_id" => $client_id, "data-post-warehouse_id" => $data->warehouse_id))
@@ -494,13 +530,15 @@ class Warehouses extends Security_Controller {
             $checkbox_class = "checkbox-checked";
         }
         $check_critical = "<span class='$checkbox_class mr15 float-start'></span>";
+        $manufacturer = $this->_get_names_by_ids($data->manufacturer_id, $manufacturers);
 
         return array(
             $data->id,
             $icon,
+            $data->is_critical,
             $check_critical,
             $data->name,
-            $data->manufacturer,
+            $manufacturer,
             $quantity,
             $data->unit,
             $data->min_stocks > 0 ? $data->min_stocks : "---",
@@ -540,7 +578,14 @@ class Warehouses extends Security_Controller {
             } else {
                 $view_data["items_dropdown"] = $this->Warehouse_oils_model->get_items_dropdown($warehouse_id);
             }
-            $view_data["oils"] = $this->Oils_model->get_details()->getResult();
+            $oils = $this->Oils_model->get_details()->getResult();
+            $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+            $oils = array_map(function ($item) use ($manufacturers) {
+                $manufacturer = $this->_get_names_by_ids($item->manufacturer_id, $manufacturers);
+                $item->manufacturer = $manufacturer;
+                return $item;
+            }, $oils);
+            $view_data["oils"] = $oils;
 
             return $this->template->view("warehouses/oils/modal_form", $view_data);
         } else {
@@ -625,10 +670,11 @@ class Warehouses extends Security_Controller {
 
     function oils_list_data($client_id, $warehouse_id) {
         $list_data = $this->Warehouse_oils_model->get_details(array("warehouse_id" => $warehouse_id))->getResult();
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
         $result = array();
 
         foreach ($list_data as $data) {
-            $result[] = $this->_oil_make_row($client_id, $data);
+            $result[] = $this->_oil_make_row($client_id, $data, $manufacturers);
         }
 
         echo json_encode(array("data" => $result));
@@ -636,10 +682,11 @@ class Warehouses extends Security_Controller {
 
     private function _oil_row_data($client_id, $id) {
         $data = $this->Warehouse_oils_model->get_details(array("id" => $id))->getRow();
-        return $this->_oil_make_row($client_id, $data);
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        return $this->_oil_make_row($client_id, $data, $manufacturers);
     }
 
-    private function _oil_make_row($client_id, $data) {
+    private function _oil_make_row($client_id, $data, $manufacturers) {
         $actions = "";
         if ($this->can_access_own_client($client_id)) {
             $actions = modal_anchor(get_uri("warehouses/oils_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-client_id" => $client_id, "data-post-warehouse_id" => $data->warehouse_id))
@@ -658,13 +705,15 @@ class Warehouses extends Security_Controller {
             $checkbox_class = "checkbox-checked";
         }
         $check_critical = "<span class='$checkbox_class mr15 float-start'></span>";
+        $manufacturer = $this->_get_names_by_ids($data->manufacturer_id, $manufacturers);
 
         return array(
             $data->id,
             $icon,
+            $data->is_critical,
             $check_critical,
             $data->name,
-            $data->manufacturer,
+            $manufacturer,
             $quantity,
             $data->unit,
             $data->min_stocks > 0 ? $data->min_stocks : "---",
@@ -704,7 +753,14 @@ class Warehouses extends Security_Controller {
             } else {
                 $view_data["items_dropdown"] = $this->Warehouse_paints_model->get_items_dropdown($warehouse_id);
             }
-            $view_data["paints"] = $this->Paints_model->get_details()->getResult();
+            $paints = $this->Paints_model->get_details()->getResult();
+            $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+            $paints = array_map(function ($item) use ($manufacturers) {
+                $manufacturer = $this->_get_names_by_ids($item->manufacturer_id, $manufacturers);
+                $item->manufacturer = $manufacturer;
+                return $item;
+            }, $paints);
+            $view_data["paints"] = $paints;
 
             return $this->template->view("warehouses/paints/modal_form", $view_data);
         } else {
@@ -789,10 +845,11 @@ class Warehouses extends Security_Controller {
 
     function paints_list_data($client_id, $warehouse_id) {
         $list_data = $this->Warehouse_paints_model->get_details(array("warehouse_id" => $warehouse_id))->getResult();
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
         $result = array();
 
         foreach ($list_data as $data) {
-            $result[] = $this->_paint_make_row($client_id, $data);
+            $result[] = $this->_paint_make_row($client_id, $data, $manufacturers);
         }
 
         echo json_encode(array("data" => $result));
@@ -800,10 +857,11 @@ class Warehouses extends Security_Controller {
 
     private function _paint_row_data($client_id, $id) {
         $data = $this->Warehouse_paints_model->get_details(array("id" => $id))->getRow();
-        return $this->_paint_make_row($client_id, $data);
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        return $this->_paint_make_row($client_id, $data, $manufacturers);
     }
 
-    private function _paint_make_row($client_id, $data) {
+    private function _paint_make_row($client_id, $data, $manufacturers) {
         $actions = "";
         if ($this->can_access_own_client($client_id)) {
             $actions = modal_anchor(get_uri("warehouses/paints_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-client_id" => $client_id, "data-post-warehouse_id" => $data->warehouse_id))
@@ -822,13 +880,15 @@ class Warehouses extends Security_Controller {
             $checkbox_class = "checkbox-checked";
         }
         $check_critical = "<span class='$checkbox_class mr15 float-start'></span>";
+        $manufacturer = $this->_get_names_by_ids($data->manufacturer_id, $manufacturers);
 
         return array(
             $data->id,
             $icon,
+            $data->is_critical,
             $check_critical,
             $data->name,
-            $data->manufacturer,
+            $manufacturer,
             $quantity,
             $data->unit,
             $data->min_stocks > 0 ? $data->min_stocks : "---",
@@ -1231,55 +1291,76 @@ class Warehouses extends Security_Controller {
             try {
                 // manufacturer
                 if (isset($manufacturer_data["name"]) && !empty($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
-                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
-                    if ($manufacturer) {
-                        $item_data["manufacturer_id"] = $manufacturer->id;
-                    } else {
-                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
-                        $item_data["manufacturer_id"] = $m_save_id;
+                    $names = explode(",", $manufacturer_data["name"]);
+                    $m_ids = array();
+                    foreach ($names as $name) {
+                        $_item = $this->_findObjectByName($name, $manufacturers);
+                        if ($_item) {
+                            $m_ids[] = $_item->id;
+                        } else {
+                            $manufacturer_data["name"] = trim($name);
+                            $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                            $m_ids[] = $m_save_id;
 
-                        $temp = new stdClass();
-                        $temp->id = $m_save_id;
-                        $temp->name = $manufacturer_data["name"];
-                        $manufacturers[] = $temp;
+                            $temp = new stdClass();
+                            $temp->id = $m_save_id;
+                            $temp->name = trim($name);
+                            $manufacturers[] = $temp;
+                        }
                     }
+
+                    $item_data["manufacturer_id"] = implode(",", $m_ids);
                 }
 
                 // applicable machinery equipments
                 if (isset($applicable_data["name"]) && !empty($applicable_data["name"]) && $applicable_data["name"] !== "---") {
-                    $applicable = $this->findObjectByName($applicable_data["name"], $applicable_equipments);
-                    if ($applicable) {
-                        $item_data["applicable_equip_id"] = $applicable->id;
-                    } else {
-                        $m_save_id = $this->Applicable_equipments_model->ci_save($applicable_data);
-                        $item_data["applicable_equip_id"] = $m_save_id;
+                    $names = explode(",", $applicable_data["name"]);
+                    $m_ids = array();
+                    foreach ($names as $name) {
+                        $_item = $this->_findObjectByName($name, $applicable_equipments);
+                        if ($_item) {
+                            $m_ids[] = $_item->id;
+                        } else {
+                            $applicable_data["name"] = trim($name);
+                            $m_save_id = $this->Applicable_equipments_model->ci_save($applicable_data);
+                            $m_ids[] = $m_save_id;
 
-                        $temp = new stdClass();
-                        $temp->id = $m_save_id;
-                        $temp->name = $applicable_data["name"];
-                        $applicable_equipments[] = $temp;
+                            $temp = new stdClass();
+                            $temp->id = $m_save_id;
+                            $temp->name = trim($name);
+                            $applicable_equipments[] = $temp;
+                        }
                     }
+
+                    $item_data["applicable_equip_id"] = implode(",", $m_ids);
                 }
 
                 // ship machinery equipments
                 if (isset($ship_data["name"]) && !empty($ship_data["name"]) && $ship_data["name"] !== "---") {
-                    $ship_item = $this->findObjectByName($ship_data["name"], $ship_equipments);
-                    if ($ship_item) {
-                        $item_data["ship_equip_id"] = $ship_item->id;
-                    } else {
-                        $m_save_id = $this->Ship_equipments_model->ci_save($ship_data);
-                        $item_data["ship_equip_id"] = $m_save_id;
+                    $names = explode(",", $ship_data["name"]);
+                    $m_ids = array();
+                    foreach ($names as $name) {
+                        $_item = $this->_findObjectByName($name, $ship_equipments);
+                        if ($_item) {
+                            $m_ids[] = $_item->id;
+                        } else {
+                            $ship_data["name"] = trim($name);
+                            $m_save_id = $this->Ship_equipments_model->ci_save($ship_data);
+                            $m_ids[] = $m_save_id;
 
-                        $temp = new stdClass();
-                        $temp->id = $m_save_id;
-                        $temp->name = $ship_data["name"];
-                        $ship_equipments[] = $temp;
+                            $temp = new stdClass();
+                            $temp->id = $m_save_id;
+                            $temp->name = trim($name);
+                            $ship_equipments[] = $temp;
+                        }
                     }
+
+                    $item_data["ship_equip_id"] = implode(",", $m_ids);
                 }
 
                 // units
                 if (isset($unit_data["name"]) && !empty($unit_data["name"]) && $unit_data["name"] !== "---") {
-                    $unit = $this->findObjectByName($unit_data["name"], $units);
+                    $unit = $this->_findObjectByName($unit_data["name"], $units);
                     if ($unit) {
                         $item_data["unit_id"] = $unit->id;
                     } else {
@@ -1294,7 +1375,7 @@ class Warehouses extends Security_Controller {
                 }
 
                 // Spare parts
-                $spare = $this->findObjectByName($item_data["name"], $spare_list);
+                $spare = $this->_findObjectByName($item_data["name"], $spare_list);
                 if ($spare) {
                     $warehouse_data["spare_id"] = $spare->id;
                 } else {
@@ -1311,7 +1392,7 @@ class Warehouses extends Security_Controller {
                 if (isset($warehouse_data["quantity"])) {
                     $warehouse_data["warehouse_id"] = $warehouse_id;
 
-                    $row = $this->findObjectBySpareId($warehouse_data["spare_id"], $warehouse_items_list);
+                    $row = $this->_findObjectBySpareId($warehouse_data["spare_id"], $warehouse_items_list);
                     if ($row) {
                         $this->Warehouse_spares_model->ci_save($warehouse_data, $row->id);
                     } else {
@@ -1356,23 +1437,30 @@ class Warehouses extends Security_Controller {
             try {
                 // manufacturer
                 if (isset($manufacturer_data["name"]) && !empty($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
-                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
-                    if ($manufacturer) {
-                        $item_data["manufacturer_id"] = $manufacturer->id;
-                    } else {
-                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
-                        $item_data["manufacturer_id"] = $m_save_id;
+                    $names = explode(",", $manufacturer_data["name"]);
+                    $m_ids = array();
+                    foreach ($names as $name) {
+                        $_item = $this->_findObjectByName($name, $manufacturers);
+                        if ($_item) {
+                            $m_ids[] = $_item->id;
+                        } else {
+                            $manufacturer_data["name"] = trim($name);
+                            $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                            $m_ids[] = $m_save_id;
 
-                        $temp = new stdClass();
-                        $temp->id = $m_save_id;
-                        $temp->name = $manufacturer_data["name"];
-                        $manufacturers[] = $temp;
+                            $temp = new stdClass();
+                            $temp->id = $m_save_id;
+                            $temp->name = trim($name);
+                            $manufacturers[] = $temp;
+                        }
                     }
+
+                    $item_data["manufacturer_id"] = implode(",", $m_ids);
                 }
 
                 // units
                 if (isset($unit_data["name"]) && !empty($unit_data["name"]) && $unit_data["name"] !== "---") {
-                    $unit = $this->findObjectByName($unit_data["name"], $units);
+                    $unit = $this->_findObjectByName($unit_data["name"], $units);
                     if ($unit) {
                         $item_data["unit_id"] = $unit->id;
                     } else {
@@ -1387,7 +1475,7 @@ class Warehouses extends Security_Controller {
                 }
 
                 // Chemicals
-                $chemical = $this->findObjectByName($item_data["name"], $chemical_list);
+                $chemical = $this->_findObjectByName($item_data["name"], $chemical_list);
                 if ($chemical) {
                     $warehouse_data["chemical_id"] = $chemical->id;
                 } else {
@@ -1404,7 +1492,7 @@ class Warehouses extends Security_Controller {
                 if (isset($warehouse_data["quantity"])) {
                     $warehouse_data["warehouse_id"] = $warehouse_id;
 
-                    $row = $this->findObjectByChemicalId($warehouse_data["chemical_id"], $warehouse_items_list);
+                    $row = $this->_findObjectByChemicalId($warehouse_data["chemical_id"], $warehouse_items_list);
                     if ($row) {
                         $this->Warehouse_chemicals_model->ci_save($warehouse_data, $row->id);
                     } else {
@@ -1449,23 +1537,30 @@ class Warehouses extends Security_Controller {
             try {
                 // manufacturer
                 if (isset($manufacturer_data["name"]) && !empty($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
-                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
-                    if ($manufacturer) {
-                        $item_data["manufacturer_id"] = $manufacturer->id;
-                    } else {
-                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
-                        $item_data["manufacturer_id"] = $m_save_id;
+                    $names = explode(",", $manufacturer_data["name"]);
+                    $m_ids = array();
+                    foreach ($names as $name) {
+                        $_item = $this->_findObjectByName($name, $manufacturers);
+                        if ($_item) {
+                            $m_ids[] = $_item->id;
+                        } else {
+                            $manufacturer_data["name"] = trim($name);
+                            $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                            $m_ids[] = $m_save_id;
 
-                        $temp = new stdClass();
-                        $temp->id = $m_save_id;
-                        $temp->name = $manufacturer_data["name"];
-                        $manufacturers[] = $temp;
+                            $temp = new stdClass();
+                            $temp->id = $m_save_id;
+                            $temp->name = trim($name);
+                            $manufacturers[] = $temp;
+                        }
                     }
+
+                    $item_data["manufacturer_id"] = implode(",", $m_ids);
                 }
 
                 // units
                 if (isset($unit_data["name"]) && !empty($unit_data["name"]) && $unit_data["name"] !== "---") {
-                    $unit = $this->findObjectByName($unit_data["name"], $units);
+                    $unit = $this->_findObjectByName($unit_data["name"], $units);
                     if ($unit) {
                         $item_data["unit_id"] = $unit->id;
                     } else {
@@ -1480,7 +1575,7 @@ class Warehouses extends Security_Controller {
                 }
 
                 // Oils
-                $oil = $this->findObjectByName($item_data["name"], $oil_list);
+                $oil = $this->_findObjectByName($item_data["name"], $oil_list);
                 if ($oil) {
                     $warehouse_data["oil_id"] = $oil->id;
                 } else {
@@ -1497,7 +1592,7 @@ class Warehouses extends Security_Controller {
                 if (isset($warehouse_data["quantity"])) {
                     $warehouse_data["warehouse_id"] = $warehouse_id;
 
-                    $row = $this->findObjectByOilId($warehouse_data["oil_id"], $warehouse_items_list);
+                    $row = $this->_findObjectByOilId($warehouse_data["oil_id"], $warehouse_items_list);
                     if ($row) {
                         $this->Warehouse_oils_model->ci_save($warehouse_data, $row->id);
                     } else {
@@ -1542,23 +1637,30 @@ class Warehouses extends Security_Controller {
             try {
                 // manufacturer
                 if (isset($manufacturer_data["name"]) && !empty($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
-                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
-                    if ($manufacturer) {
-                        $item_data["manufacturer_id"] = $manufacturer->id;
-                    } else {
-                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
-                        $item_data["manufacturer_id"] = $m_save_id;
+                    $names = explode(",", $manufacturer_data["name"]);
+                    $m_ids = array();
+                    foreach ($names as $name) {
+                        $_item = $this->_findObjectByName($name, $manufacturers);
+                        if ($_item) {
+                            $m_ids[] = $_item->id;
+                        } else {
+                            $manufacturer_data["name"] = trim($name);
+                            $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                            $m_ids[] = $m_save_id;
 
-                        $temp = new stdClass();
-                        $temp->id = $m_save_id;
-                        $temp->name = $manufacturer_data["name"];
-                        $manufacturers[] = $temp;
+                            $temp = new stdClass();
+                            $temp->id = $m_save_id;
+                            $temp->name = trim($name);
+                            $manufacturers[] = $temp;
+                        }
                     }
+
+                    $item_data["manufacturer_id"] = implode(",", $m_ids);
                 }
 
                 // units
                 if (isset($unit_data["name"]) && !empty($unit_data["name"]) && $unit_data["name"] !== "---") {
-                    $unit = $this->findObjectByName($unit_data["name"], $units);
+                    $unit = $this->_findObjectByName($unit_data["name"], $units);
                     if ($unit) {
                         $item_data["unit_id"] = $unit->id;
                     } else {
@@ -1573,7 +1675,7 @@ class Warehouses extends Security_Controller {
                 }
 
                 // Paints
-                $paint = $this->findObjectByName($item_data["name"], $paint_list);
+                $paint = $this->_findObjectByName($item_data["name"], $paint_list);
                 if ($paint) {
                     $warehouse_data["paint_id"] = $paint->id;
                 } else {
@@ -1590,7 +1692,7 @@ class Warehouses extends Security_Controller {
                 if (isset($warehouse_data["quantity"])) {
                     $warehouse_data["warehouse_id"] = $warehouse_id;
 
-                    $row = $this->findObjectByPaintId($warehouse_data["paint_id"], $warehouse_items_list);
+                    $row = $this->_findObjectByPaintId($warehouse_data["paint_id"], $warehouse_items_list);
                     if ($row) {
                         $this->Warehouse_paints_model->ci_save($warehouse_data, $row->id);
                     } else {
@@ -1610,7 +1712,7 @@ class Warehouses extends Security_Controller {
         }
     }
 
-    private function findObjectByName($name, $arr) {
+    private function _findObjectByName($name, $arr) {
         $name = trim($name);
         foreach ($arr as $item) {
             if ($name == $item->name) {
@@ -1620,7 +1722,7 @@ class Warehouses extends Security_Controller {
         return false;
     }
 
-    private function findObjectBySpareId($spare_id, $arr) {
+    private function _findObjectBySpareId($spare_id, $arr) {
         foreach ($arr as $item) {
             if ($spare_id == $item->spare_id) {
                 return $item;
@@ -1629,7 +1731,7 @@ class Warehouses extends Security_Controller {
         return false;
     }
 
-    private function findObjectByChemicalId($chemical_id, $arr) {
+    private function _findObjectByChemicalId($chemical_id, $arr) {
         foreach ($arr as $item) {
             if ($chemical_id == $item->chemical_id) {
                 return $item;
@@ -1638,7 +1740,7 @@ class Warehouses extends Security_Controller {
         return false;
     }
 
-    private function findObjectByOilId($oil_id, $arr) {
+    private function _findObjectByOilId($oil_id, $arr) {
         foreach ($arr as $item) {
             if ($oil_id == $item->oil_id) {
                 return $item;
@@ -1647,13 +1749,29 @@ class Warehouses extends Security_Controller {
         return false;
     }
 
-    private function findObjectByPaintId($paint_id, $arr) {
+    private function _findObjectByPaintId($paint_id, $arr) {
         foreach ($arr as $item) {
             if ($paint_id == $item->paint_id) {
                 return $item;
             }
         }
         return false;
+    }
+
+    private function _get_names_by_ids($ids_str, $arr) {
+        if (empty($ids_str)) {
+            return "";
+        }
+        $ids = explode(",", $ids_str);
+        $filtered_array = array_filter($arr, function ($obj) use ($ids) {
+            return in_array($obj->id, $ids);
+        });
+        if (count($filtered_array) > 0) {
+            $names = array_map(function($val) { return $val->name; }, $filtered_array);
+            return implode(", ", $names);
+        } else {
+            return "";
+        }
     }
 
 }

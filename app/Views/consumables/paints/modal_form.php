@@ -29,7 +29,14 @@
                 <label for="manufacturer_id" class="<?php echo $label_column; ?>"><?php echo app_lang('manufacturer'); ?></label>
                 <div class="<?php echo $field_column; ?>">
                     <?php
-                    echo form_dropdown("manufacturer_id", $manufacturers_dropdown, array($model_info->manufacturer_id), "class='select2 validate-hidden' id='manufacturer_id' data-rule-required='true' data-msg-required='" . app_lang('field_required') . "'");
+                    echo form_input(array(
+                        "id" => "manufacturer_id",
+                        "name" => "manufacturer_id",
+                        "value" => $model_info->manufacturer_id ? $model_info->manufacturer_id : "",
+                        "class" => "form-control",
+                        "data-rule-required" => true,
+                        "data-msg-required" => app_lang("field_required"),
+                    ));
                     ?>
                 </div>
             </div>
@@ -57,9 +64,7 @@
                         "value" => $model_info->part_number ? $model_info->part_number : "",
                         "class" => "form-control",
                         "placeholder" => app_lang('part_number'),
-                        "maxlength" => 30,
-                        "data-rule-required" => true,
-                        "data-msg-required" => app_lang("field_required"),
+                        "maxlength" => 30
                     ));
                     ?>
                 </div>
@@ -78,9 +83,7 @@
                         "class" => "form-control",
                         "placeholder" => app_lang('part_description') . "...",
                         "data-rich-text-editor" => true,
-                        "maxlength" => 200,
-                        "data-rule-required" => true,
-                        "data-msg-required" => app_lang("field_required"),
+                        "maxlength" => 200
                     ));
                     ?>
                 </div>
@@ -98,9 +101,7 @@
                         "value" => $model_info->article_number ? $model_info->article_number : "",
                         "class" => "form-control",
                         "placeholder" => app_lang('article_number'),
-                        "maxlength" => 30,
-                        "data-rule-required" => true,
-                        "data-msg-required" => app_lang("field_required"),
+                        "maxlength" => 30
                     ));
                     ?>
                 </div>
@@ -118,9 +119,7 @@
                         "value" => $model_info->hs_code ? $model_info->hs_code : "",
                         "class" => "form-control",
                         "placeholder" => app_lang('hs_code'),
-                        "maxlength" => 30,
-                        "data-rule-required" => true,
-                        "data-msg-required" => app_lang("field_required"),
+                        "maxlength" => 30
                     ));
                     ?>
                 </div>
@@ -133,7 +132,7 @@
 
                 <div class="<?php echo $field_column; ?>">
                     <?php
-                    echo form_checkbox("is_critical", "0", $model_info->is_critical, "id='is_critical' class='form-check-input mt-2'");
+                    echo form_checkbox("is_critical", "1", $model_info->is_critical, "id='is_critical' class='form-check-input mt-2'");
                     ?>
                 </div>
             </div>
@@ -161,7 +160,8 @@
             $("#name").focus();
         }, 210);
 
-        $('.select2').select2();
+        $('#unit_id').select2();
+        $("#manufacturer_id").select2({multiple: true, data: <?php echo $manufacturers_dropdown; ?>});
 
     });
 </script>
