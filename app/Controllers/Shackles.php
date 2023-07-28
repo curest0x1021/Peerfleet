@@ -790,8 +790,8 @@ class Shackles extends Security_Controller
             ["key" => "date_of_discharged", "required" => false],
             ["key" => "remarks_load_test", "required" => false],
             ["key" => "remarks_visual_inspection", "required" => false],
-            ["key" => "last_test_passed", "required" => false],
-            ["key" => "inspection_passed", "required" => false],
+            ["key" => "last_test_passed", "required" => true],
+            ["key" => "inspection_passed", "required" => true],
         );
     }
 
@@ -1198,7 +1198,7 @@ class Shackles extends Security_Controller
                         "shackle_id" => $save_id,
                         "initial_test" => 1,
                         "test_date" => $test_date,
-                        "tested_by" => $loadtest_data["initial"]["tested_by"],
+                        "tested_by" => $loadtest_data["initial"]["tested_by"] ?? "",
                         "passed" => 1
                     );
                     if ($this->valid_loadtest($save_id, $data["test_date"], $load_tests)) {
@@ -1216,9 +1216,9 @@ class Shackles extends Security_Controller
                     $data = array(
                         "shackle_id" => $save_id,
                         "test_date" => $test_date,
-                        "tested_by" => $loadtest_data["last"]["tested_by"],
-                        "passed" => $loadtest_data["last"]["passed"] == '1' ? 1 : 0,
-                        "remarks" => $loadtest_data["last"]["remarks"]
+                        "tested_by" => $loadtest_data["last"]["tested_by"] ?? "",
+                        "passed" => $loadtest_data["last"]["passed"] ?? 0,
+                        "remarks" => $loadtest_data["last"]["remarks"] ?? ""
                     );
                     if ($this->valid_loadtest($save_id, $data["test_date"], $load_tests)) {
                         $this->Shackles_loadtest_model->ci_save($data);
@@ -1236,9 +1236,9 @@ class Shackles extends Security_Controller
                     $data = array(
                         "shackle_id" => $save_id,
                         "inspection_date" => $inspection_date,
-                        "inspected_by" => $inspection_data["inspected_by"],
-                        "passed" => $inspection_data["passed"] == '1' ? 1 : 0,
-                        "remarks" => $inspection_data["remarks"]
+                        "inspected_by" => $inspection_data["inspected_by"] ?? "",
+                        "passed" => $inspection_data["passed"] ?? 0,
+                        "remarks" => $inspection_data["remarks"] ?? ""
                     );
                     if ($this->valid_inspection($save_id, $data["inspection_date"], $inspections)) {
                         $this->Shackles_inspection_model->ci_save($data);
