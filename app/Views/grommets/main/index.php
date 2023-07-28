@@ -1,6 +1,7 @@
 <div id="page-content" class="page-wrapper clearfix">
     <div class="clearfix grid-button">
-        <ul id="wire-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">
+        <a onclick="history.back()" style="cursor: pointer; font-size: 16px;"><i data-feather="arrow-left" class="icon-24"></i><?php echo app_lang("back"); ?></a>
+        <ul id="wire-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title mt15" role="tablist">
             <li><a role="presentation" data-bs-toggle="tab" class="active show"><?php echo app_lang('grommets_wire_slings') . " - " . $vessel->charter_name; ?></a></li>
             <?php if ($can_edit_items) { ?>
                 <div class="tab-title clearfix no-border">

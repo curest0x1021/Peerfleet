@@ -752,7 +752,7 @@ class Lashing extends Security_Controller
                     $data = array(
                         "lashing_id" => $save_id,
                         "inspection_date" => $inspection_date,
-                        "inspected_by" => $inspection_data["inspected_by"],
+                        "inspected_by" => $inspection_data["inspected_by"] ?? "",
                         "remarks" => $inspection_data["remarks"] ?? "",
                         "passed" => $inspection_data["passed"] ?? 0
                     );

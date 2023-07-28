@@ -1183,7 +1183,7 @@ class Misc extends Security_Controller
                         "misc_id" => $save_id,
                         "initial_test" => 1,
                         "test_date" => $test_date,
-                        "tested_by" => $loadtest_data["initial"]["tested_by"],
+                        "tested_by" => $loadtest_data["initial"]["tested_by"] ?? "",
                         "passed" => 1
                     );
                     if ($this->valid_loadtest($save_id, $data["test_date"], $load_tests)) {
@@ -1201,9 +1201,9 @@ class Misc extends Security_Controller
                     $data = array(
                         "misc_id" => $save_id,
                         "test_date" => $test_date,
-                        "tested_by" => $loadtest_data["last"]["tested_by"],
-                        "passed" => $loadtest_data["last"]["passed"] == '1' ? 1 : 0,
-                        "remarks" => $loadtest_data["last"]["remarks"]
+                        "tested_by" => $loadtest_data["last"]["tested_by"] ?? "",
+                        "passed" => $loadtest_data["last"]["passed"] ?? 0,
+                        "remarks" => $loadtest_data["last"]["remarks"] ?? ""
                     );
                     if ($this->valid_loadtest($save_id, $data["test_date"], $load_tests)) {
                         $this->Misc_loadtest_model->ci_save($data);
@@ -1221,9 +1221,9 @@ class Misc extends Security_Controller
                     $data = array(
                         "misc_id" => $save_id,
                         "inspection_date" => $inspection_date,
-                        "inspected_by" => $inspection_data["inspected_by"],
-                        "passed" => $inspection_data["passed"] == '1' ? 1 : 0,
-                        "remarks" => $inspection_data["remarks"]
+                        "inspected_by" => $inspection_data["inspected_by"] ?? "",
+                        "passed" => $inspection_data["passed"] ?? 0,
+                        "remarks" => $inspection_data["remarks"] ?? ""
                     );
                     if ($this->valid_inspection($save_id, $data["inspection_date"], $inspections)) {
                         $this->Misc_inspection_model->ci_save($data);
