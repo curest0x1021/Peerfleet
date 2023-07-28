@@ -32,6 +32,7 @@
             <div class="tab-title clearfix no-border">
                 <div class="title-button-group">
                     <?php echo modal_anchor(get_uri("labels/modal_form"), "<i data-feather='tag' class='icon-16'></i> " . app_lang('manage_labels'), array("class" => "btn btn-default", "title" => app_lang('manage_labels'), "data-post-type" => "to_do")); ?>
+                    <?php echo modal_anchor(get_uri("todo/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_item'), array("class" => "btn btn-default", "title" => app_lang('add_item'))); ?>
                 </div>
             </div>
         </ul>
