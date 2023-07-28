@@ -128,7 +128,7 @@ class Todo_model extends Crud_model {
     }
 
     function delete_todo_and_sub_items($todo_id, $undo = false) {
-        $todo_table = $this->db->prefixTable('todo');
+        $todo_table = $this->db->prefixTable('to_do');
         $checklist_items_table = $this->db->prefixTable("checklist_items");
 
         $deleted = $undo ? 0 : 1;
