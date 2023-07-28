@@ -164,6 +164,7 @@ class Consumables extends Security_Controller {
 
         return array(
             $data->id,
+            $data->is_critical,
             $check_critical,
             $data->name,
             $data->manufacturer,
@@ -307,6 +308,7 @@ class Consumables extends Security_Controller {
 
         return array(
             $data->id,
+            $data->is_critical,
             $check_critical,
             $data->name,
             $data->manufacturer,
@@ -450,6 +452,7 @@ class Consumables extends Security_Controller {
 
         return array(
             $data->id,
+            $data->is_critical,
             $check_critical,
             $data->name,
             $data->manufacturer,

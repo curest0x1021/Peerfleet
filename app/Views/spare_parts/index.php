@@ -44,18 +44,19 @@
             order: [[1, "desc"]],
             columns: [
                 {visible: false, searchable: false},
-                {title: '<?php echo app_lang("critical") ?>'},
-                {title: '<?php echo app_lang("name") ?>'},
-                {title: '<?php echo app_lang("manufacturer") ?>'},
-                {title: '<?php echo app_lang("applicable_equipment") ?>'},
-                {title: '<?php echo app_lang("ship_equipment") ?>'},
-                {title: '<?php echo app_lang("unit") ?>'},
-                {title: '<?php echo app_lang("part_number") ?>'},
-                {title: '<?php echo app_lang("hs_code") ?>'},
+                {title: '<?php echo app_lang("critical") ?>', visible: false},
+                {title: '<?php echo app_lang("critical") ?>', class: "text-center w50"},
+                {title: '<?php echo app_lang("name") ?>', class: "all"},
+                {title: '<?php echo app_lang("manufacturer") ?>', class: "w15p"},
+                {title: '<?php echo app_lang("applicable_equipment") ?>', class: "w15p"},
+                {title: '<?php echo app_lang("ship_equipment") ?>', class: "w15p"},
+                {title: '<?php echo app_lang("unit") ?>', class: "text-center w100"},
+                {title: '<?php echo app_lang("part_number") ?>', class: "text-center w10p"},
+                {title: '<?php echo app_lang("hs_code") ?>', class: "text-center w10p"},
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
-            printColumns: [2, 3, 4, 5, 6, 7, 8],
-            xlsColumns: [2, 3, 4, 5, 6, 7, 8]
+            printColumns: [1, 3, 4, 5, 6, 7, 8, 9],
+            xlsColumns: [1, 3, 4, 5, 6, 7, 8, 9]
         });
 
         $('body').on('click', '[data-act=update-critical-checkbox]', function () {
