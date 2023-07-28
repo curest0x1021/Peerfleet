@@ -58,6 +58,17 @@ class Shipyards_model extends Crud_model {
         return $this->db->query($sql)->getResult();
     }
 
+    function get_country_map() {
+        $shipyard_table = $this->db->prefixTable("shipyards");
+
+        $sql = "SELECT MAX(LOWER(country_id)) as country_id, MAX(region_id) as region_id, MAX(sailingarea_id) as sailingarea_id
+                FROM $shipyard_table
+                GROUP BY country_id
+                ORDER BY country_id ASC";
+
+        return $this->db->query($sql)->getResult();
+    }
+
     function get_details($options = array()) {
         $shipyard_table = $this->db->prefixTable("shipyards");
         $country_table = $this->db->prefixTable("country");

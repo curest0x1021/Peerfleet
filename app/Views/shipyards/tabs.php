@@ -4,7 +4,7 @@
     <li class="<?php echo ($active_tab == 'sailingarea') ? 'active' : ''; ?>"><a id="sailingarea_tab" role="presentation" data-bs-toggle="tab" href="<?php echo get_uri("shipyards/sailingarea"); ?>"> <?php echo app_lang('by_sailing_area'); ?></a></li>
     <?php if ($show_checkboxs) { ?>
         <div class="tab-title clearfix no-border">
-            <div class="title-button-group  d-flex align-items-center">
+            <div class="title-button-group  d-flex align-items-center shipyards-title">
                 <div class="checkbox">
                     <input id="service-2" type="checkbox" name="service-2" checked="checked">
                     <label for="service-2"><img src="/assets/images/shipyards/repair.png" title="Repairs" class="icon-service"/></label>
@@ -15,7 +15,7 @@
                 </div>
                 <div class="checkbox">
                     <input id="service-3" type="checkbox" name="service-3" checked="checked">
-                    <label for="service-3"><img src="/assets/images/shipyards/recycling.png" title="Recycling" class="icon-service"/></label>
+                    <label for="service-3"><img src="/assets/images/shipyards/recycling.png" title="Scrapping" class="icon-service"/></label>
                 </div>
             </div>
         </div>

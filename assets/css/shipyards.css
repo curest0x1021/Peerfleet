@@ -24,18 +24,18 @@
   margin-right: 8px;
 }
 
-.checkbox, .radio {
+.shipyards-title .checkbox, .shipyards-title .radio {
   position: relative;
   display: block;
   margin: 10px;
 }
 
-[type='checkbox']:not(:checked), [type='checkbox']:checked {
+.shipyards-title [type='checkbox']:not(:checked), .shipyards-title [type='checkbox']:checked {
   position: absolute;
   left: -9999px;
 }
 
-[type='checkbox']:not(:checked) + label, [type='checkbox']:checked + label {
+.shipyards-title [type='checkbox']:not(:checked) + label, .shipyards-title [type='checkbox']:checked + label {
   position: relative;
   display: flex;
   align-items: center;
@@ -83,17 +83,17 @@ i.icon-x-large.service-3:before {
   font-size: x-large;
 }
 
-[type='checkbox']:checked + label:after {
+.shipyards-title [type='checkbox']:checked + label:after {
   opacity: 1;
   transform: scale(1);
 }
 
-[type='checkbox']:not(:checked) + label:after {
+.shipyards-title [type='checkbox']:not(:checked) + label:after {
   opacity: 0;
   transform: scale(0);
 }
 
-[type='checkbox']:not(:checked) + label:after, [type='checkbox']:checked + label:after {
+.shipyards-title [type='checkbox']:not(:checked) + label:after, .shipyards-title [type='checkbox']:checked + label:after {
   font-family: 'FontAwesome';
   content: '\f00c';
   position: absolute;
@@ -104,7 +104,7 @@ i.icon-x-large.service-3:before {
   transition: transform .2s;
 }
 
-[type='checkbox']:not(:checked) + label:before, [type='checkbox']:checked + label:before {
+.shipyards-title [type='checkbox']:not(:checked) + label:before, .shipyards-title [type='checkbox']:checked + label:before {
   content: '';
   position: absolute;
   left: 0;
