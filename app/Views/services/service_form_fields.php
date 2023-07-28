@@ -29,6 +29,7 @@
             "id" => "serviced_ports",
             "name" => "serviced_ports",
             "value" => $model_info->serviced_ports ? $model_info->serviced_ports : "",
+            "placeholder" => app_lang('serviced_ports'),
             "class" => "form-control",
             "data-rule-required" => true,
             "data-msg-required" => app_lang("field_required"),
