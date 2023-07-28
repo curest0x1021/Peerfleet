@@ -314,14 +314,14 @@ class Services extends Security_Controller {
             ["key" => "company", "required" => true],
             ["key" => "serviced_ports", "required" => true],
             ["key" => "service_type", "required" => true],
-            ["key" => "website", "required" => true],
+            ["key" => "website", "required" => false],
             ["key" => "email", "required" => true],
-            ["key" => "phone", "required" => true],
-            ["key" => "fax", "required" => true],
-            ["key" => "address", "required" => true],
-            ["key" => "city", "required" => true],
-            ["key" => "po_box", "required" => true],
+            ["key" => "phone", "required" => false],
+            ["key" => "fax", "required" => false],
             ["key" => "country", "required" => true],
+            ["key" => "address", "required" => false],
+            ["key" => "city", "required" => false],
+            ["key" => "po_box", "required" => false],
             ["key" => "description", "required" => false]
         );
     }
