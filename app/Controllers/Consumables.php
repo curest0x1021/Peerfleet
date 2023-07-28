@@ -47,7 +47,7 @@ class Consumables extends Security_Controller {
         $view_data['model_info'] = $this->Chemicals_model->get_one($this->request->getPost('id'));
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
-        $view_data["manufacturers_dropdown"] = $this->get_manufacturers_dropdown();
+        $view_data["manufacturers_dropdown"] = $this->get_manufacturers_dropdown1();
         $view_data["units_dropdown"] = $this->get_units_dropdown();
 
         return $this->template->view('consumables/chemicals/modal_form', $view_data);
@@ -60,12 +60,8 @@ class Consumables extends Security_Controller {
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "name" => "required|max_length[40]",
-            "manufacturer_id" => "required|numeric",
-            "unit_id" => "required",
-            "part_number" => "required|max_length[30]",
-            "part_description" => "required",
-            "article_number" => "required|max_length[30]",
-            "hs_code" => "required|max_length[10]"
+            "manufacturer_id" => "required",
+            "unit_id" => "required"
         ));
 
         $id = $this->request->getPost('id');
@@ -131,9 +127,10 @@ class Consumables extends Security_Controller {
     function chemicals_list_data() {
         $is_critical = $this->request->getPost('is_critical') ? implode(",", $this->request->getPost('is_critical')) : '';
         $list_data = $this->Chemicals_model->get_details(array('is_critical' => $is_critical))->getResult();
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
         $result = array();
         foreach ($list_data as $data) {
-            $result[] = $this->_chemicals_make_row($data);
+            $result[] = $this->_chemicals_make_row($data, $manufacturers);
         }
         echo json_encode(array("data" => $result));
     }
@@ -141,10 +138,11 @@ class Consumables extends Security_Controller {
     private function _chemicals_row_data($id) {
         $options = array("id" => $id);
         $data = $this->Chemicals_model->get_details($options)->getRow();
-        return $this->_chemicals_make_row($data);
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        return $this->_chemicals_make_row($data, $manufacturers);
     }
 
-    private function _chemicals_make_row($data) {
+    private function _chemicals_make_row($data, $manufacturers) {
         $checkbox_class = "checkbox-blank";
         if ($data->is_critical) {
             $checkbox_class = "checkbox-checked";
@@ -162,12 +160,14 @@ class Consumables extends Security_Controller {
                     . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("consumables/delete_chemical"), "data-action" => "delete-confirmation"));
         }
 
+        $manufacturer = $this->_get_names_by_ids($data->manufacturer_id, $manufacturers);
+
         return array(
             $data->id,
             $data->is_critical,
             $check_critical,
             $data->name,
-            $data->manufacturer,
+            $manufacturer,
             $data->unit,
             $data->part_number,
             $data->article_number,
@@ -191,7 +191,7 @@ class Consumables extends Security_Controller {
         $view_data['model_info'] = $this->Oils_model->get_one($this->request->getPost('id'));
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
-        $view_data["manufacturers_dropdown"] = $this->get_manufacturers_dropdown();
+        $view_data["manufacturers_dropdown"] = $this->get_manufacturers_dropdown1();
         $view_data["units_dropdown"] = $this->get_units_dropdown();
 
         return $this->template->view('consumables/oils/modal_form', $view_data);
@@ -204,12 +204,8 @@ class Consumables extends Security_Controller {
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "name" => "required|max_length[40]",
-            "manufacturer_id" => "required|numeric",
-            "unit_id" => "required",
-            "part_number" => "required|max_length[30]",
-            "part_description" => "required",
-            "article_number" => "required|max_length[30]",
-            "hs_code" => "required|max_length[10]"
+            "manufacturer_id" => "required",
+            "unit_id" => "required"
         ));
 
         $id = $this->request->getPost('id');
@@ -275,9 +271,10 @@ class Consumables extends Security_Controller {
     function oils_list_data() {
         $is_critical = $this->request->getPost('is_critical') ? implode(",", $this->request->getPost('is_critical')) : '';
         $list_data = $this->Oils_model->get_details(array('is_critical' => $is_critical))->getResult();
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
         $result = array();
         foreach ($list_data as $data) {
-            $result[] = $this->_oils_make_row($data);
+            $result[] = $this->_oils_make_row($data, $manufacturers);
         }
         echo json_encode(array("data" => $result));
     }
@@ -285,10 +282,11 @@ class Consumables extends Security_Controller {
     private function _oils_row_data($id) {
         $options = array("id" => $id);
         $data = $this->Oils_model->get_details($options)->getRow();
-        return $this->_oils_make_row($data);
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        return $this->_oils_make_row($data, $manufacturers);
     }
 
-    private function _oils_make_row($data) {
+    private function _oils_make_row($data, $manufacturers) {
         $checkbox_class = "checkbox-blank";
         if ($data->is_critical) {
             $checkbox_class = "checkbox-checked";
@@ -306,12 +304,14 @@ class Consumables extends Security_Controller {
                     . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("consumables/delete_oil"), "data-action" => "delete-confirmation"));
         }
 
+        $manufacturer = $this->_get_names_by_ids($data->manufacturer_id, $manufacturers);
+
         return array(
             $data->id,
             $data->is_critical,
             $check_critical,
             $data->name,
-            $data->manufacturer,
+            $manufacturer,
             $data->unit,
             $data->part_number,
             $data->article_number,
@@ -335,7 +335,7 @@ class Consumables extends Security_Controller {
         $view_data['model_info'] = $this->Paints_model->get_one($this->request->getPost('id'));
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
-        $view_data["manufacturers_dropdown"] = $this->get_manufacturers_dropdown();
+        $view_data["manufacturers_dropdown"] = $this->get_manufacturers_dropdown1();
         $view_data["units_dropdown"] = $this->get_units_dropdown();
 
         return $this->template->view('consumables/paints/modal_form', $view_data);
@@ -348,12 +348,8 @@ class Consumables extends Security_Controller {
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "name" => "required|max_length[40]",
-            "manufacturer_id" => "required|numeric",
-            "unit_id" => "required",
-            "part_number" => "required|max_length[30]",
-            "part_description" => "required",
-            "article_number" => "required|max_length[30]",
-            "hs_code" => "required|max_length[10]"
+            "manufacturer_id" => "required",
+            "unit_id" => "required"
         ));
 
         $id = $this->request->getPost('id');
@@ -419,9 +415,10 @@ class Consumables extends Security_Controller {
     function paints_list_data() {
         $is_critical = $this->request->getPost('is_critical') ? implode(",", $this->request->getPost('is_critical')) : '';
         $list_data = $this->Paints_model->get_details(array('is_critical' => $is_critical))->getResult();
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
         $result = array();
         foreach ($list_data as $data) {
-            $result[] = $this->_paints_make_row($data);
+            $result[] = $this->_paints_make_row($data, $manufacturers);
         }
         echo json_encode(array("data" => $result));
     }
@@ -429,10 +426,11 @@ class Consumables extends Security_Controller {
     private function _paints_row_data($id) {
         $options = array("id" => $id);
         $data = $this->Paints_model->get_details($options)->getRow();
-        return $this->_paints_make_row($data);
+        $manufacturers = $this->Manufacturers_model->get_all()->getResult();
+        return $this->_paints_make_row($data, $manufacturers);
     }
 
-    private function _paints_make_row($data) {
+    private function _paints_make_row($data, $manufacturers) {
         $checkbox_class = "checkbox-blank";
         if ($data->is_critical) {
             $checkbox_class = "checkbox-checked";
@@ -450,12 +448,13 @@ class Consumables extends Security_Controller {
                     . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("consumables/delete_paint"), "data-action" => "delete-confirmation"));
         }
 
+        $manufacturer = $this->_get_names_by_ids($data->manufacturer_id, $manufacturers);
         return array(
             $data->id,
             $data->is_critical,
             $check_critical,
             $data->name,
-            $data->manufacturer,
+            $manufacturer,
             $data->unit,
             $data->part_number,
             $data->article_number,
@@ -502,9 +501,9 @@ class Consumables extends Security_Controller {
             [ "key" => "manufacturer", "required" => true ],
             [ "key" => "unit", "required" => true ],
             [ "key" => "part_description", "required" => false ],
-            [ "key" => "part_number", "required" => true ],
-            [ "key" => "article_number", "required" => true ],
-            [ "key" => "hs_code", "required" => true ],
+            [ "key" => "part_number", "required" => false ],
+            [ "key" => "article_number", "required" => false ],
+            [ "key" => "hs_code", "required" => false ],
             [ "key" => "is_critical", "required" => false ]
         );
     }
@@ -763,23 +762,30 @@ class Consumables extends Security_Controller {
             try {
                 // manufacturer
                 if (isset($manufacturer_data["name"]) && !empty($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
-                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
-                    if ($manufacturer) {
-                        $item_data["manufacturer_id"] = $manufacturer->id;
-                    } else {
-                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
-                        $item_data["manufacturer_id"] = $m_save_id;
+                    $names = explode(",", $manufacturer_data["name"]);
+                    $m_ids = array();
+                    foreach ($names as $name) {
+                        $_item = $this->_findObjectByName($name, $manufacturers);
+                        if ($_item) {
+                            $m_ids[] = $_item->id;
+                        } else {
+                            $manufacturer_data["name"] = trim($name);
+                            $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                            $m_ids[] = $m_save_id;
 
-                        $temp = new stdClass();
-                        $temp->id = $m_save_id;
-                        $temp->name = $manufacturer_data["name"];
-                        $manufacturers[] = $temp;
+                            $temp = new stdClass();
+                            $temp->id = $m_save_id;
+                            $temp->name = trim($name);
+                            $manufacturers[] = $temp;
+                        }
                     }
+
+                    $item_data["manufacturer_id"] = implode(",", $m_ids);
                 }
 
                 // units
                 if (isset($unit_data["name"]) && !empty($unit_data["name"]) && $unit_data["name"] !== "---") {
-                    $unit = $this->findObjectByName($unit_data["name"], $units);
+                    $unit = $this->_findObjectByName($unit_data["name"], $units);
                     if ($unit) {
                         $item_data["unit_id"] = $unit->id;
                     } else {
@@ -794,7 +800,7 @@ class Consumables extends Security_Controller {
                 }
 
                 // Chemicals
-                $chemical = $this->findObjectByName($item_data["name"], $chemical_list);
+                $chemical = $this->_findObjectByName($item_data["name"], $chemical_list);
                 if (!$chemical) {
                     $m_save_id = $this->Chemicals_model->ci_save($item_data);
 
@@ -834,23 +840,30 @@ class Consumables extends Security_Controller {
             try {
                 // manufacturer
                 if (isset($manufacturer_data["name"]) && !empty($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
-                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
-                    if ($manufacturer) {
-                        $item_data["manufacturer_id"] = $manufacturer->id;
-                    } else {
-                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
-                        $item_data["manufacturer_id"] = $m_save_id;
+                    $names = explode(",", $manufacturer_data["name"]);
+                    $m_ids = array();
+                    foreach ($names as $name) {
+                        $_item = $this->_findObjectByName($name, $manufacturers);
+                        if ($_item) {
+                            $m_ids[] = $_item->id;
+                        } else {
+                            $manufacturer_data["name"] = trim($name);
+                            $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                            $m_ids[] = $m_save_id;
 
-                        $temp = new stdClass();
-                        $temp->id = $m_save_id;
-                        $temp->name = $manufacturer_data["name"];
-                        $manufacturers[] = $temp;
+                            $temp = new stdClass();
+                            $temp->id = $m_save_id;
+                            $temp->name = trim($name);
+                            $manufacturers[] = $temp;
+                        }
                     }
+
+                    $item_data["manufacturer_id"] = implode(",", $m_ids);
                 }
 
                 // units
                 if (isset($unit_data["name"]) && !empty($unit_data["name"]) && $unit_data["name"] !== "---") {
-                    $unit = $this->findObjectByName($unit_data["name"], $units);
+                    $unit = $this->_findObjectByName($unit_data["name"], $units);
                     if ($unit) {
                         $item_data["unit_id"] = $unit->id;
                     } else {
@@ -865,7 +878,7 @@ class Consumables extends Security_Controller {
                 }
 
                 // Oils
-                $oil = $this->findObjectByName($item_data["name"], $oil_list);
+                $oil = $this->_findObjectByName($item_data["name"], $oil_list);
                 if (!$oil) {
                     $m_save_id = $this->Oils_model->ci_save($item_data);
 
@@ -905,23 +918,30 @@ class Consumables extends Security_Controller {
             try {
                 // manufacturer
                 if (isset($manufacturer_data["name"]) && !empty($manufacturer_data["name"]) && $manufacturer_data["name"] !== "---") {
-                    $manufacturer = $this->findObjectByName($manufacturer_data["name"], $manufacturers);
-                    if ($manufacturer) {
-                        $item_data["manufacturer_id"] = $manufacturer->id;
-                    } else {
-                        $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
-                        $item_data["manufacturer_id"] = $m_save_id;
+                    $names = explode(",", $manufacturer_data["name"]);
+                    $m_ids = array();
+                    foreach ($names as $name) {
+                        $_item = $this->_findObjectByName($name, $manufacturers);
+                        if ($_item) {
+                            $m_ids[] = $_item->id;
+                        } else {
+                            $manufacturer_data["name"] = trim($name);
+                            $m_save_id = $this->Manufacturers_model->ci_save($manufacturer_data);
+                            $m_ids[] = $m_save_id;
 
-                        $temp = new stdClass();
-                        $temp->id = $m_save_id;
-                        $temp->name = $manufacturer_data["name"];
-                        $manufacturers[] = $temp;
+                            $temp = new stdClass();
+                            $temp->id = $m_save_id;
+                            $temp->name = trim($name);
+                            $manufacturers[] = $temp;
+                        }
                     }
+
+                    $item_data["manufacturer_id"] = implode(",", $m_ids);
                 }
 
                 // units
                 if (isset($unit_data["name"]) && !empty($unit_data["name"]) && $unit_data["name"] !== "---") {
-                    $unit = $this->findObjectByName($unit_data["name"], $units);
+                    $unit = $this->_findObjectByName($unit_data["name"], $units);
                     if ($unit) {
                         $item_data["unit_id"] = $unit->id;
                     } else {
@@ -936,7 +956,7 @@ class Consumables extends Security_Controller {
                 }
 
                 // Paints
-                $paint = $this->findObjectByName($item_data["name"], $paint_list);
+                $paint = $this->_findObjectByName($item_data["name"], $paint_list);
                 if (!$paint) {
                     $m_save_id = $this->Paints_model->ci_save($item_data);
 
@@ -953,7 +973,7 @@ class Consumables extends Security_Controller {
         }
     }
 
-    private function findObjectByName($name, $arr) {
+    private function _findObjectByName($name, $arr) {
         $name = trim($name);
         foreach ($arr as $item) {
             if ($name == $item->name) {
@@ -961,6 +981,22 @@ class Consumables extends Security_Controller {
             }
         }
         return false;
+    }
+
+    private function _get_names_by_ids($ids_str, $arr) {
+        if (empty($ids_str)) {
+            return "";
+        }
+        $ids = explode(",", $ids_str);
+        $filtered_array = array_filter($arr, function ($obj) use ($ids) {
+            return in_array($obj->id, $ids);
+        });
+        if (count($filtered_array) > 0) {
+            $names = array_map(function($val) { return $val->name; }, $filtered_array);
+            return implode(", ", $names);
+        } else {
+            return "";
+        }
     }
 
 }

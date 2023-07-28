@@ -794,6 +794,20 @@ class Security_Controller extends App_Controller {
         return $dropdown;
     }
 
+    protected function get_manufacturers_dropdown1($show_header = false) {
+        $list = $this->Manufacturers_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array();
+        if ($show_header) {
+            $dropdown[] = array("id" => "", "text" => "-");
+        }
+        foreach ($list as $item) {
+            $dropdown[] = array("id" => $item->id, "text" => $item->name);
+        }
+
+        return json_encode($dropdown);
+    }
+
     protected function get_icc_dropdown() {
         $list = $this->Color_codes_model->get_all_where(array("deleted" => 0))->getResult();
 
@@ -805,26 +819,32 @@ class Security_Controller extends App_Controller {
         return $dropdown;
     }
 
-    protected function get_applicable_machinery_equipments_dropdown() {
+    protected function get_applicable_machinery_equipments_dropdown($show_header = false) {
         $list = $this->Applicable_equipments_model->get_all_where(array("deleted" => 0))->getResult();
 
-        $dropdown = array("" => "-");
+        $dropdown = array();
+        if ($show_header) {
+            $dropdown[] = array("id" => "", "text" => "-");
+        }
         foreach ($list as $item) {
-            $dropdown[$item->id] = $item->name;
+            $dropdown[] = array("id" => $item->id, "text" => $item->name);
         }
 
-        return $dropdown;
+        return json_encode($dropdown);
     }
 
-    protected function get_ship_machinery_equipments_dropdown() {
+    protected function get_ship_machinery_equipments_dropdown($show_header = false) {
         $list = $this->Ship_equipments_model->get_all_where(array("deleted" => 0))->getResult();
 
-        $dropdown = array("" => "-");
+        $dropdown = array();
+        if ($show_header) {
+            $dropdown[] = array("id" => "", "text" => "-");
+        }
         foreach ($list as $item) {
-            $dropdown[$item->id] = $item->name;
+            $dropdown[] = array("id" => $item->id, "text" => $item->name);
         }
 
-        return $dropdown;
+        return json_encode($dropdown);
     }
 
     protected function get_units_dropdown() {
