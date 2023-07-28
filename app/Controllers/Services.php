@@ -49,13 +49,7 @@ class Services extends Security_Controller {
             "company" => "required",
             "serviced_ports" => "required",
             "service_type" => "required",
-            "website" => "required",
             "email" => "required",
-            "phone" => "required",
-            "fax" => "required",
-            "address" => "required",
-            "city" => "required",
-            "po_box" => "required",
             "country_id" => "required"
         ));
 
@@ -143,10 +137,10 @@ class Services extends Security_Controller {
             $data->email,
             $data->phone,
             $data->fax,
+            $data->country,
             $data->address,
             $data->city,
             $data->po_box,
-            $data->country,
             $action
         );
     }

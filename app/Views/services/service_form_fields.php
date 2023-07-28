@@ -68,8 +68,6 @@
             "value" => $model_info->website ? $model_info->website : "",
             "class" => "form-control",
             "placeholder" => app_lang('website'),
-            "data-rule-required" => true,
-            "data-msg-required" => app_lang("field_required"),
         ));
         ?>
     </div>
@@ -107,8 +105,6 @@
             "value" => $model_info->phone ? $model_info->phone : "",
             "class" => "form-control",
             "placeholder" => app_lang('phone'),
-            "data-rule-required" => true,
-            "data-msg-required" => app_lang("field_required"),
         ));
         ?>
     </div>
@@ -126,9 +122,18 @@
             "value" => $model_info->fax ? $model_info->fax : "",
             "class" => "form-control",
             "placeholder" => app_lang('fax'),
-            "data-rule-required" => true,
-            "data-msg-required" => app_lang("field_required"),
         ));
+        ?>
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="<?php echo $label_column; ?>">
+        <span><?php echo app_lang("country"); ?>:</span>
+    </div>
+    <div class="<?php echo $field_column; ?>">
+        <?php
+        echo form_dropdown("country_id", $country_dropdown, array($model_info->country_id), "class='select2 validate-hidden' id='country_id' data-rule-required='true' data-msg-required='" . app_lang('field_required') . "'");
         ?>
     </div>
 </div>
@@ -145,8 +150,6 @@
             "value" => $model_info->address ? $model_info->address : "",
             "class" => "form-control",
             "placeholder" => app_lang('address'),
-            "data-rule-required" => true,
-            "data-msg-required" => app_lang("field_required"),
         ));
         ?>
     </div>
@@ -164,8 +167,6 @@
             "value" => $model_info->city ? $model_info->city : "",
             "class" => "form-control",
             "placeholder" => app_lang('city'),
-            "data-rule-required" => true,
-            "data-msg-required" => app_lang("field_required"),
         ));
         ?>
     </div>
@@ -183,20 +184,7 @@
             "value" => $model_info->po_box ? $model_info->po_box : "",
             "class" => "form-control",
             "placeholder" => app_lang('po_box'),
-            "data-rule-required" => true,
-            "data-msg-required" => app_lang("field_required"),
         ));
-        ?>
-    </div>
-</div>
-
-<div class="form-group row">
-    <div class="<?php echo $label_column; ?>">
-        <span><?php echo app_lang("country"); ?>:</span>
-    </div>
-    <div class="<?php echo $field_column; ?>">
-        <?php
-        echo form_dropdown("country_id", $country_dropdown, array($model_info->country_id), "class='select2 validate-hidden' id='country_id' data-rule-required='true' data-msg-required='" . app_lang('field_required') . "'");
         ?>
     </div>
 </div>
