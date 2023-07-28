@@ -277,11 +277,9 @@ $lang["only_new_build"] = "Only New Build";
 $lang["published"] = "Published";
 $lang["street"] = "Street";
 $lang["information"] = "Information";
-$lang["repair"] = "Repair";
-$lang["new_build"] = "New build";
+$lang["repairs"] = "Repairs";
+$lang["new_buildings"] = "New buildings";
 $lang["scrapping"] = "Scrapping";
-
-
 $lang["initial_test"] = "Initial test";
 $lang["initial_test_date"] = "Initial test date";
 $lang["grommets_info"] = "Grommets & Wire Slings Info";
