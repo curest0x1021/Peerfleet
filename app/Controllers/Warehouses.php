@@ -14,13 +14,11 @@ class Warehouses extends Security_Controller {
 
     //load note list view
     function index() {
-        $view_data["vessels_dropdown"] = $this->get_vessels_dropdown(true);
-        return $this->template->rander("warehouses/index", $view_data);
+        return $this->template->rander("warehouses/index");
     }
 
     function list_data() {
-        $options = array("client_id" => $this->request->getPost("client_id"));
-        $list_data = $this->Warehouses_model->get_warehouses($options)->getResult();
+        $list_data = $this->Warehouses_model->get_vessels();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_make_row($data);
@@ -35,11 +33,70 @@ class Warehouses extends Security_Controller {
         if ($total > 0) {
             $icon = '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $total . '</span>';
         }
-        $name = $data->name;
         $vessel = $data->vessel;
         if ($this->can_access_own_client($data->client_id)) {
-            $name = anchor(get_uri("warehouses/view/" . $data->client_id . "/" . $data->id), $data->name);
-            $vessel = anchor(get_uri("clients/view/" . $data->client_id), $data->vessel);
+            $vessel = anchor(get_uri("warehouses/main_view/" . $data->client_id), $data->vessel);
+        }
+
+        $spare_min = "---";
+        if ($data->spare_min > 0) {
+            $spare_min = '<span style="color: #d50000">' . $data->spare_min . '</span>';
+        }
+
+        $chemical_min = "---";
+        if ($data->chemical_min > 0) {
+            $chemical_min = '<span style="color: #d50000">' . $data->chemical_min . '</span>';
+        }
+
+        $oil_min = "---";
+        if ($data->oil_min > 0) {
+            $oil_min = '<span style="color: #d50000">' . $data->oil_min . '</span>';
+        }
+
+        $paint_min = "---";
+        if ($data->paint_min > 0) {
+            $paint_min = '<span style="color: #d50000">' . $data->paint_min . '</span>';
+        }
+
+        return array(
+            $icon,
+            $vessel,
+            $spare_min . " / " . ($data->spare_total > 0 ? $data->spare_total : "---"),
+            $chemical_min . " / " . ($data->chemical_total > 0 ? $data->chemical_total : "---"),
+            $oil_min . " / " . ($data->oil_total > 0 ? $data->oil_total : "---"),
+            $paint_min . " / " . ($data->paint_total > 0 ? $data->paint_total : "---"),
+        );
+    }
+
+    function main_view($client_id = 0) {
+        $vessel = $this->Clients_model->get_one($client_id);
+        if ($vessel->id) {
+            $view_data["vessel"] = $vessel;
+            return $this->template->rander("warehouses/main_view", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    function main_list_data($client_id) {
+        $list_data = $this->Warehouses_model->get_warehouses($client_id);
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_main_make_row($data);
+        }
+
+        echo json_encode(array("data" => $result));
+    }
+
+    private function _main_make_row($data) {
+        $icon = "";
+        $total = $data->spare_min + $data->chemical_min + $data->oil_min + $data->paint_min;
+        if ($total > 0) {
+            $icon = '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $total . '</span>';
+        }
+        $name = $data->name;
+        if ($this->can_access_own_client($data->client_id)) {
+            $name = anchor(get_uri("warehouses/view/" . $data->client_id . "/" . $data->id), $name);
         }
 
         $spare_min = "---";
@@ -67,7 +124,6 @@ class Warehouses extends Security_Controller {
             $icon,
             $data->code,
             $name,
-            $vessel,
             $spare_min . " / " . ($data->spare_total > 0 ? $data->spare_total : "---"),
             $chemical_min . " / " . ($data->chemical_total > 0 ? $data->chemical_total : "---"),
             $oil_min . " / " . ($data->oil_total > 0 ? $data->oil_total : "---"),
@@ -839,15 +895,15 @@ class Warehouses extends Security_Controller {
             return array(
                 [ "key" => "name", "required" => true ],
                 [ "key" => "manufacturer", "required" => true ],
-                [ "key" => "applicable_equipment", "required" => true ],
-                [ "key" => "ship_equipment", "required" => true ],
+                [ "key" => "applicable_equipment", "required" => false ],
+                [ "key" => "ship_equipment", "required" => false ],
                 [ "key" => "quantity", "required" => true ],
                 [ "key" => "unit", "required" => true ],
                 [ "key" => "part_description", "required" => false ],
-                [ "key" => "part_number", "required" => true ],
-                [ "key" => "article_number", "required" => true ],
-                [ "key" => "drawing_number", "required" => true ],
-                [ "key" => "hs_code", "required" => true ],
+                [ "key" => "part_number", "required" => false ],
+                [ "key" => "article_number", "required" => false ],
+                [ "key" => "drawing_number", "required" => false ],
+                [ "key" => "hs_code", "required" => false ],
                 [ "key" => "is_critical", "required" => false ],
                 [ "key" => "min_stocks", "required" => false ],
                 [ "key" => "max_stocks", "required" => false ],
@@ -859,9 +915,9 @@ class Warehouses extends Security_Controller {
                 [ "key" => "quantity", "required" => true ],
                 [ "key" => "unit", "required" => true ],
                 [ "key" => "part_description", "required" => false ],
-                [ "key" => "part_number", "required" => true ],
-                [ "key" => "article_number", "required" => true ],
-                [ "key" => "hs_code", "required" => true ],
+                [ "key" => "part_number", "required" => false ],
+                [ "key" => "article_number", "required" => false ],
+                [ "key" => "hs_code", "required" => false ],
                 [ "key" => "is_critical", "required" => false ],
                 [ "key" => "min_stocks", "required" => false ],
             );
@@ -872,9 +928,9 @@ class Warehouses extends Security_Controller {
                 [ "key" => "quantity", "required" => true ],
                 [ "key" => "unit", "required" => true ],
                 [ "key" => "part_description", "required" => false ],
-                [ "key" => "part_number", "required" => true ],
-                [ "key" => "article_number", "required" => true ],
-                [ "key" => "hs_code", "required" => true ],
+                [ "key" => "part_number", "required" => false ],
+                [ "key" => "article_number", "required" => false ],
+                [ "key" => "hs_code", "required" => false ],
                 [ "key" => "is_critical", "required" => false ],
                 [ "key" => "min_stocks", "required" => false ],
             );
@@ -885,9 +941,9 @@ class Warehouses extends Security_Controller {
                 [ "key" => "quantity", "required" => true ],
                 [ "key" => "unit", "required" => true ],
                 [ "key" => "part_description", "required" => false ],
-                [ "key" => "part_number", "required" => true ],
-                [ "key" => "article_number", "required" => true ],
-                [ "key" => "hs_code", "required" => true ],
+                [ "key" => "part_number", "required" => false ],
+                [ "key" => "article_number", "required" => false ],
+                [ "key" => "hs_code", "required" => false ],
                 [ "key" => "is_critical", "required" => false ],
                 [ "key" => "min_stocks", "required" => false ],
             );
