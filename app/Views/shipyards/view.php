@@ -3,7 +3,7 @@
 
     $htmlContent = "";
     foreach($companies as $data) {
-        $htmlContent .= modal_anchor(get_uri("shipyards/modal_form/" . $data->id), $data->name, array("title" => $data->name . " " . app_lang("information"), "data-id" => '_' . $data->id));
+        $htmlContent .= modal_anchor(get_uri("shipyards/modal_view/" . $data->id), $data->name, array("title" => $data->name . " " . app_lang("information"), "data-id" => '_' . $data->id));
     }
 ?>
 
@@ -21,6 +21,13 @@
                         <li id="repair_tab"><a role="presentation" data-bs-toggle="tab" data-bs-target="#repairs-info"> <?php echo app_lang('shipyards_for_repair') . ' (' . count($repair_list) . ')'; ?></a></li>
                         <li id="newbuild_tab"><a role="presentation" data-bs-toggle="tab" data-bs-target="#newbuilds-info"> <?php echo app_lang('shipyards_for_new_build') . ' (' . count($new_build_list) . ')'; ?></a></li>
                         <li id="scrapping_tab"><a role="presentation" data-bs-toggle="tab" data-bs-target="#scrapping-info"> <?php echo app_lang('shipyards_for_scrapping') . ' (' . count($scrapping_list) . ')'; ?></a></li>
+                        <?php if ($can_edit_items) { ?>
+                            <div class="tab-title clearfix no-border">
+                                <div class="title-button-group">
+                                    <?php echo modal_anchor(get_uri("shipyards/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_item'), array("class" => "btn btn-default", "title" => app_lang('add_item'))); ?>
+                                </div>
+                            </div>
+                        <?php } ?>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade" id="repairs-info">
