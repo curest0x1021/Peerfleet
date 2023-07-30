@@ -125,6 +125,8 @@ class Cron_job {
                 $this->misc_loadtest_reminder();
                 $this->misc_visual_inspection_reminder();
                 $this->lashing_visual_inspection_reminder();
+
+                $this->ci->Settings_model->save_setting("last_dayly_job_time", $this->current_time);
             } catch (\Exception $e) {
                 echo $e;
             }
