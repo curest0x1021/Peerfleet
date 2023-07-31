@@ -36,8 +36,8 @@
                 { title: "Dia [mm]", "class": "text-center w100" },
                 { title: "<?php echo app_lang("supplier"); ?>", "class": "text-center w100" },
                 { title: "<?php echo app_lang("delivered_on_board") ?>", "class": "text-center w100" },
-                { title: "<?php echo app_lang("visual_inspection") ?>", "class": "text-center w150" },
-                { title: "<?php echo app_lang("loadtest") ?>", "class": "text-center w150" }
+                { title: "<?php echo app_lang("loadtest") ?>", "class": "text-center w150" },
+                { title: "<?php echo app_lang("visual_inspection") ?>", "class": "text-center w150" }
             ]
         });
     };

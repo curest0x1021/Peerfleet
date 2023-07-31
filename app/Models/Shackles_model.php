@@ -26,24 +26,30 @@ class Shackles_model extends Crud_model {
             $where .= " AND $clients_table.id=$client_id";
         }
 
-        $sql = "SELECT $clients_table.id as client_id, $clients_table.charter_name as name, a.total_items, b.require_loadtests, c.require_inspections
+        $sql = "SELECT $clients_table.id as client_id, $clients_table.charter_name as name, a.total_items,
+                    (a.total_items - IFNULL(b.passed, 0)) as require_loadtests,
+                    (a.total_items - IFNULL(c.passed, 0)) as require_inspections
                 FROM $clients_table
                 LEFT JOIN (SELECT client_id, COUNT(id) as total_items FROM $shackles_table WHERE deleted = 0 GROUP BY client_id) a
                     ON $clients_table.id = a.client_id
                 LEFT JOIN (
-                    SELECT $shackles_table.client_id, COUNT($shackles_table.id) as require_loadtests
+                    SELECT $shackles_table.client_id, SUM(bb.passed) as passed
                     FROM $shackles_table
-                    JOIN (SELECT shackle_id, MAX(test_date) as test_date FROM $loadtest_table WHERE deleted = 0 AND test_date IS NOT NULL GROUP BY shackle_id) b
-                        ON $shackles_table.id = b.shackle_id
-                    WHERE $shackles_table.deleted = 0 AND b.test_date < '$loadtest_reminder_date'
+                    JOIN (SELECT $loadtest_table.shackle_id, IF(($loadtest_table.passed = 1 AND $loadtest_table.test_date > '$loadtest_reminder_date'), 1, 0) as passed FROM $loadtest_table
+                        JOIN (SELECT shackle_id, MAX(test_date) as test_date FROM $loadtest_table WHERE deleted = 0 GROUP BY shackle_id) b
+                        ON $loadtest_table.shackle_id = b.shackle_id AND $loadtest_table.test_date = b.test_date) bb
+                    ON $shackles_table.id = bb.shackle_id
+                    WHERE $shackles_table.deleted = 0
                     GROUP BY $shackles_table.client_id
                 ) b ON $clients_table.id = b.client_id
                 LEFT JOIN (
-                    SELECT $shackles_table.client_id, COUNT($shackles_table.id) as require_inspections
+                    SELECT $shackles_table.client_id, SUM(bb.passed) as passed
                     FROM $shackles_table
-                    JOIN (SELECT shackle_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 AND inspection_date IS NOT NULL GROUP BY shackle_id) b
-                        ON $shackles_table.id = b.shackle_id
-                    WHERE $shackles_table.deleted = 0 AND b.inspection_date < '$inspection_reminder_date'
+                    JOIN (SELECT $inspection_table.shackle_id, IF(($inspection_table.passed = 1 AND $inspection_table.inspection_date > '$inspection_reminder_date'), 1, 0) as passed FROM $inspection_table
+                        JOIN (SELECT shackle_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 GROUP BY shackle_id) b
+                        ON $inspection_table.shackle_id = b.shackle_id AND $inspection_table.inspection_date = b.inspection_date) bb
+                    ON $shackles_table.id = bb.shackle_id
+                    WHERE $shackles_table.deleted = 0
                     GROUP BY $shackles_table.client_id
                 ) c ON $clients_table.id = c.client_id
                 WHERE $clients_table.deleted = 0 $where
@@ -52,7 +58,7 @@ class Shackles_model extends Crud_model {
         return $this->db->query($sql);
     }
 
-    function get_warnning_info($client_id) {
+    function get_warnning_info($client_id, $main_id) {
         $shackles_table = $this->db->prefixTable("shackles");
         $loadtest_table = $this->db->prefixTable("shackles_loadtest");
         $inspection_table = $this->db->prefixTable("shackles_inspection");
@@ -60,20 +66,28 @@ class Shackles_model extends Crud_model {
         $loadtest_reminder_date = get_loadtest_reminder_date();
         $inspection_reminder_date = get_visual_inspection_reminder_date();
 
-        $sql = "SELECT SUM(k.require_loadtests) as require_loadtests, SUM(k.require_inspections) as require_inspections
-                FROM (
-                    SELECT COUNT(a.id) as require_loadtests, 0 as require_inspections
-                    FROM (SELECT id FROM $shackles_table WHERE deleted = 0 AND client_id = $client_id) a
-                    JOIN (SELECT shackle_id, MAX(test_date) as test_date FROM $loadtest_table WHERE deleted = 0 AND test_date IS NOT NULL GROUP BY shackle_id) b
-                        ON a.id = b.shackle_id
-                    WHERE b.test_date < '$loadtest_reminder_date'
-                    UNION
-                    SELECT 0 as require_loadtests, COUNT(a.id) as require_inspections
-                    FROM (SELECT id FROM $shackles_table WHERE deleted = 0 AND client_id = $client_id) a
-                    JOIN (SELECT shackle_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 AND inspection_date IS NOT NULL GROUP BY shackle_id) b
-                        ON a.id = b.shackle_id
-                    WHERE b.inspection_date < '$inspection_reminder_date'
-                    ) k";
+        $sql = "SELECT (a.total_items - IFNULL(b.passed, 0)) as require_loadtests, (a.total_items - IFNULL(c.passed, 0)) as require_inspections
+                FROM (SELECT main_id, COUNT(id) as total_items FROM $shackles_table WHERE deleted = 0 AND client_id = $client_id and main_id = $main_id GROUP BY main_id) a
+                LEFT JOIN (
+                    SELECT $shackles_table.main_id, SUM(bb.passed) as passed
+                    FROM $shackles_table
+                    JOIN (SELECT $loadtest_table.shackle_id, IF(($loadtest_table.passed = 1 AND $loadtest_table.test_date > '$loadtest_reminder_date'), 1, 0) as passed FROM $loadtest_table
+                        JOIN (SELECT shackle_id, MAX(test_date) as test_date FROM $loadtest_table WHERE deleted = 0 GROUP BY shackle_id) b
+                        ON $loadtest_table.shackle_id = b.shackle_id AND $loadtest_table.test_date = b.test_date) bb
+                    ON $shackles_table.id = bb.shackle_id
+                    WHERE $shackles_table.deleted = 0 AND $shackles_table.client_id = $client_id AND $shackles_table.main_id = $main_id
+                    GROUP BY $shackles_table.main_id
+                ) b ON a.main_id = b.main_id
+                LEFT JOIN (
+                    SELECT $shackles_table.main_id, SUM(bb.passed) as passed
+                    FROM $shackles_table
+                    JOIN (SELECT $inspection_table.shackle_id, IF(($inspection_table.passed = 1 AND $inspection_table.inspection_date > '$inspection_reminder_date'), 1, 0) as passed FROM $inspection_table
+                        JOIN (SELECT shackle_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 GROUP BY shackle_id) b
+                        ON $inspection_table.shackle_id = b.shackle_id AND $inspection_table.inspection_date = b.inspection_date) bb
+                    ON $shackles_table.id = bb.shackle_id
+                    WHERE $shackles_table.deleted = 0 AND $shackles_table.client_id = $client_id AND $shackles_table.main_id = $main_id
+                    GROUP BY $shackles_table.main_id
+                ) c ON a.main_id = c.main_id";
 
         return $this->db->query($sql)->getRow();
     }
@@ -104,7 +118,9 @@ class Shackles_model extends Crud_model {
             $where .= " AND $shackles_table.main_id=$main_id";
         }
 
-        $sql = "SELECT $main_table.item_description, $main_table.wll, $main_table.bl, $main_table.iw, $main_table.pd, $main_table.il, $shackles_table.*, $types_table.name as type, $icc_table.name as icc, $certificate_table.name as certificate_type, $manufacturer_table.name as manufacturer, lt.passed as loadtest_passed, it.passed as inspection_passed, it.remarks
+        $sql = "SELECT $main_table.item_description, $main_table.wll, $main_table.bl, $main_table.iw, $main_table.pd, $main_table.il, $shackles_table.*, $types_table.name as type,
+                    $icc_table.name as icc, $certificate_table.name as certificate_type, $manufacturer_table.name as manufacturer,
+                    lt.passed as loadtest_passed, lt.test_date as test_date, it.passed as inspection_passed, it.inspection_date as inspection_date, it.remarks
                 FROM $shackles_table
                 JOIN $main_table ON $main_table.id = $shackles_table.main_id
                 LEFT JOIN (SELECT a.* FROM $loadtest_table a JOIN (SELECT shackle_id, MAX(test_date) as test_date FROM $loadtest_table GROUP BY shackle_id) b ON a.shackle_id = b.shackle_id AND a.test_date = b.test_date) lt
@@ -179,15 +195,18 @@ class Shackles_model extends Crud_model {
 
         $reminder_date = get_loadtest_reminder_date();
 
-        $sql = "SELECT $shackles_table.id as shackle_id, $shackles_table.client_id, a.test_date
+        $sql = "SELECT $shackles_table.id as shackle_id, $shackles_table.client_id, aa.test_date
                 FROM (
-                    SELECT shackle_id, MAX(test_date) as test_date
-                    FROM $loadtest_table
-                    WHERE deleted = 0 AND test_date IS NOT NULL
-                    GROUP BY shackle_id
-                ) a
-                JOIN $shackles_table ON $shackles_table.id = a.shackle_id
-                WHERE Date(a.test_date) < '$reminder_date'";
+                    SELECT $loadtest_table.* FROM $loadtest_table
+                    JOIN (
+                        SELECT shackle_id, MAX(test_date) as test_date
+                        FROM $loadtest_table
+                        WHERE deleted = 0
+                        GROUP BY shackle_id
+                    ) a ON $loadtest_table.shackle_id = a.shackle_id AND $loadtest_table.test_date = a.test_date
+                    WHERE $loadtest_table.test_date < '$reminder_date' OR $loadtest_table.passed = 0 ) aa
+                JOIN $shackles_table ON $shackles_table.id = aa.shackle_id
+                WHERE $shackles_table.deleted = 0";
 
         $result = $this->db->query($sql)->getResult();
         return $result;
@@ -200,15 +219,18 @@ class Shackles_model extends Crud_model {
 
         $reminder_date = get_visual_inspection_reminder_date();
 
-        $sql = "SELECT $shackles_table.id as shackle_id, $shackles_table.client_id, a.inspection_date
+        $sql = "SELECT $shackles_table.id as shackle_id, $shackles_table.client_id, aa.inspection_date
                 FROM (
-                    SELECT shackle_id, MAX(inspection_date) as inspection_date
-                    FROM $inspection_table
-                    WHERE deleted = 0 AND inspection_date IS NOT NULL
-                    GROUP BY shackle_id
-                ) a
-                JOIN $shackles_table ON $shackles_table.id = a.shackle_id
-                WHERE Date(a.inspection_date) < '$reminder_date'";
+                    SELECT $inspection_table.* FROM $inspection_table
+                    JOIN (
+                        SELECT shackle_id, MAX(inspection_date) as inspection_date
+                        FROM $inspection_table
+                        WHERE deleted = 0
+                        GROUP BY shackle_id
+                    ) a ON $inspection_table.shackle_id = a.shackle_id AND $inspection_table.inspection_date = a.inspection_date
+                    WHERE $inspection_table.inspection_date < '$reminder_date' OR $inspection_table.passed = 0 ) aa
+                JOIN $shackles_table ON $shackles_table.id = aa.shackle_id
+                WHERE $shackles_table.deleted = 0";
 
         $result = $this->db->query($sql)->getResult();
         return $result;

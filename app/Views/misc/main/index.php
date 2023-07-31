@@ -35,8 +35,8 @@
                 { title: "BL [kN]", "class": "text-center w8p" },
                 { title: "<?php echo app_lang("supplier"); ?>", "class": "text-center w10p" },
                 { title: "<?php echo app_lang("delivered_on_board") ?>", "class": "text-center w10p" },
-                { title: "<?php echo app_lang("visual_inspection") ?>", "class": "text-center w15p" },
-                { title: "<?php echo app_lang("loadtest") ?>", "class": "text-center w15p" }
+                { title: "<?php echo app_lang("loadtest") ?>", "class": "text-center w15p" },
+                { title: "<?php echo app_lang("visual_inspection") ?>", "class": "text-center w15p" }
             ]
         });
     };

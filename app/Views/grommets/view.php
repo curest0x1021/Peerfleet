@@ -8,8 +8,8 @@
                 </div>
                 <ul id="grommets-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs title" role="tablist">
                     <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("grommets/info_tab/" . $client_id . "/" . $main_id); ?>" data-bs-target="#grommets-info"> <?php echo $main_info->item_description; ?></a></li>
-                    <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("grommets/loadtest_tab/" . $client_id . "/" . $main_id); ?>" data-bs-target="#grommets-loadtest"> <?php echo app_lang('loadtest'); ?></a></li>
-                    <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("grommets/inspection_tab/" . $client_id . "/" . $main_id); ?>" data-bs-target="#grommets-inspection"> <?php echo app_lang('visual_inspection'); ?></a></li>
+                    <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("grommets/loadtest_tab/" . $client_id . "/" . $main_id); ?>" data-bs-target="#grommets-loadtest"> <?php echo app_lang('loadtest') . $warnning["loadtests"]; ?></a></li>
+                    <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("grommets/inspection_tab/" . $client_id . "/" . $main_id); ?>" data-bs-target="#grommets-inspection"> <?php echo app_lang('visual_inspection') . $warnning["inspections"]; ?></a></li>
                 </ul>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane fade" id="grommets-info"></div>
