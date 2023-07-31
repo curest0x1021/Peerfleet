@@ -65,21 +65,20 @@ class Wires_history_model extends Crud_model {
     }
 
     function get_required_exchange_wires() {
-        $wires_table = $this->db->prefixTable("wires");
         $history_table = $this->db->prefixTable("wires_history");
 
         // 8 months before exchaning wires
         $reminder_date = get_wire_exchange_reminder_date();
 
-        $sql = "SELECT $wires_table.id as crane_id, $wires_table.client_id, a.last_replacement
-                FROM (
-                    SELECT wire_id, client_id, MAX(replacement) as last_replacement
+        $sql = "SELECT $history_table.wire_id, $history_table.client_id, $history_table.replacement as last_replacement
+                FROM $history_table
+                JOIN (
+                    SELECT wire_id, MAX(replacement) as replacement
                     FROM $history_table
                     WHERE deleted = 0
                     GROUP BY wire_id
-                ) a
-                JOIN $wires_table ON $wires_table.id = a.wire_id
-                WHERE Date(a.last_replacement) < '$reminder_date'";
+                ) a ON $history_table.wire_id = a.wire_id AND $history_table.replacement = a.replacement
+                WHERE a.replacement < '$reminder_date'";
 
         $result = $this->db->query($sql)->getResult();
         return $result;

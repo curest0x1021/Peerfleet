@@ -198,27 +198,34 @@ class Wires extends Security_Controller {
         $name = $data->name;
         $action = "";
         if ($this->can_access_own_client($data->client_id)) {
-            if (!$data->hasCrane) {
-                $action = modal_anchor(get_uri("wires/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('add_crane'), "data-post-client_id" => $data->client_id));
-            } else {
+            if ($data->cranes > 0) {
                 $name = anchor(get_uri("wires/view/" . $data->client_id), $data->name);
+            } else {
+                $action = modal_anchor(get_uri("wires/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('add_crane'), "data-post-client_id" => $data->client_id));
             }
         }
 
-        $icon = "";
-        $required_exchanges = $data->required_exchanges;
-        if ($required_exchanges > 0) {
-            $icon = '<div style="width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
-            $required_exchanges = '<span style="color: #d50000">' . $required_exchanges . '</span>';
+        $required_exchanges = "---";
+        if ($data->required_exchanges > 0) {
+            $required_exchanges = '<span style="color: #d50000">' . $data->required_exchanges . '</span>';
+        }
+        $required_loadtests = "---";
+        if ($data->required_loadtests > 0) {
+            $required_loadtests = '<span style="color: #d50000">' . $data->required_loadtests . '</span>';
+        }
+        $required_inspections = "---";
+        if ($data->required_inspections > 0) {
+            $required_inspections = '<span style="color: #d50000">' . $data->required_inspections . '</span>';
         }
 
         return array(
             $data->client_id,
-            $icon,
             $name,
             $data->cranes,
             $data->wires,
             $required_exchanges,
+            $required_loadtests,
+            $required_inspections,
             $action
         );
     }
