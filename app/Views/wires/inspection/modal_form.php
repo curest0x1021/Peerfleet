@@ -6,6 +6,10 @@
             <input type="hidden" name="client_id" value="<?php echo $wire->client_id; ?>" />
             <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
 
+            <div class="form-group notepad-title">
+                <strong><?php echo $wire->crane . " - " . $wire->wire ; ?></strong>
+            </div>
+
             <div class="form-group">
                 <div class="row">
                     <label for="inspection_date" class="<?php echo $label_column; ?>"><?php echo app_lang('inspection_date'); ?></label>
