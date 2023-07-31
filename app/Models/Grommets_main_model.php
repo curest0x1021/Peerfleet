@@ -18,6 +18,9 @@ class Grommets_main_model extends Crud_model {
         $inspection_table = $this->db->prefixTable("grommets_inspection");
         $types_table = $this->db->prefixTable("grommet_types");
 
+        $loadtest_reminder_date = get_loadtest_reminder_date();
+        $inspection_reminder_date = get_visual_inspection_reminder_date();
+
         $sql = "SELECT $main_table.*, $types_table.name as type, b.qty, b.loadtest_passed, b.inspection_passed, b.total_test, b.supplied_date, b.supplied_place
                 FROM $main_table
                 JOIN $types_table ON $types_table.id = $main_table.type_id
@@ -27,14 +30,14 @@ class Grommets_main_model extends Crud_model {
                         SELECT $grommets_table.*, t.passed as loadtest_passed, s.passed as inspection_passed
                         FROM $grommets_table
                         LEFT JOIN (
-                            SELECT a.grommet_id, a.passed FROM $loadtest_table a
+                            SELECT a.grommet_id, IF((a.passed = 1 AND a.test_date > '$loadtest_reminder_date'), 1, 0) as passed FROM $loadtest_table a
                             JOIN (SELECT grommet_id, MAX(test_date) as test_date FROM $loadtest_table WHERE deleted = 0 AND grommet_id IN (
                                 SELECT id FROM $grommets_table WHERE deleted = 0 AND client_id = $client_id
                             ) GROUP BY grommet_id) b
                             ON a.grommet_id = b.grommet_id AND a.test_date = b.test_date
                         ) t ON $grommets_table.id = t.grommet_id
                         LEFT JOIN (
-                            SELECT a.grommet_id, a.passed FROM $inspection_table a
+                            SELECT a.grommet_id, IF((a.passed = 1 AND a.inspection_date > '$inspection_reminder_date'), 1, 0) as passed FROM $inspection_table a
                             JOIN (SELECT grommet_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 AND grommet_id IN (
                                 SELECT id FROM $grommets_table WHERE deleted = 0 AND client_id = $client_id
                             ) GROUP BY grommet_id) b

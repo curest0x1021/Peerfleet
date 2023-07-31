@@ -289,32 +289,27 @@ class Lashing extends Security_Controller
     function inspection_detail_list_data($client_id, $lashing_id) {
         $list_data = $this->Lashing_inspection_model->get_history(array("lashing_id" => $lashing_id))->getResult();
         $result = array();
-        foreach ($list_data as $data) {
-            $result[] = $this->_inspection_make_row($data, $client_id, false);
+        foreach ($list_data as $key => $data) {
+            $result[] = $this->_inspection_make_row($data, $client_id, false, $key == 0);
         }
         echo json_encode(array("data" => $result));
     }
 
     private function _inspection_row_data($id, $client_id) {
         $data = $this->Lashing_inspection_model->get_one($id);
-        return $this->_inspection_make_row($data, $client_id, false);
+        return $this->_inspection_make_row($data, $client_id, false, true);
     }
 
-    private function _inspection_make_row($data, $client_id, $showInternalId = true) {
+    private function _inspection_make_row($data, $client_id, $showInternalId = true, $last_date = true) {
         $name = "";
         if ($showInternalId) {
-            $icon = "";
-            $reminder_date = get_visual_inspection_reminder_date();
-            if ($data->inspection_date && $data->inspection_date < $reminder_date) {
-                $icon = '<span style="display: inline-block; width: 8px; height: 8px; background-color: #d50000; border-radius: 4px; margin-right: 4px;"></span>';
-            }
-            $name = $icon . $data->name;
+            $name = $data->name;
         }
         $action = "";
         if ($this->can_access_own_client($client_id)) {
             if ($showInternalId) {
-                $name = anchor(get_uri("lashing/inspection_detail_view/" . $data->lashing_id), $name, array("class" => "edit", "title" => app_lang('lashing')));
-                $action = modal_anchor(get_uri("lashing/inspection_modal_form/" . $data->lashing_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "add", "title" => app_lang('add_item'), "data-post-force_refresh" => true));
+                $name = anchor(get_uri("lashing/inspection_detail_view/" . $data->lashing_id), $name, array("title" => $data->name));
+                $action = modal_anchor(get_uri("lashing/inspection_modal_form/" . $data->lashing_id), "<i data-feather='plus-circle' class='icon-16'></i>", array("class" => "add", "title" => app_lang('add_item'), "data-post-force_refresh" => true));
             } else {
                 $action = modal_anchor(get_uri("lashing/inspection_modal_form/" . $data->lashing_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-force_refresh" => false))
                     . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("lashing/delete_inspection"), "data-action" => "delete-confirmation"));
@@ -322,12 +317,15 @@ class Lashing extends Security_Controller
         }
 
         $passed = '';
-        if ($data->inspection_date) {
-            if ($data->passed) {
-                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;"></div>';
+        if ($data->passed) {
+            $reminder_date = get_visual_inspection_reminder_date();
+            if ($last_date && $reminder_date > $data->inspection_date) {
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Due to over due"></div>';
             } else {
-                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;" title="Passed"></div>';
             }
+        } else {
+            $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Not passed"></div>';
         }
 
         $next_inspection_date = "";

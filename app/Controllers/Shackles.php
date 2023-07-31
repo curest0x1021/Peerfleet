@@ -200,8 +200,8 @@ class Shackles extends Security_Controller
             $data->il,
             $data->supplied_place,
             $data->supplied_date,
-            $inspection_tests,
-            $load_tests
+            $load_tests,
+            $inspection_tests
         );
     }
 
@@ -213,7 +213,14 @@ class Shackles extends Security_Controller
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
             $view_data['vessel'] = $this->Clients_model->get_one($client_id);
             $view_data['main_info'] = $this->Shackles_main_model->get_one($main_id);
-
+            $info = $this->Shackles_model->get_warnning_info($client_id, $main_id);
+            $require_loadtests = ($info && $info->require_loadtests > 0) ? $info->require_loadtests : 0;
+            $require_inspections = ($info && $info->require_inspections > 0) ? $info->require_inspections : 0;
+            $warnning = array(
+                "loadtests" => $require_loadtests > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_loadtests . '</span>' : "",
+                "inspections" => $require_inspections > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_inspections . '</span>' : ""
+            );
+            $view_data['warnning'] = $warnning;
             return $this->template->rander("shackles/view", $view_data);
         } else {
             show_404();
@@ -317,18 +324,29 @@ class Shackles extends Security_Controller
                 . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("shackles/delete_info"), "data-action" => "delete-confirmation"));
         }
 
+        $loadtest_reminder_date = get_loadtest_reminder_date();
+        $inspection_reminder_date = get_visual_inspection_reminder_date();
+
         $loadtest_passed = '';
         if ($data->loadtest_passed) {
-            $loadtest_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;"></div>';
+            if ($loadtest_reminder_date > $data->test_date) {
+                $loadtest_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Due to over due"></div>';
+            } else {
+                $loadtest_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;" title="Passed"></div>';
+            }
         } else {
-            $loadtest_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+            $loadtest_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Not passed"></div>';
         }
 
         $inspection_passed = '';
         if ($data->inspection_passed) {
-            $inspection_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;"></div>';
+            if ($inspection_reminder_date > $data->inspection_date) {
+                $inspection_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Due to over due"></div>';
+            } else {
+                $inspection_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;" title="Passed"></div>';
+            }
         } else {
-            $inspection_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+            $inspection_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Not Passed"></div>';
         }
 
         return array(
@@ -472,32 +490,27 @@ class Shackles extends Security_Controller
     function loadtest_detail_list_data($client_id, $shackle_id) {
         $list_data = $this->Shackles_loadtest_model->get_history(array("shackle_id" => $shackle_id))->getResult();
         $result = array();
-        foreach ($list_data as $data) {
-            $result[] = $this->_loadtest_make_row($data, $client_id, false);
+        foreach ($list_data as $key => $data) {
+            $result[] = $this->_loadtest_make_row($data, $client_id, false, $key == 0);
         }
         echo json_encode(array("data" => $result));
     }
 
     private function _loadtest_row_data($id, $client_id) {
         $data = $this->Shackles_loadtest_model->get_one($id);
-        return $this->_loadtest_make_row($data, $client_id, false);
+        return $this->_loadtest_make_row($data, $client_id, false, true);
     }
 
-    private function _loadtest_make_row($data, $client_id, $showInternalId = true) {
+    private function _loadtest_make_row($data, $client_id, $showInternalId = true, $last_date = true) {
         $internal_id = "";
         if ($showInternalId) {
-            $icon = "";
-            $reminder_date = get_loadtest_reminder_date();
-            if ($data->test_date && $data->test_date < $reminder_date) {
-                $icon = '<span style="display: inline-block; width: 8px; height: 8px; background-color: #d50000; border-radius: 4px; margin-right: 4px;"></span>';
-            }
-            $internal_id = $icon . $data->internal_id;
+            $internal_id = $data->internal_id;
         }
         $action = "";
         if ($this->can_access_own_client($client_id)) {
             if ($showInternalId) {
-                $internal_id = anchor(get_uri("shackles/loadtest_detail_view/" . $data->shackle_id), $internal_id, array("class" => "edit", "title" => app_lang('shackles')));
-                $action = modal_anchor(get_uri("shackles/loadtest_modal_form/" . $data->shackle_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "add", "title" => app_lang('add_item'), "data-post-force_refresh" => true));
+                $internal_id = anchor(get_uri("shackles/loadtest_detail_view/" . $data->shackle_id), $internal_id, array("title" => $data->internal_id));
+                $action = modal_anchor(get_uri("shackles/loadtest_modal_form/" . $data->shackle_id), "<i data-feather='plus-circle' class='icon-16'></i>", array("class" => "add", "title" => app_lang('add_item'), "data-post-force_refresh" => true));
             } else {
                 $action = modal_anchor(get_uri("shackles/loadtest_modal_form/" . $data->shackle_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-force_refresh" => false))
                     . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("shackles/delete_loadtest"), "data-action" => "delete-confirmation"));
@@ -505,12 +518,15 @@ class Shackles extends Security_Controller
         }
 
         $passed = '';
-        if ($data->test_date) {
-            if ($data->passed) {
-                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;"></div>';
+        if ($data->passed) {
+            $reminder_date = get_loadtest_reminder_date();
+            if ($last_date && $reminder_date > $data->test_date) {
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Due to over due"></div>';
             } else {
-                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;" title="Passed"></div>';
             }
+        } else {
+            $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Not passed"></div>';
         }
 
         $next_test_date = "";
@@ -649,32 +665,27 @@ class Shackles extends Security_Controller
     function inspection_detail_list_data($client_id, $shackle_id) {
         $list_data = $this->Shackles_inspection_model->get_history(array("shackle_id" => $shackle_id))->getResult();
         $result = array();
-        foreach ($list_data as $data) {
-            $result[] = $this->_inspection_make_row($data, $client_id, false);
+        foreach ($list_data as $key => $data) {
+            $result[] = $this->_inspection_make_row($data, $client_id, false, $key == 0);
         }
         echo json_encode(array("data" => $result));
     }
 
     private function _inspection_row_data($id, $client_id) {
         $data = $this->Shackles_inspection_model->get_one($id);
-        return $this->_inspection_make_row($data, $client_id, false);
+        return $this->_inspection_make_row($data, $client_id, false, true);
     }
 
-    private function _inspection_make_row($data, $client_id, $showInternalId = true) {
+    private function _inspection_make_row($data, $client_id, $showInternalId = true, $last_date = true) {
         $internal_id = "";
         if ($showInternalId) {
-            $icon = "";
-            $reminder_date = get_visual_inspection_reminder_date();
-            if ($data->inspection_date && $data->inspection_date < $reminder_date) {
-                $icon = '<span style="display: inline-block; width: 8px; height: 8px; background-color: #d50000; border-radius: 4px; margin-right: 4px;"></span>';
-            }
-            $internal_id = $icon . $data->internal_id;
+            $internal_id = $data->internal_id;
         }
         $action = "";
         if ($this->can_access_own_client($client_id)) {
             if ($showInternalId) {
-                $internal_id = anchor(get_uri("shackles/inspection_detail_view/" . $data->shackle_id), $internal_id, array("class" => "edit", "title" => app_lang('shackles')));
-                $action = modal_anchor(get_uri("shackles/inspection_modal_form/" . $data->shackle_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "add", "title" => app_lang('add_item'), "data-post-force_refresh" => true));
+                $internal_id = anchor(get_uri("shackles/inspection_detail_view/" . $data->shackle_id), $internal_id, array("title" => $data->internal_id));
+                $action = modal_anchor(get_uri("shackles/inspection_modal_form/" . $data->shackle_id), "<i data-feather='plus-circle' class='icon-16'></i>", array("class" => "add", "title" => app_lang('add_item'), "data-post-force_refresh" => true));
             } else {
                 $action = modal_anchor(get_uri("shackles/inspection_modal_form/" . $data->shackle_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-force_refresh" => false))
                     . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("shackles/delete_inspection"), "data-action" => "delete-confirmation"));
@@ -682,12 +693,15 @@ class Shackles extends Security_Controller
         }
 
         $passed = '';
-        if ($data->inspection_date) {
-            if ($data->passed) {
-                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;"></div>';
+        if ($data->passed) {
+            $reminder_date = get_visual_inspection_reminder_date();
+            if ($last_date && $reminder_date > $data->inspection_date) {
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Due to over due"></div>';
             } else {
-                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;"></div>';
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;" title="Passed"></div>';
             }
+        } else {
+            $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Not passed"></div>';
         }
 
         $next_inspection_date = "";
