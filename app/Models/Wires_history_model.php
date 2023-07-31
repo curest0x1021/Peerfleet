@@ -15,7 +15,7 @@ class Wires_history_model extends Crud_model {
         $wires_table = $this->db->prefixTable("wires");
         $history_table = $this->db->prefixTable("wires_history");
 
-        $sql = "SELECT id as wire_id, client_id, CONCAT(crane, ' ', wire) as name
+        $sql = "SELECT id as wire_id, client_id, CONCAT(crane, ' - ', wire) as name
                 FROM $wires_table
                 WHERE client_id = $client_id
                 ORDER BY id ASC";
@@ -32,6 +32,8 @@ class Wires_history_model extends Crud_model {
             $item->required_exchanges = false;
             if (count($history) > 0) {
                 $item->required_exchanges = end($history)->replacement < $reminder_date;
+            } else {
+                $item->required_exchanges = true;
             }
             $item->initial = count($history) > 0 ? array_values($history)[0]->replacement : null;
             $item->first = count($history) > 1 ? array_values($history)[1]->replacement : null;

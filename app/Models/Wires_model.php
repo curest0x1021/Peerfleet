@@ -47,6 +47,55 @@ class Wires_model extends Crud_model {
         return $this->db->query($sql);
     }
 
+    function get_warnning_info($client_id) {
+        $wires_table = $this->db->prefixTable("wires");
+        $history_table = $this->db->prefixTable("wires_history");
+        $loadtest_table = $this->db->prefixTable("wires_loadtest");
+        $inspection_table = $this->db->prefixTable("wires_inspection");
+
+        $wire_exchange_date = get_wire_exchange_reminder_date();
+        $loadtest_reminder_date = get_loadtest_reminder_date();
+        $inspection_reminder_date = get_visual_inspection_reminder_date();
+
+        $sql = "SELECT a.client_id, (a.total_wires - IFNULL(k1.passed, 0)) as require_exchanges,
+                    (a.total_wires - IFNULL(k2.passed, 0)) as require_loadtests, (a.total_wires - IFNULL(k3.passed, 0)) as require_inspections
+                FROM (SELECT client_id, COUNT(id) as total_wires FROM $wires_table WHERE deleted = 0 AND client_id = $client_id GROUP BY client_id) a
+                LEFT JOIN (
+                    SELECT bb.client_id, SUM(bb.passed) as passed
+                    FROM (
+                        SELECT $history_table.wire_id, $history_table.client_id, IF(b.replacement > '$wire_exchange_date', 1, 0) as passed
+                        FROM $history_table
+                        JOIN (SELECT wire_id, MAX(replacement) as replacement FROM $history_table WHERE client_id = $client_id GROUP BY wire_id) b
+                        ON $history_table.wire_id = b.wire_id AND $history_table.replacement = b.replacement
+                        WHERE $history_table.client_id = $client_id ) bb
+                    GROUP BY bb.client_id
+                ) k1 ON a.client_id = k1.client_id
+                LEFT JOIN (
+                    SELECT cc.client_id, SUM(cc.passed) as passed
+                    FROM (
+                        SELECT $loadtest_table.wire_id, $loadtest_table.client_id,
+                            IF($loadtest_table.test_date > '$loadtest_reminder_date' AND $loadtest_table.passed = 1, 1, 0) as passed
+                        FROM $loadtest_table
+                        JOIN (SELECT wire_id, MAX(test_date) as test_date FROM $loadtest_table WHERE client_id = $client_id GROUP BY wire_id) c
+                        ON $loadtest_table.wire_id = c.wire_id AND $loadtest_table.test_date = c.test_date
+                        WHERE $loadtest_table.client_id = $client_id ) cc
+                    GROUP BY cc.client_id
+                ) k2 ON a.client_id = k2.client_id
+                LEFT JOIN (
+                    SELECT dd.client_id, SUM(dd.passed) as passed
+                    FROM (
+                        SELECT $inspection_table.wire_id, $inspection_table.client_id,
+                            IF($inspection_table.inspection_date > '$inspection_reminder_date' AND $inspection_table.passed = 1, 1, 0) as passed
+                        FROM $inspection_table
+                        JOIN (SELECT wire_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE client_id = $client_id GROUP BY wire_id) d
+                        ON $inspection_table.wire_id = d.wire_id AND $inspection_table.inspection_date = d.inspection_date
+                        WHERE $inspection_table.client_id = $client_id ) dd
+                    GROUP BY dd.client_id
+                ) k3 ON a.client_id = k3.client_id";
+
+        return $this->db->query($sql)->getRow();
+    }
+
     function get_cranes_dropdown($client_id) {
         $wires_table = $this->db->prefixTable("wires");
 

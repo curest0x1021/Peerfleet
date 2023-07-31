@@ -235,6 +235,17 @@ class Wires extends Security_Controller {
                 $view_data["tab"] = $tab;
                 $view_data["crane"] = $model_info;
 
+                $info = $this->Wires_model->get_warnning_info($client_id);
+                $require_exchanges = ($info && $info->require_exchanges > 0) ? $info->require_exchanges : 0;
+                $require_loadtests = ($info && $info->require_loadtests > 0) ? $info->require_loadtests : 0;
+                $require_inspections = ($info && $info->require_inspections > 0) ? $info->require_inspections : 0;
+                $warnning = array(
+                    "exchanges" => $require_exchanges > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_exchanges . '</span>' : "",
+                    "loadtests" => $require_loadtests > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_loadtests . '</span>' : "",
+                    "inspections" => $require_inspections > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_inspections . '</span>' : ""
+                );
+                $view_data['warnning'] = $warnning;
+
                 return $this->template->rander("wires/view", $view_data);
             } else {
                 show_404();
@@ -437,22 +448,17 @@ class Wires extends Security_Controller {
         }
     }
 
-    function loadtest_modal_form() {
-        $client_id = $this->request->getPost("client_id");
-
-        if (!$this->can_access_own_client($client_id)) {
+    function loadtest_modal_form($wire_id) {
+        $wire = $this->Wires_model->get_one($wire_id);
+        if (!$this->can_access_own_client($wire->client_id)) {
             app_redirect("forbidden");
         }
 
+        $id = $this->request->getPost("id");
+        $view_data["model_info"] = $this->Wires_loadtest_model->get_one($id);
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
-        $view_data["client_id"] = $client_id;
-        $view_data["cranes_dropdown"] = $this->Wires_model->get_cranes_dropdown($client_id);
-
-        $id = $this->request->getPost("id");
-        if ($id) {
-            $view_data["model_info"] = $this->Wires_loadtest_model->get_details(array("id" => $this->request->getPost("id")))->getRow();
-        }
+        $view_data["wire"] = $wire;
 
         return $this->template->view("wires/loadtest/modal_form", $view_data);
     }
@@ -480,7 +486,6 @@ class Wires extends Security_Controller {
             "client_id" => "required|numeric",
             "wire_id" => "required|numeric",
             "test_date" => "required",
-            "result" => "required",
             "location" => "required"
         ));
 
@@ -488,8 +493,9 @@ class Wires extends Security_Controller {
             "client_id" => intval($this->request->getPost("client_id")),
             "wire_id" => intval($this->request->getPost("wire_id")),
             "test_date" => $this->request->getPost("test_date"),
-            "result" => $this->request->getPost("result"),
             "location" => $this->request->getPost("location"),
+            "passed" => $this->request->getPost("passed"),
+            "result" => $this->request->getPost("result"),
         );
 
         $target_path = getcwd() . "/" . get_general_file_path("wires", $data["client_id"]);
@@ -505,7 +511,7 @@ class Wires extends Security_Controller {
         $save_id = $this->Wires_loadtest_model->ci_save($data, $id);
 
         if ($save_id) {
-            echo json_encode(array("success" => true, "data" => $this->_loadtest_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+            echo json_encode(array("success" => true, 'message' => app_lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
@@ -535,14 +541,12 @@ class Wires extends Security_Controller {
     }
 
     function loadtest_list_data($client_id) {
-        $list_data = $this->Wires_loadtest_model->get_details(array("client_id" => $client_id))->getResult();
-        $result_data = [];
-        foreach ($list_data as $data) {
-            $result_data[] = $this->_loadtest_make_row($data);
+        $list = $this->Wires_loadtest_model->get_loadtests($client_id);
+        $result = [];
+        foreach ($list as $data) {
+            $result[] = $this->_loadtest_make_row($data);
         }
-
-        $result["data"] = $result_data;
-        echo json_encode($result);
+        echo json_encode(array("data" => $result));
     }
 
     function download_loadtest_file($id, $key) {
@@ -553,14 +557,33 @@ class Wires extends Security_Controller {
         return $this->download_app_files(get_general_file_path("wires", $client_id), $file_data);
     }
 
-    private function _loadtest_row_data($id) {
-        $data = $this->Wires_loadtest_model->get_details(array("id" => $id))->getRow();
-        return $this->_loadtest_make_row($data);
-    }
+    private function _loadtest_make_row($data, $is_detail = false, $last_date = true) {
+        $action = "";
+        if ($is_detail) {
+            if ($this->can_access_own_client($data->client_id)) {
+                $action = modal_anchor(get_uri("wires/loadtest_modal_form/" . $data->wire_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id))
+                        . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("wires/delete_loadtest"), "data-action" => "delete-confirmation"));
+            }
+        } else {
+            $name = $data->name;
 
-    private function _loadtest_make_row($data) {
-        $action = modal_anchor(get_uri("wires/loadtest_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_loadtest'), "data-post-id" => $data->id, "data-post-client_id" => $data->client_id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("wires/delete_loadtest"), "data-action" => "delete-confirmation"));
+            if ($this->can_access_own_client($data->client_id)) {
+                $name = anchor(get_uri("wires/loadtest_detail_view/" . $data->id), $name);
+                $action = modal_anchor(get_uri("wires/loadtest_modal_form/" . $data->id), "<i data-feather='plus-circle' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('add_item')));
+            }
+        }
+
+        $passed = '';
+        if ($data->passed) {
+            $loadtest_reminder_date = get_loadtest_reminder_date();
+            if ($last_date && $loadtest_reminder_date > $data->test_date) {
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Due to over due"></div>';
+            } else {
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;" title="Passed"></div>';
+            }
+        } else {
+            $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Not passed"></div>';
+        }
 
         $files_str = "";
         $files = unserialize($data->files);
@@ -572,16 +595,52 @@ class Wires extends Security_Controller {
                 $files_str .= anchor(get_uri("wires/download_loadtest_file/" . $data->id . "/" .$key), remove_file_prefix($file["file_name"]));
             }
         }
-        return array(
-            $data->id,
-            $data->test_date,
-            $data->crane,
-            $data->wire,
-            $data->result,
-            $data->location,
-            $files_str,
-            $action
-        );
+
+        if ($is_detail) {
+            return array(
+                $data->id,
+                $data->test_date,
+                $data->location,
+                $passed,
+                $data->result,
+                $files_str,
+                $action
+            );
+        } else {
+            return array(
+                $data->id,
+                $name,
+                $data->test_date,
+                $data->location,
+                $passed,
+                $data->result,
+                $files_str,
+                $action
+            );
+        }
+    }
+
+    function loadtest_detail_view($wire_id) {
+        $model_info = $this->Wires_model->get_one($wire_id);
+        if ($model_info->id) {
+            if (!$this->can_access_own_client($model_info->client_id)) {
+                app_redirect("forbidden");
+            }
+
+            $view_data["model_info"] = $model_info;
+            return $this->template->rander("wires/loadtest/detail_view", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    function loadtest_detail_list_data($wire_id) {
+        $list = $this->Wires_loadtest_model->get_details($wire_id);
+        $result = [];
+        foreach ($list as $key => $data) {
+            $result[] = $this->_loadtest_make_row($data, true, $key == 0);
+        }
+        echo json_encode(array("data" => $result));
     }
 
     function inspection_tab($client_id) {
@@ -598,21 +657,17 @@ class Wires extends Security_Controller {
         }
     }
 
-    function inspection_modal_form() {
-        $client_id = $this->request->getPost("client_id");
-        if (!$this->can_access_own_client($client_id)) {
+    function inspection_modal_form($wire_id) {
+        $wire = $this->Wires_model->get_one($wire_id);
+        if (!$this->can_access_own_client($wire->client_id)) {
             app_redirect("forbidden");
         }
 
+        $id = $this->request->getPost("id");
+        $view_data["model_info"] = $this->Wires_inspection_model->get_one($id);
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
-        $view_data["client_id"] = $client_id;
-        $view_data["cranes_dropdown"] = $this->Wires_model->get_cranes_dropdown($client_id);
-
-        $id = $this->request->getPost("id");
-        if ($id) {
-            $view_data["model_info"] = $this->Wires_inspection_model->get_details(array("id" => $this->request->getPost("id")))->getRow();
-        }
+        $view_data["wire"] = $wire;
 
         return $this->template->view("wires/inspection/modal_form", $view_data);
     }
@@ -629,7 +684,6 @@ class Wires extends Security_Controller {
             "client_id" => "required|numeric",
             "wire_id" => "required|numeric",
             "inspection_date" => "required",
-            "result" => "required",
             "location" => "required"
         ));
 
@@ -637,8 +691,9 @@ class Wires extends Security_Controller {
             "client_id" => intval($this->request->getPost("client_id")),
             "wire_id" => intval($this->request->getPost("wire_id")),
             "inspection_date" => $this->request->getPost("inspection_date"),
+            "location" => $this->request->getPost("location"),
+            "passed" => $this->request->getPost("passed"),
             "result" => $this->request->getPost("result"),
-            "location" => $this->request->getPost("location")
         );
 
         $target_path = getcwd() . "/" . get_general_file_path("wires", $data["client_id"]);
@@ -654,7 +709,7 @@ class Wires extends Security_Controller {
         $save_id = $this->Wires_inspection_model->ci_save($data, $id);
 
         if ($save_id) {
-            echo json_encode(array("success" => true, "data" => $this->_inspection_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+            echo json_encode(array("success" => true, 'message' => app_lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
@@ -684,7 +739,7 @@ class Wires extends Security_Controller {
     }
 
     function inspection_list_data($client_id) {
-        $list_data = $this->Wires_inspection_model->get_details(array("client_id" => $client_id))->getResult();
+        $list_data = $this->Wires_inspection_model->get_inspections($client_id);
         $result_data = [];
         foreach ($list_data as $data) {
             $result_data[] = $this->_inspection_make_row($data);
@@ -694,14 +749,33 @@ class Wires extends Security_Controller {
         echo json_encode($result);
     }
 
-    private function _inspection_row_data($id) {
-        $data = $this->Wires_inspection_model->get_details(array("id" => $id))->getRow();
-        return $this->_inspection_make_row($data);
-    }
+    private function _inspection_make_row($data, $is_detail = false, $last_date = true) {
+        $action = "";
+        if ($is_detail) {
+            if ($this->can_access_own_client($data->client_id)) {
+                $action = modal_anchor(get_uri("wires/inspection_modal_form/" . $data->wire_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id))
+                        . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("wires/delete_inspection"), "data-action" => "delete-confirmation"));
+            }
+        } else {
+            $name = $data->name;
 
-    private function _inspection_make_row($data) {
-        $action = modal_anchor(get_uri("wires/inspection_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_inspection'), "data-post-id" => $data->id, "data-post-client_id" => $data->client_id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("wires/delete_inspection"), "data-action" => "delete-confirmation"));
+            if ($this->can_access_own_client($data->client_id)) {
+                $name = anchor(get_uri("wires/inspection_detail_view/" . $data->id), $name);
+                $action = modal_anchor(get_uri("wires/inspection_modal_form/" . $data->id), "<i data-feather='plus-circle' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('add_item')));
+            }
+        }
+
+        $passed = '';
+        if ($data->passed) {
+            $inspection_reminder_date = get_visual_inspection_reminder_date();
+            if ($last_date && $inspection_reminder_date > $data->inspection_date) {
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Due to over due"></div>';
+            } else {
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;" title="Passed"></div>';
+            }
+        } else {
+            $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Not passed"></div>';
+        }
 
         $files_str = "";
         $files = unserialize($data->files);
@@ -717,17 +791,31 @@ class Wires extends Security_Controller {
         if ($data->inspection_date) {
             $next_suggested_inspection = date('Y-m-d', strtotime($data->inspection_date . ' + 12 months'));
         }
-        return array(
-            $data->id,
-            $data->inspection_date,
-            $data->crane,
-            $data->wire,
-            $data->result,
-            $data->location,
-            $next_suggested_inspection,
-            $files_str,
-            $action
-        );
+
+        if ($is_detail) {
+            return array(
+                $data->id,
+                $data->inspection_date,
+                $data->location,
+                $passed,
+                $data->result,
+                $next_suggested_inspection,
+                $files_str,
+                $action
+            );
+        } else {
+            return array(
+                $data->id,
+                $name,
+                $data->inspection_date,
+                $data->location,
+                $passed,
+                $data->result,
+                $next_suggested_inspection,
+                $files_str,
+                $action
+            );
+        }
     }
 
     function download_inspection_file($id, $key) {
@@ -736,6 +824,29 @@ class Wires extends Security_Controller {
         $client_id = $model_info->client_id;
         $file_data = serialize(array($files[$key]));
         return $this->download_app_files(get_general_file_path("wires", $client_id), $file_data);
+    }
+
+    function inspection_detail_view($wire_id) {
+        $model_info = $this->Wires_model->get_one($wire_id);
+        if ($model_info->id) {
+            if (!$this->can_access_own_client($model_info->client_id)) {
+                app_redirect("forbidden");
+            }
+
+            $view_data["model_info"] = $model_info;
+            return $this->template->rander("wires/inspection/detail_view", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    function inspection_detail_list_data($wire_id) {
+        $list = $this->Wires_inspection_model->get_details($wire_id);
+        $result = [];
+        foreach ($list as $key => $data) {
+            $result[] = $this->_inspection_make_row($data, true, $key == 0);
+        }
+        echo json_encode(array("data" => $result));
     }
 
     function get_wires_dropdown() {
@@ -815,6 +926,7 @@ class Wires extends Security_Controller {
                 [ "key" => "wire", "required" => false ],
                 [ "key" => "test_date", "required" => false ],
                 [ "key" => "location", "required" => false ],
+                [ "key" => "passed", "required" => false ],
                 [ "key" => "result", "required" => false ]
             );
         } else if ($tab == "inspection") {
@@ -823,6 +935,7 @@ class Wires extends Security_Controller {
                 [ "key" => "wire", "required" => false ],
                 [ "key" => "inspection_date", "required" => false ],
                 [ "key" => "location", "required" => false ],
+                [ "key" => "passed", "required" => false ],
                 [ "key" => "result", "required" => false ]
             );
         }

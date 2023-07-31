@@ -21,11 +21,11 @@
             order: [[0, "asc"]],
             columns: [
                 {visible: false, searchable: false},
+                {title: '<?php echo app_lang("name") ?>', class: "w200"},
                 {title: '<?php echo app_lang("inspection_date") ?>', class: "w100"},
-                {title: '<?php echo app_lang("crane") ?>', class: "w100"},
-                {title: '<?php echo app_lang("wire") ?>', class: "w100"},
-                {title: '<?php echo app_lang("wire_inspection_result") ?>', class: "w25p"},
                 {title: '<?php echo app_lang("location") ?>', class: "w150"},
+                {title: '<?php echo app_lang("passed") ?>', class: "text-center w50"},
+                {title: '<?php echo app_lang("remarks") ?>', class: "w25p"},
                 {title: '<?php echo app_lang("next_suggested_inspection") ?>', class: "w150"},
                 {title: '<?php echo app_lang("files") ?>', class: "all"},
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
