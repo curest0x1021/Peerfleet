@@ -291,5 +291,7 @@ $lang["latitude"] = "Latitude";
 $lang["longitude"] = "Longitude";
 $lang["region"] = "Région";
 $lang["sailing_area"] = "Zone de voile";
+$lang["wire_loadtest_required"] = "Test de chargement des fils requis";
+$lang["wire_inspection_required"] = "Fils inspection visuelle requise";
 
 return $lang;

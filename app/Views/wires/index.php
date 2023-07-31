@@ -16,12 +16,9 @@
     loadWiresTable = function(selector) {
         $(selector).appTable({
             source: '<?php echo_uri("wires/list_data") ?>',
-            columns: [{
-                    visible: false, searchable: false
-                },
+            columns: [
                 {
-                    title: "",
-                    "class": "text-center w25"
+                    visible: false, searchable: false
                 },
                 {
                     title: "<?php echo app_lang("vessel") ?>",
@@ -37,6 +34,14 @@
                 },
                 {
                     title: "<?php echo app_lang("required_exchange_wires") ?>",
+                    "class": "text-center w15p"
+                },
+                {
+                    title: "<?php echo app_lang("require_loadtests") ?>",
+                    "class": "text-center w15p"
+                },
+                {
+                    title: "<?php echo app_lang("require_inspections") ?>",
                     "class": "text-center w15p"
                 },
                 {

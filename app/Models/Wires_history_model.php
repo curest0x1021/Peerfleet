@@ -15,7 +15,7 @@ class Wires_history_model extends Crud_model {
         $wires_table = $this->db->prefixTable("wires");
         $history_table = $this->db->prefixTable("wires_history");
 
-        $sql = "SELECT id as wire_id, client_id, CONCAT(crane, ' ', wire) as name
+        $sql = "SELECT id as wire_id, client_id, CONCAT(crane, ' - ', wire) as name
                 FROM $wires_table
                 WHERE client_id = $client_id
                 ORDER BY id ASC";
@@ -32,6 +32,8 @@ class Wires_history_model extends Crud_model {
             $item->required_exchanges = false;
             if (count($history) > 0) {
                 $item->required_exchanges = end($history)->replacement < $reminder_date;
+            } else {
+                $item->required_exchanges = true;
             }
             $item->initial = count($history) > 0 ? array_values($history)[0]->replacement : null;
             $item->first = count($history) > 1 ? array_values($history)[1]->replacement : null;
@@ -63,21 +65,20 @@ class Wires_history_model extends Crud_model {
     }
 
     function get_required_exchange_wires() {
-        $wires_table = $this->db->prefixTable("wires");
         $history_table = $this->db->prefixTable("wires_history");
 
         // 8 months before exchaning wires
         $reminder_date = get_wire_exchange_reminder_date();
 
-        $sql = "SELECT $wires_table.id as crane_id, $wires_table.client_id, a.last_replacement
-                FROM (
-                    SELECT wire_id, client_id, MAX(replacement) as last_replacement
+        $sql = "SELECT $history_table.wire_id, $history_table.client_id, $history_table.replacement as last_replacement
+                FROM $history_table
+                JOIN (
+                    SELECT wire_id, MAX(replacement) as replacement
                     FROM $history_table
                     WHERE deleted = 0
                     GROUP BY wire_id
-                ) a
-                JOIN $wires_table ON $wires_table.id = a.wire_id
-                WHERE Date(a.last_replacement) < '$reminder_date'";
+                ) a ON $history_table.wire_id = a.wire_id AND $history_table.replacement = a.replacement
+                WHERE a.replacement < '$reminder_date'";
 
         $result = $this->db->query($sql)->getResult();
         return $result;
