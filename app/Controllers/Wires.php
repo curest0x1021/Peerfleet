@@ -276,14 +276,12 @@ class Wires extends Security_Controller {
         }
     }
 
-    function info_modal_form() {
+    function info_modal_form($client_id) {
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
 
         $wire_id = $this->request->getPost("wire_id");
-        $client_id = $this->request->getPost("client_id");
-
         $model_info = $this->Wires_info_model->get_details(array("wire_id" => $wire_id))->getRow();
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
@@ -330,18 +328,17 @@ class Wires extends Security_Controller {
     }
 
     function info_list_data($client_id) {
-        $list_data = $this->Wires_info_model->get_details(array("client_id" => $client_id))->getResult();
-        $result_data = [];
-        foreach ($list_data as $data) {
-            $result_data[] = $this->_info_make_row($data);
+        $list = $this->Wires_info_model->get_details(array("client_id" => $client_id))->getResult();
+        $result = [];
+        foreach ($list as $data) {
+            $result[] = $this->_info_make_row($data);
         }
 
-        $result["data"] = $result_data;
-        echo json_encode($result);
+        echo json_encode(array("data" => $result));
     }
 
     private function _info_make_row($data) {
-        $action = modal_anchor(get_uri("wires/info_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit') . " - " . $data->crane . " " . $data->wire, "data-post-wire_id" => $data->wire_id, "data-post-client_id" => $data->client_id));
+        $action = modal_anchor(get_uri("wires/info_modal_form/" . $data->client_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit') . " - " . $data->crane . " " . $data->wire, "data-post-wire_id" => $data->wire_id));
 
         return array(
             $data->wire_id,
