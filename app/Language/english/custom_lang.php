@@ -290,9 +290,6 @@ $lang["latitude"] = "Latitude";
 $lang["longitude"] = "Longitude";
 $lang["region"] = "Region";
 $lang["sailing_area"] = "Sailing Area";
-
-
-
 $lang["wire_loadtest_required"] = "Wires load test required";
 $lang["wire_inspection_required"] = "Wires visual inspection required";
 
