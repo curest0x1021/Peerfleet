@@ -24,16 +24,19 @@ class Lashing_model extends Crud_model {
             $where .= " AND $clients_table.id=$client_id";
         }
 
-        $sql = "SELECT $clients_table.id as client_id, $clients_table.charter_name as name, a.total_items, c.require_inspections
+        $sql = "SELECT $clients_table.id as client_id, $clients_table.charter_name as name, a.total_items,
+                    (a.total_items - IFNULL(c.passed, 0)) as require_inspections
                 FROM $clients_table
                 LEFT JOIN (SELECT client_id, COUNT(id) as total_items FROM $lashing_table WHERE deleted = 0 GROUP BY client_id) a
                     ON $clients_table.id = a.client_id
                 LEFT JOIN (
-                    SELECT $lashing_table.client_id, COUNT($lashing_table.id) as require_inspections
+                    SELECT $lashing_table.client_id, SUM(bb.passed) as passed
                     FROM $lashing_table
-                    JOIN (SELECT lashing_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 AND inspection_date IS NOT NULL GROUP BY lashing_id) b
-                        ON $lashing_table.id = b.lashing_id
-                    WHERE $lashing_table.deleted = 0 AND b.inspection_date < '$inspection_reminder_date'
+                    JOIN (SELECT $inspection_table.lashing_id, IF(($inspection_table.passed = 1 AND $inspection_table.inspection_date > '$inspection_reminder_date'), 1, 0) as passed FROM $inspection_table
+                        JOIN (SELECT lashing_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 GROUP BY lashing_id) b
+                        ON $inspection_table.lashing_id = b.lashing_id AND $inspection_table.inspection_date = b.inspection_date) bb
+                    ON $lashing_table.id = bb.lashing_id
+                    WHERE $lashing_table.deleted = 0
                     GROUP BY $lashing_table.client_id
                 ) c ON $clients_table.id = c.client_id
                 WHERE $clients_table.deleted = 0 $where
@@ -48,11 +51,18 @@ class Lashing_model extends Crud_model {
 
         $inspection_reminder_date = get_visual_inspection_reminder_date();
 
-        $sql = "SELECT COUNT(a.id) as require_inspections
-                FROM (SELECT id FROM $lashing_table WHERE deleted = 0 AND client_id = $client_id) a
-                JOIN (SELECT lashing_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 AND inspection_date IS NOT NULL GROUP BY lashing_id) b
-                    ON a.id = b.lashing_id
-                WHERE b.inspection_date < '$inspection_reminder_date'";
+        $sql = "SELECT (a.total_items - IFNULL(c.passed, 0)) as require_inspections
+                FROM (SELECT client_id, COUNT(id) as total_items FROM $lashing_table WHERE deleted = 0 AND client_id = $client_id GROUP BY client_id) a
+                LEFT JOIN (
+                    SELECT $lashing_table.client_id, SUM(bb.passed) as passed
+                    FROM $lashing_table
+                    JOIN (SELECT $inspection_table.lashing_id, IF(($inspection_table.passed = 1 AND $inspection_table.inspection_date > '$inspection_reminder_date'), 1, 0) as passed FROM $inspection_table
+                        JOIN (SELECT lashing_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 GROUP BY lashing_id) b
+                        ON $inspection_table.lashing_id = b.lashing_id AND $inspection_table.inspection_date = b.inspection_date) bb
+                    ON $lashing_table.id = bb.lashing_id
+                    WHERE $lashing_table.deleted = 0 AND $lashing_table.client_id = $client_id
+                    GROUP BY $lashing_table.client_id
+                ) c ON a.client_id = c.client_id";
 
         return $this->db->query($sql)->getRow();
     }
@@ -112,15 +122,18 @@ class Lashing_model extends Crud_model {
 
         $reminder_date = get_visual_inspection_reminder_date();
 
-        $sql = "SELECT $lashing_table.id as lashing_id, $lashing_table.client_id, a.inspection_date
+        $sql = "SELECT $lashing_table.id as lashing_id, $lashing_table.client_id, aa.inspection_date
                 FROM (
-                    SELECT lashing_id, MAX(inspection_date) as inspection_date
-                    FROM $inspection_table
-                    WHERE deleted = 0 AND inspection_date IS NOT NULL
-                    GROUP BY lashing_id
-                ) a
-                JOIN $lashing_table ON $lashing_table.id = a.lashing_id
-                WHERE Date(a.inspection_date) < '$reminder_date'";
+                    SELECT $inspection_table.* FROM $inspection_table
+                    JOIN (
+                        SELECT lashing_id, MAX(inspection_date) as inspection_date
+                        FROM $inspection_table
+                        WHERE deleted = 0
+                        GROUP BY lashing_id
+                    ) a ON $inspection_table.lashing_id = a.lashing_id AND $inspection_table.inspection_date = a.inspection_date
+                    WHERE $inspection_table.inspection_date < '$reminder_date' OR $inspection_table.passed = 0 ) aa
+                JOIN $lashing_table ON $lashing_table.id = aa.lashing_id
+                WHERE $lashing_table.deleted = 0";
 
         $result = $this->db->query($sql)->getResult();
         return $result;

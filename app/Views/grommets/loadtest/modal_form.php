@@ -120,7 +120,12 @@
 <script type="text/javascript">
     $(document).ready(function() {
         const forceRefresh = '<?php echo $force_refresh; ?>';
-        console.log(forceRefresh);
+
+        $('#loadtest-form').bind('submit', function () {
+            $('#passed').prop('disabled', false);
+            $('#remarks').prop('disabled', false);
+        });
+
         $("#loadtest-form").appForm({
             onSuccess: function(result) {
                 appAlert.success(result.message, {
@@ -137,5 +142,17 @@
         });
 
         setDatePicker("#test_date");
+
+        $("#initial_test").change(function() {
+            if (this.checked) {
+                $("#passed").prop('checked', true);
+                $("#passed").prop('disabled', true);
+                $("#remarks").prop('disabled', true);
+            } else {
+                $("#passed").prop('checked', false);
+                $("#passed").prop('disabled', false);
+                $("#remarks").prop('disabled', false);
+            }
+        });
     });
 </script>
