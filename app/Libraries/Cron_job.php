@@ -118,6 +118,8 @@ class Cron_job {
         if ($this->_is_daily_job_runnable()) {
             try {
                 $this->wires_exchange_due_reminder();
+                $this->wires_loadtest_reminder();
+                $this->wires_visual_inspection_reminder();
                 $this->grommets_loadtest_reminder();
                 $this->grommets_visual_inspection_reminder();
                 $this->shackles_loadtest_reminder();
@@ -146,7 +148,7 @@ class Cron_job {
         $owners = array();
         $primary_contacts = array();
         foreach ($wires as $wire) {
-            log_notification("wire_exchange_required", array("client_id" => $wire->client_id, "crane_id" => $wire->crane_id), "0");
+            log_notification("wire_exchange_required", array("client_id" => $wire->client_id, "wire_id" => $wire->wire_id), "0");
             // register todo
             $todo_data = array(
                 "client_id" => $wire->client_id,
@@ -175,6 +177,98 @@ class Cron_job {
                 $todo_data["created_by"] = $item2["primary_contact_id"];
             } else {
                 $primary_contact_id = $this->ci->Clients_model->get_primary_contact($wire->client_id);
+                $todo_data["created_by"] = $primary_contact_id;
+
+                $item2[] = array(
+                    "client_id" => $client->id,
+                    "primary_contact_id" => $primary_contact_id
+                );
+            }
+
+            $this->ci->Todo_model->ci_save($todo_data, null);
+        }
+    }
+
+    private function wires_loadtest_reminder() {
+        $list = $this->ci->Wires_model->get_required_loadtest_items();
+        $owners = array();
+        $primary_contacts = array();
+        foreach ($list as $data) {
+            log_notification("wire_loadtest_required", array("client_id" => $data->client_id, "wire_id" => $data->wire_id), "0");
+            // register todo
+            $todo_data = array(
+                "client_id" => $data->client_id,
+                "title" => app_lang("wire_loadtest_required"),
+                "description" => get_uri("wires/loadtest_detail_view/" . $data->wire_id),
+                "created_at" => get_current_utc_time(),
+                "start_date" => get_current_utc_time("Y-m-d")
+            );
+
+            $item1 = $this->find_item_by_client_id($data->client_id, $owners);
+            if ($item1) {
+                $todo_data["created_by"] = $item1["owner_id"];
+            } else {
+                $client = $this->ci->Clients_model->get_one($data->client_id);
+                $todo_data["created_by"] = $client->owner_id;
+
+                $item1[] = array(
+                    "client_id" => $client->id,
+                    "owner_id" => $client->owner_id
+                );
+            }
+            $this->ci->Todo_model->ci_save($todo_data, null);
+
+            $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
+            if ($item2) {
+                $todo_data["created_by"] = $item2["primary_contact_id"];
+            } else {
+                $primary_contact_id = $this->ci->Clients_model->get_primary_contact($data->client_id);
+                $todo_data["created_by"] = $primary_contact_id;
+
+                $item2[] = array(
+                    "client_id" => $client->id,
+                    "primary_contact_id" => $primary_contact_id
+                );
+            }
+
+            $this->ci->Todo_model->ci_save($todo_data, null);
+        }
+    }
+
+    private function wires_visual_inspection_reminder() {
+        $list = $this->ci->Wires_model->get_required_visual_inspection_items();
+        $owners = array();
+        $primary_contacts = array();
+        foreach ($list as $data) {
+            log_notification("wire_inspection_required", array("client_id" => $data->client_id, "wire_id" => $data->wire_id), "0");
+            // register todo
+            $todo_data = array(
+                "client_id" => $data->client_id,
+                "title" => app_lang("wire_inspection_required"),
+                "description" => get_uri("wires/inspection_detail_view/" . $data->wire_id),
+                "created_at" => get_current_utc_time(),
+                "start_date" => get_current_utc_time("Y-m-d")
+            );
+
+            $item1 = $this->find_item_by_client_id($data->client_id, $owners);
+            if ($item1) {
+                $todo_data["created_by"] = $item1["owner_id"];
+            } else {
+                $client = $this->ci->Clients_model->get_one($data->client_id);
+                $todo_data["created_by"] = $client->owner_id;
+
+                $item1[] = array(
+                    "client_id" => $client->id,
+                    "owner_id" => $client->owner_id
+                );
+            }
+            $this->ci->Todo_model->ci_save($todo_data, null);
+
+            $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
+            if ($item2) {
+                $todo_data["created_by"] = $item2["primary_contact_id"];
+            } else {
+                $primary_contact_id = $this->ci->Clients_model->get_primary_contact($data->client_id);
                 $todo_data["created_by"] = $primary_contact_id;
 
                 $item2[] = array(

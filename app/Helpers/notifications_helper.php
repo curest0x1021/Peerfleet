@@ -226,12 +226,28 @@ if (!function_exists('get_notification_config')) {
             return array("url" => $url);
         };
 
-        $crane_link = function ($options) {
+        $wire_exchange_link = function ($options) {
             $url = "";
             if (isset($options->client_id)) {
                 $url = get_uri("wires/view/" . $options->client_id);
             }
 
+            return array("url" => $url);
+        };
+
+        $wire_loadtest_link = function ($option) {
+            $url = "";
+            if (isset($option->wire_id)) {
+                $url = get_uri("wires/loadtest_detail_view/" . $option->wire_id);
+            }
+            return array("url" => $url);
+        };
+
+        $wire_inspection_link = function ($option) {
+            $url = "";
+            if (isset($option->wire_id)) {
+                $url = get_uri("wires/inspection_detail_view/" . $option->wire_id);
+            }
             return array("url" => $url);
         };
 
@@ -558,7 +574,15 @@ if (!function_exists('get_notification_config')) {
             ),
             "wire_exchange_required" => array(
                 "notify_to" => array("vessel_contact", "responsible_person"),
-                "info" => $crane_link
+                "info" => $wire_exchange_link
+            ),
+            "wire_loadtest_required" => array(
+                "notify_to" => array("vessel_contact", "responsible_person"),
+                "info" => $wire_loadtest_link
+            ),
+            "wire_inspection_required" => array(
+                "notify_to" => array("vessel_contact", "responsible_person"),
+                "info" => $wire_inspection_link
             ),
             "grommet_loadtest_required" => array(
                 "notify_to" => array("vessel_contact", "responsible_person"),
@@ -922,12 +946,30 @@ if (!function_exists('send_notification_emails')) {
         } else if ($notification->event == "wire_exchange_required") {
             $template_name = "wire_exchange_required";
 
-            $crane_info = $ci->Wires_history_model->get_wire_history($notification->crane_id);
-            $parser_data["VESSEL_TITLE"] = $crane_info->vessel;
-            $parser_data["CRANE_TITLE"] = $crane_info->name;
-            $parser_data["DUE_DATE"] = $crane_info->due_date;
-            $parser_data["LAST_REPLACEMENT"] = $crane_info->last_replacement;
-            $parser_data["WIRE_URL"] = $url;
+            $wire_info = $ci->Wires_history_model->get_wire_history($notification->wire_id);
+            $parser_data["VESSEL_TITLE"] = $wire_info->vessel;
+            $parser_data["WIRE_TITLE"] = $wire_info->name;
+            $parser_data["DUE_DATE"] = $wire_info->due_date;
+            $parser_data["LAST_REPLACEMENT"] = $wire_info->last_replacement;
+            $parser_data["ITEM_URL"] = $url;
+        } else if ($notification->event == "wire_loadtest_required") {
+            $template_name = "wire_loadtest_required";
+
+            $info = $ci->Wires_model->get_loadtest_info($notification->wire_id);
+            $parser_data["VESSEL_TITLE"] = $info->vessel;
+            $parser_data["WIRE_TITLE"] = $info->name;
+            $parser_data["DUE_DATE"] = $info->due_date;
+            $parser_data["LAST_TEST_DATE"] = $info->last_test_date;
+            $parser_data["ITEM_URL"] = $url;
+        } else if ($notification->event == "wire_inspection_required") {
+            $template_name = "wire_inspection_required";
+
+            $info = $ci->Wires_model->get_inspection_info($notification->wire_id);
+            $parser_data["VESSEL_TITLE"] = $info->vessel;
+            $parser_data["WIRE_TITLE"] = $info->name;
+            $parser_data["DUE_DATE"] = $info->due_date;
+            $parser_data["LAST_INSPECTION_DATE"] = $info->last_inspection_date;
+            $parser_data["ITEM_URL"] = $url;
         } else if ($notification->event == "grommet_loadtest_required") {
             $template_name = "grommet_loadtest_required";
 

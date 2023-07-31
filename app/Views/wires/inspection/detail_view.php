@@ -8,7 +8,7 @@
                 </div>
                 <div class="clearfix grid-button">
                     <ul id="inspection-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">
-                        <li class="title-tab"><a role="presentation" data-bs-toggle="tab" class="active show"><?php echo app_lang("inspection"); ?></a></li>
+                        <li class="title-tab"><a role="presentation" data-bs-toggle="tab" class="active show"><?php echo app_lang("visual_inspection"); ?></a></li>
                         <div class="tab-title clearfix no-border">
                             <div class="title-button-group">
                                 <?php echo modal_anchor(get_uri("wires/inspection_modal_form/" . $model_info->id), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_item'), array("class" => "btn btn-default", "title" => app_lang('add_item'))); ?>

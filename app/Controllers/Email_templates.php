@@ -76,7 +76,9 @@ class Email_templates extends Security_Controller {
                 "warehouse_item_minimum_reached" => array("VESSEL_TITLE", "WAREHOUSE_TITLE", "ITEM_TITLE", "QUANTITY", "MIN_STOCKS", "WAREHOUSE_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS")
             ),
             "wires" => array(
-                "wire_exchange_required" => array("VESSEL_TITLE", "CRANE_TITLE", "LAST_REPLACEMENT", "DUE_DATE", "WIRE_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS")
+                "wire_exchange_required" => array("VESSEL_TITLE", "WIRE_TITLE", "LAST_REPLACEMENT", "DUE_DATE", "ITEM_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS"),
+                "wire_loadtest_required" => array("VESSEL_TITLE", "WIRE_TITLE", "LAST_TEST_DATE", "DUE_DATE", "ITEM_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS"),
+                "wire_inspection_required" => array("VESSEL_TITLE", "WIRE_TITLE", "LAST_INSPECTION_DATE", "DUE_DATE", "ITEM_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS")
             ),
             "grommets" => array(
                 "grommet_loadtest_required" => array("VESSEL_TITLE", "GROMMET_TITLE", "LAST_TEST_DATE", "DUE_DATE", "ITEM_URL", "LOGO_URL", "RECIPIENTS_EMAIL_ADDRESS"),

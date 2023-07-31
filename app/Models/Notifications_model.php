@@ -80,7 +80,7 @@ class Notifications_model extends Crud_model {
         $warehouse_id = get_array_value($options, "warehouse_id");
         $warehouse_item_id = get_array_value($options, "warehouse_item_id");
         $warehouse_tab = get_array_value($options, "warehouse_tab");
-        $crane_id = get_array_value($options, "crane_id");
+        $wire_id = get_array_value($options, "wire_id");
         $grommet_id = get_array_value($options, "grommet_id");
         $shackle_id = get_array_value($options, "shackle_id");
         $misc_id = get_array_value($options, "misc_id");
@@ -510,9 +510,9 @@ class Notifications_model extends Crud_model {
             $warehouse_info = $this->db->query("SELECT $warehouse_table.* FROM $warehouse_table WHERE $warehouse_table.id=$warehouse_id")->getRow();
         }
 
-        $crane_info = NULL;
-        if ($crane_id) {
-            $crane_info = $this->db->query("SELECT $wires_table.* FROM $wires_table WHERE $wires_table.id=$crane_id")->getRow();
+        $wire_info = NULL;
+        if ($wire_id) {
+            $wire_info = $this->db->query("SELECT $wires_table.* FROM $wires_table WHERE $wires_table.id=$wire_id")->getRow();
         }
 
         $web_notify_to = "";
@@ -622,7 +622,7 @@ class Notifications_model extends Crud_model {
             "warehouse_id" => $warehouse_id ? $warehouse_id : "",
             "warehouse_item_id" => $warehouse_item_id ? $warehouse_item_id : "",
             "warehouse_tab" => $warehouse_tab ? $warehouse_tab : "",
-            "crane_id" => $crane_id ? $crane_id : "",
+            "wire_id" => $wire_id ? $wire_id : "",
             "grommet_id" => $grommet_id ? $grommet_id : "",
             "shackle_id" => $shackle_id ? $shackle_id : "",
             "misc_id" => $misc_id ? $misc_id : "",
@@ -956,7 +956,7 @@ class Notifications_model extends Crud_model {
                  $leave_applications_table.start_date AS leave_start_date, $leave_applications_table.end_date AS leave_end_date,
                  $invoice_payments_table.invoice_id AS payment_invoice_id, $invoice_payments_table.amount AS payment_amount,
                  CONCAT($warehouses_table.code, ' - ', $warehouses_table.name) AS warehouse_title,
-                 CONCAT($wires_table.crane, ' ', $wires_table.wire) AS wire_title,
+                 CONCAT($wires_table.crane, ' - ', $wires_table.wire) AS wire_title,
                  $clients_table.charter_name AS vessel_title,
                  (SELECT CONCAT($users_table.first_name, ' ', $users_table.last_name) FROM $users_table WHERE $users_table.id=$notifications_table.to_user_id) AS to_user_name,
                  FIND_IN_SET($user_id, $notifications_table.read_by) as is_read    
@@ -980,7 +980,7 @@ class Notifications_model extends Crud_model {
         LEFT JOIN $announcements_table ON $announcements_table.id=$notifications_table.announcement_id
         LEFT JOIN $estimate_comments_table ON $estimate_comments_table.id=$notifications_table.estimate_comment_id
         LEFT JOIN $warehouses_table ON $warehouses_table.id=$notifications_table.warehouse_id
-        LEFT JOIN $wires_table ON $wires_table.id=$notifications_table.crane_id
+        LEFT JOIN $wires_table ON $wires_table.id=$notifications_table.wire_id
         LEFT JOIN $clients_table ON $clients_table.id=$notifications_table.client_id
         WHERE $notifications_table.deleted=0 AND FIND_IN_SET($user_id, $notifications_table.notify_to) != 0
         ORDER BY $notifications_table.id DESC LIMIT $offset, $limit";
@@ -1057,7 +1057,7 @@ class Notifications_model extends Crud_model {
         LEFT JOIN $estimate_comments_table ON $estimate_comments_table.id=$notifications_table.estimate_comment_id
         LEFT JOIN $proposals_table ON $proposals_table.id=$notifications_table.proposal_id
         LEFT JOIN $warehouses_table ON $warehouses_table.id=$notifications_table.warehouse_id
-        LEFT JOIN $wires_table ON $wires_table.id=$notifications_table.crane_id
+        LEFT JOIN $wires_table ON $wires_table.id=$notifications_table.wire_id
         LEFT JOIN $clients_table ON $clients_table.id=$notifications_table.client_id
         WHERE $notifications_table.id=$notification_id";
 
