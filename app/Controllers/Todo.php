@@ -66,8 +66,7 @@ class Todo extends Security_Controller {
     function save() {
         $this->validate_submitted_data(array(
             "id" => "numeric",
-            "title" => "required",
-            "client_id" => "required"
+            "title" => "required"
         ));
 
         $id = $this->request->getPost('id');
@@ -76,7 +75,7 @@ class Todo extends Security_Controller {
             "title" => $this->request->getPost('title'),
             "description" => $this->request->getPost('description') ? $this->request->getPost('description') : "",
             "client_id" => $this->request->getPost('client_id'),
-            "status" => $this->request->getPost('status'),
+            "status" => $this->request->getPost('status') ?? "to_do",
             "priority_id" => $this->request->getPost('priority_id'),
             "created_by" => $this->login_user->id,
             "labels" => $this->request->getPost('labels') ? $this->request->getPost('labels') : "",
