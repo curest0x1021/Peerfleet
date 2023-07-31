@@ -78,7 +78,7 @@ class Notification_processor extends App_Controller {
             "warehouse_id" => get_array_value($data, "warehouse_id"),
             "warehouse_item_id" => get_array_value($data, "warehouse_item_id"),
             "warehouse_tab" => get_array_value($data, "warehouse_tab"),
-            "crane_id" => get_array_value($data, "crane_id"),
+            "wire_id" => get_array_value($data, "wire_id"),
             "grommet_id" => get_array_value($data, "grommet_id"),
             "shackle_id" => get_array_value($data, "shackle_id"),
             "misc_id" => get_array_value($data, "misc_id"),

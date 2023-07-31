@@ -11,26 +11,32 @@ class Wires_inspection_model extends Crud_model {
         parent::__construct($this->table);
     }
 
-    function get_details($options = array()) {
+    function get_inspections($client_id) {
         $inspection_table = $this->db->prefixTable("wires_inspection");
         $wires_table = $this->db->prefixTable("wires");
 
-        $where = "";
-        $id = $this->_get_clean_value($options, "id");
-        if ($id) {
-            $where .= " AND $inspection_table.id = $id";
-        }
-        $client_id = $this->_get_clean_value($options, "client_id");
-        if ($client_id) {
-            $where .= " AND $inspection_table.client_id = $client_id";
-        }
+        $sql = "SELECT $wires_table.id, $wires_table.client_id, CONCAT($wires_table.crane, ' - ', $wires_table.wire) as name, IFNULL(k.passed, 0) as passed,
+                    k.inspection_date, k.location, k.result, k.files
+                FROM $wires_table
+                LEFT JOIN (
+                    SELECT $inspection_table.*
+                    FROM $inspection_table
+                    JOIN (SELECT wire_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE client_id=$client_id GROUP BY wire_id) a
+                    ON $inspection_table.wire_id = a.wire_id AND $inspection_table.inspection_date = a.inspection_date
+                    WHERE $inspection_table.deleted = 0 AND $inspection_table.client_id = $client_id
+                ) k ON $wires_table.id = k.wire_id
+                WHERE $wires_table.deleted = 0 AND $wires_table.client_id = $client_id";
 
-        $sql = "SELECT $inspection_table.*, $wires_table.crane, $wires_table.wire
-                FROM $inspection_table
-                LEFT JOIN $wires_table ON $wires_table.id = $inspection_table.wire_id
-                WHERE $inspection_table.deleted=0 $where
-                ORDER BY $inspection_table.inspection_date DESC";
+        return $this->db->query($sql)->getResult();
+    }
 
-        return $this->db->query($sql);
+    function get_details($wire_id) {
+        $inspection_table = $this->db->prefixTable("wires_inspection");
+
+        $sql = "SELECT * FROM $inspection_table
+                WHERE deleted = 0 AND wire_id = $wire_id
+                ORDER BY inspection_date DESC";
+
+        return $this->db->query($sql)->getResult();
     }
 }
