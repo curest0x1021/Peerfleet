@@ -2,9 +2,13 @@
 <div id="load-test-dropzone" class="post-dropzone">
     <div class="modal-body clearfix">
         <div class="container-fluid">
-            <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" />
-            <input type="hidden" name="id" value="<?php echo isset($model_info) ? $model_info->id : null; ?>" />
+            <input type="hidden" name="wire_id" value="<?php echo $wire->id; ?>" />
+            <input type="hidden" name="client_id" value="<?php echo $wire->client_id; ?>" />
+            <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
 
+            <div class="form-group notepad-title">
+                <strong><?php echo $wire->crane . " - " . $wire->wire ; ?></strong>
+            </div>
             <div class="form-group">
                 <div class="row">
                     <label for="test_date" class="<?php echo $label_column; ?>"><?php echo app_lang('test_date'); ?></label>
@@ -15,58 +19,10 @@
                             "name" => "test_date",
                             "class" => "form-control",
                             "placeholder" => app_lang('test_date'),
-                            "value" => isset($model_info) ? $model_info->test_date : "",
+                            "value" => $model_info->test_date,
                             "autocomplete" => "off",
                             "data-rule-required" => true,
                             "data-msg-required" => app_lang("field_required"),
-                        ));
-                        ?>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="row">
-                    <label for="crane" class="<?php echo $label_column; ?>"><?php echo app_lang('crane'); ?></label>
-                    <div class="<?php echo $field_column; ?>">
-                        <?php
-                        echo form_dropdown("crane", $cranes_dropdown, isset($model_info) ? $model_info->crane : "", "class='select2' id='crane' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
-                        ?>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="row">
-                    <label for="wire_id" class="<?php echo $label_column; ?>"><?php echo app_lang("wire"); ?></label>
-                    <div class="<?php echo $field_column; ?>">
-                        <?php
-                            echo form_input(array(
-                                "id" => "wire_id",
-                                "name" => "wire_id",
-                                "value" => isset($model_info) ? $model_info->wire : null,
-                                "class" => "form-control",
-                                "placeholder" => app_lang("wire"),
-                                "data-rule-required" => true,
-                                "data-msg-required" => app_lang("field_required"),
-                            ));
-                        ?>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="row">
-                    <label for="result" class="<?php echo $label_column; ?>"><?php echo app_lang('result'); ?></label>
-                    <div class="<?php echo $field_column; ?>">
-                        <?php
-                        echo form_textarea(array(
-                            "id" => "result",
-                            "name" => "result",
-                            "value" => isset($model_info) ? $model_info->result : "",
-                            "class" => "form-control",
-                            "placeholder" => app_lang('result_loadtest') . "...",
-                            "data-rich-text-editor" => true
                         ));
                         ?>
                     </div>
@@ -81,7 +37,7 @@
                         echo form_input(array(
                             "id" => "location",
                             "name" => "location",
-                            "value" => isset($model_info) ? $model_info->location : "",
+                            "value" => $model_info->location,
                             "class" => "form-control",
                             "placeholder" => app_lang('location'),
                             "maxlength" => 255,
@@ -93,12 +49,41 @@
                 </div>
             </div>
 
+            <div class="form-group row">
+                <div class="<?php echo $label_column; ?>">
+                    <span><?php echo app_lang("passed"); ?>:</span>
+                </div>
+                <div class="<?php echo $field_column; ?>">
+                    <?php
+                    echo form_checkbox("passed", "1", $model_info->passed ? $model_info->passed == "1" : false, "id='passed' class='form-check-input mt-2'");
+                    ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label for="result" class="<?php echo $label_column; ?>"><?php echo app_lang('result'); ?></label>
+                    <div class="<?php echo $field_column; ?>">
+                        <?php
+                        echo form_textarea(array(
+                            "id" => "result",
+                            "name" => "result",
+                            "value" => $model_info->result,
+                            "class" => "form-control",
+                            "placeholder" => app_lang('result_loadtest') . "...",
+                            "data-rich-text-editor" => true
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <div class="row">
                     <label class="<?php echo $label_column; ?>"></label>
                     <div class="<?php echo $field_column; ?> row pr-0">
                         <?php
-                        echo view("includes/file_list", array("files" => isset($model_info) ? $model_info->files : ''));
+                        echo view("includes/file_list", array("files" => $model_info->files));
                         ?>
                     </div>
                 </div>
@@ -120,42 +105,20 @@
     $(document).ready(function() {
         var uploadUrl = "<?php echo get_uri("wires/upload_file"); ?>";
         var validationUri = "<?php echo get_uri("wires/validate_file"); ?>";
-        var client_id = '<?php echo $client_id; ?>';
 
         var dropzone = attachDropzoneWithForm("#load-test-dropzone", uploadUrl, validationUri);
 
         $("#loadtest-form").appForm({
             onSuccess: function(result) {
-                appAlert.success(result.message, {duration: 10000});
-                $("#wire-loadtest-table").appTable({ newData: result.data, dataId: result.id });
+                appAlert.success(result.message, {
+                    duration: 5000
+                });
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500);
             }
         });
 
         setDatePicker("#test_date");
-        $("#crane").select2().on("change", function (e) {
-            loadWires(client_id, e.val);
-        });
-
-        var crane = '<?php echo isset($model_info) ? $model_info->crane : null; ?>';
-        var wire_id = '<?php echo isset($model_info) ? $model_info->wire_id : null; ?>';
-        if (crane && wire_id) {
-            loadWires(client_id, crane, wire_id);
-        }
     });
-
-    function loadWires(client_id, crane, wire_id = 0) {
-        $("#wire_id").select2("destroy");
-        const url = '<?php echo_uri("wires/get_wires_dropdown") ?>';
-        $.post(url, { client_id: client_id, crane: crane },
-            function(data, status) {
-                if (status == "success") {
-                    $("#wire_id").val("");
-                    $("#wire_id").select2({ data: JSON.parse(data) });
-                    if (wire_id > 0) {
-                        console.log(wire_id)
-                        $("#wire_id").select2("val", wire_id );
-                    }
-                }
-            });
-    }
 </script>
