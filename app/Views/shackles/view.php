@@ -8,8 +8,8 @@
                 </div>
                 <ul id="shackles-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs title" role="tablist">
                     <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("shackles/info_tab/" . $client_id . "/" . $main_id); ?>" data-bs-target="#shackles-info"> <?php echo $main_info->item_description; ?></a></li>
-                    <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("shackles/loadtest_tab/" . $client_id . "/" . $main_id); ?>" data-bs-target="#shackles-loadtest"> <?php echo app_lang('loadtest'); ?></a></li>
-                    <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("shackles/inspection_tab/" . $client_id . "/" . $main_id); ?>" data-bs-target="#shackles-inspection"> <?php echo app_lang('visual_inspection'); ?></a></li>
+                    <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("shackles/loadtest_tab/" . $client_id . "/" . $main_id); ?>" data-bs-target="#shackles-loadtest"> <?php echo app_lang('loadtest') . $warnning["loadtests"]; ?></a></li>
+                    <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("shackles/inspection_tab/" . $client_id . "/" . $main_id); ?>" data-bs-target="#shackles-inspection"> <?php echo app_lang('visual_inspection') . $warnning["inspections"]; ?></a></li>
                 </ul>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane fade" id="shackles-info"></div>
