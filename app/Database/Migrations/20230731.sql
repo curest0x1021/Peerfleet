@@ -1,0 +1,1 @@
+ALTER TABLE `pf_to_do` CHANGE `client_id` `client_id` INT NULL;

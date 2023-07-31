@@ -42,23 +42,23 @@
             ?>
         </div>
 
-        <div class="col-md-12 mb15">
-            <span><?php echo app_lang("vessel"); ?>: <strong><?php echo $model_info->vessel; ?></strong></span>
-        </div>
+        <?php if ($model_info->vessel) { ?>
+            <div class="col-md-12 mb15">
+                <span><?php echo app_lang("vessel"); ?>: <strong><?php echo $model_info->vessel; ?></strong></span>
+            </div>
+        <?php } ?>
 
-        <div class="col-md-12 mb15">
-            <span><?php echo app_lang("priority"); ?>:
-            <?php
-                $priority = "";
-                if ($model_info->priority_id) {
-                    $priority = " <span class='' title='" . app_lang('priority') . "'>
-                                <span class='sub-task-icon priority-badge' style='background: $model_info->priority_color'><i data-feather='$model_info->priority_icon' class='icon-14'></i></span><span class='small'> $model_info->priority_title</span>
-                        </span>";
-                }
-                echo $priority;
-            ?>
-            </span>
-        </div>
+        <?php if ($model_info->priority_id) { ?>
+            <div class="col-md-12 mb15">
+                <span><?php echo app_lang("priority"); ?>:
+                <span>
+                    <span class='sub-task-icon priority-badge' style='background: <?php echo $model_info->priority_color; ?>'>
+                        <i data-feather='<?php echo $model_info->priority_icon; ?>' class='icon-14'></i></span><span class='small'> <?php echo $model_info->priority_title; ?>
+                    </span>
+                </span>
+                </span>
+            </div>
+        <?php } ?>
 
         <?php if ($model_info->description) { ?>
             <div class="col-md-12 mb15 notepad">
