@@ -227,8 +227,8 @@ function initMap(companies) {
     id: "mapbox/navigation-night-v1",
     tileSize: 512,
     zoomOffset: -1,
-    accessToken:
-      "pk.eyJ1IjoiY2hlbi1tYXJpdGltZWRhdGFzeXN0ZW1zLWNvbSIsImEiOiJjajNlNjduMzkwMHBhMzFzMjJnMGlpZmhvIn0.buGEUU37tesHnaWbKZET1A",
+    accessToken: "pk.eyJ1IjoibWFyYzkyNyIsImEiOiJjbGtzMWJlZ2cwdnJlM2dwbnFia3M4bnRoIn0.Y_b3jtNbkzSLTjZUIczd8g"
+      // "pk.eyJ1IjoiY2hlbi1tYXJpdGltZWRhdGFzeXN0ZW1zLWNvbSIsImEiOiJjajNlNjduMzkwMHBhMzFzMjJnMGlpZmhvIn0.buGEUU37tesHnaWbKZET1A",
   }).addTo(map);
 
   markersClusterGroup = L.markerClusterGroup({
