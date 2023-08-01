@@ -293,5 +293,7 @@ $lang["region"] = "Région";
 $lang["sailing_area"] = "Zone de voile";
 $lang["wire_loadtest_required"] = "Test de chargement des fils requis";
 $lang["wire_inspection_required"] = "Fils inspection visuelle requise";
+$lang["notification_wire_loadtest_required"] = "Test de chargement des fils requis";
+$lang["notification_wire_inspection_required"] = "Fils inspection visuelle requise";
 
 return $lang;

@@ -106,11 +106,15 @@ class Shipyards extends Security_Controller {
             $view_data["model_info"] = $model_info;
             $view_data["label_column"] = "col-md-3";
             $view_data["field_column"] = "col-md-9";
+            $view_data["can_edit_items"] = $this->can_edit_items();
             return $this->template->view("shipyards/modal_view", $view_data);
         }
     }
 
     function modal_form() {
+        if (!$this->can_edit_items()) {
+            app_redirect("forbidden");
+        }
         $id = $this->request->getPost("id");
         $model_info = $this->Shipyards_model->get_one($id);
 
