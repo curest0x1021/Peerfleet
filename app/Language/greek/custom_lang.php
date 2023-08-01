@@ -293,5 +293,7 @@ $lang["region"] = "Περιοχή";
 $lang["sailing_area"] = "Χώρος ιστιοπλοΐας";
 $lang["wire_loadtest_required"] = "Απαιτείται δοκιμή φόρτωσης καλωδίων";
 $lang["wire_inspection_required"] = "Απαιτείται οπτική επιθεώρηση καλωδίων";
+$lang["notification_wire_loadtest_required"] = "Απαιτείται δοκιμή φόρτωσης καλωδίων";
+$lang["notification_wire_inspection_required"] = "Απαιτείται οπτική επιθεώρηση καλωδίων";
 
 return $lang;

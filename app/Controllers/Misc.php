@@ -441,7 +441,7 @@ class Misc extends Security_Controller
             "initial_test" => $this->request->getPost("initial_test")
         );
 
-        if (empty($id) && !$this->Misc_loadtest_model->check_valid_loadtest($data["misc_id"], $data["test_date"])) {
+        if (empty($id) && $data["initial_test"] == 0 && !$this->Misc_loadtest_model->check_valid_loadtest($data["misc_id"], $data["test_date"])) {
             echo json_encode(array("success" => false, 'message' => app_lang('loadtest_date_invalid')));
         } else {
             $save_id = $this->Misc_loadtest_model->ci_save($data, $id);

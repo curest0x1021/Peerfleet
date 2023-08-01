@@ -1,4 +1,4 @@
-<div class="modal-body clearfix general-form">
+<div class="modal-body clearfix general-form" style="height: 768px; position: relative; overflow: auto;">
     <div class="container-fluid">
         <div class="form-group">
             <div class="col-md-12 notepad-title">

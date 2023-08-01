@@ -293,5 +293,7 @@ $lang["region"] = "Kraj";
 $lang["sailing_area"] = "Plachta";
 $lang["wire_loadtest_required"] = "Vyžaduje se test zatížení drátů";
 $lang["wire_inspection_required"] = "Je nutná vizuální kontrola drátů";
+$lang["notification_wire_loadtest_required"] = "Vyžaduje se test zatížení drátů";
+$lang["notification_wire_inspection_required"] = "Je nutná vizuální kontrola drátů";
 
 return $lang;

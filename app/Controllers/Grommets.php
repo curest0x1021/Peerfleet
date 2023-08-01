@@ -249,7 +249,6 @@ class Grommets extends Security_Controller
             "main_id" => "required",
             "internal_id" => "required",
             "qty" => "required",
-            "bl" => "required",
             "icc_id" => "required",
             "certificate_number" => "required",
             "certificate_type_id" => "required",
@@ -447,7 +446,7 @@ class Grommets extends Security_Controller
             "initial_test" => $this->request->getPost("initial_test")
         );
 
-        if (empty($id) && !$this->Grommets_loadtest_model->check_valid_loadtest($data["grommet_id"], $data["test_date"])) {
+        if (empty($id) && $data["initial_test"] == 0 && !$this->Grommets_loadtest_model->check_valid_loadtest($data["grommet_id"], $data["test_date"])) {
             echo json_encode(array("success" => false, 'message' => app_lang('loadtest_date_invalid')));
         } else {
             $save_id = $this->Grommets_loadtest_model->ci_save($data, $id);
