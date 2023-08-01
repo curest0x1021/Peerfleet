@@ -293,5 +293,7 @@ $lang["region"] = "Regio";
 $lang["sailing_area"] = "Zeilgebied";
 $lang["wire_loadtest_required"] = "Draden laadtest vereist";
 $lang["wire_inspection_required"] = "Draden visuele inspectie vereist";
+$lang["notification_wire_loadtest_required"] = "Draden laadtest vereist";
+$lang["notification_wire_inspection_required"] = "Draden visuele inspectie vereist";
 
 return $lang;
