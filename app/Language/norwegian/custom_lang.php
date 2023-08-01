@@ -293,5 +293,7 @@ $lang["region"] = "Region";
 $lang["sailing_area"] = "Seilingsområdet";
 $lang["wire_loadtest_required"] = "Ledninger belastningstest kreves";
 $lang["wire_inspection_required"] = "Ledninger visuell inspeksjon påkrevd";
+$lang["notification_wire_loadtest_required"] = "Ledninger belastningstest kreves";
+$lang["notification_wire_inspection_required"] = "Ledninger visuell inspeksjon påkrevd";
 
 return $lang;

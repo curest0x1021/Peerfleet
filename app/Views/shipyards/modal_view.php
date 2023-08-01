@@ -191,7 +191,9 @@
 </div>
 <div class="modal-footer">
     <?php
-        echo modal_anchor(get_uri("shipyards/modal_form"), "<i data-feather='edit-2' class='icon-16'></i> " . app_lang('edit'), array("class" => "btn btn-default", "data-post-id" => $model_info->id, "title" => app_lang('edit')));
+        if ($can_edit_items) {
+            echo modal_anchor(get_uri("shipyards/modal_form"), "<i data-feather='edit-2' class='icon-16'></i> " . app_lang('edit'), array("class" => "btn btn-default", "data-post-id" => $model_info->id, "title" => app_lang('edit')));
+        }
     ?>
     <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
 </div>

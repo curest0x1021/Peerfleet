@@ -293,5 +293,7 @@ $lang["region"] = "Область";
 $lang["sailing_area"] = "Плавальная зона";
 $lang["wire_loadtest_required"] = "Требуется тест на загрузку проводов";
 $lang["wire_inspection_required"] = "Требуется визуальный осмотр проводов";
+$lang["notification_wire_loadtest_required"] = "Требуется тест на загрузку проводов";
+$lang["notification_wire_inspection_required"] = "Требуется визуальный осмотр проводов";
 
 return $lang;

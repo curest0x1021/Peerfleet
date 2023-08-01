@@ -293,5 +293,7 @@ $lang["region"] = "Region";
 $lang["sailing_area"] = "Segelbereich";
 $lang["wire_loadtest_required"] = "Drähte Lasttest erforderlich";
 $lang["wire_inspection_required"] = "Drähte visuelle Inspektion erforderlich";
+$lang["notification_wire_loadtest_required"] = "Drähte Lasttest erforderlich";
+$lang["notification_wire_inspection_required"] = "Drähte visuelle Inspektion erforderlich";
 
 return $lang;
