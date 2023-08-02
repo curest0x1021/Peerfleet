@@ -170,7 +170,9 @@ class Cron_job {
                     "owner_id" => $client->owner_id
                 );
             }
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
 
             $item2 = $this->find_item_by_client_id($wire->client_id, $primary_contacts);
             if ($item2) {
@@ -185,7 +187,9 @@ class Cron_job {
                 );
             }
 
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
         }
     }
 
@@ -216,7 +220,9 @@ class Cron_job {
                     "owner_id" => $client->owner_id
                 );
             }
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
 
             $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
             if ($item2) {
@@ -231,7 +237,9 @@ class Cron_job {
                 );
             }
 
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
         }
     }
 
@@ -262,7 +270,9 @@ class Cron_job {
                     "owner_id" => $client->owner_id
                 );
             }
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
 
             $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
             if ($item2) {
@@ -277,7 +287,9 @@ class Cron_job {
                 );
             }
 
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
         }
     }
 
@@ -317,7 +329,9 @@ class Cron_job {
                     "owner_id" => $client->owner_id
                 );
             }
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
 
             $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
             if ($item2) {
@@ -332,7 +346,9 @@ class Cron_job {
                 );
             }
 
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
         }
     }
 
@@ -363,7 +379,9 @@ class Cron_job {
                     "owner_id" => $client->owner_id
                 );
             }
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
 
             $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
             if ($item2) {
@@ -378,7 +396,9 @@ class Cron_job {
                 );
             }
 
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
         }
     }
 
@@ -409,7 +429,9 @@ class Cron_job {
                     "owner_id" => $client->owner_id
                 );
             }
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
 
             $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
             if ($item2) {
@@ -424,7 +446,9 @@ class Cron_job {
                 );
             }
 
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
         }
     }
 
@@ -455,7 +479,9 @@ class Cron_job {
                     "owner_id" => $client->owner_id
                 );
             }
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
 
             $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
             if ($item2) {
@@ -470,7 +496,9 @@ class Cron_job {
                 );
             }
 
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
         }
     }
 
@@ -501,7 +529,9 @@ class Cron_job {
                     "owner_id" => $client->owner_id
                 );
             }
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
 
             $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
             if ($item2) {
@@ -516,7 +546,9 @@ class Cron_job {
                 );
             }
 
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
         }
     }
 
@@ -547,7 +579,9 @@ class Cron_job {
                     "owner_id" => $client->owner_id
                 );
             }
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
 
             $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
             if ($item2) {
@@ -562,7 +596,9 @@ class Cron_job {
                 );
             }
 
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
         }
     }
 
@@ -593,7 +629,9 @@ class Cron_job {
                     "owner_id" => $client->owner_id
                 );
             }
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
 
             $item2 = $this->find_item_by_client_id($data->client_id, $primary_contacts);
             if ($item2) {
@@ -608,7 +646,9 @@ class Cron_job {
                 );
             }
 
-            $this->ci->Todo_model->ci_save($todo_data, null);
+            if ($todo_data["created_by"] > 0) {
+                $this->ci->Todo_model->ci_save($todo_data, null);
+            }
         }
     }
 
