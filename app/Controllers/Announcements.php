@@ -74,10 +74,10 @@ class Announcements extends Security_Controller {
         $options["user_type"] = $this->login_user->user_type;
 
         if ($this->login_user->user_type === "client") {
-            $group_ids = $this->Clients_model->get_one($this->login_user->client_id)->group_ids;
-            if ($group_ids) {
-                $options["client_group_ids"] = $group_ids;
-            }
+            // $group_ids = $this->Clients_model->get_one($this->login_user->client_id)->group_ids;
+            // if ($group_ids) {
+            //     $options["client_group_ids"] = $group_ids;
+            // }
         }
 
         return $options;
