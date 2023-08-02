@@ -374,7 +374,7 @@ class Notifications_model extends Crud_model {
         if (in_array("post_creator", $notify_to_terms) && $post_id) {
             $where .= " OR ($users_table.id=(SELECT $posts_table.created_by FROM $posts_table WHERE $posts_table.id=(IF((SELECT $posts_table.post_id FROM $posts_table WHERE $posts_table.id=$post_id), (SELECT $posts_table.post_id FROM $posts_table WHERE $posts_table.id=$post_id), $post_id)))) ";
         }
-        
+
         //find client_all_contacts by subscription
         if (in_array("client_all_contacts", $notify_to_terms) && $subscription_id) {
             $where .= " OR FIND_IN_SET( $users_table.id, (
@@ -395,8 +395,6 @@ class Notifications_model extends Crud_model {
         if (in_array("responsible_person", $notify_to_terms)) {
             if ($client_id) {
                 $where .= " OR ($users_table.id=(SELECT $clients_table.owner_id FROM $clients_table WHERE $clients_table.id=$client_id)) ";
-            // } else if ($warehouse_id) {
-            //     $where .= " OR ($users_table.id=(SELECT $clients_table.owner_id FROM $clients_table WHERE $clients_table.id=(SELECT $warehouse_table.client_id FROM $warehouse_table WHERE $warehouse_table.id=$warehouse_id))) ";
             }
         }
 
@@ -404,8 +402,6 @@ class Notifications_model extends Crud_model {
         if (in_array("vessel_contact", $notify_to_terms)) {
             if ($client_id) {
                 $where .= " OR ($users_table.id=(SELECT $users_table.id FROM $users_table WHERE $users_table.client_id=$client_id AND $users_table.is_primary_contact=1))";
-            // } else if ($warehouse_id) {
-            //     $where .= " OR ($users_table.id=(SELECT $users_table.id FROM $users_table WHERE $users_table.client_id=(SELECT $warehouse_table.client_id FROM $warehouse_table WHERE $warehouse_table.id=$warehouse_id) AND $users_table.is_primary_contact=1))";
             }
         }
 
