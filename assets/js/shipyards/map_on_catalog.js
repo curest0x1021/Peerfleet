@@ -117,11 +117,10 @@ function initMap () {
       // "pk.eyJ1IjoiY2hlbi1tYXJpdGltZWRhdGFzeXN0ZW1zLWNvbSIsImEiOiJjajNlNjduMzkwMHBhMzFzMjJnMGlpZmhvIn0.buGEUU37tesHnaWbKZET1A",
   }).addTo(map);
   style = {
-    fillColor: "#ffffff",
     weight: 2,
     opacity: 0.5,
     color: "#ffffff",
-    dashArray: "5",
+    dashArray: "4",
     fillOpacity: 0,
   };
 
