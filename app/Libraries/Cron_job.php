@@ -108,7 +108,7 @@ class Cron_job {
 
     private function _is_hourly_job_runnable() {
         $last_hourly_job_time = get_setting('last_hourly_job_time');
-        if ($last_hourly_job_time == "" || ($this->current_time > ($last_hourly_job_time * 1 + 3600))) {
+        if ($last_hourly_job_time == "" || ($this->current_time >= ($last_hourly_job_time * 1 + 3600))) {
             return true;
         }
     }
@@ -137,7 +137,7 @@ class Cron_job {
 
     private function _is_daily_job_runnable() {
         $last_dayly_job_time = get_setting('last_dayly_job_time');
-        if ($last_dayly_job_time == "" || ($this->current_time > ($last_dayly_job_time * 1 + 86400))) {
+        if ($last_dayly_job_time == "" || ($this->current_time >= ($last_dayly_job_time * 1 + 86400))) {
             return true;
         }
     }
