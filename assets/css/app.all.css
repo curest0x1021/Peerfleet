@@ -2052,7 +2052,7 @@ img.mfp-img {
   .full-width-button .clients-view-button .dataTables_wrapper .w-filter-right div.dataTables_filter input, .full-width-button .estimate-request-full-button .dataTables_wrapper .w-filter-right div.dataTables_filter input, .full-width-button .announcements-page .dataTables_wrapper .w-filter-right div.dataTables_filter input {
     margin-left: 15px !important;
   }
-  .grid-button #client-tabs, .grid-button .invoices-view {
+  .grid-button #vessel-tabs, .grid-button .invoices-view {
     padding-bottom: 15px;
   }
   .grid-button .projects-page {
@@ -3393,7 +3393,7 @@ div.dataTables_wrapper div.dataTables_processing {
   }
 }
 html, body {
-  background-color: #EEF1F9;
+  background-color: #1ff;
   color: #4e5e6a;
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13.5px;
@@ -6547,4 +6547,16 @@ input[type="color"]::-webkit-color-swatch {
 }
 #all-timesheet-users-summary {
   height: 63px;
+}
+
+#clients_list {
+  display: none;
+}
+
+#contacts {
+  display: none;
+}
+
+.tab-content>.active {
+  display: block !important;
 }
