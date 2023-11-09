@@ -4,9 +4,11 @@ namespace App\Controllers;
 
 use stdClass;
 
-class Clients extends Security_Controller {
+class Clients extends Security_Controller
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
 
         //check permission to access this module
@@ -14,7 +16,8 @@ class Clients extends Security_Controller {
     }
 
     /* load clients list view */
-    function index() {
+    function index($tab = "")
+    {
         $this->access_only_allowed_members();
 
         $view_data = $this->make_access_permissions_view_data();
@@ -22,12 +25,13 @@ class Clients extends Security_Controller {
         $view_data['can_edit_clients'] = $this->can_edit_clients();
         $view_data["show_project_info"] = $this->can_manage_all_projects() && !$this->has_all_projects_restricted_role();
         $view_data["show_own_clients_only_user_id"] = $this->show_own_clients_only_user_id();
-
+        $view_data['tab'] = clean_data($tab);
         return $this->template->rander("clients/index", $view_data);
     }
 
     //for team members, check only read_only permission here, since other permission will be checked accordingly
-    private function can_edit_clients() {
+    private function can_edit_clients()
+    {
         if ($this->login_user->is_admin) {
             return true;
         } else {
@@ -35,7 +39,8 @@ class Clients extends Security_Controller {
         }
     }
 
-    private function can_view_files() {
+    private function can_view_files()
+    {
         if ($this->login_user->user_type == "staff") {
             $this->access_only_allowed_members();
         } else {
@@ -43,7 +48,8 @@ class Clients extends Security_Controller {
         }
     }
 
-    private function can_add_files() {
+    private function can_add_files()
+    {
         if ($this->login_user->user_type == "staff") {
             $this->access_only_allowed_members();
         } else {
@@ -53,7 +59,8 @@ class Clients extends Security_Controller {
 
     /* load client add/edit modal */
 
-    function modal_form() {
+    function modal_form()
+    {
         $this->access_only_allowed_members();
         if (!$this->can_edit_clients()) {
             app_redirect("forbidden");
@@ -80,7 +87,8 @@ class Clients extends Security_Controller {
 
     /* insert or update a client */
 
-    function save() {
+    function save()
+    {
         $client_id = $this->request->getPost('id');
         if (!$this->can_edit_clients()) {
             app_redirect("forbidden");
@@ -164,7 +172,8 @@ class Clients extends Security_Controller {
 
     /* delete or undo a vessel */
 
-    function delete() {
+    function delete()
+    {
         $this->access_only_allowed_members();
         if (!$this->can_edit_clients()) {
             app_redirect("forbidden");
@@ -186,7 +195,8 @@ class Clients extends Security_Controller {
 
     /* list of vessels, prepared for datatable  */
 
-    function list_data() {
+    function list_data()
+    {
 
         $this->access_only_allowed_members();
         $options = array(
@@ -219,7 +229,8 @@ class Clients extends Security_Controller {
     }
 
     /* return a row of vessel list table */
-    private function _row_data($id) {
+    private function _row_data($id)
+    {
         $options = array(
             "id" => $id,
         );
@@ -228,7 +239,8 @@ class Clients extends Security_Controller {
     }
 
     /* prepare a row of client list table */
-    private function _make_row($data) {
+    private function _make_row($data)
+    {
         $image_url = get_avatar($data->owner_avatar);
         $contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->owner_name";
         $owner_name = get_team_member_profile_link($data->owner_id, $contact);
@@ -237,7 +249,8 @@ class Clients extends Security_Controller {
         if ($this->can_access_own_client($data->id)) {
             $name = anchor(get_uri("clients/view/" . $data->id), $data->charter_name);
         }
-        $row_data = array($data->id,
+        $row_data = array(
+            $data->id,
             $name,
             $data->owner_name ? $owner_name : "",
             $data->vessel_type,
@@ -245,13 +258,14 @@ class Clients extends Security_Controller {
         );
 
         $row_data[] = modal_anchor(get_uri("clients/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_vessel'), "data-post-id" => $data->id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_vessel'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("clients/delete"), "data-action" => "delete-confirmation"));
+            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_vessel'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("clients/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
     }
 
     /* load client details view */
-    function view($client_id = 0, $tab = "") {
+    function view($client_id = 0, $tab = "")
+    {
         $this->access_only_allowed_members();
         $this->can_access_own_client($client_id);
 
@@ -274,7 +288,7 @@ class Clients extends Security_Controller {
                 $view_data['client_info'] = $client_info;
                 $view_data["is_starred"] = strpos($client_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
                 $view_data["view_type"] = "";
-                $view_data["tab"] = $tab;
+                $view_data["tab"] = clean_data($tab);
 
                 //even it's hidden, admin can view all information of client
                 $view_data['hidden_menu'] = array("");
@@ -290,7 +304,8 @@ class Clients extends Security_Controller {
 
     /* add-remove start mark from client */
 
-    function add_remove_star($client_id, $type = "add") {
+    function add_remove_star($client_id, $type = "add")
+    {
         if ($client_id) {
             $view_data["client_id"] = clean_data($client_id);
 
@@ -304,14 +319,16 @@ class Clients extends Security_Controller {
         }
     }
 
-    function show_my_starred_clients() {
+    function show_my_starred_clients()
+    {
         $view_data["clients"] = $this->Clients_model->get_starred_clients($this->login_user->id)->getResult();
         return $this->template->view('clients/star/clients_list', $view_data);
     }
 
     /* load projects tab  */
 
-    function projects($client_id) {
+    function projects($client_id)
+    {
         $this->access_only_allowed_members();
         $this->can_access_own_client($client_id);
 
@@ -325,7 +342,8 @@ class Clients extends Security_Controller {
 
     /* load tickets tab  */
 
-    function tickets($client_id) {
+    function tickets($client_id)
+    {
         $this->access_only_allowed_members();
         $this->can_access_own_client($client_id);
 
@@ -343,7 +361,8 @@ class Clients extends Security_Controller {
 
     /* load notes tab  */
 
-    function notes($client_id) {
+    function notes($client_id)
+    {
         $this->access_only_allowed_members();
         $this->can_access_own_client($client_id);
 
@@ -355,7 +374,8 @@ class Clients extends Security_Controller {
 
     /* load events tab  */
 
-    function events($client_id) {
+    function events($client_id)
+    {
         $this->access_only_allowed_members();
         $this->can_access_own_client($client_id);
 
@@ -369,7 +389,8 @@ class Clients extends Security_Controller {
 
     /* load files tab */
 
-    function files($client_id, $view_type = "") {
+    function files($client_id, $view_type = "")
+    {
         $this->can_view_files();
         $this->can_access_own_client($client_id);
 
@@ -390,7 +411,8 @@ class Clients extends Security_Controller {
 
     /* file upload modal */
 
-    function file_modal_form() {
+    function file_modal_form()
+    {
         $this->can_add_files();
 
         $view_data['model_info'] = $this->General_files_model->get_one($this->request->getPost('id'));
@@ -403,7 +425,8 @@ class Clients extends Security_Controller {
 
     /* save file data and move temp file to parmanent file directory */
 
-    function save_file() {
+    function save_file()
+    {
         $this->can_add_files();
 
         $this->validate_submitted_data(array(
@@ -453,7 +476,8 @@ class Clients extends Security_Controller {
 
     /* list of files, prepared for datatable  */
 
-    function files_list_data($client_id = 0) {
+    function files_list_data($client_id = 0)
+    {
         $this->can_view_files();
         $this->can_access_own_client($client_id);
 
@@ -466,7 +490,8 @@ class Clients extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
 
-    private function _make_file_row($data) {
+    private function _make_file_row($data)
+    {
         $image_url = get_avatar($data->uploaded_by_user_image);
         $uploaded_by = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->uploaded_by_user_name";
 
@@ -488,7 +513,7 @@ class Clients extends Security_Controller {
         }
 
         $description = "<div class='float-start'>" .
-                js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("clients/view_file/" . $data->id)));
+            js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "0", "data-url" => get_uri("clients/view_file/" . $data->id)));
 
         if ($data->description) {
             $description .= "<br /><span>" . $data->description . "</span></div>";
@@ -503,7 +528,8 @@ class Clients extends Security_Controller {
         }
 
 
-        return array($data->id,
+        return array(
+            $data->id,
             "<div class='d-flex align-items-center flex-wrap'>" . $show . $description . "</div>",
             convert_file_size($data->file_size),
             $uploaded_by,
@@ -512,7 +538,8 @@ class Clients extends Security_Controller {
         );
     }
 
-    function view_file($file_id = 0) {
+    function view_file($file_id = 0)
+    {
         $file_info = $this->General_files_model->get_details(array("id" => $file_id))->getRow();
 
         if ($file_info) {
@@ -545,7 +572,8 @@ class Clients extends Security_Controller {
 
     /* download a file */
 
-    function download_file($id) {
+    function download_file($id)
+    {
         $this->can_view_files();
 
         $file_info = $this->General_files_model->get_one($id);
@@ -564,19 +592,22 @@ class Clients extends Security_Controller {
 
     /* upload a post file */
 
-    function upload_file() {
+    function upload_file()
+    {
         upload_file_to_temp();
     }
 
     /* check valid file for client */
 
-    function validate_file() {
+    function validate_file()
+    {
         return validate_post_file($this->request->getPost("file_name"));
     }
 
     /* delete a file */
 
-    function delete_file() {
+    function delete_file()
+    {
 
         $id = $this->request->getPost('id');
         $info = $this->General_files_model->get_one($id);
@@ -598,7 +629,8 @@ class Clients extends Security_Controller {
         }
     }
 
-    function contact_profile($contact_id = 0, $tab = "") {
+    function contact_profile($contact_id = 0, $tab = "")
+    {
         $this->access_only_allowed_members_or_contact_personally($contact_id);
 
         $view_data['user_info'] = $this->Users_model->get_one($contact_id);
@@ -617,7 +649,8 @@ class Clients extends Security_Controller {
     }
 
     //show account settings of a user
-    function account_settings($contact_id) {
+    function account_settings($contact_id)
+    {
         $this->access_only_allowed_members_or_contact_personally($contact_id);
         $view_data['user_info'] = $this->Users_model->get_one($contact_id);
         $view_data['can_edit_clients'] = $this->can_edit_clients();
@@ -626,7 +659,8 @@ class Clients extends Security_Controller {
     }
 
     //show my preference settings of a team member
-    function my_preferences() {
+    function my_preferences()
+    {
         $view_data["user_info"] = $this->Users_model->get_one($this->login_user->id);
 
         //language dropdown
@@ -640,7 +674,8 @@ class Clients extends Security_Controller {
         return $this->template->view("clients/contacts/my_preferences", $view_data);
     }
 
-    function save_my_preferences() {
+    function save_my_preferences()
+    {
         //setting preferences
         $settings = array("notification_sound_volume", "disable_push_notification", "disable_keyboard_shortcuts", "reminder_sound_volume", "reminder_snooze_length");
 
@@ -682,7 +717,8 @@ class Clients extends Security_Controller {
         echo json_encode(array("success" => true, 'message' => app_lang('settings_updated')));
     }
 
-    function save_personal_language($language) {
+    function save_personal_language($language)
+    {
         if (!get_setting("disable_language_selector_for_clients") && ($language || $language === "0")) {
 
             $language = clean_data($language);
@@ -694,7 +730,8 @@ class Clients extends Security_Controller {
 
     /* load contacts tab  */
 
-    function contacts($client_id = 0) {
+    function contacts($client_id = 0)
+    {
         $this->access_only_allowed_members();
         $this->can_access_own_client($client_id);
 
@@ -703,15 +740,18 @@ class Clients extends Security_Controller {
             $view_data["model_info"] = $this->Clients_model->get_primary_contact($client_id, true);
             $view_data["label_column"] = "col-3";
             $view_data["field_column"] = "col-9";
-
-            $view_data['can_edit_clients'] = $this->can_edit_clients();
-            return $this->template->view("clients/contacts/index", $view_data);
+        } else {
+            $view_data["client_id"] = "";
         }
+
+        $view_data['can_edit_clients'] = $this->can_edit_clients();
+        return $this->template->view("clients/contacts/index", $view_data);
     }
 
     /* contact add modal */
 
-    function add_new_contact_modal_form() {
+    function add_new_contact_modal_form()
+    {
         $this->access_only_allowed_members();
         if (!$this->can_edit_clients()) {
             app_redirect("forbidden");
@@ -729,7 +769,8 @@ class Clients extends Security_Controller {
 
     /* load contact's general info tab view */
 
-    function contact_general_info_tab($contact_id = 0) {
+    function contact_general_info_tab($contact_id = 0)
+    {
         if ($contact_id) {
             $this->access_only_allowed_members_or_contact_personally($contact_id);
 
@@ -746,7 +787,8 @@ class Clients extends Security_Controller {
 
     /* load contact's company info tab view */
 
-    function company_info_tab($client_id = 0) {
+    function company_info_tab($client_id = 0)
+    {
         if ($client_id) {
             $this->access_only_allowed_members_or_client_contact($client_id);
             $this->can_access_own_client($client_id);
@@ -766,7 +808,8 @@ class Clients extends Security_Controller {
 
     /* load contact's social links tab view */
 
-    function contact_social_links_tab($contact_id = 0) {
+    function contact_social_links_tab($contact_id = 0)
+    {
         if ($contact_id) {
             $this->access_only_allowed_members_or_contact_personally($contact_id);
 
@@ -783,7 +826,8 @@ class Clients extends Security_Controller {
 
     /* insert/upadate a contact */
 
-    function save_contact() {
+    function save_contact()
+    {
         $contact_id = $this->request->getPost('contact_id');
         $client_id = $this->request->getPost('client_id');
         $this->can_access_own_client($client_id);
@@ -878,7 +922,8 @@ class Clients extends Security_Controller {
     }
 
     //save social links of a contact
-    function save_contact_social_links($contact_id = 0) {
+    function save_contact_social_links($contact_id = 0)
+    {
         if (!$this->can_edit_clients()) {
             app_redirect("forbidden");
         }
@@ -921,7 +966,8 @@ class Clients extends Security_Controller {
     }
 
     //save account settings of a client contact (user)
-    function save_account_settings($user_id) {
+    function save_account_settings($user_id)
+    {
         if (!$this->can_edit_clients()) {
             app_redirect("forbidden");
         }
@@ -987,7 +1033,8 @@ class Clients extends Security_Controller {
     }
 
     //save profile image of a contact
-    function save_profile_image($user_id = 0) {
+    function save_profile_image($user_id = 0)
+    {
         if (!$this->can_edit_clients()) {
             app_redirect("forbidden");
         }
@@ -1034,7 +1081,8 @@ class Clients extends Security_Controller {
 
     /* delete or undo a contact */
 
-    function delete_contact() {
+    function delete_contact()
+    {
         if (!$this->can_edit_clients()) {
             app_redirect("forbidden");
         }
@@ -1067,11 +1115,11 @@ class Clients extends Security_Controller {
 
     /* list of contacts, prepared for datatable  */
 
-    function contacts_list_data($client_id = 0) {
+    function contacts_list_data($client_id = 0)
+    {
 
         $this->access_only_allowed_members_or_client_contact($client_id);
         $this->can_access_own_client($client_id);
-
         $options = array(
             "user_type" => "client",
             "client_id" => $client_id,
@@ -1108,23 +1156,23 @@ class Clients extends Security_Controller {
 
     /* return a row of contact list table */
 
-    private function _contact_row_data($id) {
-        $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("client_contacts", $this->login_user->is_admin, $this->login_user->user_type);
+    private function _contact_row_data($id)
+    {
         $options = array(
             "id" => $id,
             "user_type" => "client",
-            "custom_fields" => $custom_fields
         );
         $data = $this->Users_model->get_details($options)->getRow();
-        return $this->_make_contact_row($data, $custom_fields);
+        return $this->_make_contact_row($data);
     }
 
     /* prepare a row of contact list table */
 
-    private function _make_contact_row($data, $hide_primary_contact_label = false) {
+    private function _make_contact_row($data, $hide_primary_contact_label = false)
+    {
         $image_url = get_avatar($data->image);
         $user_avatar = "<span class='avatar avatar-xs'><img src='$image_url' alt='...'></span>";
-        $full_name = $data->first_name . " " . $data->last_name . " ";
+        $full_name = $data->first_name ?  $data->first_name . " " . $data->last_name . " " : "_";
         $primary_contact = "";
         if ($data->is_primary_contact == "1" && !$hide_primary_contact_label) {
             $primary_contact = "<span class='bg-info badge text-white'>" . app_lang('primary_contact') . "</span>";
@@ -1159,7 +1207,8 @@ class Clients extends Security_Controller {
 
     /* open invitation modal */
 
-    function invitation_modal() {
+    function invitation_modal()
+    {
         if (get_setting("disable_user_invitation_option_by_clients") && $this->login_user->user_type == "client") {
             app_redirect("forbidden");
         }
@@ -1182,7 +1231,8 @@ class Clients extends Security_Controller {
     }
 
     //send a team member invitation to an email address
-    function send_invitation() {
+    function send_invitation()
+    {
         if (get_setting("disable_user_invitation_option_by_clients") && $this->login_user->user_type == "client") {
             app_redirect("forbidden");
         }
@@ -1239,7 +1289,8 @@ class Clients extends Security_Controller {
 
     /* only visible to client  */
 
-    function users() {
+    function users()
+    {
         if ($this->login_user->user_type === "client") {
             $view_data['client_id'] = $this->login_user->client_id;
             return $this->template->rander("clients/contacts/users", $view_data);
@@ -1248,15 +1299,18 @@ class Clients extends Security_Controller {
 
     /* show keyboard shortcut modal form */
 
-    function keyboard_shortcut_modal_form() {
+    function keyboard_shortcut_modal_form()
+    {
         return $this->template->view('team_members/keyboard_shortcut_modal_form');
     }
 
-    function upload_excel_file() {
+    function upload_excel_file()
+    {
         upload_file_to_temp(true);
     }
 
-    function import_clients_modal_form() {
+    function import_clients_modal_form()
+    {
         $this->access_only_allowed_members();
         if (!$this->can_edit_clients()) {
             app_redirect("forbidden");
@@ -1265,7 +1319,8 @@ class Clients extends Security_Controller {
         return $this->template->view("clients/import_clients_modal_form");
     }
 
-    private function _prepare_client_data($data_row, $allowed_headers) {
+    private function _prepare_client_data($data_row, $allowed_headers)
+    {
         //prepare client data
         $client_data = array();
         $contact_data = array();
@@ -1299,7 +1354,8 @@ class Clients extends Security_Controller {
         );
     }
 
-    function save_client_from_excel_file() {
+    function save_client_from_excel_file()
+    {
         if (!$this->can_edit_clients()) {
             app_redirect("forbidden");
         }
@@ -1385,7 +1441,8 @@ class Clients extends Security_Controller {
         echo json_encode(array('success' => true, 'message' => app_lang("record_saved")));
     }
 
-    private function findObjectByTitle($title, $arr) {
+    private function findObjectByTitle($title, $arr)
+    {
         $title = trim($title);
         foreach ($arr as $item) {
             if ($title == $item->title) {
@@ -1395,7 +1452,8 @@ class Clients extends Security_Controller {
         return false;
     }
 
-    private function _save_custom_fields_of_client($client_id, $custom_field_values_array) {
+    private function _save_custom_fields_of_client($client_id, $custom_field_values_array)
+    {
         if (!$custom_field_values_array) {
             return false;
         }
@@ -1414,7 +1472,8 @@ class Clients extends Security_Controller {
         }
     }
 
-    private function _get_allowed_headers() {
+    private function _get_allowed_headers()
+    {
         return array(
             "charter_name",
             "christian_name",
@@ -1439,7 +1498,8 @@ class Clients extends Security_Controller {
         );
     }
 
-    private function _store_headers_position($headers_row = array()) {
+    private function _store_headers_position($headers_row = array())
+    {
         $allowed_headers = $this->_get_allowed_headers();
 
         //check if all headers are correct and on the right position
@@ -1470,7 +1530,8 @@ class Clients extends Security_Controller {
         return $final_headers;
     }
 
-    function validate_import_clients_file() {
+    function validate_import_clients_file()
+    {
         $this->access_only_allowed_members();
 
         $file_name = $this->request->getPost("file_name");
@@ -1487,7 +1548,8 @@ class Clients extends Security_Controller {
         }
     }
 
-    function validate_import_clients_file_data($check_on_submit = false) {
+    function validate_import_clients_file_data($check_on_submit = false)
+    {
         $this->access_only_allowed_members();
 
         $table_data = "";
@@ -1607,12 +1669,14 @@ class Clients extends Security_Controller {
         echo json_encode(array("success" => true, 'table_data' => $table_data, 'got_error' => ($got_error_header || $got_error_table_data) ? true : false));
     }
 
-    private function _row_data_validation_and_get_error_message($key, $data) {
+    private function _row_data_validation_and_get_error_message($key, $data)
+    {
         $allowed_headers = $this->_get_allowed_headers();
         $header_value = get_array_value($allowed_headers, $key);
 
         if (((count($allowed_headers)) > $key) && empty($data)) {
-            if ($header_value == "charter_name" ||
+            if (
+                $header_value == "charter_name" ||
                 $header_value == "christan_name" ||
                 $header_value == "type" ||
                 $header_value == "imo_number" ||
@@ -1633,17 +1697,20 @@ class Clients extends Security_Controller {
         }
     }
 
-    function download_sample_excel_file() {
+    function download_sample_excel_file()
+    {
         $this->access_only_allowed_members();
         return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => "import-vessels-sample.xlsx"))));
     }
 
-    function gdpr() {
+    function gdpr()
+    {
         $view_data["user_info"] = $this->Users_model->get_one($this->login_user->id);
         return $this->template->view("clients/contacts/gdpr", $view_data);
     }
 
-    function export_my_data() {
+    function export_my_data()
+    {
         if (get_setting("enable_gdpr") && get_setting("allow_clients_to_export_their_data")) {
             $user_info = $this->Users_model->get_one($this->login_user->id);
 
@@ -1672,7 +1739,8 @@ class Clients extends Security_Controller {
         }
     }
 
-    private function _make_export_data($user_info) {
+    private function _make_export_data($user_info)
+    {
         $required_general_info_array = array("first_name", "last_name", "email", "job_title", "phone", "gender", "skype", "created_at");
 
         $data = strtoupper(app_lang("general_info")) . "\n";
@@ -1723,7 +1791,8 @@ class Clients extends Security_Controller {
         return $data;
     }
 
-    function request_my_account_removal() {
+    function request_my_account_removal()
+    {
         if (get_setting("enable_gdpr") && get_setting("clients_can_request_account_removal")) {
 
             $user_id = $this->login_user->id;
@@ -1738,7 +1807,8 @@ class Clients extends Security_Controller {
         }
     }
 
-    function clients_list() {
+    function clients_list()
+    {
         $this->access_only_allowed_members();
 
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("clients", $this->login_user->is_admin, $this->login_user->user_type);
@@ -1754,7 +1824,8 @@ class Clients extends Security_Controller {
         return $this->template->view("clients/clients_list", $view_data);
     }
 
-    private function make_access_permissions_view_data() {
+    private function make_access_permissions_view_data()
+    {
         $access_ticket = $this->get_access_info("ticket");
         $view_data["show_ticket_info"] = (get_setting("module_ticket") && $access_ticket->access_type == "all") ? true : false;
 
@@ -1765,7 +1836,8 @@ class Clients extends Security_Controller {
         return $view_data;
     }
 
-    function switch_account($user_id) {
+    function switch_account($user_id)
+    {
         validate_numeric_value($user_id);
         $this->access_only_clients();
 
@@ -1789,7 +1861,8 @@ class Clients extends Security_Controller {
         app_redirect('dashboard/view');
     }
 
-    function total_clients_list() {
+    function total_clients_list()
+    {
         $this->access_only_allowed_members();
 
         $result = $this->Clients_model->get_total_clients();
@@ -1804,7 +1877,8 @@ class Clients extends Security_Controller {
         echo json_encode($result);
     }
 
-    private function _make_client_row($data) {
+    private function _make_client_row($data)
+    {
         $favorite = empty($data->starred_by) ? "<i data-feather='star' class='icon-16' style='color: #ffb822;'></i>" : "<i data-feather='star' class='icon-16 icon-fill-warning' style='color: #ffb822;'></i>";
         $row_data = array(
             anchor(get_uri("clients/view/" . $data->id), $data->charter_name),
@@ -1817,7 +1891,8 @@ class Clients extends Security_Controller {
     }
 
     //load the sea valves view
-    function sea_valves($client_id) {
+    function sea_valves($client_id)
+    {
         $this->access_only_allowed_members();
         $this->can_access_own_client($client_id);
 
@@ -1827,7 +1902,8 @@ class Clients extends Security_Controller {
         }
     }
 
-    function sea_valve_modal_form() {
+    function sea_valve_modal_form()
+    {
         $this->access_only_allowed_members();
         // if (!$this->can_edit_clients()) {
         //     app_redirect("forbidden");
@@ -1844,7 +1920,8 @@ class Clients extends Security_Controller {
         return $this->template->view('clients/sea_valves/modal_form', $view_data);
     }
 
-    function import_sea_valves_modal_form() {
+    function import_sea_valves_modal_form()
+    {
         $this->access_only_allowed_members();
 
         $client_id = $this->request->getPost('client_id') ? $this->request->getPost('client_id') : $view_data['model_info']->client_id;
@@ -1855,7 +1932,8 @@ class Clients extends Security_Controller {
         return $this->template->view('clients/sea_valves/import_modal_form', $view_data);
     }
 
-    function save_sea_valve_from_excel_file() {
+    function save_sea_valve_from_excel_file()
+    {
         $client_id = $this->request->getPost('client_id');
         $this->can_access_own_client($client_id);
 
@@ -1896,12 +1974,14 @@ class Clients extends Security_Controller {
         echo json_encode(array('success' => true, 'message' => app_lang("record_saved")));
     }
 
-    function download_sample_sea_valves_excel_file() {
+    function download_sample_sea_valves_excel_file()
+    {
         $this->access_only_allowed_members();
         return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => "import-sea-valves-sample.xlsx"))));
     }
 
-    function validate_import_sea_valves_file() {
+    function validate_import_sea_valves_file()
+    {
         $this->access_only_allowed_members();
 
         $file_name = $this->request->getPost("file_name");
@@ -1918,7 +1998,8 @@ class Clients extends Security_Controller {
         }
     }
 
-    private function _get_allowed_sea_valve_headers() {
+    private function _get_allowed_sea_valve_headers()
+    {
         return array(
             "name",
             "description",
@@ -1931,7 +2012,8 @@ class Clients extends Security_Controller {
         );
     }
 
-    private function _store_sea_valve_headers_position($headers_row = array()) {
+    private function _store_sea_valve_headers_position($headers_row = array())
+    {
         $allowed_headers = $this->_get_allowed_sea_valve_headers();
 
         //check if all headers are correct and on the right position
@@ -1962,14 +2044,14 @@ class Clients extends Security_Controller {
         return $final_headers;
     }
 
-    private function _sea_valve_row_data_validation_and_get_error_message($key, $data) {
+    private function _sea_valve_row_data_validation_and_get_error_message($key, $data)
+    {
         $allowed_headers = $this->_get_allowed_sea_valve_headers();
         $header_value = get_array_value($allowed_headers, $key);
 
         //there has no date field on default import fields
         if (((count($allowed_headers)) > $key) && $data) {
             if ($header_value == "description") {
-
             } else {
                 if (empty($data)) {
                     $error_message = sprintf(app_lang("import_data_empty_message"), app_lang($header_value));
@@ -1991,7 +2073,8 @@ class Clients extends Security_Controller {
         }
     }
 
-    private function _prepare_sea_valve_data($data_row, $allowed_headers) {
+    private function _prepare_sea_valve_data($data_row, $allowed_headers)
+    {
         //prepare sea valve data
         $sea_valve_data = array();
 
@@ -2007,7 +2090,8 @@ class Clients extends Security_Controller {
         return $sea_valve_data;
     }
 
-    function validate_import_sea_valves_file_data($check_on_submit = false) {
+    function validate_import_sea_valves_file_data($check_on_submit = false)
+    {
         $this->access_only_allowed_members();
 
         $table_data = "";
@@ -2127,7 +2211,8 @@ class Clients extends Security_Controller {
         echo json_encode(array("success" => true, 'table_data' => $table_data, 'got_error' => ($got_error_header || $got_error_table_data) ? true : false));
     }
 
-    function save_sea_valve() {
+    function save_sea_valve()
+    {
         // if (!$this->can_edit_clients()) {
         //     app_redirect("forbidden");
         // }
@@ -2167,7 +2252,8 @@ class Clients extends Security_Controller {
         }
     }
 
-    function delete_sea_valve() {
+    function delete_sea_valve()
+    {
         // if (!$this->can_edit_clients()) {
         //     app_redirect("forbidden");
         // }
@@ -2190,7 +2276,8 @@ class Clients extends Security_Controller {
         }
     }
 
-    function sea_valves_list_data($client_id = 0) {
+    function sea_valves_list_data($client_id = 0)
+    {
         validate_numeric_value($client_id);
 
         $options['client_id'] = $client_id;
@@ -2202,14 +2289,16 @@ class Clients extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
 
-    private function _row_sea_valve_data($id) {
+    private function _row_sea_valve_data($id)
+    {
         $data = $this->Sea_valves_model->get_one($id);
         return $this->_make_sea_valve_row($data);
     }
 
-    private function _make_sea_valve_row($data) {
+    private function _make_sea_valve_row($data)
+    {
         $action = modal_anchor(get_uri("clients/sea_valve_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_sea_valve'), "data-post-id" => $data->id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_sea_valve'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("clients/delete_sea_valve"), "data-action" => "delete-confirmation"));
+            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_sea_valve'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("clients/delete_sea_valve"), "data-action" => "delete-confirmation"));
 
         return array(
             $data->id,
@@ -2226,7 +2315,8 @@ class Clients extends Security_Controller {
     }
 
     //load the warehouses view
-    function warehouses($client_id) {
+    function warehouses($client_id)
+    {
         $this->access_only_allowed_members();
         $this->can_access_own_client($client_id);
 
@@ -2236,7 +2326,8 @@ class Clients extends Security_Controller {
         }
     }
 
-    function warehouse_modal_form() {
+    function warehouse_modal_form()
+    {
         $view_data['label_column'] = "col-md-3";
         $view_data['field_column'] = "col-md-9";
         $view_data["model_info"] = $this->Warehouses_model->get_one($this->request->getPost('id'));
@@ -2248,7 +2339,8 @@ class Clients extends Security_Controller {
         return $this->template->view('clients/warehouses/modal_form', $view_data);
     }
 
-    function save_warehouse() {
+    function save_warehouse()
+    {
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "code" => "required|max_length[30]",
@@ -2275,7 +2367,8 @@ class Clients extends Security_Controller {
         }
     }
 
-    function delete_warehouse() {
+    function delete_warehouse()
+    {
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
         ));
@@ -2289,10 +2382,11 @@ class Clients extends Security_Controller {
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
-    }
+        }
     }
 
-    function warehouses_list_data($client_id = 0) {
+    function warehouses_list_data($client_id = 0)
+    {
         validate_numeric_value($client_id);
 
         $options['client_id'] = $client_id;
@@ -2304,14 +2398,16 @@ class Clients extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
 
-    private function _row_warehouse_data($id) {
+    private function _row_warehouse_data($id)
+    {
         $data = $this->Warehouses_model->get_one($id);
         return $this->_make_warehouse_row($data);
     }
 
-    private function _make_warehouse_row($data) {
+    private function _make_warehouse_row($data)
+    {
         $action = modal_anchor(get_uri("clients/warehouse_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_warehouse'), "data-post-id" => $data->id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_warehouse'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("clients/delete_warehouse"), "data-action" => "delete-confirmation"));
+            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_warehouse'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("clients/delete_warehouse"), "data-action" => "delete-confirmation"));
 
         return array(
             $data->id,
@@ -2321,7 +2417,6 @@ class Clients extends Security_Controller {
             $action
         );
     }
-
 }
 
 /* End of file clients.php */
