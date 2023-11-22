@@ -12,7 +12,7 @@ class Google_calendar_events {
         $this->ci = new App_Controller();
 
         //load resources
-        require_once(APPPATH . "ThirdParty/Google/google-api-php-client/vendor/autoload.php");
+        require_once(APPPATH . "ThirdParty/Google/google-api-php-client-2-15-0/autoload.php");
     }
 
     //authorize connection
@@ -194,22 +194,28 @@ class Google_calendar_events {
 
     //get start/end date and time 
     private function _get_start_end_date_time($event_info, $type = "", $datetime_object_type = "") {
-        $date_object = $type . "_date";
-        $time_object = $type . "_time";
+        $date_type = $type . "_date";
+        $time_type = $type . "_time";
 
-        if ($type === "end" && is_null($event_info->$date_object)) {
-            //there has no end date
-            $type = "start";
-            $date_object = $type . "_date";
-            $time_object = $type . "_time";
+        if ($type === "end" && is_null($event_info->end_date)) {
+            $event_info->end_date = $event_info->start_date;      //there has no end date. Set start date = end date. 
         }
+
+        if ($type === "end" && $datetime_object_type == "date") {
+            //all day event. add one day extra with end date for google calander event. 
+            $event_info->end_date = add_period_to_date($event_info->end_date, 1, "days");
+        }
+
+
+        $date = $event_info->$date_type;
+        $time = $event_info->$time_type;
 
         $time_array = array("timeZone" => get_setting("timezone"));
 
         if ($datetime_object_type == "date") { //all day event
-            $time_array["date"] = $event_info->$date_object;
+            $time_array["date"] = $date;
         } else { //customized time event
-            $date_time = new \DateTime($event_info->$date_object . " " . $event_info->$time_object, new \DateTimeZone(get_setting("timezone")));
+            $date_time = new \DateTime($date . " " . $time, new \DateTimeZone(get_setting("timezone")));
             $time_array["dateTime"] = $date_time->format(\DateTime::RFC3339);
         }
 
@@ -241,7 +247,9 @@ class Google_calendar_events {
 
             $users = $this->ci->Events_model->get_share_with_users_of_event($event_info)->getResult();
             foreach ($users as $user) {
+                //when saving event from RISE to Google, add shared members whose are not integrated with Google Calendar also
                 $user_google_calendar_gmail = get_setting('user_' . $user->id . '_google_calendar_gmail');
+                $user_google_calendar_gmail = $user_google_calendar_gmail ? $user_google_calendar_gmail : $user->email;
                 if ($user_google_calendar_gmail) {
                     $emails_array[] = array("email" => $user_google_calendar_gmail);
                 }
@@ -257,7 +265,12 @@ class Google_calendar_events {
     public function delete($google_event_id = "", $user_id = "") {
         if ($google_event_id && $user_id) {
             $service = $this->_get_calendar_service($user_id);
-            $service->events->delete('primary', $google_event_id);
+
+            try {
+                $service->events->delete('primary', $google_event_id);
+            } catch (\Exception $ex) {
+
+            }
         }
     }
 
@@ -353,7 +366,20 @@ class Google_calendar_events {
             }
 
             $start_date = $event->start->date;
-            $end_date = $start_date; //start date and end date should be same for one time event
+            $end_date = $start_date;
+
+            if ($event->end->date) {
+                // it's full day event. In google calendar, the full day event returns 1 extra day. 
+                // so, we have to remove the extra day before saving to RISE. 
+                $end_date = subtract_period_from_date($event->end->date, 1, "days");
+            }
+
+            // make sure, the end date can't be before start date. 
+            if ($end_date < $start_date) {
+                $end_date = $start_date;
+            }
+
+
             $start_time = "00:00:00";
             $end_time = "00:00:00";
 

@@ -20,16 +20,16 @@ if (!function_exists('get_notification_config')) {
             $id = "";
 
             if (isset($options->task_id)) {
-                $ajax_url = get_uri("projects/task_view/");
+                $ajax_url = get_uri("tasks/view/");
                 $id = $options->task_id;
-                $url = get_uri("projects/task_view/" . $id);
+                $url = get_uri("tasks/view/" . $id);
             }
 
             if ((isset($options->task_id) && $options->task_id) || (isset($options->project_id) && $options->project_id)) {
                 return array("url" => $url, "ajax_modal_url" => $ajax_url, "large_modal" => "1", "id" => $id);
             } else {
                 //return all tasks link for reminder notifications
-                return array("url" => get_uri("projects/all_tasks"));
+                return array("url" => get_uri("tasks/all_tasks"));
             }
         };
 
@@ -119,7 +119,7 @@ if (!function_exists('get_notification_config')) {
         $order_link = function ($options) {
             $url = "";
             if (isset($options->order_id)) {
-                $url = get_uri("orders/preview/" . $options->order_id . "/1");
+                $url = get_uri("store/order_preview/" . $options->order_id . "/1");
             }
 
             return array("url" => $url);
@@ -217,6 +217,7 @@ if (!function_exists('get_notification_config')) {
             return array("url" => $url);
         };
 
+        
         $csp_link = function ($options) {
             $url = "";
             if (isset($options->client_id) && isset($options->warehouse_id)) {
@@ -611,6 +612,46 @@ if (!function_exists('get_notification_config')) {
             "lashing_inspection_required" => array(
                 "notify_to" => array("vessel_contact", "responsible_person"),
                 "info" => $lashing_inspection_link
+            ),
+            "general_task_created" => array(
+                "notify_to" => array("task_assignee", "task_collaborators", "team_members", "team"),
+                "info" => $task_link
+            ),
+            "general_task_updated" => array(
+                "notify_to" => array("task_assignee", "task_collaborators", "team_members", "team"),
+                "info" => $task_link
+            ),
+            "general_task_assigned" => array(
+                "notify_to" => array("task_assignee", "task_collaborators", "team_members", "team"),
+                "info" => $task_link
+            ),
+            "general_task_started" => array(
+                "notify_to" => array("team_members", "team"),
+                "info" => $task_link
+            ),
+            "general_task_finished" => array(
+                "notify_to" => array("team_members", "team"),
+                "info" => $task_link
+            ),
+            "general_task_reopened" => array(
+                "notify_to" => array("team_members", "team"),
+                "info" => $task_link
+            ),
+            "general_task_deleted" => array(
+                "notify_to" => array("task_assignee", "task_collaborators", "team_members", "team"),
+                "info" => $task_link
+            ),
+            "general_task_commented" => array(
+                "notify_to" => array("mentioned_members", "task_assignee", "task_collaborators", "team_members", "team"),
+                "info" => $task_link
+            ),
+            "subscription_started" => array(
+                "notify_to" => array("client_primary_contact", "client_all_contacts", "team_members", "team"),
+                "info" => $subscription_link
+            ),
+            "subscription_invoice_created_via_cron_job" => array(
+                "notify_to" => array("client_primary_contact", "client_all_contacts", "team_members", "team"),
+                "info" => $invoice_link
             )
         );
 
@@ -883,8 +924,30 @@ if (!function_exists('send_notification_emails')) {
             $parser_data["PROJECT_TITLE"] = $notification->project_title;
             $parser_data["USER_NAME"] = $notification->user_name;
             $parser_data["PROJECT_URL"] = $url;
-        } else if ($notification->event == "subscription_request_sent") {
+        } else if ($notification->category == "subscription") {
             $template_name = "subscription_request_sent";
+
+            if ($notification->event == "subscription_started") {
+                $template_name = "subscription_started";
+            } else if ($notification->event == "subscription_invoice_created_via_cron_job") {
+                $template_name = "subscription_invoice_created_via_cron_job";
+                $invoice_data = get_invoice_making_data($notification->invoice_id);
+                $invoice_info = get_array_value($invoice_data, "invoice_info");
+                $invoice_total_summary = get_array_value($invoice_data, "invoice_total_summary");
+                $parser_data["INVOICE_ID"] = $notification->invoice_id;
+                $parser_data["INVOICE_FULL_ID"] = get_invoice_id($notification->invoice_id);
+                $parser_data["BALANCE_DUE"] = to_currency($invoice_total_summary->balance_due, $invoice_total_summary->currency_symbol);
+                $parser_data["DUE_DATE"] = format_to_date($invoice_info->due_date, false);
+                $parser_data["INVOICE_URL"] = $url;
+
+                $default_bcc = get_setting('send_bcc_to');
+                if ($default_bcc) {
+                    $email_options["bcc"] = $default_bcc;
+                }
+
+                $attachement_url = prepare_invoice_pdf($invoice_data, "send_email");
+                $email_options["attachments"] = array(array("file_path" => $attachement_url));
+            }
 
             $subscription_info = $ci->Subscriptions_model->get_one($notification->subscription_id);
             $primary_contact = $ci->Clients_model->get_primary_contact($subscription_info->client_id, true);
@@ -894,13 +957,13 @@ if (!function_exists('send_notification_emails')) {
 
             $parser_data["SUBSCRIPTION_ID"] = $notification->subscription_id;
             $parser_data["SUBSCRIPTION_TITLE"] = $notification->subscription_title;
-            $parser_data["PROJECT_URL"] = $url;
-        } else if ($notification->event == "project_task_created" || $notification->event == "project_task_assigned" || $notification->event == "project_task_commented" || $notification->event == "project_task_updated" || $notification->event == "project_task_started" || $notification->event == "project_task_finished" || $notification->event == "project_task_reopened" || $notification->event == "project_task_deleted") {
-            if ($notification->event == "project_task_commented") {
+            $parser_data["SUBSCRIPTION_URL"] = $url;
+        } else if ($notification->event == "project_task_created" || $notification->event == "project_task_assigned" || $notification->event == "project_task_commented" || $notification->event == "project_task_updated" || $notification->event == "project_task_started" || $notification->event == "project_task_finished" || $notification->event == "project_task_reopened" || $notification->event == "project_task_deleted" || $notification->event == "general_task_created" || $notification->event == "general_task_assigned" || $notification->event == "general_task_commented" || $notification->event == "general_task_updated" || $notification->event == "general_task_started" || $notification->event == "general_task_finished" || $notification->event == "general_task_reopened" || $notification->event == "general_task_deleted") {
+            if ($notification->event == "project_task_commented" || $notification->event == "general_task_commented") {
                 $template_name = "task_commented";
 
                 $parser_data["TASK_COMMENT"] = convert_mentions(convert_comment_link($notification->project_comment_title, false), false);
-            } else if ($notification->event == "project_task_assigned") {
+            } else if ($notification->event == "project_task_assigned" || $notification->event == "general_task_assigned") {
                 $template_name = "task_assigned";
             } else {
                 $template_name = "task_general";
@@ -908,10 +971,30 @@ if (!function_exists('send_notification_emails')) {
                 $parser_data["EVENT_TITLE"] = "<b>" . $notification->user_name . "</b> " . sprintf(app_lang("notification_" . $notification->event));
             }
 
+            $task_info = $ci->Tasks_model->get_details(array("id" => $notification->task_id))->getRow();
+            $context_label = $task_info->context;
+            $context_tilte = "";
+
+            if ($context_label == "project" || $context_label == "contract" || $context_label == "subscription" || $context_label == "expense" || $context_label == "ticket") {
+                $context_tilte = $task_info->{$task_info->context . "_title"};
+            } else if ($context_label == "invoice") {
+                $context_tilte = get_invoice_id($task_info->{$task_info->context . "_id"});
+            } else if ($context_label == "estimate") {
+                $context_tilte = get_estimate_id($task_info->{$task_info->context . "_id"});
+            } else if ($context_label == "order") {
+                $context_tilte = get_order_id($task_info->{$task_info->context . "_id"});
+            } else if ($context_label == "proposal") {
+                $context_tilte = get_proposal_id($task_info->{$task_info->context . "_id"});
+            } else if ($context_label == "client" || $context_label == "lead") {
+                $context_tilte = $task_info->company_name;
+            }
+
+            $parser_data["CONTEXT_LABEL"] = app_lang($context_label);
+            $parser_data["CONTEXT_TITLE"] = $context_tilte;
+
             $parser_data["TASK_ID"] = $notification->task_id;
             $parser_data["TASK_TITLE"] = $notification->task_title;
             $parser_data["TASK_DESCRIPTION"] = $notification->task_description;
-            $parser_data["PROJECT_TITLE"] = $notification->project_title;
             $parser_data["USER_NAME"] = $notification->user_name;
             $parser_data["ASSIGNED_TO_USER_NAME"] = $notification->to_user_name;
             $parser_data["TASK_URL"] = $url;
@@ -1046,7 +1129,6 @@ if (!function_exists('send_notification_emails')) {
 
         $email_template = $ci->Email_templates_model->get_final_template($template_name, true);
 
-        $parser_data["RECIPIENTS_EMAIL_ADDRESS"] = $notification->recipients_email_address;
         $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_default");
         $parser_data["LOGO_URL"] = get_logo_url();
         $parser = \Config\Services::parser();
@@ -1074,14 +1156,22 @@ if (!function_exists('send_notification_emails')) {
 
             foreach ($notification_multiple_tasks_user_wise as $user_id => $tasks) {
                 //prepare all tasks of this user
-                $table = view("projects/tasks/notification_multiple_tasks_table", array("tasks" => $tasks));
+                $table = view("tasks/notification_multiple_tasks_table", array("tasks" => $tasks));
+
+                $user_info = $ci->Users_model->get_one($user_id);
+                $user_email_address = $user_info->email;
+                $user_language = $user_info->language;
+
+                $parser_data["RECIPIENTS_EMAIL_ADDRESS"] = $user_email_address;
+                $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_$user_language") ? get_array_value($email_template, "signature_$user_language") : get_array_value($email_template, "signature_default");
 
                 $parser_data["TASKS_LIST"] = $table;
-                $message = $parser->setData($parser_data)->renderString($email_template->message);
+                $message = get_array_value($email_template, "message_$user_language") ? get_array_value($email_template, "message_$user_language") : get_array_value($email_template, "message_default");
+                $message = $parser->setData($parser_data)->renderString($message);
                 $parser_data["EVENT_TITLE"] = $notification->user_name . " " . sprintf(app_lang("notification_" . $notification->event), $notification->to_user_name);
-                $subject = $parser->setData($parser_data)->renderString($email_template->subject);
+                $subject = get_array_value($email_template, "subject_$user_language") ? get_array_value($email_template, "subject_$user_language") : get_array_value($email_template, "subject_default");
+                $subject = $parser->setData($parser_data)->renderString($subject);
 
-                $user_email_address = $ci->Users_model->get_one($user_id)->email;
                 if ($user_email_address) {
                     send_app_mail($user_email_address, $subject, $message, $email_options);
                 }
@@ -1096,11 +1186,33 @@ if (!function_exists('send_notification_emails')) {
                         $user_email_address = $user->email;
                         $user_language = $user->language;
                     }
-
+                    $parser_data["RECIPIENTS_EMAIL_ADDRESS"] = $user_email_address;
                     $parser_data["SIGNATURE"] = get_array_value($email_template, "signature_$user_language") ? get_array_value($email_template, "signature_$user_language") : get_array_value($email_template, "signature_default");
 
                     $message = get_array_value($email_template, "message_$user_language") ? get_array_value($email_template, "message_$user_language") : get_array_value($email_template, "message_default");
                     $subject = get_array_value($email_template, "subject_$user_language") ? get_array_value($email_template, "subject_$user_language") : get_array_value($email_template, "subject_default");
+
+                    if ($notification->event == "recurring_invoice_created_vai_cron_job") {
+                        $invoice_data = get_invoice_making_data($notification->invoice_id);
+                        $invoice_info = get_array_value($invoice_data, "invoice_info");
+                        $contact_id = $user->id;
+                        //add public pay invoice url 
+                        if (get_setting("client_can_pay_invoice_without_login") && strpos($message, "PUBLIC_PAY_INVOICE_URL")) {
+                            $verification_data = array(
+                                "type" => "invoice_payment",
+                                "code" => make_random_string(),
+                                "params" => serialize(array(
+                                    "invoice_id" => $notification->invoice_id,
+                                    "client_id" => $invoice_info->client_id,
+                                    "contact_id" => $contact_id
+                                ))
+                            );
+                            $save_id = $ci->Verification_model->ci_save($verification_data);
+                            $verification_info = $ci->Verification_model->get_one($save_id);
+                            $parser_data["PUBLIC_PAY_INVOICE_URL"] = get_uri("pay_invoice/index/" . $verification_info->code);
+                        }
+                    }
+
                     $message = $parser->setData($parser_data)->renderString($message);
                     $subject = $parser->setData($parser_data)->renderString($subject);
 

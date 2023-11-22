@@ -10,7 +10,7 @@ class Task_status extends Security_Controller {
     }
 
     function index() {
-        return $this->template->rander("task_status/index");
+        return $this->template->view("task_status/index");
     }
 
     function modal_form() {
@@ -32,7 +32,8 @@ class Task_status extends Security_Controller {
         $id = $this->request->getPost('id');
         $data = array(
             "color" => $this->request->getPost('color'),
-            "hide_from_kanban" => $this->request->getPost('hide_from_kanban') ? $this->request->getPost('hide_from_kanban') : 0
+            "hide_from_kanban" => $this->request->getPost('hide_from_kanban') ? $this->request->getPost('hide_from_kanban') : 0,
+            "hide_from_non_project_related_tasks" => $this->request->getPost('hide_from_non_project_related_tasks') ? $this->request->getPost('hide_from_non_project_related_tasks') : 0
         );
 
         $task_status_info = $this->Task_status_model->get_one($id);

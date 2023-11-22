@@ -16,6 +16,12 @@ class Tasks_model extends Crud_model
 
     function schema()
     {
+        if (get_setting("show_time_with_task_start_date_and_deadline")) {
+            $type = "date_time";
+        } else {
+            $type = "date";
+        }
+
         return array(
             "id" => array(
                 "label" => app_lang("id"),
@@ -67,11 +73,11 @@ class Tasks_model extends Crud_model
             ),
             "start_date" => array(
                 "label" => app_lang("start_date"),
-                "type" => "date"
+                "type" => $type
             ),
             "deadline" => array(
                 "label" => app_lang("deadline"),
-                "type" => "date"
+                "type" => $type
             ),
             "project_id" => array(
                 "label" => app_lang("project"),
@@ -124,13 +130,17 @@ class Tasks_model extends Crud_model
     {
         $tasks_table = $this->db->prefixTable('tasks');
         $users_table = $this->db->prefixTable('users');
-        $projects = $this->db->prefixTable('projects');
+        $projects_table = $this->db->prefixTable('projects');
         $milestones_table = $this->db->prefixTable('milestones');
         $project_members_table = $this->db->prefixTable('project_members');
         $task_status_table = $this->db->prefixTable('task_status');
         $ticket_table = $this->db->prefixTable('tickets');
         $task_priority_table = $this->db->prefixTable('task_priority');
         $notifications_table = $this->db->prefixTable("notifications");
+        $clients_table = $this->db->prefixTable("clients");
+        $contracts_table = $this->db->prefixTable("contracts");
+        $subscriptions_table = $this->db->prefixTable("subscriptions");
+        $expenses_table = $this->db->prefixTable('expenses');
 
         $where = "";
 
@@ -142,11 +152,6 @@ class Tasks_model extends Crud_model
         $project_id = $this->_get_clean_value($options, "project_id");
         if ($project_id) {
             $where .= " AND $tasks_table.project_id=$project_id";
-        }
-
-        $client_id = $this->_get_clean_value($options, "client_id");
-        if ($client_id) {
-            $where .= " AND $projects.client_id=$client_id";
         }
 
         $parent_task_id = $this->_get_clean_value($options, "parent_task_id");
@@ -179,6 +184,51 @@ class Tasks_model extends Crud_model
             $where .= " AND $tasks_table.assigned_to=$assigned_to";
         }
 
+        $client_id = $this->_get_clean_value($options, "client_id");
+        if ($client_id) {
+            $where .= " AND $tasks_table.client_id=$client_id";
+        }
+
+        $lead_id = $this->_get_clean_value($options, "lead_id");
+        if ($lead_id) {
+            $where .= " AND $tasks_table.lead_id=$lead_id";
+        }
+
+        $invoice_id = $this->_get_clean_value($options, "invoice_id");
+        if ($invoice_id) {
+            $where .= " AND $tasks_table.invoice_id=$invoice_id";
+        }
+
+        $estimate_id = $this->_get_clean_value($options, "estimate_id");
+        if ($estimate_id) {
+            $where .= " AND $tasks_table.estimate_id=$estimate_id";
+        }
+
+        $order_id = $this->_get_clean_value($options, "order_id");
+        if ($order_id) {
+            $where .= " AND $tasks_table.order_id=$order_id";
+        }
+
+        $contract_id = $this->_get_clean_value($options, "contract_id");
+        if ($contract_id) {
+            $where .= " AND $tasks_table.contract_id=$contract_id";
+        }
+
+        $proposal_id = $this->_get_clean_value($options, "proposal_id");
+        if ($proposal_id) {
+            $where .= " AND $tasks_table.proposal_id=$proposal_id";
+        }
+
+        $subscription_id = $this->_get_clean_value($options, "subscription_id");
+        if ($subscription_id) {
+            $where .= " AND $tasks_table.subscription_id=$subscription_id";
+        }
+
+        $expense_id = $this->_get_clean_value($options, "expense_id");
+        if ($expense_id) {
+            $where .= " AND $tasks_table.expense_id=$expense_id";
+        }
+
         $priority_id = $this->_get_clean_value($options, "priority_id");
         if ($priority_id) {
             $where .= " AND $tasks_table.priority_id=$priority_id";
@@ -194,20 +244,35 @@ class Tasks_model extends Crud_model
             $where .= " AND ($tasks_table.assigned_to=$show_assigned_tasks_only_user_id OR FIND_IN_SET('$show_assigned_tasks_only_user_id', $tasks_table.collaborators))";
         }
 
+
         $project_status = $this->_get_clean_value($options, "project_status");
-        if ($project_status) {
-            $where .= " AND FIND_IN_SET($projects.status,'$project_status')";
+        $context_options = get_array_value($options, "context_options");
+        if ($project_status && !$context_options) {
+            $where .= " AND $projects_table.status_id ='$project_status' ";
         }
+
 
         $milestone_id = $this->_get_clean_value($options, "milestone_id");
         if ($milestone_id) {
             $where .= " AND $tasks_table.milestone_id=$milestone_id";
         }
 
+        $context = $this->_get_clean_value($options, "context");
+        if ($context) {
+            $where .= " AND $tasks_table.context='$context'";
+        }
+
         $task_status_id = $this->_get_clean_value($options, "task_status_id");
         if ($task_status_id) {
             $where .= " AND $tasks_table.status_id=$task_status_id";
         }
+
+        $label_id = $this->_get_clean_value($options, "label_id");
+        if ($label_id) {
+            $where .= " AND (FIND_IN_SET('$label_id', $tasks_table.labels)) ";
+        }
+
+        $where .= $this->make_context_query($context_options, $tasks_table, $clients_table, $ticket_table, $projects_table, $project_members_table);
 
         $start_date = $this->_get_clean_value($options, "start_date");
         $deadline = $this->_get_clean_value($options, "deadline");
@@ -244,24 +309,29 @@ class Tasks_model extends Crud_model
 
         $exclude_reminder_date = $this->_get_clean_value($options, "exclude_reminder_date");
         if ($exclude_reminder_date) {
-            $where .= " AND ($tasks_table.reminder_date !='$exclude_reminder_date') ";
+            $where .= " AND ($tasks_table.reminder_date IS NULL OR $tasks_table.reminder_date !='$exclude_reminder_date') ";
         }
 
         $ticket_id = $this->_get_clean_value($options, "ticket_id");
         if ($ticket_id) {
-            $where .= " AND $ticket_table.ticket_id=$ticket_id";
+            $where .= " AND $tasks_table.ticket_id=$ticket_id";
         }
 
         $order = "";
         $sort_by_project = $this->_get_clean_value($options, "sort_by_project");
         if ($sort_by_project) {
-            $order = ", $tasks_table.project_id ASC";
+            $order = " ORDER BY $tasks_table.project_id ASC";
         }
 
         $extra_left_join = "";
         $project_member_id = $this->_get_clean_value($options, "project_member_id");
         if ($project_member_id) {
             $where .= " AND $project_members_table.user_id=$project_member_id";
+        } else if (isset($context_options["project"]) && is_array($context_options["project"]) && array_key_exists("project_member_id", $context_options["project"])) {
+            $project_member_id = $context_options["project"]["project_member_id"];
+        }
+
+        if ($project_member_id) {
             $extra_left_join = " LEFT JOIN $project_members_table ON $tasks_table.project_id= $project_members_table.project_id AND $project_members_table.deleted=0 AND $project_members_table.user_id=$project_member_id";
         }
 
@@ -294,14 +364,14 @@ class Tasks_model extends Crud_model
             "milestone" => "milestone_title",
             "assigned_to" => "assigned_to_user",
             "status" => $tasks_table . ".status_id",
-            "project" => $projects . ".title",
+            "project" => $projects_table . ".title",
         );
 
         $order_by = get_array_value($available_order_by_list, $this->_get_clean_value($options, "order_by"));
 
         if ($order_by) {
             $order_dir = $this->_get_clean_value($options, "order_dir");
-            $order = ", $order_by $order_dir ";
+            $order = " ORDER BY $order_by $order_dir ";
         }
 
         $search_by = get_array_value($options, "search_by");
@@ -323,7 +393,7 @@ class Tasks_model extends Crud_model
                 $where .= " OR CONCAT($users_table.first_name, ' ', $users_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
                 $where .= " OR $task_status_table.key_name LIKE '%$search_by%' ESCAPE '!' ";
                 $where .= " OR $task_status_table.title LIKE '%$search_by%' ESCAPE '!' ";
-                $where .= " OR $projects.title LIKE '%$search_by%' ESCAPE '!' ";
+                $where .= " OR $projects_table.title LIKE '%$search_by%' ESCAPE '!' ";
                 $where .= " OR (SELECT GROUP_CONCAT($labels_table.title, ', ') FROM $labels_table WHERE FIND_IN_SET($labels_table.id, $tasks_table.labels)) LIKE '%$search_by%' ESCAPE '!' ";
                 $where .= $this->get_custom_field_search_query($tasks_table, "tasks", $search_by);
                 $where .= " )";
@@ -341,22 +411,32 @@ class Tasks_model extends Crud_model
         $this->db->query('SET SQL_BIG_SELECTS=1');
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS $tasks_table.*, $task_status_table.key_name AS status_key_name, $task_status_table.title AS status_title,  $task_status_table.color AS status_color, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS assigned_to_user, $users_table.image as assigned_to_avatar, $users_table.user_type,
-                    $projects.title AS project_title, $milestones_table.title AS milestone_title, IF($tasks_table.deadline IS NULL, $milestones_table.due_date,$tasks_table.deadline) AS deadline,$ticket_table.title AS ticket_title,
+                    $projects_table.title AS project_title, $milestones_table.title AS milestone_title, IF($tasks_table.deadline IS NULL, $milestones_table.due_date,$tasks_table.deadline) AS deadline,$ticket_table.title AS ticket_title,
                     (SELECT GROUP_CONCAT($users_table.id, '--::--', $users_table.first_name, ' ', $users_table.last_name, '--::--' , IFNULL($users_table.image,''), '--::--', $users_table.user_type) FROM $users_table WHERE $users_table.deleted=0 AND FIND_IN_SET($users_table.id, $tasks_table.collaborators)) AS collaborator_list,
                     $task_priority_table.title AS priority_title, $task_priority_table.icon AS priority_icon, $task_priority_table.color AS priority_color,
-                    IF($tasks_table.deadline IS NULL, $milestones_table.title, '') AS deadline_milestone_title, notification_table.task_id AS unread, $select_labels_data_query $select_custom_fieds 
+                    $clients_table.charter_name,
+                    $contracts_table.title AS contract_title,
+                    $subscriptions_table.title AS subscription_title,
+                    $expenses_table.expense_date, $expenses_table.title AS expense_title,
+                    IF($tasks_table.deadline IS NULL, $milestones_table.title, '') AS deadline_milestone_title, notification_table.task_id AS unread, sub_task_table.total_sub_tasks AS has_sub_tasks, $select_labels_data_query $select_custom_fieds 
+                        
         FROM $tasks_table
         LEFT JOIN $users_table ON $users_table.id= $tasks_table.assigned_to
-        LEFT JOIN $projects ON $tasks_table.project_id=$projects.id
-        LEFT JOIN $milestones_table ON $tasks_table.milestone_id=$milestones_table.id
-        LEFT JOIN $task_status_table ON $tasks_table.status_id = $task_status_table.id
-        LEFT JOIN $task_priority_table ON $tasks_table.priority_id = $task_priority_table.id
+        LEFT JOIN $projects_table ON $tasks_table.project_id=$projects_table.id 
+        LEFT JOIN $milestones_table ON $tasks_table.milestone_id=$milestones_table.id 
+        LEFT JOIN $contracts_table ON $contracts_table.id=$tasks_table.contract_id 
+        LEFT JOIN $subscriptions_table ON $subscriptions_table.id=$tasks_table.subscription_id 
+        LEFT JOIN $expenses_table ON $expenses_table.id=$tasks_table.expense_id 
+        LEFT JOIN $clients_table ON ($clients_table.id=$tasks_table.client_id OR $clients_table.id=$tasks_table.lead_id)
+        LEFT JOIN $task_status_table ON $tasks_table.status_id = $task_status_table.id 
+        LEFT JOIN $task_priority_table ON $tasks_table.priority_id = $task_priority_table.id 
         LEFT JOIN $ticket_table ON $tasks_table.ticket_id = $ticket_table.id
+        LEFT JOIN (SELECT COUNT($tasks_table.id) AS total_sub_tasks, $tasks_table.parent_task_id FROM $tasks_table WHERE $tasks_table.deleted = 0 AND $tasks_table.parent_task_id!=0 GROUP BY $tasks_table.parent_task_id) AS sub_task_table ON sub_task_table.parent_task_id = $tasks_table.id
         LEFT JOIN (SELECT $notifications_table.task_id FROM $notifications_table WHERE $notifications_table.deleted=0 AND $notifications_table.event='project_task_commented' AND !FIND_IN_SET('$unread_status_user_id', $notifications_table.read_by) AND $notifications_table.user_id!=$unread_status_user_id  GROUP BY $notifications_table.task_id) AS notification_table ON notification_table.task_id = $tasks_table.id
-        $extra_left_join
-        $join_custom_fieds
-        WHERE $tasks_table.deleted=0 $where $custom_fields_where
-        ORDER BY $tasks_table.path ASC $order $limit_offset";
+        $extra_left_join 
+        $join_custom_fieds 
+        WHERE $tasks_table.deleted=0 $where $custom_fields_where 
+        $order $limit_offset";
 
         $raw_query = $this->db->query($sql);
 
@@ -373,6 +453,95 @@ class Tasks_model extends Crud_model
         }
     }
 
+    private function make_context_query($context_options, $tasks_table, $clients_table, $tickets_table, $projects_table, $project_members_table)
+    {
+        if (!$context_options) {
+            return "";
+        }
+
+        $estimates_table = $this->db->prefixTable("estimates");
+        $context_where = "";
+
+        foreach ($context_options as $context => $context_permissions) {
+            $context_where_for_this_context = "";
+            $project_where = "";
+
+            foreach ($context_permissions as $context_permission => $permission_value) {
+                //has restriction on this context, check each permissions
+
+                if (!$permission_value) {
+                    continue;
+                }
+
+                if ($context_permission === "project_status") {
+                    $project_where .= " AND $projects_table.status_id = '$permission_value' ";
+                } else if ($context_permission === "project_member_id") {
+                    $project_where .= " AND $project_members_table.user_id=$permission_value ";
+                } else if ($context_permission === "show_assigned_tasks_only_user_id") {
+                    $project_where .= " AND ($tasks_table.assigned_to=$permission_value OR FIND_IN_SET('$permission_value', $tasks_table.collaborators)) ";
+                } else if ($context_permission === "show_own_clients_only_user_id") {
+                    $context_where_for_this_context .= " ($tasks_table.context='$context'
+                                                AND $tasks_table.client_id IN(
+                                                    SELECT $clients_table.id FROM $clients_table WHERE $clients_table.deleted=0 AND $clients_table.is_lead=0 AND ($clients_table.created_by=$permission_value OR $clients_table.owner_id=$permission_value)
+                                                )
+                                        )";
+                } else if ($context_permission === "client_groups") {
+                    $client_groups_where_query = $this->prepare_allowed_client_groups_query($clients_table, explode(',', $permission_value));
+                    $context_where_for_this_context .= " ($tasks_table.context='$context'
+                                                AND $tasks_table.client_id IN(
+                                                    SELECT $clients_table.id FROM $clients_table WHERE $clients_table.deleted=0 AND $clients_table.is_lead=0 $client_groups_where_query
+                                                )
+                                        )";
+                } else if ($context_permission === "show_own_leads_only_user_id") {
+                    $context_where_for_this_context .= " ($tasks_table.context='$context'
+                                                AND $tasks_table.lead_id IN(
+                                                    SELECT $clients_table.id FROM $clients_table WHERE $clients_table.deleted=0 AND $clients_table.is_lead=1 AND $clients_table.owner_id=$permission_value
+                                                )
+                                        )";
+                } else if ($context_permission === "show_own_estimates_only_user_id") {
+                    $context_where_for_this_context .= " ($tasks_table.context='$context'
+                                                AND $tasks_table.estimate_id IN(
+                                                    SELECT $estimates_table.id FROM $estimates_table WHERE $estimates_table.deleted=0 AND $estimates_table.created_by=$permission_value
+                                                )
+                                        )";
+                } else if ($context_permission === "show_assigned_tickets_only_user_id") {
+                    $context_where_for_this_context .= " ($tasks_table.context='$context'
+                                                AND $tasks_table.ticket_id IN(
+                                                    SELECT $tickets_table.id FROM $tickets_table WHERE $tickets_table.deleted=0 AND $tickets_table.assigned_to=$permission_value
+                                                )
+                                        )";
+                } else if ($context_permission === "ticket_types") {
+                    $context_where_for_this_context .= " ($tasks_table.context='$context'
+                                                AND $tasks_table.ticket_id IN(
+                                                    SELECT $tickets_table.id FROM $tickets_table WHERE $tickets_table.deleted=0 AND FIND_IN_SET($tickets_table.ticket_type_id, '$permission_value')
+                                                )
+                                        )";
+                }
+            }
+
+            if ($project_where) {
+                $context_where_for_this_context .= " ($tasks_table.context='$context' $project_where )";
+            }
+
+            if ($context_where) {
+                $context_where .= " OR ";
+            }
+
+            if ($context_where_for_this_context) {
+                $context_where .= $context_where_for_this_context;
+            } else {
+                //has no restriction on this context
+                $context_where .= " $tasks_table.context='$context' ";
+            }
+        }
+
+        if ($context_where) {
+            $context_where = " AND ($context_where) ";
+        }
+
+        return $context_where;
+    }
+
     private function make_quick_filter_query($filter, $tasks_table)
     {
         $project_comments_table = $this->db->prefixTable("project_comments");
@@ -387,8 +556,8 @@ class Tasks_model extends Crud_model
 
         $recently_updated_last_time = prepare_last_recently_date_time($login_user_id);
 
-        $project_comments_table_query = "SELECT $project_comments_table.task_id
-                           FROM $project_comments_table
+        $project_comments_table_query = "SELECT $project_comments_table.task_id 
+                           FROM $project_comments_table 
                            WHERE $project_comments_table.deleted=0 AND $project_comments_table.task_id!=0";
         $project_comments_table_group_by = "GROUP BY $project_comments_table.task_id";
 
@@ -415,7 +584,7 @@ class Tasks_model extends Crud_model
     {
         $tasks_table = $this->db->prefixTable('tasks');
         $users_table = $this->db->prefixTable('users');
-        $projects = $this->db->prefixTable('projects');
+        $projects_table = $this->db->prefixTable('projects');
         $milestones_table = $this->db->prefixTable('milestones');
         $labels_table = $this->db->prefixTable('labels');
         $project_members_table = $this->db->prefixTable('project_members');
@@ -423,7 +592,6 @@ class Tasks_model extends Crud_model
         $clients_table = $this->db->prefixTable('clients');
         $notifications_table = $this->db->prefixTable("notifications");
         $checklist_items_table = $this->db->prefixTable('checklist_items');
-        $comments_table = $this->db->prefixTable('project_comments');
 
         $where = "";
 
@@ -439,19 +607,27 @@ class Tasks_model extends Crud_model
 
         $client_id = $this->_get_clean_value($options, "client_id");
         if ($client_id) {
-            $where .= " AND $projects.client_id=$client_id";
+            $where .= " AND $projects_table.client_id=$client_id";
         }
 
 
-        $status = $this->_get_clean_value($options, "status");
-        if ($status) {
-            $where .= " AND FIND_IN_SET($tasks_table.status,'$status')";
+        $status_id = $this->_get_clean_value($options, "status_id");
+        if ($status_id) {
+            $where .= " AND $tasks_table.status_id = $status_id";
         }
+
+        $get_after_max_sort = $this->_get_clean_value($options, "get_after_max_sort");
+        if ($get_after_max_sort) {
+            $where .= " AND $tasks_table.sort > $get_after_max_sort";
+        }
+
 
         $project_status = $this->_get_clean_value($options, "project_status");
-        if ($project_status) {
-            $where .= " AND FIND_IN_SET($projects.status,'$project_status')";
+        $context_options = get_array_value($options, "context_options");
+        if ($project_status && !$context_options) {
+            $where .= " AND $projects_table.status_id = '$project_status'";
         }
+
 
         $assigned_to = $this->_get_clean_value($options, "assigned_to");
         if ($assigned_to) {
@@ -476,6 +652,16 @@ class Tasks_model extends Crud_model
         $milestone_id = $this->_get_clean_value($options, "milestone_id");
         if ($milestone_id) {
             $where .= " AND $tasks_table.milestone_id=$milestone_id";
+        }
+
+        $context = $this->_get_clean_value($options, "context");
+        if ($context) {
+            $where .= " AND $tasks_table.context='$context'";
+        }
+
+        $label_id = $this->_get_clean_value($options, "label_id");
+        if ($label_id) {
+            $where .= " AND (FIND_IN_SET('$label_id', $tasks_table.labels)) ";
         }
 
         $deadline = $this->_get_clean_value($options, "deadline");
@@ -506,10 +692,23 @@ class Tasks_model extends Crud_model
             }
         }
 
+        $limit_sql = "";
+
+        $limit = $this->_get_clean_value($options, "limit");
+        if ($limit) {
+            $limit_sql = " LIMIT $limit";
+        }
+
+
         $extra_left_join = "";
         $project_member_id = $this->_get_clean_value($options, "project_member_id");
         if ($project_member_id) {
             $where .= " AND $project_members_table.user_id=$project_member_id";
+        } else if (isset($context_options["project"]) && is_array($context_options["project"]) && array_key_exists("project_member_id", $context_options["project"])) {
+            $project_member_id = $context_options["project"]["project_member_id"];
+        }
+
+        if ($project_member_id) {
             $extra_left_join = " LEFT JOIN $project_members_table ON $tasks_table.project_id= $project_members_table.project_id AND $project_members_table.deleted=0 AND $project_members_table.user_id=$project_member_id";
         }
 
@@ -518,6 +717,8 @@ class Tasks_model extends Crud_model
             $where .= $this->make_quick_filter_query($quick_filter, $tasks_table);
         }
 
+        $ticket_table = $this->db->prefixTable('tickets');
+        $where .= $this->make_context_query($context_options, $tasks_table, $clients_table, $ticket_table, $projects_table, $project_members_table);
 
         $custom_field_filter = $this->_get_clean_value($options, "custom_field_filter");
         $custom_field_query_info = $this->prepare_custom_field_query_string("tasks", "", $tasks_table, $custom_field_filter);
@@ -530,42 +731,51 @@ class Tasks_model extends Crud_model
 
         $select_labels_data_query = $this->get_labels_data_query();
 
-        $this->db->query("SET SQL_BIG_SELECTS=1");
+        $this->db->query('SET SQL_BIG_SELECTS=1');
 
-        $sql = "SELECT $tasks_table.id, $tasks_table.title, $tasks_table.start_date, $tasks_table.deadline, $tasks_table.sort, IF($tasks_table.sort!=0, $tasks_table.sort, $tasks_table.id) AS new_sort, $tasks_table.assigned_to, $tasks_table.labels, $tasks_table.status_id, $tasks_table.project_id, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS assigned_to_user, $tasks_table.priority_id, $projects.title AS project_title, (SELECT $clients_table.charter_name FROM $clients_table WHERE id=(SELECT $projects.client_id FROM $projects WHERE $projects.id=$tasks_table.project_id)) AS client_name, $projects.project_type AS project_type,
+        if (get_array_value($options, "return_task_counts_only")) {
+            $sql = "SELECT COUNT($tasks_table.id) as tasks_count, $tasks_table.status_id
+            FROM $tasks_table
+            LEFT JOIN $projects_table ON $tasks_table.project_id=$projects_table.id 
+            LEFT JOIN $milestones_table ON $tasks_table.milestone_id=$milestones_table.id 
+            $extra_left_join
+            WHERE $tasks_table.deleted=0 $where $custom_fields_where 
+            GROUP BY $tasks_table.status_id";
+        } else {
+            $sql = "SELECT $tasks_table.id, $tasks_table.title, $tasks_table.start_date, $tasks_table.deadline, $tasks_table.sort, IF($tasks_table.sort!=0, $tasks_table.sort, $tasks_table.id) AS new_sort, $tasks_table.assigned_to, $tasks_table.labels, $tasks_table.status_id, $tasks_table.project_id, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS assigned_to_user, $tasks_table.priority_id, $projects_table.title AS project_title, (SELECT $clients_table.charter_name FROM $clients_table WHERE id=(SELECT $projects_table.client_id FROM $projects_table WHERE $projects_table.id=$tasks_table.project_id)) AS client_name, $projects_table.project_type AS project_type,
                 $task_priority_table.title AS priority_title, $task_priority_table.icon AS priority_icon, $task_priority_table.color AS priority_color,
                 $users_table.image as assigned_to_avatar, $tasks_table.parent_task_id, sub_tasks_table.id AS has_sub_tasks, parent_tasks_table.title AS parent_task_title, $notifications_table.id AS unread, 
                 (SELECT COUNT($checklist_items_table.id) FROM $checklist_items_table WHERE $checklist_items_table.deleted=0 AND $checklist_items_table.task_id=$tasks_table.id) AS total_checklist,
                 (SELECT COUNT($checklist_items_table.id) FROM $checklist_items_table WHERE $checklist_items_table.is_checked=1 AND $checklist_items_table.deleted=0 AND $checklist_items_table.task_id=$tasks_table.id) AS total_checklist_checked,
-                COUNT(sub_tasks_table.id) AS total_sub_tasks, completed_sub_tasks_table.total_sub_tasks_done, $comments_table.files,
+                COUNT(sub_tasks_table.id) AS total_sub_tasks, completed_sub_tasks_table.total_sub_tasks_done, $tasks_table.client_id, $tasks_table.contract_id, $tasks_table.estimate_id, $tasks_table.expense_id, $tasks_table.invoice_id, $tasks_table.lead_id, $tasks_table.order_id, $tasks_table.proposal_id, $tasks_table.subscription_id, $tasks_table.ticket_id, $tasks_table.collaborators,
                 $select_labels_data_query
         FROM $tasks_table
         LEFT JOIN (
             SELECT $tasks_table.id, $tasks_table.parent_task_id, $tasks_table.title
-            FROM $tasks_table
+            FROM $tasks_table 
             WHERE $tasks_table.deleted=0 AND $tasks_table.parent_task_id!=0
         ) AS sub_tasks_table ON sub_tasks_table.parent_task_id=$tasks_table.id
         LEFT JOIN (
             SELECT COUNT($tasks_table.id) as total_sub_tasks_done, $tasks_table.parent_task_id
-            FROM $tasks_table
+            FROM $tasks_table 
             WHERE $tasks_table.deleted=0 AND $tasks_table.parent_task_id!=0 AND $tasks_table.status_id=3
             GROUP BY $tasks_table.parent_task_id
         ) AS completed_sub_tasks_table ON completed_sub_tasks_table.parent_task_id=$tasks_table.id
         LEFT JOIN (
             SELECT $tasks_table.id, $tasks_table.parent_task_id, $tasks_table.title
-            FROM $tasks_table
+            FROM $tasks_table 
             WHERE $tasks_table.deleted=0
         ) AS parent_tasks_table ON parent_tasks_table.id=$tasks_table.parent_task_id
         LEFT JOIN $users_table ON $users_table.id= $tasks_table.assigned_to
-        LEFT JOIN $projects ON $tasks_table.project_id=$projects.id
-        LEFT JOIN $task_priority_table ON $tasks_table.priority_id = $task_priority_table.id
-        LEFT JOIN $milestones_table ON $tasks_table.milestone_id=$milestones_table.id
+        LEFT JOIN $projects_table ON $tasks_table.project_id=$projects_table.id 
+        LEFT JOIN $task_priority_table ON $tasks_table.priority_id = $task_priority_table.id 
+        LEFT JOIN $milestones_table ON $tasks_table.milestone_id=$milestones_table.id 
         LEFT JOIN $notifications_table ON $notifications_table.task_id = $tasks_table.id AND $notifications_table.deleted=0 AND $notifications_table.event='project_task_commented' AND !FIND_IN_SET('$unread_status_user_id', $notifications_table.read_by) AND $notifications_table.user_id!=$unread_status_user_id
-        LEFT JOIN $comments_table ON $comments_table.task_id = $tasks_table.id
         $extra_left_join
-        WHERE $tasks_table.deleted=0 $where $custom_fields_where
+        WHERE $tasks_table.deleted=0 $where $custom_fields_where 
         GROUP BY $tasks_table.id
-        ORDER BY $tasks_table.path ASC, new_sort ASC";
+        ORDER BY $tasks_table.sort ASC $limit_sql";
+        }
 
         return $this->db->query($sql);
     }
@@ -577,12 +787,11 @@ class Tasks_model extends Crud_model
 
         $sql = "SELECT COUNT($tasks_table.id) AS total
         FROM $tasks_table
-        WHERE $tasks_table.deleted=0 AND ($tasks_table.assigned_to=$user_id OR FIND_IN_SET('$user_id', $tasks_table.collaborators)) AND $tasks_table.status_id !=3
+        WHERE $tasks_table.deleted=0 AND (($tasks_table.assigned_to=$user_id OR FIND_IN_SET('$user_id', $tasks_table.collaborators)) AND $tasks_table.status_id !=3
         AND $tasks_table.project_id IN(
             SELECT $projects_table.id
             FROM $projects_table
-            WHERE $projects_table.deleted=0 AND FIND_IN_SET($projects_table.status,'open')
-        )";
+            WHERE $projects_table.deleted=0 AND FIND_IN_SET($projects_table.status_id,'1')) OR (($tasks_table.assigned_to=$user_id OR FIND_IN_SET('$user_id', $tasks_table.collaborators)) AND $tasks_table.context !='project') )";
 
         return $this->db->query($sql)->getRow()->total;
     }
@@ -605,7 +814,7 @@ class Tasks_model extends Crud_model
 
         $sql = "SELECT $project_members_table.project_id, $projects_table.title AS project_title
         FROM $project_members_table
-        LEFT JOIN $projects_table ON $projects_table.id= $project_members_table.project_id
+        LEFT JOIN $projects_table ON $projects_table.id= $project_members_table.project_id AND $projects_table.status_id=1
         WHERE $project_members_table.deleted=0 AND $projects_table.deleted=0 $where 
         GROUP BY $project_members_table.project_id";
         return $this->db->query($sql);
@@ -693,7 +902,7 @@ class Tasks_model extends Crud_model
 
         $sql = "SELECT * FROM $tasks_table
                         WHERE $tasks_table.deleted=0 AND $tasks_table.recurring=1
-                        AND $tasks_table.next_recurring_date IS NOT NULL AND $tasks_table.next_recurring_date='$date'
+                        AND $tasks_table.next_recurring_date IS NOT NULL AND $tasks_table.next_recurring_date<='$date'
                         AND ($tasks_table.no_of_cycles < 1 OR ($tasks_table.no_of_cycles_completed < $tasks_table.no_of_cycles ))";
 
         return $this->db->query($sql);
@@ -825,27 +1034,27 @@ class Tasks_model extends Crud_model
         return true;
     }
 
-    function get_new_path($parent_task_id = 0)
+    function get_next_sort_value($project_id = 0, $status_id = 1)
     {
-        $tasks_table = $this->db->prefixTable("tasks");
+        $tasks_table = $this->db->prefixTable('tasks');
 
-        $sql = "SELECT COUNT(id) as maxCount FROM $tasks_table WHERE parent_task_id = $parent_task_id";
+        $where = "";
+
+        if ($project_id) {
+            $where .= " AND $tasks_table.project_id = $project_id ";
+        }
+
+        $sql = "SELECT $tasks_table.sort
+        FROM $tasks_table
+        WHERE $tasks_table.deleted=0 AND $tasks_table.status_id = $status_id $where
+        ORDER BY $tasks_table.sort DESC LIMIT 1";
+
         $row = $this->db->query($sql)->getRow();
+
         if ($row) {
-            $maxCount = $row->maxCount + 1;
+            return $row->sort + 1;
         } else {
-            $maxCount = 1;
+            return 1000; //could be any positive value
         }
-        $path = sprintf('%05d', $maxCount);
-
-        if ($parent_task_id > 0) {
-            $sql = "SELECT path FROM $tasks_table WHERE id=$parent_task_id";
-            $row = $this->db->query($sql)->getRow();
-            $parent_path = $row->path;
-
-            $path = $parent_path . "_" . $path;
-        }
-
-        return $path;
     }
 }

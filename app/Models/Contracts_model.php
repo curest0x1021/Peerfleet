@@ -77,7 +77,7 @@ class Contracts_model extends Crud_model {
 
 
 
-        $sql = "SELECT $contracts_table.*, $clients_table.currency, $clients_table.currency_symbol, $clients_table.company_name, $clients_table.is_lead, $projects_table.title AS project_title, 
+        $sql = "SELECT $contracts_table.*, $clients_table.currency, $clients_table.currency_symbol, $clients_table.charter_name, $clients_table.is_lead, $projects_table.title AS project_title, 
            CONCAT($users_table.first_name, ' ',$users_table.last_name) AS signer_name, $users_table.email AS signer_email,
            IF($contracts_table.staff_signed_by, (SELECT CONCAT($users_table.first_name, ' ',$users_table.last_name) FROM $users_table WHERE $users_table.id=$contracts_table.staff_signed_by), '') AS staff_signer_name,
            $contract_value_calculation AS contract_value, tax_table.percentage AS tax_percentage, tax_table2.percentage AS tax_percentage2 $select_custom_fieds

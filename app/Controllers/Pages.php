@@ -45,9 +45,11 @@ class Pages extends Security_Controller {
             "content" => decode_ajax_post_data($this->request->getPost('content')),
             "slug" => $slug,
             "status" => $this->request->getPost('status'),
-            "internal_use_only" => is_null($this->request->getPost('internal_use_only')) ? "" : $this->request->getPost('internal_use_only'),
-            "visible_to_team_members_only" => is_null($this->request->getPost('visible_to_team_members_only')) ? "" : $this->request->getPost('visible_to_team_members_only'),
-            "visible_to_clients_only" => is_null($this->request->getPost('visible_to_clients_only')) ? "" : $this->request->getPost('visible_to_clients_only')
+            "internal_use_only" => is_null($this->request->getPost('internal_use_only')) ? 0 : $this->request->getPost('internal_use_only'),
+            "visible_to_team_members_only" => is_null($this->request->getPost('visible_to_team_members_only')) ? 0 : $this->request->getPost('visible_to_team_members_only'),
+            "visible_to_clients_only" => is_null($this->request->getPost('visible_to_clients_only')) ? 0 : $this->request->getPost('visible_to_clients_only'),
+            "hide_topbar" => is_null($this->request->getPost('hide_topbar')) ? 0 : $this->request->getPost('hide_topbar'),
+            "full_width" => is_null($this->request->getPost('full_width')) ? 0 : $this->request->getPost('full_width')
         );
 
         $save_id = $this->Pages_model->ci_save($data, $id);
@@ -100,9 +102,44 @@ class Pages extends Security_Controller {
 
         $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_page'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("pages/delete"), "data-action" => "delete"));
 
+    
+        $status_class = "bg-success";
+        if ($data->status === "inactive") {
+            $status_class = "bg-danger";
+        } 
+
+        $status = "<span class='badge $status_class large'>" . app_lang($data->status) . "</span> ";
+
+        
+        
+        $options_icons = "";
+        
+        if($data->hide_topbar){
+             $options_icons .= "<span title='". app_lang('hide_topbar') ."'><i data-feather='square' class='icon-16 mr10'></i></span>";
+        }
+        
+        if($data->full_width){
+             $options_icons .= "<span title='". app_lang('full_width') ."'><i data-feather='maximize-2' style='transform: rotate(45deg)' class='icon-16 mr10'></i></span>";
+        }
+        
+        if($data->internal_use_only){
+             $options_icons .= "<span title='". app_lang('internal_use_only') ."'><i data-feather='lock' class='icon-16 mr10'></i></span>";
+        }
+        
+        if($data->internal_use_only && $data->visible_to_team_members_only){
+             $options_icons .= "<span title='". app_lang('visible_to_team_members_only') ."'><i data-feather='users' class='icon-16 mr10'></i></span>";
+        }
+        
+        if($data->internal_use_only && $data->visible_to_clients_only){
+             $options_icons .= "<span title='". app_lang('visible_to_clients_only') ."'><i data-feather='briefcase' class='icon-16 mr10'></i></span>";
+        }
+        
+        
+        
         return array($data->title,
             anchor(get_uri("about") . "/" . $data->slug, get_uri("about") . "/" . $data->slug, array("target" => "_blank")),
-            app_lang($data->status),
+            $status,
+            $options_icons,
             $options
         );
     }

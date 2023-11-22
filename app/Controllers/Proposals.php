@@ -45,8 +45,15 @@ class Proposals extends Security_Controller {
             "client_id" => "numeric"
         ));
 
+        $id = $this->request->getPost('id');
+        $is_clone = $this->request->getPost('is_clone');
+
+        if (!$this->_is_proposal_editable($id, $is_clone)) {
+            app_redirect("forbidden");
+        }
+
         $client_id = $this->request->getPost('client_id');
-        $view_data['model_info'] = $this->Proposals_model->get_one($this->request->getPost('id'));
+        $view_data['model_info'] = $this->Proposals_model->get_one($id);
 
         $project_client_id = $client_id;
         if ($view_data['model_info']->client_id) {
@@ -66,7 +73,6 @@ class Proposals extends Security_Controller {
         $view_data['client_id'] = $client_id;
 
         //clone proposal data
-        $is_clone = $this->request->getPost('is_clone');
         $view_data['is_clone'] = $is_clone;
 
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("proposals", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
@@ -84,7 +90,7 @@ class Proposals extends Security_Controller {
         $clients = $this->Clients_model->get_all_where(array("deleted" => 0), 0, 0, "is_lead")->getResult();
 
         foreach ($clients as $client) {
-            $company_name = $client->is_lead ? (app_lang("lead") . ": " . $client->company_name) : (app_lang("client") . ": " . $client->company_name);
+            $company_name = $client->is_lead ? (app_lang("lead") . ": " . $client->charter_name) : (app_lang("client") . ": " . $client->charter_name);
             $clients_dropdown[$client->id] = $company_name;
         }
 
@@ -123,6 +129,11 @@ class Proposals extends Security_Controller {
 
         $client_id = $this->request->getPost('proposal_client_id');
         $id = $this->request->getPost('id');
+        $is_clone = $this->request->getPost('is_clone');
+
+        if (!$this->_is_proposal_editable($id, $is_clone)) {
+            app_redirect("forbidden");
+        }
 
         $proposal_data = array(
             "client_id" => $client_id,
@@ -144,8 +155,6 @@ class Proposals extends Security_Controller {
                 $proposal_data["content"] = $Proposal_templates_model->get_one(get_setting("default_proposal_template"))->template;
             }
         }
-
-        $is_clone = $this->request->getPost('is_clone');
 
         $main_proposal_id = "";
         if ($is_clone && $id) {
@@ -339,8 +348,13 @@ class Proposals extends Security_Controller {
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
+        $edit = "";
+        if ($this->_is_proposal_editable($data)) {
+            $edit = modal_anchor(get_uri("proposals/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_proposal'), "data-post-id" => $data->id));
+        }
+
         $row_data[] = anchor(get_uri("offer/preview/" . $data->id . "/" . $data->public_key), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('proposal') . " " . app_lang("url"), "target" => "_blank"))
-                . modal_anchor(get_uri("proposals/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_proposal'), "data-post-id" => $data->id))
+                . $edit
                 . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_proposal'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("proposals/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
@@ -401,6 +415,7 @@ class Proposals extends Security_Controller {
                 $view_data["show_estimate_option"] = (get_setting("module_estimate") && $access_info->access_type == "all") ? true : false;
 
                 $view_data["proposal_id"] = $proposal_id;
+                $view_data["is_proposal_editable"] = $this->_is_proposal_editable($proposal_id);
 
                 return $this->template->rander("proposals/view", $view_data);
             } else {
@@ -414,6 +429,7 @@ class Proposals extends Security_Controller {
     private function _get_proposal_total_view($proposal_id = 0) {
         $view_data["proposal_total_summary"] = $this->Proposals_model->get_proposal_total_summary($proposal_id);
         $view_data["proposal_id"] = $proposal_id;
+        $view_data["is_proposal_editable"] = $this->_is_proposal_editable($proposal_id);
         return $this->template->view('proposals/proposal_total_section', $view_data);
     }
 
@@ -427,6 +443,10 @@ class Proposals extends Security_Controller {
         ));
 
         $proposal_id = $this->request->getPost('proposal_id');
+
+        if (!$this->_is_proposal_editable($proposal_id)) {
+            app_redirect("forbidden");
+        }
 
         $view_data['model_info'] = $this->Proposals_model->get_one($proposal_id);
 
@@ -446,6 +466,10 @@ class Proposals extends Security_Controller {
         ));
 
         $proposal_id = $this->request->getPost('proposal_id');
+
+        if (!$this->_is_proposal_editable($proposal_id)) {
+            app_redirect("forbidden");
+        }
 
         $data = array(
             "discount_type" => $this->request->getPost('discount_type'),
@@ -474,6 +498,10 @@ class Proposals extends Security_Controller {
 
         $proposal_id = $this->request->getPost('proposal_id');
 
+        if (!$this->_is_proposal_editable($proposal_id)) {
+            app_redirect("forbidden");
+        }
+
         $view_data['model_info'] = $this->Proposal_items_model->get_one($this->request->getPost('id'));
         if (!$proposal_id) {
             $proposal_id = $view_data['model_info']->proposal_id;
@@ -493,6 +521,9 @@ class Proposals extends Security_Controller {
         ));
 
         $proposal_id = $this->request->getPost('proposal_id');
+        if (!$this->_is_proposal_editable($proposal_id)) {
+            app_redirect("forbidden");
+        }
 
         $id = $this->request->getPost('id');
         $rate = unformat_currency($this->request->getPost('proposal_item_rate'));
@@ -551,6 +582,11 @@ class Proposals extends Security_Controller {
         ));
 
         $id = $this->request->getPost('id');
+        $item_info = $this->Proposal_items_model->get_one($id);
+        if (!$this->_is_proposal_editable($item_info->proposal_id)) {
+            app_redirect("forbidden");
+        }
+
         if ($this->request->getPost('undo')) {
             if ($this->Proposal_items_model->delete($id, true)) {
                 $options = array("id" => $id);
@@ -586,9 +622,17 @@ class Proposals extends Security_Controller {
     /* prepare a row of proposal item list table */
 
     private function _make_item_row($data) {
-        $item = "<div class='item-row strong mb5' data-id='$data->id'><div class='float-start move-icon'><i data-feather='menu' class='icon-16'></i></div> $data->title</div>";
+        $move_icon = "";
+        $desc_style = "";
+
+        if ($this->_is_proposal_editable($data->proposal_id)) {
+            $move_icon = "<div class='float-start move-icon'><i data-feather='menu' class='icon-16'></i></div>";
+            $desc_style = " style='margin-left:30px'";
+        }
+
+        $item = "<div class='item-row strong mb5' data-id='$data->id'>$move_icon $data->title</div>";
         if ($data->description) {
-            $item .= "<span style='margin-left:25px'>" . nl2br($data->description) . "</span>";
+            $item .= "<div $desc_style >" . nl2br($data->description) . "</div>";
         }
         $type = $data->unit_type ? $data->unit_type : "";
 
@@ -598,7 +642,7 @@ class Proposals extends Security_Controller {
             to_decimal_format($data->quantity) . " " . $type,
             to_currency($data->rate, $data->currency_symbol),
             to_currency($data->total, $data->currency_symbol),
-            modal_anchor(get_uri("proposals/item_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_proposal'), "data-post-id" => $data->id))
+            modal_anchor(get_uri("proposals/item_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_proposal'), "data-post-id" => $data->id, "data-post-proposal_id" => $data->proposal_id))
             . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("proposals/delete_item"), "data-action" => "delete"))
         );
     }
@@ -706,13 +750,12 @@ class Proposals extends Security_Controller {
             }
 
             $contacts = $this->Users_model->get_details($contacts_options)->getResult();
-            $contact_first_name = "";
-            $contact_last_name = "";
+
+            $primary_contact_info = "";
             $contacts_dropdown = array();
             foreach ($contacts as $contact) {
                 if ($contact->is_primary_contact) {
-                    $contact_first_name = $contact->first_name;
-                    $contact_last_name = $contact->last_name;
+                    $primary_contact_info = $contact;
                     $contacts_dropdown[$contact->id] = $contact->first_name . " " . $contact->last_name . " (" . app_lang("primary_contact") . ")";
                 }
             }
@@ -725,24 +768,61 @@ class Proposals extends Security_Controller {
 
             $view_data['contacts_dropdown'] = $contacts_dropdown;
 
-            $email_template = $this->Email_templates_model->get_final_template("proposal_sent");
-
-            $parser_data["PROPOSAL_ID"] = $proposal_info->id;
-            $parser_data["CONTACT_FIRST_NAME"] = $contact_first_name;
-            $parser_data["CONTACT_LAST_NAME"] = $contact_last_name;
-            $parser_data["PROPOSAL_URL"] = get_uri("proposals/preview/" . $proposal_info->id);
-            $parser_data["PUBLIC_PROPOSAL_URL"] = get_uri("offer/preview/" . $proposal_info->id . "/" . $proposal_info->public_key);
-            $parser_data['SIGNATURE'] = $email_template->signature;
-            $parser_data["LOGO_URL"] = get_logo_url();
-
-            $message = $this->parser->setData($parser_data)->renderString($email_template->message);
-            $subject = $this->parser->setData($parser_data)->renderString($email_template->subject);
-            $view_data['message'] = htmlspecialchars_decode($message);
-            $view_data['subject'] = htmlspecialchars_decode($subject);
+            $template_data = $this->get_send_proposal_template($proposal_id, 0, "", $proposal_info, $primary_contact_info);
+            $view_data['message'] = get_array_value($template_data, "message");
+            $view_data['subject'] = get_array_value($template_data, "subject");
 
             return $this->template->view('proposals/send_proposal_modal_form', $view_data);
         } else {
             show_404();
+        }
+    }
+
+    function get_send_proposal_template($proposal_id = 0, $contact_id = 0, $return_type = "", $proposal_info = "", $contact_info = "") {
+        $this->access_only_allowed_members();
+
+        validate_numeric_value($proposal_id);
+        validate_numeric_value($contact_id);
+
+        if (!$proposal_info) {
+            $options = array("id" => $proposal_id);
+            $proposal_info = $this->Proposals_model->get_details($options)->getRow();
+        }
+
+        if (!$contact_info) {
+            $contact_info = $this->Users_model->get_one($contact_id);
+        }
+
+        $contact_language = $contact_info->language;
+
+        $email_template = $this->Email_templates_model->get_final_template("proposal_sent", true);
+
+        $parser_data["PROPOSAL_ID"] = $proposal_info->id;
+        $parser_data["CONTACT_FIRST_NAME"] = $contact_info->first_name;
+        $parser_data["CONTACT_LAST_NAME"] = $contact_info->last_name;
+        $parser_data["PROPOSAL_URL"] = get_uri("proposals/preview/" . $proposal_info->id);
+        $parser_data["PUBLIC_PROPOSAL_URL"] = get_uri("offer/preview/" . $proposal_info->id . "/" . $proposal_info->public_key);
+        $parser_data['SIGNATURE'] = get_array_value($email_template, "signature_$contact_language") ? get_array_value($email_template, "signature_$contact_language") : get_array_value($email_template, "signature_default");
+        $parser_data["LOGO_URL"] = get_logo_url();
+        $parser_data["RECIPIENTS_EMAIL_ADDRESS"] = $contact_info->email;
+
+        $parser = \Config\Services::parser();
+
+        $message = get_array_value($email_template, "message_$contact_language") ? get_array_value($email_template, "message_$contact_language") : get_array_value($email_template, "message_default");
+        $subject = get_array_value($email_template, "subject_$contact_language") ? get_array_value($email_template, "subject_$contact_language") : get_array_value($email_template, "subject_default");
+
+        $message = $parser->setData($parser_data)->renderString($message);
+        $subject = $parser->setData($parser_data)->renderString($subject);
+        $message = htmlspecialchars_decode($message);
+        $subject = htmlspecialchars_decode($subject);
+
+        if ($return_type == "json") {
+            echo json_encode(array("success" => true, "message_view" => $message));
+        } else {
+            return array(
+                "message" => $message,
+                "subject" => $subject
+            );
         }
     }
 
@@ -813,6 +893,33 @@ class Proposals extends Security_Controller {
         validate_numeric_value($proposal_id);
         $view_data['proposal_info'] = $this->Proposals_model->get_details(array("id" => $proposal_id))->getRow();
         return $this->template->view("proposals/proposal_editor", $view_data);
+    }
+
+    /* load tasks tab  */
+
+    function tasks($proposal_id) {
+        $this->access_only_allowed_members();
+
+        $view_data["proposal_id"] = $proposal_id;
+        $view_data["custom_field_headers_of_task"] = $this->Custom_fields_model->get_custom_field_headers_for_table("tasks", $this->login_user->is_admin, $this->login_user->user_type);
+
+        return $this->template->view("proposals/tasks/index", $view_data);
+    }
+
+    //prevent editing of proposal after certain state
+    private function _is_proposal_editable($_proposal, $is_clone = 0) {
+        if (get_setting("enable_proposal_lock_state")) {
+            $proposal_info = is_object($_proposal) ? $_proposal : $this->Proposals_model->get_one($_proposal);
+            if (!$proposal_info->id || $is_clone) {
+                return true;
+            }
+
+            if ($proposal_info->status != "accepted") {
+                return true;
+            }
+        } else {
+            return true;
+        }
     }
 
 }

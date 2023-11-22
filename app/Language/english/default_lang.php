@@ -112,6 +112,7 @@ $lang["edit_team_member"] = "Edit team member";
 $lang["delete_team_member"] = "Delete team member";
 $lang["team_member"] = "Team member";
 $lang["team_members"] = "Team members";
+$lang["teams"] = "Teams";
 $lang["active_members"] = "Active members";
 $lang["inactive_members"] = "Inactive members";
 $lang["first_name"] = "First name";
@@ -121,6 +122,7 @@ $lang["alternative_address"] = "Alternative address";
 $lang["phone"] = "Phone";
 $lang["alternative_phone"] = "Alternative phone";
 $lang["gender"] = "Gender";
+$lang["mobile"] = "Mobile";
 $lang["male"] = "Male";
 $lang["female"] = "Female";
 $lang["date_of_birth"] = "Date of birth";
@@ -308,12 +310,12 @@ $lang["me"] = "Me";
 $lang["select_a_message"] = "Select a message to view";
 
 /* clients */
-$lang["add_client"] = "Add client";
-$lang["edit_client"] = "Edit client";
-$lang["delete_client"] = "Delete client";
-$lang["client"] = "Client";
-$lang["clients"] = "Clients";
-$lang["client_details"] = "Client details";
+$lang["add_client"] = "Add vessel";
+$lang["edit_client"] = "Edit vessel";
+$lang["delete_client"] = "Delete vessel";
+$lang["client"] = "Vessel";
+$lang["clients"] = "Vessels";
+$lang["client_details"] = "Vessel details";
 $lang["due"] = "Due";
 
 $lang["add_contact"] = "Add contact";
@@ -1298,7 +1300,7 @@ $lang["cancelled_by"] = "Cancelled by";
 /* Version 2.3 */
 
 $lang["test_push_notification"] = "Test push notification";
-$lang["notification_test_push_notification"] = "It's a demo push notification";
+$lang["notification_test_push_notification"] = "Great! Push notification looks OK.";
 $lang["push_notification_error_message"] = "Error! Can't connect with the Pusher using the credentials.";
 $lang["clone_estimate"] = "Clone Estimate";
 
@@ -2294,7 +2296,7 @@ $lang["file_size_too_large"] = "File size is too large. Please increase the uplo
 
 $lang["sub_task_status"] = "Sub task status";
 
-$lang["can_access_client_feedback_in_projects"] = "Can access client feedback in projects?";
+$lang["can_access_client_feedback_in_projects"] = "Can access client feedback in projects";
 $lang["change_the_milestone_dates_based_on_project_start_date"] = "Change the milestone dates based on project start date";
 
 $lang["send_first_due_invoice_reminder_notification_before"] = "Send 1st due invoice reminder before due date";
@@ -2324,7 +2326,7 @@ $lang["show_in_subscription"] = "Show in subscription";
 $lang["subscription_total"] = "Subscription total";
 $lang["start_subscription"] = "Start subscription";
 
-$lang["subscription_success_message"] = "You're subscription has been started successfully.";
+$lang["subscription_success_message"] = "The subscription has been started successfully.";
 
 $lang["enable_stripe_subscription"] = "Enable Stripe subscription";
 $lang["please_enable_the_stripe_payment_method_first"] = "Please enable the stripe payment method first!";
@@ -2381,5 +2383,153 @@ $lang["company_logo"] = "Company Logo";
 $lang["task_commented"] = "Task commented";
 $lang["task_assigned"] = "Task assigned";
 $lang["task_general"] = "Task general";
+
+/* Version 3.5 */
+
+$lang["visitors_can_see_store_before_login"] = "Visitors can see store before login";
+$lang["show_payment_option_after_submitting_the_order"] = "Show payment option after submitting the order";
+$lang["accept_order_before_login"] = "Accept order before login";
+$lang["proceed_to_payment"] = "Proceed to payment";
+$lang["pay_order"] = "Pay order";
+$lang["order_status_after_payment"] = "Order status after payment";
+$lang["store_settings"] = "Store settings";
+$lang["banner_image_on_public_store"] = "Banner image on public store";
+$lang["your_order_has_been_submitted"] = "Your order has been submitted.";
+
+$lang["re_captcha_error-timeout-or-duplicate"] = "The reCAPTCHA has been expired or duplicate. Please reload the page.";
+
+$lang["related_to"] = "Related to";
+
+$lang["hide_from_non_project_related_tasks"] = "Hide from non-project related tasks";
+$lang["add_task_in_project"] = "Add task in project";
+
+$lang["general_task"] = "General task";
+$lang["general_task_created"] = "General task created";
+$lang["general_task_updated"] = "General task updated";
+$lang["general_task_assigned"] = "General task assigned";
+$lang["general_task_started"] = "General task started";
+$lang["general_task_finished"] = "General task finished";
+$lang["general_task_reopened"] = "General task reopened";
+$lang["general_task_deleted"] = "General task deleted";
+$lang["general_task_commented"] = "General task commented";
+
+$lang["notification_general_task_created"] = "Created a new task.";
+$lang["notification_general_task_updated"] = "Updated a task.";
+$lang["notification_general_task_assigned"] = "Assigned a task to %s."; //Assigned a task to Mr. X
+$lang["notification_general_task_started"] = "Started a task.";
+$lang["notification_general_task_finished"] = "Finished a task.";
+$lang["notification_general_task_reopened"] = "Reopened a task.";
+$lang["notification_general_task_deleted"] = "Deleted a task.";
+$lang["notification_general_task_commented"] = "Commented on a task.";
+
+$lang["bookmark"] = "Bookmark";
+$lang["bookmark_icon"] = "Bookmark Icon";
+$lang["change_filters"] = "Change filters";
+$lang["manage_filters"] = "Manage Filters";
+$lang["new_filter"] = "New filter";
+$lang["update_filter"] = "Update filter";
+$lang["add_new_filter"] = "Add new filter";
+$lang["show_time_with_task_start_date_and_deadline"] = "Show time with task start date and deadline";
+
+$lang["save_and_continue_to_login_for_payment"] = "Save & continue to login for payment";
+$lang["public_store_page_setting_help_message"] = "You can set the store as landing page by adding 'store' in the landing page setting.";
+$lang["public_store_page_setting_permission_error_message"] = "Please enable the store access permission for clients.";
+$lang["order_status_after_payment_help_message"] = "This will be applicable only when the order status is";
+
+$lang["subscription_first_billing_date_error_message"] = "The first billing date should be before the next billing date based on the billing period!";
+$lang["client_currency_not_editable_message"] = "The currency is not editable when there is any invoice, estimate, order, proposal, contract or subscription.";
+
+$lang["subscription_started"] = "Subscription started";
+$lang["notification_subscription_started"] = "Started a subscription.";
+
+$lang["subscription_invoice_created_via_cron_job"] = "Subscription invoice created via Cron Job";
+$lang["notification_subscription_invoice_created_via_cron_job"] = "New invoice generated from subscription.";
+
+$lang["create_credit_note"] = "Create credit note";
+$lang["create_credit_note_message"] = "Are you sure? You're going to fully credit this invoice. A credit note will be created for this invoice.";
+$lang["credited"] = "Credited";
+$lang["credit_note"] = "Credit Note";
+$lang["email_credit_note_to_client"] = "Email credit note to client";
+$lang["main_invoice"] = "Main invoice";
+$lang["credit_note_id"] = "Credit note ID";
+$lang["send_credit_note"] = "Send credit note";
+
+$lang["taxable"] = "Taxable";
+
+$lang["can_manage_team_members_notes"] = "Can manage team member's notes?";
+$lang["team_members_can_not_see_own_notes"] = "Team members can't see own notes.";
+
+$lang["articles_order"] = "Articles order";
+$lang["top_menu"] = "Top menu";
+$lang["edit_top_menu"] = "Edit top menu";
+
+$lang["top_menu_description_message"] = "This menu will be visible only in the public pages";
+$lang["enable_top_menu"] = "Enable top menu";
+$lang["menu_items"] = "Menu items";
+
+$lang["landing_page"] = "Landing page";
+$lang["landing_page_help_text"] = "Normally keep it blank. Set this value only if you want any custom landing page. (Example value: knowledge_base)";
+
+$lang["fixed_amount_discount_before_tax_error_message"] = "Fixed amount discount can't be added before tax.";
+
+$lang["invoices_summary"] = "Invoices summary";
+$lang["estimates_summary"] = "Estimates summary";
+$lang["leads_summary"] = "Leads summary";
+$lang["orders_summary"] = "Orders summary";
+$lang["estimate_request_summary"] = "Estimate request summary";
+$lang["proposals_summary"] = "Proposals summary";
+$lang["expenses_summary"] = "Expenses summary";
+$lang["monthly_summary"] = "Monthly summary";
+
+$lang["yearly_chart"] = "Yearly chart";
+$lang["category_chart"] = "Category chart";
+
+$lang["count"] = "Count";
+$lang["invoice_total"] = "Invoice total";
+$lang["order_total"] = "Order total";
+
+$lang["last_7_days"] = "Last 7 Days";
+$lang["next_7_days"] = "Next 7 Days";
+$lang["last_30_days"] = "Last 30 Days";
+$lang["this_month"] = "This Month";
+$lang["last_month"] = "Last Month";
+$lang["next_month"] = "Next Month";
+$lang["next_year"] = "Next Year";
+
+$lang["hold_projects"] = "Hold Projects";
+$lang["open_tasks"] = "Open Tasks";
+$lang["completed_tasks"] = "Completed Tasks";
+
+$lang["team_members_summary"] = "Team members summary";
+$lang["created_date_wise"] = "Created date wise";
+$lang["conversion_date_wise"] = "Conversion date wise";
+
+$lang["ticket_statistics"] = "Ticket Statistics";
+
+$lang["can_activate_deactivate_team_members"] = "Can activate deactivate team members?";
+$lang["can_delete_team_members"] = "Can delete team members?";
+
+$lang["project_settings"] = "Project settings";
+$lang["project_status"] = "Project Status";
+$lang["add_project_status"] = "Add project status";
+$lang["mark_project_as"] = "Mark Project as";
+
+$lang["status_language_key_recommendation_help_text"] = "Recommended to use any prefix like project_status_";
+$lang["edit_project_status"] = "Edit project status";
+$lang["delete_project_status"] = "Delete project status";
+
+$lang["open_project_status_recommendation_help_text"] = "You can change the text, but this status will be considered as initial open status.";
+$lang["completed_project_status_recommendation_help_text"] = "You can change the text, but this status will be considered as completed.";
+
+$lang["full_width"] = "Full width";
+$lang["hide_topbar"] = "Hide topbar";
+
+/* Version 3.5.1 */
+
+$lang["enable_lock_state"] = "Enable lock state";
+$lang["invoice_lock_state_description"] = "Once you enable the lock state, the invoices can’t be edited after sending to client or changing the status.";
+$lang["estimate_lock_state_description"] = "Once you enable the lock state, the accepted estimates can’t be edited.";
+$lang["proposal_lock_state_description"] = "Once you enable the lock state, the accepted proposals can’t be edited.";
+$lang["contract_lock_state_description"] = "Once you enable the lock state, the accepted contracts can't be edited.";
 
 return $lang;

@@ -2277,109 +2277,257 @@ $lang["total_after_discount"] = "Celková částka po slevě";
 
 /* Version 3.3 */
 
-$lang["change_the_tasks_start_date_and_deadline_based_on_project_start_date"] = "Change the tasks start date and deadline based on project start date";
+$lang["change_the_tasks_start_date_and_deadline_based_on_project_start_date"] = "Změňte datum zahájení úkolů a termín na základě data zahájení projektu";
 
-$lang["can_edit_only_own_created_projects"] = "Can edit only own created projects";
-$lang["can_delete_only_own_created_projects"] = "Can delete only own created projects";
+$lang["can_edit_only_own_created_projects"] = "Lze upravovat pouze vlastní vytvořené projekty";
+$lang["can_delete_only_own_created_projects"] = "Lze smazat pouze vlastní vytvořené projekty";
 
-$lang["checklist_status"] = "Checklist status";
+$lang["checklist_status"] = "Stav kontrolního seznamu";
 
 /* Version 3.4 */
 
-$lang["subscribe"] = "Subscribe";
-$lang["email_protocol"] = "Email protocol";
+$lang["subscribe"] = "Přihlásit se k odběru";
+$lang["email_protocol"] = "E-mailový protokol";
 
-$lang["please_enable_the_file_uploads_php_settings"] = "Please enable the file_uploads php setting in the server.";
-$lang["file_size_too_large"] = "File size is too large. Please increase the upload_max_filesize from server.";
+$lang["please_enable_the_file_uploads_php_settings"] = "Prosím povolte nastavení php file_uploads na serveru.";
+$lang["file_size_too_large"] = "Velikost souboru je příliš velká. Zvyšte prosím upload_max_filesize ze serveru.";
 
-$lang["sub_task_status"] = "Sub task status";
+$lang["sub_task_status"] = "Stav dílčího úkolu";
 
-$lang["can_access_client_feedback_in_projects"] = "Can access client feedback in projects?";
-$lang["change_the_milestone_dates_based_on_project_start_date"] = "Change the milestone dates based on project start date";
+$lang["can_access_client_feedback_in_projects"] = "Může získat přístup ke zpětné vazbě klientů v projektech";
+$lang["change_the_milestone_dates_based_on_project_start_date"] = "Změnit data milníku podle data zahájení projektu";
 
-$lang["send_first_due_invoice_reminder_notification_before"] = "Send 1st due invoice reminder before due date";
-$lang["send_second_due_invoice_reminder_notification_before"] = "Send 2nd due invoice reminder before due date";
+$lang["send_first_due_invoice_reminder_notification_before"] = "Odeslat 1. upomínku splatnosti faktury před datem splatnosti";
+$lang["send_second_due_invoice_reminder_notification_before"] = "Odeslat 2. upomínku splatnosti faktury před datem splatnosti";
 
-$lang["send_first_invoice_overdue_reminder_after"] = "Send 1st invoice overdue reminder after";
-$lang["send_second_invoice_overdue_reminder_after"] = "Send 2nd invoice overdue reminder after";
+$lang["send_first_invoice_overdue_reminder_after"] = "Odeslat 1. upomínku po splatnosti faktury po";
+$lang["send_second_invoice_overdue_reminder_after"] = "Odeslat 2. upomínku po splatnosti faktury po";
 
-$lang["product"] = "Product";
+$lang["product"] = "Produkt";
 
-$lang["subscription_id"] = "Subscription ID";
-$lang["subscription_sent_message"] = "The subscription has been sent!";
-$lang["add_subscription"] = "Add subscription";
-$lang["edit_subscription"] = "Edit subscription";
-$lang["delete_subscription"] = "Delete subscription";
-$lang["subscription"] = "Subscription";
-$lang["subscriptions"] = "Subscriptions";
-$lang["subscription_value"] = "Subscription Value";
-$lang["subscription_items"] = "Subscription items";
-$lang["email_subscription_to_client"] = "Email subscription to client";
-$lang["send_subscription"] = "Send subscription";
-$lang["subscription_settings"] = "Subscription Settings";
-$lang["subscription_prefix"] = "Subscription prefix";
-$lang["initial_number_of_the_subscription"] = "Initial number of the subscription";
-$lang["can_access_subscriptions"] = "Can access subscriptions?";
-$lang["show_in_subscription"] = "Show in subscription";
-$lang["subscription_total"] = "Subscription total";
-$lang["start_subscription"] = "Start subscription";
+$lang["subscription_id"] = "ID předplatného";
+$lang["subscription_sent_message"] = "Odběr byl odeslán!";
+$lang["add_subscription"] = "Přidat předplatné";
+$lang["edit_subscription"] = "Upravit předplatné";
+$lang["delete_subscription"] = "Smazat předplatné";
+$lang["subscription"] = "Předplatné";
+$lang["subscriptions"] = "Předplatné";
+$lang["subscription_value"] = "Hodnota předplatného";
+$lang["subscription_items"] = "Předplatné položky";
+$lang["email_subscription_to_client"] = "E-mailové předplatné klientovi";
+$lang["send_subscription"] = "Odeslat předplatné";
+$lang["subscription_settings"] = "Nastavení předplatného";
+$lang["subscription_prefix"] = "Prefix předplatného";
+$lang["initial_number_of_the_subscription"] = "Počáteční číslo předplatného";
+$lang["can_access_subscriptions"] = "Můžete přistupovat k odběrům?";
+$lang["show_in_subscription"] = "Zobrazit v předplatném";
+$lang["subscription_total"] = "Celkový počet předplatného";
+$lang["start_subscription"] = "Zahájit předplatné";
 
-$lang["subscription_success_message"] = "You're subscription has been started successfully.";
+$lang["subscription_success_message"] = "Vaše předplatné bylo úspěšně zahájeno.";
 
-$lang["enable_stripe_subscription"] = "Enable Stripe subscription";
-$lang["please_enable_the_stripe_payment_method_first"] = "Please enable the stripe payment method first!";
-$lang["tax_mapping"] = "Tax mapping";
-$lang["mapped"] = "Mapped";
-$lang["select_stripe_tax"] = "Select Stripe tax";
-$lang["stripe_price_error_message"] = "App subscription price and recurring interval should be same as stripe product price and interval.";
-$lang["stripe_tax_error_message"] = "Some taxes are not mapped with stripe yet. Please map the taxes from the subscription settings.";
-$lang["payment_status"] = "Payment status";
-$lang["failed"] = "Failed";
-$lang["next_billing_date"] = "Next billing date";
-$lang["cancel_subscription"] = "Cancel subscription";
+$lang["enable_stripe_subscription"] = "Povolit předplatné Stripe";
+$lang["please_enable_the_stripe_payment_method_first"] = "Nejdříve prosím povolte proužkovou platební metodu!";
+$lang["tax_mapping"] = "Daňové mapování";
+$lang["mapped"] = "Mapováno";
+$lang["select_stripe_tax"] = "Vybrat daň proužků";
+$lang["stripe_price_error_message"] = "Cena předplatného aplikace a interval opakování by měly být stejné jako cena a interval prokládaných produktů.";
+$lang["stripe_tax_error_message"] = "Některé daně ještě nejsou namapovány s pruhem. Mapujte daně z nastavení předplatného.";
+$lang["payment_status"] = "Stav platby";
+$lang["failed"] = "Nezdařilo se";
+$lang["next_billing_date"] = "Datum příští fakturace";
+$lang["cancel_subscription"] = "Zrušit předplatné";
 
-$lang["invoice_number"] = "Invoice number";
-$lang["estimate_number"] = "Estimate number";
-$lang["order_number"] = "Order number";
+$lang["invoice_number"] = "Číslo faktury";
+$lang["estimate_number"] = "Odhad počtu";
+$lang["order_number"] = "Číslo objednávky";
 
-$lang["client_can_access_notes"] = "Client can access notes?";
+$lang["client_can_access_notes"] = "Klient má přístup k poznámkám?";
 
-$lang["my_tasks_overview"] = "My Tasks Overview";
+$lang["my_tasks_overview"] = "Přehled mých úkolů";
 
-$lang["leads_overview"] = "Leads Overview";
-$lang["converted_to_client"] = "Converted to client";
+$lang["leads_overview"] = "Přehled potenciálních zákazníků";
+$lang["converted_to_client"] = "Převedeno na klienta";
 
-$lang["remember_to_add_this_urls_in_authorized_redirect_uri"] = "Remember to add this urls in Authorized redirect uri";
+$lang["remember_to_add_this_urls_in_authorized_redirect_uri"] = "Nezapomeňte přidat tyto adresy URL do uri autorizovaného přesměrování";
 
-$lang["merge"] = "Merge";
-$lang["move_all_comments_or_notes_from"] = "Move all comments/notes from";
-$lang["moved_to"] = "Moved to";
+$lang["merge"] = "Sloučit";
+$lang["move_all_comments_or_notes_from"] = "Přesunout všechny komentáře/poznámky z";
+$lang["moved_to"] = "Přesunuto do";
 
 $lang["ok"] = "OK";
-$lang["app"] = "App";
-$lang["stripe"] = "Stripe";
-$lang["activate_as_stripe_subscription"] = "Activate as Stripe subscription";
-$lang["activate_as_internal_subscription"] = "Activate as internal subscription";
-$lang["activate_as_stripe_subscription_message_1"] = "Please map the stripe product and price with this subscription. You can add the stripe products and prices from your stripe dashboard.";
-$lang["activate_as_stripe_subscription_message_2"] = "The client will get a request to add the payment method with this subscription. Once the client submit the payment method, this subscription will be activated and auto payment will be enabled via stripe.";
-$lang["activate_as_internal_subscription_message_1"] = "This subscription will be managed by app. The invoices will be created based on the subscription terms.";
-$lang["activate_as_internal_subscription_message_2"] = "Note: Payments will not be done automatically. For automated payment, you can use the stripe subscription.";
-$lang["subscription_toatl_can_not_empty_message"] = "Subscription total can't be 0.";
+$lang["app"] = "Aplikace";
+$lang["stripe"] = "Proužek";
+$lang["activate_as_stripe_subscription"] = "Aktivovat jako předplatné Stripe";
+$lang["activate_as_internal_subscription"] = "Aktivovat jako interní předplatné";
+$lang["activate_as_stripe_subscription_message_1"] = "Namapujte prosím pruhovaný produkt a cenu s tímto předplatným. Můžete přidat pruhované produkty a ceny z vašeho pruhového panelu.";
+$lang["activate_as_stripe_subscription_message_2"] = "Klient obdrží požadavek na přidání platební metody s tímto předplatným. Jakmile klient odešle platební metodu, bude toto předplatné aktivováno a bude povolena automatická platba přes stripe.";
+$lang["activate_as_internal_subscription_message_1"] = "Toto předplatné bude spravováno aplikací. Faktury budou vytvořeny na základě podmínek předplatného.";
+$lang["activate_as_internal_subscription_message_2"] = "Poznámka: Platby nebudou prováděny automaticky. Pro automatické platby můžete použít stripe předplatné.";
+$lang["subscription_toatl_can_not_empty_message"] = "Celková částka předplatného nemůže být 0.";
 
-$lang["subscription_request_sent"] = "Subscription request sent";
-$lang["notification_subscription_request_sent"] = "New subscription request";
+$lang["subscription_request_sent"] = "Požadavek na odběr odeslán";
+$lang["notification_subscription_request_sent"] = "Nový požadavek na předplatné";
 
-$lang["first_billing_date"] = "First billing date";
-$lang["first_billing_date_cant_be_past_message"] = "First billing date can’t be past. Keep it blank to use the date when the client will subscribe.";
+$lang["first_billing_date"] = "Datum první fakturace";
+$lang["first_billing_date_cant_be_past_message"] = "Datum první fakturace nemůže být minulostí. Nechte toto pole prázdné, chcete-li použít datum, kdy se klient přihlásí k odběru.";
 
-$lang["gst_number"] = "GST Number";
+$lang["gst_number"] = "Číslo GST";
 
-$lang["announcement_created"] = "Announcement created";
+$lang["announcement_created"] = "Oznámení vytvořeno";
 
-$lang["company_logo"] = "Company Logo";
+$lang["company_logo"] = "Logo společnosti";
 
-$lang["task_commented"] = "Task commented";
-$lang["task_assigned"] = "Task assigned";
-$lang["task_general"] = "Task general";
+$lang["task_commented"] = "Úkol okomentován";
+$lang["task_assigned"] = "Úkol přidělen";
+$lang["task_general"] = "Úkol obecný";
+
+/* Version 3.5 */
+
+$lang["visitors_can_see_store_before_login"] = "Návštěvníci mohou vidět obchod před přihlášením";
+$lang["show_payment_option_after_submitting_the_order"] = "Zobrazit možnost platby po odeslání objednávky";
+$lang["accept_order_before_login"] = "Přijmout objednávku před přihlášením";
+$lang["proceed_to_payment"] = "Pokračovat k platbě";
+$lang["pay_order"] = "Zaplatit příkaz";
+$lang["order_status_after_payment"] = "Stav objednávky po zaplacení";
+$lang["store_settings"] = "Nastavení obchodu";
+$lang["banner_image_on_public_store"] = "Obrázek banneru ve veřejném obchodě";
+$lang["your_order_has_been_submitted"] = "Vaše objednávka byla odeslána.";
+
+$lang["re_captcha_error-timeout-or-duplicate"] = "Platnost reCAPTCHA vypršela nebo je duplikát. Načtěte stránku znovu.";
+
+$lang["related_to"] = "Související s";
+
+$lang["hide_from_non_project_related_tasks"] = "Skrýt před úkoly nesouvisejícími s projektem";
+$lang["add_task_in_project"] = "Přidat úkol do projektu";
+
+$lang["general_task"] = "Obecný úkol";
+$lang["general_task_created"] = "Obecný úkol vytvořen";
+$lang["general_task_updated"] = "Obecný úkol aktualizován";
+$lang["general_task_assigned"] = "Obecný úkol přidělen";
+$lang["general_task_started"] = "Obecná úloha zahájena";
+$lang["general_task_finished"] = "Obecný úkol dokončen";
+$lang["general_task_reopened"] = "Obecný úkol znovu otevřen";
+$lang["general_task_deleted"] = "Obecný úkol smazán";
+$lang["general_task_commented"] = "Obecný úkol okomentován";
+
+$lang["notification_general_task_created"] = "Vytvořen nový úkol.";
+$lang["notification_general_task_updated"] = "Aktualizován úkol.";
+$lang["notification_general_task_assigned"] = "Přiřazen úkol %s."; //Assigned a task to Mr. X
+$lang["notification_general_task_started"] = "Zahájen úkol.";
+$lang["notification_general_task_finished"] = "Dokončen úkol.";
+$lang["notification_general_task_reopened"] = "Znovu otevřen úkol.";
+$lang["notification_general_task_deleted"] = "Smazán úkol.";
+$lang["notification_general_task_commented"] = "Přidán komentář k úkolu.";
+
+$lang["bookmark"] = "Záložka";
+$lang["bookmark_icon"] = "Ikona záložky";
+$lang["change_filters"] = "Změnit filtry";
+$lang["manage_filters"] = "Spravovat filtry";
+$lang["new_filter"] = "Nový filtr";
+$lang["update_filter"] = "Aktualizovat filtr";
+$lang["add_new_filter"] = "Přidat nový filtr";
+$lang["show_time_with_task_start_date_and_deadline"] = "Zobrazit čas s datem zahájení úkolu a termínem";
+
+$lang["save_and_continue_to_login_for_payment"] = "Uložit a pokračovat v přihlášení k platbě";
+$lang["public_store_page_setting_help_message"] = "Obchod můžete nastavit jako vstupní stránku přidáním 'obchod' do nastavení vstupní stránky.";
+$lang["public_store_page_setting_permission_error_message"] = "Povolte klientům oprávnění k přístupu do obchodu.";
+$lang["order_status_after_payment_help_message"] = "Toto bude platit pouze v případě, že je stav objednávky";
+
+$lang["subscription_first_billing_date_error_message"] = "První datum fakturace by mělo být před datem příští fakturace podle fakturačního období!";
+$lang["client_currency_not_editable_message"] = "Měnu nelze upravit, pokud existuje nějaká faktura, odhad, objednávka, návrh, smlouva nebo předplatné.";
+
+$lang["subscription_started"] = "Předplatné zahájeno";
+$lang["notification_subscription_started"] = "Zahájeno předplatné.";
+
+$lang["subscription_invoice_created_via_cron_job"] = "Faktura za předplatné vytvořená prostřednictvím Cron Job";
+$lang["notification_subscription_invoice_created_via_cron_job"] = "Nová faktura vygenerovaná z předplatného.";
+
+$lang["create_credit_note"] = "Vytvořit dobropis";
+$lang["create_credit_note_message"] = "Jste si jistý? Chystáte se plně připsat tuto fakturu. Pro tuto fakturu bude vytvořen dobropis.";
+$lang["credited"] = "Připsáno";
+$lang["credit_note"] = "Dobropis";
+$lang["email_credit_note_to_client"] = "Poslat dobropis e-mailem klientovi";
+$lang["main_invoice"] = "Hlavní faktura";
+$lang["credit_note_id"] = "ID dobropisu";
+$lang["send_credit_note"] = "Poslat dobropis";
+
+$lang["taxable"] = "Zdanitelné";
+
+$lang["can_manage_team_members_notes"] = "Můžete spravovat poznámky člena týmu?";
+$lang["team_members_can_not_see_own_notes"] = "Členové týmu nemohou vidět vlastní poznámky.";
+
+$lang["articles_order"] = "Pořadí článků";
+$lang["top_menu"] = "Hlavní nabídka";
+$lang["edit_top_menu"] = "Upravit hlavní nabídku";
+
+$lang["top_menu_description_message"] = "Toto menu bude viditelné pouze na veřejných stránkách";
+$lang["enable_top_menu"] = "Povolit hlavní nabídku";
+$lang["menu_items"] = "Položky nabídky";
+
+$lang["landing_page"] = "Vstupní stránka";
+$lang["landing_page_help_text"] = "Normálně ponechejte prázdné. Tuto hodnotu nastavte pouze v případě, že chcete vlastní vstupní stránku. (Příklad hodnoty: znalostní báze)";
+
+$lang["fixed_amount_discount_before_tax_error_message"] = "Slevu v pevné výši nelze přidat před zdaněním.";
+
+$lang["invoices_summary"] = "Přehled faktur";
+$lang["estimates_summary"] = "Shrnutí odhadů";
+$lang["leads_summary"] = "Shrnutí potenciálních zákazníků";
+$lang["orders_summary"] = "Přehled objednávek";
+$lang["estimate_request_summary"] = "Odhadnout souhrn požadavku";
+$lang["proposals_summary"] = "Souhrn návrhů";
+$lang["expenses_summary"] = "Přehled výdajů";
+$lang["monthly_summary"] = "Měsíční shrnutí";
+
+$lang["yearly_chart"] = "Roční tabulka";
+$lang["category_chart"] = "Tabulka kategorií";
+
+$lang["count"] = "Počet";
+$lang["invoice_total"] = "Celková faktura";
+$lang["order_total"] = "Celková objednávka";
+
+$lang["last_7_days"] = "Posledních 7 dní";
+$lang["next_7_days"] = "Dalších 7 dní";
+$lang["last_30_days"] = "Posledních 30 dní";
+$lang["this_month"] = "Tento měsíc";
+$lang["last_month"] = "Minulý měsíc";
+$lang["next_month"] = "Příští měsíc";
+$lang["next_year"] = "Příští rok";
+
+$lang["hold_projects"] = "Pozastavit projekty";
+$lang["open_tasks"] = "Otevřené úkoly";
+$lang["completed_tasks"] = "Dokončené úkoly";
+
+$lang["team_members_summary"] = "Přehled členů týmu";
+$lang["created_date_wise"] = "Vytvořeno podle data";
+$lang["conversion_date_wise"] = "Podle data převodu";
+
+$lang["ticket_statistics"] = "Statistika vstupenek";
+
+$lang["can_activate_deactivate_team_members"] = "Lze aktivovat deaktivaci členů týmu?";
+$lang["can_delete_team_members"] = "Lze smazat členy týmu?";
+
+$lang["project_settings"] = "Nastavení projektu";
+$lang["project_status"] = "Stav projektu";
+$lang["add_project_status"] = "Přidat stav projektu";
+$lang["mark_project_as"] = "Označit projekt jako";
+
+$lang["status_language_key_recommendation_help_text"] = "Doporučeno použít libovolnou předponu jako project_status_";
+$lang["edit_project_status"] = "Upravit stav projektu";
+$lang["delete_project_status"] = "Smazat stav projektu";
+
+$lang["open_project_status_recommendation_help_text"] = "Můžete změnit text, ale tento stav bude považován za počáteční otevřený stav.";
+$lang["completed_project_status_recommendation_help_text"] = "Text můžete změnit, ale tento stav bude považován za dokončený.";
+
+$lang["full_width"] = "Plná šířka";
+$lang["hide_topbar"] = "Skrýt horní lištu";
+
+/* Version 3.5.1 */
+
+$lang["enable_lock_state"] = "Povolit stav uzamčení";
+$lang["invoice_lock_state_description"] = "Jakmile povolíte stav uzamčení, nebude možné po odeslání klientovi nebo změně stavu upravovat faktury.";
+$lang["estimate_lock_state_description"] = "Jakmile povolíte stav uzamčení, přijaté odhady nelze upravovat.";
+$lang["proposal_lock_state_description"] = "Jakmile povolíte stav uzamčení, přijaté návrhy nelze upravovat.";
+$lang["contract_lock_state_description"] = "Jakmile povolíte stav uzamčení, přijaté smlouvy nelze upravovat.";
 
 return $lang;

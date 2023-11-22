@@ -2,6 +2,10 @@
 
 namespace App\Libraries;
 
+use Psr\Http\Message\RequestInterface;
+use Google\Http\MediaFileUpload;
+use GuzzleHttp\Psr7\Request;
+
 class Google {
 
     private $Settings_model;
@@ -10,7 +14,7 @@ class Google {
         $this->Settings_model = model("App\Models\Settings_model");
 
         //load resources
-        require_once(APPPATH . "ThirdParty/Google/google-api-php-client/vendor/autoload.php");
+        require_once(APPPATH . "ThirdParty/Google/google-api-php-client-2-15-0/autoload.php");
     }
 
     //authorize connection
@@ -198,7 +202,7 @@ class Google {
     }
 
     //upload file to temp folder
-    public function upload_file($temp_file, $file_name, $folder_name = "", $file_content = "") {
+    public function upload_file_old($temp_file, $file_name, $folder_name = "", $file_content = "") {
         $service = $this->_get_drive_service();
 
         $folder_id = $this->_create_folder($folder_name);
@@ -231,6 +235,117 @@ class Google {
             $this->_save_id($file_name, $file->id, "file");
         } else {
             return array("file_name" => $file_name, "file_id" => $file->id, "service_type" => "google");
+        }
+    }
+
+    //upload file to temp folder
+    public function upload_file($temp_file, $file_name, $folder_name = "", $file_content = "", $file_size = 0) {
+        $service = $this->_get_drive_service();
+
+        $folder_id = $this->_create_folder($folder_name);
+
+        $meta = array(
+            'name' => $file_name,
+            'parents' => array($folder_id)
+        );
+
+        $fileMetadata = new \Google_Service_Drive_DriveFile($meta);
+
+        $google_drive_file_id = "";
+        
+        
+        if ($file_content) {
+
+            $finfo = new \finfo(FILEINFO_MIME);
+            $mime_type = $finfo->buffer($file_content);
+
+            $file = $service->files->create($fileMetadata, array(
+                'data' => $file_content,
+                'mimeType' => $mime_type,
+                'uploadType' => 'multipart',
+                'fields' => 'id'));
+            
+            $google_drive_file_id = $file->id;
+        } else {
+
+            $mime_type = mime_content_type($temp_file);
+            $client = $this->_get_client_credentials();
+            $this->_check_access_token($client);
+
+            $request_body = $meta;
+            $request_body["mimeType"] = $mime_type;
+
+            $access_token = get_array_value($client->getAccessToken(), "access_token");
+
+            //Note: 
+            //The suggested url by google drive documentaion is https://www.googleapis.com/upload/drive/v3/files?uploadType=media. 
+            //https://developers.google.com/drive/api/guides/manage-uploads
+            //But there might be any bug in the MediaFileUpload. So, use the following url: 
+            //https://www.googleapis.com/drive/v3/files?uploadType=resumable
+
+            $request = new Request('POST', 'https://www.googleapis.com/drive/v3/files?uploadType=resumable',
+                    array(
+                "Authorization" => 'Bearer ' . $access_token,
+                "Content-Type" => "application/json"
+                    ),
+                    json_encode($request_body));
+
+            $chunk_size = 1024 * 1024 * 3; // 3MB
+
+            $media_file = new MediaFileUpload(
+                    $client,
+                    $request,
+                    "application/json",
+                    json_encode($request_body), true, $chunk_size
+            );
+
+            $media_file->setFileSize($file_size);
+
+            $temp_file_content = fopen($temp_file, 'r');
+            while (!feof($temp_file_content)) {
+
+                $chunk = fread($temp_file_content, $chunk_size);
+
+                $media_file->nextChunk($chunk);
+
+            }
+
+            fclose($temp_file_content);
+
+            // The upload is complete.
+            //find the file id
+
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $media_file->getResumeUri());
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, "file=1"); //could be any data. 
+            
+            $headers = array(
+                "Authorization" => "Bearer $access_token",
+                "Content-Type" => "applicaito/json",
+                "Content-length"=> 6 //google drive api requires a content lenght for post re
+            );
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+            $result = curl_exec($curl);
+            curl_close($curl);
+
+            
+            if ($result) {
+                $result = json_decode($result);
+                $google_drive_file_id =  $result->id;
+            }
+
+        }
+
+        $this->_make_file_as_public($service, $google_drive_file_id);
+
+        //save id's for temp files
+        if ($folder_name == "temp") {
+            $this->_save_id($file_name, $google_drive_file_id, "file");
+        } else {
+            return array("file_name" => $file_name, "file_id" => $google_drive_file_id, "service_type" => "google");
         }
     }
 

@@ -13,6 +13,18 @@ class Tickets extends Security_Controller {
         $this->Ticket_templates_model = model('App\Models\Ticket_templates_model');
     }
 
+    private function validate_ticket_access($ticket_id = 0) {
+        if (!$this->can_access_tickets($ticket_id)) {
+            app_redirect("forbidden");
+        }
+    }
+
+    private function _validate_tickets_report_access() {
+        if (!$this->login_user->is_admin && $this->access_type != "all") {
+            app_redirect("forbidden");
+        }
+    }
+
     //only admin can delete tickets
     protected function can_delete_tickets() {
         return $this->login_user->is_admin;
@@ -34,17 +46,9 @@ class Tickets extends Security_Controller {
             //prepare ticket label filter list
             $view_data['ticket_labels_dropdown'] = json_encode($this->make_labels_dropdown("ticket", "", true));
 
-            //prepare assign to filter list
-            $assigned_to_dropdown = array(array("id" => "", "text" => "- " . app_lang("assigned_to") . " -"));
-
-            $assigned_to_list = $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id", array("deleted" => 0, "user_type" => "staff"));
-            foreach ($assigned_to_list as $key => $value) {
-                $assigned_to_dropdown[] = array("id" => $key, "text" => $value);
-            }
-
             $view_data['show_options_column'] = true; //team members can view the options column
 
-            $view_data['assigned_to_dropdown'] = json_encode($assigned_to_dropdown);
+            $view_data['assigned_to_dropdown'] = json_encode($this->_get_assiged_to_dropdown());
 
             $view_data['ticket_types_dropdown'] = json_encode($this->_get_ticket_types_dropdown_list_for_filter($ticket_type_id));
 
@@ -56,6 +60,16 @@ class Tickets extends Security_Controller {
         }
     }
 
+    private function _get_assiged_to_dropdown() {
+        $assigned_to_dropdown = array(array("id" => "", "text" => "- " . app_lang("assigned_to") . " -"));
+
+        $assigned_to_list = $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id", array("deleted" => 0, "user_type" => "staff", "status" => "active"));
+        foreach ($assigned_to_list as $key => $value) {
+            $assigned_to_dropdown[] = array("id" => $key, "text" => $value);
+        }
+        return $assigned_to_dropdown;
+    }
+
     //load new tickt modal 
     function modal_form() {
         $this->validate_submitted_data(array(
@@ -63,7 +77,7 @@ class Tickets extends Security_Controller {
         ));
 
         $id = $this->request->getPost('id');
-        $this->_check_permission_of_selected_ticket($id);
+        $this->validate_ticket_access($id);
 
         //client should not be able to edit ticket
         if ($this->login_user->user_type === "client" && $id) {
@@ -107,7 +121,7 @@ class Tickets extends Security_Controller {
 
         $view_data['model_info'] = $model_info;
         $view_data['client_id'] = $ticket_info->client_id;
-        $view_data['clients_dropdown'] = array("" => "-") + $this->Clients_model->get_dropdown_list(array("charter_name"), "id", array());
+        $view_data['clients_dropdown'] = array("" => "-") + $this->Clients_model->get_dropdown_list(array("charter_name"), "id", array("is_lead" => 0));
         $view_data['show_project_reference'] = get_setting('project_reference_in_tickets');
 
         $view_data['project_id'] = $this->request->getPost('project_id');
@@ -121,7 +135,7 @@ class Tickets extends Security_Controller {
         }
 
         //prepare assign to list
-        $assigned_to_dropdown = array("" => "-") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id", array("deleted" => 0, "user_type" => "staff"));
+        $assigned_to_dropdown = array("" => "-") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id", array("deleted" => 0, "user_type" => "staff", "status" => "active"));
         $view_data['assigned_to_dropdown'] = $assigned_to_dropdown;
 
         //prepare label suggestions
@@ -148,7 +162,7 @@ class Tickets extends Security_Controller {
     // add a new ticket
     function save() {
         $id = $this->request->getPost('id');
-        $this->_check_permission_of_selected_ticket($id);
+        $this->validate_ticket_access($id);
 
         if ($id) {
             $this->validate_submitted_data(array(
@@ -368,7 +382,12 @@ class Tickets extends Security_Controller {
         );
 
         $data = $this->Tickets_model->get_details($options)->getRow();
-        return $this->_make_row($data, $custom_fields);
+
+        if ($data) {
+            return $this->_make_row($data, $custom_fields);
+        } else {
+            return json_encode(array());
+        }
     }
 
     //prepare a row of ticket list table
@@ -449,7 +468,7 @@ class Tickets extends Security_Controller {
                             <ul class="dropdown-menu dropdown-menu-end" role="menu">' . $edit . $status . $assigned_to . $delete_ticket . '</ul>
                         </span>';
 
-            $modal_view = modal_anchor(get_uri("tickets/view"), "<i data-feather='tablet' class='icon-16'></i>", array("class" => "action-option", "title" => app_lang('ticket_info') . " #$data->id", "data-post-id" => $data->id, "data-post-view_type" => "modal_view"));
+            $modal_view = modal_anchor(get_uri("tickets/view"), "<i data-feather='tablet' class='icon-16'></i>", array("class" => "action-option", "title" => app_lang('ticket_info') . " #$data->id", "data-post-id" => $data->id, "data-post-view_type" => "modal_view", "data-modal-fullscreen" => "1", "data-modal-custom-bg" => "1"));
 
             $row_data[] = $modal_view . $actions;
         }
@@ -470,7 +489,7 @@ class Tickets extends Security_Controller {
         $view_type = $this->request->getPost('view_type');
 
         if ($ticket_id) {
-            $this->_check_permission_of_selected_ticket($ticket_id);
+            $this->validate_ticket_access($ticket_id);
 
             $sort_as_decending = get_setting("show_recent_ticket_comments_at_the_top");
 
@@ -487,7 +506,7 @@ class Tickets extends Security_Controller {
                 //For project related tickets, check task cration permission for the project
                 if ($ticket_info->project_id) {
                     $this->init_project_permission_checker($ticket_info->project_id);
-                    $view_data["can_create_tasks"] = $this->can_create_tasks();
+                    $view_data["can_create_tasks"] = true; //since the user has permission to manage the tickets.
                 }
 
                 $view_data['ticket_info'] = $ticket_info;
@@ -536,7 +555,7 @@ class Tickets extends Security_Controller {
         }
 
         $id = $this->request->getPost('id');
-        $this->_check_permission_of_selected_ticket($id);
+        $this->validate_ticket_access($id);
 
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
@@ -553,7 +572,7 @@ class Tickets extends Security_Controller {
         $ticket_id = $this->request->getPost('ticket_id');
         $description = $this->request->getPost('description');
         $now = get_current_utc_time();
-        $this->_check_permission_of_selected_ticket($ticket_id);
+        $this->validate_ticket_access($ticket_id);
 
         $target_path = get_setting("timeline_file_path");
         $files_data = move_files_from_temp_dir_to_permanent_dir($target_path, "ticket");
@@ -611,7 +630,7 @@ class Tickets extends Security_Controller {
     function save_ticket_status($ticket_id = 0, $status = "closed") {
         validate_numeric_value($ticket_id);
         if ($ticket_id) {
-            $this->_check_permission_of_selected_ticket($ticket_id);
+            $this->validate_ticket_access($ticket_id);
 
             $data = array(
                 "status" => $status
@@ -644,34 +663,11 @@ class Tickets extends Security_Controller {
         return $this->download_app_files(get_setting("timeline_file_path"), $files);
     }
 
-    //check if user has permission on this ticket
-    private function _check_permission_of_selected_ticket($ticket_id = 0) {
-        if ($ticket_id && $this->access_type !== "all") {
-            $ticket_info = $this->Tickets_model->get_one($ticket_id);
-
-            if ($this->access_type === "assigned_only") {
-                if ($ticket_info->assigned_to !== $this->login_user->id) {
-                    app_redirect("forbidden");
-                }
-            } else if ($this->access_type === "specific") {
-                if (!in_array($ticket_info->ticket_type_id, $this->allowed_ticket_types)) {
-                    app_redirect("forbidden");
-                }
-            } else if ($this->login_user->user_type === "client") {
-                if ($ticket_info->client_id != $this->login_user->client_id) {
-                    app_redirect("forbidden");
-                }
-            } else {
-                app_redirect("forbidden");
-            }
-        }
-    }
-
     function assign_to_me($ticket_id = 0) {
         if ($ticket_id) {
             validate_numeric_value($ticket_id);
 
-            $this->_check_permission_of_selected_ticket($ticket_id);
+            $this->validate_ticket_access($ticket_id);
 
             $data = array(
                 "assigned_to" => $this->login_user->id
@@ -899,7 +895,7 @@ class Tickets extends Security_Controller {
         ));
 
         $ticket_id = $this->request->getPost("ticket_id");
-        $this->_check_permission_of_selected_ticket($ticket_id);
+        $this->validate_ticket_access($ticket_id);
 
         $data = array("client_id" => $this->request->getPost("client_id"));
         $save_id = $this->Tickets_model->ci_save($data, $ticket_id);
@@ -1001,7 +997,7 @@ class Tickets extends Security_Controller {
         $view_data["ticket_ids"] = clean_data($ticket_ids);
 
         $where = array();
-        if ($this->login_user->user_type === "staff" && $this->access_type !== "all") {
+        if ($this->login_user->user_type === "staff" && $this->access_type !== "all" && $this->access_type !== "assigned_only") {
             $where = array("where_in" => array("id" => $this->allowed_ticket_types));
         }
         $view_data['ticket_types_dropdown'] = array("" => "-") + $this->Ticket_types_model->get_dropdown_list(array("title"), "id", $where);
@@ -1037,7 +1033,7 @@ class Tickets extends Security_Controller {
                 $tickets_ids_array = explode('-', $ticket_ids);
 
                 foreach ($tickets_ids_array as $id) {
-                    $this->_check_permission_of_selected_ticket($id);
+                    $this->validate_ticket_access($id);
                     $this->Tickets_model->ci_save($data, $id);
                 }
 
@@ -1081,7 +1077,7 @@ class Tickets extends Security_Controller {
         ));
 
         $ticket_id = $this->request->getPost('ticket_id');
-        $this->_check_permission_of_selected_ticket($ticket_id);
+        $this->validate_ticket_access($ticket_id);
 
         $ticket_info = $this->Tickets_model->get_one($ticket_id);
 
@@ -1112,7 +1108,12 @@ class Tickets extends Security_Controller {
 
     function save_merge_ticket() {
         $ticket_id = $this->request->getPost('ticket_id');
-        $this->_check_permission_of_selected_ticket($ticket_id);
+        $this->validate_ticket_access($ticket_id);
+
+        //client should not be able to merge ticket
+        if ($this->login_user->user_type === "client") {
+            app_redirect("forbidden");
+        }
 
         $this->validate_submitted_data(array(
             "ticket_id" => "required|numeric",
@@ -1143,6 +1144,90 @@ class Tickets extends Security_Controller {
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
+    }
+
+    /* load tasks tab  */
+
+    function tasks($ticket_id) {
+        $this->validate_ticket_access($ticket_id);
+
+        $view_data["custom_field_headers_of_task"] = $this->Custom_fields_model->get_custom_field_headers_for_table("tasks", $this->login_user->is_admin, $this->login_user->user_type);
+
+        $view_data['ticket_id'] = clean_data($ticket_id);
+        return $this->template->view("tickets/tasks/index", $view_data);
+    }
+
+    function tickets_chart_report() {
+        $this->_validate_tickets_report_access();
+
+        $view_data['ticket_labels_dropdown'] = json_encode($this->make_labels_dropdown("ticket", "", true));
+        $view_data['assigned_to_dropdown'] = json_encode($this->_get_assiged_to_dropdown());
+        $view_data['ticket_types_dropdown'] = json_encode($this->_get_ticket_types_dropdown_list_for_filter());
+
+        return $this->template->rander("tickets/reports/chart_report_container", $view_data);
+    }
+
+    function tickets_chart_report_data() {
+        $this->_validate_tickets_report_access();
+
+        $start_date = $this->request->getPost("start_date");
+        $options = array(
+            "start_date" => $start_date,
+            "end_date" => $this->request->getPost("end_date"),
+            "ticket_type_id" => $this->request->getPost("ticket_type_id"),
+            "assigned_to" => $this->request->getPost("assigned_to"),
+            "ticket_label" => $this->request->getPost("ticket_label")
+        );
+
+        $view_data["month"] = strtolower(date("F", strtotime($start_date)));
+        $days_of_month = date("t", strtotime($start_date));
+
+        $open_data_array = array();
+        $closed_data_array = array();
+        $labels = array();
+        $open_tickets_array = array();
+        $closed_tickets_array = array();
+
+        $options["group_by"] = "created_date";
+        $options["status"] = "open";
+        $open_tickets_list = $this->Tickets_model->get_ticket_statistics($options)->getResult();
+
+        for ($i = 1; $i <= $days_of_month; $i++) {
+            $open_tickets_array[$i] = 0;
+            $closed_tickets_array[$i] = 0;
+        }
+
+        foreach ($open_tickets_list as $value) {
+            $open_tickets_array[$value->day * 1] = $value->total ? $value->total : 0;
+        }
+
+        foreach ($open_tickets_array as $value) {
+            $open_data_array[] = $value;
+        }
+
+
+        $options["group_by"] = "created_date";
+        $options["status"] = "closed";
+        $closed_tickets_list = $this->Tickets_model->get_ticket_statistics($options)->getResult();
+
+        foreach ($closed_tickets_list as $value) {
+            $closed_tickets_array[$value->day * 1] = $value->total ? $value->total : 0;
+        }
+
+        foreach ($closed_tickets_array as $value) {
+            $closed_data_array[] = $value;
+        }
+
+
+        for ($i = 1; $i <= $days_of_month; $i++) {
+            $labels[] = $i;
+        }
+
+        $view_data["labels"] = json_encode($labels);
+        $view_data["open_data"] = json_encode($open_data_array);
+        $view_data["closed_data"] = json_encode($closed_data_array);
+
+        return $this->template->view("tickets/reports/chart_report_view", $view_data);
     }
 
 }

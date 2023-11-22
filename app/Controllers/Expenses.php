@@ -57,7 +57,9 @@ class Expenses extends Security_Controller {
 
     //load the expenses list summary view
     function summary() {
-        return $this->template->view("expenses/expenses_summary");
+        $this->check_module_availability("module_expense");
+
+        return $this->template->rander("expenses/reports/expenses_summary");
     }
 
     //load custom expenses list
@@ -341,7 +343,7 @@ class Expenses extends Security_Controller {
 
         $row_data = array(
             $data->expense_date,
-            modal_anchor(get_uri("expenses/expense_details"), format_to_date($data->expense_date, false), array("title" => app_lang("expense_details"), "data-post-id" => $data->id)),
+            modal_anchor(get_uri("expenses/expense_details"), format_to_date($data->expense_date, false), array("title" => app_lang("expense_details"), "data-post-id" => $data->id, "data-modal-lg" => "1")),
             $data->category_title,
             $data->title,
             $description,
@@ -401,7 +403,7 @@ class Expenses extends Security_Controller {
 
     //load the expenses yearly chart view
     function yearly_chart() {
-        return $this->template->view("expenses/yearly_chart");
+        return $this->template->view("expenses/reports/yearly_chart");
     }
 
     function yearly_chart_data() {
@@ -428,7 +430,7 @@ class Expenses extends Security_Controller {
 
     function income_vs_expenses() {
         $view_data["projects_dropdown"] = $this->_get_projects_dropdown_for_income_and_expenses();
-        return $this->template->rander("expenses/income_vs_expenses_chart", $view_data);
+        return $this->template->rander("expenses/reports/income_vs_expenses_chart", $view_data);
     }
 
     function income_vs_expenses_chart_data() {
@@ -470,7 +472,7 @@ class Expenses extends Security_Controller {
 
     function income_vs_expenses_summary() {
         $view_data["projects_dropdown"] = $this->_get_projects_dropdown_for_income_and_expenses();
-        return $this->template->view("expenses/income_vs_expenses_summary", $view_data);
+        return $this->template->view("expenses/reports/income_vs_expenses_summary", $view_data);
     }
 
     function income_vs_expenses_summary_list_data() {
@@ -546,16 +548,6 @@ class Expenses extends Security_Controller {
             $result[] = $this->_make_row($data, $custom_fields);
         }
         echo json_encode(array("data" => $result));
-    }
-
-    private function can_access_clients() {
-        $permissions = $this->login_user->permissions;
-
-        if (get_array_value($permissions, "client")) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     function expense_details() {
@@ -1060,6 +1052,52 @@ class Expenses extends Security_Controller {
                 return app_lang("import_date_error_message");
             }
         }
+    }
+
+    /* load tasks tab  */
+
+    function tasks($expense_id) {
+        $view_data["custom_field_headers_of_task"] = $this->Custom_fields_model->get_custom_field_headers_for_table("tasks", $this->login_user->is_admin, $this->login_user->user_type);
+
+        $view_data['expense_id'] = clean_data($expense_id);
+        return $this->template->view("expenses/tasks/index", $view_data);
+    }
+
+    //load the expenses monthly summary view
+    function monthly_summary() {
+        return $this->template->view("expenses/reports/monthly_summary");
+    }
+
+    //load the expenses custom summary view
+    function custom_summary() {
+        return $this->template->view("expenses/reports/custom_summary");
+    }
+
+    //load the expenses category chart view
+    function category_chart() {
+        return $this->template->view("expenses/reports/category_chart_container");
+    }
+
+    function category_chart_view() {
+        $start_date = $this->request->getPost('start_date');
+        $end_date = $this->request->getPost('end_date');
+
+        $options = array("start_date" => $start_date, "end_date" => $end_date);
+
+        $categories_data = $this->Expenses_model->get_summary_details($options)->getResult();
+        $category_title = array();
+        $category_value = array();
+
+        foreach ($categories_data as $category_data) {
+            $category_title[] = $category_data->category_title;
+            $category_value[] = $category_data->amount + $category_data->tax + $category_data->tax2;
+        }
+
+        $view_data["label"]= $category_title;
+        $view_data["data"]= $category_value;
+        
+        
+        return $this->template->view("expenses/reports/category_chart", $view_data);
     }
 
 }

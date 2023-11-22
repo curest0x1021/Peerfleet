@@ -9,6 +9,7 @@ use stdClass;
 class Crud_model extends Model {
 
     protected $table;
+    protected $table_without_prefix;    
     protected $db;
     protected $db_builder = null;
     private $log_activity = false;
@@ -20,7 +21,7 @@ class Crud_model extends Model {
     private $log_for_key2 = "";
     protected $allowedFields = array();
     private $Activity_logs_model;
-
+    
     function __construct($table = null, $db = null) {
         $this->Activity_logs_model = model("App\Models\Activity_logs_model");
         $this->db = $db ? $db : db_connect('default');
@@ -31,6 +32,7 @@ class Crud_model extends Model {
     protected function use_table($table) {
         $db_prefix = $this->db->getPrefix();
         $this->table = $db_prefix . $table;
+        $this->table_without_prefix = $table;
         $this->db_builder = $this->db->table($this->table);
     }
 
@@ -165,13 +167,19 @@ class Crud_model extends Model {
                         $log_type_title_key = $this->log_type_title_key;
                         $log_type_title = isset($data_before_update->$log_type_title_key) ? $data_before_update->$log_type_title_key : "";
 
+                        if ($this->log_type === "task" && $data_before_update->context != "project") {
+                            $log_for = "general_task";
+                        } else {
+                            $log_for = $this->log_for;
+                        }
+
                         $log_data = array(
                             "action" => "updated",
                             "log_type" => $this->log_type,
                             "log_type_title" => $log_type_title,
                             "log_type_id" => $id,
                             "changes" => serialize($fields_changed),
-                            "log_for" => $this->log_for,
+                            "log_for" => $log_for,
                             "log_for_id" => $log_for_id,
                             "log_for2" => $this->log_for2,
                             "log_for_id2" => $log_for_id2,
@@ -187,6 +195,7 @@ class Crud_model extends Model {
                 app_hooks()->do_action("app_hook_data_update", array(
                     "id" => $id,
                     "table" => $this->table,
+                    "table_without_prefix" => $this->table_without_prefix,
                     "data" => $data
                 ));
             } catch (\Exception $ex) {
@@ -210,13 +219,19 @@ class Crud_model extends Model {
                         $log_for_id2 = get_array_value($data, $this->log_for_key2);
                     }
 
+                    if ($this->log_type === "task" && get_array_value($data, "context") != "project") {
+                        $log_for = "general_task";
+                    } else {
+                        $log_for = $this->log_for;
+                    }
+
                     $log_type_title = get_array_value($data, $this->log_type_title_key);
                     $log_data = array(
                         "action" => "created",
                         "log_type" => $this->log_type,
                         "log_type_title" => $log_type_title ? $log_type_title : "",
                         "log_type_id" => $insert_id,
-                        "log_for" => $this->log_for,
+                        "log_for" => $log_for,
                         "log_for_id" => $log_for_id,
                         "log_for2" => $this->log_for2,
                         "log_for_id2" => $log_for_id2,
@@ -230,6 +245,7 @@ class Crud_model extends Model {
                     app_hooks()->do_action("app_hook_data_insert", array(
                         "id" => $insert_id,
                         "table" => $this->table,
+                        "table_without_prefix" => $this->table_without_prefix,
                         "data" => $data
                     ));
                 } catch (\Exception $ex) {
@@ -293,7 +309,8 @@ class Crud_model extends Model {
         try {
             app_hooks()->do_action("app_hook_data_delete", array(
                 "id" => $id,
-                "table" => $this->table
+                "table" => $this->table,
+                "table_without_prefix" => $this->table_without_prefix,
             ));
         } catch (\Exception $ex) {
             log_message('error', '[ERROR] {exception}', ['exception' => $ex]);
@@ -322,11 +339,12 @@ class Crud_model extends Model {
         $join_string = "";
         $select_string = "";
         $custom_field_values_table = $this->db->prefixTable('custom_field_values');
-
+        $field_type_array = array();
         if ($related_to && $custom_fields) {
             $related_to = $this->db->escapeString($related_to);
             foreach ($custom_fields as $cf) {
                 $cf_id = $cf->id;
+                $field_type_array[$cf_id] = $cf->field_type;
                 $virtual_table = "cfvt_$cf_id"; //custom field values virtual table
 
                 $select_string .= " , $virtual_table.value AS cfv_$cf_id ";
@@ -339,14 +357,14 @@ class Crud_model extends Model {
             $custom_field_filter = array();
         }
         foreach ($custom_field_filter as $cf_id => $cf_filter) {
-            if ($where_string) {
-                $where_string .= " OR ";
-            }
-            $where_string .= "($custom_field_values_table.custom_field_id=$cf_id AND $custom_field_values_table.value='$cf_filter')";
-        }
 
-        if ($where_string) {
-            $where_string = " AND $related_to_table.id IN(SELECT $custom_field_values_table.related_to_id FROM $custom_field_values_table WHERE $custom_field_values_table.related_to_type='$related_to' AND $custom_field_values_table.deleted=0 AND ($where_string))";
+            $field_type = get_array_value($field_type_array, $cf_id);
+            $_where = " $custom_field_values_table.value= '$cf_filter'";
+            if ($field_type == "multi_select") {
+                $_where = " FIND_IN_SET('$cf_filter', $custom_field_values_table.value)";
+            }
+
+            $where_string .= " AND $related_to_table.id IN(SELECT $custom_field_values_table.related_to_id FROM $custom_field_values_table WHERE $custom_field_values_table.related_to_type='$related_to' AND $custom_field_values_table.deleted=0 AND $custom_field_values_table.custom_field_id=$cf_id AND $_where) ";
         }
 
         return array("select_string" => $select_string, "join_string" => $join_string, "where_string" => $where_string);
@@ -358,34 +376,9 @@ class Crud_model extends Model {
         $currency = $currency ? $currency : $default_currency;
         $currency = $currency ? $this->db->escapeString($currency) : $currency;
 
-        $client_where = ($currency == $default_currency) ? " AND $clients_table.currency='$default_currency' OR $clients_table.currency='' OR $clients_table.currency IS NULL" : " AND $clients_table.currency='$currency'";
+        $client_where = ($currency == $default_currency) ? " AND ($clients_table.currency='$default_currency' OR $clients_table.currency='' OR $clients_table.currency IS NULL)" : " AND $clients_table.currency='$currency'";
 
         return " AND $invoices_table.client_id IN(SELECT $clients_table.id FROM $clients_table WHERE $clients_table.deleted=0 $client_where)";
-    }
-
-    //get total invoice value calculation query
-    protected function _get_invoice_value_calculation_query($invoices_table) {
-        $select_invoice_value = "IFNULL(items_table.invoice_value,0)";
-
-        $after_tax_1 = "(IFNULL(tax_table.percentage,0)/100*$select_invoice_value)";
-        $after_tax_2 = "(IFNULL(tax_table2.percentage,0)/100*$select_invoice_value)";
-        $after_tax_3 = "(IFNULL(tax_table3.percentage,0)/100*$select_invoice_value)";
-
-        $discountable_invoice_value = "IF($invoices_table.discount_type='after_tax', (($select_invoice_value + $after_tax_1 + $after_tax_2) - $after_tax_3), $select_invoice_value )";
-
-        $discount_amount = "IF($invoices_table.discount_amount_type='percentage', IFNULL($invoices_table.discount_amount,0)/100* $discountable_invoice_value, $invoices_table.discount_amount)";
-
-        $before_tax_1 = "(IFNULL(tax_table.percentage,0)/100* ($select_invoice_value- $discount_amount))";
-        $before_tax_2 = "(IFNULL(tax_table2.percentage,0)/100* ($select_invoice_value- $discount_amount))";
-        $before_tax_3 = "(IFNULL(tax_table3.percentage,0)/100* ($select_invoice_value- $discount_amount))";
-
-        $invoice_value_calculation_query = "(
-                $select_invoice_value+
-                IF($invoices_table.discount_type='before_tax',  (($before_tax_1+ $before_tax_2) - $before_tax_3), (($after_tax_1 + $after_tax_2) - $after_tax_3))
-                - $discount_amount
-               )";
-
-        return $invoice_value_calculation_query;
     }
 
     protected function get_labels_data_query() {
@@ -402,7 +395,7 @@ class Crud_model extends Model {
         }
     }
 
-    protected function prepare_allowed_client_groups_query($clients_table, $client_groups = "") {
+    protected function prepare_allowed_client_groups_query($clients_table, $client_groups = array()) {
         $where = "";
 
         if ($client_groups && count($client_groups)) {
@@ -438,4 +431,99 @@ class Crud_model extends Model {
         return " OR $table.id IN( SELECT $custom_field_values_table.related_to_id FROM $custom_field_values_table WHERE $custom_field_values_table.deleted=0 AND $custom_field_values_table.related_to_type='$related_to_type' AND $custom_field_values_table.value LIKE '%$search_by%' ESCAPE '!' ) ";
     }
 
+    protected function get_sales_total_meta($id, $main_table, $items_table) {
+
+        //$main_table like as invoices table
+        //$items_table like as invoice_items_table
+        $taxes_table = $this->db->prefixTable('taxes');
+
+        $invoice_sql = "SELECT $main_table.id, $main_table.discount_amount, $main_table.discount_amount_type, $main_table.discount_type,
+                tax_table.percentage AS tax_percentage, tax_table2.percentage AS tax_percentage2, tax_table3.percentage AS tax_percentage3,
+                tax_table.title AS tax_name, tax_table2.title AS tax_name2, tax_table3.title AS tax_name3,
+                taxable_item.total_taxable, non_taxable_item.total_non_taxable
+                FROM $main_table
+                LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage, $taxes_table.title FROM $taxes_table) AS tax_table ON tax_table.id = $main_table.tax_id
+                LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage, $taxes_table.title FROM $taxes_table) AS tax_table2 ON tax_table2.id = $main_table.tax_id2
+                LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage, $taxes_table.title FROM $taxes_table) AS tax_table3 ON tax_table3.id = $main_table.tax_id3
+                LEFT JOIN (SELECT SUM($items_table.total) AS total_taxable, $items_table.invoice_id FROM $items_table WHERE $items_table.deleted=0 AND $items_table.taxable = 1 GROUP BY $items_table.invoice_id) AS taxable_item ON taxable_item.invoice_id = $main_table.id
+                LEFT JOIN (SELECT SUM($items_table.total) AS total_non_taxable, $items_table.invoice_id  FROM $items_table WHERE $items_table.deleted=0 AND $items_table.taxable = 0 GROUP BY $items_table.invoice_id) AS non_taxable_item ON non_taxable_item.invoice_id = $main_table.id
+                WHERE $main_table.deleted=0 AND $main_table.id = $id";
+
+        $invoice_info = $this->db->query($invoice_sql)->getRow();
+
+        if (!$invoice_info->id) {
+            return null;
+        }
+
+        $total_taxable = $invoice_info->total_taxable ? $invoice_info->total_taxable : 0;
+        $total_non_taxable = $invoice_info->total_non_taxable ? $invoice_info->total_non_taxable : 0;
+        $sub_total = $total_taxable + $total_non_taxable;
+        $discount_total = 0;
+        $invoice_total = 0;
+
+        if ($invoice_info->discount_amount_type == "percentage") {
+
+            $non_taxable_discount_value = $total_non_taxable * ($invoice_info->discount_amount / 100);
+
+            if ($invoice_info->discount_type == "before_tax") {
+                $taxable_discount_value = $total_taxable * ($invoice_info->discount_amount / 100);
+                $total_taxable = $total_taxable - $taxable_discount_value; //apply discount before tax
+            }
+
+            $tax1 = $total_taxable * ($invoice_info->tax_percentage / 100);
+            $tax2 = $total_taxable * ($invoice_info->tax_percentage2 / 100);
+            $tax3 = $total_taxable * ($invoice_info->tax_percentage3 / 100);
+            $total_taxable = $total_taxable + $tax1 + $tax2 - $tax3;
+
+            $invoice_total = $total_taxable + $total_non_taxable - $non_taxable_discount_value; //deduct only non-taxable discount since the taxable discount already deducted 
+
+            if ($invoice_info->discount_type == "after_tax") {
+                $taxable_discount_value = $total_taxable * ($invoice_info->discount_amount / 100);
+                $invoice_total = $total_taxable + $total_non_taxable - $taxable_discount_value - $non_taxable_discount_value;
+            }
+
+            $discount_total = $taxable_discount_value + $non_taxable_discount_value;
+        } else {
+            //discount_amount_type is fixed_amount
+
+            $discount_total = $invoice_info->discount_amount; //fixed amount 
+            //fixed amount discount. fixed amount can't be applied before tax when there are both taxable and non-taxable items.
+            //calculate all togather 
+
+            if ($invoice_info->discount_type == "before_tax" && $total_taxable > 0) {
+                $total_taxable = $total_taxable - $discount_total;
+            } else if ($invoice_info->discount_type == "before_tax" && $total_taxable == 0) {
+                $total_non_taxable = $total_non_taxable - $discount_total;
+            }
+
+
+            $tax1 = $total_taxable * ($invoice_info->tax_percentage / 100);
+            $tax2 = $total_taxable * ($invoice_info->tax_percentage2 / 100);
+            $tax3 = $total_taxable * ($invoice_info->tax_percentage3 / 100);
+            $invoice_total = $total_taxable + $total_non_taxable + $tax1 + $tax2 - $tax3; //discount before tax
+
+            if ($invoice_info->discount_type == "after_tax") {
+                $invoice_total = $total_taxable + $total_non_taxable + $tax1 + $tax2 - $tax3 - $discount_total;
+            }
+        }
+
+        $info = new \stdClass();
+        $info->invoice_total = number_format($invoice_total, 2, ".", "") * 1;
+        $info->invoice_subtotal = number_format($sub_total, 2, ".", "") * 1;
+        $info->discount_total = number_format($discount_total, 2, ".", "") * 1;
+
+        $info->tax_percentage = $invoice_info->tax_percentage;
+        $info->tax_percentage2 = $invoice_info->tax_percentage2;
+        $info->tax_percentage3 = $invoice_info->tax_percentage3;
+        $info->tax_name = $invoice_info->tax_name;
+        $info->tax_name2 = $invoice_info->tax_name2;
+        $info->tax_name3 = $invoice_info->tax_name3;
+
+        $info->tax = number_format($tax1, 2, ".", "") * 1;
+        $info->tax2 = number_format($tax2, 2, ".", "") * 1;
+        $info->tax3 = number_format($tax3, 2, ".", "") * 1;
+
+        $info->discount_type = $invoice_info->discount_type;
+        return $info;
+    }
 }

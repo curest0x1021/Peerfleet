@@ -12,13 +12,7 @@ class Search extends Security_Controller {
     public function index() {
         
     }
-
-    private function can_access_clients() {
-        $permissions = $this->login_user->permissions;
-        if ($this->login_user->is_admin || get_array_value($permissions, "client")) {
-            return true;
-        }
-    }
+    
 
     function search_modal_form() {
         $search_fields = array(

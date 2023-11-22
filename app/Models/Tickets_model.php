@@ -159,7 +159,7 @@ class Tickets_model extends Crud_model {
         LEFT JOIN $users_table AS requested_table ON requested_table.id= $tickets_table.requested_by
         LEFT JOIN $project_table ON $project_table.id= $tickets_table.project_id
         LEFT JOIN $task_table ON $task_table.id= $tickets_table.task_id
-        $join_custom_fieds    
+        $join_custom_fieds
         WHERE $tickets_table.deleted=0 $where $custom_fields_where
         $order $limit_offset";
 
@@ -271,14 +271,38 @@ class Tickets_model extends Crud_model {
         $ticket_types_table = $this->db->prefixTable('ticket_types');
 
         $where = "";
-        $where_ticket = "";
+
         $offset = convert_seconds_to_time_format(get_timezone_offset());
 
         $start_date = $this->_get_clean_value($options, "start_date");
         $end_date = $this->_get_clean_value($options, "end_date");
         if ($start_date && $end_date) {
-            $where_ticket .= " AND DATE(ADDTIME($tickets_table.created_at,'$offset')) BETWEEN '$start_date' AND '$end_date'";
+            $where .= " AND DATE(ADDTIME($tickets_table.created_at,'$offset')) BETWEEN '$start_date' AND '$end_date'";
         }
+
+
+        $status = $this->_get_clean_value($options, "status");
+        if ($status === "closed") {
+            $where .= " AND $tickets_table.status='$status'";
+        } if ($status === "open") {
+            $where .= " AND FIND_IN_SET($tickets_table.status, 'new,open,client_replied')";
+        }
+
+        $ticket_type_id = $this->_get_clean_value($options, "ticket_type_id");
+        if ($ticket_type_id) {
+            $where .= " AND $tickets_table.ticket_type_id=$ticket_type_id";
+        }
+
+        $assigned_to = $this->_get_clean_value($options, "assigned_to");
+        if ($assigned_to) {
+            $where .= " AND $tickets_table.assigned_to=$assigned_to";
+        }
+
+        $ticket_label = $this->_get_clean_value($options, "ticket_label");
+        if ($ticket_label) {
+            $where .= " AND (FIND_IN_SET('$ticket_label', $tickets_table.labels)) ";
+        }
+
 
         $allowed_ticket_types = $this->_get_clean_value($options, "allowed_ticket_types");
         if ($allowed_ticket_types && count($allowed_ticket_types)) {
@@ -296,29 +320,26 @@ class Tickets_model extends Crud_model {
         $offset_in_gmt = $dateTime->format('P');
         $select_tz_start_time = "CONVERT_TZ($tickets_table.created_at,'+00:00','$offset_in_gmt')";
 
-        $ticket_info = "SELECT DATE($select_tz_start_time) AS date, COUNT($tickets_table.id) AS total
-                FROM $tickets_table 
-                WHERE $tickets_table.deleted=0 $where $where_ticket
-                GROUP BY DATE($select_tz_start_time)";
+        $sql = "";
+        $group_by = $this->_get_clean_value($options, "group_by");
+        if ($group_by == "created_date") {
+            $sql = "SELECT DATE($select_tz_start_time) AS date, DATE_FORMAT($select_tz_start_time,'%d') as day, COUNT($tickets_table.id) AS total
+                    FROM $tickets_table 
+                    WHERE $tickets_table.deleted=0 $where
+                    GROUP BY DATE($select_tz_start_time)";
+        } else if ($group_by == "ticket_type") {
+            $sql = "SELECT COUNT($tickets_table.id) AS total, $ticket_types_table.id AS ticket_type_id, $ticket_types_table.title AS ticket_type_title
+                    FROM $tickets_table
+                    LEFT JOIN $ticket_types_table ON $ticket_types_table.id = $tickets_table.ticket_type_id
+                    WHERE $tickets_table.deleted=0 AND $tickets_table.status!='closed' $where
+                    GROUP BY $tickets_table.ticket_type_id";
+        } else if ($group_by == "ticket_status") {
+            $sql = "SELECT $tickets_table.status, COUNT($tickets_table.id) AS total
+                    FROM $tickets_table
+                    WHERE $tickets_table.deleted=0 $where
+                    GROUP BY $tickets_table.status";
+        }
 
-        $ticket_types = "SELECT COUNT($tickets_table.id) AS total, $ticket_types_table.id AS ticket_type_id, $ticket_types_table.title AS ticket_type_title
-        FROM $tickets_table
-        LEFT JOIN $ticket_types_table ON $ticket_types_table.id = $tickets_table.ticket_type_id
-        WHERE $tickets_table.deleted=0 AND $tickets_table.status!='closed' $where
-        GROUP BY $tickets_table.ticket_type_id
-        LIMIT 5";
-
-        $ticket_status_info = "SELECT $tickets_table.status, COUNT($tickets_table.id) AS total
-        FROM $tickets_table
-        WHERE $tickets_table.deleted=0 $where
-        GROUP BY $tickets_table.status";
-
-        $info = new \stdClass();
-        $info->tickets_info = $this->db->query($ticket_info)->getResult();
-        $info->ticket_types_info = $this->db->query($ticket_types)->getResult();
-        $info->ticket_status_info = $this->db->query($ticket_status_info)->getResult();
-
-        return $info;
+        return $this->db->query($sql);
     }
-
 }

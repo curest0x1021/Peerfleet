@@ -51,14 +51,18 @@ if (!function_exists('get_change_logs')) {
             } else if (get_array_value($schema_info, "type") === "text") {
                 $from_value = is_null($from_value) ? "" : $from_value;
                 $to_value = is_null($to_value) ? "" : $to_value;
-                $from_value = mb_convert_encoding($from_value, 'HTML-ENTITIES', 'UTF-8');
-                $to_value = mb_convert_encoding($to_value, 'HTML-ENTITIES', 'UTF-8');
+                
+                $from_value = htmlspecialchars_decode(htmlentities($from_value));
+                $to_value = htmlspecialchars_decode(htmlentities($to_value));
+//                $from_value = mb_convert_encoding($from_value, 'HTML-ENTITIES', 'UTF-8');
+//                $to_value = mb_convert_encoding($to_value, 'HTML-ENTITIES', 'UTF-8');
 
                 require_once(APPPATH . "ThirdParty/php-htmldiff/vendor/autoload.php");
                 $htmlDiff = new \Caxy\HtmlDiff\HtmlDiff(nl2br($from_value), nl2br($to_value));
                 $changes = $htmlDiff->build();
                 $changes = is_null($changes) ? "" : $changes;
-                $changes = mb_convert_encoding($changes, 'HTML-ENTITIES', 'UTF-8');
+                //$changes = mb_convert_encoding($changes, 'HTML-ENTITIES', 'UTF-8');
+                $changes = htmlspecialchars_decode(htmlentities($changes));
             } else if (get_array_value($schema_info, "type") === "foreign_key") {
                 $linked_model = get_array_value($schema_info, "linked_model");
                 if ($from_value && $linked_model) {
@@ -124,12 +128,17 @@ if (!function_exists('get_change_logs')) {
                     $to_value = format_to_date($to_value, false);
                 }
 
-
                 $changes = "<del>" . $from_value . "</del> <ins>" . $to_value . "</ins>";
             } else if (get_array_value($schema_info, "type") === "time") {
                 $changes = "<del>" . $from_value . "</del> <ins>" . $to_value . "</ins>";
             } else if (get_array_value($schema_info, "type") === "date_time") {
-                $changes = "<del>" . $from_value . "</del> <ins>" . $to_value . "</ins>";
+                if (get_time_from_datetime($from_value) == get_time_from_datetime($to_value)) {
+                    $changes = "<del>" . format_to_date($from_value) . "</del> <ins>" . format_to_date($to_value) . "</ins>";
+                } else if (get_date_from_datetime($from_value) == get_date_from_datetime($to_value)) {
+                    $changes = "<del>" . format_to_time($from_value) . "</del> <ins>" . format_to_time($to_value) . "</ins>";
+                } else {
+                    $changes = "<del>" . format_to_datetime($from_value, false) . "</del> <ins>" . format_to_datetime($to_value, false) . "</ins>";
+                }
             } else {
                 $changes = "<del>" . $from_value . "</del> <ins>" . $to_value . "</ins>";
             }

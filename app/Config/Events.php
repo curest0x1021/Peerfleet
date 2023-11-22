@@ -32,7 +32,7 @@ Events::on('pre_system', static function () {
             ob_end_flush();
         }
 
-        ob_start(static fn ($buffer) => $buffer);
+        ob_start(static fn($buffer) => $buffer);
     }
 
     /*
@@ -41,7 +41,7 @@ Events::on('pre_system', static function () {
      * --------------------------------------------------------------------
      * If you delete, they will no longer be collected.
      */
-    if (CI_DEBUG && ! is_cli()) {
+    if (CI_DEBUG && !is_cli()) {
         Events::on('DBQuery', 'CodeIgniter\Debug\Toolbar\Collectors\Database::collect');
         Services::toolbar()->respond();
     }
@@ -55,6 +55,9 @@ Events::on('pre_system', static function () {
     define('PLUGIN_URL_PATH', 'plugins/'); //define plugin path
 
     load_plugin_indexes();
+
+    include APPPATH . 'Config/RiseHooks.php';
+    include APPPATH . 'Config/RiseCustomHooks.php';
 });
 
 function load_plugin_indexes() {

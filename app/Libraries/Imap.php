@@ -78,18 +78,50 @@ class Imap {
             return false;
         }
 
-        $mailbox = $connection->getMailbox('INBOX'); //get mails of inbox only
+
+        $mailbox_name = "";
+
+        if ($connection->hasMailbox("INBOX")) {
+            $mailbox_name = "INBOX";
+        } else if ($connection->hasMailbox("Inbox")) {
+            $mailbox_name = "Inbox";
+        } else if ($connection->hasMailbox("inbox")) {
+            $mailbox_name = "inbox";
+        }
+
+        if (!$mailbox_name) {
+            log_message('error', 'IMAP integration will not work since there is no mailbox named INBOX');
+            return false;
+        }
+
+        $mailbox = $connection->getMailbox($mailbox_name); //get mails of inbox only
+
         $messages = $mailbox->getMessages();
 
-        foreach ($messages as $message) {
-            //create tickets for unread mails
-            if (!$message->isSeen()) {
-                $this->_create_ticket_from_imap($message);
+        $email_address = get_setting("imap_email");
+        $last_seen_settings_name = "last_seen_imap_message_number_" . $email_address;
+        $saved_last_message = get_setting($last_seen_settings_name);
+        $saved_last_message = $saved_last_message ? $saved_last_message : 0;
 
-                //mark the mail as read
-                $message->markAsSeen();
+        $last_number = 0;
+        foreach ($messages as $key => $message) {
+
+            $last_number = $messages[$key];
+
+            //Skip already seen messages Nothing to do there.
+            if ($saved_last_message <= $last_number) {
+                //create tickets for unread mails
+                if (!$message->isSeen()) {
+
+                    $this->_create_ticket_from_imap($message);
+
+                    //mark the mail as read
+                    $message->markAsSeen();
+                }
             }
         }
+
+        $this->ci->Settings_model->save_setting($last_seen_settings_name, $last_number);
     }
 
     private function _create_ticket_from_imap($message_info = "") {
@@ -268,5 +300,4 @@ class Imap {
             return $files_data;
         }
     }
-
 }

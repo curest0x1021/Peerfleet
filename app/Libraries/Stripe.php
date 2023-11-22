@@ -20,6 +20,7 @@ class Stripe {
         require_once(APPPATH . "ThirdParty/Stripe/vendor/autoload.php");
 
         \Stripe\Stripe::setApiKey($this->stripe_config->secret_key);
+        \Stripe\Stripe::setApiVersion("2022-11-15");
     }
 
     public function get_stripe_checkout_session($data = array(), $login_user = 0) {
@@ -74,14 +75,13 @@ class Stripe {
             "verification_code" => $verification_code ? $verification_code : "",
             "invoice_id" => $invoice_id ? $invoice_id : 0,
             "subscription_id" => $subscription_id ? $subscription_id : 0,
-            "contact_user_id" => $contact_user_id,
+            "contact_user_id" => $contact_user_id ? $contact_user_id : 0,
             "client_id" => $client_id,
             "payment_method_id" => $payment_method_id,
             "payment_verification_code" => $payment_verification_code
         );
 
         if ($subscription_id) {
-
             //create/get existing stripe client first
             $stripe_customer_id = $this->get_customer_id($client_id, $contact_user_id);
 
@@ -155,7 +155,7 @@ class Stripe {
             //create stripe client
             $user_info = $this->Users_model->get_one($contact_user_id);
             $customer = \Stripe\Customer::create(array(
-                        "name" => $client_info->company_name,
+                        "name" => $client_info->charter_name,
                         "phone" => $client_info->phone,
                         "email" => $user_info->email,
                         "address" => array(

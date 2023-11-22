@@ -357,3 +357,23 @@ if (!function_exists('get_converted_amount')) {
     }
 
 }
+
+
+/**
+ * get how much the app should consider to mark an invoice as paid. 
+ * 
+ * @param number $number
+ * @return number
+ */
+if (!function_exists('get_paid_status_tolarance')) {
+
+    function get_paid_status_tolarance() {
+        $tolarance = get_setting("paid_status_tolarance");
+        if ($tolarance || $tolarance == 0) {
+            return $tolarance;
+        } else {
+            return 0.02;
+        }
+    }
+
+}
