@@ -11,7 +11,7 @@ $settings_menu = array(
         array("name" => "notifications", "url" => "settings/notifications"),
         array("name" => "integration", "url" => "settings/integration"),
         array("name" => "cron_job", "url" => "settings/cron_job"),
-        // array("name" => "updates", "url" => "Updates"),
+        array("name" => "updates", "url" => "Updates"),
     ),
     "access_permission" => array(),
     "client_portal" => array(
@@ -31,7 +31,7 @@ $settings_menu = array(
         array("name" => "applicable_equipments", "url" => "applicable_equipments"),
         array("name" => "ship_equipments", "url" => "ship_equipments"),
         array("name" => "lifting_gear_types", "url" => "lifting_gear_types"),
-        array("name" => "tasks", "url" => "task_status"),
+        array("name" => "tasks", "url" => "settings/tasks"),
     ),
 );
 
@@ -57,6 +57,7 @@ $settings_menu["sales_and_prospects"][] = array("name" => "item_categories", "ur
 
 if (get_setting("module_order") == "1") {
     $settings_menu["sales_and_prospects"][] = array("name" => "orders", "url" => "settings/orders");
+    $settings_menu["sales_and_prospects"][] = array("name" => "store", "url" => "settings/store");
 }
 
 // if (get_setting("module_estimate") == "1") {

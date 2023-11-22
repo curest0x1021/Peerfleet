@@ -38,42 +38,45 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="row">
-                    <label for="password" class=" col-md-2"><?php echo app_lang('password'); ?></label>
-                    <div class=" col-md-10">
-                        <?php
-                        echo form_password(array(
-                            "id" => "password",
-                            "name" => "password",
-                            "class" => "form-control",
-                            "placeholder" => app_lang('password'),
-                            "autocomplete" => "off",
-                            "data-rule-minlength" => 6,
-                            "data-msg-minlength" => app_lang("enter_minimum_6_characters"),
-                        ));
-                        ?>
+
+            <?php if (($user_info->id == $login_user->id) || $login_user->is_admin) { ?> 
+                <div class="form-group">
+                    <div class="row">
+                        <label for="password" class=" col-md-2"><?php echo app_lang('password'); ?></label>
+                        <div class=" col-md-10">
+                            <?php
+                            echo form_password(array(
+                                "id" => "password",
+                                "name" => "password",
+                                "class" => "form-control",
+                                "placeholder" => app_lang('password'),
+                                "autocomplete" => "off",
+                                "data-rule-minlength" => 6,
+                                "data-msg-minlength" => app_lang("enter_minimum_6_characters"),
+                            ));
+                            ?>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                    <label for="retype_password" class=" col-md-2"><?php echo app_lang('retype_password'); ?></label>
-                    <div class=" col-md-10">
-                        <?php
-                        echo form_password(array(
-                            "id" => "retype_password",
-                            "name" => "retype_password",
-                            "class" => "form-control",
-                            "placeholder" => app_lang('retype_password'),
-                            "autocomplete" => "off",
-                            "data-rule-equalTo" => "#password",
-                            "data-msg-equalTo" => app_lang("enter_same_value")
-                        ));
-                        ?>
+                <div class="form-group">
+                    <div class="row">
+                        <label for="retype_password" class=" col-md-2"><?php echo app_lang('retype_password'); ?></label>
+                        <div class=" col-md-10">
+                            <?php
+                            echo form_password(array(
+                                "id" => "retype_password",
+                                "name" => "retype_password",
+                                "class" => "form-control",
+                                "placeholder" => app_lang('retype_password'),
+                                "autocomplete" => "off",
+                                "data-rule-equalTo" => "#password",
+                                "data-msg-equalTo" => app_lang("enter_same_value")
+                            ));
+                            ?>
+                        </div>
                     </div>
                 </div>
-            </div>
+            <?php } ?> 
 
             <?php if ($user_info->user_type === "staff" && ($login_user->is_admin || (!$user_info->is_admin && get_array_value($login_user->permissions, "can_manage_user_role_and_permissions") && $login_user->id !== $user_info->id))) { ?>
                 <div class="form-group">
@@ -95,7 +98,7 @@
                 </div>
             <?php } ?>
 
-            <?php if ($login_user->is_admin && $user_info->id !== $login_user->id) { ?>
+            <?php if (isset($can_activate_deactivate_team_members) && $can_activate_deactivate_team_members && $user_info->id !== $login_user->id) { ?>
                 <div class="form-group">
                     <div class="row">
                         <label for="disable_login" class="col-md-2"><?php echo app_lang('disable_login'); ?></label>

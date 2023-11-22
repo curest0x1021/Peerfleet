@@ -13,6 +13,15 @@
     AppLanugage.today = "<?php echo app_lang('today'); ?>";
     AppLanugage.yesterday = "<?php echo app_lang('yesterday'); ?>";
     AppLanugage.tomorrow = "<?php echo app_lang('tomorrow'); ?>";
+    AppLanugage.last_7_days = "<?php echo app_lang('last_7_days'); ?>";
+    AppLanugage.next_7_days = "<?php echo app_lang('next_7_days'); ?>";
+    AppLanugage.last_30_days = "<?php echo app_lang('last_30_days'); ?>";
+    AppLanugage.this_month = "<?php echo app_lang('this_month'); ?>";
+    AppLanugage.last_month = "<?php echo app_lang('last_month'); ?>";
+    AppLanugage.next_month = "<?php echo app_lang('next_month'); ?>";
+    AppLanugage.this_year = "<?php echo app_lang('this_year'); ?>";
+    AppLanugage.next_year = "<?php echo app_lang('next_year'); ?>";
+    AppLanugage.last_year = "<?php echo app_lang('last_year'); ?>";
 
     AppLanugage.search = "<?php echo app_lang('search'); ?>";
     AppLanugage.noRecordFound = "<?php echo app_lang('no_record_found'); ?>";
@@ -35,6 +44,10 @@
     AppLanugage.preview_previous_key = "<?php echo app_lang('preview_previous_key'); ?>";
 
     AppLanugage.filters = "<?php echo app_lang('filters'); ?>";
+    AppLanugage.manageFilters = "<?php echo app_lang('manage_filters'); ?>";
+    AppLanugage.newFilter = "<?php echo app_lang('new_filter'); ?>";
+    AppLanugage.addNewFilter = "<?php echo app_lang('add_new_filter'); ?>";
+    AppLanugage.updateFilter = "<?php echo app_lang('update_filter'); ?>";
 
     AppLanugage.comment = "<?php echo app_lang('comment'); ?>";
 

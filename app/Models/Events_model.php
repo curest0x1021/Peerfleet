@@ -16,6 +16,9 @@ class Events_model extends Crud_model {
         $users_table = $this->db->prefixTable('users');
         $clients_table = $this->db->prefixTable('clients');
 
+        $today = date("Y-m-d", strtotime(convert_date_local_to_utc(date("Y-m-d"))) + get_timezone_offset());
+
+        $select = "";
         $where = "";
         $id = $this->_get_clean_value($options, "id");
         if ($id) {
@@ -77,7 +80,18 @@ class Events_model extends Crud_model {
 
         $future_from = $this->_get_clean_value($options, "future_from");
         if ($future_from) {
-            $where .= " AND (DATE($events_table.start_date)>='$future_from' OR DATE($events_table.last_start_date)>='$future_from' )";
+            $next_recurring_date = " IF(
+                $events_table.recurring=1 AND $events_table.start_date<'$today', 
+		IF($events_table.repeat_type='years', DATE_ADD($events_table.start_date, INTERVAL TIMESTAMPDIFF(YEAR, $events_table.start_date, '$today')+1 YEAR), 
+			IF($events_table.repeat_type='months', DATE_ADD($events_table.start_date, INTERVAL TIMESTAMPDIFF(MONTH, $events_table.start_date, '$today')+1 MONTH), 
+                            IF($events_table.repeat_type='weeks', DATE_ADD($events_table.start_date, INTERVAL TIMESTAMPDIFF(WEEK, $events_table.start_date, '$today')+1 WEEK), DATE_ADD($events_table.start_date, INTERVAL TIMESTAMPDIFF(DAY, $events_table.start_date, '$today')+1 DAY))
+			)
+		), $events_table.start_date) ";
+            $select = $next_recurring_date . " AS next_recurring_date, ";
+
+            $where .= " AND (DATE($events_table.start_date)>='$future_from' OR DATE($next_recurring_date)>'$future_from' )";
+
+            $order_by = " ORDER BY next_recurring_date ASC ";
         }
 
         $recurring = $this->_get_clean_value($options, "recurring");
@@ -142,6 +156,36 @@ class Events_model extends Crud_model {
             $where .= " AND $events_table.ticket_id=$ticket_id";
         }
 
+        $proposal_id = $this->_get_clean_value($options, "proposal_id");
+        if ($proposal_id) {
+            $where .= " AND $events_table.proposal_id=$proposal_id";
+        }
+
+        $contract_id = $this->_get_clean_value($options, "contract_id");
+        if ($contract_id) {
+            $where .= " AND $events_table.contract_id=$contract_id";
+        }
+
+        $subscription_id = $this->_get_clean_value($options, "subscription_id");
+        if ($subscription_id) {
+            $where .= " AND $events_table.subscription_id=$subscription_id";
+        }
+
+        $invoice_id = $this->_get_clean_value($options, "invoice_id");
+        if ($invoice_id) {
+            $where .= " AND $events_table.invoice_id=$invoice_id";
+        }
+
+        $order_id = $this->_get_clean_value($options, "order_id");
+        if ($order_id) {
+            $where .= " AND $events_table.order_id=$order_id";
+        }
+
+        $estimate_id = $this->_get_clean_value($options, "estimate_id");
+        if ($estimate_id) {
+            $where .= " AND $events_table.estimate_id=$estimate_id";
+        }
+
         $reminder_status = $this->_get_clean_value($options, "reminder_status");
         if ($reminder_status) {
             $where .= " AND $events_table.reminder_status='$reminder_status'";
@@ -167,8 +211,8 @@ class Events_model extends Crud_model {
 
         $select_labels_data_query = $this->get_labels_data_query();
 
-        $sql = "SELECT $events_table.*,
-            CONCAT($users_table.first_name, ' ',$users_table.last_name) AS created_by_name, $users_table.image AS created_by_avatar, $clients_table.charter_name, $select_labels_data_query
+        $sql = "SELECT $events_table.*, $select
+            CONCAT($users_table.first_name, ' ',$users_table.last_name) AS created_by_name, $users_table.image AS created_by_avatar, $clients_table.charter_name, $clients_table.is_lead, $select_labels_data_query
         FROM $events_table
         LEFT JOIN $users_table ON $users_table.id = $events_table.created_by
         LEFT JOIN $clients_table ON $clients_table.id = $events_table.client_id    
@@ -179,7 +223,7 @@ class Events_model extends Crud_model {
     }
 
     function count_events_today($options = array()) {
-        
+
         $events_table = $this->db->prefixTable('events');
         $now = get_my_local_time("Y-m-d");
 
@@ -246,8 +290,8 @@ class Events_model extends Crud_model {
             }
         } else if ($repeat_type === "years") {
             //for days type years, max value can't be more then 10 years
-            if (!$no_of_cycles || $no_of_cycles > 10) {
-                $no_of_cycles = 10;
+            if (!$no_of_cycles || $no_of_cycles > 50) {
+                $no_of_cycles = 50;
             }
         }
 
@@ -259,9 +303,11 @@ class Events_model extends Crud_model {
     }
 
     function get_upcomming_events($options = array()) {
-        
+
         //find all event after today
         $today = date("Y-m-d", strtotime(convert_date_local_to_utc(date("Y-m-d H:i:s"))) + get_timezone_offset());
+        $limit = get_array_value($options, "limit");
+
         $options["future_from"] = $today;
         $result = $this->get_details($options)->getResult();
 
@@ -304,7 +350,7 @@ class Events_model extends Crud_model {
         //if there are recurring events, so we have to re-sort the events and remove extra rows
         if ($has_recurring) {
             usort($final_result, array($this, "sort_by_start_date")); //sort by start date
-            $final_result = array_slice($final_result, 0, 10); //keep only top 10 rows
+            $final_result = array_slice($final_result, 0, $limit); //keep only top 10 rows
         }
 
 
@@ -390,7 +436,7 @@ class Events_model extends Crud_model {
                 }
             }
 
-            $sql = "SELECT $users_table.id FROM $users_table
+            $sql = "SELECT $users_table.id, $users_table.email FROM $users_table
                 WHERE $users_table.deleted=0 AND $users_table.status='active' AND $users_table.id!=$event_info->created_by $where";
 
             return $this->db->query($sql);
@@ -423,5 +469,4 @@ class Events_model extends Crud_model {
             return $result->getRow()->total_reminders;
         }
     }
-
 }

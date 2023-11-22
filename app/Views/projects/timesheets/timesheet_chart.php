@@ -1,13 +1,12 @@
 <div class="card">
     <div class="card-header clearfix border-bottom-0">
-        <div class="float-start strong"><i data-feather="bar-chart-2" class="icon-16"></i>&nbsp; <?php echo app_lang("chart"); ?></div>
-        <div class="float-end clearfix timesheet-chart-button">
-            <span id="monthly-chart-date-range-selector" class="float-end"></span>
+        <div class="float-start clearfix timesheet-chart-button">
+            <span id="monthly-chart-date-range-selector" class="float-start"></span>
             <?php
             echo form_input(array(
                 "id" => "members-dropdown",
                 "name" => "members-dropdown",
-                "class" => "select2 w200 reload-timesheet-chart float-end",
+                "class" => "select2 w200 reload-timesheet-chart ml15",
                 "placeholder" => app_lang('member')
             ));
             ?>
@@ -16,7 +15,7 @@
                 echo form_input(array(
                     "id" => "projects-dropdown",
                     "name" => "projects-dropdown",
-                    "class" => "select2 w200 reload-timesheet-chart float-end mr15 timesheet-chart-project-dropdown",
+                    "class" => "select2 w200 reload-timesheet-chart ml15 timesheet-chart-project-dropdown",
                     "placeholder" => app_lang('project')
                 ));
             }

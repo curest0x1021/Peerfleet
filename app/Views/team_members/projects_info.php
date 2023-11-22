@@ -7,11 +7,19 @@
         </table>
     </div>
 </div>
+
+
 <script type="text/javascript">
     $(document).ready(function () {
         $("#project-table").appTable({
             source: '<?php echo_uri("projects/projects_list_data_of_team_member/" . $user_id) ?>',
-            radioButtons: [{text: '<?php echo app_lang("open") ?>', name: "status", value: "open", isChecked: true}, {text: '<?php echo app_lang("completed") ?>', name: "status", value: "completed", isChecked: false}, {text: '<?php echo app_lang("hold") ?>', name: "status", value: "hold", isChecked: false}, {text: '<?php echo app_lang("canceled") ?>', name: "status", value: "canceled", isChecked: false}],
+            multiSelect: [
+                {
+                    name: "status_id",
+                    text: "<?php echo app_lang('status'); ?>",
+                    options: <?php echo view("project_status/project_status_dropdown", array("project_statuses" => $project_statuses, "selected_status_key" => "open")); ?>
+                }
+            ],
             filterDropdown: [<?php echo $custom_field_filters; ?>],
             columns: [
                 {title: '<?php echo app_lang("id") ?>', "class": "w50"},

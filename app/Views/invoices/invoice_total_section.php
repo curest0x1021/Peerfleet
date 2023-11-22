@@ -9,8 +9,10 @@
 
     <?php
     $discount_edit_btn = "";
+    $total_after_discount_btn = "";
     if ($can_edit_invoices) {
         $discount_edit_btn = "<td class='text-center option w100'>" . modal_anchor(get_uri("invoices/discount_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "data-post-invoice_id" => $invoice_id, "title" => app_lang('edit_discount'))) . "<span class='p20'>&nbsp;&nbsp;&nbsp;</span></td>";
+        $total_after_discount_btn = "<td></td>";
     }
     $discount_row = "<tr>
                         <td style='padding-top:13px;'>" . app_lang("discount") . "</td>
@@ -21,14 +23,14 @@
     $total_after_discount_row = "<tr>
                                     <td>" . app_lang("total_after_discount") . "</td>
                                     <td style='width:120px;'>" . to_currency($invoice_total_summary->invoice_subtotal - $invoice_total_summary->discount_total, $invoice_total_summary->currency_symbol) . "</td>
-                                    <td></td>
+                                    $total_after_discount_btn
                                 </tr>";
 
     if ($invoice_total_summary->invoice_subtotal && (!$invoice_total_summary->discount_total || ($invoice_total_summary->discount_total !== 0 && $invoice_total_summary->discount_type == "before_tax"))) {
         //when there is discount and type is before tax or no discount
         echo $discount_row;
 
-        if ($invoice_total_summary->discount_total !== 0) {
+        if ($invoice_total_summary->discount_total) {
             echo $total_after_discount_row;
         }
     }

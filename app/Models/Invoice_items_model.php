@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
+use CodeIgniter\Model;
+
 class Invoice_items_model extends Crud_model {
 
     protected $table = null;
+    private $_Invoices_model = null;
 
     function __construct() {
         $this->table = 'invoice_items';
         parent::__construct($this->table);
+
+        $this->_Invoices_model = model("App\Models\Invoices_model");
     }
 
     function get_details($options = array()) {
@@ -87,4 +92,23 @@ class Invoice_items_model extends Crud_model {
         }
     }
 
+    function save_item_and_update_invoice($data, $id, $invoice_id) {
+        $result = $this->ci_save($data, $id);
+
+        $invoices_model = model("App\Models\Invoices_model");
+        $invoices_model->update_invoice_total_meta($invoice_id);
+
+        return $result;
+    }
+
+    function delete_item_and_update_invoice($id, $undo = false) {
+        $item_info = $this->get_one($id);
+
+        $result = $this->delete($id, $undo);
+
+        $invoices_model = model("App\Models\Invoices_model");
+        $invoices_model->update_invoice_total_meta($item_info->invoice_id);
+
+        return $result;
+    }
 }

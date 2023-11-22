@@ -35,7 +35,7 @@ class Invoice_payments extends Security_Controller {
 
         $payment_methods = $this->Payment_methods_model->get_all_where(array("deleted" => 0))->getResult();
 
-        $payment_method_dropdown = array(array("id" => "", "text" => "- " . app_lang("payment_methods") . " -"));
+        $payment_method_dropdown = array(array("id" => "", "text" => "- " . app_lang("payment_method") . " -"));
         foreach ($payment_methods as $value) {
             $payment_method_dropdown[] = array("id" => $value->id, "text" => $value->title);
         }
@@ -81,7 +81,7 @@ class Invoice_payments extends Security_Controller {
 
         $amount = $view_data['model_info']->amount ? to_decimal_format($view_data['model_info']->amount) : "";
         if (!$view_data['model_info']->amount && $invoice_id) {
-            $amount = $this->Invoices_model->get_invoice_total_summary($invoice_id)->balance_due;
+            $amount = to_decimal_format($this->Invoices_model->get_invoice_total_summary($invoice_id)->balance_due);
         }
 
         $view_data["amount"] = $amount;
@@ -255,7 +255,11 @@ class Invoice_payments extends Security_Controller {
     private function _get_invoice_total_view($invoice_id = 0) {
         $view_data["invoice_total_summary"] = $this->Invoices_model->get_invoice_total_summary($invoice_id);
         $view_data["invoice_id"] = $invoice_id;
-        $view_data["can_edit_invoices"] = $this->can_edit_invoices();
+        $can_edit_invoices = false;
+        if ($this->can_edit_invoices() && $this->is_invoice_editable($invoice_id)) {
+            $can_edit_invoices = true;
+        }
+        $view_data["can_edit_invoices"] = $can_edit_invoices;
         return $this->template->view('invoices/invoice_total_section', $view_data);
     }
 
@@ -306,7 +310,7 @@ class Invoice_payments extends Security_Controller {
         try {
             $session = $stripe->get_stripe_checkout_session($this->request->getPost("input_data"), $this->login_user->id);
             if ($session->id) {
-                echo json_encode(array("success" => true, "session_id" => $session->id, "publishable_key" => $stripe->get_publishable_key()));
+                echo json_encode(array("success" => true, "checkout_url" => $session->url));
             } else {
                 echo json_encode(array('success' => false, 'message' => app_lang('error_occurred')));
             }
@@ -336,8 +340,9 @@ class Invoice_payments extends Security_Controller {
         }
 
         $view_data['can_access_clients'] = $this->can_access_clients();
-        $view_data["conversion_rate"] = $this->get_conversion_rate_with_currency_symbol();
-        return $this->template->rander("invoices/yearly_payments_summary", $view_data);
+        $view_data["currencies_dropdown"] = $this->_get_currencies_dropdown(false);
+        $view_data['payment_method_dropdown'] = $this->get_payment_method_dropdown();
+        return $this->template->rander("invoices/reports/yearly_payments_summary", $view_data);
     }
 
     function yearly_payment_summary_list_data() {
@@ -352,17 +357,24 @@ class Invoice_payments extends Security_Controller {
         $end_date = $this->request->getPost('end_date');
         $options = array(
             "start_date" => $start_date,
-            "end_date" => $end_date
+            "end_date" => $end_date,
+            "currency" => $this->request->getPost("currency"),
+            "payment_method_id" => $this->request->getPost('payment_method_id')
         );
+
         $list_data = $this->Invoice_payments_model->get_yearly_summary_details($options)->getResult();
+
+        $default_currency_symbol = get_setting("currency_symbol");
 
         $result = array();
         foreach ($list_data as $data) {
+            $currency_symbol = $data->currency_symbol ? $data->currency_symbol : $default_currency_symbol;
             $month = get_array_value($month_array, $data->month);
 
             $result[] = array(
                 app_lang($month),
-                to_currency($data->amount)
+                $data->payment_count,
+                to_currency($data->amount, $currency_symbol)
             );
         }
 
@@ -370,8 +382,9 @@ class Invoice_payments extends Security_Controller {
     }
 
     function clients_payment_summary() {
-        $view_data["conversion_rate"] = $this->get_conversion_rate_with_currency_symbol();
-        return $this->template->view("invoices/clients_payment_summary", $view_data);
+        $view_data["currencies_dropdown"] = $this->_get_currencies_dropdown(false);
+        $view_data['payment_method_dropdown'] = $this->get_payment_method_dropdown();
+        return $this->template->view("invoices/reports/clients_payment_summary", $view_data);
     }
 
     function clients_payment_summary_list_data() {
@@ -379,29 +392,27 @@ class Invoice_payments extends Security_Controller {
         $end_date = $this->request->getPost('end_date');
         $options = array(
             "start_date" => $start_date,
-            "end_date" => $end_date
+            "end_date" => $end_date,
+            "currency" => $this->request->getPost("currency"),
+            "payment_method_id" => $this->request->getPost('payment_method_id')
         );
+
         $list_data = $this->Invoice_payments_model->get_clients_summary_details($options)->getResult();
+
+        $default_currency_symbol = get_setting("currency_symbol");
 
         $result = array();
         foreach ($list_data as $data) {
+            $currency_symbol = $data->currency_symbol ? $data->currency_symbol : $default_currency_symbol;
+
             $result[] = array(
                 anchor(get_uri("clients/view/" . $data->client_id), $data->client_name),
-                to_currency($data->amount)
+                $data->payment_count,
+                to_currency($data->amount, $currency_symbol)
             );
         }
 
         echo json_encode(array("data" => $result));
-    }
-
-    private function can_access_clients() {
-        $permissions = $this->login_user->permissions;
-
-        if (get_array_value($permissions, "client") || $this->login_user->is_admin) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     function get_invoice_payment_amount_suggestion($invoice_id) {
@@ -412,6 +423,26 @@ class Invoice_payments extends Security_Controller {
         } else {
             echo json_encode(array("success" => false));
         }
+    }
+
+    /* list of invoice payments, prepared for datatable  */
+
+    function payment_list_data_of_order($order_id, $client_id = 0) {
+        if (!$this->can_view_invoices($client_id)) {
+            app_redirect("forbidden");
+        }
+
+        validate_numeric_value($order_id);
+        validate_numeric_value($client_id);
+
+        $options = array("order_id" => $order_id,);
+        $list_data = $this->Invoice_payments_model->get_details($options)->getResult();
+
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_make_payment_row($data);
+        }
+        echo json_encode(array("data" => $result));
     }
 
 }

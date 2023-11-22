@@ -89,6 +89,10 @@ if ($notification->post_id && $notification->posts_title) {
     echo "<div>" . app_lang("comment") . ": " . $notification->posts_title . "</div>";
 }
 
+if ($notification->subscription_title) {
+    echo "<div>" . app_lang("title") . ": " . $notification->subscription_title . "</div>";
+}
+
 //show data from hook
 try {
     $notification_descriptions = array();
@@ -100,4 +104,20 @@ try {
     }
 } catch (\Exception $ex) {
     log_message('error', '[ERROR] {exception}', ['exception' => $ex]);
+}
+
+if ($notification->client_id && $notification->company_name) {
+    echo "<div>" . app_lang("client") . ": " . $notification->company_name . "</div>";
+}
+
+if ($notification->lead_id && $notification->lead_company_name) {
+    echo "<div>" . app_lang("lead") . ": " . $notification->lead_company_name . "</div>";
+}
+
+if ($notification->expense_id && $notification->expense_title) {
+    echo "<div>" . app_lang("expense") . ": " . $notification->expense_title . "</div>";
+}
+
+if ($notification->subscription_id) {
+    echo "<div>" . get_subscription_id($notification->subscription_id) . "</div>";
 }

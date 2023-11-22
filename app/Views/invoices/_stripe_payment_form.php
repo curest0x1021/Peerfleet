@@ -49,14 +49,8 @@ echo form_open("", array("id" => "stripe-checkout-form", "class" => "float-start
                 dataType: 'json',
                 data: {input_data: data},
                 success: function (result) {
-                    if (result.success && result.session_id && result.publishable_key) {
-                        var stripe = Stripe(result.publishable_key);
-
-                        stripe.redirectToCheckout({
-                            sessionId: result.session_id
-                        }).then(function (result) {
-                            appAlert.error(result.error.message);
-                        });
+                    if (result.success && result.checkout_url) {
+                        window.location.href = result.checkout_url;
                     } else {
                         appAlert.error(result.message);
                     }

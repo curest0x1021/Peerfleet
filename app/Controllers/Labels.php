@@ -13,31 +13,38 @@ class Labels extends Security_Controller {
     }
 
     private function can_access_labels_of_this_context($context = "", $label_id = 0) {
+
+        $access_info = $this->get_access_info($context);
+
         if ($context == "project" && $this->can_edit_projects()) {
             return true;
-        } else if ($context == "ticket") {
-            $this->init_permission_checker("ticket");
-            return $this->access_only_allowed_members();
-        } else if ($context == "invoice") {
-            $this->init_permission_checker("invoice");
-            return $this->access_only_allowed_members();
+        } else if ($context == "ticket" && $access_info->access_type) {
+            return true;
+        } else if ($context == "invoice" && $access_info->access_type) {
+            return true;
         } else if ($context == "event" || $context == "note" || $context == "to_do") {
+
             if ($label_id) {
                 //can access only own labels if there has any associated user id with this label
                 $label_info = $this->Labels_model->get_one($label_id);
-                if ($label_info->user_id && $label_info->user_id !== $this->login_user->id) {
+                if ($label_info->user_id && !$this->is_own_id($label_info->user_id)) {
                     return false;
                 }
             }
-
+            
             return true;
-        } else if ($context == "task") {
-            if ($this->can_manage_all_projects() || get_array_value($this->login_user->permissions, "can_edit_tasks") == "1") {
-                return true;
-            }
-        } else if ($context == "subscription") {
-            $this->init_permission_checker("subscription");
-            return $this->access_only_allowed_members();
+        } else if ($context == "task" && ($this->can_manage_all_projects() || get_array_value($this->login_user->permissions, "can_edit_tasks") == "1")) {
+            return true;
+        } else if ($context == "subscription" && $access_info->access_type) {
+            return true;
+        } else if ($context == "client" && $access_info->access_type) {
+            return true;
+        } else if ($context == "lead" && $access_info->access_type) {
+            return true;
+        } else if ($context == "client" && $this->get_access_info("lead")->access_type) {
+            return true; //client and lead has same labels. allow access if there is any one. 
+        } else if ($context == "lead" && $this->get_access_info("client")->access_type) {
+            return true; //client and lead has same labels. allow access if there is any one. 
         }
     }
 
@@ -143,7 +150,6 @@ class Labels extends Security_Controller {
             }
         }
     }
-
 }
 
 /* End of file Labels.php */

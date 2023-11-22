@@ -4,23 +4,28 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+
+        var filterDrpdown = [];
+
+<?php if ($show_members_dropdown) { ?>
+            filterDrpdown.push({name: "user_id", class: "w200", options: <?php echo $project_members_dropdown; ?>});
+<?php } ?>
+        filterDrpdown.push({name: "task_id", class: "w200", options: <?php echo $tasks_dropdown; ?>});
+        filterDrpdown.push({name: "group_by", class: "w200", options: <?php echo $group_by_dropdown; ?>});
+        filterDrpdown.push(<?php echo $custom_field_filters; ?>);
+
         $("#timesheet-summary-table").appTable({
             source: '<?php echo_uri("projects/timesheet_summary_list_data/"); ?>',
             filterParams: {project_id: "<?php echo $project_id; ?>"},
-            filterDropdown: [
-                {name: "user_id", class: "w200", options: <?php echo $project_members_dropdown; ?>},
-                {name: "task_id", class: "w200", options: <?php echo $tasks_dropdown; ?>},
-                {name: "group_by", class: "w200", options: <?php echo $group_by_dropdown; ?>},
-                <?php echo $custom_field_filters; ?>
-            ],
+            filterDropdown: filterDrpdown,
             rangeDatepicker: [{startDate: {name: "start_date", value: ""}, endDate: {name: "end_date", value: ""}, showClearButton: true}],
             columns: [
                 {visible: false, searchable: false},
                 {visible: false, searchable: false},
-                {title: "<?php echo app_lang("member"); ?>"},
-                {title: "<?php echo app_lang("task"); ?>"},
-                {title: "<?php echo app_lang("duration"); ?>", "class": "w15p text-right"},
-                {title: "<?php echo app_lang("hours"); ?>", "class": "w15p text-right"}
+                {title: "<?php echo app_lang('member'); ?>"},
+                {title: "<?php echo app_lang('task'); ?>"},
+                {title: "<?php echo app_lang('duration'); ?>", "class": "w15p text-right"},
+                {title: "<?php echo app_lang('hours'); ?>", "class": "w15p text-right"}
             ],
             printColumns: [2, 3, 4, 5],
             xlsColumns: [2, 3, 4, 5],

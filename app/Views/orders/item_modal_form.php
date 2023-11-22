@@ -1,4 +1,4 @@
-<?php echo form_open(get_uri("orders/save_item"), array("id" => "order-item-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_open(get_uri("store/save_item"), array("id" => "order-item-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
@@ -77,7 +77,7 @@
                         "placeholder" => app_lang('unit_type') . ' (Ex: hours, pc, etc.)'
                     );
 
-                    if ($login_user->user_type === "client") {
+                    if (!isset($login_user->user_type) || $login_user->user_type === "client") {
                         $form_input_array["disabled"] = "disabled";
                     }
 
@@ -101,7 +101,7 @@
                         "data-msg-required" => app_lang("field_required"),
                     );
 
-                    if ($login_user->user_type === "client") {
+                    if (!isset($login_user->user_type) || $login_user->user_type === "client") {
                         $form_input_array["disabled"] = "disabled";
                     }
 

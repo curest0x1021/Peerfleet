@@ -43,15 +43,11 @@
 
         <?php if ($show_cotact_info && $user_info->user_type !== "client") { ?>
             <p class="p10 m0"><i data-feather="mail" class="icon-16"></i> <?php echo $user_info->email ? $user_info->email : "-"; ?></p> 
-            <?php if ($user_info->phone || $user_info->skype) { ?>
-                <p class="p10 m0">
+            <?php if ($user_info->phone || $user_info->linkedin) { ?>
+                <p class="p8 m0">
                     <?php if ($user_info->phone) { ?>
                         <i data-feather="phone" class="icon-16"></i> <?php echo $user_info->phone; ?> <span class="mr15"></span>
                         <?php
-                    }
-                    if ($user_info->skype) {
-                        echo view("users/svg_social_icons/skype");
-                        echo " " . $user_info->skype;
                     }
                     ?>
                 </p>

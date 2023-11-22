@@ -29,6 +29,11 @@ class Invoice_payments_model extends Crud_model {
             $where .= " AND $invoice_payments_table.invoice_id=$invoice_id";
         }
 
+        $order_id = $this->_get_clean_value($options, "order_id");
+        if ($order_id) {
+            $where .= " AND $invoice_payments_table.invoice_id IN(SELECT $invoices_table.id FROM $invoices_table WHERE $invoices_table.deleted=0 AND $invoices_table.order_id=$order_id)";
+        }
+
         $client_id = $this->_get_clean_value($options, "client_id");
         if ($client_id) {
             $where .= " AND $invoices_table.client_id=$client_id";
@@ -119,6 +124,7 @@ class Invoice_payments_model extends Crud_model {
     function get_yearly_summary_details($options = array()) {
         $payments_table = $this->db->prefixTable('invoice_payments');
         $invoices_table = $this->db->prefixTable('invoices');
+        $clients_table = $this->db->prefixTable('clients');
 
         $where = "";
 
@@ -128,9 +134,22 @@ class Invoice_payments_model extends Crud_model {
             $where .= " AND ($payments_table.payment_date BETWEEN '$start_date' AND '$end_date') ";
         }
 
-        $sql = "SELECT SUM($payments_table.amount) AS amount, MONTH($payments_table.payment_date) AS month
+        $payment_method_id = $this->_get_clean_value($options, "payment_method_id");
+        if ($payment_method_id) {
+            $where .= " AND $payments_table.payment_method_id=$payment_method_id";
+        }
+
+        $selected_currency = get_array_value($options, "currency");
+        $default_currency = get_setting("default_currency");
+        $currency = $selected_currency ? $selected_currency : get_setting("default_currency");
+        $currency = $this->db->escapeString($currency);
+
+        $where .= ($currency == $default_currency) ? " AND ($clients_table.currency='$default_currency' OR $clients_table.currency='' OR $clients_table.currency IS NULL)" : " AND $clients_table.currency='$currency'";
+
+        $sql = "SELECT COUNT($payments_table.id) AS payment_count, SUM($payments_table.amount) AS amount, MONTH($payments_table.payment_date) AS month, $clients_table.currency, $clients_table.currency_symbol
         FROM $payments_table
         LEFT JOIN $invoices_table ON $invoices_table.id=$payments_table.invoice_id
+        LEFT JOIN $clients_table ON $clients_table.id=(SELECT $invoices_table.client_id FROM $invoices_table WHERE $invoices_table.id=$payments_table.invoice_id LIMIT 1)
         WHERE $payments_table.deleted=0 $where
         GROUP BY MONTH($payments_table.payment_date)";
 
@@ -150,9 +169,22 @@ class Invoice_payments_model extends Crud_model {
             $where .= " AND ($payments_table.payment_date BETWEEN '$start_date' AND '$end_date') ";
         }
 
-        $sql = "SELECT SUM($payments_table.amount) AS amount, $invoices_table.client_id, (SELECT $clients_table.company_name FROM $clients_table WHERE id=(SELECT $invoices_table.client_id FROM $invoices_table WHERE $invoices_table.id=$payments_table.invoice_id)) AS client_name
+        $payment_method_id = $this->_get_clean_value($options, "payment_method_id");
+        if ($payment_method_id) {
+            $where .= " AND $payments_table.payment_method_id=$payment_method_id";
+        }
+
+        $selected_currency = get_array_value($options, "currency");
+        $default_currency = get_setting("default_currency");
+        $currency = $selected_currency ? $selected_currency : get_setting("default_currency");
+        $currency = $this->db->escapeString($currency);
+
+        $where .= ($currency == $default_currency) ? " AND ($clients_table.currency='$default_currency' OR $clients_table.currency='' OR $clients_table.currency IS NULL)" : " AND $clients_table.currency='$currency'";
+
+        $sql = "SELECT COUNT($payments_table.id) AS payment_count, SUM($payments_table.amount) AS amount, $invoices_table.client_id, $clients_table.charter_name AS client_name, $clients_table.currency, $clients_table.currency_symbol
         FROM $payments_table
         LEFT JOIN $invoices_table ON $invoices_table.id=$payments_table.invoice_id
+        LEFT JOIN $clients_table ON $clients_table.id=(SELECT $invoices_table.client_id FROM $invoices_table WHERE $invoices_table.id=$payments_table.invoice_id LIMIT 1)
         WHERE $payments_table.deleted=0 $where
         GROUP BY $invoices_table.client_id";
 

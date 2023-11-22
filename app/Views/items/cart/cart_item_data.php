@@ -21,7 +21,7 @@
             </div>
 
             <div class="cart-item-input-section hide">
-                <?php echo form_open(get_uri("items/change_cart_item_quantity/input"), array("id" => "item-quantity-form", "class" => "general-form", "role" => "form")); ?>
+                <?php echo form_open(get_uri("store/change_cart_item_quantity/input"), array("id" => "item-quantity-form", "class" => "general-form", "role" => "form")); ?>
                 <input type="hidden" name="id" value="<?php echo $item->id; ?>" />
                 <input type="text" value="<?php echo $item->quantity; ?>" name="item_quantity" autocomplete="off" class="w50 form-control inline-block item-quantity-input-box" />
                 <button type="submit" class="btn btn-primary btn-sm item-quantity-btn"><span data-feather="check" class="icon-16"></span></button>

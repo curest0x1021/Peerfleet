@@ -46,15 +46,24 @@
             history.pushState(browserState, "", browserState.Url);
 
             //restore previous url
-            $('#ajaxModal').on('hidden.bs.modal', function (e) {
-                if (window.existingUrl) {
-                    var browserState = {Url: window.existingUrl};
-                    history.pushState(browserState, "", browserState.Url);
-                    window.existingUrl = "";
-                }
+            
+            if(!window.modalEventAttached){
+                $('#ajaxModal').on('hidden.bs.modal', function (e) {
+                    if (window.existingUrl) {
+                        var browserState = {Url: window.existingUrl};
+                        history.pushState(browserState, "", browserState.Url);
+                        window.existingUrl = "";
+                    }
 
-                $("#reload-kanban-button:visible").trigger("click");
-            });
+                    if(window.reloadKanban){
+                        window.reloadKanban = false; //reset
+                        $("#reload-kanban-button:visible").trigger("click");
+                    }
+                    
+                });
+                window.modalEventAttached = true;
+            }
+            
         });
     </script>
 
@@ -141,9 +150,6 @@ $task_link = anchor(get_uri("projects/task_view/$model_info->id"), '<i data-feat
         function count_checklists() {
             var checklists = $(".checklist-items .checklist-item-row").length;
             $(".chcklists_count").text(checklists);
-
-            //reload kanban
-            $("#reload-kanban-button:visible").trigger("click");
         }
 
         var checklists = $(".checklist-items .checklist-item-row").length;
@@ -165,6 +171,7 @@ $task_link = anchor(get_uri("projects/task_view/$model_info->id"), '<i data-feat
                 $("#checklist-items").append(response.data);
 
                 count_checklists();
+                window.reloadKanban = true; 
             }
         });
 
@@ -189,8 +196,7 @@ $task_link = anchor(get_uri("projects/task_view/$model_info->id"), '<i data-feat
                 success: function (response) {
                     if (response.success) {
                         status_checkbox.closest("div").html(response.data);
-                        //reload kanban
-                        $("#reload-kanban-button:visible").trigger("click");
+                        window.reloadKanban = true; 
                     }
                 }
             });
@@ -217,6 +223,7 @@ $task_link = anchor(get_uri("projects/task_view/$model_info->id"), '<i data-feat
                 $("#sub-task-title").val("");
                 $("#sub-task-title").focus();
                 $("#sub-tasks").append(response.task_data);
+                window.reloadKanban = true; 
             }
         });
 
@@ -232,9 +239,7 @@ $task_link = anchor(get_uri("projects/task_view/$model_info->id"), '<i data-feat
                 success: function (response) {
                     if (response.success) {
                         sub_task_status_checkbox.closest("div").html(response.data);
-                    } else {
-                        appAlert.error(response.message, {duration: 10000});
-                        sub_task_status_checkbox.removeClass("inline-loader");
+                        window.reloadKanban = true;
                     }
                 }
             });

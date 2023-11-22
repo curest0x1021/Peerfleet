@@ -33,8 +33,6 @@
                             "value" => process_images_from_content($model_info->description, false),
                             "class" => "form-control",
                             "placeholder" => app_lang('description'),
-                            "data-rule-required" => true,
-                            "data-msg-required" => app_lang("field_required"),
                             "data-rich-text-editor" => true
                         ));
                         ?>
@@ -62,7 +60,11 @@
                     <label for="start_time" class=" col-md-2 col-sm-2"><?php echo app_lang('start_time'); ?></label>
                     <div class=" col-md-3 col-sm-3">
                         <?php
-                        $start_time = is_date_exists($model_info->start_time) ? $model_info->start_time : "";
+                        if (is_date_exists($model_info->start_time) && $model_info->start_time == "00:00:00") {
+                            $start_time = "";
+                        } else {
+                            $start_time = $model_info->start_time;
+                        }
 
                         if ($time_format_24_hours) {
                             $start_time = $start_time ? date("H:i", strtotime($start_time)) : "";
@@ -103,7 +105,11 @@
                     <label for="end_time" class=" col-md-2 col-sm-2"><?php echo app_lang('end_time'); ?></label>
                     <div class=" col-md-3 col-sm-3">
                         <?php
-                        $end_time = is_date_exists($model_info->end_time) ? $model_info->end_time : "";
+                        if (is_date_exists($model_info->end_time) && $model_info->end_time == "00:00:00") {
+                            $end_time = "";
+                        } else {
+                            $end_time = $model_info->end_time;
+                        }
 
                         if ($time_format_24_hours) {
                             $end_time = $end_time ? date("H:i", strtotime($end_time)) : "";

@@ -24,14 +24,32 @@
             </div>
         </div>
 
+        <?php if ($client_id || $login_user->user_type == "client") { ?>
+            <input type="hidden" name="project_type" value="client_project" />
+        <?php } else { ?>
+            <div class="form-group">
+                <div class="row">
+                    <label for="project_type" class=" col-md-3"><?php echo app_lang('project_type'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_dropdown("project_type", array(
+                            "client_project" => app_lang("client_project"),
+                            "internal_project" => app_lang("internal_project"),
+                                ), array($model_info->project_type ? $model_info->project_type : "client_project"), "class='select2 validate-hidden' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "' id='project-type-dropdown'");
+                        ?>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+
         <?php if ($client_id) { ?>
             <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" />
-        <?php } else if ($login_user->user_type == "client") { ?>
+        <?php } else if ($login_user->user_type == "client" || $hide_clients_dropdown) { ?>
             <input type="hidden" name="client_id" value="<?php echo $model_info->client_id; ?>" />
         <?php } else { ?>
-            <div class="form-group" id="clients-dropdown">
+            <div class="form-group <?php echo $model_info->project_type === "internal_project" ? 'hide' : ''; ?>" id="clients-dropdown">
                 <div class="row">
-                    <label for="client_id" class=" col-md-3"><?php echo app_lang('vessel'); ?></label>
+                    <label for="client_id" class=" col-md-3"><?php echo app_lang('client'); ?></label>
                     <div class=" col-md-9">
                         <?php
                         echo form_dropdown("client_id", $clients_dropdown, array($model_info->client_id), "class='select2 validate-hidden' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
@@ -96,7 +114,7 @@
 
         <div class="form-group">
             <div class="row">
-                <label for="price" class=" col-md-3"><?php echo app_lang('budget'); ?></label>
+                <label for="price" class=" col-md-3"><?php echo app_lang('price'); ?></label>
                 <div class=" col-md-9">
                     <?php
                     echo form_input(array(
@@ -104,7 +122,7 @@
                         "name" => "price",
                         "value" => $model_info->price ? to_decimal_format($model_info->price) : "",
                         "class" => "form-control",
-                        "placeholder" => app_lang('budget')
+                        "placeholder" => app_lang('price')
                     ));
                     ?>
                 </div>
@@ -131,10 +149,14 @@
         <?php if ($model_info->id) { ?>
             <div class="form-group">
                 <div class="row">
-                    <label for="status" class=" col-md-3"><?php echo app_lang('status'); ?></label>
-                    <div class=" col-md-9">
+                    <label for="status_id" class=" col-md-3"><?php echo app_lang('status'); ?></label>
+                    <div class="col-md-9">
                         <?php
-                        echo form_dropdown("status", array("open" => app_lang("open"), "completed" => app_lang("completed"), "hold" => app_lang("hold"), "canceled" => app_lang("canceled")), array($model_info->status), "class='select2'");
+                        foreach ($statuses as $status) {
+                            $project_status[$status->id] = $status->key_name ? app_lang($status->key_name) : $status->title;
+                        }
+
+                        echo form_dropdown("status_id", $project_status, array($model_info->status_id), "class='select2'");
                         ?>
                     </div>
                 </div>
@@ -152,7 +174,7 @@
     </div>
 
     <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
-    <?php if (!$model_info->id && $login_user->user_type != "client") { ?>
+    <?php if (!$model_info->id && $login_user->user_type != "client" && $can_edit_projects) { ?>
         <button type="button" id="save-and-continue-button" class="btn btn-info text-white"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('save_and_continue'); ?></button>
     <?php } ?>
     <button type="submit" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('save'); ?></button>

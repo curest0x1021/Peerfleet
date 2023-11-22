@@ -56,7 +56,7 @@ load_js(array(
         function getAwesompleteList() {
 
             $.ajax({
-                url: "<?php echo get_uri($type . '/get_article_suggestion/'); ?>",
+                url: "<?php echo get_uri($type . '/get_article_suggestion'); ?>",
                 data: {search: $searchBox.val()},
                 cache: false,
                 type: 'POST',

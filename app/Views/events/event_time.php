@@ -14,11 +14,13 @@ if ($model_info->start_date == $model_info->end_date) {
         echo $day_name . ", " . $month_name . " " . date("d", strtotime($model_info->start_date));
     }
 
-    if (is_date_exists($model_info->start_time)) {
-        echo ", " . format_to_time($model_info->start_date . " " . $model_info->start_time, false);
+    if (is_date_exists($model_info->start_time) && $model_info->start_time != "00:00:00" || (is_date_exists($model_info->end_time) && $model_info->end_time != "00:00:00")) {
+        if (is_date_exists($model_info->start_time)) {
+            echo ", " . format_to_time($model_info->start_date . " " . $model_info->start_time, false);
 
-        if (!isset($is_reminder)) {
-            echo " – " . format_to_time($model_info->end_date . " " . $model_info->end_time, false);
+            if (!isset($is_reminder)) {
+                echo " – " . format_to_time($model_info->end_date . " " . $model_info->end_time, false);
+            }
         }
     }
 } else {
@@ -27,8 +29,10 @@ if ($model_info->start_date == $model_info->end_date) {
     $month_name = app_lang(strtolower(date("F", strtotime($model_info->start_date)))); //get month name from language
     echo $day_name . ", " . $month_name . " " . date("d", strtotime($model_info->start_date));
 
-    if (is_date_exists($model_info->start_time)) {
-        echo ", " . format_to_time($model_info->start_date . " " . $model_info->start_time, false);
+    if (is_date_exists($model_info->start_time) && $model_info->start_time != "00:00:00" || (is_date_exists($model_info->end_time) && $model_info->end_time != "00:00:00")) {
+        if (is_date_exists($model_info->start_time)) {
+            echo ", " . format_to_time($model_info->start_date . " " . $model_info->start_time, false);
+        }
     }
 
 
@@ -36,8 +40,10 @@ if ($model_info->start_date == $model_info->end_date) {
     $end_month_name = app_lang(strtolower(date("F", strtotime($model_info->end_date)))); //get month name from language
     echo " – " . $end_day_name . ", " . $end_month_name . " " . date("d", strtotime($model_info->end_date));
 
-    if (is_date_exists($model_info->end_time)) {
-        echo ", " . format_to_time($model_info->end_date . " " . $model_info->end_time, false);
+    if (is_date_exists($model_info->start_time) && $model_info->start_time != "00:00:00" || (is_date_exists($model_info->end_time) && $model_info->end_time != "00:00:00")) {
+        if (is_date_exists($model_info->end_time)) {
+            echo ", " . format_to_time($model_info->end_date . " " . $model_info->end_time, false);
+        }
     }
 }
 ?>

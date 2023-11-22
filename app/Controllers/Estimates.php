@@ -2,11 +2,19 @@
 
 namespace App\Controllers;
 
+use Config\Services;
+
 class Estimates extends Security_Controller {
 
     function __construct() {
         parent::__construct();
         $this->init_permission_checker("estimate");
+    }
+
+    private function validate_estimate_access($estimate_id = 0, $check_client = false) {
+        if (!$this->can_access_this_estimate($estimate_id, $check_client)) {
+            app_redirect("forbidden");
+        }
     }
 
     /* load estimate list view */
@@ -37,29 +45,6 @@ class Estimates extends Security_Controller {
         }
     }
 
-    private function show_own_estimates_only_user_id() {
-        if ($this->login_user->user_type === "staff") {
-            return get_array_value($this->login_user->permissions, "estimate") == "own" ? $this->login_user->id : false;
-        }
-    }
-
-    private function can_access_this_estimate($estimate_id = 0) {
-        $estimate_info = $this->Estimates_model->get_one($estimate_id);
-
-        if ($estimate_info->id && get_array_value($this->login_user->permissions, "estimate") == "own" && $estimate_info->created_by !== $this->login_user->id) {
-            app_redirect("forbidden");
-        }
-    }
-
-    private function can_access_this_estimate_item($estimate_item_id = 0) {
-        $options = array("id" => $estimate_item_id);
-        $item_info = $this->Estimate_items_model->get_details($options)->getRow();
-
-        if ($item_info->id && get_array_value($this->login_user->permissions, "estimate") == "own" && $item_info->created_by !== $this->login_user->id) {
-            app_redirect("forbidden");
-        }
-    }
-
     //load the yearly view of estimate list
     function yearly() {
         return $this->template->view("estimates/yearly_estimates");
@@ -68,15 +53,18 @@ class Estimates extends Security_Controller {
     /* load new estimate modal */
 
     function modal_form() {
-        $this->access_only_allowed_members();
-
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "client_id" => "numeric"
         ));
 
         $id = $this->request->getPost('id');
-        $this->can_access_this_estimate($id);
+        $is_clone = $this->request->getPost('is_clone');
+        $this->validate_estimate_access($id);
+        if (!$this->_is_estimate_editable($id, $is_clone)) {
+            app_redirect("forbidden");
+        }
+
         $client_id = $this->request->getPost('client_id');
         $model_info = $this->Estimates_model->get_one($id);
 
@@ -122,7 +110,6 @@ class Estimates extends Security_Controller {
         $view_data['client_id'] = $client_id;
 
         //clone estimate data
-        $is_clone = $this->request->getPost('is_clone');
         $view_data['is_clone'] = $is_clone;
 
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("estimates", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
@@ -138,7 +125,6 @@ class Estimates extends Security_Controller {
     /* add, edit or clone an estimate */
 
     function save() {
-        $this->access_only_allowed_members();
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
@@ -150,7 +136,12 @@ class Estimates extends Security_Controller {
 
         $client_id = $this->request->getPost('estimate_client_id');
         $id = $this->request->getPost('id');
-        $this->can_access_this_estimate($id);
+        $is_clone = $this->request->getPost('is_clone');
+
+        $this->validate_estimate_access($id);
+        if (!$this->_is_estimate_editable($id, $is_clone)) {
+            app_redirect("forbidden");
+        }
 
         $estimate_data = array(
             "client_id" => $client_id,
@@ -162,7 +153,6 @@ class Estimates extends Security_Controller {
             "note" => $this->request->getPost('estimate_note')
         );
 
-        $is_clone = $this->request->getPost('is_clone');
         $estimate_request_id = $this->request->getPost('estimate_request_id');
         $contract_id = $this->request->getPost('contract_id');
         $proposal_id = $this->request->getPost('proposal_id');
@@ -264,9 +254,8 @@ class Estimates extends Security_Controller {
         }
 
         validate_numeric_value($estimate_id);
-        $this->can_access_this_estimate($estimate_id);
+        $this->validate_estimate_access($estimate_id, true);
         $estmate_info = $this->Estimates_model->get_one($estimate_id);
-        $this->access_only_allowed_members_or_client_contact($estmate_info->client_id);
 
         if ($this->login_user->user_type == "client") {
             //updating by client
@@ -338,7 +327,7 @@ class Estimates extends Security_Controller {
 
     private function _create_project_from_estimate($estimate_id) {
         if ($estimate_id) {
-            $this->can_access_this_estimate($estimate_id);
+            $this->validate_estimate_access($estimate_id);
             $estimate_info = $this->Estimates_model->get_one($estimate_id);
 
             //don't create new project if there has already been created a new project with this estimate
@@ -362,14 +351,13 @@ class Estimates extends Security_Controller {
     /* delete or undo an estimate */
 
     function delete() {
-        $this->access_only_allowed_members();
 
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
         ));
 
         $id = $this->request->getPost('id');
-        $this->can_access_this_estimate($id);
+        $this->validate_estimate_access($id);
         $estimate_info = $this->Estimates_model->get_one($id);
 
         if ($this->Estimates_model->delete($id)) {
@@ -487,8 +475,13 @@ class Estimates extends Security_Controller {
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
+        $edit = "";
+        if ($this->_is_estimate_editable($data)) {
+            $edit = modal_anchor(get_uri("estimates/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_estimate'), "data-post-id" => $data->id));
+        }
+
         $row_data[] = anchor(get_uri("estimate/preview/" . $data->id . "/" . $data->public_key), "<i data-feather='external-link' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('estimate') . " " . app_lang("url"), "target" => "_blank"))
-                . modal_anchor(get_uri("estimates/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_estimate'), "data-post-id" => $data->id))
+                . $edit
                 . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_estimate'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("estimates/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
@@ -502,8 +495,7 @@ class Estimates extends Security_Controller {
     /* load estimate details view */
 
     function view($estimate_id = 0) {
-        $this->access_only_allowed_members();
-        $this->can_access_this_estimate($estimate_id);
+        $this->validate_estimate_access($estimate_id);
 
         if ($estimate_id) {
             validate_numeric_value($estimate_id);
@@ -528,6 +520,7 @@ class Estimates extends Security_Controller {
                 $view_data["can_create_projects"] = $this->can_create_projects();
 
                 $view_data["estimate_id"] = clean_data($estimate_id);
+                $view_data["is_estimate_editable"] = $this->_is_estimate_editable($estimate_id);
 
                 return $this->template->rander("estimates/view", $view_data);
             } else {
@@ -541,20 +534,23 @@ class Estimates extends Security_Controller {
     private function _get_estimate_total_view($estimate_id = 0) {
         $view_data["estimate_total_summary"] = $this->Estimates_model->get_estimate_total_summary($estimate_id);
         $view_data["estimate_id"] = $estimate_id;
+        $view_data["is_estimate_editable"] = $this->_is_estimate_editable($estimate_id);
         return $this->template->view('estimates/estimate_total_section', $view_data, true);
     }
 
     /* load discount modal */
 
     function discount_modal_form() {
-        $this->access_only_allowed_members();
 
         $this->validate_submitted_data(array(
             "estimate_id" => "required|numeric"
         ));
 
         $estimate_id = $this->request->getPost('estimate_id');
-        $this->can_access_this_estimate($estimate_id);
+        $this->validate_estimate_access($estimate_id);
+        if (!$this->_is_estimate_editable($estimate_id)) {
+            app_redirect("forbidden");
+        }
 
         $view_data['model_info'] = $this->Estimates_model->get_one($estimate_id);
 
@@ -564,7 +560,6 @@ class Estimates extends Security_Controller {
     /* save discount */
 
     function save_discount() {
-        $this->access_only_allowed_members();
 
         $this->validate_submitted_data(array(
             "estimate_id" => "required|numeric",
@@ -574,7 +569,10 @@ class Estimates extends Security_Controller {
         ));
 
         $estimate_id = $this->request->getPost('estimate_id');
-        $this->can_access_this_estimate($estimate_id);
+        $this->validate_estimate_access($estimate_id);
+        if (!$this->_is_estimate_editable($estimate_id)) {
+            app_redirect("forbidden");
+        }
 
         $data = array(
             "discount_type" => $this->request->getPost('discount_type'),
@@ -595,14 +593,16 @@ class Estimates extends Security_Controller {
     /* load item modal */
 
     function item_modal_form() {
-        $this->access_only_allowed_members();
 
         $this->validate_submitted_data(array(
             "id" => "numeric"
         ));
 
         $estimate_id = $this->request->getPost('estimate_id');
-        $this->can_access_this_estimate($estimate_id);
+        $this->validate_estimate_access($estimate_id);
+        if (!$this->_is_estimate_editable($estimate_id)) {
+            app_redirect("forbidden");
+        }
 
         $view_data['model_info'] = $this->Estimate_items_model->get_one($this->request->getPost('id'));
         if (!$estimate_id) {
@@ -615,7 +615,6 @@ class Estimates extends Security_Controller {
     /* add or edit an estimate item */
 
     function save_item() {
-        $this->access_only_allowed_members();
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
@@ -623,7 +622,10 @@ class Estimates extends Security_Controller {
         ));
 
         $estimate_id = $this->request->getPost('estimate_id');
-        $this->can_access_this_estimate($estimate_id);
+        $this->validate_estimate_access($estimate_id);
+        if (!$this->_is_estimate_editable($estimate_id)) {
+            app_redirect("forbidden");
+        }
 
         $id = $this->request->getPost('id');
         $rate = unformat_currency($this->request->getPost('estimate_item_rate'));
@@ -682,7 +684,11 @@ class Estimates extends Security_Controller {
         ));
 
         $id = $this->request->getPost('id');
-        $this->can_access_this_estimate_item($id);
+        $item_info = $this->Estimate_items_model->get_one($id);
+        if (!$this->_is_estimate_editable($item_info->estimate_id)) {
+            app_redirect("forbidden");
+        }
+
         if ($this->request->getPost('undo')) {
             if ($this->Estimate_items_model->delete($id, true)) {
                 $options = array("id" => $id);
@@ -705,8 +711,7 @@ class Estimates extends Security_Controller {
 
     function item_list_data($estimate_id = 0) {
         validate_numeric_value($estimate_id);
-        $this->access_only_allowed_members();
-        $this->can_access_this_estimate($estimate_id);
+        $this->validate_estimate_access($estimate_id);
 
         $list_data = $this->Estimate_items_model->get_details(array("estimate_id" => $estimate_id))->getResult();
         $result = array();
@@ -719,9 +724,17 @@ class Estimates extends Security_Controller {
     /* prepare a row of estimate item list table */
 
     private function _make_item_row($data) {
-        $item = "<div class='item-row strong mb5' data-id='$data->id'><div class='float-start move-icon'><i data-feather='menu' class='icon-16'></i></div> $data->title</div>";
+        $move_icon = "";
+        $desc_style = "";
+
+        if ($this->_is_estimate_editable($data->estimate_id)) {
+            $move_icon = "<div class='float-start move-icon'><i data-feather='menu' class='icon-16'></i></div>";
+            $desc_style = "style='margin-left:25px'";
+        }
+
+        $item = "<div class='item-row strong mb5' data-id='$data->id'>$move_icon $data->title</div>";
         if ($data->description) {
-            $item .= "<span class='text-wrap' style='margin-left:25px'>" . nl2br($data->description) . "</span>";
+            $item .= "<span class='text-wrap' $desc_style>" . nl2br($data->description) . "</span>";
         }
         $type = $data->unit_type ? $data->unit_type : "";
 
@@ -731,7 +744,7 @@ class Estimates extends Security_Controller {
             to_decimal_format($data->quantity) . " " . $type,
             to_currency($data->rate, $data->currency_symbol),
             to_currency($data->total, $data->currency_symbol),
-            modal_anchor(get_uri("estimates/item_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_estimate'), "data-post-id" => $data->id))
+            modal_anchor(get_uri("estimates/item_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_estimate'), "data-post-id" => $data->id, "data-post-estimate_id" => $data->estimate_id))
             . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("estimates/delete_item"), "data-action" => "delete"))
         );
     }
@@ -771,7 +784,7 @@ class Estimates extends Security_Controller {
         if ($estimate_id) {
             validate_numeric_value($estimate_id);
 
-            $this->can_access_this_estimate($estimate_id);
+            $this->validate_estimate_access($estimate_id, true);
 
             $estimate_data = get_estimate_making_data($estimate_id);
             $this->_check_estimate_access_permission($estimate_data);
@@ -802,10 +815,10 @@ class Estimates extends Security_Controller {
         }
     }
 
-    function download_pdf($estimate_id = 0, $mode = "download") {
+    function download_pdf($estimate_id = 0, $mode = "download", $user_language = "") {
         if ($estimate_id) {
             validate_numeric_value($estimate_id);
-            $this->can_access_this_estimate($estimate_id);
+            $this->validate_estimate_access($estimate_id);
             $estimate_data = get_estimate_making_data($estimate_id);
             $this->_check_estimate_access_permission($estimate_data);
 
@@ -813,7 +826,24 @@ class Estimates extends Security_Controller {
                 @ob_clean();
             //so, we have a valid estimate data. Prepare the view.
 
-            prepare_estimate_pdf($estimate_data, $mode);
+            if ($user_language) {
+                $language = Services::language();
+
+                $active_locale = $language->getLocale();
+
+                if ($user_language && $user_language !== $active_locale) {
+                    $language->setLocale($user_language);
+                }
+
+                prepare_estimate_pdf($estimate_data, $mode);
+
+                if ($user_language && $user_language !== $active_locale) {
+                    // Reset to active locale
+                    $language->setLocale($active_locale);
+                }
+            } else {
+                prepare_estimate_pdf($estimate_data, $mode);
+            }
         } else {
             show_404();
         }
@@ -838,8 +868,7 @@ class Estimates extends Security_Controller {
 
     function get_estimate_status_bar($estimate_id = 0) {
         validate_numeric_value($estimate_id);
-        $this->access_only_allowed_members();
-        $this->can_access_this_estimate($estimate_id);
+        $this->validate_estimate_access($estimate_id);
 
         $view_data["estimate_info"] = $this->Estimates_model->get_details(array("id" => $estimate_id))->getRow();
         $view_data['estimate_status_label'] = $this->_get_estimate_status_label($view_data["estimate_info"]);
@@ -847,8 +876,7 @@ class Estimates extends Security_Controller {
     }
 
     function send_estimate_modal_form($estimate_id) {
-        $this->access_only_allowed_members();
-        $this->can_access_this_estimate($estimate_id);
+        $this->validate_estimate_access($estimate_id);
 
         if ($estimate_id) {
             validate_numeric_value($estimate_id);
@@ -864,13 +892,12 @@ class Estimates extends Security_Controller {
             }
 
             $contacts = $this->Users_model->get_details($contacts_options)->getResult();
-            $contact_first_name = "";
-            $contact_last_name = "";
+
+            $primary_contact_info = "";
             $contacts_dropdown = array();
             foreach ($contacts as $contact) {
                 if ($contact->is_primary_contact) {
-                    $contact_first_name = $contact->first_name;
-                    $contact_last_name = $contact->last_name;
+                    $primary_contact_info = $contact;
                     $contacts_dropdown[$contact->id] = $contact->first_name . " " . $contact->last_name . " (" . app_lang("primary_contact") . ")";
                 }
             }
@@ -883,21 +910,10 @@ class Estimates extends Security_Controller {
 
             $view_data['contacts_dropdown'] = $contacts_dropdown;
 
-            $email_template = $this->Email_templates_model->get_final_template("estimate_sent");
-
-            $parser_data["ESTIMATE_ID"] = $estimate_info->id;
-            $parser_data["PUBLIC_ESTIMATE_URL"] = get_uri("estimate/preview/" . $estimate_info->id . "/" . $estimate_info->public_key);
-            $parser_data["CONTACT_FIRST_NAME"] = $contact_first_name;
-            $parser_data["CONTACT_LAST_NAME"] = $contact_last_name;
-            $parser_data["PROJECT_TITLE"] = $estimate_info->project_title;
-            $parser_data["ESTIMATE_URL"] = get_uri("estimates/preview/" . $estimate_info->id);
-            $parser_data['SIGNATURE'] = $email_template->signature;
-            $parser_data["LOGO_URL"] = get_logo_url();
-
-            $message = $this->parser->setData($parser_data)->renderString($email_template->message);
-            $subject = $this->parser->setData($parser_data)->renderString($email_template->subject);
-            $view_data['message'] = htmlspecialchars_decode($message);
-            $view_data['subject'] = htmlspecialchars_decode($subject);
+            $template_data = $this->get_send_estimate_template($estimate_id, 0, "", $estimate_info, $primary_contact_info);
+            $view_data['message'] = get_array_value($template_data, "message");
+            $view_data['subject'] = get_array_value($template_data, "subject");
+            $view_data['user_language'] = get_array_value($template_data, "user_language");
 
             return $this->template->view('estimates/send_estimate_modal_form', $view_data);
         } else {
@@ -905,15 +921,65 @@ class Estimates extends Security_Controller {
         }
     }
 
-    function send_estimate() {
+    function get_send_estimate_template($estimate_id = 0, $contact_id = 0, $return_type = "", $estimate_info = "", $contact_info = "") {
         $this->access_only_allowed_members();
+        $this->can_access_this_estimate($estimate_id);
+
+        validate_numeric_value($estimate_id);
+        validate_numeric_value($contact_id);
+
+        if (!$estimate_info) {
+            $options = array("id" => $estimate_id);
+            $estimate_info = $this->Estimates_model->get_details($options)->getRow();
+        }
+
+        if (!$contact_info) {
+            $contact_info = $this->Users_model->get_one($contact_id);
+        }
+
+        $contact_language = $contact_info->language;
+
+        $email_template = $this->Email_templates_model->get_final_template("estimate_sent", true);
+
+        $parser_data["ESTIMATE_ID"] = $estimate_info->id;
+        $parser_data["PUBLIC_ESTIMATE_URL"] = get_uri("estimate/preview/" . $estimate_info->id . "/" . $estimate_info->public_key);
+        $parser_data["CONTACT_FIRST_NAME"] = $contact_info->first_name;
+        $parser_data["CONTACT_LAST_NAME"] = $contact_info->last_name;
+        $parser_data["PROJECT_TITLE"] = $estimate_info->project_title;
+        $parser_data["ESTIMATE_URL"] = get_uri("estimates/preview/" . $estimate_info->id);
+        $parser_data['SIGNATURE'] = get_array_value($email_template, "signature_$contact_language") ? get_array_value($email_template, "signature_$contact_language") : get_array_value($email_template, "signature_default");
+        $parser_data["LOGO_URL"] = get_logo_url();
+        $parser_data["RECIPIENTS_EMAIL_ADDRESS"] = $contact_info->email;
+
+        $parser = \Config\Services::parser();
+
+        $message = get_array_value($email_template, "message_$contact_language") ? get_array_value($email_template, "message_$contact_language") : get_array_value($email_template, "message_default");
+        $subject = get_array_value($email_template, "subject_$contact_language") ? get_array_value($email_template, "subject_$contact_language") : get_array_value($email_template, "subject_default");
+
+        $message = $parser->setData($parser_data)->renderString($message);
+        $subject = $parser->setData($parser_data)->renderString($subject);
+        $message = htmlspecialchars_decode($message);
+        $subject = htmlspecialchars_decode($subject);
+
+        if ($return_type == "json") {
+            echo json_encode(array("success" => true, "message_view" => $message, "user_language" => $contact_language));
+        } else {
+            return array(
+                "message" => $message,
+                "subject" => $subject,
+                "user_language" => $contact_language
+            );
+        }
+    }
+
+    function send_estimate() {
 
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
         ));
 
         $estimate_id = $this->request->getPost('id');
-        $this->can_access_this_estimate($estimate_id);
+        $this->validate_estimate_access($estimate_id);
 
         $contact_id = $this->request->getPost('contact_id');
         $cc = $this->request->getPost('estimate_cc');
@@ -925,7 +991,23 @@ class Estimates extends Security_Controller {
         $contact = $this->Users_model->get_one($contact_id);
 
         $estimate_data = get_estimate_making_data($estimate_id);
+
+        //send pdf user language wise
+        $language = Services::language();
+        $user_language = $this->request->getPost('user_language');
+
+        $active_locale = $language->getLocale();
+
+        if ($user_language && $user_language !== $active_locale) {
+            $language->setLocale($user_language);
+        }
+
         $attachement_url = prepare_estimate_pdf($estimate_data, "send_email");
+
+        if ($user_language && $user_language !== $active_locale) {
+            // Reset to active locale
+            $language->setLocale($active_locale);
+        }
 
         $default_bcc = get_setting('send_estimate_bcc_to');
         $bcc_emails = "";
@@ -1114,6 +1196,33 @@ class Estimates extends Security_Controller {
             echo json_encode(array("success" => true, "print_view" => $this->template->view("estimates/print_estimate", $view_data)));
         } else {
             echo json_encode(array("success" => false, app_lang('error_occurred')));
+        }
+    }
+
+    /* load tasks tab  */
+
+    function tasks($estimate_id) {
+        $this->validate_estimate_access($estimate_id);
+
+        $view_data["estimate_id"] = $estimate_id;
+        $view_data["custom_field_headers_of_task"] = $this->Custom_fields_model->get_custom_field_headers_for_table("tasks", $this->login_user->is_admin, $this->login_user->user_type);
+
+        return $this->template->view("estimates/tasks/index", $view_data);
+    }
+
+    //prevent editing of estimate after certain state
+    private function _is_estimate_editable($_estimate, $is_clone = 0) {
+        if (get_setting("enable_estimate_lock_state")) {
+            $estimate_info = is_object($_estimate) ? $_estimate : $this->Estimates_model->get_one($_estimate);
+            if (!$estimate_info->id || $is_clone) {
+                return true;
+            }
+
+            if ($estimate_info->status != "accepted") {
+                return true;
+            }
+        } else {
+            return true;
         }
     }
 

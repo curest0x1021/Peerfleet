@@ -41,15 +41,7 @@ if (!function_exists("make_project_tabs_data")) {
                     <div class="page-title no-bg clearfix mb5 no-border">
                         <div>
                             <h1 class="pl0">
-                                <?php if ($project_info->status == "open") { ?>
-                                    <span title="<?php echo app_lang("open"); ?>"><i data-feather="grid" class='icon'></i></span>
-                                <?php } else if ($project_info->status == "completed") { ?>
-                                    <span title="<?php echo app_lang("completed"); ?>"><i data-feather="check-circle" class='icon'></i></span>
-                                <?php } else if ($project_info->status == "hold") { ?>
-                                    <span title="<?php echo app_lang("hold"); ?>"><i data-feather="pause-circle" class='icon'></i></span>
-                                <?php } else if ($project_info->status == "canceled") { ?>
-                                    <span title="<?php echo app_lang("canceled"); ?>"><i data-feather="x-circle" class='icon'></i></span>
-                                <?php } ?>
+                                <span title="<?php echo $project_info->title_language_key ? app_lang($project_info->title_language_key) : $project_info->status_title; ?>"><i data-feather="<?php echo $project_info->status_icon; ?>" class='icon'></i></span>
 
                                 <?php echo $project_info->title; ?>
 
@@ -79,8 +71,8 @@ if (!function_exists("make_project_tabs_data")) {
                             //default tab order
                             $project_tabs = array(
                                 "overview" => "projects/overview/" . $project_info->id,
-                                "tasks_list" => "projects/tasks/" . $project_info->id,
-                                "tasks_kanban" => "projects/tasks_kanban/" . $project_info->id,
+                                "tasks_list" => "tasks/project_tasks/" . $project_info->id,
+                                "tasks_kanban" => "tasks/project_tasks_kanban/" . $project_info->id,
                             );
 
                             if ($show_milestone_info) {
@@ -88,7 +80,7 @@ if (!function_exists("make_project_tabs_data")) {
                             }
 
                             if ($show_gantt_info) {
-                                $project_tabs["gantt"] = "projects/gantt/" . $project_info->id;
+                                $project_tabs["gantt"] = "tasks/gantt/" . $project_info->id;
                             }
 
                             if ($show_note_info) {
@@ -98,7 +90,7 @@ if (!function_exists("make_project_tabs_data")) {
                             $project_tabs["files"] = "projects/files/" . $project_info->id;
                             $project_tabs["comments"] = "projects/comments/" . $project_info->id;
 
-                            if ($project_info->project_type === "client_project" && ($login_user->is_admin || get_array_value($login_user->permissions, "client_feedback_access_permission"))) {
+                            if ($project_info->project_type === "client_project" && $show_customer_feedback) {
                                 $project_tabs["customer_feedback"] = "projects/customer_feedback/" . $project_info->id;
                             }
 
@@ -106,18 +98,18 @@ if (!function_exists("make_project_tabs_data")) {
                                 $project_tabs["timesheets"] = "projects/timesheets/" . $project_info->id;
                             }
 
-                            // if ($show_invoice_info && $project_info->project_type === "client_project") {
-                            //     $project_tabs["invoices"] = "projects/invoices/" . $project_info->id;
-                            //     $project_tabs["payments"] = "projects/payments/" . $project_info->id;
-                            // }
+                            if ($show_invoice_info && $project_info->project_type === "client_project") {
+                                $project_tabs["invoices"] = "projects/invoices/" . $project_info->id;
+                                $project_tabs["payments"] = "projects/payments/" . $project_info->id;
+                            }
 
-                            // if ($show_expense_info) {
-                            //     $project_tabs["expenses"] = "projects/expenses/" . $project_info->id;
-                            // }
+                            if ($show_expense_info) {
+                                $project_tabs["expenses"] = "projects/expenses/" . $project_info->id;
+                            }
 
-                            // if ($show_contract_info && $project_info->project_type === "client_project") {
-                            //     $project_tabs["contracts"] = "projects/contracts/" . $project_info->id;
-                            // }
+                            if ($show_contract_info && $project_info->project_type === "client_project") {
+                                $project_tabs["contracts"] = "projects/contracts/" . $project_info->id;
+                            }
 
                             if ($show_ticket_info && $project_info->project_type === "client_project") {
                                 $project_tabs["tickets"] = "projects/tickets/" . $project_info->id;
@@ -136,8 +128,8 @@ if (!function_exists("make_project_tabs_data")) {
                             );
 
                             if ($show_tasks) {
-                                $project_tabs["tasks_list"] = "projects/tasks/" . $project_info->id;
-                                $project_tabs["tasks_kanban"] = "projects/tasks_kanban/" . $project_info->id;
+                                $project_tabs["tasks_list"] = "tasks/project_tasks/" . $project_info->id;
+                                $project_tabs["tasks_kanban"] = "tasks/project_tasks_kanban/" . $project_info->id;
                             }
 
                             if ($show_files) {
@@ -151,21 +143,21 @@ if (!function_exists("make_project_tabs_data")) {
                             }
 
                             if ($show_gantt_info) {
-                                $project_tabs["gantt"] = "projects/gantt/" . $project_info->id;
+                                $project_tabs["gantt"] = "tasks/gantt/" . $project_info->id;
                             }
 
                             if ($show_timesheet_info) {
                                 $project_tabs["timesheets"] = "projects/timesheets/" . $project_info->id;
                             }
 
-                            // if (get_setting("module_invoice")) {
-                            //     //check left menu settings
-                            //     $left_menu = get_setting("user_" . $login_user->id . "_left_menu") ? get_setting("user_" . $login_user->id . "_left_menu") : get_setting("default_client_left_menu");
-                            //     $left_menu = $left_menu ? json_decode(json_encode(@unserialize($left_menu)), true) : false;
-                            //     if (!$left_menu || in_array("invoices", array_column($left_menu, "name"))) {
-                            //         $project_tabs["invoices"] = "projects/invoices/" . $project_info->id . "/" . $login_user->client_id;
-                            //     }
-                            // }
+                            if (get_setting("module_invoice")) {
+                                //check left menu settings
+                                $left_menu = get_setting("user_" . $login_user->id . "_left_menu") ? get_setting("user_" . $login_user->id . "_left_menu") : get_setting("default_client_left_menu");
+                                $left_menu = $left_menu ? json_decode(json_encode(@unserialize($left_menu)), true) : false;
+                                if (!$left_menu || in_array("invoices", array_column($left_menu, "name"))) {
+                                    $project_tabs["invoices"] = "projects/invoices/" . $project_info->id . "/" . $login_user->client_id;
+                                }
+                            }
 
                             $project_tabs_of_hook_of_client = array();
                             $project_tabs_of_hook_of_client = app_hooks()->apply_filters('app_filter_clients_project_details_tab', $project_tabs_of_hook_of_client, $project_info->id);
@@ -189,10 +181,10 @@ if (!function_exists("make_project_tabs_data")) {
                     <div role="tabpanel" class="tab-pane fade" id="project-customer_feedback-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-notes-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-timesheets-section"></div>
-                    <!-- <div role="tabpanel" class="tab-pane fade" id="project-invoices-section"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="project-invoices-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-payments-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-expenses-section"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="project-contracts-section"></div> -->
+                    <div role="tabpanel" class="tab-pane fade" id="project-contracts-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-tickets-section"></div>
 
                     <?php
@@ -219,7 +211,7 @@ if (!function_exists("make_project_tabs_data")) {
 //if we get any task parameter, we'll show the task details modal automatically
 $preview_task_id = get_array_value($_GET, 'task');
 if ($preview_task_id) {
-    echo modal_anchor(get_uri("projects/task_view"), "", array("id" => "preview_task_link", "title" => app_lang('task_info') . " #$preview_task_id", "data-post-id" => $preview_task_id, "data-modal-lg" => "1"));
+    echo modal_anchor(get_uri("tasks/view"), "", array("id" => "preview_task_link", "title" => app_lang('task_info') . " #$preview_task_id", "data-post-id" => $preview_task_id, "data-modal-lg" => "1"));
 }
 ?>
 
@@ -265,5 +257,5 @@ load_js(array(
     });
 </script>
 
-<?php echo view("projects/tasks/batch_update/batch_update_script"); ?>
-<?php echo view("projects/tasks/sub_tasks_helper_js"); ?>
+<?php echo view("tasks/batch_update/batch_update_script"); ?>
+<?php echo view("tasks/sub_tasks_helper_js"); ?>

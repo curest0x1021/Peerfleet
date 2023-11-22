@@ -66,7 +66,7 @@
                 {
                     title: "<?php echo app_lang("iridium_phone") ?>",
                     "class": "w100",
-                    order_by: "alternative_phone"
+                    order_by: "mobile"
                 },
                 {
                     title: '<i data-feather="menu" class="icon-16"></i>',

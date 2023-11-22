@@ -106,6 +106,17 @@
                 </div>
             <?php } ?>
 
+<!--            <div class="form-group">
+                <div class="row">
+                    <label for="taxable" class=" col-md-3 col-xs-5 col-sm-4"><?php //echo app_lang('taxable'); ?></label>
+                    <div class=" col-md-9 col-xs-7 col-sm-8">
+                        <?php
+                       // echo form_checkbox("taxable", "1", $model_info->taxable ? true : false, "id='taxable' class='form-check-input'");
+                        ?>                       
+                    </div>
+                </div>
+            </div>-->
+
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-12 row pr0">

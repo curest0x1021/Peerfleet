@@ -56,7 +56,7 @@
     </div>
 </div>
 <style type="text/css">
-    .datatable-tools:first-child {
+    .filter-section-container {
         display:  none;
     }
 </style>

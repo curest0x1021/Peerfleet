@@ -77,7 +77,7 @@ class Subscriptions_model extends Crud_model {
         $join_custom_fieds = get_array_value($custom_field_query_info, "join_string");
         $custom_fields_where = get_array_value($custom_field_query_info, "where_string");
 
-        $sql = "SELECT $subscriptions_table.*, $clients_table.currency, $clients_table.currency_symbol, $clients_table.company_name, 
+        $sql = "SELECT $subscriptions_table.*, $clients_table.currency, $clients_table.currency_symbol, $clients_table.charter_name, 
            $subscription_value_calculation AS subscription_value, tax_table.percentage AS tax_percentage, tax_table.stripe_tax_id AS stripe_tax_id, tax_table2.percentage AS tax_percentage2, tax_table2.stripe_tax_id AS stripe_tax_id2, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS cancelled_by_user, $select_labels_data_query $select_custom_fieds
         FROM $subscriptions_table
         LEFT JOIN $clients_table ON $clients_table.id= $subscriptions_table.client_id
@@ -119,6 +119,7 @@ class Subscriptions_model extends Crud_model {
         $result->tax_percentage2 = $subscription->tax_percentage2;
         $result->tax_name = $subscription->tax_name;
         $result->tax_name2 = $subscription->tax_name2;
+        $result->bill_date = $subscription->bill_date;
         $result->tax = 0;
         $result->tax2 = 0;
 

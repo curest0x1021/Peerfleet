@@ -1,155 +1,20 @@
 <div id="kanban-wrapper">
-    <?php
-    $columns_data = array();
-
-    $show_in_kanban = get_setting("show_in_kanban");
-    $show_in_kanban_items = explode(',', $show_in_kanban);
-    $timeline_file_path = get_setting("timeline_file_path");
-
-    foreach ($tasks as $task) {
-
-        $exising_items = get_array_value($columns_data, $task->status_id);
-        if (!$exising_items) {
-            $exising_items = "";
-        }
-
-        $task_labels = "";
-        $task_checklist_status = "";
-        $checklist_label_color = "#6690F4";
-
-        if ($task->total_checklist_checked <= 0) {
-            $checklist_label_color = "#E18A00";
-        } else if ($task->total_checklist_checked == $task->total_checklist) {
-            $checklist_label_color = "#01B392";
-        }
-
-        if ($task->priority_id) {
-            $task_labels .= "<div class='meta float-start mr5'><span class='sub-task-icon priority-badge' data-bs-toggle='tooltip' title='" . app_lang("priority") . ": " . $task->priority_title . "' style='background: $task->priority_color'><i data-feather='$task->priority_icon' class='icon-14'></i></span></div>";
-        }
-
-        if ($task->total_checklist) {
-            $task_checklist_status .= "<div class='meta float-start badge rounded-pill mr5' style='background-color:$checklist_label_color'><span data-bs-toggle='tooltip' title='" . app_lang("checklist_status") . "'><i data-feather='check' class='icon-14'></i> $task->total_checklist_checked/$task->total_checklist</span></div>";
-        }
-
-        $task_labels_data = make_labels_view_data($task->labels_list);
-        $sub_task_icon = "";
-        if ($task->parent_task_id) {
-            $sub_task_icon = "<span class='sub-task-icon mr5' title='" . app_lang("sub_task") . "'><i data-feather='git-merge' class='icon-14'></i></span>";
-        }
-
-        if ($task_labels_data) {
-            $task_labels .= "<div class='meta float-start mr5'>$task_labels_data</div>";
-        }
-
-        $unread_comments_class = "";
-        if (isset($task->unread) && $task->unread && $task->unread != "0") {
-            $unread_comments_class = "unread-comments-of-kanban unread";
-        }
-
-        $batch_operation_checkbox = "";
-        if ($login_user->user_type == "staff" && $can_edit_tasks && $project_id) {
-            $batch_operation_checkbox = "<span data-act='batch-operation-task-checkbox' title='" . app_lang("batch_update") . "' class='checkbox-blank-sm float-end invisible'></span>";
-        }
-
-        $toggle_sub_task_icon = "";
-
-        if ($task->has_sub_tasks) {
-            $toggle_sub_task_icon = "<span class='filter-sub-task-kanban-button clickable float-end ml5' title='" . app_lang("show_sub_tasks") . "' main-task-id= '#$task->id'><i data-feather='filter' class='icon-14'></i></span>";
-        }
-
-        $disable_dragging = can_edit_this_task_status($task->assigned_to) ? "" : "disable-dragging";
-
-        //custom fields to show in kanban
-        $kanban_custom_fields_data = "";
-        $kanban_custom_fields = get_custom_variables_data("tasks", $task->id, $login_user->is_admin);
-        if ($kanban_custom_fields) {
-            foreach ($kanban_custom_fields as $kanban_custom_field) {
-                $kanban_custom_fields_data .= "<div class='mt5 font-12'>" . get_array_value($kanban_custom_field, "custom_field_title") . ": " . view("custom_fields/output_" . get_array_value($kanban_custom_field, "custom_field_type"), array("value" => get_array_value($kanban_custom_field, "value"))) . "</div>";
-            }
-        }
-
-        $start_date = "";
-        if ($task->start_date) {
-            $start_date = "<div class='mt10 font-12 float-start' title='" . app_lang("start_date") . "'><i data-feather='calendar' class='icon-14 text-off mr5'></i> " . format_to_date($task->start_date, false) . "</div>";
-        }
-
-        $deadline_text = "-";
-        if ($task->deadline && is_date_exists($task->deadline)) {
-            $deadline_text = format_to_date($task->deadline, false);
-            if (get_my_local_time("Y-m-d") > $task->deadline && $task->status_id != "3") {
-                $deadline_text = "<span class='text-danger'>" . $deadline_text . "</span> ";
-            } else if (get_my_local_time("Y-m-d") == $task->deadline && $task->status_id != "3") {
-                $deadline_text = "<span class='text-warning'>" . $deadline_text . "</span> ";
-            }
-        }
-
-        $end_date = "";
-        if ($task->deadline) {
-            $end_date = "<div class='mt10 font-12 float-end' title='" . app_lang("deadline") . "'><i data-feather='calendar' class='icon-14 text-off mr5'></i> " . $deadline_text . "</div>";
-        }
-
-        $task_id = "";
-        $parent_task_id = "";
-        if (in_array("id", $show_in_kanban_items)) {
-            $task_id = $task->id . ". ";
-            $parent_task_id = $task->parent_task_id . ". ";
-        }
-
-        $project_name = "";
-        if (in_array("project_name", $show_in_kanban_items)) {
-            $project_name = "<div class='clearfix mt5 text-truncate'><i data-feather='grid' class='icon-14 text-off mr5'></i> " . $task->project_title . "</div>";
-        }
-
-        $client_name = "";
-        if (in_array("client_name", $show_in_kanban_items) && $task->project_type == "client_project") {
-            $client_name = "<div class='clearfix mt5 text-truncate'><i data-feather='briefcase' class='icon-14 text-off mr5'></i> " . $task->client_name . "</div>";
-        }
-
-        $sub_task_status = "";
-        $sub_task_label_color = "#6690F4";
-
-        if ($task->total_sub_tasks_done <= 0) {
-            $sub_task_label_color = "#E18A00";
-        } else if ($task->total_sub_tasks_done == $task->total_sub_tasks) {
-            $sub_task_label_color = "#01B392";
-        }
-
-        if ($task->total_sub_tasks) {
-            $sub_task_status .= "<div class='meta float-start badge rounded-pill' style='background-color:$sub_task_label_color'><span data-bs-toggle='tooltip' title='" . app_lang("sub_task_status") . "'><i data-feather='git-merge' class='icon-14'></i> " . ($task->total_sub_tasks_done ? $task->total_sub_tasks_done : 0) . "/$task->total_sub_tasks</span></div>";
-        }
-
-        $parent_task = "";
-        if (in_array("parent_task", $show_in_kanban_items) && $task->parent_task_title) {
-            $parent_task = "<div class='mt5 text-truncate text-off'>" . $parent_task_id . $task->parent_task_title . "</div>";
-        }
-
-        $image = "";
-        $files = unserialize($task->files);
-        if ($files && count($files) > 0) {
-            $imageFiles = array_filter($files, function($k) {
-                return is_viewable_image_file($k["file_name"]);
-            });
-            if (count($imageFiles) > 0) {
-                $thumbnail = get_source_url_of_file($imageFiles[0], $timeline_file_path, "thumbnail");
-                $file_name = $imageFiles[0]["file_name"];
-                $image = "<img src='$thumbnail' alt='$file_name' style='width: 100%; height: 160px; object-fit: cover;'/>";
-            }
-        }
-
-        $item = $exising_items . modal_anchor(get_uri("projects/task_view"), "<span class='avatar'>" .
-                        "<img src='" . get_avatar($task->assigned_to_avatar) . "'>" .
-                        "</span>" . $sub_task_icon . $task_id . $task->title . $toggle_sub_task_icon . $batch_operation_checkbox . "<div class='clearfix'>" . $image . "</div>" .  "<div class='clearfix'>" . $start_date . $end_date . "</div>" . $project_name . $client_name . $kanban_custom_fields_data .
-                        $task_labels . $task_checklist_status . $sub_task_status . "<div class='clearfix'></div>" . $parent_task, array("class" => "kanban-item d-block $disable_dragging $unread_comments_class", "data-id" => $task->id, "data-project_id" => $task->project_id, "data-sort" => $task->new_sort, "data-post-id" => $task->id, "title" => app_lang('task_info') . " #$task->id", "data-modal-lg" => "1"));
-
-        $columns_data[$task->status_id] = $item;
-    }
-    ?>
-
     <ul id="kanban-container" class="kanban-container clearfix">
 
         <?php foreach ($columns as $column) { ?>
-            <li class="kanban-col kanban-<?php echo $column->id; ?>" >
-                <div class="kanban-col-title" style="border-bottom: 3px solid <?php echo $column->color ? $column->color : "#2e4053"; ?>;"> <?php echo $column->key_name ? app_lang($column->key_name) : $column->title; ?> <span class="<?php echo $column->id; ?>-task-count float-end"></span></div>
+            <li class="kanban-col kanban-<?php
+            echo $column->id;
+            $tasks_count = get_array_value($column_tasks_count, $column->id);
+            if (!$tasks_count) {
+                $tasks_count = 0;
+            }
+
+            $tasks = get_array_value($tasks_list, $column->id);
+            if (!$tasks) {
+                $tasks = array();
+            }
+            ?>" >
+                <div class="kanban-col-title" style="border-bottom: 3px solid <?php echo $column->color ? $column->color : "#2e4053"; ?>;"> <?php echo $column->key_name ? app_lang($column->key_name) : $column->title; ?> <span class="kanban-item-count <?php echo $column->id; ?>-task-count float-end"><?php echo $tasks_count; ?> </span></div>
 
                 <div class="kanban-input general-form hide">
                     <?php
@@ -164,7 +29,13 @@
                 </div>
 
                 <div  id="kanban-item-list-<?php echo $column->id; ?>" class="kanban-item-list" data-status_id="<?php echo $column->id; ?>">
-                    <?php echo get_array_value($columns_data, $column->id); ?>
+                    <?php
+                    echo view("projects/tasks/kanban/kanban_column_items", array(
+                        "tasks" => $tasks,
+                        "can_edit_tasks" > $can_edit_tasks,
+                        "project_id" > $project_id
+                    ));
+                    ?>
                 </div>
             </li>
         <?php } ?>
@@ -280,6 +151,20 @@
     };
 
 
+    setLoadmoreButton = function () {
+        $(".kanban-item-count").each(function () {
+            var count = $(this).html();
+
+            var $columnItems = $(this).closest(".kanban-col").find(".kanban-item-list").find("a.kanban-item");
+            if (count > $columnItems.length) {
+                $columnItems.closest(".kanban-item-list").addClass("js-load-more-on-scroll");
+            } else {
+                $columnItems.closest(".kanban-item-list").removeClass("js-load-more-on-scroll");
+            }
+
+        });
+    };
+
 
     $(document).ready(function () {
         kanbanContainerWidth = $("#kanban-container").width();
@@ -301,17 +186,26 @@
                     group: "kanban-item-list",
                     filter: ".disable-dragging",
                     cancel: ".disable-dragging",
-                    onAdd: function (e) {
+                    onAdd: function (e, x) {
                         //moved to another column. update bothe sort and status
-                        saveStatusAndSort($(e.item), $(e.item).closest(".kanban-item-list").attr("data-status_id"));
+                        var status_id = $(e.item).closest(".kanban-item-list").attr("data-status_id");
+                        saveStatusAndSort($(e.item), status_id);
 
-                        update_counts();
+                        var $countContainer = $("." + status_id + "-task-count");
+                        $countContainer.html($countContainer.html().trim() * 1 + 1);
+                        var $item = $(e.item);
+                        setTimeout(function () {
+                            $item.attr("data-status_id", status_id); //update status id in data.
+                        });
+                    },
+                    onRemove: function (e, x) {
+                        var status_id = $(e.item)[0].dataset.status_id;
+                        var $countContainer = $("." + status_id + "-task-count");
+                        $countContainer.html($countContainer.html().trim() * 1 - 1);
                     },
                     onUpdate: function (e) {
                         //updated sort
                         saveStatusAndSort($(e.item));
-
-                        update_counts();
                     }
                 };
 
@@ -338,23 +232,56 @@
         }
 
         adjustViewHeightWidth();
-
-        update_counts();
+        setLoadmoreButton();
 
         $('[data-bs-toggle="tooltip"]').tooltip();
 
+
+        $(".kanban-item-list").scroll(function () {
+            var $instance = $(this);
+            var status_id = $instance.data("status_id");
+            if ($instance.hasClass("js-load-more-on-scroll")) {
+                var scrollTop = $instance.scrollTop();
+                var columnHeight = $instance.get(0).scrollHeight - $instance.height();
+
+                if (scrollTop > columnHeight - 200) {
+                    //load more item once the scroll reach at to bootom (200px above)
+
+                    if (!$instance.find(".kanban-item-loading").length) {
+
+                        $instance.append("<div class='text-center kanban-item-loading'><div class='inline-loader' ></div></div>");
+
+                        var $lastChild = $instance.find("a.kanban-item").last();
+
+                        var filterParams = window.InstanceCollection["kanban-filters"].filterParams;
+
+                        var postData = $.extend({}, filterParams);
+                        postData.max_sort = $lastChild.data("sort") || 0;
+                        postData.kanban_column_id = status_id;
+
+                        $.ajax({
+                            url: window.InstanceCollection["kanban-filters"].source,
+                            type: 'POST',
+                            data: postData,
+                            success: function (response) {
+                                $instance.find(".kanban-item-loading").remove();
+                                $instance.append(response);
+                                setLoadmoreButton();
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
     });
 
-
-    function update_counts() {
-<?php foreach ($columns as $column) { ?>
-            $('.<?php echo $column->id; ?>-task-count').html($('.kanban-<?php echo $column->id; ?>').find('.kanban-item').length);
-<?php } ?>
-    }
 
     $(window).resize(function () {
         adjustViewHeightWidth();
     });
+
+
 
 </script>
 

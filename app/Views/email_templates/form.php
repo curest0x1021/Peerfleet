@@ -11,7 +11,7 @@
         ?>
         <div class="tab-title clearfix no-border">
             <div class="title-button-group">
-                <?php echo modal_anchor(get_uri("email_templates/add_template_modal_form/"), "<i data-feather='plus-circle' class='icon-16'></i> ", array("class" => "btn btn-default", "id" => "add-template-button", "title" => app_lang('add_template'), "data-post-template_name" => $model_info->template_name)); ?>
+                <?php echo modal_anchor(get_uri("email_templates/add_template_modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> ", array("class" => "btn btn-default", "id" => "add-template-button", "title" => app_lang('add_template'), "data-post-template_name" => $model_info->template_name)); ?>
             </div>
         </div>
     </ul>

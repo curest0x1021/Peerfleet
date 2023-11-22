@@ -21,7 +21,7 @@
             </li>
         <?php } else { ?>
             <li class="list-group-item border-top">
-                <?php echo app_lang("status"); ?>: <?php echo app_lang($project_info->status); ?>
+                <?php echo app_lang("status"); ?>: <?php echo $project_info->title_language_key ? app_lang($project_info->title_language_key) : $project_info->status_title; ?>
             </li>
         <?php } ?>
     </ul>

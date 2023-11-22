@@ -1,6 +1,6 @@
 <?php if (get_setting("enable_footer")) { ?>
 
-    <div class="footer p15 hidden-xs">
+    <div class="footer p15">
         <?php
         $footer_copyright_text = get_setting("footer_copyright_text");
         if ($footer_copyright_text) {

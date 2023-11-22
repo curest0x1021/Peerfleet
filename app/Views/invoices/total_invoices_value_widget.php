@@ -29,6 +29,12 @@ if ($type == "invoices") {
     $icon = "file-text";
     $value = to_currency($invoices_info->draft_total);
     $link = get_uri('invoices/index');
+} else if ($type == "draft_count") {
+    $lang = app_lang("draft_invoices");
+    $card = "bg-orange";
+    $icon = "file-text";
+    $value = $invoices_info->draft_count;
+    $link = get_uri('invoices/index');
 }
 ?>
 

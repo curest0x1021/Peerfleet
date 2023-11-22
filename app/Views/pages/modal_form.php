@@ -66,10 +66,33 @@
                 </div>
             </div>
         </div>
+        
         <div class="form-group">
             <div class="row">
-                <label for="internal_use_only" class=" col-md-4"><?php echo app_lang('internal_use_only'); ?></label>
-                <div class=" col-md-8">
+                <label for="hide_topbar" class=" col-md-2"><?php echo app_lang('hide_topbar'); ?></label>
+                <div class=" col-md-10">
+                    <?php
+                    echo form_checkbox("hide_topbar", "1", $model_info->hide_topbar ? true : false, "id='hide_topbar' class='form-check-input'");
+                    ?>                       
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="row">
+                <label for="full_width" class=" col-md-2"><?php echo app_lang('full_width'); ?></label>
+                <div class=" col-md-10">
+                    <?php
+                    echo form_checkbox("full_width", "1", $model_info->full_width ? true : false, "id='full_width' class='form-check-input'");
+                    ?>                       
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="row">
+                <label for="internal_use_only" class=" col-md-2"><?php echo app_lang('internal_use_only'); ?></label>
+                <div class=" col-md-10">
                     <?php
                     echo form_checkbox("internal_use_only", "1", $model_info->internal_use_only ? true : false, "id='internal_use_only' class='form-check-input'");
                     ?>                       
@@ -79,8 +102,8 @@
         <div class="<?php echo $model_info->internal_use_only ? "" : "hide"; ?>" id="page-visible-to-area">
             <div class="form-group <?php echo $model_info->visible_to_clients_only ? "hide" : ""; ?>" id="visible_to_team_members_only_area">
                 <div class="row">
-                    <label for="visible_to_team_members_only" class=" col-md-4"><?php echo app_lang('visible_to_team_members_only'); ?></label>
-                    <div class=" col-md-8">
+                    <label for="visible_to_team_members_only" class=" col-md-2"><?php echo app_lang('visible_to_team_members_only'); ?></label>
+                    <div class=" col-md-10">
                         <?php
                         echo form_checkbox("visible_to_team_members_only", "1", $model_info->visible_to_team_members_only ? true : false, "id='visible_to_team_members_only' class='form-check-input'");
                         ?>                       
@@ -89,8 +112,8 @@
             </div> 
             <div class="form-group <?php echo $model_info->visible_to_team_members_only ? "hide" : ""; ?>" id="visible_to_clients_only_area">
                 <div class="row">
-                    <label for="visible_to_clients_only" class=" col-md-4"><?php echo app_lang('visible_to_clients_only'); ?></label>
-                    <div class=" col-md-8">
+                    <label for="visible_to_clients_only" class=" col-md-2"><?php echo app_lang('visible_to_clients_only'); ?></label>
+                    <div class=" col-md-10">
                         <?php
                         echo form_checkbox("visible_to_clients_only", "1", $model_info->visible_to_clients_only ? true : false, "id='visible_to_clients_only' class='form-check-input'");
                         ?>                       
@@ -98,6 +121,9 @@
                 </div>
             </div> 
         </div>
+        
+        
+        
     </div>
 </div>
 

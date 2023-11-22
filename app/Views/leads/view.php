@@ -9,7 +9,7 @@
                     <div class="title-button-group mr0">
                         <?php
                         if (can_access_reminders_module()) {
-                            echo modal_anchor(get_uri("events/reminders"), "<i data-feather='clock' class='icon-16'></i> " . app_lang('reminders'), array("class" => "btn btn-default mr10", "id" => "reminder-icon", "data-post-lead_id" => $lead_info->id, "title" => app_lang('reminders') . " (" . app_lang('private') . ")"));
+                            echo modal_anchor(get_uri("events/reminders"), "<i data-feather='clock' class='icon-16'></i> " . app_lang('reminders'), array("class" => "btn btn-default mr10", "id" => "reminder-icon", "data-post-lead_id" => $lead_info->id, "data-post-reminder_view_type" => "client", "lead" => app_lang('reminders') . " (" . app_lang('private') . ")"));
                         }
                         ?>
                         <?php echo modal_anchor(get_uri("leads/make_client_modal_form/") . $lead_info->id, "<i data-feather='briefcase' class='icon-16'></i> " . app_lang('make_client'), array("class" => "btn btn-primary float-end mr15", "title" => app_lang('make_client'))); ?>
@@ -19,7 +19,9 @@
                 <ul data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs" role="tablist">
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leads/contacts/" . $lead_info->id); ?>" data-bs-target="#lead-contacts"> <?php echo app_lang('contacts'); ?></a></li>
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leads/company_info_tab/" . $lead_info->id); ?>" data-bs-target="#lead-info"> <?php echo app_lang('lead_info'); ?></a></li>
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leads/tasks/" . $lead_info->id); ?>" data-bs-target="#lead-tasks"><?php echo app_lang('tasks'); ?></a></li>
 
+                    
                     <?php if ($show_estimate_info) { ?>
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leads/estimates/" . $lead_info->id); ?>" data-bs-target="#lead-estimates"> <?php echo app_lang('estimates'); ?></a></li>
                     <?php } ?>
@@ -44,6 +46,7 @@
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("leads/events/" . $lead_info->id); ?>" data-bs-target="#lead-events"> <?php echo app_lang('events'); ?></a></li>
                     <?php } ?>
 
+           
                     <?php
                     $hook_tabs = array();
                     $hook_tabs = app_hooks()->apply_filters('app_filter_lead_details_ajax_tab', $hook_tabs, $lead_info->id);
@@ -66,6 +69,7 @@
                     <div role="tabpanel" class="tab-pane fade" id="lead-estimate-requests"></div>
                     <div role="tabpanel" class="tab-pane fade" id="lead-tickets"></div>
                     <div role="tabpanel" class="tab-pane fade" id="lead-notes"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="lead-tasks"></div>
                     <div role="tabpanel" class="tab-pane" id="lead-events" style="min-height: 300px"></div>
                     <?php foreach ($hook_tabs as $hook_tab) { ?>
                         <div role="tabpanel" class="tab-pane fade" id="<?php echo get_array_value($hook_tab, 'target') ?>"></div>

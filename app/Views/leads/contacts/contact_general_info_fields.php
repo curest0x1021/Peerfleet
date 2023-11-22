@@ -77,13 +77,13 @@
 </div>
 <div class="form-group">
     <div class="row">
-        <label for="skype" class="<?php echo $label_column; ?>">Skype</label>
+        <label for="linkedin" class="<?php echo $label_column; ?>">Skype</label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_input(array(
-                "id" => "skype",
-                "name" => "skype",
-                "value" => $model_info->skype ? $model_info->skype : "",
+                "id" => "linkedin",
+                "name" => "linkedin",
+                "value" => $model_info->linkedin ? $model_info->linkedin : "",
                 "class" => "form-control",
                 "placeholder" => "Skype"
             ));

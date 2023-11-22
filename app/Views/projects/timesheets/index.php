@@ -43,12 +43,20 @@
             endTimeVisibility = false;
 <?php } ?>
 
+        var filterDropdown = [];
+
+<?php if ($show_members_dropdown) { ?>
+            filterDropdown.push({name: "user_id", class: "w200", options: <?php echo $project_members_dropdown; ?>});
+<?php } ?>
+        filterDropdown.push({name: "task_id", class: "w200", options: <?php echo $tasks_dropdown; ?>});
+        filterDropdown.push(<?php echo $custom_field_filters; ?>);
+
         $("#project-timesheet-table").appTable({
             source: '<?php echo_uri("projects/timesheet_list_data/") ?>',
             filterParams: {project_id: "<?php echo $project_id; ?>"},
             order: [[3, "desc"]],
-            filterDropdown: [{name: "user_id", class: "w200", options: <?php echo $project_members_dropdown; ?>}, {name: "task_id", class: "w200", options: <?php echo $tasks_dropdown; ?>}, <?php echo $custom_field_filters; ?>],
-            rangeDatepicker: [{startDate: {name: "start_date", value: ""}, endDate: {name: "end_date", value: ""}, showClearButton: true}],
+            filterDropdown: filterDropdown,
+            rangeDatepicker: [{startDate: {name: "start_date", value: ""}, endDate: {name: "end_date", value: ""}, showClearButton: true, label: "<?php echo app_lang('date'); ?>", ranges: ['this_month', 'last_month', 'this_year', 'last_year', 'last_30_days', 'last_7_days']}],
             columns: [
                 {title: "<?php echo app_lang('member') ?>", order_by: "member_name"},
                 {visible: false, searchable: false},

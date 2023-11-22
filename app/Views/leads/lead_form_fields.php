@@ -248,6 +248,23 @@
     </div>
 <?php } ?>
 
+<div class="form-group">
+    <div class="row">
+        <label for="lead_labels" class="<?php echo $label_column; ?>"><?php echo app_lang('labels'); ?></label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_input(array(
+                "id" => "lead_labels",
+                "name" => "labels",
+                "value" => $model_info->labels,
+                "class" => "form-control",
+                "placeholder" => app_lang('labels')
+            ));
+            ?>
+        </div>
+    </div>
+</div>
+
 <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => $label_column, "field_column" => $field_column)); ?> 
 
 <script type="text/javascript">
@@ -262,6 +279,8 @@
 <?php } ?>
 
         $('#owner_id').select2({data: <?php echo json_encode($owners_dropdown); ?>});
+
+        $("#lead_labels").select2({multiple: true, data: <?php echo json_encode($label_suggestions); ?>});
 
     });
 </script>

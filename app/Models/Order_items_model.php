@@ -24,9 +24,19 @@ class Order_items_model extends Crud_model {
         }
 
         $created_by = $this->_get_clean_value($options, "created_by");
+        $created_by_hash = $this->_get_clean_value($options, "created_by_hash");
+        $created_by_where = "";
         if ($created_by) {
-            $where .= " AND $order_items_table.created_by=$created_by";
+            $created_by_where = " AND $order_items_table.created_by=$created_by ";
+        } else if ($created_by_hash) {
+            $created_by_where = " AND $order_items_table.created_by_hash='$created_by_hash' ";
         }
+
+        if ($created_by && $created_by_hash) {
+            $created_by_where = " AND ($order_items_table.created_by=$created_by OR $order_items_table.created_by_hash='$created_by_hash') ";
+        }
+
+        $where .= $created_by_where;
 
         $order_id = $this->_get_clean_value($options, "order_id");
         if ($order_id) {
@@ -34,7 +44,7 @@ class Order_items_model extends Crud_model {
         }
 
         $processing = $this->_get_clean_value($options, "processing");
-        if ($processing && $created_by) {
+        if ($processing && ($created_by || $created_by_hash)) {
             $where .= " AND $order_items_table.order_id=0";
         }
 

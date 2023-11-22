@@ -35,10 +35,6 @@
             <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/general_info/" . $user_info->id); ?>" data-bs-target="#tab-general-info"> <?php echo app_lang('general_info'); ?></a></li>
         <?php } ?>
 
-        <?php if ($show_general_info) { ?>
-            <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/social_links/" . $user_info->id); ?>" data-bs-target="#tab-social-links"> <?php echo app_lang('social_links'); ?></a></li>
-        <?php } ?>
-
         <?php if ($show_job_info) { ?>
             <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/job_info/" . $user_info->id); ?>" data-bs-target="#tab-job-info"> <?php echo app_lang('job_info'); ?></a></li>
         <?php } ?>
@@ -64,6 +60,17 @@
 
         <?php if ($show_attendance) { ?>
             <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/attendance_info/" . $user_info->id); ?>" data-bs-target="#tab-attendance-info"> <?php echo app_lang('attendance'); ?></a></li>
+        <?php } ?>
+
+        <?php if ($show_leave) { ?>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/leave_info/" . $user_info->id); ?>" data-bs-target="#tab-leave-info"><?php echo app_lang('leaves'); ?></a></li>
+        <?php } ?>
+        <?php if ($show_expense_info) { ?>
+            <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/expense_info/" . $user_info->id); ?>" data-bs-target="#tab-expense-info"><?php echo app_lang('expenses'); ?></a></li>
+        <?php } ?>
+
+        <?php if ($show_notes) { ?>
+            <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("team_members/notes/" . $user_info->id); ?>" data-bs-target="#tab-notes"> <?php echo app_lang('notes'); ?></a></li>
         <?php } ?>
 
         <?php
@@ -92,6 +99,9 @@
         <div role="tabpanel" class="tab-pane fade" id="tab-user-left-menu"></div>
         <div role="tabpanel" class="tab-pane fade" id="tab-projects-info"></div>
         <div role="tabpanel" class="tab-pane fade" id="tab-attendance-info"></div>
+        <div role="tabpanel" class="tab-pane fade" id="tab-leave-info"></div>
+        <div role="tabpanel" class="tab-pane fade" id="tab-expense-info"></div>
+        <div role="tabpanel" class="tab-pane fade" id="tab-notes"></div>
         <?php
         foreach ($hook_tabs as $hook_tab) {
             ?>

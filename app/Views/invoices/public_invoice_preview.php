@@ -9,7 +9,7 @@
 
     <div class="invoice-preview">
         <?php if ($invoice_total_summary->balance_due >= 1 && count($payment_methods) && !$client_info->disable_online_payment) { ?>
-            <div class="card d-block p15 no-border clearfix pb0">
+            <div class="card d-block p15 no-border clearfix invoice-payment-button pb0">
                 <div class="inline-block strong float-start pt5 pr15">
                     <?php echo app_lang("pay_invoice"); ?>:
                 </div>

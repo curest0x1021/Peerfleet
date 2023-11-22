@@ -4,10 +4,14 @@ $can_order = false;
 //load cart ui if order module is enabled
 //and if the user is client or permitted member
 if (get_setting("module_order")) {
-    $permissions = $login_user->permissions;
-    if ($login_user->user_type === "staff" && ($login_user->is_admin || get_array_value($permissions, "order"))) {
-        $can_order = true;
-    } else if ($login_user->user_type === "client" && get_setting("client_can_access_store")) {
+    if (isset($login_user->id)) {
+        $permissions = $login_user->permissions;
+        if ($login_user->user_type === "staff" && ($login_user->is_admin || get_array_value($permissions, "order"))) {
+            $can_order = true;
+        } else if ($login_user->user_type === "client" && get_setting("client_can_access_store")) {
+            $can_order = true;
+        }
+    } else if (get_setting("visitors_can_see_store_before_login")) {
         $can_order = true;
     }
 }
@@ -100,7 +104,7 @@ if ($can_order) {
                     deleteCartItem($itemRow, itemId);
                 } else {
                     $.ajax({
-                        url: "<?php echo get_uri('items/change_cart_item_quantity'); ?>",
+                        url: "<?php echo get_uri('store/change_cart_item_quantity'); ?>",
                         cache: false,
                         type: 'POST',
                         data: {action: action, id: itemId},
@@ -129,7 +133,7 @@ if ($can_order) {
         function deleteCartItem($itemRow, itemId) {
             if (itemId) {
                 $.ajax({
-                    url: "<?php echo get_uri('items/delete_cart_item'); ?>",
+                    url: "<?php echo get_uri('store/delete_cart_item'); ?>",
                     cache: false,
                     type: 'POST',
                     data: {id: itemId},
@@ -198,7 +202,7 @@ if ($can_order) {
             appLoader.show({container: "#js-rise-cart-wrapper", css: "bottom: 31%; right: 41%;"});
 
             $.ajax({
-                url: "<?php echo get_uri("items/load_cart_items"); ?>",
+                url: "<?php echo get_uri("store/load_cart_items"); ?>",
                 success: function (response) {
                     $("#js-rise-cart-wrapper").html(response);
                     appLoader.hide();
@@ -209,7 +213,7 @@ if ($can_order) {
         //count total items in the cart for the login client user
         window.countCartItems = function () {
             $.ajax({
-                url: "<?php echo get_uri('items/count_cart_items'); ?>",
+                url: "<?php echo get_uri('store/count_cart_items'); ?>",
                 cache: false,
                 type: 'POST',
                 dataType: 'json',

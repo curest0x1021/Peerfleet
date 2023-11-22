@@ -120,12 +120,15 @@ if ($total_invoices) {
                     <div class="row">
                         <div class='col-md-5 col-5 ps-4'>
                             <div><?php echo app_lang("total_invoiced"); ?></div>
-                            <div class="strong mt10"><?php echo to_currency($invoices_info->invoices_total, $currency_symbol); ?></div>
+                            <div class="strong"><?php echo to_currency($invoices_info->invoices_total, $currency_symbol); ?></div>
+
+                            <div class="mt10"><?php echo app_lang("due"); ?></div>
+                            <div class="strong "><?php echo to_currency($invoices_info->due, $currency_symbol); ?></div>
                         </div>
                         <div class="col-md-7 col-7">
                             <div><?php echo app_lang("last_12_months"); ?></div>
                             <div class="invoice-line-chart-container">
-                                <canvas id="invoice-overview-chart" style="width: 100%; height: 60px;"></canvas>
+                                <canvas id="invoice-overview-chart" style="width: 100%; height: 70px;"></canvas>
                             </div>
                         </div>
                     </div>

@@ -25,7 +25,13 @@ class Pages_model extends Crud_model {
 
         $slug = $this->_get_clean_value($options, "slug");
         if ($slug) {
-            $where = " AND $pages_table.slug='$slug'";
+            $where .= " AND $pages_table.slug='$slug'";
+        }
+
+
+        $status = $this->_get_clean_value($options, "status");
+        if ($status) {
+            $where .= " AND $pages_table.status='$status'";
         }
 
         $sql = "SELECT $pages_table.*
@@ -42,5 +48,4 @@ class Pages_model extends Crud_model {
             return false;
         }
     }
-
 }

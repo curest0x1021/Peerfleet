@@ -6,7 +6,7 @@
     ?>
 
     <div class="invoice-preview">
-        <?php if ($login_user->user_type === "client" && $invoice_total_summary->balance_due >= 1 && count($payment_methods) && !$client_info->disable_online_payment) { ?>
+        <?php if ($login_user->user_type === "client" && $invoice_total_summary->balance_due >= 1 && count($payment_methods) && !$client_info->disable_online_payment && $invoice_info->status !== "credited" && $invoice_info->status !== "cancelled") { ?>
             <div class="card d-block p15 no-border clearfix invoice-payment-button pb-0">
                 <div class="inline-block strong float-start pt5 pr15">
                     <?php echo app_lang("pay_invoice"); ?>:
@@ -65,13 +65,14 @@
         ?>
 
         <div id="invoice-preview" class="invoice-preview-container bg-white mt15">
-            <div class="row">
-                <div class="col-md-12 position-relative">
-                    <div class="ribbon"><?php echo $invoice_status_label; ?></div>
+            <?php if ($invoice_info->type == "invoice") { ?>
+                <div class="row">
+                    <div class="col-md-12 position-relative">
+                        <div class="ribbon"><?php echo $invoice_status_label; ?></div>
+                    </div>
                 </div>
-            </div>
-
-            <?php
+                <?php
+            }
             echo $invoice_preview;
             ?>
         </div>

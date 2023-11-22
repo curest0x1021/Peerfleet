@@ -7,22 +7,23 @@
         $("#all-timesheet-summary-table").appTable({
             source: '<?php echo_uri("projects/timesheet_summary_list_data/"); ?>',
             filterDropdown: [
+                {name: "group_by", class: "w200", options: <?php echo $group_by_dropdown; ?>},
                 {name: "user_id", class: "w200", options: <?php echo $members_dropdown; ?>},
                 {name: "project_id", class: "w200", options: <?php echo $projects_dropdown; ?>, dependency: ["client_id"], dataSource: '<?php echo_uri("projects/get_projects_of_selected_client_for_filter") ?>', selfDependency: true}, //projects are dependent on client. but we have to show all projects, if there is no selected client
 <?php if ($login_user->is_admin || get_array_value($login_user->permissions, "client")) { ?>
                     {name: "client_id", class: "w200", options: <?php echo $clients_dropdown; ?>, dependent: ["project_id"]}, //reset projects on changing of client
 <?php } ?>
-                {name: "group_by", class: "w200", options: <?php echo $group_by_dropdown; ?>},
+               
                 <?php echo $custom_field_filters; ?>
             ],
-            rangeDatepicker: [{startDate: {name: "start_date", value: moment().format("YYYY-MM-DD")}, endDate: {name: "end_date", value: moment().format("YYYY-MM-DD")}, showClearButton: true}],
+            rangeDatepicker: [{startDate: {name: "start_date", value: moment().format("YYYY-MM-DD")}, endDate: {name: "end_date", value: moment().format("YYYY-MM-DD")}, showClearButton: true, label: "<?php echo app_lang('date'); ?>", ranges: ['this_month', 'last_month', 'this_year', 'last_year', 'last_30_days', 'last_7_days']}],
             columns: [
-                {title: "<?php echo app_lang("project"); ?>"},
+                {title: "<?php echo app_lang('project'); ?>"},
                 {title: "<?php echo app_lang('client') ?>"},
-                {title: "<?php echo app_lang("member"); ?>"},
-                {title: "<?php echo app_lang("task"); ?>"},
-                {title: "<?php echo app_lang("duration"); ?>", "class": "w15p text-right"},
-                {title: "<?php echo app_lang("hours"); ?>", "class": "w15p  text-right"}
+                {title: "<?php echo app_lang('member'); ?>"},
+                {title: "<?php echo app_lang('task'); ?>"},
+                {title: "<?php echo app_lang('duration'); ?>", "class": "w15p text-right"},
+                {title: "<?php echo app_lang('hours'); ?>", "class": "w15p  text-right"}
             ],
             printColumns: [0, 1, 2, 3, 4, 5],
             xlsColumns: [0, 1, 2, 3, 4, 5],

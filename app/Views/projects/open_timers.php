@@ -47,7 +47,7 @@
             <?php if (!$timer->task_id) { ?>
                 <div class="pt5"> <i data-feather='grid' class='icon-16'></i> <?php echo anchor("projects/view/" . $timer->project_id, $timer->project_title, array("class" => "dark")); ?></div>
             <?php } else { ?>
-                <div class="pt5"> <i data-feather='list' class='icon-16'></i> <?php echo modal_anchor(get_uri("projects/task_view"), $timer->task_title, array("title" => app_lang('task_info') . " #$timer->task_id", "class" => "dark", "data-post-id" => $timer->task_id, "data-modal-lg" => "1")); ?></div>
+                <div class="pt5"> <i data-feather='list' class='icon-16'></i> <?php echo modal_anchor(get_uri("tasks/view"), $timer->task_title, array("title" => app_lang('task_info') . " #$timer->task_id", "class" => "dark", "data-post-id" => $timer->task_id, "data-modal-lg" => "1")); ?></div>
             <?php } ?>
         </div>
     <?php } ?>

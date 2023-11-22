@@ -25,6 +25,9 @@
         $("#article-table").appTable({
             source: '<?php echo_uri("help/articles_list_data/" . $type) ?>',
             order: [[0, "desc"]],
+            filterDropdown: [
+                {name: "category_id", class: "w200", options: <?php echo $categories_dropdown; ?>}
+            ],
             columns: [
                 {title: "<?php echo app_lang('title') ?>"},
                 {title: "<?php echo app_lang('category') ?>", "class": "w30p"},

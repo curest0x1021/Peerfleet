@@ -77,7 +77,7 @@ class Help extends Security_Controller {
         $view_data['selected_category_id'] = $category_info->id;
         $view_data['categories'] = $this->Help_categories_model->get_details(array("type" => $category_info->type))->getResult();
 
-        $view_data["articles"] = $this->Help_articles_model->get_articles_of_a_category($id)->getResult();
+        $view_data["articles"] = $this->Help_articles_model->get_articles_of_a_category($id, $category_info->articles_order)->getResult();
         $view_data["category_info"] = $category_info;
 
         return $this->template->rander("help_and_knowledge_base/articles/view_page", $view_data);
@@ -88,6 +88,7 @@ class Help extends Security_Controller {
         $this->access_only_allowed_members();
 
         $view_data["type"] = "help";
+        $view_data['categories_dropdown'] = $this->_get_categories_dropdown($view_data["type"]);
         return $this->template->rander("help_and_knowledge_base/articles/index", $view_data);
     }
 
@@ -96,7 +97,22 @@ class Help extends Security_Controller {
         $this->access_only_allowed_members();
 
         $view_data["type"] = "knowledge_base";
+        $view_data['categories_dropdown'] = $this->_get_categories_dropdown($view_data["type"]);
+        
         return $this->template->rander("help_and_knowledge_base/articles/index", $view_data);
+    }
+    
+    
+    private function _get_categories_dropdown($type) {
+        $categories_json_dropdown = array(array("id" => "", "text" => "- " . app_lang("category") . " -"));
+        $categories = $this->Help_categories_model->get_details(array("type" => $type, "only_active_categories"=>true))->getResult();
+
+        foreach ($categories as $category) {
+
+            $categories_json_dropdown[] = array("id" => $category->id, "text" => $category->title);
+        }
+
+        return json_encode($categories_json_dropdown);
     }
 
     //show help articles list
@@ -145,6 +161,7 @@ class Help extends Security_Controller {
             "description" => $this->request->getPost('description'),
             "type" => $this->request->getPost('type'),
             "sort" => $this->request->getPost('sort'),
+            "articles_order" => $this->request->getPost('articles_order'),
             "status" => $this->request->getPost('status')
         );
         $save_id = $this->Help_categories_model->ci_save($data, $id);
@@ -299,7 +316,9 @@ class Help extends Security_Controller {
     function articles_list_data($type) {
         $this->access_only_allowed_members();
 
-        $list_data = $this->Help_articles_model->get_details(array("type" => $type, "login_user_id" => $this->login_user->id))->getResult();
+        $category_id = $this->request->getPost('category_id');
+        
+        $list_data = $this->Help_articles_model->get_details(array("type" => $type, "login_user_id" => $this->login_user->id, "category_id"=>$category_id))->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_make_article_row($data);
@@ -322,7 +341,16 @@ class Help extends Security_Controller {
 
         if ($data->type == "knowledge_base") {
             $title = anchor(get_uri("knowledge_base/view/" . $data->id), $data->title);
-            $feedback = "<span class='badge bg-success mt0'>" . $data->helpful_status_yes . " " . app_lang("yes") . "</span> <span class='badge bg-danger mt0'>" . $data->helpful_status_no . " " . app_lang("no") . "</span>";
+            
+            if($data->helpful_status_yes){
+                $feedback .= "<span class='badge bg-success mt0'>" . $data->helpful_status_yes . " " . app_lang("yes") . "</span> ";
+            }
+            
+            if($data->helpful_status_no){
+                $feedback .= "<span class='badge bg-danger mt0'>" . $data->helpful_status_no . " " . app_lang("no") . "</span>";
+            }
+           
+            
         }
 
         return array(

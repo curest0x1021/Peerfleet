@@ -102,6 +102,16 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label for="enable_proposal_lock_state" class="col-md-2"><?php echo app_lang('enable_lock_state'); ?> <span class="help" data-bs-toggle="tooltip" title="<?php echo app_lang('proposal_lock_state_description'); ?>"><i data-feather='help-circle' class="icon-16"></i></span></label>
+                                        <div class="col-md-10">
+                                            <?php
+                                            echo form_checkbox("enable_proposal_lock_state", "1", get_setting("enable_proposal_lock_state") ? true : false, "id='enable_proposal_lock_state' class='form-check-input'");
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary"><span data-feather='check-circle' class="icon-16"></span> <?php echo app_lang('save'); ?></button>

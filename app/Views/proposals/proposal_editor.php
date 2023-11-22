@@ -74,7 +74,7 @@
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['height', ['height']],
                 ['table', ['table']],
-                ['insert', ['hr', 'picture', 'video']],
+                ['insert', ['hr', 'link', 'picture', 'video']],
                 ['view', ['fullscreen', 'codeview']]
             ],
             lang: "<?php echo app_lang('language_locale_long'); ?>"

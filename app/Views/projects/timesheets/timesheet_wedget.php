@@ -30,7 +30,7 @@
             tooltips: {
                 callbacks: {
                     title: function (tooltipItem, data) {
-                        return data['labels'][tooltipItem[0]['index']];
+                        return data['labels'][tooltipItem[0]['index']] + " <?php echo app_lang($month) ?>";
                     },
                     label: function (tooltipItem, data) {
                         return secondsToTimeFormat(data['datasets'][0]['data'][tooltipItem['index']] * 60 * 60);

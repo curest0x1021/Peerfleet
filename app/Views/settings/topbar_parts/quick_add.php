@@ -5,12 +5,12 @@ $permissions = $login_user->permissions;
 
 $links = "";
 
-if (($login_user->user_type == "staff" && ($login_user->is_admin || get_array_value($permissions, "can_manage_all_projects") == "1" || get_array_value($permissions, "can_create_tasks") == "1")) || ($login_user->user_type == "client" && get_setting("client_can_create_tasks"))) {
+if (($login_user->user_type == "staff") || ($login_user->user_type == "client" && get_setting("client_can_create_tasks"))) {
     //add tasks 
-    $links .= modal_anchor(get_uri("projects/task_modal_form"), app_lang('add_task'), array("class" => "dropdown-item clearfix", "title" => app_lang('add_task'), "id" => "js-quick-add-task"));
+    $links .= modal_anchor(get_uri("tasks/modal_form"), app_lang('add_task'), array("class" => "dropdown-item clearfix", "title" => app_lang('add_task'), "id" => "js-quick-add-task"));
 
     //add multiple tasks
-    $links .= modal_anchor(get_uri("projects/task_modal_form"), app_lang('add_multiple_tasks'), array("class" => "dropdown-item clearfix", "title" => app_lang('add_multiple_tasks'), "data-post-add_type" => "multiple", "id" => "js-quick-add-multiple-task"));
+    $links .= modal_anchor(get_uri("tasks/modal_form"), app_lang('add_multiple_tasks'), array("class" => "dropdown-item clearfix", "title" => app_lang('add_multiple_tasks'), "data-post-add_type" => "multiple", "id" => "js-quick-add-multiple-task"));
 }
 
 //add project time

@@ -3,6 +3,7 @@
     <div class="modal-body clearfix">
         <div class="container-fluid">
             <input type="hidden" name="id" value="<?php echo $invoice_info->id; ?>" />
+            <input type="hidden" name="user_language" id="user_language" value="<?php echo $user_language; ?>" />
 
             <div class="form-group">
                 <div class="row">
@@ -78,7 +79,7 @@
                 </div>
             </div>
             <div class="form-group ml15">
-                <i data-feather="check-circle" class='icon-16' style="color: #5CB85C;"></i> <?php echo app_lang('attached') . ' ' . anchor(get_uri("invoices/download_pdf/" . $invoice_info->id), preg_replace('/[^A-Za-z0-9\-]/', '-', get_invoice_id($invoice_info->id)) . ".pdf", array("target" => "_blank")); ?> 
+                <i data-feather="check-circle" class='icon-16' style="color: #5CB85C;"></i> <?php echo app_lang('attached') . ' ' . anchor(get_uri("invoices/download_pdf/" . $invoice_info->id . "/download/$user_language"), preg_replace('/[^A-Za-z0-9\-]/', '-', get_invoice_id($invoice_info->id)) . ".pdf", array("target" => "_blank", "id" => "attachment-url")); ?> 
             </div>
 
             <?php echo view("includes/dropzone_preview"); ?>
@@ -140,6 +141,9 @@
                         if (result.success) {
                             $("#message").val(result.message_view);
                             initWYSIWYGEditor("#message", {height: 400, toolbar: []});
+                            $("#user_language").val(result.user_language);
+                            $("#attachment-url").attr("href", "<?php echo get_uri('invoices/download_pdf/' . $invoice_info->id . '/download/'); ?>" + result.user_language);
+
                             appLoader.hide();
                         }
                     }

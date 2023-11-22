@@ -3,7 +3,7 @@
     <div class="b-b" style="line-height: 2px; border-bottom: 1px solid #f2f4f6;"> </div>
 <?php } ?>
 <div style="line-height: 3px;"> </div>
-<strong><?php echo $client_info->company_name; ?> </strong>
+<strong><?php echo $client_info->charter_name; ?> </strong>
 <div style="line-height: 3px;"> </div>
 <span class="invoice-meta text-default" style="font-size: 90%; color: #666;">
     <?php if ($client_info->address) { ?>

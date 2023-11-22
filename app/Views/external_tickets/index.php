@@ -1,8 +1,16 @@
 <style type="text/css">
-    .post-file-previews {border:none !important; }
-    .client-info-section  .form-group {margin: 25px 15px;}
-    #page-content.page-wrapper{padding: 10px !important}
-    #content{margin-top: 15px !important}
+    .post-file-previews {
+        border:none !important;
+    }
+    .client-info-section  .form-group {
+        margin: 25px 15px;
+    }
+    #page-content.page-wrapper{
+        padding: 10px !important
+    }
+    #content{
+        margin-top: 15px !important
+    }
 </style>
 
 <div id="page-content" class="page-wrapper clearfix">
@@ -57,6 +65,8 @@
                 </div>
             </div>
 
+            <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => "", "field_column" => "")); ?> 
+
             <div class="form-group">
                 <label for="email"><?php echo app_lang('your_email'); ?></label>
                 <div>
@@ -90,6 +100,7 @@
                     ?>
                 </div>
             </div>
+
 
             <div>
                 <?php echo view("signin/re_captcha"); ?>

@@ -1,7 +1,9 @@
 <?php
+$url = "projects/save_comment";
 $comment_type = "";
 if (isset($task_id)) {
     $comment_type = "task";
+    $url = "tasks/save_comment";
 } else if (isset($file_id)) {
     $comment_type = "file";
 } else if (isset($customer_feedback_id)) {
@@ -9,10 +11,14 @@ if (isset($task_id)) {
 } else {
     $comment_type = "project";
 }
-?>
 
+$mention_source = get_uri("projects/get_member_suggestion_to_mention");
+if (isset($model_info->context) && $model_info->context != "project") {
+    $mention_source = get_uri("tasks/get_member_suggestion_to_mention");
+}
+?>
 <div id="<?php echo $comment_type . "-comment-form-container"; ?>">
-    <?php echo form_open(get_uri("projects/save_comment"), array("id" => $comment_type . "-comment-form", "class" => "general-form", "role" => "form")); ?>
+    <?php echo form_open(get_uri($url), array("id" => $comment_type . "-comment-form", "class" => "general-form", "role" => "form")); ?>
     <div class="d-flex b-b comment-form-container">
         <div class="flex-shrink-0 d-none d-sm-block">
             <div class="avatar  <?php echo isset($project_id) || isset($customer_feedback_id) ? " avatar-md" : " avatar-sm"; ?>  pr15 d-table-cell">
@@ -36,7 +42,7 @@ if (isset($task_id)) {
                     "data-msg-required" => app_lang("field_required"),
                     "data-rich-text-editor" => true,
                     "data-mention" => true,
-                    "data-mention-source" => get_uri("projects/get_member_suggestion_to_mention"),
+                    "data-mention-source" => $mention_source,
                     "data-mention-project_id" => $project_id
                 ));
                 ?>
@@ -56,7 +62,7 @@ if (isset($task_id)) {
 <script type="text/javascript">
     $(document).ready(function () {
         $('#comment_description').appMention({
-            source: "<?php echo_uri("projects/get_member_suggestion_to_mention"); ?>",
+            source: "<?php echo $mention_source; ?>",
             data: {project_id: <?php echo $project_id; ?>}
         });
 

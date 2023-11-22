@@ -71,7 +71,7 @@ class Proposals_model extends Crud_model {
 
 
 
-        $sql = "SELECT $proposals_table.*, $clients_table.currency, $clients_table.currency_symbol, $clients_table.company_name, $clients_table.is_lead,
+        $sql = "SELECT $proposals_table.*, $clients_table.currency, $clients_table.currency_symbol, $clients_table.charter_name, $clients_table.is_lead,
            CONCAT($users_table.first_name, ' ',$users_table.last_name) AS signer_name, $users_table.email AS signer_email,
            $proposal_value_calculation AS proposal_value, tax_table.percentage AS tax_percentage, tax_table2.percentage AS tax_percentage2 $select_custom_fieds
         FROM $proposals_table

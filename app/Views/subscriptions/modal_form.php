@@ -34,6 +34,7 @@
                 <div class="row">
                     <label for="subscription_bill_date" class=" col-md-3"><?php echo app_lang('first_billing_date'); ?> <span class="help" data-bs-toggle="tooltip" title="<?php echo app_lang('first_billing_date_cant_be_past_message'); ?>"><i data-feather="help-circle" class="icon-16"></i></span></label>
                     <div class="col-md-9">
+                        <input type="hidden" id="today_date" value="<?php echo get_my_local_time('Y-m-d'); ?>" />
                         <?php
                         echo form_input(array(
                             "id" => "subscription_bill_date",
@@ -42,7 +43,7 @@
                             "class" => "form-control recurring_element",
                             "placeholder" => app_lang('first_billing_date'),
                             "autocomplete" => "off",
-                            "data-rule-greaterThanOrEqual" => get_my_local_time("Y-m-d"),
+                            "data-rule-greaterThanOrEqual" => "#today_date",
                             "data-msg-greaterThanOrEqual" => app_lang("date_must_be_equal_or_greater_than_today")
                         ));
                         ?>
@@ -236,9 +237,14 @@
 
         $("#subscription_client_id").select2();
 
-        setDatePicker("#subscription_bill_date");
+        setDatePicker("#today_date");
+        
+        setDatePicker("#subscription_bill_date", {
+            startDate: moment().local().format() //set min date = today
+        });
+        
         setDatePicker("#next_recurring_date", {
-            startDate: moment().add(1, 'days').format("YYYY-MM-DD") //set min date = tomorrow
+            startDate: moment().add(1, 'days').local().format() //set min date = tomorrow
         });
 
         $('[data-bs-toggle="tooltip"]').tooltip();
