@@ -35,12 +35,19 @@ class Payment_methods extends Security_Controller {
         $this->validate_submitted_data(array(
             "id" => "numeric"
         ));
+        
+        $available_on_invoice = $this->request->getPost('available_on_invoice');
+        if($available_on_invoice){
+            $available_on_invoice = 1;
+        }else{
+            $available_on_invoice = "";
+        }
 
         $id = $this->request->getPost('id');
         $data = array(
             "title" => $this->request->getPost('title'),
             "description" => $this->request->getPost('description'),
-            "available_on_invoice" => $this->request->getPost('available_on_invoice'),
+            "available_on_invoice" => $available_on_invoice,
             "minimum_payment_amount" => unformat_currency($this->request->getPost('minimum_payment_amount'))
         );
 

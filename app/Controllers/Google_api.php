@@ -8,6 +8,10 @@ use App\Libraries\Google_calendar_events;
 
 class Google_api extends Security_Controller {
 
+    private $google;
+    private $Google_calendar;
+    private $Google_calendar_events;
+
     function __construct() {
         parent::__construct();
         $this->google = new Google();
@@ -60,7 +64,6 @@ class Google_api extends Security_Controller {
             app_redirect("events");
         }
     }
-
 }
 
 /* End of file Google_api.php */

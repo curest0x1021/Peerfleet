@@ -111,11 +111,9 @@ class Stripe_redirect extends App_Controller {
         if ($subscription_info->stripe_tax_id2) {
             array_push($tax_rates, $subscription_info->stripe_tax_id2);
         }
-        
-        
+
+
         $subscription_data = array();
-        
-        
 
         //create subscription with this payment method
         $stripe_subscription_data = array(
@@ -135,16 +133,16 @@ class Stripe_redirect extends App_Controller {
             ),
             "proration_behavior" => "none"
         );
-        
+
         $billing_cycle_anchor = $subscription_info->bill_date;
         $today = get_my_local_time("Y-m-d H:i:s");
-        if($billing_cycle_anchor>$today){
+        if ($billing_cycle_anchor > $today) {
             $stripe_subscription_data["billing_cycle_anchor"] = strtotime($billing_cycle_anchor);
-        }else{
-             $subscription_data["bill_date"] = $today;
+        } else {
+            $subscription_data["bill_date"] = $today;
         }
-        
-        
+
+
 
         //prepare the last billed date 
         if ($subscription_info->no_of_cycles) {
@@ -175,6 +173,8 @@ class Stripe_redirect extends App_Controller {
 
             //delete the ipn data
             $this->Stripe_ipn_model->delete($stripe_ipn_info->id);
+            
+            log_notification("subscription_started", array("subscription_id" => $stripe_ipn_info->subscription_id));
 
             $this->session->setFlashdata("success_message", app_lang("subscription_success_message"));
             app_redirect("subscriptions/preview/$stripe_ipn_info->subscription_id");

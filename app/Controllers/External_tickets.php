@@ -19,6 +19,8 @@ class External_tickets extends App_Controller {
         $where = array();
         $view_data['ticket_types_dropdown'] = $this->Ticket_types_model->get_dropdown_list(array("title"), "id", $where);
 
+        $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("tickets", 0, 0, "client")->getResult();
+
         return $this->template->rander("external_tickets/index", $view_data);
     }
 
@@ -101,6 +103,9 @@ class External_tickets extends App_Controller {
         $ticket_id = $this->Tickets_model->ci_save($ticket_data);
 
         if ($ticket_id) {
+
+            save_custom_fields("tickets", $ticket_id, 0, "client");
+
             //save ticket's comment
             $comment_data = array(
                 "description" => $this->request->getPost('description'),
@@ -151,8 +156,14 @@ class External_tickets extends App_Controller {
     }
 
     function embedded_code_modal_form() {
-        $embedded_code = "<iframe width='768' height='360' src='" . get_uri("external_tickets") . "' frameborder='0'></iframe>";
-        $view_data['embedded'] = $embedded_code;
+        $embedded_code = "<iframe width='768' height='840' src='" . get_uri("external_tickets") . "' frameborder='0'></iframe>";
+
+        if (get_setting("enable_embedded_form_to_get_tickets")) {
+            $view_data['embedded'] = $embedded_code;
+        } else {
+            $view_data['embedded'] = "Please save the settings first to see the code.";
+        }
+
 
         return $this->template->view('external_tickets/embedded_code_modal_form', $view_data);
     }

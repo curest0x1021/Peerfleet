@@ -73,6 +73,17 @@ class Custom_fields_model extends Crud_model {
         return $this->db->query($sql);
     }
 
+    function get_fields_of_a_context($context) {
+        $related_to = $this->db->escapeString($context);
+        $custom_fields_table = $this->db->prefixTable('custom_fields');
+
+        $sql = "SELECT $custom_fields_table.id, $custom_fields_table.title, $custom_fields_table.field_type
+        FROM $custom_fields_table
+        WHERE $custom_fields_table.deleted=0 AND $custom_fields_table.related_to = '$related_to'  
+        ORDER by $custom_fields_table.title ASC";
+        return $this->db->query($sql);
+    }
+
     function get_max_sort_value($related_to = "") {
         $custom_fields_table = $this->db->prefixTable('custom_fields');
 
@@ -219,5 +230,4 @@ class Custom_fields_model extends Crud_model {
 
         return $variables_array;
     }
-
 }

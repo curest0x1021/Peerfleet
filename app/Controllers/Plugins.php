@@ -19,6 +19,12 @@ class Plugins extends Security_Controller {
         return $this->template->view('plugins/modal_form');
     }
 
+    //load plugin list view
+    function install_modal_form($plugin) {
+        $view_data["plugin"] = $plugin;
+        return $this->template->view('plugins/install_modal_form', $view_data);
+    }
+
     /* upload a post file */
 
     function upload_file() {
@@ -277,6 +283,7 @@ class Plugins extends Security_Controller {
     //prepare an plugin list row
     //indexed, installed, activated, deactivated
     private function _make_row($plugin, $status) {
+
         $main_plugin_name = $plugin;
         $plugin_info = get_plugin_meta_data($plugin);
 
@@ -300,7 +307,13 @@ class Plugins extends Security_Controller {
             $status_class = "bg-danger";
         }
 
-        $action = '<li role="presentation">' . ajax_anchor(get_uri("plugins/save_status_of_plugin/$plugin/$action_type/1"), "<i data-feather='$icon' class='icon-16'></i> " . app_lang($lang_key), array("data-reload-on-success" => true, "class" => "dropdown-item", "data-show-response" => true)) . '</li>';
+
+        if ($action_type == "installed") {
+            $action = '<li role="presentation">' . modal_anchor(get_uri("plugins/install_modal_form/$plugin"), "<i data-feather='$icon' class='icon-16'></i> " . app_lang($lang_key), array("title" => app_lang("install") . " " . $plugin, "class" => "dropdown-item")) . '</li>';
+        } else {
+            $action = '<li role="presentation">' . ajax_anchor(get_uri("plugins/save_status_of_plugin/$plugin/$action_type/1"), "<i data-feather='$icon' class='icon-16'></i> " . app_lang($lang_key), array("data-reload-on-success" => true, "class" => "dropdown-item", "data-show-response" => true)) . '</li>';
+        }
+
 
         $update = "";
         if ($status === "activated") {
@@ -398,7 +411,6 @@ class Plugins extends Security_Controller {
             return $this->template->view('plugins/no_hook_modal');
         }
     }
-
 }
 
 /* End of file plugins.php */

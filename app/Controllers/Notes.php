@@ -9,6 +9,7 @@ class Notes extends Security_Controller {
     }
 
     protected function validate_access_to_note($note_info, $edit_mode = false) {
+
         if ($note_info->is_public) {
             //it's a public note. visible to all available users
             if ($edit_mode) {
@@ -21,14 +22,21 @@ class Notes extends Security_Controller {
             if ($note_info->client_id) {
                 //this is a client/lead note. check access permission
                 $client_info = $this->Clients_model->get_one($note_info->client_id);
+              
                 if ($client_info->is_lead) {
-                    $this->can_access_this_lead($note_info->client_id);
+                    if(!$this->can_access_this_lead($note_info->client_id)){
+                        app_redirect("forbidden");
+                    }
                 } else {
-                    $this->can_access_this_client($note_info->client_id);
+                    if (!$this->can_edit_clients($note_info->client_id)) {
+                        app_redirect("forbidden");
+                    }
                 }
             } else if ($note_info->user_id) {
                 //this is a user's note. check user's access permission.
-                app_redirect("forbidden");
+                if (!$this->can_access_team_members_note($note_info->user_id)) {
+                    app_redirect("forbidden");
+                }
             } else {
                 //this is a private note. only available to creator
                 if ($this->login_user->id !== $note_info->created_by) {

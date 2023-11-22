@@ -197,7 +197,7 @@ class Updates extends Security_Controller {
         }
     }
 
-    function do_update($version = "") {
+    function do_update($version = "", $acknowledged = 0) {
         ini_set('max_execution_time', 300); //300 seconds 
         if (!$version) {
             echo json_encode(array("success" => false, 'message' => app_lang("something_went_wrong")));
@@ -210,6 +210,8 @@ class Updates extends Security_Controller {
             echo json_encode(array("success" => false, 'message' => "Please install the version - $updates_info->next_installable_version first!"));
             exit();
         }
+
+
         $local_updates_dir = get_setting("updates_path");
 
         if (!class_exists('ZipArchive')) {
@@ -221,6 +223,26 @@ class Updates extends Security_Controller {
         $zip->open($local_updates_dir . $version . '.zip');
 
         $executeable_file = "";
+
+        $env_checker_file = "env_checker.php";
+        $removeable_env_checker_file_path = "";
+        if ($zip->locateName($env_checker_file) !== false) {
+            file_put_contents($env_checker_file, $zip->getFromName($env_checker_file));
+            $removeable_env_checker_file_path = $env_checker_file;
+            $check_result = include ($env_checker_file);
+            if (get_array_value($check_result, "response_type") == "success") {
+                //can update...
+            } else if ($acknowledged != "1" && get_array_value($check_result, "response_type") == "acknowledgement_required") {
+                unlink($removeable_env_checker_file_path); //remove the env checker file
+                echo json_encode(array("response_type" => "acknowledgement_required", 'message' => get_array_value($check_result, "message")));
+                exit();
+            } else if (get_array_value($check_result, "response_type") == "error") {
+                unlink($removeable_env_checker_file_path); //remove the env checker file
+                echo json_encode(array("response_type" => "error", 'message' => get_array_value($check_result, "message")));
+                exit();
+            }
+        }
+
 
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $file_info_array = $zip->statIndex($i);
@@ -239,14 +261,11 @@ class Updates extends Security_Controller {
             //overwrite the existing file
             if (!is_dir('./' . $file_name)) {
                 $contents = $zip->getFromIndex($i);
-
                 //execute command if required
                 if ($file_name == 'execute.php') {
-                    file_put_contents($file_name, $contents);
                     $executeable_file = $file_name;
-                } else {
-                    file_put_contents($file_name, $contents);
                 }
+                file_put_contents($file_name, $contents);
             }
         }
 
@@ -255,16 +274,19 @@ class Updates extends Security_Controller {
         //has an executeable file. run it.
         if ($executeable_file) {
             include ($executeable_file);
-            unlink($executeable_file); //delete the file for sequrity purpose and it's not required to keep in root directory
+            unlink($executeable_file); //delete the file for security purpose and it's not required to keep in root directory
         }
 
-        echo json_encode(array("success" => true, 'message' => "Version - $version installed successfully!"));
+        if ($removeable_env_checker_file_path) {
+            unlink($removeable_env_checker_file_path); //remove the env checker file
+        }
+
+        echo json_encode(array("response_type" => "success", 'message' => "Version - $version installed successfully!"));
     }
 
     function systeminfo() {
         phpinfo();
     }
-
 }
 
 /* End of file updates.php */

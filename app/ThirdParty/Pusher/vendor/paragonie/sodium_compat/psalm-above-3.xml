@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <psalm
         useDocblockTypes="true"
-        totallyTyped="true"
 >
     <projectFiles>
         <directory name="src" />
+        <directory name="lib" />
     </projectFiles>
     <issueHandlers>
         <InvalidFunctionCall errorLevel="suppress" />
@@ -47,6 +47,11 @@
         <!--
             Not interesting
         -->
+
+        <RedundantCast errorLevel="info" />
+        <UnnecessaryVarAnnotation errorLevel="suppress" />
+        <UnusedVariable errorLevel="info" />
+        <UnusedFunctionCall errorLevel="info" />
 
     </issueHandlers>
 </psalm>

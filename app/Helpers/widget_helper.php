@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\Security_Controller;
+use App\Controllers\Tasks;
 use App\Libraries\Template;
 
 /**
@@ -123,7 +124,7 @@ if (!function_exists('announcements_alert_widget')) {
 
         $client_group_ids = "";
         if ($ci->login_user->user_type === "client") {
-            // $client_group_ids = $ci->Clients_model->get_one($ci->login_user->client_id)->group_ids;
+            $client_group_ids = $ci->Clients_model->get_one($ci->login_user->client_id)->group_ids;
         }
 
         $announcements = $ci->Announcements_model->get_unread_announcements($ci->login_user->id, $ci->login_user->user_type, $client_group_ids)->getResult();
@@ -146,7 +147,7 @@ if (!function_exists('my_open_tasks_widget')) {
         $ci = new Security_Controller(false);
         $view_data["total"] = $ci->Tasks_model->count_my_open_tasks($ci->login_user->id);
         $template = new Template();
-        return $template->view("projects/tasks/open_tasks_widget", $view_data);
+        return $template->view("tasks/open_tasks_widget", $view_data);
     }
 
 }
@@ -165,7 +166,7 @@ if (!function_exists('my_task_stataus_widget')) {
         $view_data["custom_class"] = $custom_class;
 
         $template = new Template();
-        return $template->view("projects/tasks/my_task_status_widget", $view_data);
+        return $template->view("tasks/my_task_status_widget", $view_data);
     }
 
 }
@@ -239,7 +240,7 @@ if (!function_exists('events_widget')) {
     function events_widget() {
         $ci = new Security_Controller(false);
 
-        $options = array("user_id" => $ci->login_user->id, "limit" => 10, "team_ids" => $ci->login_user->team_ids);
+        $options = array("user_id" => $ci->login_user->id, "limit" => 20, "team_ids" => $ci->login_user->team_ids);
 
         if ($ci->login_user->user_type == "client") {
             $options["is_client"] = true;
@@ -338,14 +339,20 @@ if (!function_exists('ticket_status_widget')) {
         $start_date = subtract_period_from_date($today, 30, "days");
         $end_date = $today;
 
-        $options = array("start_date" => $start_date, "end_date" => $end_date);
+        $options = array();
         $allowed_ticket_types = get_array_value($data, "allowed_ticket_types");
         if ($ci->login_user->user_type == "staff") {
             $options["allowed_ticket_types"] = $allowed_ticket_types;
             $options["show_assigned_tickets_only_user_id"] = get_array_value($data, "show_assigned_tickets_only_user_id");
         }
 
-        $tickets_result = $Tickets_model->get_ticket_statistics($options)->tickets_info;
+        $options["group_by"] = "created_date";
+
+        $created_date_options = $options;
+        $created_date_options["start_date"] = $start_date;
+        $created_date_options["end_date"] = $end_date;
+
+        $tickets_result = $Tickets_model->get_ticket_statistics($created_date_options)->getResult();
 
         $ticket_result_array = array();
         foreach ($tickets_result as $ticket) {
@@ -368,9 +375,11 @@ if (!function_exists('ticket_status_widget')) {
         $view_data["ticks"] = json_encode($ticks);
         $view_data["total_tickets"] = json_encode($tickets_array);
 
-        $view_data["tickets_info"] = $Tickets_model->get_ticket_statistics($options)->ticket_types_info;
+        $options["group_by"] = "ticket_type";
+        $view_data["tickets_info"] = $Tickets_model->get_ticket_statistics($options)->getResult();
 
-        $ticket_status_info = $Tickets_model->get_ticket_statistics($options)->ticket_status_info;
+        $options["group_by"] = "ticket_status";
+        $ticket_status_info = $Tickets_model->get_ticket_statistics($options)->getResult();
         $view_data["new"] = 0;
         $view_data["open"] = 0;
         $view_data["closed"] = 0;
@@ -380,7 +389,7 @@ if (!function_exists('ticket_status_widget')) {
             } else if ($status->status === "closed") {
                 $view_data["closed"] = $status->total;
             } else {
-                $view_data["open"] += $status->total;
+                $view_data["open"] = $status->total;
             }
         }
 
@@ -513,6 +522,8 @@ if (!function_exists('project_timesheet_statistics_widget')) {
         $view_data["timesheets"] = json_encode($timesheets_array);
         $view_data["timesheet_type"] = $type;
         $view_data["ticks"] = json_encode($ticks);
+        $view_data["month"] = strtolower(date("F", strtotime($start_date)));
+        
         $template = new Template();
 
         if ($type == "my_timesheet_statistics") {
@@ -756,8 +767,12 @@ if (!function_exists('all_tasks_kanban_widget')) {
 
         $view_data['priorities_dropdown'] = json_encode($priorities_dropdown);
 
+        $tasks = new Tasks();
+        $view_data['contexts_dropdown'] = json_encode($tasks->_get_accessible_contexts_dropdown());
+        $view_data['labels_dropdown'] = json_encode($tasks->get_task_labels_dropdown_for_filter());
+
         $template = new Template();
-        return $template->view("projects/tasks/kanban/all_tasks_kanban_widget", $view_data);
+        return $template->view("tasks/kanban/all_tasks_kanban_widget", $view_data);
     }
 
 }
@@ -894,7 +909,7 @@ if (!function_exists('my_open_projects_widget')) {
         $ci = new Security_Controller(false);
 
         $options = array(
-            "statuses" => "open"
+            "status_id" => 1
         );
 
         if ($ci->login_user->user_type == "client") {
@@ -1086,7 +1101,20 @@ if (!function_exists('get_invoices_value_widget')) {
 
     function get_invoices_value_widget($type = "") {
         $Invoices_model = model("App\Models\Invoices_model");
-        $view_data["invoices_info"] = $Invoices_model->get_invoices_total_and_paymnts();
+        $options = array();
+        if ($type == "invoices") {
+            $options = array("return_only" => "invoices");
+        } else if ($type == "payments") {
+            $options = array("return_only" => "payments");
+        } else if ($type == "due") {
+            $options = array("return_only" => "due");
+        } else if ($type == "draft") {
+            $options = array("return_only" => "draft");
+        } else if ($type == "draft_count") {
+            $options = array("return_only" => "draft");
+        }
+
+        $view_data["invoices_info"] = $Invoices_model->get_invoices_total_and_paymnts($options);
         $view_data["type"] = $type;
         $template = new Template();
         return $template->view("invoices/total_invoices_value_widget", $view_data);
@@ -1106,7 +1134,7 @@ if (!function_exists('my_tasks_list_widget')) {
         $Task_status_model = model("App\Models\Task_status_model");
         $view_data['task_statuses'] = $Task_status_model->get_details()->getResult();
         $template = new Template();
-        return $template->view("projects/tasks/my_tasks_list_widget", $view_data);
+        return $template->view("tasks/my_tasks_list_widget", $view_data);
     }
 
 }
@@ -1440,6 +1468,12 @@ if (!function_exists('projects_overview_widget')) {
             );
         }
 
+        $status_text_info = get_project_status_text_info();
+
+        $view_data["open_status_text"] = $status_text_info->open;
+        $view_data["completed_status_text"] = $status_text_info->completed;
+        $view_data["hold_status_text"] = $status_text_info->hold;
+
         $view_data["count_project_status"] = $ci->Projects_model->count_project_status($options);
 
         $view_data["projects_info"] = $ci->Projects_model->count_task_points($options);
@@ -1611,7 +1645,7 @@ if (!function_exists('tasks_overview_widget')) {
         $view_data["type"] = $type;
 
         $template = new Template();
-        return $template->view("projects/tasks/tasks_overview_widget", $view_data);
+        return $template->view("tasks/tasks_overview_widget", $view_data);
     }
 
 }
@@ -1674,14 +1708,16 @@ if (!function_exists('invoice_overview_widget')) {
         $view_data["currencies"] = $info->currencies;
         $view_data["currency_symbol"] = clean_data($currency_symbol);
 
-        $view_data["total_invoices"] = $ci->Invoices_model->count_invoices(array("currency" => $currency));
-        $view_data["overdue_invoices"] = $ci->Invoices_model->count_invoices(array("status" => "overdue", "currency" => $currency));
-        $view_data["not_paid_invoices"] = $ci->Invoices_model->count_invoices(array("status" => "not_paid", "currency" => $currency));
-        $view_data["partially_paid_invoices"] = $ci->Invoices_model->count_invoices(array("status" => "partially_paid", "currency" => $currency));
-        $view_data["fully_paid_invoices"] = $ci->Invoices_model->count_invoices(array("status" => "fully_paid", "currency" => $currency));
-        $view_data["draft_invoices"] = $ci->Invoices_model->count_invoices(array("status" => "draft", "currency" => $currency));
+        $invoice_info = $ci->Invoices_model->get_invoices_total_and_paymnts(array("currency" => $currency));
 
-        $view_data["invoices_info"] = $ci->Invoices_model->get_invoices_total_and_paymnts(array("currency" => $currency));
+        $view_data["total_invoices"] = $invoice_info->invoices_count;
+        $view_data["overdue_invoices"] = $invoice_info->overdue_count;
+        $view_data["not_paid_invoices"] = $invoice_info->not_paid_count;
+        $view_data["partially_paid_invoices"] = $invoice_info->partially_paid_count;
+        $view_data["fully_paid_invoices"] = $invoice_info->fully_paid_count;
+        $view_data["draft_invoices"] = $invoice_info->draft_count;
+
+        $view_data["invoices_info"] = $invoice_info;
 
         $template = new Template();
         return $template->view("invoices/invoice_overview_widget", $view_data);

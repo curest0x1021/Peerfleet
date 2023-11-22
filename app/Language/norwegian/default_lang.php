@@ -2277,109 +2277,257 @@ $lang["total_after_discount"] = "Totalt etter rabatt";
 
 /* Version 3.3 */
 
-$lang["change_the_tasks_start_date_and_deadline_based_on_project_start_date"] = "Change the tasks start date and deadline based on project start date";
+$lang["change_the_tasks_start_date_and_deadline_based_on_project_start_date"] = "Endre oppgavens startdato og frist basert på prosjektets startdato";
 
-$lang["can_edit_only_own_created_projects"] = "Can edit only own created projects";
-$lang["can_delete_only_own_created_projects"] = "Can delete only own created projects";
+$lang["can_edit_only_own_created_projects"] = "Kan kun redigere egne opprettede prosjekter";
+$lang["can_delete_only_own_created_projects"] = "Kan bare slette egne opprettede prosjekter";
 
-$lang["checklist_status"] = "Checklist status";
+$lang["checklist_status"] = "Sjekklistestatus";
 
 /* Version 3.4 */
 
-$lang["subscribe"] = "Subscribe";
-$lang["email_protocol"] = "Email protocol";
+$lang["subscribe"] = "Abonner";
+$lang["email_protocol"] = "E-postprotokoll";
 
-$lang["please_enable_the_file_uploads_php_settings"] = "Please enable the file_uploads php setting in the server.";
-$lang["file_size_too_large"] = "File size is too large. Please increase the upload_max_filesize from server.";
+$lang["please_enable_the_file_uploads_php_settings"] = "Vennligst aktiver file_uploads php-innstillingen på serveren.";
+$lang["file_size_too_large"] = "Filstørrelsen er for stor. Øk upload_max_filesize fra serveren.";
 
-$lang["sub_task_status"] = "Sub task status";
+$lang["sub_task_status"] = "Status for underoppgave";
 
-$lang["can_access_client_feedback_in_projects"] = "Can access client feedback in projects?";
-$lang["change_the_milestone_dates_based_on_project_start_date"] = "Change the milestone dates based on project start date";
+$lang["can_access_client_feedback_in_projects"] = "Kan få tilgang til tilbakemeldinger fra kunder i prosjekter";
+$lang["change_the_milestone_dates_based_on_project_start_date"] = "Endre milepældatoene basert på prosjektets startdato";
 
-$lang["send_first_due_invoice_reminder_notification_before"] = "Send 1st due invoice reminder before due date";
-$lang["send_second_due_invoice_reminder_notification_before"] = "Send 2nd due invoice reminder before due date";
+$lang["send_first_due_invoice_reminder_notification_before"] = "Send 1. forfallsfakturapåminnelse før forfallsdato";
+$lang["send_second_due_invoice_reminder_notification_before"] = "Send 2. forfallsfakturapåminnelse før forfallsdato";
 
-$lang["send_first_invoice_overdue_reminder_after"] = "Send 1st invoice overdue reminder after";
-$lang["send_second_invoice_overdue_reminder_after"] = "Send 2nd invoice overdue reminder after";
+$lang["send_first_invoice_overdue_reminder_after"] = "Send 1. faktura forsinket påminnelse etter";
+$lang["send_second_invoice_overdue_reminder_after"] = "Send 2. faktura forsinket påminnelse etter";
 
-$lang["product"] = "Product";
+$lang["product"] = "Produkt";
 
-$lang["subscription_id"] = "Subscription ID";
-$lang["subscription_sent_message"] = "The subscription has been sent!";
-$lang["add_subscription"] = "Add subscription";
-$lang["edit_subscription"] = "Edit subscription";
-$lang["delete_subscription"] = "Delete subscription";
-$lang["subscription"] = "Subscription";
-$lang["subscriptions"] = "Subscriptions";
-$lang["subscription_value"] = "Subscription Value";
-$lang["subscription_items"] = "Subscription items";
-$lang["email_subscription_to_client"] = "Email subscription to client";
-$lang["send_subscription"] = "Send subscription";
-$lang["subscription_settings"] = "Subscription Settings";
-$lang["subscription_prefix"] = "Subscription prefix";
-$lang["initial_number_of_the_subscription"] = "Initial number of the subscription";
-$lang["can_access_subscriptions"] = "Can access subscriptions?";
-$lang["show_in_subscription"] = "Show in subscription";
-$lang["subscription_total"] = "Subscription total";
-$lang["start_subscription"] = "Start subscription";
+$lang["subscription_id"] = "Abonnement-ID";
+$lang["subscription_sent_message"] = "Abonnementet er sendt!";
+$lang["add_subscription"] = "Legg til abonnement";
+$lang["edit_subscription"] = "Rediger abonnement";
+$lang["delete_subscription"] = "Slett abonnement";
+$lang["subscription"] = "Abonnement";
+$lang["subscriptions"] = "Abonnementer";
+$lang["subscription_value"] = "Abonnementsverdi";
+$lang["subscription_items"] = "Abonnementsartikler";
+$lang["email_subscription_to_client"] = "E-postabonnement til klient";
+$lang["send_subscription"] = "Send abonnement";
+$lang["subscription_settings"] = "Abonnementsinnstillinger";
+$lang["subscription_prefix"] = "Abonnementsprefiks";
+$lang["initial_number_of_the_subscription"] = "Opprinnelig nummer på abonnementet";
+$lang["can_access_subscriptions"] = "Kan få tilgang til abonnementer?";
+$lang["show_in_subscription"] = "Vis i abonnement";
+$lang["subscription_total"] = "Totalt abonnement";
+$lang["start_subscription"] = "Start abonnement";
 
-$lang["subscription_success_message"] = "You're subscription has been started successfully.";
+$lang["subscription_success_message"] = "Du har startet abonnementet.";
 
-$lang["enable_stripe_subscription"] = "Enable Stripe subscription";
-$lang["please_enable_the_stripe_payment_method_first"] = "Please enable the stripe payment method first!";
-$lang["tax_mapping"] = "Tax mapping";
-$lang["mapped"] = "Mapped";
-$lang["select_stripe_tax"] = "Select Stripe tax";
-$lang["stripe_price_error_message"] = "App subscription price and recurring interval should be same as stripe product price and interval.";
-$lang["stripe_tax_error_message"] = "Some taxes are not mapped with stripe yet. Please map the taxes from the subscription settings.";
-$lang["payment_status"] = "Payment status";
-$lang["failed"] = "Failed";
-$lang["next_billing_date"] = "Next billing date";
-$lang["cancel_subscription"] = "Cancel subscription";
+$lang["enable_stripe_subscription"] = "Aktiver Stripe-abonnement";
+$lang["please_enable_the_stripe_payment_method_first"] = "Vennligst aktiver stripe betalingsmåten først!";
+$lang["tax_mapping"] = "Skattekartlegging";
+$lang["mapped"] = "Tilordnet";
+$lang["select_stripe_tax"] = "Velg Stripe-skatt";
+$lang["stripe_price_error_message"] = "App-abonnementspris og gjentakende intervall bør være det samme som stripeproduktpris og intervall.";
+$lang["stripe_tax_error_message"] = "Noen skatter er ikke kartlagt med stripe ennå. Vennligst kartlegg avgiftene fra abonnementsinnstillingene.";
+$lang["payment_status"] = "Betalingsstatus";
+$lang["failed"] = "Mislyktes";
+$lang["next_billing_date"] = "Neste faktureringsdato";
+$lang["cancel_subscription"] = "Avbryt abonnement";
 
-$lang["invoice_number"] = "Invoice number";
-$lang["estimate_number"] = "Estimate number";
-$lang["order_number"] = "Order number";
+$lang["invoice_number"] = "Fakturanummer";
+$lang["estimate_number"] = "Estimatantall";
+$lang["order_number"] = "Ordrenummer";
 
-$lang["client_can_access_notes"] = "Client can access notes?";
+$lang["client_can_access_notes"] = "Klient kan få tilgang til notater?";
 
-$lang["my_tasks_overview"] = "My Tasks Overview";
+$lang["my_tasks_overview"] = "Mine oppgaver Oversikt";
 
-$lang["leads_overview"] = "Leads Overview";
-$lang["converted_to_client"] = "Converted to client";
+$lang["leads_overview"] = "Leads Oversikt";
+$lang["converted_to_client"] = "Konvertert til klient";
 
-$lang["remember_to_add_this_urls_in_authorized_redirect_uri"] = "Remember to add this urls in Authorized redirect uri";
+$lang["remember_to_add_this_urls_in_authorized_redirect_uri"] = "Husk å legge til disse nettadressene i autorisert omdirigerings-uri";
 
-$lang["merge"] = "Merge";
-$lang["move_all_comments_or_notes_from"] = "Move all comments/notes from";
-$lang["moved_to"] = "Moved to";
+$lang["merge"] = "Slå sammen";
+$lang["move_all_comments_or_notes_from"] = "Flytt alle kommentarer/notater fra";
+$lang["moved_to"] = "Flyttet til";
 
 $lang["ok"] = "OK";
 $lang["app"] = "App";
 $lang["stripe"] = "Stripe";
-$lang["activate_as_stripe_subscription"] = "Activate as Stripe subscription";
-$lang["activate_as_internal_subscription"] = "Activate as internal subscription";
-$lang["activate_as_stripe_subscription_message_1"] = "Please map the stripe product and price with this subscription. You can add the stripe products and prices from your stripe dashboard.";
-$lang["activate_as_stripe_subscription_message_2"] = "The client will get a request to add the payment method with this subscription. Once the client submit the payment method, this subscription will be activated and auto payment will be enabled via stripe.";
-$lang["activate_as_internal_subscription_message_1"] = "This subscription will be managed by app. The invoices will be created based on the subscription terms.";
-$lang["activate_as_internal_subscription_message_2"] = "Note: Payments will not be done automatically. For automated payment, you can use the stripe subscription.";
-$lang["subscription_toatl_can_not_empty_message"] = "Subscription total can't be 0.";
+$lang["activate_as_stripe_subscription"] = "Aktiver som Stripe-abonnement";
+$lang["activate_as_internal_subscription"] = "Aktiver som internt abonnement";
+$lang["activate_as_stripe_subscription_message_1"] = "Vennligst kartlegg stripeproduktet og prisen med dette abonnementet. Du kan legge til stripeproduktene og prisene fra stripe-dashbordet.";
+$lang["activate_as_stripe_subscription_message_2"] = "Klienten vil få en forespørsel om å legge til betalingsmåten med dette abonnementet. Når klienten har sendt inn betalingsmåten, vil dette abonnementet bli aktivert og automatisk betaling vil bli aktivert via stripe.";
+$lang["activate_as_internal_subscription_message_1"] = "Dette abonnementet vil bli administrert av app. Fakturaene vil bli opprettet basert på abonnementsvilkårene.";
+$lang["activate_as_internal_subscription_message_2"] = "Merk: Betalinger vil ikke bli gjort automatisk. For automatisk betaling kan du bruke stripe-abonnementet.";
+$lang["subscription_toatl_can_not_empty_message"] = "Abonnementssummen kan ikke være 0.";
 
-$lang["subscription_request_sent"] = "Subscription request sent";
-$lang["notification_subscription_request_sent"] = "New subscription request";
+$lang["subscription_request_sent"] = "Abonnementsforespørsel sendt";
+$lang["notification_subscription_request_sent"] = "Ny abonnementsforespørsel";
 
-$lang["first_billing_date"] = "First billing date";
-$lang["first_billing_date_cant_be_past_message"] = "First billing date can’t be past. Keep it blank to use the date when the client will subscribe.";
+$lang["first_billing_date"] = "Første faktureringsdato";
+$lang["first_billing_date_cant_be_past_message"] = "Første faktureringsdato kan ikke være forbi. Hold det tomt for å bruke datoen når klienten vil abonnere.";
 
-$lang["gst_number"] = "GST Number";
+$lang["gst_number"] = "GST-nummer";
 
-$lang["announcement_created"] = "Announcement created";
+$lang["announcement_created"] = "Kunngjøring opprettet";
 
-$lang["company_logo"] = "Company Logo";
+$lang["company_logo"] = "Bedriftslogo";
 
-$lang["task_commented"] = "Task commented";
-$lang["task_assigned"] = "Task assigned";
-$lang["task_general"] = "Task general";
+$lang["task_commented"] = "Oppgave kommentert";
+$lang["task_assigned"] = "Oppgave tildelt";
+$lang["task_general"] = "Oppgave generelt";
+
+/* Version 3.5 */
+
+$lang["visitors_can_see_store_before_login"] = "Besøkende kan se butikken før pålogging";
+$lang["show_payment_option_after_submitting_the_order"] = "Vis betalingsalternativet etter at du har sendt inn bestillingen";
+$lang["accept_order_before_login"] = "Godta ordre før pålogging";
+$lang["proceed_to_payment"] = "Fortsett til betaling";
+$lang["pay_order"] = "Betalordre";
+$lang["order_status_after_payment"] = "Bestillingsstatus etter betaling";
+$lang["store_settings"] = "Butikkinnstillinger";
+$lang["banner_image_on_public_store"] = "Bannerbilde på offentlig butikk";
+$lang["your_order_has_been_submitted"] = "Bestillingen din er sendt.";
+
+$lang["re_captcha_error-timeout-or-duplicate"] = "ReCAPTCHA er utløpt eller duplisert. Last inn siden på nytt.";
+
+$lang["related_to"] = "Relatert til";
+
+$lang["hide_from_non_project_related_tasks"] = "Skjul fra ikke-prosjektrelaterte oppgaver";
+$lang["add_task_in_project"] = "Legg til oppgave i prosjektet";
+
+$lang["general_task"] = "Generell oppgave";
+$lang["general_task_created"] = "Generell oppgave opprettet";
+$lang["general_task_updated"] = "Generell oppgave oppdatert";
+$lang["general_task_assigned"] = "Generell oppgave tildelt";
+$lang["general_task_started"] = "Generell oppgave startet";
+$lang["general_task_finished"] = "Generell oppgave fullført";
+$lang["general_task_reopened"] = "Generell oppgave gjenåpnet";
+$lang["general_task_deleted"] = "Generell oppgave slettet";
+$lang["general_task_commented"] = "Generell oppgave kommentert";
+
+$lang["notification_general_task_created"] = "Opprettet en ny oppgave.";
+$lang["notification_general_task_updated"] = "Oppdaterte en oppgave.";
+$lang["notification_general_task_assigned"] = "Tildelt en oppgave til %s."; //Assigned a task to Mr. X
+$lang["notification_general_task_started"] = "Startet en oppgave.";
+$lang["notification_general_task_finished"] = "Fullførte en oppgave.";
+$lang["notification_general_task_reopened"] = "Åpnet en oppgave på nytt.";
+$lang["notification_general_task_deleted"] = "Slettet en oppgave.";
+$lang["notification_general_task_commented"] = "Kommenterte en oppgave.";
+
+$lang["bookmark"] = "Bokmerke";
+$lang["bookmark_icon"] = "Bokmerkeikon";
+$lang["change_filters"] = "Endre filtre";
+$lang["manage_filters"] = "Administrer filtre";
+$lang["new_filter"] = "Nytt filter";
+$lang["update_filter"] = "Oppdater filter";
+$lang["add_new_filter"] = "Legg til nytt filter";
+$lang["show_time_with_task_start_date_and_deadline"] = "Vis tid med oppgavens startdato og frist";
+
+$lang["save_and_continue_to_login_for_payment"] = "Lagre og fortsett å logge på for betaling";
+$lang["public_store_page_setting_help_message"] = "Du kan angi butikken som landingsside ved å legge til 'butikk' i landingssideinnstillingen.";
+$lang["public_store_page_setting_permission_error_message"] = "Vennligst aktiver butikktilgangstillatelsen for klienter.";
+$lang["order_status_after_payment_help_message"] = "Dette vil kun gjelde når ordrestatusen er";
+
+$lang["subscription_first_billing_date_error_message"] = "Den første faktureringsdatoen bør være før neste faktureringsdato basert på faktureringsperioden!";
+$lang["client_currency_not_editable_message"] = "Valutaen er ikke redigerbar når det er noen faktura, estimat, ordre, forslag, kontrakt eller abonnement.";
+
+$lang["subscription_started"] = "Abonnement startet";
+$lang["notification_subscription_started"] = "Startet et abonnement.";
+
+$lang["subscription_invoice_created_via_cron_job"] = "Abonnementsfaktura opprettet via Cron Job";
+$lang["notification_subscription_invoice_created_via_cron_job"] = "Ny faktura generert fra abonnement.";
+
+$lang["create_credit_note"] = "Opprett kreditnota";
+$lang["create_credit_note_message"] = "Er du sikker? Du kommer til å kreditere denne fakturaen i sin helhet. En kreditnota vil bli opprettet for denne fakturaen.";
+$lang["credited"] = "Kreditert";
+$lang["credit_note"] = "Kredittnota";
+$lang["email_credit_note_to_client"] = "E-post kredittnota til klient";
+$lang["main_invoice"] = "Hovedfaktura";
+$lang["credit_note_id"] = "Kredittnota ID";
+$lang["send_credit_note"] = "Send kreditnota";
+
+$lang["taxable"] = "Skattepliktig";
+
+$lang["can_manage_team_members_notes"] = "Kan administrere lagmedlemmets notater?";
+$lang["team_members_can_not_see_own_notes"] = "Teammedlemmer kan ikke se egne notater.";
+
+$lang["articles_order"] = "Rekkefølge av artikler";
+$lang["top_menu"] = "Toppmeny";
+$lang["edit_top_menu"] = "Rediger toppmenyen";
+
+$lang["top_menu_description_message"] = "Denne menyen vil bare være synlig på de offentlige sidene";
+$lang["enable_top_menu"] = "Aktiver toppmenyen";
+$lang["menu_items"] = "Menyelementer";
+
+$lang["landing_page"] = "Landingsside";
+$lang["landing_page_help_text"] = "Hold det normalt tomt. Sett denne verdien kun hvis du vil ha en egendefinert landingsside. (Eksempelverdi: knowledge_base)";
+
+$lang["fixed_amount_discount_before_tax_error_message"] = "Rabatt med fast beløp kan ikke legges til før skatt.";
+
+$lang["invoices_summary"] = "Fakturasammendrag";
+$lang["estimates_summary"] = "Estimatsammendrag";
+$lang["leads_summary"] = "Sammendrag av kundeemner";
+$lang["orders_summary"] = "Ordresammendrag";
+$lang["estimate_request_summary"] = "Sammendrag av estimatforespørsel";
+$lang["proposals_summary"] = "Sammendrag av forslag";
+$lang["expenses_summary"] = "Utgiftssammendrag";
+$lang["monthly_summary"] = "Månedlig oppsummering";
+
+$lang["yearly_chart"] = "Årlig diagram";
+$lang["category_chart"] = "Kategoridiagram";
+
+$lang["count"] = "Tell";
+$lang["invoice_total"] = "Total faktura";
+$lang["order_total"] = "Bestilling totalt";
+
+$lang["last_7_days"] = "Siste 7 dager";
+$lang["next_7_days"] = "Neste 7 dager";
+$lang["last_30_days"] = "Siste 30 dager";
+$lang["this_month"] = "Denne måneden";
+$lang["last_month"] = "Siste måned";
+$lang["next_month"] = "Neste måned";
+$lang["next_year"] = "Neste år";
+
+$lang["hold_projects"] = "Hold prosjekter";
+$lang["open_tasks"] = "Åpne oppgaver";
+$lang["completed_tasks"] = "Fullførte oppgaver";
+
+$lang["team_members_summary"] = "Sammendrag av teammedlemmer";
+$lang["created_date_wise"] = "Opprettet datomessig";
+$lang["conversion_date_wise"] = "Konverteringsdato";
+
+$lang["ticket_statistics"] = "Billettstatistikk";
+
+$lang["can_activate_deactivate_team_members"] = "Kan aktivere deaktivere teammedlemmer?";
+$lang["can_delete_team_members"] = "Kan slette teammedlemmer?";
+
+$lang["project_settings"] = "Prosjektinnstillinger";
+$lang["project_status"] = "Prosjektstatus";
+$lang["add_project_status"] = "Legg til prosjektstatus";
+$lang["mark_project_as"] = "Merk prosjekt som";
+
+$lang["status_language_key_recommendation_help_text"] = "Anbefales å bruke et hvilket som helst prefiks som project_status_";
+$lang["edit_project_status"] = "Rediger prosjektstatus";
+$lang["delete_project_status"] = "Slett prosjektstatus";
+
+$lang["open_project_status_recommendation_help_text"] = "Du kan endre teksten, men denne statusen vil bli betraktet som initial åpen status.";
+$lang["completed_project_status_recommendation_help_text"] = "Du kan endre teksten, men denne statusen vil anses som fullført.";
+
+$lang["full_width"] = "Full bredde";
+$lang["hide_topbar"] = "Skjul topplinjen";
+
+/* Version 3.5.1 */
+
+$lang["enable_lock_state"] = "Aktiver låsetilstand";
+$lang["invoice_lock_state_description"] = "Når du har aktivert låsetilstanden, kan ikke fakturaene redigeres etter sending til klient eller endret status.";
+$lang["estimate_lock_state_description"] = "Når du har aktivert låsetilstanden, kan de aksepterte estimatene ikke redigeres.";
+$lang["proposal_lock_state_description"] = "Når du har aktivert låsetilstanden, kan de aksepterte forslagene ikke redigeres.";
+$lang["contract_lock_state_description"] = "Når du har aktivert låsetilstanden, kan de aksepterte kontraktene ikke redigeres.";
 
 return $lang;

@@ -2277,109 +2277,257 @@ $lang["total_after_discount"] = "Łącznie po rabacie";
 
 /* Version 3.3 */
 
-$lang["change_the_tasks_start_date_and_deadline_based_on_project_start_date"] = "Change the tasks start date and deadline based on project start date";
+$lang["change_the_tasks_start_date_and_deadline_based_on_project_start_date"] = "Zmień datę i termin rozpoczęcia zadań na podstawie daty rozpoczęcia projektu";
 
-$lang["can_edit_only_own_created_projects"] = "Can edit only own created projects";
-$lang["can_delete_only_own_created_projects"] = "Can delete only own created projects";
+$lang["can_edit_only_own_created_projects"] = "Może edytować tylko własne utworzone projekty";
+$lang["can_delete_only_own_created_projects"] = "Może usuwać tylko własne utworzone projekty";
 
-$lang["checklist_status"] = "Checklist status";
+$lang["checklist_status"] = "Status listy kontrolnej";
 
 /* Version 3.4 */
 
-$lang["subscribe"] = "Subscribe";
-$lang["email_protocol"] = "Email protocol";
+$lang["subscribe"] = "Subskrybuj";
+$lang["email_protocol"] = "Protokół e-mail";
 
-$lang["please_enable_the_file_uploads_php_settings"] = "Please enable the file_uploads php setting in the server.";
-$lang["file_size_too_large"] = "File size is too large. Please increase the upload_max_filesize from server.";
+$lang["please_enable_the_file_uploads_php_settings"] = "Włącz ustawienie php file_uploads na serwerze.";
+$lang["file_size_too_large"] = "Rozmiar pliku jest za duży. Zwiększ upload_max_filesize z serwera.";
 
-$lang["sub_task_status"] = "Sub task status";
+$lang["sub_task_status"] = "Status zadania podrzędnego";
 
-$lang["can_access_client_feedback_in_projects"] = "Can access client feedback in projects?";
-$lang["change_the_milestone_dates_based_on_project_start_date"] = "Change the milestone dates based on project start date";
+$lang["can_access_client_feedback_in_projects"] = "Czy można uzyskać dostęp do opinii klientów w projektach";
+$lang["change_the_milestone_dates_based_on_project_start_date"] = "Zmień daty kamieni milowych na podstawie daty rozpoczęcia projektu";
 
-$lang["send_first_due_invoice_reminder_notification_before"] = "Send 1st due invoice reminder before due date";
-$lang["send_second_due_invoice_reminder_notification_before"] = "Send 2nd due invoice reminder before due date";
+$lang["send_first_due_invoice_reminder_notification_before"] = "Wyślij przypomnienie o pierwszej fakturze przed terminem płatności";
+$lang["send_second_due_invoice_reminder_notification_before"] = "Wyślij przypomnienie o drugiej fakturze przed terminem płatności";
 
-$lang["send_first_invoice_overdue_reminder_after"] = "Send 1st invoice overdue reminder after";
-$lang["send_second_invoice_overdue_reminder_after"] = "Send 2nd invoice overdue reminder after";
+$lang["send_first_invoice_overdue_reminder_after"] = "Wyślij pierwsze przypomnienie o zaległej fakturze po";
+$lang["send_second_invoice_overdue_reminder_after"] = "Wyślij przypomnienie o drugiej zaległej fakturze po";
 
-$lang["product"] = "Product";
+$lang["product"] = "Produkt";
 
-$lang["subscription_id"] = "Subscription ID";
-$lang["subscription_sent_message"] = "The subscription has been sent!";
-$lang["add_subscription"] = "Add subscription";
-$lang["edit_subscription"] = "Edit subscription";
-$lang["delete_subscription"] = "Delete subscription";
-$lang["subscription"] = "Subscription";
-$lang["subscriptions"] = "Subscriptions";
-$lang["subscription_value"] = "Subscription Value";
-$lang["subscription_items"] = "Subscription items";
-$lang["email_subscription_to_client"] = "Email subscription to client";
-$lang["send_subscription"] = "Send subscription";
-$lang["subscription_settings"] = "Subscription Settings";
-$lang["subscription_prefix"] = "Subscription prefix";
-$lang["initial_number_of_the_subscription"] = "Initial number of the subscription";
-$lang["can_access_subscriptions"] = "Can access subscriptions?";
-$lang["show_in_subscription"] = "Show in subscription";
-$lang["subscription_total"] = "Subscription total";
-$lang["start_subscription"] = "Start subscription";
+$lang["subscription_id"] = "Identyfikator subskrypcji";
+$lang["subscription_sent_message"] = "Subskrypcja została wysłana!";
+$lang["add_subscription"] = "Dodaj subskrypcję";
+$lang["edit_subscription"] = "Edytuj subskrypcję";
+$lang["delete_subscription"] = "Usuń subskrypcję";
+$lang["subscription"] = "Subskrypcja";
+$lang["subscriptions"] = "Subskrypcje";
+$lang["subscription_value"] = "Wartość subskrypcji";
+$lang["subscription_items"] = "Elementy subskrypcji";
+$lang["email_subscription_to_client"] = "Subskrypcja e-mail do klienta";
+$lang["send_subscription"] = "Wyślij subskrypcję";
+$lang["subscription_settings"] = "Ustawienia subskrypcji";
+$lang["subscription_prefix"] = "Prefiks subskrypcji";
+$lang["initial_number_of_the_subscription"] = "Początkowy numer subskrypcji";
+$lang["can_access_subscriptions"] = "Czy można uzyskać dostęp do subskrypcji?";
+$lang["show_in_subscription"] = "Pokaż w subskrypcji";
+$lang["subscription_total"] = "Suma subskrypcji";
+$lang["start_subscription"] = "Rozpocznij subskrypcję";
 
-$lang["subscription_success_message"] = "You're subscription has been started successfully.";
+$lang["subscription_success_message"] = "Twoja subskrypcja została rozpoczęta pomyślnie.";
 
-$lang["enable_stripe_subscription"] = "Enable Stripe subscription";
-$lang["please_enable_the_stripe_payment_method_first"] = "Please enable the stripe payment method first!";
-$lang["tax_mapping"] = "Tax mapping";
-$lang["mapped"] = "Mapped";
-$lang["select_stripe_tax"] = "Select Stripe tax";
-$lang["stripe_price_error_message"] = "App subscription price and recurring interval should be same as stripe product price and interval.";
-$lang["stripe_tax_error_message"] = "Some taxes are not mapped with stripe yet. Please map the taxes from the subscription settings.";
-$lang["payment_status"] = "Payment status";
-$lang["failed"] = "Failed";
-$lang["next_billing_date"] = "Next billing date";
-$lang["cancel_subscription"] = "Cancel subscription";
+$lang["enable_stripe_subscription"] = "Włącz subskrypcję Stripe";
+$lang["please_enable_the_stripe_payment_method_first"] = "Najpierw włącz metodę płatności paskiem!";
+$lang["tax_mapping"] = "Mapowanie podatków";
+$lang["mapped"] = "Mapowany";
+$lang["select_stripe_tax"] = "Wybierz podatek Stripe";
+$lang["stripe_price_error_message"] = "Cena subskrypcji aplikacji i cykliczny interwał powinny być takie same jak cena i interwał produktu Stripe.";
+$lang["stripe_tax_error_message"] = "Niektóre podatki nie są jeszcze zmapowane z paskiem. Proszę zmapować podatki z ustawień subskrypcji.";
+$lang["payment_status"] = "Status płatności";
+$lang["failed"] = "Niepowodzenie";
+$lang["next_billing_date"] = "Następna data rozliczenia";
+$lang["cancel_subscription"] = "Anuluj subskrypcję";
 
-$lang["invoice_number"] = "Invoice number";
-$lang["estimate_number"] = "Estimate number";
-$lang["order_number"] = "Order number";
+$lang["invoice_number"] = "Numer faktury";
+$lang["estimate_number"] = "Oszacowana liczba";
+$lang["order_number"] = "Numer zamówienia";
 
-$lang["client_can_access_notes"] = "Client can access notes?";
+$lang["client_can_access_notes"] = "Klient ma dostęp do notatek?";
 
-$lang["my_tasks_overview"] = "My Tasks Overview";
+$lang["my_tasks_overview"] = "Przegląd moich zadań";
 
-$lang["leads_overview"] = "Leads Overview";
-$lang["converted_to_client"] = "Converted to client";
+$lang["leads_overview"] = "Przegląd potencjalnych klientów";
+$lang["converted_to_client"] = "Konwertowano na klienta";
 
-$lang["remember_to_add_this_urls_in_authorized_redirect_uri"] = "Remember to add this urls in Authorized redirect uri";
+$lang["remember_to_add_this_urls_in_authorized_redirect_uri"] = "Pamiętaj, aby dodać te adresy URL w URI autoryzowanego przekierowania";
 
-$lang["merge"] = "Merge";
-$lang["move_all_comments_or_notes_from"] = "Move all comments/notes from";
-$lang["moved_to"] = "Moved to";
+$lang["merge"] = "Połącz";
+$lang["move_all_comments_or_notes_from"] = "Przenieś wszystkie komentarze/notatki z";
+$lang["moved_to"] = "Przeniesiono do";
 
 $lang["ok"] = "OK";
-$lang["app"] = "App";
-$lang["stripe"] = "Stripe";
-$lang["activate_as_stripe_subscription"] = "Activate as Stripe subscription";
-$lang["activate_as_internal_subscription"] = "Activate as internal subscription";
-$lang["activate_as_stripe_subscription_message_1"] = "Please map the stripe product and price with this subscription. You can add the stripe products and prices from your stripe dashboard.";
-$lang["activate_as_stripe_subscription_message_2"] = "The client will get a request to add the payment method with this subscription. Once the client submit the payment method, this subscription will be activated and auto payment will be enabled via stripe.";
-$lang["activate_as_internal_subscription_message_1"] = "This subscription will be managed by app. The invoices will be created based on the subscription terms.";
-$lang["activate_as_internal_subscription_message_2"] = "Note: Payments will not be done automatically. For automated payment, you can use the stripe subscription.";
-$lang["subscription_toatl_can_not_empty_message"] = "Subscription total can't be 0.";
+$lang["app"] = "Aplikacja";
+$lang["stripe"] = "Pasek";
+$lang["activate_as_stripe_subscription"] = "Aktywuj jako subskrypcję Stripe";
+$lang["activate_as_internal_subscription"] = "Aktywuj jako subskrypcję wewnętrzną";
+$lang["activate_as_stripe_subscription_message_1"] = "Zmapuj produkt i cenę paska z tą subskrypcją. Możesz dodać produkty i ceny paska z pulpitu paska.";
+$lang["activate_as_stripe_subscription_message_2"] = "Klient otrzyma prośbę o dodanie metody płatności do tej subskrypcji. Gdy klient prześle metodę płatności, ta subskrypcja zostanie aktywowana, a płatność automatyczna zostanie włączona za pomocą paska.";
+$lang["activate_as_internal_subscription_message_1"] = "Ta subskrypcja będzie zarządzana przez aplikację. Faktury będą tworzone na podstawie warunków subskrypcji.";
+$lang["activate_as_internal_subscription_message_2"] = "Uwaga: Płatności nie będą dokonywane automatycznie. W przypadku płatności automatycznych możesz skorzystać z subskrypcji paskowej.";
+$lang["subscription_toatl_can_not_empty_message"] = "Suma subskrypcji nie może wynosić 0.";
 
-$lang["subscription_request_sent"] = "Subscription request sent";
-$lang["notification_subscription_request_sent"] = "New subscription request";
+$lang["subscription_request_sent"] = "Wysłano prośbę o subskrypcję";
+$lang["notification_subscription_request_sent"] = "Nowe żądanie subskrypcji";
 
-$lang["first_billing_date"] = "First billing date";
-$lang["first_billing_date_cant_be_past_message"] = "First billing date can’t be past. Keep it blank to use the date when the client will subscribe.";
+$lang["first_billing_date"] = "Data pierwszego rozliczenia";
+$lang["first_billing_date_cant_be_past_message"] = "Data pierwszego rozliczenia nie może być wcześniejsza. Pozostaw to pole puste, aby użyć daty, kiedy klient rozpocznie subskrypcję.";
 
-$lang["gst_number"] = "GST Number";
+$lang["gst_number"] = "Numer GST";
 
-$lang["announcement_created"] = "Announcement created";
+$lang["announcement_created"] = "Ogłoszenie utworzone";
 
-$lang["company_logo"] = "Company Logo";
+$lang["company_logo"] = "Logo firmy";
 
-$lang["task_commented"] = "Task commented";
-$lang["task_assigned"] = "Task assigned";
-$lang["task_general"] = "Task general";
+$lang["task_commented"] = "Zadanie skomentowane";
+$lang["task_assigned"] = "Zadanie przydzielone";
+$lang["task_general"] = "Zadanie ogólne";
+
+/* Version 3.5 */
+
+$lang["visitors_can_see_store_before_login"] = "Odwiedzający mogą zobaczyć sklep przed zalogowaniem";
+$lang["show_payment_option_after_submitting_the_order"] = "Pokaż opcję płatności po złożeniu zamówienia";
+$lang["accept_order_before_login"] = "Zaakceptuj zamówienie przed zalogowaniem";
+$lang["proceed_to_payment"] = "Przejdź do płatności";
+$lang["pay_order"] = "Zlecenie zapłaty";
+$lang["order_status_after_payment"] = "Status zamówienia po dokonaniu płatności";
+$lang["store_settings"] = "Zapisz ustawienia";
+$lang["banner_image_on_public_store"] = "Obraz banera w sklepie publicznym";
+$lang["your_order_has_been_submitted"] = "Twoje zamówienie zostało przesłane.";
+
+$lang["re_captcha_error-timeout-or-duplicate"] = "ReCAPTCHA wygasła lub jest zduplikowana. Załaduj ponownie stronę.";
+
+$lang["related_to"] = "Powiązany z";
+
+$lang["hide_from_non_project_related_tasks"] = "Ukryj przed zadaniami niezwiązanymi z projektem";
+$lang["add_task_in_project"] = "Dodaj zadanie w projekcie";
+
+$lang["general_task"] = "Ogólne zadanie";
+$lang["general_task_created"] = "Utworzono ogólne zadanie";
+$lang["general_task_updated"] = "Ogólne zadanie zaktualizowane";
+$lang["general_task_assigned"] = "Przydzielone zadanie ogólne";
+$lang["general_task_started"] = "Zadanie ogólne rozpoczęte";
+$lang["general_task_finished"] = "Zadanie ogólne zakończone";
+$lang["general_task_reopened"] = "Zadanie ogólne ponownie otwarte";
+$lang["general_task_deleted"] = "Usunięto zadanie ogólne";
+$lang["general_task_commented"] = "Ogólne zadanie zostało skomentowane";
+
+$lang["notification_general_task_created"] = "Utworzono nowe zadanie.";
+$lang["notification_general_task_updated"] = "Zaktualizowano zadanie.";
+$lang["notification_general_task_assigned"] = "Przypisano zadanie do %s."; //Assigned a task to Mr. X
+$lang["notification_general_task_started"] = "Rozpoczęto zadanie.";
+$lang["notification_general_task_finished"] = "Ukończono zadanie.";
+$lang["notification_general_task_reopened"] = "Ponownie otwarto zadanie.";
+$lang["notification_general_task_deleted"] = "Usunięto zadanie.";
+$lang["notification_general_task_commented"] = "Dodano komentarz do zadania.";
+
+$lang["bookmark"] = "Zakładka";
+$lang["bookmark_icon"] = "Ikona zakładki";
+$lang["change_filters"] = "Zmień filtry";
+$lang["manage_filters"] = "Zarządzaj filtrami";
+$lang["new_filter"] = "Nowy filtr";
+$lang["update_filter"] = "Filtr aktualizacji";
+$lang["add_new_filter"] = "Dodaj nowy filtr";
+$lang["show_time_with_task_start_date_and_deadline"] = "Pokaż czas z datą rozpoczęcia zadania i ostatecznym terminem";
+
+$lang["save_and_continue_to_login_for_payment"] = "Zapisz i kontynuuj logowanie do płatności";
+$lang["public_store_page_setting_help_message"] = "Możesz ustawić sklep jako stronę docelową, dodając 'sklep' w ustawieniach strony docelowej.";
+$lang["public_store_page_setting_permission_error_message"] = "Proszę włączyć uprawnienia dostępu do sklepu dla klientów.";
+$lang["order_status_after_payment_help_message"] = "Będzie to miało zastosowanie tylko wtedy, gdy status zamówienia to";
+
+$lang["subscription_first_billing_date_error_message"] = "Pierwsza data rozliczenia powinna przypadać przed kolejną datą rozliczenia na podstawie okresu rozliczeniowego!";
+$lang["client_currency_not_editable_message"] = "Waluty nie można edytować, gdy jest jakakolwiek faktura, kosztorys, zamówienie, propozycja, umowa lub subskrypcja.";
+
+$lang["subscription_started"] = "Subskrypcja rozpoczęta";
+$lang["notification_subscription_started"] = "Rozpoczęto subskrypcję.";
+
+$lang["subscription_invoice_created_via_cron_job"] = "Faktura subskrypcyjna utworzona za pomocą zadania Cron";
+$lang["notification_subscription_invoice_created_via_cron_job"] = "Nowa faktura wygenerowana z subskrypcji.";
+
+$lang["create_credit_note"] = "Utwórz notę kredytową";
+$lang["create_credit_note_message"] = "Czy na pewno? Zamierzasz w pełni zaksięgować tę fakturę. Dla tej faktury zostanie utworzona nota kredytowa.";
+$lang["credited"] = "kredytowane";
+$lang["credit_note"] = "Nota kredytowa";
+$lang["email_credit_note_to_client"] = "Wyślij notę kredytową do klienta";
+$lang["main_invoice"] = "Główna faktura";
+$lang["credit_note_id"] = "Identyfikator noty kredytowej";
+$lang["send_credit_note"] = "Wyślij notę kredytową";
+
+$lang["taxable"] = "Podlegający opodatkowaniu";
+
+$lang["can_manage_team_members_notes"] = "Czy możesz zarządzać notatkami członków zespołu?";
+$lang["team_members_can_not_see_own_notes"] = "Członkowie zespołu nie widzą własnych notatek.";
+
+$lang["articles_order"] = "Kolejność artykułów";
+$lang["top_menu"] = "Główne menu";
+$lang["edit_top_menu"] = "Edytuj górne menu";
+
+$lang["top_menu_description_message"] = "To menu będzie widoczne tylko na stronach publicznych";
+$lang["enable_top_menu"] = "Włącz górne menu";
+$lang["menu_items"] = "Pozycje menu";
+
+$lang["landing_page"] = "Strona docelowa";
+$lang["landing_page_help_text"] = "Zwykle pozostaw to pole puste. Ustaw tę wartość tylko wtedy, gdy chcesz mieć niestandardową stronę docelową. (Przykładowa wartość: baza_wiedzy)";
+
+$lang["fixed_amount_discount_before_tax_error_message"] = "Nie można dodać stałej kwoty rabatu przed opodatkowaniem.";
+
+$lang["invoices_summary"] = "Podsumowanie faktur";
+$lang["estimates_summary"] = "Podsumowanie szacunków";
+$lang["leads_summary"] = "Podsumowanie potencjalnych klientów";
+$lang["orders_summary"] = "Podsumowanie zamówień";
+$lang["estimate_request_summary"] = "Podsumowanie zapytania o oszacowanie";
+$lang["proposals_summary"] = "Podsumowanie propozycji";
+$lang["expenses_summary"] = "Podsumowanie wydatków";
+$lang["monthly_summary"] = "Podsumowanie miesięczne";
+
+$lang["yearly_chart"] = "Wykres roczny";
+$lang["category_chart"] = "Wykres kategorii";
+
+$lang["count"] = "liczba";
+$lang["invoice_total"] = "Suma faktury";
+$lang["order_total"] = "Suma zamówienia";
+
+$lang["last_7_days"] = "Ostatnie 7 dni";
+$lang["next_7_days"] = "Następne 7 dni";
+$lang["last_30_days"] = "Ostatnie 30 dni";
+$lang["this_month"] = "Ten miesiąc";
+$lang["last_month"] = "Ostatni miesiąc";
+$lang["next_month"] = "Następny miesiąc";
+$lang["next_year"] = "Następny rok";
+
+$lang["hold_projects"] = "Wstrzymaj projekty";
+$lang["open_tasks"] = "Otwórz zadania";
+$lang["completed_tasks"] = "Ukończone zadania";
+
+$lang["team_members_summary"] = "Podsumowanie członków zespołu";
+$lang["created_date_wise"] = "Data utworzenia";
+$lang["conversion_date_wise"] = "Pod względem daty konwersji";
+
+$lang["ticket_statistics"] = "Statystyki biletów";
+
+$lang["can_activate_deactivate_team_members"] = "Czy można aktywować dezaktywować członków zespołu?";
+$lang["can_delete_team_members"] = "Czy można usuwać członków zespołu?";
+
+$lang["project_settings"] = "Ustawienia projektu";
+$lang["project_status"] = "Status projektu";
+$lang["add_project_status"] = "Dodaj status projektu";
+$lang["mark_project_as"] = "Oznacz projekt jako";
+
+$lang["status_language_key_recommendation_help_text"] = "Zalecane użycie przedrostka typu project_status_";
+$lang["edit_project_status"] = "Edytuj status projektu";
+$lang["delete_project_status"] = "Usuń status projektu";
+
+$lang["open_project_status_recommendation_help_text"] = "Możesz zmienić tekst, ale ten status będzie traktowany jako początkowy status otwarty.";
+$lang["completed_project_status_recommendation_help_text"] = "Możesz zmienić tekst, ale ten status zostanie uznany za zakończony.";
+
+$lang["full_width"] = "Pełna szerokość";
+$lang["hide_topbar"] = "Ukryj górny pasek";
+
+/* Version 3.5.1 */
+
+$lang["enable_lock_state"] = "Włącz stan blokady";
+$lang["invoice_lock_state_description"] = "Po włączeniu stanu blokady faktury nie mogą być edytowane po wysłaniu do klienta lub zmianie statusu.";
+$lang["estimate_lock_state_description"] = "Po włączeniu stanu blokady zaakceptowane oszacowania nie mogą być edytowane.";
+$lang["proposal_lock_state_description"] = "Po włączeniu stanu blokady zaakceptowane propozycje nie mogą być edytowane.";
+$lang["contract_lock_state_description"] = "Po włączeniu stanu blokady zaakceptowane umowy nie mogą być edytowane.";
 
 return $lang;

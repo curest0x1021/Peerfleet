@@ -198,30 +198,39 @@ if (!function_exists('upload_file_to_temp')) {
 
     function upload_file_to_temp($upload_to_local = false) {
         if (!empty($_FILES)) {
-            $temp_file = $_FILES['file']['tmp_name'];
-            $file_name = $_FILES['file']['name'];
-            $mime_type = $_FILES['file']['type'];
+            $file = get_array_value($_FILES, "file");
 
-            if (!is_valid_file_to_upload($file_name))
+            if (!$file) {
+                die("Invalid file");
+            }
+
+            $temp_file = get_array_value($file, "tmp_name");
+            $file_name = get_array_value($file, "name");
+            $file_size = get_array_value($file, "size");
+
+            if (!is_valid_file_to_upload($file_name)) {
                 return false;
+            }
+
 
             if (defined('PLUGIN_CUSTOM_STORAGE') && !$upload_to_local) {
                 try {
                     app_hooks()->do_action('app_hook_upload_file_to_temp', array(
                         "temp_file" => $temp_file,
-                        "file_name" => $file_name
+                        "file_name" => $file_name,
+                        "file_size" => $file_size
                     ));
                 } catch (\Exception $ex) {
                     log_message('error', '[ERROR] {exception}', ['exception' => $ex]);
                 }
             } else if (get_setting("enable_google_drive_api_to_upload_file") && get_setting("google_drive_authorized") && !$upload_to_local) {
                 $google = new Google();
-                $google->upload_file($temp_file, $file_name, "temp");
+                $google->upload_file($temp_file, $file_name, "temp", "", $file_size);
             } else {
                 $temp_file_path = get_setting("temp_file_path");
                 $target_path = getcwd() . '/' . $temp_file_path;
                 if (!is_dir($target_path)) {
-                    if (!mkdir($target_path, 0777, true)) {
+                    if (!mkdir($target_path, 0755, true)) {
                         die('Failed to create file folders.');
                     }
                 }
@@ -247,7 +256,7 @@ if (!function_exists('upload_file_to_temp')) {
  */
 if (!function_exists('move_temp_file')) {
 
-    function move_temp_file($file_name, $target_path, $related_to = "", $source_path = NULL, $static_file_name = "", $file_content = "", $direct_upload = false) {
+    function move_temp_file($file_name, $target_path, $related_to = "", $source_path = NULL, $static_file_name = "", $file_content = "", $direct_upload = false, $file_size = 0) {
         //to make the file name unique we'll add a prefix
         $filename_prefix = $related_to . "_" . uniqid("file") . "-";
 
@@ -291,7 +300,12 @@ if (!function_exists('move_temp_file')) {
 
             if ($file_name == "avatar.png" || $file_name == "site-logo.png" || $file_name == "invoice-logo.png" || $file_name == "estimate-logo.png" || $file_name == "order-logo.png" || $file_name == "favicon.png" || $related_to == "imap_ticket" || $related_to == "pasted_image" || $file_content || $direct_upload) {
                 //directly upload to the main directory
-                $files_data = $google->upload_file($source_path, $new_filename, get_drive_folder_name($target_path), $file_content);
+
+                if (!$file_size && $source_path) {
+                    $file_size = strlen(base64_decode(get_array_value(explode(",", $source_path), 1)));
+                }
+
+                $files_data = $google->upload_file($source_path, $new_filename, get_drive_folder_name($target_path), $file_content, $file_size);
             } else {
                 $files_data = $google->move_temp_file($file_name, $new_filename, get_drive_folder_name($target_path));
             }
@@ -347,7 +361,7 @@ if (!function_exists("get_drive_folder_name")) {
         if ($target_path) {
             $folders_array = array("profile_images", "timeline_files", "project_files", "system", "general", "temp");
             $folders_array = app_hooks()->apply_filters('app_filter_add_folder_to_google_drive_valid_folders_array', $folders_array);
-    
+
             $explode_target_path = explode("/", $target_path);
 
             foreach ($folders_array as $folder_name) {
@@ -534,10 +548,12 @@ if (!function_exists('move_files_from_temp_dir_to_permanent_dir')) {
 
         if ($file_names && get_array_value($file_names, 0)) {
             foreach ($file_names as $key => $file_name) {
-                $file_data = move_temp_file($file_name, $target_path, $related_to);
+
+                $file_size = get_array_value($file_sizes, $key);
+                $file_data = move_temp_file($file_name, $target_path, $related_to, null, "", "", false, $file_size);
                 $files_data[] = array(
                     "file_name" => get_array_value($file_data, "file_name"),
-                    "file_size" => get_array_value($file_sizes, $key),
+                    "file_size" => $file_size,
                     "file_id" => get_array_value($file_data, "file_id"),
                     "service_type" => get_array_value($file_data, "service_type")
                 );
@@ -553,7 +569,7 @@ if (!function_exists('move_files_from_temp_dir_to_permanent_dir')) {
                     $file_name = $files["name"][$key];
                     $file_size = $files["size"][$key];
 
-                    $file_data = move_temp_file($file_name, $target_path, $related_to, $temp_file);
+                    $file_data = move_temp_file($file_name, $target_path, $related_to, $temp_file, "", "", false, $file_size);
                     $files_data[] = array(
                         "file_name" => get_array_value($file_data, "file_name"),
                         "file_size" => $file_size,

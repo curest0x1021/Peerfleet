@@ -75,7 +75,7 @@ class Pay_invoice extends App_Controller {
         try {
             $session = $stripe->get_stripe_checkout_session($this->request->getPost("input_data"));
             if ($session->id) {
-                echo json_encode(array("success" => true, "session_id" => $session->id, "publishable_key" => $stripe->get_publishable_key()));
+                echo json_encode(array("success" => true, "checkout_url" => $session->url));
             } else {
                 echo json_encode(array('success' => false, 'message' => app_lang('error_occurred')));
             }

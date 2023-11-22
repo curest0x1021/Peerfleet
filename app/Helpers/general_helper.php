@@ -591,6 +591,10 @@ if (!function_exists('send_app_mail')) {
 
     function send_app_mail($to, $subject, $message, $optoins = array(), $convert_message_to_html = true) {
 
+        if (config('Logger')->threshold >= 6) {
+            log_message('notice', 'Email: ' . $to . ' Subject: ' . $subject);
+        }
+
         $email_protocol = get_setting("email_protocol");
         if ($email_protocol === "microsoft_outlook") {
             $Outlook_smtp = new Outlook_smtp();
@@ -807,22 +811,27 @@ if (!function_exists('get_invoice_status_label')) {
         $status = "not_paid";
         $now = get_my_local_time("Y-m-d");
 
+        $tolarance = get_paid_status_tolarance();
+
         //ignore the hidden value. check only 2 decimal place.
         $invoice_info->invoice_value = floor($invoice_info->invoice_value * 100) / 100;
 
         if ($invoice_info->status == "cancelled") {
             $invoice_status_class = "bg-danger";
             $status = "cancelled";
-        } else if ($invoice_info->status != "draft" && $invoice_info->due_date < $now && $invoice_info->payment_received < $invoice_info->invoice_value) {
+        } else if ($invoice_info->status == "credited") {
+            $invoice_status_class = "bg-danger";
+            $status = "credited";
+        } else if ($invoice_info->status != "draft" && $invoice_info->due_date < $now && $invoice_info->payment_received < $invoice_info->invoice_value - $tolarance) {
             $invoice_status_class = "bg-danger";
             $status = "overdue";
         } else if ($invoice_info->status !== "draft" && $invoice_info->payment_received <= 0) {
             $invoice_status_class = "bg-warning";
             $status = "not_paid";
-        } else if ($invoice_info->payment_received * 1 && $invoice_info->payment_received >= $invoice_info->invoice_value) {
+        } else if ($invoice_info->payment_received * 1 && $invoice_info->payment_received >= $invoice_info->invoice_value - $tolarance) {
             $invoice_status_class = "bg-success";
             $status = "fully_paid";
-        } else if ($invoice_info->payment_received > 0 && $invoice_info->payment_received < $invoice_info->invoice_value) {
+        } else if ($invoice_info->payment_received > 0 && $invoice_info->payment_received < $invoice_info->invoice_value - $tolarance) {
             $invoice_status_class = "bg-primary";
             $status = "partially_paid";
         } else if ($invoice_info->status === "draft") {
@@ -858,7 +867,6 @@ if (!function_exists('get_invoice_making_data')) {
             $data['invoice_items'] = $ci->Invoice_items_model->get_details(array("invoice_id" => $invoice_id))->getResult();
             $data['invoice_status_label'] = get_invoice_status_label($invoice_info);
             $data["invoice_total_summary"] = $ci->Invoices_model->get_invoice_total_summary($invoice_id);
-
             $data['invoice_info']->custom_fields = $ci->Custom_field_values_model->get_details(array("related_to_type" => "invoices", "show_in_invoice" => true, "related_to_id" => $invoice_id))->getResult();
             $data['client_info']->custom_fields = $ci->Custom_field_values_model->get_details(array("related_to_type" => "clients", "show_in_invoice" => true, "related_to_id" => $data['invoice_info']->client_id))->getResult();
             return $data;
@@ -1171,7 +1179,7 @@ if (!function_exists('get_proposal_making_data')) {
  */
 if (!function_exists('get_order_making_data')) {
 
-    function get_order_making_data($order_id = 0) {
+    function get_order_making_data($order_id = 0, $cookie_hash = "") {
         $ci = new Security_Controller(false);
         $data = array();
         if ($order_id) {
@@ -1188,7 +1196,8 @@ if (!function_exists('get_order_making_data')) {
         } else {
             //order total when it's in cart 
             //count all items of login user (client)
-            $data["order_total_summary"] = $ci->Orders_model->get_processing_order_total_summary($ci->login_user->id);
+            $login_user_id = isset($ci->login_user->id) ? $ci->login_user->id : 0;
+            $data["order_total_summary"] = $ci->Orders_model->get_processing_order_total_summary($login_user_id, $cookie_hash);
         }
         return $data;
     }
@@ -1487,11 +1496,13 @@ if (!function_exists("get_logo_url")) {
 //get logo from setting
 if (!function_exists("get_file_from_setting")) {
 
-    function get_file_from_setting($setting_name = "", $only_file_path_with_slash = false) {
+    function get_file_from_setting($setting_name = "", $only_file_path_with_slash = false, $file_path = "") {
 
         if ($setting_name) {
             $setting_value = get_setting($setting_name);
             if ($setting_value) {
+                $file_path = $file_path ? $file_path : get_setting("system_file_path");
+
                 $file = @unserialize($setting_value);
                 if (is_array($file)) {
 
@@ -1501,12 +1512,12 @@ if (!function_exists("get_file_from_setting")) {
                         $show_full_size_thumbnail = true;
                     }
 
-                    return get_source_url_of_file($file, get_setting("system_file_path"), "thumbnail", $only_file_path_with_slash, $only_file_path_with_slash, $show_full_size_thumbnail);
+                    return get_source_url_of_file($file, $file_path, "thumbnail", $only_file_path_with_slash, $only_file_path_with_slash, $show_full_size_thumbnail);
                 } else {
                     if ($only_file_path_with_slash) {
-                        return "/" . (get_setting("system_file_path") . $setting_value);
+                        return "/" . ($file_path . $setting_value);
                     } else {
-                        return get_file_uri(get_setting("system_file_path") . $setting_value);
+                        return get_file_uri($file_path . $setting_value);
                     }
                 }
             }
@@ -1647,9 +1658,25 @@ if (!function_exists("get_update_task_info_anchor_data")) {
                 $start_date = format_to_date($model_info->start_date, false);
             }
 
+            $start_time = ""; //don't show start time if don't have the start date
+            if ($model_info->start_date) {
+                $start_time = "<span class='text-off'>" . app_lang("add") . " " . app_lang("start_time") . "<span>";
+                if (date("H:i:s", strtotime($model_info->start_date)) != "00:00:00") {
+                    $start_time = format_to_time($model_info->start_date, false, true);
+                }
+            }
+
             $deadline = "<span class='text-off'>" . app_lang("add") . " " . app_lang("deadline") . "<span>";
             if ($model_info->deadline) {
                 $deadline = format_to_date($model_info->deadline, false);
+            }
+
+            $end_time = ""; //don't show end time if don't have the deadline
+            if ($model_info->deadline && !$model_info->deadline_milestone_title) {
+                $end_time = "<span class='text-off'>" . app_lang("add") . " " . app_lang("end_time") . "<span>";
+                if (date("H:i:s", strtotime($model_info->deadline)) != "00:00:00") {
+                    $end_time = format_to_time($model_info->deadline, false, true);
+                }
             }
 
             $labels = "<span class='text-off'>" . app_lang("add") . " " . app_lang("label") . "<span>";
@@ -1682,10 +1709,16 @@ if (!function_exists("get_update_task_info_anchor_data")) {
                 return $can_edit_tasks ? js_anchor($collaborators, array('title' => "", "class" => "", "data-id" => $model_info->id, "data-value" => $model_info->collaborators, "data-act" => "update-task-info", "data-act-type" => "collaborators")) : $extra_data;
             } else if ($type == "start_date") {
 
-                return $can_edit_tasks ? js_anchor($start_date, array('title' => "", "class" => "", "data-id" => $model_info->id, "data-value" => $model_info->start_date, "data-act" => "update-task-info", "data-act-type" => "start_date")) : format_to_date($model_info->start_date, false);
+                return $can_edit_tasks ? js_anchor($start_date, array('title' => "", "class" => "", "data-id" => $model_info->id, "data-value" => $model_info->start_date ? date("Y-m-d", strtotime($model_info->start_date)) : "", "data-act" => "update-task-info", "data-act-type" => "start_date")) : format_to_date($model_info->start_date, false);
+            } else if ($type == "start_time") {
+
+                return $can_edit_tasks ? js_anchor($start_time, array('title' => "", "class" => "", "data-id" => $model_info->id, "data-value" => format_to_time($model_info->start_date, false), "data-act" => "update-task-info", "data-act-type" => "start_time")) : format_to_time($model_info->start_date, false);
             } else if ($type == "deadline") {
 
-                return $can_edit_tasks ? js_anchor($deadline, array('title' => "", "class" => "", "data-id" => $model_info->id, "data-value" => $model_info->deadline, "data-act" => "update-task-info", "data-act-type" => "deadline")) : format_to_date($model_info->deadline, false);
+                return $can_edit_tasks ? js_anchor($deadline, array('title' => "", "class" => "", "data-id" => $model_info->id, "data-value" => $model_info->deadline ? date("Y-m-d", strtotime($model_info->deadline)) : "", "data-act" => "update-task-info", "data-act-type" => "deadline")) : format_to_date($model_info->deadline, false);
+            } else if ($type == "end_time") {
+
+                return $can_edit_tasks ? js_anchor($end_time, array('title' => "", "class" => "", "data-id" => $model_info->id, "data-value" => format_to_time($model_info->deadline, false), "data-act" => "update-task-info", "data-act-type" => "end_time")) : format_to_time($model_info->deadline, false);
             } else if ($type == "priority") {
 
                 $priority = "<span class='sub-task-icon priority-badge' style='background: $model_info->priority_color'><i data-feather='$model_info->priority_icon' class='icon-14'></i></span> $model_info->priority_title";
@@ -2035,7 +2068,7 @@ if (!function_exists('prepare_contract_view')) {
             $view_data["client_info"] = $client_info;
             $view_data["is_preview"] = true;
             $parser_data["CONTRACT_TO_INFO"] = view("contracts/contract_parts/contract_to", $view_data);
-            $parser_data["CONTRACT_TO_COMPANY_NAME"] = $client_info->company_name;
+            $parser_data["CONTRACT_TO_COMPANY_NAME"] = $client_info->charter_name;
             $parser_data["CONTRACT_TO_ADDRESS"] = $client_info->address;
             $parser_data["CONTRACT_TO_CITY"] = $client_info->city;
             $parser_data["CONTRACT_TO_STATE"] = $client_info->state;
@@ -2181,7 +2214,7 @@ if (!function_exists('convert_comment_link')) {
                     $comment_id = get_array_value($explode_link_code, 1);
                     $comment_text = $link_texts[$key];
 
-                    $links[] = anchor(get_uri("projects/task_view/" . $task_id . "/#comment-" . $comment_id), $comment_text, array('class' => 'comment-highlight-link', 'data-comment-id' => $comment_id, 'data-task-id' => $task_id));
+                    $links[] = anchor(get_uri("tasks/view/" . $task_id . "/#comment-" . $comment_id), $comment_text, array('class' => 'comment-highlight-link', 'data-comment-id' => $comment_id, 'data-task-id' => $task_id));
                 } else {
                     $links[] = $link_texts[$key];
                 }
@@ -2210,7 +2243,7 @@ if (!function_exists('convert_comment_link')) {
 
 /**
  * get all data to make an proposal
- * 
+ *
  * @param proposal making data $proposal_data
  * @return array
  */
@@ -2257,7 +2290,7 @@ if (!function_exists('prepare_proposal_view')) {
             $view_data["client_info"] = $client_info;
             $view_data["is_preview"] = true;
             $parser_data["PROPOSAL_TO_INFO"] = view("proposals/proposal_parts/proposal_to", $view_data);
-            $parser_data["PROPOSAL_TO_COMPANY_NAME"] = $client_info->company_name;
+            $parser_data["PROPOSAL_TO_COMPANY_NAME"] = $client_info->charter_name;
             $parser_data["PROPOSAL_TO_ADDRESS"] = $client_info->address;
             $parser_data["PROPOSAL_TO_CITY"] = $client_info->city;
             $parser_data["PROPOSAL_TO_STATE"] = $client_info->state;
@@ -2535,9 +2568,11 @@ if (!function_exists('create_invoice_from_subscription')) {
                 "rate" => $item->rate,
                 "total" => $item->total,
                 "invoice_id" => $new_invoice_id,
+                "taxable" => 1
             );
             $ci->Invoice_items_model->ci_save($new_invoice_item_data);
         }
+        $ci->Invoices_model->update_invoice_total_meta($new_invoice_id);
 
         return $new_invoice_id;
     }
@@ -2558,7 +2593,7 @@ if (!function_exists('can_access_reminders_module')) {
 
 if (!function_exists('show_clients_of_this_client_contact')) {
 
-    function show_clients_of_this_client_contact($login_user) {
+    function show_clients_of_this_client_contact($login_user, $show_icon = false) {
         $Users_model = model('App\Models\Users_model');
         $Clients_model = model('App\Models\Clients_model');
         $clients = $Users_model->get_other_clients_of_this_client_contact($login_user->email, $login_user->id)->getResult();
@@ -2566,6 +2601,7 @@ if (!function_exists('show_clients_of_this_client_contact')) {
         if (count($clients)) {
             $view_data["clients"] = $clients;
             $view_data["login_user_company_name"] = $Clients_model->get_one($login_user->client_id)->charter_name;
+            $view_data["show_icon"] = $show_icon;
             echo view("clients/clients_dropdown_of_this_client_contact", $view_data);
         }
     }
@@ -2612,25 +2648,38 @@ if (!function_exists('get_reminder_context_info')) {
         $context_icon = "";
 
         if ($reminder_info->lead_id) {
-
             $context_url = get_uri("leads/view/$reminder_info->lead_id");
             $context_icon = "layers";
         } else if ($reminder_info->client_id) {
-
             $context_url = get_uri("clients/view/$reminder_info->client_id");
             $context_icon = "briefcase";
         } else if ($reminder_info->task_id) {
-
-            $context_url = get_uri("projects/task_view/$reminder_info->task_id");
+            $context_url = get_uri("tasks/view/$reminder_info->task_id");
             $context_icon = "check-circle";
         } else if ($reminder_info->project_id) {
-
             $context_url = get_uri("projects/view/$reminder_info->project_id");
             $context_icon = "grid";
         } else if ($reminder_info->ticket_id) {
-
             $context_url = get_uri("tickets/view/$reminder_info->ticket_id");
             $context_icon = "life-buoy";
+        } else if ($reminder_info->proposal_id) {
+            $context_url = get_uri("proposals/view/$reminder_info->proposal_id");
+            $context_icon = "file-text";
+        } else if ($reminder_info->contract_id) {
+            $context_url = get_uri("contracts/view/$reminder_info->contract_id");
+            $context_icon = "file-plus";
+        } else if ($reminder_info->subscription_id) {
+            $context_url = get_uri("subscriptions/view/$reminder_info->subscription_id");
+            $context_icon = "repeat";
+        } else if ($reminder_info->invoice_id) {
+            $context_url = get_uri("invoices/view/$reminder_info->invoice_id");
+            $context_icon = "file-text";
+        } else if ($reminder_info->order_id) {
+            $context_url = get_uri("orders/view/$reminder_info->order_id");
+            $context_icon = "shopping-cart";
+        } else if ($reminder_info->estimate_id) {
+            $context_url = get_uri("orders/view/$reminder_info->estimate_id");
+            $context_icon = "file";
         }
 
         return array(
@@ -2680,6 +2729,52 @@ if (!function_exists('get_estimate_status_label')) {
         } else {
             return $estimate_info->status;
         }
+    }
+
+}
+
+if (!function_exists('create_invoice_from_order')) {
+
+    function create_invoice_from_order($order_id) {
+        $ci = new Security_Controller(false);
+
+        $order_info = $ci->Orders_model->get_one($order_id);
+        $now = get_my_local_time("Y-m-d");
+
+        $invoice_data = array(
+            "bill_date" => $now,
+            "due_date" => $now,
+            "client_id" => $order_info->client_id,
+            "tax_id" => $order_info->tax_id,
+            "tax_id2" => $order_info->tax_id2,
+            "discount_amount" => $order_info->discount_amount,
+            "discount_amount_type" => $order_info->discount_amount_type,
+            "discount_type" => $order_info->discount_type,
+            "company_id" => $order_info->company_id,
+            "order_id" => $order_id, //save the order_id only to pay for the order, when we manually create invoice from order we don't save this
+            "note" => $order_info->note,
+            "status" => "not_paid"
+        );
+
+        $invoice_id = $ci->Invoices_model->ci_save($invoice_data);
+
+        //copy items
+        $order_items = $ci->Order_items_model->get_details(array("order_id" => $order_id))->getResult();
+        foreach ($order_items as $data) {
+            $invoice_item_data = array(
+                "invoice_id" => $invoice_id,
+                "title" => $data->title ? $data->title : "",
+                "description" => $data->description ? $data->description : "",
+                "quantity" => $data->quantity ? $data->quantity : 0,
+                "unit_type" => $data->unit_type ? $data->unit_type : "",
+                "rate" => $data->rate ? $data->rate : 0,
+                "total" => $data->total ? $data->total : 0,
+                "taxable" => 1
+            );
+            $ci->Invoice_items_model->ci_save($invoice_item_data);
+        }
+        $ci->Invoices_model->update_invoice_total_meta($invoice_id);
+        return $invoice_id;
     }
 
 }
@@ -2795,22 +2890,70 @@ if (!function_exists('get_company_logo')) {
     function get_company_logo($company_id, $type = "") {
         $Company_model = model('App\Models\Company_model');
         $company_info = $Company_model->get_one($company_id);
+        $only_file_path = get_setting('only_file_path');
 
         if (isset($company_info->logo) && $company_info->logo) {
-            $files = unserialize($company_info->logo);
-            if (count($files)) {
-                foreach ($files as $file) {
-                    $thumbnail = get_source_url_of_file($file, get_setting("system_file_path"), "thumbnail");
-                }
+            $file = unserialize($company_info->logo);
+            if (is_array($file)) {
+                $file = get_array_value($file, 0);
                 ?>
-                <img class="max-logo-size" id="company-logo-preview" src="<?php echo $thumbnail; ?>" alt="..." />
-
+                <img class="max-logo-size" src="<?php echo get_source_url_of_file($file, get_setting("system_file_path"), "thumbnail", $only_file_path, $only_file_path); ?>" alt="..." />
                 <?php
             }
+        } else {
+            $logo = $type . "_logo";
+            if (!get_setting($logo)) {
+                $logo = "invoice_logo";
+            }
+            ?>
+
+            <img class="max-logo-size" src="<?php echo get_file_from_setting($logo, $only_file_path); ?>" alt="..." />
+
+            <?php
         }
     }
 
 }
+
+
+
+/**
+ * get all project statuses text object
+ * 
+ * @return object
+ */
+if (!function_exists('get_project_status_text_info')) {
+
+    function get_project_status_text_info() {
+        $ci = new App_Controller();
+
+        $info = new \stdClass();
+
+        $info->open = 0;
+        $info->completed = 0;
+        $info->hold = 0;
+
+        $project_statuses = $ci->Project_status_model->get_details()->getResult();
+        foreach ($project_statuses as $status) {
+            $text = $status->title;
+            if ($status->title_language_key) {
+                $text = app_lang($status->title_language_key);
+            }
+
+            if ($status->id == 1) {
+                $info->open = $text;
+            } else if ($status->id == 2) {
+                $info->completed = $text;
+            } else if ($status->id == 3) {
+                $info->hold = $text;
+            }
+        }
+
+        return $info;
+    }
+
+}
+
 
 /**
  * get rope exchange reminder date

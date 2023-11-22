@@ -108,7 +108,7 @@ class Clean_data {
          *
          * Note: Use rawurldecode() so it does not remove plus signs
          */
-        if (stripos($str, '%') !== false) {
+        if (stripos($str, '%') !== false && (stripos($str, 'http') !== false || stripos($str, 'https') !== false)) {
             do {
                 $oldstr = $str;
                 $str = rawurldecode($str);

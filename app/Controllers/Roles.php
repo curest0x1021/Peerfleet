@@ -44,10 +44,10 @@ class Roles extends Security_Controller {
             $view_data['ticket_types_dropdown'] = json_encode($ticket_types_dropdown);
 
             $client_groups_dropdown = array();
-            // $client_groups = $this->Client_groups_model->get_all_where(array("deleted" => 0))->getResult();
-            // foreach ($client_groups as $type) {
-            //     $client_groups_dropdown[] = array("id" => $type->id, "text" => $type->title);
-            // }
+            $client_groups = $this->Vessel_types_model->get_all_where(array("deleted" => 0))->getResult();
+            foreach ($client_groups as $type) {
+                $client_groups_dropdown[] = array("id" => $type->id, "text" => $type->title);
+            }
             $view_data['client_groups_dropdown'] = json_encode($client_groups_dropdown);
 
             $permissions = $view_data['model_info']->permissions ? unserialize($view_data['model_info']->permissions) : "";
@@ -123,11 +123,15 @@ class Roles extends Security_Controller {
             $view_data['can_manage_all_kinds_of_settings'] = get_array_value($permissions, "can_manage_all_kinds_of_settings");
             $view_data['can_manage_user_role_and_permissions'] = get_array_value($permissions, "can_manage_user_role_and_permissions");
             $view_data['can_add_or_invite_new_team_members'] = get_array_value($permissions, "can_add_or_invite_new_team_members");
+            $view_data['can_activate_deactivate_team_members'] = get_array_value($permissions, "can_activate_deactivate_team_members");
+            $view_data['can_delete_team_members'] = get_array_value($permissions, "can_delete_team_members");
 
             $view_data['timeline_permission'] = get_array_value($permissions, "timeline_permission");
             $view_data['timeline_permission_specific'] = get_array_value($permissions, "timeline_permission_specific");
 
             $view_data['client_feedback_access_permission'] = get_array_value($permissions, "client_feedback_access_permission");
+
+            $view_data['team_members_note_manage_permission'] = get_array_value($permissions, "team_members_note_manage_permission");
 
             $view_data['permissions'] = $permissions;
 
@@ -252,6 +256,8 @@ class Roles extends Security_Controller {
             $can_manage_all_kinds_of_settings = $this->request->getPost('can_manage_all_kinds_of_settings');
             $can_manage_user_role_and_permissions = $can_manage_all_kinds_of_settings ? $this->request->getPost('can_manage_user_role_and_permissions') : "";
             $can_add_or_invite_new_team_members = $this->request->getPost('can_add_or_invite_new_team_members');
+            $can_activate_deactivate_team_members = $this->request->getPost('can_activate_deactivate_team_members');
+            $can_delete_team_members = $this->request->getPost('can_delete_team_members');
         } else {
             //is not an admin user, fetch data
             $role_info = $this->Roles_model->get_one($id);
@@ -260,6 +266,8 @@ class Roles extends Security_Controller {
             $can_manage_all_kinds_of_settings = get_array_value($permissions, "can_manage_all_kinds_of_settings");
             $can_manage_user_role_and_permissions = get_array_value($permissions, "can_manage_user_role_and_permissions");
             $can_add_or_invite_new_team_members = get_array_value($permissions, "can_add_or_invite_new_team_members");
+            $can_activate_deactivate_team_members = get_array_value($permissions, "can_activate_deactivate_team_members");
+            $can_delete_team_members = get_array_value($permissions, "can_delete_team_members");
         }
 
         $message_permission = "";
@@ -284,6 +292,8 @@ class Roles extends Security_Controller {
         }
 
         $client_feedback_access_permission = $this->request->getPost('client_feedback_access_permission');
+
+        $team_members_note_manage_permission = $this->request->getPost('team_members_note_manage_permission');
 
         $permissions = array(
             "leave" => $leave,
@@ -337,12 +347,21 @@ class Roles extends Security_Controller {
             "can_manage_all_kinds_of_settings" => $can_manage_all_kinds_of_settings,
             "can_manage_user_role_and_permissions" => $can_manage_user_role_and_permissions,
             "can_add_or_invite_new_team_members" => $can_add_or_invite_new_team_members,
+            "can_activate_deactivate_team_members" => $can_activate_deactivate_team_members,
+            "can_delete_team_members" => $can_delete_team_members,
             "timeline_permission" => $timeline_permission,
             "timeline_permission_specific" => $timeline_permission_specific,
             "client_feedback_access_permission" => $client_feedback_access_permission,
+            "team_members_note_manage_permission" => $team_members_note_manage_permission,
         );
 
-        $permissions = app_hooks()->apply_filters('app_filter_role_permissions_save_data', $permissions);
+        try {
+            $permissions = app_hooks()->apply_filters('app_filter_role_permissions_save_data', $permissions);
+        } catch (\Exception $ex) {
+            log_message('error', '[ERROR] {exception}', ['exception' => $ex]);
+            exit();
+        }
+
 
         $data = array(
             "permissions" => serialize($permissions),
@@ -505,7 +524,6 @@ class Roles extends Security_Controller {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
     }
-
 }
 
 /* End of file roles.php */

@@ -21,12 +21,15 @@ class Settings extends Security_Controller {
     }
 
     function save_general_settings() {
-        $settings = array("site_logo", "favicon", "show_background_image_in_signin_page", "show_logo_in_signin_page", "app_title", "accepted_file_formats", "rows_per_page", "item_purchase_code", "scrollbar", "enable_rich_text_editor", "show_theme_color_changer", "default_theme_color");
+        $settings = array("site_logo", "favicon", "show_background_image_in_signin_page", "show_logo_in_signin_page", "app_title", "accepted_file_formats", "landing_page", "rows_per_page", "item_purchase_code", "scrollbar", "enable_rich_text_editor", "show_theme_color_changer", "default_theme_color");
         $has_php_file_format = false;
 
         foreach ($settings as $setting) {
             $value = $this->request->getPost($setting);
-            if ($value || $value === "0") {
+
+            if ($setting == "landing_page") {
+                $this->Settings_model->save_setting($setting, $value); //can be saved as blank also
+            } else if ($value || $value === "0") {
                 if ($setting === "site_logo") {
                     $value = str_replace("~", ":", $value);
                     $value = serialize(move_temp_file("site-logo.png", get_setting("system_file_path"), "", $value));
@@ -81,6 +84,7 @@ class Settings extends Security_Controller {
                 }
 
                 $file_name = get_array_value($file_data, "tmp_name");
+                $file_size = get_array_value($file_data, "size");
                 if (!$file_name) {
                     continue;
                 }
@@ -92,7 +96,7 @@ class Settings extends Security_Controller {
                     $setting_name = "favicon";
                 }
 
-                $new_file_data = serialize(move_temp_file($new_file_name, get_setting("system_file_path"), "", $file_name));
+                $new_file_data = serialize(move_temp_file($new_file_name, get_setting("system_file_path"), "", $file_name, "", "", false, $file_size));
                 //delete old file
                 delete_app_files(get_setting("system_file_path"), get_system_files_setting_value($setting_name));
                 $this->Settings_model->save_setting($setting_name, $new_file_data);
@@ -306,7 +310,7 @@ class Settings extends Security_Controller {
     }
 
     function save_invoice_settings() {
-        $settings = array("allow_partial_invoice_payment_from_clients", "invoice_color", "invoice_footer", "send_bcc_to", "invoice_prefix", "invoice_style", "send_invoice_due_pre_reminder", "send_invoice_due_pre_second_reminder", "send_invoice_due_after_reminder", "send_invoice_due_after_second_reminder", "send_recurring_invoice_reminder_before_creation", "default_due_date_after_billing_date", "initial_number_of_the_invoice", "client_can_pay_invoice_without_login");
+        $settings = array("allow_partial_invoice_payment_from_clients", "invoice_color", "invoice_footer", "send_bcc_to", "invoice_prefix", "invoice_style", "send_invoice_due_pre_reminder", "send_invoice_due_pre_second_reminder", "send_invoice_due_after_reminder", "send_invoice_due_after_second_reminder", "send_recurring_invoice_reminder_before_creation", "default_due_date_after_billing_date", "initial_number_of_the_invoice", "client_can_pay_invoice_without_login", "enable_invoice_lock_state");
         $reload_page = false;
 
         foreach ($settings as $setting) {
@@ -374,12 +378,7 @@ class Settings extends Security_Controller {
             array("id" => "subscription", "text" => app_lang("subscription")),
             array("id" => "ticket", "text" => app_lang("ticket")),
             array("id" => "timeline", "text" => app_lang("timeline")),
-            array("id" => "warehouse", "text" => app_lang("warehouse")),
-            array("id" => "wire", "text" => app_lang("wire")),
-            array("id" => "grommets", "text" => app_lang("grommets")),
-            array("id" => "shackles", "text" => app_lang("shackles")),
-            array("id" => "misc", "text" => app_lang("misc")),
-            array("id" => "lashing", "text" => app_lang("lashing"))
+            array("id" => "general_task", "text" => app_lang("general_task"))
         );
 
         //get data from hook to show in filter
@@ -681,7 +680,7 @@ class Settings extends Security_Controller {
 
         $view_data['show_in_kanban_dropdown'] = json_encode($show_in_kanban_dropdown);
 
-        return $this->template->view("settings/tasks", $view_data);
+        return $this->template->rander("settings/tasks", $view_data);
     }
 
     /* show imap settings tab */
@@ -699,7 +698,7 @@ class Settings extends Security_Controller {
     //save task settings
     function save_task_settings() {
 
-        $settings = array("project_task_reminder_on_the_day_of_deadline", "project_task_deadline_pre_reminder", "project_task_deadline_overdue_reminder", "enable_recurring_option_for_tasks", "task_point_range", "create_recurring_tasks_before", "show_in_kanban");
+        $settings = array("project_task_reminder_on_the_day_of_deadline", "project_task_deadline_pre_reminder", "project_task_deadline_overdue_reminder", "enable_recurring_option_for_tasks", "task_point_range", "create_recurring_tasks_before", "show_in_kanban", "show_time_with_task_start_date_and_deadline");
 
         foreach ($settings as $setting) {
             $value = $this->request->getPost($setting);
@@ -809,7 +808,7 @@ class Settings extends Security_Controller {
     }
 
     function save_estimate_settings() {
-        $settings = array("estimate_prefix", "estimate_color", "estimate_footer", "send_estimate_bcc_to", "initial_number_of_the_estimate", "create_new_projects_automatically_when_estimates_gets_accepted", "enable_comments_on_estimates", "show_most_recent_estimate_comments_at_the_top", "add_signature_option_on_accepting_estimate");
+        $settings = array("estimate_prefix", "estimate_color", "estimate_footer", "send_estimate_bcc_to", "initial_number_of_the_estimate", "create_new_projects_automatically_when_estimates_gets_accepted", "enable_comments_on_estimates", "show_most_recent_estimate_comments_at_the_top", "add_signature_option_on_accepting_estimate", "enable_estimate_lock_state");
         $reload_page = false;
 
         foreach ($settings as $setting) {
@@ -900,7 +899,7 @@ class Settings extends Security_Controller {
 
         $view_data["footer_menus"] = $footer_menus_data;
 
-        return $this->template->rander("settings/footer/index", $view_data);
+        return $this->template->view("settings/footer/index", $view_data);
     }
 
     private function _make_footer_menu_item_data($menu_name, $url, $type = "") {
@@ -951,6 +950,74 @@ class Settings extends Security_Controller {
 
         if ($menu_name && $url) {
             echo json_encode(array("success" => true, 'data' => $this->_make_footer_menu_item_data($menu_name, $url, $type)));
+        }
+    }
+
+    function top_menu() {
+        //check available menus
+        $top_menus_data = "";
+
+        $top_menus = unserialize(get_setting("top_menus"));
+
+        if ($top_menus && is_array($top_menus)) {
+            foreach ($top_menus as $menu) {
+                $top_menus_data .= $this->_make_top_menu_item_data($menu->menu_name, $menu->url);
+            }
+        }
+
+        $view_data["top_menus"] = $top_menus_data;
+
+        return $this->template->view("settings/top_menu/index", $view_data);
+    }
+
+    private function _make_top_menu_item_data($menu_name, $url, $type = "") {
+        $edit = modal_anchor(get_uri("settings/top_menu_item_edit_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "float-end mr5 top-menu-edit-btn", "title" => app_lang('edit_top_menu'), "data-post-menu_name" => $menu_name, "data-post-url" => $url));
+        $delete = "<span class='top-menu-delete-btn  float-end clickable'><i data-feather='x' class='icon-16'></i></span>";
+
+        if ($type == "data") {
+            return "<a href='$url' target='_blank'>$menu_name</a>" . $delete . $edit;
+        } else {
+            return "<div class='list-group-item top-menu-item' data-top_menu_temp_id='" . rand(2000, 400000000) . "'><a href='$url' target='_blank'>$menu_name</a>" . $delete . $edit . "</div>";
+        }
+    }
+
+    function save_top_menu_settings() {
+        $settings = array("enable_top_menu", "top_menus");
+
+        foreach ($settings as $setting) {
+            $value = $this->request->getPost($setting);
+            if (is_null($value)) {
+                $value = "";
+            }
+
+            if ($setting == "top_menus") {
+                $value = json_decode($value);
+                $value = $value ? serialize($value) : serialize(array());
+            }
+
+            $this->Settings_model->save_setting($setting, $value);
+        }
+
+        echo json_encode(array("success" => true, 'message' => app_lang('settings_updated')));
+    }
+
+    function top_menu_item_edit_modal_form() {
+        $model_info = new \stdClass();
+        $model_info->menu_name = $this->request->getPost("menu_name");
+        $model_info->url = $this->request->getPost("url");
+
+        $view_data["model_info"] = $model_info;
+
+        return $this->template->view("settings/top_menu/modal_form", $view_data);
+    }
+
+    function save_top_menu() {
+        $menu_name = $this->request->getPost("menu_name");
+        $url = $this->request->getPost("url");
+        $type = $this->request->getPost("type");
+
+        if ($menu_name && $url) {
+            echo json_encode(array("success" => true, 'data' => $this->_make_top_menu_item_data($menu_name, $url, $type)));
         }
     }
 
@@ -1200,7 +1267,7 @@ class Settings extends Security_Controller {
     }
 
     function save_contract_settings() {
-        $settings = array("contract_prefix", "contract_color", "send_contract_bcc_to", "initial_number_of_the_contract", "add_signature_option_on_accepting_contract", "default_contract_template", "add_signature_option_for_team_members");
+        $settings = array("contract_prefix", "contract_color", "send_contract_bcc_to", "initial_number_of_the_contract", "add_signature_option_on_accepting_contract", "default_contract_template", "add_signature_option_for_team_members", "enable_contract_lock_state");
         $reload_page = false;
 
         foreach ($settings as $setting) {
@@ -1252,7 +1319,7 @@ class Settings extends Security_Controller {
     }
 
     function save_proposal_settings() {
-        $settings = array("proposal_prefix", "proposal_color", "send_proposal_bcc_to", "initial_number_of_the_proposal", "add_signature_option_on_accepting_proposal", "default_proposal_template");
+        $settings = array("proposal_prefix", "proposal_color", "send_proposal_bcc_to", "initial_number_of_the_proposal", "add_signature_option_on_accepting_proposal", "default_proposal_template", "enable_proposal_lock_state");
         $reload_page = false;
 
         foreach ($settings as $setting) {
@@ -1321,6 +1388,49 @@ class Settings extends Security_Controller {
         return serialize($conversion_rate);
     }
 
+    function store() {
+        $order_statuses_dropdown = array("" => "-");
+        $store_statuses = $this->Order_status_model->get_details()->getResult();
+        foreach ($store_statuses as $store_status) {
+            $order_statuses_dropdown[$store_status->id] = $store_status->title;
+        }
+
+        $view_data['order_statuses_dropdown'] = $order_statuses_dropdown;
+
+        return $this->template->rander("settings/store", $view_data);
+    }
+
+    function save_store_settings() {
+        $settings = array("visitors_can_see_store_before_login", "show_payment_option_after_submitting_the_order", "accept_order_before_login", "order_status_after_payment");
+
+        $visitors_can_see_store_before_login = $this->request->getPost("visitors_can_see_store_before_login");
+        $show_payment_option_after_submitting_the_order = $this->request->getPost("show_payment_option_after_submitting_the_order");
+
+        foreach ($settings as $setting) {
+            $value = $this->request->getPost($setting);
+            if (is_null($value)) {
+                $value = "";
+            }
+
+            if ($setting === "accept_order_before_login" && !($visitors_can_see_store_before_login && !$show_payment_option_after_submitting_the_order)) {
+                $value = "";
+            }
+
+            $this->Settings_model->save_setting($setting, $value);
+        }
+
+        //save banner image
+        $files_data = move_files_from_temp_dir_to_permanent_dir(get_setting("timeline_file_path"), "store");
+        $unserialize_files_data = unserialize($files_data);
+        $banner_image_on_public_store = get_array_value($unserialize_files_data, 0);
+        if ($banner_image_on_public_store) {
+            delete_app_files(get_setting("timeline_file_path"), get_system_files_setting_value("banner_image_on_public_store"));
+            $this->Settings_model->save_setting("banner_image_on_public_store", serialize($banner_image_on_public_store));
+        }
+
+        echo json_encode(array("success" => true, 'message' => app_lang('settings_updated')));
+    }
+
     function subscriptions() {
         $last_subscription_id = $this->Subscriptions_model->get_last_subscription_id();
 
@@ -1348,25 +1458,40 @@ class Settings extends Security_Controller {
             }
         }
 
-        //create webhook in stripe
         $webhook_listener_link_of_stripe_subscription = $this->request->getPost("webhook_listener_link_of_stripe_subscription");
-        if ($webhook_listener_link_of_stripe_subscription) {
+        $this->save_stripe_webhook($webhook_listener_link_of_stripe_subscription);
+
+        echo json_encode(array("success" => true, 'message' => app_lang('settings_updated')));
+    }
+
+    private function save_stripe_webhook($webhook_listener_link_of_stripe_subscription) {
+        //create webhook in stripe
+        if (!$webhook_listener_link_of_stripe_subscription) {
+            return false;
+        }
+
+        $Stripe = new Stripe();
+        $stripe_webhook_id = get_setting("stripe_webhook_id");
+        $create_new_webhook = true;
+
+        if ($stripe_webhook_id) {
             try {
-                $Stripe = new Stripe();
-                $stripe_webhook_id = get_setting("stripe_webhook_id");
-                if ($stripe_webhook_id) {
-                    $Stripe->update_webhook($stripe_webhook_id, $webhook_listener_link_of_stripe_subscription);
-                } else {
-                    $stripe_webhook_id = $Stripe->create_webhook($webhook_listener_link_of_stripe_subscription)->id;
-                    $this->Settings_model->save_setting("stripe_webhook_id", $stripe_webhook_id);
-                }
+                $Stripe->update_webhook($stripe_webhook_id, $webhook_listener_link_of_stripe_subscription);
+                $create_new_webhook = false; //if webhook id not found or any error raised, try creating new webhook
+            } catch (\Exception $ex) {
+                
+            }
+        }
+
+        if ($create_new_webhook) {
+            try {
+                $stripe_webhook_id = $Stripe->create_webhook($webhook_listener_link_of_stripe_subscription)->id;
+                $this->Settings_model->save_setting("stripe_webhook_id", $stripe_webhook_id);
             } catch (\Exception $ex) {
                 echo json_encode(array("success" => false, 'message' => $ex->getMessage()));
                 return false;
             }
         }
-
-        echo json_encode(array("success" => true, 'message' => app_lang('settings_updated')));
     }
 
 }

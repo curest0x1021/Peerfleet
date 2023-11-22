@@ -12,7 +12,7 @@ class Google_calendar {
         $this->ci = new App_Controller();
 
         //load resources
-        require_once(APPPATH . "ThirdParty/Google/google-api-php-client/vendor/autoload.php");
+        require_once(APPPATH . "ThirdParty/Google/google-api-php-client-2-15-0/autoload.php");
     }
 
     //authorize connection

@@ -25,6 +25,11 @@ class Task_status_model extends Crud_model {
             $where .= " AND $task_status_table.hide_from_kanban=$hide_from_kanban";
         }
 
+        $hide_from_non_project_related_tasks = $this->_get_clean_value($options, "hide_from_non_project_related_tasks");
+        if (!is_null($hide_from_non_project_related_tasks)) {
+            $where .= " AND $task_status_table.hide_from_non_project_related_tasks=$hide_from_non_project_related_tasks";
+        }
+
         $exclude_status_ids = $this->_get_clean_value($options, "exclude_status_ids");
         if ($exclude_status_ids) {
             $where .= " AND $task_status_table.id NOT IN($exclude_status_ids)";

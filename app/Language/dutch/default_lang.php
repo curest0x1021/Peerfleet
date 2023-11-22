@@ -849,8 +849,8 @@ $lang["short_friday"] = "vr";
 $lang["short_saturday"] = "za";
 
 $lang["min_sunday"] = "zo";
-$lang["min_monday"] = "zo";
-$lang["min_tuesday"] = "zo";
+$lang["min_monday"] = "ma";
+$lang["min_tuesday"] = "di";
 $lang["min_wednesday"] = "wo";
 $lang["min_thursday"] = "do";
 $lang["min_friday"] = "vr";
@@ -2277,109 +2277,257 @@ $lang["total_after_discount"] = "Totaal na korting";
 
 /* Version 3.3 */
 
-$lang["change_the_tasks_start_date_and_deadline_based_on_project_start_date"] = "Change the tasks start date and deadline based on project start date";
+$lang["change_the_tasks_start_date_and_deadline_based_on_project_start_date"] = "Wijzig de startdatum en deadline van de taak op basis van de startdatum van het project";
 
-$lang["can_edit_only_own_created_projects"] = "Can edit only own created projects";
-$lang["can_delete_only_own_created_projects"] = "Can delete only own created projects";
+$lang["can_edit_only_own_created_projects"] = "Kan alleen eigen gemaakte projecten bewerken";
+$lang["can_delete_only_own_created_projects"] = "Kan alleen eigen gemaakte projecten verwijderen";
 
-$lang["checklist_status"] = "Checklist status";
+$lang["checklist_status"] = "Checklist-status";
 
 /* Version 3.4 */
 
-$lang["subscribe"] = "Subscribe";
-$lang["email_protocol"] = "Email protocol";
+$lang["subscribe"] = "Abonneer";
+$lang["email_protocol"] = "E-mailprotocol";
 
-$lang["please_enable_the_file_uploads_php_settings"] = "Please enable the file_uploads php setting in the server.";
-$lang["file_size_too_large"] = "File size is too large. Please increase the upload_max_filesize from server.";
+$lang["please_enable_the_file_uploads_php_settings"] = "Schakel de php-instelling van file_uploads in op de server.";
+$lang["file_size_too_large"] = "Bestandsgrootte is te groot. Vergroot de upload_max_filesize vanaf de server.";
 
-$lang["sub_task_status"] = "Sub task status";
+$lang["sub_task_status"] = "Subtaakstatus";
 
-$lang["can_access_client_feedback_in_projects"] = "Can access client feedback in projects?";
-$lang["change_the_milestone_dates_based_on_project_start_date"] = "Change the milestone dates based on project start date";
+$lang["can_access_client_feedback_in_projects"] = "Heeft u toegang tot klantfeedback in projecten";
+$lang["change_the_milestone_dates_based_on_project_start_date"] = "Wijzig de mijlpaaldata op basis van de startdatum van het project";
 
-$lang["send_first_due_invoice_reminder_notification_before"] = "Send 1st due invoice reminder before due date";
-$lang["send_second_due_invoice_reminder_notification_before"] = "Send 2nd due invoice reminder before due date";
+$lang["send_first_due_invoice_reminder_notification_before"] = "Stuur 1e factuurherinnering vóór de vervaldatum";
+$lang["send_second_due_invoice_reminder_notification_before"] = "Verzend 2e factuurherinnering vóór vervaldatum";
 
-$lang["send_first_invoice_overdue_reminder_after"] = "Send 1st invoice overdue reminder after";
-$lang["send_second_invoice_overdue_reminder_after"] = "Send 2nd invoice overdue reminder after";
+$lang["send_first_invoice_overdue_reminder_after"] = "Stuur 1e factuur achterstallige herinnering na";
+$lang["send_second_invoice_overdue_reminder_after"] = "Verzend 2e factuur achterstallige herinnering na";
 
 $lang["product"] = "Product";
 
-$lang["subscription_id"] = "Subscription ID";
-$lang["subscription_sent_message"] = "The subscription has been sent!";
-$lang["add_subscription"] = "Add subscription";
-$lang["edit_subscription"] = "Edit subscription";
-$lang["delete_subscription"] = "Delete subscription";
-$lang["subscription"] = "Subscription";
-$lang["subscriptions"] = "Subscriptions";
-$lang["subscription_value"] = "Subscription Value";
-$lang["subscription_items"] = "Subscription items";
-$lang["email_subscription_to_client"] = "Email subscription to client";
-$lang["send_subscription"] = "Send subscription";
-$lang["subscription_settings"] = "Subscription Settings";
-$lang["subscription_prefix"] = "Subscription prefix";
-$lang["initial_number_of_the_subscription"] = "Initial number of the subscription";
-$lang["can_access_subscriptions"] = "Can access subscriptions?";
-$lang["show_in_subscription"] = "Show in subscription";
-$lang["subscription_total"] = "Subscription total";
-$lang["start_subscription"] = "Start subscription";
+$lang["subscription_id"] = "Abonnements-ID";
+$lang["subscription_sent_message"] = "Het abonnement is verzonden!";
+$lang["add_subscription"] = "Abonnement toevoegen";
+$lang["edit_subscription"] = "Bewerk abonnement";
+$lang["delete_subscription"] = "Verwijder abonnement";
+$lang["subscription"] = "Abonnement";
+$lang["subscriptions"] = "Abonnementen";
+$lang["subscription_value"] = "Abonnementswaarde";
+$lang["subscription_items"] = "Abonnementsitems";
+$lang["email_subscription_to_client"] = "E-mail abonnement op client";
+$lang["send_subscription"] = "Abonnement verzenden";
+$lang["subscription_settings"] = "Abonnementsinstellingen";
+$lang["subscription_prefix"] = "Abonnementsvoorvoegsel";
+$lang["initial_number_of_the_subscription"] = "Initieel nummer van het abonnement";
+$lang["can_access_subscriptions"] = "Heeft u toegang tot abonnementen?";
+$lang["show_in_subscription"] = "Toon in abonnement";
+$lang["subscription_total"] = "Totaal abonnement";
+$lang["start_subscription"] = "Start abonnement";
 
-$lang["subscription_success_message"] = "You're subscription has been started successfully.";
+$lang["subscription_success_message"] = "Uw abonnement is succesvol gestart.";
 
-$lang["enable_stripe_subscription"] = "Enable Stripe subscription";
-$lang["please_enable_the_stripe_payment_method_first"] = "Please enable the stripe payment method first!";
-$lang["tax_mapping"] = "Tax mapping";
-$lang["mapped"] = "Mapped";
-$lang["select_stripe_tax"] = "Select Stripe tax";
-$lang["stripe_price_error_message"] = "App subscription price and recurring interval should be same as stripe product price and interval.";
-$lang["stripe_tax_error_message"] = "Some taxes are not mapped with stripe yet. Please map the taxes from the subscription settings.";
-$lang["payment_status"] = "Payment status";
-$lang["failed"] = "Failed";
-$lang["next_billing_date"] = "Next billing date";
-$lang["cancel_subscription"] = "Cancel subscription";
+$lang["enable_stripe_subscription"] = "Stripe-abonnement inschakelen";
+$lang["please_enable_the_stripe_payment_method_first"] = "Schakel eerst de stripe-betaalmethode in!";
+$lang["tax_mapping"] = "Belastingtoewijzing";
+$lang["mapped"] = "toegewezen";
+$lang["select_stripe_tax"] = "Selecteer Stripe belasting";
+$lang["stripe_price_error_message"] = "App-abonnementsprijs en herhalingsinterval moeten hetzelfde zijn als stripproductprijs en interval.";
+$lang["stripe_tax_error_message"] = "Sommige belastingen zijn nog niet in kaart gebracht met stripe. Breng de belastingen in kaart vanuit de abonnementsinstellingen.";
+$lang["payment_status"] = "Betalingsstatus";
+$lang["failed"] = "Mislukt";
+$lang["next_billing_date"] = "Volgende factuurdatum";
+$lang["cancel_subscription"] = "Abonnement opzeggen";
 
-$lang["invoice_number"] = "Invoice number";
-$lang["estimate_number"] = "Estimate number";
-$lang["order_number"] = "Order number";
+$lang["invoice_number"] = "Factuurnummer";
+$lang["estimate_number"] = "Schattingsgetal";
+$lang["order_number"] = "Bestelnummer";
 
-$lang["client_can_access_notes"] = "Client can access notes?";
+$lang["client_can_access_notes"] = "Klant heeft toegang tot notities?";
 
-$lang["my_tasks_overview"] = "My Tasks Overview";
+$lang["my_tasks_overview"] = "Mijn takenoverzicht";
 
-$lang["leads_overview"] = "Leads Overview";
-$lang["converted_to_client"] = "Converted to client";
+$lang["leads_overview"] = "Leadoverzicht";
+$lang["converted_to_client"] = "Geconverteerd naar client";
 
-$lang["remember_to_add_this_urls_in_authorized_redirect_uri"] = "Remember to add this urls in Authorized redirect uri";
+$lang["remember_to_add_this_urls_in_authorized_redirect_uri"] = "Vergeet niet om deze url toe te voegen in Geautoriseerde omleiding uri";
 
-$lang["merge"] = "Merge";
-$lang["move_all_comments_or_notes_from"] = "Move all comments/notes from";
-$lang["moved_to"] = "Moved to";
+$lang["merge"] = "Samenvoegen";
+$lang["move_all_comments_or_notes_from"] = "Verplaats alle opmerkingen/notities van";
+$lang["moved_to"] = "Verplaatst naar";
 
 $lang["ok"] = "OK";
 $lang["app"] = "App";
-$lang["stripe"] = "Stripe";
-$lang["activate_as_stripe_subscription"] = "Activate as Stripe subscription";
-$lang["activate_as_internal_subscription"] = "Activate as internal subscription";
-$lang["activate_as_stripe_subscription_message_1"] = "Please map the stripe product and price with this subscription. You can add the stripe products and prices from your stripe dashboard.";
-$lang["activate_as_stripe_subscription_message_2"] = "The client will get a request to add the payment method with this subscription. Once the client submit the payment method, this subscription will be activated and auto payment will be enabled via stripe.";
-$lang["activate_as_internal_subscription_message_1"] = "This subscription will be managed by app. The invoices will be created based on the subscription terms.";
-$lang["activate_as_internal_subscription_message_2"] = "Note: Payments will not be done automatically. For automated payment, you can use the stripe subscription.";
-$lang["subscription_toatl_can_not_empty_message"] = "Subscription total can't be 0.";
+$lang["stripe"] = "streep";
+$lang["activate_as_stripe_subscription"] = "Activeren als Stripe-abonnement";
+$lang["activate_as_internal_subscription"] = "Activeren als intern abonnement";
+$lang["activate_as_stripe_subscription_message_1"] = "Wijs alstublieft het Stripe-product en de prijs toe met dit abonnement. U kunt de Stripe-producten en prijzen toevoegen vanuit uw Stripe-dashboard.";
+$lang["activate_as_stripe_subscription_message_2"] = "De klant krijgt een verzoek om de betaalmethode toe te voegen aan dit abonnement. Zodra de klant de betaalmethode heeft ingevoerd, wordt dit abonnement geactiveerd en wordt automatische betaling via stripe ingeschakeld.";
+$lang["activate_as_internal_subscription_message_1"] = "Dit abonnement wordt beheerd door de app. De facturen worden aangemaakt op basis van de abonnementsvoorwaarden.";
+$lang["activate_as_internal_subscription_message_2"] = "Let op: Betalingen worden niet automatisch gedaan. Voor automatische betaling kunt u het stripe-abonnement gebruiken.";
+$lang["subscription_toatl_can_not_empty_message"] = "Abonnementstotaal mag niet 0 zijn.";
 
-$lang["subscription_request_sent"] = "Subscription request sent";
-$lang["notification_subscription_request_sent"] = "New subscription request";
+$lang["subscription_request_sent"] = "Abonnementsverzoek verzonden";
+$lang["notification_subscription_request_sent"] = "Nieuw abonnementsverzoek";
 
-$lang["first_billing_date"] = "First billing date";
-$lang["first_billing_date_cant_be_past_message"] = "First billing date can’t be past. Keep it blank to use the date when the client will subscribe.";
+$lang["first_billing_date"] = "Eerste factuurdatum";
+$lang["first_billing_date_cant_be_past_message"] = "Eerste factuurdatum kan niet voorbij zijn. Laat het leeg om de datum te gebruiken waarop de klant zich zal abonneren.";
 
-$lang["gst_number"] = "GST Number";
+$lang["gst_number"] = "GST-nummer";
 
-$lang["announcement_created"] = "Announcement created";
+$lang["announcement_created"] = "Aankondiging gemaakt";
 
-$lang["company_logo"] = "Company Logo";
+$lang["company_logo"] = "Bedrijfslogo";
 
-$lang["task_commented"] = "Task commented";
-$lang["task_assigned"] = "Task assigned";
-$lang["task_general"] = "Task general";
+$lang["task_commented"] = "Taak becommentarieerd";
+$lang["task_assigned"] = "Taak toegewezen";
+$lang["task_general"] = "Taak algemeen";
+
+/* Version 3.5 */
+
+$lang["visitors_can_see_store_before_login"] = "Bezoekers kunnen de winkel zien voordat ze inloggen";
+$lang["show_payment_option_after_submitting_the_order"] = "Toon betalingsoptie na het plaatsen van de bestelling";
+$lang["accept_order_before_login"] = "Accepteer bestelling alvorens in te loggen";
+$lang["proceed_to_payment"] = "Doorgaan naar betaling";
+$lang["pay_order"] = "Betaalopdracht";
+$lang["order_status_after_payment"] = "Bestellingsstatus na betaling";
+$lang["store_settings"] = "Instellingen opslaan";
+$lang["banner_image_on_public_store"] = "Bannerafbeelding in openbare winkel";
+$lang["your_order_has_been_submitted"] = "Uw bestelling is verzonden.";
+
+$lang["re_captcha_error-timeout-or-duplicate"] = "De reCAPTCHA is verlopen of gedupliceerd. Laad de pagina opnieuw.";
+
+$lang["related_to"] = "Gerelateerd aan";
+
+$lang["hide_from_non_project_related_tasks"] = "Verbergen voor niet-projectgerelateerde taken";
+$lang["add_task_in_project"] = "Taak toevoegen aan project";
+
+$lang["general_task"] = "Algemene taak";
+$lang["general_task_created"] = "Algemene taak gemaakt";
+$lang["general_task_updated"] = "Algemene taak bijgewerkt";
+$lang["general_task_assigned"] = "Algemene taak toegewezen";
+$lang["general_task_started"] = "Algemene taak gestart";
+$lang["general_task_finished"] = "Algemene taak voltooid";
+$lang["general_task_reopened"] = "Algemene taak heropend";
+$lang["general_task_deleted"] = "Algemene taak verwijderd";
+$lang["general_task_commented"] = "Algemene taak becommentarieerd";
+
+$lang["notification_general_task_created"] = "Nieuwe taak aangemaakt.";
+$lang["notification_general_task_updated"] = "Een taak bijgewerkt.";
+$lang["notification_general_task_assigned"] = "Een taak toegewezen aan %s."; //Assigned a task to Mr. X
+$lang["notification_general_task_started"] = "Taak gestart.";
+$lang["notification_general_task_finished"] = "Een taak voltooid.";
+$lang["notification_general_task_reopened"] = "Een taak opnieuw geopend.";
+$lang["notification_general_task_deleted"] = "Een taak verwijderd.";
+$lang["notification_general_task_commented"] = "Heeft gereageerd op een taak.";
+
+$lang["bookmark"] = "Bladwijzer";
+$lang["bookmark_icon"] = "Bladwijzerpictogram";
+$lang["change_filters"] = "Filters wijzigen";
+$lang["manage_filters"] = "Filters beheren";
+$lang["new_filter"] = "Nieuw filter";
+$lang["update_filter"] = "Filter bijwerken";
+$lang["add_new_filter"] = "Nieuw filter toevoegen";
+$lang["show_time_with_task_start_date_and_deadline"] = "Toon tijd met startdatum en deadline van taak";
+
+$lang["save_and_continue_to_login_for_payment"] = "Opslaan en doorgaan met inloggen voor betaling";
+$lang["public_store_page_setting_help_message"] = "U kunt de winkel instellen als bestemmingspagina door 'winkel' toe te voegen aan de instelling voor de bestemmingspagina.";
+$lang["public_store_page_setting_permission_error_message"] = "Schakel de toestemming voor winkeltoegang in voor klanten.";
+$lang["order_status_after_payment_help_message"] = "Dit is alleen van toepassing als de status van de bestelling is";
+
+$lang["subscription_first_billing_date_error_message"] = "De eerste factuurdatum moet vóór de volgende factuurdatum vallen op basis van de factuurperiode!";
+$lang["client_currency_not_editable_message"] = "De valuta kan niet worden gewijzigd als er een factuur, schatting, bestelling, voorstel, contract of abonnement is.";
+
+$lang["subscription_started"] = "Abonnement gestart";
+$lang["notification_subscription_started"] = "Abonnement gestart.";
+
+$lang["subscription_invoice_created_via_cron_job"] = "Abonnementsfactuur aangemaakt via cronjob";
+$lang["notification_subscription_invoice_created_via_cron_job"] = "Nieuwe factuur gegenereerd uit abonnement.";
+
+$lang["create_credit_note"] = "Tegoedbon aanmaken";
+$lang["create_credit_note_message"] = "Weet u het zeker? U gaat deze factuur volledig crediteren. Er wordt een creditnota aangemaakt voor deze factuur.";
+$lang["credited"] = "Gecrediteerd";
+$lang["credit_note"] = "Creditnota";
+$lang["email_credit_note_to_client"] = "E-mail creditnota naar klant";
+$lang["main_invoice"] = "Hoofdfactuur";
+$lang["credit_note_id"] = "Creditnota-ID";
+$lang["send_credit_note"] = "Tegoedbon verzenden";
+
+$lang["taxable"] = "Belastbaar";
+
+$lang["can_manage_team_members_notes"] = "Kan notities van teamleden beheren?";
+$lang["team_members_can_not_see_own_notes"] = "Teamleden kunnen hun eigen notities niet zien.";
+
+$lang["articles_order"] = "Artikelen bestellen";
+$lang["top_menu"] = "Hoofdmenu";
+$lang["edit_top_menu"] = "Bewerk hoofdmenu";
+
+$lang["top_menu_description_message"] = "Dit menu is alleen zichtbaar op de openbare pagina's";
+$lang["enable_top_menu"] = "Hoofdmenu inschakelen";
+$lang["menu_items"] = "Menu-items";
+
+$lang["landing_page"] = "Bestemmingspagina";
+$lang["landing_page_help_text"] = "Laat deze normaal gesproken leeg. Stel deze waarde alleen in als u een aangepaste bestemmingspagina wilt. (Voorbeeldwaarde: knowledge_base)";
+
+$lang["fixed_amount_discount_before_tax_error_message"] = "Korting met vast bedrag kan niet vóór belasting worden toegevoegd.";
+
+$lang["invoices_summary"] = "Facturenoverzicht";
+$lang["estimates_summary"] = "Schattingsoverzicht";
+$lang["leads_summary"] = "Leadoverzicht";
+$lang["orders_summary"] = "Overzicht van bestellingen";
+$lang["estimate_request_summary"] = "Schatting aanvraag samenvatting";
+$lang["proposals_summary"] = "Samenvatting voorstellen";
+$lang["expenses_summary"] = "Onkostenoverzicht";
+$lang["monthly_summary"] = "Maandelijks overzicht";
+
+$lang["yearly_chart"] = "Jaarlijkse grafiek";
+$lang["category_chart"] = "Categorieoverzicht";
+
+$lang["count"] = "Tel";
+$lang["invoice_total"] = "Factuurtotaal";
+$lang["order_total"] = "Totaal bestelling";
+
+$lang["last_7_days"] = "Laatste 7 dagen";
+$lang["next_7_days"] = "Volgende 7 dagen";
+$lang["last_30_days"] = "Laatste 30 dagen";
+$lang["this_month"] = "Deze maand";
+$lang["last_month"] = "Vorige maand";
+$lang["next_month"] = "Volgende maand";
+$lang["next_year"] = "Volgend jaar";
+
+$lang["hold_projects"] = "Projecten vasthouden";
+$lang["open_tasks"] = "Openstaande taken";
+$lang["completed_tasks"] = "Voltooide taken";
+
+$lang["team_members_summary"] = "Samenvatting teamleden";
+$lang["created_date_wise"] = "Datum verstandig gemaakt";
+$lang["conversion_date_wise"] = "Conversiedatum verstandig";
+
+$lang["ticket_statistics"] = "Ticketstatistieken";
+
+$lang["can_activate_deactivate_team_members"] = "Kunnen teamleden deactiveren activeren?";
+$lang["can_delete_team_members"] = "Kunnen teamleden verwijderen?";
+
+$lang["project_settings"] = "Projectinstellingen";
+$lang["project_status"] = "Projectstatus";
+$lang["add_project_status"] = "Projectstatus toevoegen";
+$lang["mark_project_as"] = "Markeer project als";
+
+$lang["status_language_key_recommendation_help_text"] = "Aanbevolen om een voorvoegsel zoals project_status_ te gebruiken";
+$lang["edit_project_status"] = "Projectstatus bewerken";
+$lang["delete_project_status"] = "Projectstatus verwijderen";
+
+$lang["open_project_status_recommendation_help_text"] = "U kunt de tekst wijzigen, maar deze status wordt beschouwd als de initiële open status.";
+$lang["completed_project_status_recommendation_help_text"] = "U kunt de tekst wijzigen, maar deze status wordt als voltooid beschouwd.";
+
+$lang["full_width"] = "Volledige breedte";
+$lang["hide_topbar"] = "Topbalk verbergen";
+
+/* Version 3.5.1 */
+
+$lang["enable_lock_state"] = "Vergrendelstatus inschakelen";
+$lang["invoice_lock_state_description"] = "Als u eenmaal de vergrendelingsstatus hebt ingeschakeld, kunnen de facturen niet meer worden bewerkt nadat ze naar de klant zijn verzonden of de status hebben gewijzigd.";
+$lang["estimate_lock_state_description"] = "Zodra u de vergrendelingsstatus inschakelt, kunnen de geaccepteerde schattingen niet meer worden bewerkt.";
+$lang["proposal_lock_state_description"] = "Zodra u de vergrendelingsstatus inschakelt, kunnen de geaccepteerde voorstellen niet meer worden bewerkt.";
+$lang["contract_lock_state_description"] = "Zodra u de vergrendelingsstatus inschakelt, kunnen de geaccepteerde contracten niet meer worden bewerkt.";
 
 return $lang;

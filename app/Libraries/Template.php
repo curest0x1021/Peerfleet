@@ -37,5 +37,4 @@ class Template {
 
         return view($view, $view_data);
     }
-
 }

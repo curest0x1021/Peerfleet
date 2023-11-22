@@ -221,9 +221,12 @@ class Webhooks_listener extends App_Controller {
         }
     }
 
-    function stripe_subscription() {
+    function stripe_subscription($key) {
         try {
             $payloads = json_decode(file_get_contents('php://input'));
+            if (!$this->_is_valid_payloads_of_stripe($payloads, $key)) {
+                app_redirect("forbidden");
+            }
         } catch (\Exception $ex) {
             log_message('error', '[ERROR] {exception}', ['exception' => $ex]);
             exit();
@@ -235,6 +238,13 @@ class Webhooks_listener extends App_Controller {
 
         if ($payloads->type === "invoice.payment_failed") {
             $this->subscription_payment_failed($payloads);
+        }
+    }
+
+    private function _is_valid_payloads_of_stripe($payloads, $key) {
+        $settings_key = get_setting("webhook_listener_link_of_stripe_subscription");
+        if ($settings_key && $settings_key == $key && $payloads) {
+            return true;
         }
     }
 

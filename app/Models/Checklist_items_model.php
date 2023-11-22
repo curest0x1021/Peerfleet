@@ -13,21 +13,24 @@ class Checklist_items_model extends Crud_model {
 
     function get_details($options = array()) {
         $checklist_items_table = $this->db->prefixTable("checklist_items");
+        $tasks_table = $this->db->prefixTable('tasks');
 
         $where = "";
+
+        $id = $this->_get_clean_value($options, "id");
+        if ($id) {
+            $where .= " AND $checklist_items_table.id=$id";
+        }
 
         $task_id = $this->_get_clean_value($options, "task_id");
         if ($task_id) {
             $where .= " AND $checklist_items_table.task_id=$task_id";
         }
 
-        $todo_id = $this->_get_clean_value($options, "todo_id");
-        if ($todo_id) {
-            $where .= " AND $checklist_items_table.todo_id=$todo_id";
-        }
-
-        $sql = "SELECT $checklist_items_table.*, IF($checklist_items_table.sort!=0, $checklist_items_table.sort, $checklist_items_table.id) AS new_sort
+        $sql = "SELECT $checklist_items_table.*, IF($checklist_items_table.sort!=0, $checklist_items_table.sort, $checklist_items_table.id) AS new_sort,
+        $tasks_table.client_id
         FROM $checklist_items_table
+        LEFT JOIN $tasks_table ON $tasks_table.id=$checklist_items_table.task_id
         WHERE $checklist_items_table.deleted=0 $where
         ORDER BY new_sort ASC";
         return $this->db->query($sql);

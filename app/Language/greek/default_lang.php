@@ -499,7 +499,7 @@ $lang["add_invoice"] = "Προσθήκη Τιμολογίου";
 $lang["edit_invoice"] = "Επεξεργασία Τιμολογίου";
 $lang["delete_invoice"] = "Διαγραφή Τιμολογίου";
 $lang["invoice"] = "Τιμολόγιο";
-$lang["invoices"] = " Τιμολόγια";
+$lang["invoices"] = "Τιμολόγια";
 $lang["bill_date"] = "Ημερομηνία Τιμολόγησης";
 $lang["due_date"] = "Ημερομηνία Λήξης Οφειλής";
 $lang["payment_date"] = "Ημερομηνία Πληρωμής";
@@ -2277,109 +2277,257 @@ $lang["total_after_discount"] = "Σύνολο μετά την έκπτωση";
 
 /* Version 3.3 */
 
-$lang["change_the_tasks_start_date_and_deadline_based_on_project_start_date"] = "Change the tasks start date and deadline based on project start date";
+$lang["change_the_tasks_start_date_and_deadline_based_on_project_start_date"] = "Αλλαγή της ημερομηνίας έναρξης εργασιών και της προθεσμίας με βάση την ημερομηνία έναρξης του έργου";
 
-$lang["can_edit_only_own_created_projects"] = "Can edit only own created projects";
-$lang["can_delete_only_own_created_projects"] = "Can delete only own created projects";
+$lang["can_edit_only_own_created_projects"] = "Μπορεί να επεξεργαστεί μόνο τα δικά του δημιουργημένα έργα";
+$lang["can_delete_only_own_created_projects"] = "Μπορεί να διαγράψει μόνο τα δικά του δημιουργημένα έργα";
 
-$lang["checklist_status"] = "Checklist status";
+$lang["checklist_status"] = "Κατάσταση λίστας ελέγχου";
 
 /* Version 3.4 */
 
-$lang["subscribe"] = "Subscribe";
-$lang["email_protocol"] = "Email protocol";
+$lang["subscribe"] = "Εγγραφή";
+$lang["email_protocol"] = "Πρωτόκολλο email";
 
-$lang["please_enable_the_file_uploads_php_settings"] = "Please enable the file_uploads php setting in the server.";
-$lang["file_size_too_large"] = "File size is too large. Please increase the upload_max_filesize from server.";
+$lang["please_enable_the_file_uploads_php_settings"] = "Ενεργοποιήστε τη ρύθμιση file_uploads php στον διακομιστή.";
+$lang["file_size_too_large"] = "Το μέγεθος του αρχείου είναι πολύ μεγάλο. Αυξήστε το upload_max_filesize από τον διακομιστή.";
 
-$lang["sub_task_status"] = "Sub task status";
+$lang["sub_task_status"] = "Κατάσταση δευτερεύουσας εργασίας";
 
-$lang["can_access_client_feedback_in_projects"] = "Can access client feedback in projects?";
-$lang["change_the_milestone_dates_based_on_project_start_date"] = "Change the milestone dates based on project start date";
+$lang["can_access_client_feedback_in_projects"] = "Μπορείτε να αποκτήσετε πρόσβαση στα σχόλια πελατών σε έργα";
+$lang["change_the_milestone_dates_based_on_project_start_date"] = "Αλλαγή των ημερομηνιών ορόσημων με βάση την ημερομηνία έναρξης του έργου";
 
-$lang["send_first_due_invoice_reminder_notification_before"] = "Send 1st due invoice reminder before due date";
-$lang["send_second_due_invoice_reminder_notification_before"] = "Send 2nd due invoice reminder before due date";
+$lang["send_first_due_invoice_reminder_notification_before"] = "Αποστολή 1ης υπενθύμισης οφειλόμενου τιμολογίου πριν από την ημερομηνία λήξης";
+$lang["send_second_due_invoice_reminder_notification_before"] = "Αποστολή 2ης υπενθύμισης οφειλόμενου τιμολογίου πριν από την ημερομηνία λήξης";
 
-$lang["send_first_invoice_overdue_reminder_after"] = "Send 1st invoice overdue reminder after";
-$lang["send_second_invoice_overdue_reminder_after"] = "Send 2nd invoice overdue reminder after";
+$lang["send_first_invoice_overdue_reminder_after"] = "Αποστολή 1ης υπενθύμισης ληξιπρόθεσμου τιμολογίου μετά";
+$lang["send_second_invoice_overdue_reminder_after"] = "Αποστολή 2ης ληξιπρόθεσμης υπενθύμισης τιμολογίου μετά";
 
-$lang["product"] = "Product";
+$lang["product"] = "Προϊόν";
 
-$lang["subscription_id"] = "Subscription ID";
-$lang["subscription_sent_message"] = "The subscription has been sent!";
-$lang["add_subscription"] = "Add subscription";
-$lang["edit_subscription"] = "Edit subscription";
-$lang["delete_subscription"] = "Delete subscription";
-$lang["subscription"] = "Subscription";
-$lang["subscriptions"] = "Subscriptions";
-$lang["subscription_value"] = "Subscription Value";
-$lang["subscription_items"] = "Subscription items";
-$lang["email_subscription_to_client"] = "Email subscription to client";
-$lang["send_subscription"] = "Send subscription";
-$lang["subscription_settings"] = "Subscription Settings";
-$lang["subscription_prefix"] = "Subscription prefix";
-$lang["initial_number_of_the_subscription"] = "Initial number of the subscription";
-$lang["can_access_subscriptions"] = "Can access subscriptions?";
-$lang["show_in_subscription"] = "Show in subscription";
-$lang["subscription_total"] = "Subscription total";
-$lang["start_subscription"] = "Start subscription";
+$lang["subscription_id"] = "Αναγνωριστικό συνδρομής";
+$lang["subscription_sent_message"] = "Η συνδρομή έχει σταλεί!";
+$lang["add_subscription"] = "Προσθήκη συνδρομής";
+$lang["edit_subscription"] = "Επεξεργασία συνδρομής";
+$lang["delete_subscription"] = "Διαγραφή συνδρομής";
+$lang["subscription"] = "Συνδρομή";
+$lang["subscriptions"] = "Συνδρομές";
+$lang["subscription_value"] = "Αξία συνδρομής";
+$lang["subscription_items"] = "Στοιχεία συνδρομής";
+$lang["email_subscription_to_client"] = "Συνδρομή μέσω email στον πελάτη";
+$lang["send_subscription"] = "Αποστολή συνδρομής";
+$lang["subscription_settings"] = "Ρυθμίσεις συνδρομής";
+$lang["subscription_prefix"] = "Πρόθεμα συνδρομής";
+$lang["initial_number_of_the_subscription"] = "Αρχικός αριθμός της συνδρομής";
+$lang["can_access_subscriptions"] = "Μπορείτε να αποκτήσετε πρόσβαση σε συνδρομές;";
+$lang["show_in_subscription"] = "Εμφάνιση στη συνδρομή";
+$lang["subscription_total"] = "Σύνολο συνδρομής";
+$lang["start_subscription"] = "Έναρξη συνδρομής";
 
-$lang["subscription_success_message"] = "You're subscription has been started successfully.";
+$lang["subscription_success_message"] = "Η συνδρομή σας ξεκίνησε με επιτυχία.";
 
-$lang["enable_stripe_subscription"] = "Enable Stripe subscription";
-$lang["please_enable_the_stripe_payment_method_first"] = "Please enable the stripe payment method first!";
-$lang["tax_mapping"] = "Tax mapping";
-$lang["mapped"] = "Mapped";
-$lang["select_stripe_tax"] = "Select Stripe tax";
-$lang["stripe_price_error_message"] = "App subscription price and recurring interval should be same as stripe product price and interval.";
-$lang["stripe_tax_error_message"] = "Some taxes are not mapped with stripe yet. Please map the taxes from the subscription settings.";
-$lang["payment_status"] = "Payment status";
-$lang["failed"] = "Failed";
-$lang["next_billing_date"] = "Next billing date";
-$lang["cancel_subscription"] = "Cancel subscription";
+$lang["enable_stripe_subscription"] = "Ενεργοποίηση συνδρομής Stripe";
+$lang["please_enable_the_stripe_payment_method_first"] = "Ενεργοποιήστε πρώτα τον stripe τρόπο πληρωμής!";
+$lang["tax_mapping"] = "Φορολογική αντιστοίχιση";
+$lang["mapped"] = "Χαρτογράφηση";
+$lang["select_stripe_tax"] = "Επιλογή φόρου Stripe";
+$lang["stripe_price_error_message"] = "Η τιμή συνδρομής στην εφαρμογή και το επαναλαμβανόμενο διάστημα θα πρέπει να είναι ίδια με την τιμή και το διάστημα του προϊόντος stripe.";
+$lang["stripe_tax_error_message"] = "Ορισμένοι φόροι δεν έχουν ακόμη αντιστοιχιστεί με λωρίδα. Αντιστοιχίστε τους φόρους από τις ρυθμίσεις συνδρομής.";
+$lang["payment_status"] = "Κατάσταση πληρωμής";
+$lang["failed"] = "Απέτυχε";
+$lang["next_billing_date"] = "Επόμενη ημερομηνία χρέωσης";
+$lang["cancel_subscription"] = "Ακύρωση συνδρομής";
 
-$lang["invoice_number"] = "Invoice number";
-$lang["estimate_number"] = "Estimate number";
-$lang["order_number"] = "Order number";
+$lang["invoice_number"] = "Αριθμός τιμολογίου";
+$lang["estimate_number"] = "Εκτίμηση αριθμού";
+$lang["order_number"] = "Αριθμός παραγγελίας";
 
-$lang["client_can_access_notes"] = "Client can access notes?";
+$lang["client_can_access_notes"] = "Ο πελάτης έχει πρόσβαση στις σημειώσεις;";
 
-$lang["my_tasks_overview"] = "My Tasks Overview";
+$lang["my_tasks_overview"] = "Επισκόπηση των εργασιών μου";
 
-$lang["leads_overview"] = "Leads Overview";
-$lang["converted_to_client"] = "Converted to client";
+$lang["leads_overview"] = "Επισκόπηση δυνητικών πελατών";
+$lang["converted_to_client"] = "Μετατράπηκε σε πελάτη";
 
-$lang["remember_to_add_this_urls_in_authorized_redirect_uri"] = "Remember to add this urls in Authorized redirect uri";
+$lang["remember_to_add_this_urls_in_authorized_redirect_uri"] = "Θυμηθείτε να προσθέσετε αυτές τις διευθύνσεις URL στο Εξουσιοδοτημένο uri ανακατεύθυνσης";
 
-$lang["merge"] = "Merge";
-$lang["move_all_comments_or_notes_from"] = "Move all comments/notes from";
-$lang["moved_to"] = "Moved to";
+$lang["merge"] = "Συγχώνευση";
+$lang["move_all_comments_or_notes_from"] = "Μετακίνηση όλων των σχολίων/σημειώσεων από";
+$lang["moved_to"] = "Μετακινήθηκε στο";
 
-$lang["ok"] = "OK";
-$lang["app"] = "App";
+$lang["ok"] = "ΟΚ";
+$lang["app"] = "Εφαρμογή";
 $lang["stripe"] = "Stripe";
-$lang["activate_as_stripe_subscription"] = "Activate as Stripe subscription";
-$lang["activate_as_internal_subscription"] = "Activate as internal subscription";
-$lang["activate_as_stripe_subscription_message_1"] = "Please map the stripe product and price with this subscription. You can add the stripe products and prices from your stripe dashboard.";
-$lang["activate_as_stripe_subscription_message_2"] = "The client will get a request to add the payment method with this subscription. Once the client submit the payment method, this subscription will be activated and auto payment will be enabled via stripe.";
-$lang["activate_as_internal_subscription_message_1"] = "This subscription will be managed by app. The invoices will be created based on the subscription terms.";
-$lang["activate_as_internal_subscription_message_2"] = "Note: Payments will not be done automatically. For automated payment, you can use the stripe subscription.";
-$lang["subscription_toatl_can_not_empty_message"] = "Subscription total can't be 0.";
+$lang["activate_as_stripe_subscription"] = "Ενεργοποίηση ως συνδρομή Stripe";
+$lang["activate_as_internal_subscription"] = "Ενεργοποίηση ως εσωτερική συνδρομή";
+$lang["activate_as_stripe_subscription_message_1"] = "Παρακαλώ αντιστοιχίστε το προϊόν stripe και την τιμή με αυτήν τη συνδρομή. Μπορείτε να προσθέσετε τα stripe προϊόντα και τις τιμές από τον πίνακα ελέγχου stripe.";
+$lang["activate_as_stripe_subscription_message_2"] = "Ο πελάτης θα λάβει ένα αίτημα για προσθήκη του τρόπου πληρωμής με αυτήν τη συνδρομή. Μόλις ο πελάτης υποβάλει τον τρόπο πληρωμής, αυτή η συνδρομή θα ενεργοποιηθεί και η αυτόματη πληρωμή θα ενεργοποιηθεί μέσω stripe.";
+$lang["activate_as_internal_subscription_message_1"] = "Η διαχείριση αυτής της συνδρομής θα γίνεται από την εφαρμογή. Τα τιμολόγια θα δημιουργηθούν με βάση τους όρους συνδρομής.";
+$lang["activate_as_internal_subscription_message_2"] = "Σημείωση: Οι πληρωμές δεν θα γίνονται αυτόματα. Για αυτοματοποιημένες πληρωμές, μπορείτε να χρησιμοποιήσετε τη stripe συνδρομή.";
+$lang["subscription_toatl_can_not_empty_message"] = "Το σύνολο της συνδρομής δεν μπορεί να είναι 0.";
 
-$lang["subscription_request_sent"] = "Subscription request sent";
-$lang["notification_subscription_request_sent"] = "New subscription request";
+$lang["subscription_request_sent"] = "Έστειλε το αίτημα συνδρομής";
+$lang["notification_subscription_request_sent"] = "Νέο αίτημα συνδρομής";
 
-$lang["first_billing_date"] = "First billing date";
-$lang["first_billing_date_cant_be_past_message"] = "First billing date can’t be past. Keep it blank to use the date when the client will subscribe.";
+$lang["first_billing_date"] = "Πρώτη ημερομηνία χρέωσης";
+$lang["first_billing_date_cant_be_past_message"] = "Η πρώτη ημερομηνία χρέωσης δεν μπορεί να είναι παρελθόν. Διατηρήστε την κενή για να χρησιμοποιήσετε την ημερομηνία κατά την οποία ο πελάτης θα εγγραφεί.";
 
-$lang["gst_number"] = "GST Number";
+$lang["gst_number"] = "Αριθμός GST";
 
-$lang["announcement_created"] = "Announcement created";
+$lang["announcement_created"] = "Η ανακοίνωση δημιουργήθηκε";
 
-$lang["company_logo"] = "Company Logo";
+$lang["company_logo"] = "Λογότυπο εταιρείας";
 
-$lang["task_commented"] = "Task commented";
-$lang["task_assigned"] = "Task assigned";
-$lang["task_general"] = "Task general";
+$lang["task_commented"] = "Η εργασία σχολιάστηκε";
+$lang["task_assigned"] = "Ανατέθηκε εργασία";
+$lang["task_general"] = "Γενική εργασία";
+
+/* Version 3.5 */
+
+$lang["visitors_can_see_store_before_login"] = "Οι επισκέπτες μπορούν να δουν το κατάστημα πριν από τη σύνδεση";
+$lang["show_payment_option_after_submitting_the_order"] = "Εμφάνιση επιλογής πληρωμής μετά την υποβολή της παραγγελίας";
+$lang["accept_order_before_login"] = "Αποδοχή παραγγελίας πριν από τη σύνδεση";
+$lang["proceed_to_payment"] = "Συνέχεια στην πληρωμή";
+$lang["pay_order"] = "Εντολή πληρωμής";
+$lang["order_status_after_payment"] = "Κατάσταση παραγγελίας μετά την πληρωμή";
+$lang["store_settings"] = "Ρυθμίσεις καταστήματος";
+$lang["banner_image_on_public_store"] = "Εικόνα banner σε δημόσιο κατάστημα";
+$lang["your_order_has_been_submitted"] = "Η παραγγελία σας υποβλήθηκε.";
+
+$lang["re_captcha_error-timeout-or-duplicate"] = "Το reCAPTCHA έχει λήξει ή είναι διπλό. Φορτώστε ξανά τη σελίδα.";
+
+$lang["related_to"] = "Σχετικό με";
+
+$lang["hide_from_non_project_related_tasks"] = "Απόκρυψη από εργασίες που δεν σχετίζονται με το έργο";
+$lang["add_task_in_project"] = "Προσθήκη εργασίας στο έργο";
+
+$lang["general_task"] = "Γενική εργασία";
+$lang["general_task_created"] = "Δημιουργήθηκε γενική εργασία";
+$lang["general_task_updated"] = "Η γενική εργασία ενημερώθηκε";
+$lang["general_task_assigned"] = "Ανατέθηκε γενική εργασία";
+$lang["general_task_started"] = "Η γενική εργασία ξεκίνησε";
+$lang["general_task_finished"] = "Η γενική εργασία ολοκληρώθηκε";
+$lang["general_task_reopened"] = "Η γενική εργασία άνοιξε ξανά";
+$lang["general_task_deleted"] = "Η γενική εργασία διαγράφηκε";
+$lang["general_task_commented"] = "Σχολιάστηκε η γενική εργασία";
+
+$lang["notification_general_task_created"] = "Δημιουργήθηκε μια νέα εργασία.";
+$lang["notification_general_task_updated"] = "Ενημερώθηκε μια εργασία.";
+$lang["notification_general_task_assigned"] = "Αναθέσατε μια εργασία στο %s."; //Assigned a task to Mr. X
+$lang["notification_general_task_started"] = "Ξεκίνησε μια εργασία.";
+$lang["notification_general_task_finished"] = "Ολοκλήρωσε μια εργασία.";
+$lang["notification_general_task_reopened"] = "Άνοιξε ξανά μια εργασία.";
+$lang["notification_general_task_deleted"] = "Διαγράφηκε μια εργασία.";
+$lang["notification_general_task_commented"] = "Σχολίασε μια εργασία.";
+
+$lang["bookmark"] = "Σελιδοδείκτης";
+$lang["bookmark_icon"] = "Εικονίδιο σελιδοδείκτη";
+$lang["change_filters"] = "Αλλαγή φίλτρων";
+$lang["manage_filters"] = "Διαχείριση φίλτρων";
+$lang["new_filter"] = "Νέο φίλτρο";
+$lang["update_filter"] = "Ενημέρωση φίλτρου";
+$lang["add_new_filter"] = "Προσθήκη νέου φίλτρου";
+$lang["show_time_with_task_start_date_and_deadline"] = "Εμφάνιση ώρας με ημερομηνία έναρξης εργασίας και προθεσμία";
+
+$lang["save_and_continue_to_login_for_payment"] = "Αποθήκευση και συνέχιση της σύνδεσης για πληρωμή";
+$lang["public_store_page_setting_help_message"] = "Μπορείτε να ορίσετε το κατάστημα ως σελίδα προορισμού προσθέτοντας 'store' στη ρύθμιση της σελίδας προορισμού.";
+$lang["public_store_page_setting_permission_error_message"] = "Ενεργοποιήστε την άδεια πρόσβασης στο κατάστημα για πελάτες.";
+$lang["order_status_after_payment_help_message"] = "Αυτό θα ισχύει μόνο όταν είναι η κατάσταση της παραγγελίας";
+
+$lang["subscription_first_billing_date_error_message"] = "Η πρώτη ημερομηνία χρέωσης πρέπει να είναι πριν από την επόμενη ημερομηνία χρέωσης με βάση την περίοδο χρέωσης!";
+$lang["client_currency_not_editable_message"] = "Το νόμισμα δεν είναι επεξεργάσιμο όταν υπάρχει τιμολόγιο, εκτίμηση, παραγγελία, πρόταση, σύμβαση ή συνδρομή.";
+
+$lang["subscription_started"] = "Η συνδρομή ξεκίνησε";
+$lang["notification_subscription_started"] = "Ξεκίνησε μια συνδρομή.";
+
+$lang["subscription_invoice_created_via_cron_job"] = "Το τιμολόγιο συνδρομής δημιουργήθηκε μέσω Cron Job";
+$lang["notification_subscription_invoice_created_via_cron_job"] = "Δημιουργήθηκε νέο τιμολόγιο από τη συνδρομή.";
+
+$lang["create_credit_note"] = "Δημιουργία πιστωτικού σημειώματος";
+$lang["create_credit_note_message"] = "Είστε σίγουροι; Θα πιστώσετε πλήρως αυτό το τιμολόγιο. Θα δημιουργηθεί ένα πιστωτικό σημείωμα για αυτό το τιμολόγιο.";
+$lang["credited"] = "Πιστώθηκε";
+$lang["credit_note"] = "Πιστωτικό Σημείωμα";
+$lang["email_credit_note_to_client"] = "Στείλτε πιστωτικό σημείωμα ηλεκτρονικού ταχυδρομείου στον πελάτη";
+$lang["main_invoice"] = "Κύριο τιμολόγιο";
+$lang["credit_note_id"] = "Αναγνωριστικό πιστωτικού σημειώματος";
+$lang["send_credit_note"] = "Αποστολή πιστωτικού σημειώματος";
+
+$lang["taxable"] = " Φορολογητέα " ;
+
+$lang["can_manage_team_members_notes"] = "Μπορείτε να διαχειριστείτε τις σημειώσεις των μελών της ομάδας;";
+$lang["team_members_can_not_see_own_notes"] = "Τα μέλη της ομάδας δεν μπορούν να δουν τις δικές τους σημειώσεις.";
+
+$lang["articles_order"] = "Σειρά άρθρων";
+$lang["top_menu"] = "Κορυφαίο μενού";
+$lang["edit_top_menu"] = "Επεξεργασία επάνω μενού";
+
+$lang["top_menu_description_message"] = "Αυτό το μενού θα είναι ορατό μόνο στις δημόσιες σελίδες";
+$lang["enable_top_menu"] = "Ενεργοποίηση επάνω μενού";
+$lang["menu_items"] = "Στοιχεία μενού";
+
+$lang["landing_page"] = "Σελίδα προορισμού";
+$lang["landing_page_help_text"] = "Κανονικά κρατήστε το κενό. Ορίστε αυτήν την τιμή μόνο εάν θέλετε κάποια προσαρμοσμένη σελίδα προορισμού. (Παράδειγμα τιμής: Knowledge_base)";
+
+$lang["fixed_amount_discount_before_tax_error_message"] = "Η έκπτωση σταθερού ποσού δεν μπορεί να προστεθεί προ φόρων.";
+
+$lang["invoices_summary"] = "Περίληψη τιμολογίων";
+$lang["estimates_summary"] = "Σύνοψη εκτιμήσεων";
+$lang["leads_summary"] = "Σύνοψη δυνητικών πελατών";
+$lang["orders_summary"] = "Σύνοψη παραγγελιών";
+$lang["estimate_request_summary"] = "Εκτίμηση περίληψης αιτήματος";
+$lang["proposals_summary"] = "Σύνοψη προτάσεων";
+$lang["expenses_summary"] = "Περίληψη εξόδων";
+$lang["monthly_summary"] = "Μηνιαία περίληψη";
+
+$lang["yearly_chart"] = "Ετήσιο γράφημα";
+$lang["category_chart"] = "Γράφημα κατηγορίας";
+
+$lang["count"] = "Μετρήστε";
+$lang["invoice_total"] = "Σύνολο τιμολογίου";
+$lang["order_total"] = "Σύνολο παραγγελίας";
+
+$lang["last_7_days"] = "Τελευταίες 7 ημέρες";
+$lang["next_7_days"] = "Επόμενες 7 ημέρες";
+$lang["last_30_days"] = "Τελευταίες 30 ημέρες";
+$lang["this_month"] = "Αυτός ο μήνας";
+$lang["last_month"] = "Τελευταίος μήνας";
+$lang["next_month"] = "Επόμενος μήνας";
+$lang["next_year"] = "Την επόμενη χρονιά";
+
+$lang["hold_projects"] = "Αναμονή έργων";
+$lang["open_tasks"] = "Άνοιγμα εργασιών";
+$lang["completed_tasks"] = "Ολοκληρωμένες εργασίες";
+
+$lang["team_members_summary"] = "Σύνοψη μελών ομάδας";
+$lang["created_date_wise"] = "Δημιουργήθηκε κατά την ημερομηνία";
+$lang["conversion_date_wise"] = "Ημερομηνία μετατροπής";
+
+$lang["ticket_statistics"] = "Στατιστικά εισιτηρίων";
+
+$lang["can_activate_deactivate_team_members"] = "Μπορείτε να ενεργοποιήσετε την απενεργοποίηση των μελών της ομάδας";
+$lang["can_delete_team_members"] = "Μπορείτε να διαγράψετε μέλη της ομάδας";
+
+$lang["project_settings"] = "Ρυθμίσεις έργου";
+$lang["project_status"] = "Κατάσταση έργου";
+$lang["add_project_status"] = "Προσθήκη κατάστασης έργου";
+$lang["mark_project_as"] = "Επισήμανση έργου ως";
+
+$lang["status_language_key_recommendation_help_text"] = "Συνιστάται η χρήση οποιουδήποτε προθέματος όπως το project_status_";
+$lang["edit_project_status"] = "Επεξεργασία κατάστασης έργου";
+$lang["delete_project_status"] = "Διαγραφή κατάστασης έργου";
+
+$lang["open_project_status_recommendation_help_text"] = "Μπορείτε να αλλάξετε το κείμενο, αλλά αυτή η κατάσταση θα θεωρηθεί ως αρχική ανοιχτή κατάσταση.";
+$lang["completed_project_status_recommendation_help_text"] = "Μπορείτε να αλλάξετε το κείμενο, αλλά αυτή η κατάσταση θα θεωρηθεί ως ολοκληρωμένη.";
+
+$lang["full_width"] = "Πλήρο πλάτος";
+$lang["hide_topbar"] = "Απόκρυψη επάνω γραμμής";
+
+/* Version 3.5.1 */
+
+$lang["enable_lock_state"] = "Ενεργοποίηση κατάστασης κλειδώματος";
+$lang["invoice_lock_state_description"] = "Μόλις ενεργοποιήσετε την κατάσταση κλειδώματος, τα τιμολόγια δεν μπορούν να επεξεργαστούν μετά την αποστολή στον πελάτη ή την αλλαγή της κατάστασης.";
+$lang["estimate_lock_state_description"] = "Μόλις ενεργοποιήσετε την κατάσταση κλειδώματος, οι αποδεκτές εκτιμήσεις δεν μπορούν να επεξεργαστούν.";
+$lang["proposal_lock_state_description"] = "Μόλις ενεργοποιήσετε την κατάσταση κλειδώματος, οι αποδεκτές προτάσεις δεν μπορούν να επεξεργαστούν.";
+$lang["contract_lock_state_description"] = "Μόλις ενεργοποιήσετε την κατάσταση κλειδώματος, τα αποδεκτά συμβόλαια δεν μπορούν να επεξεργαστούν.";
 
 return $lang;

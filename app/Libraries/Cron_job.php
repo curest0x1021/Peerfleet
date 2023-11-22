@@ -759,7 +759,13 @@ class Cron_job {
             "discount_amount" => $invoice->discount_amount,
             "discount_amount_type" => $invoice->discount_amount_type,
             "discount_type" => $invoice->discount_type,
-            "company_id" => $invoice->company_id
+            "company_id" => $invoice->company_id,
+            "invoice_subtotal" => $invoice->invoice_subtotal,
+            "invoice_total" => $invoice->invoice_total,
+            "discount_total" => $invoice->discount_total,
+            "tax" => $invoice->tax,
+            "tax2" => $invoice->tax2,
+            "tax3" => $invoice->tax3
         );
 
         //create new invoice
@@ -776,6 +782,7 @@ class Cron_job {
                 "unit_type" => $item->unit_type,
                 "rate" => $item->rate,
                 "total" => $item->total,
+                "taxable" => $item->taxable,
                 "invoice_id" => $new_invoice_id,
             );
             $this->ci->Invoice_items_model->ci_save($new_invoice_item_data);
@@ -807,7 +814,7 @@ class Cron_job {
 
     //create new invoice from a subscription
     private function _create_new_invoice_of_subscription($subscription_info) {
-        create_invoice_from_subscription($subscription_info->id);
+        $invoice_id = create_invoice_from_subscription($subscription_info->id);
 
         //update the main recurring subscription
         $no_of_cycles_completed = $subscription_info->no_of_cycles_completed + 1;
@@ -821,6 +828,7 @@ class Cron_job {
         $this->ci->Subscriptions_model->ci_save($subscription_data, $subscription_info->id);
 
         //finally send notification
+        log_notification("subscription_invoice_created_via_cron_job", array("invoice_id" => $invoice_id, "subscription_id" => $subscription_info->id), "0");
     }
 
     private function get_google_calendar_events() {
@@ -891,6 +899,8 @@ class Cron_job {
         $start_date = $task->next_recurring_date;
         $deadline = NULL;
 
+        $context = $task->context;
+
         if ($task->deadline) {
             $task_start_date = $task->start_date ? $task->start_date : $task->created_date;
             $diff_of_deadline = get_date_difference_in_days($task->deadline, $task_start_date); //calculate the deadline difference of the original task
@@ -904,8 +914,18 @@ class Cron_job {
             "milestone_id" => $task->milestone_id,
             "points" => $task->points,
             "status_id" => 1, //new tasks should be on ToDo
+            "context" => $context,
+            "client_id" => $task->client_id,
+            "lead_id" => $task->lead_id,
+            "invoice_id" => $task->invoice_id,
+            "estimate_id" => $task->estimate_id,
+            "order_id" => $task->order_id,
+            "contract_id" => $task->contract_id,
+            "proposal_id" => $task->proposal_id,
+            "expense_id" => $task->expense_id,
+            "subscription_id" => $task->subscription_id,
+            "priority_id" => $task->priority_id,
             "labels" => $task->labels,
-            "points" => $task->points,
             "start_date" => $start_date,
             "deadline" => $deadline,
             "recurring_task_id" => $task->id,
@@ -914,6 +934,8 @@ class Cron_job {
             "created_date" => get_current_utc_time(),
             "activity_log_created_by_app" => true
         );
+
+        $new_task_data["sort"] = $this->ci->Tasks_model->get_next_sort_value($task->project_id, $new_task_data["status_id"]);
 
         //create new task
         $new_task_id = $this->ci->Tasks_model->ci_save($new_task_data);
@@ -956,6 +978,8 @@ class Cron_job {
             $sub_task_data['created_date'] = get_current_utc_time();
             $sub_task_data['deadline'] = NULL;
 
+            $sub_task_data["sort"] = $this->ci->Tasks_model->get_next_sort_value(get_array_value($sub_task_data, "project_id"), $sub_task_data["status_id"]);
+
             $sub_task_save_id = $this->ci->Tasks_model->ci_save($sub_task_data);
 
             //create sub tasks checklist
@@ -981,7 +1005,15 @@ class Cron_job {
         $this->ci->Tasks_model->save_reminder_date($recurring_task_data, $task->id);
 
         //send notification
-        $notification_option = array("project_id" => $task->project_id, "task_id" => $new_task_id);
+        if ($context === "project") {
+            $notification_option = array("project_id" => $task->project_id, "task_id" => $new_task_id);
+        } else {
+            $context_id_key = $context . "_id";
+            $context_id_value = $task->{$context . "_id"};
+
+            $notification_option = array("$context_id_key" => $context_id_value, "task_id" => $new_task_id);
+        }
+
         log_notification("recurring_task_created_via_cron_job", $notification_option, "0");
     }
 
@@ -1073,7 +1105,7 @@ class Cron_job {
         $this->ci->Expenses_model->ci_save($recurring_expense_data, $expense->id);
 
         //finally send notification
-//        log_notification("recurring_expense_created_vai_cron_job", array("expense_id" => $new_expense_id), "0");
+        //log_notification("recurring_expense_created_vai_cron_job", array("expense_id" => $new_expense_id), "0");
     }
 
     private function create_recurring_reminders() {
@@ -1098,4 +1130,10 @@ class Cron_job {
         }
     }
 
+    private function remove_old_session_data() {
+        $Ci_sessions_model = model('App\Models\Ci_sessions_model');
+        $last_weak_date = subtract_period_from_date($this->today, 7, "days");
+
+        $Ci_sessions_model->delete_session_by_date($last_weak_date);
+    }
 }

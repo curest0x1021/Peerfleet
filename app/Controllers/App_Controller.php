@@ -81,6 +81,7 @@ class App_Controller extends Controller {
     public $Proposal_items_model;
     public $Checklist_template_model;
     public $Checklist_groups_model;
+    public $Project_status_model;
     public $Subscriptions_model;
     public $Subscription_items_model;
     public $Sea_valves_model;
@@ -128,13 +129,13 @@ class App_Controller extends Controller {
     public $Shipyards_model;
     public $Ports_model;
     public $Sailing_areas_model;
-
+    
     public function __construct() {
         //main template to make frame of this app
         $this->template = new Template();
 
         //load helpers
-        helper(array('url', 'file', 'form', 'language', 'general', 'date_time', 'app_files', 'widget', 'activity_logs', 'currency'));
+        helper(array('url', 'file', 'form', 'language', 'general', 'date_time', 'app_files', 'widget', 'activity_logs', 'currency', 'reports'));
 
         //models
         $models_array = $this->get_models_array();
@@ -159,6 +160,13 @@ class App_Controller extends Controller {
         $this->session = \Config\Services::session();
         $this->form_validation = \Config\Services::validation();
         $this->parser = \Config\Services::parser();
+        
+        $landing_page = get_setting("landing_page");
+        $request = request();
+        if($landing_page && $request->getUri() == base_url()){
+            app_redirect($landing_page);
+        }
+        
     }
 
     public function initController(\CodeIgniter\HTTP\RequestInterface $request, \CodeIgniter\HTTP\ResponseInterface $response, \Psr\Log\LoggerInterface $logger) {
@@ -230,6 +238,7 @@ class App_Controller extends Controller {
             'Proposal_items_model',
             'Checklist_template_model',
             'Checklist_groups_model',
+            'Project_status_model',
             'Subscriptions_model',
             'Subscription_items_model',
             'Sea_valves_model',

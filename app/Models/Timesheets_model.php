@@ -93,7 +93,7 @@ class Timesheets_model extends Crud_model {
             "start_time" => $timesheet_table . ".start_time",
             "end_time" => $timesheet_table . ".end_time",
             "project" => "project_title",
-            "client" => "timesheet_client_name",
+            "client" => "timesheet_client_charter_name",
         );
 
         $order_by = get_array_value($available_order_by_list, $this->_get_clean_value($options, "order_by"));
@@ -123,7 +123,7 @@ class Timesheets_model extends Crud_model {
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS $timesheet_table.*,  CONCAT($users_table.first_name, ' ',$users_table.last_name) AS logged_by_user, $users_table.image as logged_by_avatar,
             $tasks_table.title AS task_title, $projects_table.title AS project_title,
-            $projects_table.client_id AS timesheet_client_id, (SELECT $clients_table.charter_name FROM $clients_table WHERE $clients_table.id=$projects_table.client_id AND $clients_table.deleted=0) AS timesheet_client_name $select_custom_fieds
+            $projects_table.client_id AS timesheet_client_id, (SELECT $clients_table.charter_name FROM $clients_table WHERE $clients_table.id=$projects_table.client_id AND $clients_table.deleted=0) AS timesheet_client_charter_name $select_custom_fieds
         FROM $timesheet_table
         LEFT JOIN $users_table ON $users_table.id= $timesheet_table.user_id
         LEFT JOIN $tasks_table ON $tasks_table.id= $timesheet_table.task_id
@@ -225,7 +225,7 @@ class Timesheets_model extends Crud_model {
 
         $sql = "SELECT new_summary_table.user_id, new_summary_table.total_duration, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS logged_by_user, $users_table.image as logged_by_avatar,
                        $tasks_table.id AS task_id,  $tasks_table.title AS task_title,  $projects_table.id AS project_id,  $projects_table.title AS project_title,
-                       $projects_table.client_id AS timesheet_client_id, (SELECT $clients_table.charter_name FROM $clients_table WHERE $clients_table.id=$projects_table.client_id AND $clients_table.deleted=0) AS timesheet_client_name
+                       $projects_table.client_id AS timesheet_client_id, (SELECT $clients_table.charter_name FROM $clients_table WHERE $clients_table.id=$projects_table.client_id AND $clients_table.deleted=0) AS timesheet_client_charter_name
                 FROM (SELECT MAX($timesheet_table.project_id) AS project_id, MAX($timesheet_table.user_id) AS user_id, MAX($timesheet_table.task_id) AS task_id, (SUM(TIMESTAMPDIFF(SECOND, $timesheet_table.start_time, $timesheet_table.end_time)) + SUM(ROUND(($timesheet_table.hours * 60), 0) * 60)) AS total_duration
                         FROM $timesheet_table
                         WHERE $timesheet_table.deleted=0 $where $custom_fields_where
@@ -358,7 +358,7 @@ class Timesheets_model extends Crud_model {
                 WHERE $timesheet_table.deleted=0 AND $timesheet_table.status='logged' $where
                 GROUP BY DATE($select_tz_start_time)";
 
-        $timesheet_users_data = "SELECT $timesheet_table.user_id AS day, (SUM(TIME_TO_SEC(TIMEDIFF($select_tz_end_time,$select_tz_start_time))) + SUM(ROUND(($timesheet_table.hours * 60), 0) * 60)) total_sec,
+        $timesheet_users_data = "SELECT $timesheet_table.user_id, (SUM(TIME_TO_SEC(TIMEDIFF($select_tz_end_time,$select_tz_start_time))) + SUM(ROUND(($timesheet_table.hours * 60), 0) * 60)) total_sec,
                 CONCAT($users_table.first_name, ' ',$users_table.last_name) AS user_name, $users_table.image as user_avatar
                 FROM $timesheet_table 
                 LEFT JOIN $users_table ON $users_table.id = $timesheet_table.user_id

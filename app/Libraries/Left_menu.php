@@ -214,6 +214,10 @@ class Left_menu {
             $view_data["sidebar_menu"] = $this->_get_sidebar_menu_items($type);
         }
 
+        if (!$is_preview) {
+            $view_data["sidebar_menu"] = $this->_get_active_menu($view_data["sidebar_menu"]);
+        }
+
         $view_data["is_preview"] = $is_preview;
         $view_data["login_user"] = $this->ci->login_user;
         return view("includes/left_menu", $view_data);
@@ -283,8 +287,9 @@ class Left_menu {
 
             if ($this->ci->login_user->is_admin || !get_array_value($this->ci->login_user->permissions, "do_not_show_projects")) {
                 $sidebar_menu["projects"] = array("name" => "projects", "url" => "projects/all_projects", "class" => "grid");
-                $sidebar_menu["tasks"] = array("name" => "tasks", "url" => "projects/all_tasks", "class" => "check-circle");
             }
+
+            $sidebar_menu["tasks"] = array("name" => "tasks", "url" => "tasks/all_tasks", "class" => "check-circle");
 
             if (get_setting("module_lead") == "1" && ($this->ci->login_user->is_admin || $access_lead)) {
                 $sidebar_menu["leads"] = array("name" => "leads", "url" => "leads", "class" => "layers");
@@ -300,16 +305,13 @@ class Left_menu {
             $sales_submenu = array();
 
             if (get_setting("module_invoice") == "1" && ($this->ci->login_user->is_admin || $access_invoice)) {
-                $sales_submenu["invoices"] = array("name" => "invoices", "url" => "invoices", "class" => "file-text");
+                $sales_submenu[] = array("name" => "invoices", "url" => "invoices", "class" => "file-text");
             }
-
 
             if (get_setting("module_order") == "1" && ($this->ci->login_user->is_admin || $access_order)) {
-
                 $sales_submenu[] = array("name" => "orders_list", "url" => "orders", "class" => "truck");
-                $sales_submenu[] = array("name" => "store", "url" => "items/grid_view", "class" => "list");
+                $sales_submenu[] = array("name" => "store", "url" => "store", "class" => "list");
             }
-
 
             if (get_setting("module_invoice") == "1" && ($this->ci->login_user->is_admin || $access_invoice)) {
                 $sales_submenu[] = array("name" => "invoice_payments", "url" => "invoice_payments", "class" => "dollar-sign");
@@ -317,15 +319,15 @@ class Left_menu {
             }
 
             if ($access_items && (get_setting("module_invoice") == "1" || get_setting("module_estimate") == "1" )) {
-                $sales_submenu["items"] = array("name" => "items", "url" => "items", "class" => "list");
+                $sales_submenu[] = array("name" => "items", "url" => "items", "class" => "list");
             }
 
             if (get_setting("module_contract") && ($this->ci->login_user->is_admin || $access_contract)) {
-                $sales_submenu["contracts"] = array("name" => "contracts", "url" => "contracts", "class" => "book-open");
+                $sales_submenu[] = array("name" => "contracts", "url" => "contracts", "class" => "book-open");
             }
 
             if (count($sales_submenu)) {
-                $sidebar_menu["orders"] = array("name" => "sales", "url" => "orders", "class" => "shopping-cart", "submenu" => $sales_submenu);
+                $sidebar_menu["sales"] = array("name" => "sales", "class" => "shopping-cart", "submenu" => $sales_submenu);
             }
 
 
@@ -421,27 +423,19 @@ class Left_menu {
                 $show_expenses_menu = true;
             }
 
-            $reports_submenu = [];
-            if (get_setting("module_project_timesheet") && ($this->ci->login_user->is_admin || !get_array_value($this->ci->login_user->permissions, "do_not_show_projects"))) {
-                $reports_submenu[] = array("name" => "timesheets", "url" => "projects/all_timesheets", "class" => "clock");
-            }
-
-
-            if ($show_expenses_menu && $show_payments_menu) {
-                $reports_submenu[] = array("name" => "income_vs_expenses", "url" => "expenses/income_vs_expenses", "class" => "trending-up");
-            }
-
-            if ($show_payments_menu) {
-                $reports_submenu[] = array("name" => "payments_summary", "url" => "invoice_payments/payments_summary", "class" => "dollar-sign");
-            }
-
-            if (count($reports_submenu)) {
-                $sidebar_menu["reports"] = array("name" => "reports", "url" => "expenses/income_vs_expenses", "class" => "pie-chart",
-                    "submenu" => $reports_submenu
-                );
-            }
-
-
+            $sidebar_menu["reports"] = array("name" => "reports", "url" => "reports/index", "class" => "pie-chart",
+                "sub_pages" => array(
+                    "invoices/invoices_summary",
+                    "orders/orders_summary",
+                    "projects/all_timesheets",
+                    "expenses/income_vs_expenses",
+                    "invoice_payments/payments_summary",
+                    "expenses/summary",
+                    "projects/team_members_summary",
+                    "leads/converted_to_client_report",
+                    "tickets/tickets_chart_report"
+                )
+            );
 
             $module_help = get_setting("module_help") == "1" ? true : false;
             $module_knowledge_base = get_setting("module_knowledge_base") == "1" ? true : false;
@@ -485,7 +479,28 @@ class Left_menu {
 
 
             if ($this->ci->login_user->is_admin || get_array_value($this->ci->login_user->permissions, "can_manage_all_kinds_of_settings")) {
-                $sidebar_menu["settings"] = array("name" => "settings", "url" => "settings/general", "class" => "settings");
+                $sidebar_menu["settings"] = array("name" => "settings", "url" => "settings/general", "class" => "settings",
+                    "sub_pages" => array(
+                        "email_templates/index",
+                        "left_menu/index",
+                        "updates/index",
+                        "roles/index",
+                        "roles/user_roles",
+                        "team/index",
+                        "dashboard/client_default_dashboard",
+                        "left_menus/index",
+                        "company/index",
+                        "item_categories/index",
+                        "payment_methods/index",
+                        "custom_fields/view",
+                        "client_groups/index",
+                        "expense_categories/index",
+                        "leave_types/index",
+                        "ticket_types/index",
+                        "lead_status/index",
+                        "pages/index",
+                        "plugins/index"
+                ));
             }
 
 
@@ -559,7 +574,7 @@ class Left_menu {
             }
 
             if (!in_array("store", $hidden_menu) && get_setting("client_can_access_store")) {
-                $sidebar_menu[] = array("name" => "store", "url" => "items/grid_view", "class" => "truck");
+                $sidebar_menu[] = array("name" => "store", "url" => "store", "class" => "truck");
                 $sidebar_menu[] = array("name" => "orders", "url" => "orders", "class" => "shopping-cart");
             }
 
@@ -606,6 +621,81 @@ class Left_menu {
         }
 
         return $this->position_items_for_default_left_menu($sidebar_menu);
+    }
+
+    function _get_active_menu($sidebar_menu = array()) {
+        $router = service('router');
+        $controller_name = strtolower(get_actual_controller_name($router));
+        $uri_string = uri_string();
+        $current_url = get_uri($uri_string);
+        $method_name = $router->methodName();
+
+        $found_url_active_key = null;
+
+        foreach ($sidebar_menu as $key => $menu) {
+            if (isset($menu["name"])) {
+                $menu_name = get_array_value($menu, "name");
+                $menu_url = get_array_value($menu, "url");
+
+                if ($controller_name == $menu_url) {
+                    $found_url_active_key = $key;
+                }
+
+                //compare with current url
+                if ($menu_url && ($menu_url === $current_url || get_uri($menu_url) === $current_url)) {
+                    $found_url_active_key = $key;
+                }
+
+                //compare with controller name
+                if ($menu_name === $controller_name) {
+                    $found_url_active_key = $key;
+                }
+
+                //check in submenu values
+                $submenu = get_array_value($menu, "submenu");
+                if ($submenu && count($submenu)) {
+                    foreach ($submenu as $sub_menu) {
+                        if (isset($sub_menu['name'])) {
+
+                            $sub_menu_url = get_array_value($sub_menu, "url");
+
+                            if ($controller_name == $sub_menu_url) {
+                                $found_url_active_key = $key;
+                            }
+
+                            //compare with current url
+                            if ($sub_menu_url === $current_url || get_uri($sub_menu_url) === $current_url) {
+                                $found_url_active_key = $key;
+                            }
+
+                            //compare with controller name
+                            if (get_array_value($sub_menu, "name") === $controller_name) {
+                                $found_url_active_key = $key;
+                            } else if (get_array_value($sub_menu, "category") === $controller_name) {
+                                $found_url_active_key = $key;
+                            }
+                        }
+                    }
+                }
+
+
+                $sub_pages = get_array_value($menu, "sub_pages");
+                if ($sub_pages) {
+                    foreach ($sub_pages as $sub_page_ur) {
+                        if ($sub_page_ur == $controller_name . "/" . $method_name) {
+                            $found_url_active_key = $key;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!is_null($found_url_active_key)) {
+            $sidebar_menu[$found_url_active_key]["is_active_menu"] = 1;
+        }
+
+
+        return $sidebar_menu;
     }
 
     //position items for plugins

@@ -187,7 +187,7 @@ class Users_model extends Crud_model {
             "job_title" => $users_table . ".job_title",
             "email" => $users_table . ".email",
             "phone" => $users_table . ".phone",
-            "skype" => $users_table . ".skype",
+            "linkedin" => $users_table . ".linkedin",
         );
 
         $order_by = get_array_value($available_order_by_list, $this->_get_clean_value($options, "order_by"));
@@ -207,7 +207,7 @@ class Users_model extends Crud_model {
             $where .= " $users_table.job_title LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR $users_table.email LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR $users_table.phone LIKE '%$search_by%' ESCAPE '!' ";
-            $where .= " OR $users_table.skype LIKE '%$search_by%' ESCAPE '!' ";
+            $where .= " OR $users_table.linkedin LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR $clients_table.charter_name LIKE '%$search_by%' ESCAPE '!' ";
             $where .= " OR CONCAT($users_table.first_name, ' ', $users_table.last_name) LIKE '%$search_by%' ESCAPE '!' ";
             $where .= $this->get_custom_field_search_query($users_table, "client_contacts", $search_by);
@@ -498,6 +498,15 @@ class Users_model extends Crud_model {
         FROM $users_table 
         WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active'";
         return $this->db->query($sql)->getRow()->total;
+    }
+
+    function get_team_members_id_and_name() {
+        $users_table = $this->db->prefixTable('users');
+
+        $sql = "SELECT id, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS user_name
+        FROM $users_table 
+        WHERE $users_table.deleted=0 AND $users_table.user_type='staff' AND $users_table.status='active'";
+        return $this->db->query($sql);
     }
 
 }

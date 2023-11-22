@@ -220,6 +220,10 @@ class Security_Controller extends App_Controller {
 
     //When checking project permissions, to reduce db query we'll use this init function, where team members has to be access on the project
     protected function init_project_permission_checker($project_id = 0) {
+        if (!$project_id) {
+            return false;
+        }
+
         if ($this->login_user->user_type == "client") {
             $project_info = $this->Projects_model->get_one($project_id);
             if ($project_info->client_id == $this->login_user->client_id) {
@@ -263,21 +267,24 @@ class Security_Controller extends App_Controller {
     }
 
     //get currencies dropdown
-    protected function _get_currencies_dropdown() {
+    protected function _get_currencies_dropdown($support_empty_value = true) {
         $used_currencies = $this->Invoices_model->get_used_currencies_of_client()->getResult();
 
         if ($used_currencies) {
             $default_currency = get_setting("default_currency");
 
-            $currencies_dropdown = array(
-                array("id" => "", "text" => "- " . app_lang("currency") . " -"),
-                array("id" => $default_currency, "text" => $default_currency) // add default currency
-            );
-
-            foreach ($used_currencies as $currency) {
-                $currencies_dropdown[] = array("id" => $currency->currency, "text" => $currency->currency);
+            $currencies_dropdown = array();
+            if ($support_empty_value) {
+                $currencies_dropdown[] = array("id" => "", "text" => "- " . app_lang("currency") . " -");
             }
 
+            $currencies_dropdown[] = array("id" => $default_currency, "text" => $default_currency); // add default currency
+
+            if ($used_currencies) {
+                foreach ($used_currencies as $currency) {
+                    $currencies_dropdown[] = array("id" => $currency->currency, "text" => $currency->currency);
+                }
+            }
             return json_encode($currencies_dropdown);
         }
     }
@@ -484,10 +491,16 @@ class Security_Controller extends App_Controller {
 
     protected function check_access_to_store() {
         $this->check_module_availability("module_order");
-        if ($this->login_user->user_type == "staff") {
-            $this->access_only_allowed_members();
+        if (isset($this->login_user->id)) {
+            if ($this->login_user->user_type == "staff") {
+                $this->access_only_allowed_members();
+            } else {
+                if (!get_setting("client_can_access_store")) {
+                    app_redirect("forbidden");
+                }
+            }
         } else {
-            if (!get_setting("client_can_access_store")) {
+            if (!(get_setting("module_order") && get_setting("visitors_can_see_store_before_login"))) {
                 app_redirect("forbidden");
             }
         }
@@ -983,11 +996,81 @@ class Security_Controller extends App_Controller {
         }
     }
 
-    protected function can_access_this_lead($lead_id = 0) {
-        $lead_info = $this->Clients_model->get_one($lead_id);
+    protected function can_edit_clients($client_id = 0) {
+        $permissions = $this->login_user->permissions;
 
-        if ($lead_info->id && get_array_value($this->login_user->permissions, "lead") == "own" && $lead_info->owner_id !== $this->login_user->id) {
-            app_redirect("forbidden");
+        if ($this->login_user->is_admin) {
+            return true;
+        } else if (get_array_value($permissions, "client") == "all") {
+            return true;
+        } else if (!$client_id && $this->login_user->user_type == "staff" && get_array_value($permissions, "client") === "read_only") {
+            return false;
+        } else if (!$client_id && get_array_value($permissions, "client")) {
+            //clients list
+            return true;
+        } else if ($client_id) {
+            $client_info = $this->Clients_model->get_one($client_id);
+
+            if ($this->login_user->user_type == "client" && $client_info->id === $this->login_user->client_id) {
+                return true;
+            } else if (get_array_value($permissions, "client") === "own" && ($client_info->created_by == $this->login_user->id || $client_info->owner_id == $this->login_user->id)) {
+                return true;
+            } else if (get_array_value($permissions, "client") === "specific") {
+                $specific_client_groups = explode(',', get_array_value($permissions, "client_specific"));
+                if (array_intersect($specific_client_groups, explode(',', $client_info->group_ids))) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    protected function can_view_clients($client_id = 0) {
+        if ($this->can_edit_clients($client_id)) {
+            return true;
+        } else if (get_array_value($this->login_user->permissions, "client") === "read_only") {
+            return true;
+        }
+    }
+
+    protected function can_access_tickets($ticket_id = 0) {
+        $permissions = $this->login_user->permissions;
+
+        if ($this->login_user->is_admin) {
+            return true;
+        } else if (get_array_value($permissions, "ticket") == "all") {
+            return true;
+        } else if (!$ticket_id && get_array_value($permissions, "ticket") || $this->login_user->user_type == "client") {
+            return true;
+        } else if ($ticket_id) {
+            $ticket_info = $this->Tickets_model->get_one($ticket_id);
+
+            if ($this->login_user->user_type == "client" && $ticket_info->client_id === $this->login_user->client_id) {
+                return true;
+            } else if (get_array_value($permissions, "ticket") === "assigned_only" && $ticket_info->assigned_to == $this->login_user->id) {
+                return true;
+            } else if (get_array_value($permissions, "ticket") === "specific") {
+                $allowed_ticket_types = explode(',', get_array_value($permissions, "ticket_specific"));
+                if (in_array($ticket_info->ticket_type_id, $allowed_ticket_types)) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    protected function can_access_this_lead($lead_id = 0) {
+        $permissions = $this->login_user->permissions;
+
+        if ($this->login_user->is_admin) {
+            return true;
+        } else if (get_array_value($permissions, "lead") == "all") {
+            return true;
+        } else if (!$lead_id && get_array_value($permissions, "lead")) {
+            return true;
+        } else if ($lead_id) {
+            $lead_info = $this->Clients_model->get_one($lead_id);
+            if ($lead_info->id && get_array_value($permissions, "lead") == "own" && $lead_info->owner_id == $this->login_user->id) {
+                return true;
+            }
         }
     }
 
@@ -1090,6 +1173,7 @@ class Security_Controller extends App_Controller {
         return $companies_dropdown;
     }
 
+    
     protected function can_edit_tasks() {
         if ($this->login_user->user_type == "staff") {
             if ($this->can_manage_all_projects()) {
@@ -1118,17 +1202,17 @@ class Security_Controller extends App_Controller {
         }
     }
 
-    protected function can_edit_subscriptions($client_id = 0) {
-        if ($this->login_user->user_type == "staff") {
-            if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "subscription") === "all") {
-                return true;
-            }
-        } else {
-            if ($this->login_user->client_id === $client_id) {
-                return true;
-            }
-        }
-    }
+    // protected function can_edit_subscriptions($client_id = 0) {
+    //     if ($this->login_user->user_type == "staff") {
+    //         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "subscription") === "all") {
+    //             return true;
+    //         }
+    //     } else {
+    //         if ($this->login_user->client_id === $client_id) {
+    //             return true;
+    //         }
+    //     }
+    // }
 
     protected function can_edit_this_subscription($subscription_id = 0) {
         if (!$subscription_id) {
@@ -1138,6 +1222,202 @@ class Security_Controller extends App_Controller {
         $subscription_info = $this->Subscriptions_model->get_one($subscription_id);
         if (!($this->login_user->user_type == "staff" && $subscription_info->status !== "active")) {
             app_redirect("forbidden");
+        }
+    }
+    /* prepare a row of order item list table */
+
+    protected function _make_order_item_row($data) {
+        $item = "<div class='item-row strong mb5' data-id='$data->id'><div class='float-start move-icon'><i data-feather='menu' class='icon-16'></i></div> $data->title</div>";
+        if ($data->description) {
+            $item .= "<span>" . nl2br($data->description) . "</span>";
+        }
+        $type = $data->unit_type ? $data->unit_type : "";
+        return array(
+            $data->sort,
+            $item,
+            to_decimal_format($data->quantity) . " " . $type,
+            to_currency($data->rate),
+            to_currency($data->total),
+            modal_anchor(get_uri("store/item_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-order_id" => $data->order_id))
+            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("store/delete_item"), "data-action" => "delete"))
+        );
+    }
+
+    // protected function can_view_subscriptions($client_id = 0) {
+    //     if ($this->login_user->user_type == "staff") {
+    //         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "subscription")) {
+    //             return true;
+    //         }
+    //     } else {
+    //         if ($this->login_user->client_id === $client_id) {
+    //             return true;
+    //         }
+    //     }
+    // }
+
+    protected function can_edit_subscriptions($subscription_id = 0) {
+        $permissions = $this->login_user->permissions;
+
+        if ($this->login_user->is_admin) {
+            return true;
+        } else if (get_array_value($permissions, "subscription") == "all") {
+            return true;
+        } else if (!$subscription_id && $this->login_user->user_type == "staff" && get_array_value($permissions, "subscription") === "read_only") {
+            return false;
+        } else if ($subscription_id) {
+            $subscription_info = $this->Subscriptions_model->get_one($subscription_id);
+
+            if ($this->login_user->user_type == "staff" && get_array_value($permissions, "subscription") !== "read_only" && $subscription_info->status !== "active") {
+                return true;
+            }
+        }
+    }
+
+    //only admin/permitted users can access user's notes
+    //users can't access own notes
+    protected function can_access_team_members_note($user_id) {
+        if (($this->login_user->is_admin || get_array_value($this->login_user->permissions, "team_members_note_manage_permission")) && $user_id != $this->login_user->id) {
+            return true;
+        }
+    }
+
+    /*
+     * admin can manage all members timesheet
+     * allowed member can manage other members timesheet accroding to permission
+     */
+
+    protected function _get_members_to_manage_timesheet() {
+        $access_info = $this->get_access_info("timesheet_manage_permission");
+        $access_type = $access_info->access_type;
+
+        if (!$access_type || $access_type === "own") {
+            return array($this->login_user->id); //permission: no / own
+        } else if (($access_type === "specific" || $access_type === "specific_excluding_own") && count($access_info->allowed_members)) {
+            return $access_info->allowed_members; //permission: specific / specific_excluding_own
+        } else {
+            return $access_type; //permission: all / own_project_members / own_project_members_excluding_own
+        }
+    }
+
+    /* load the project settings into ci settings */
+
+    protected function init_project_settings($project_id) {
+        if (!$project_id) {
+            return false;
+        }
+
+        $settings = $this->Project_settings_model->get_all_where(array("project_id" => $project_id))->getResult();
+        foreach ($settings as $setting) {
+            config('Rise')->app_settings_array[$setting->setting_name] = $setting->setting_value;
+        }
+    }
+
+    protected function can_view_timesheet($project_id = 0, $show_all_personal_timesheets = false) {
+        if (!get_setting("module_project_timesheet")) {
+            return false;
+        }
+
+        if ($this->login_user->user_type == "staff") {
+            if ($this->can_manage_all_projects()) {
+                return true;
+            } else {
+
+
+                if ($project_id) {
+                    //check is user a project member
+                    $this->init_project_permission_checker($project_id);
+                    return $this->is_user_a_project_member;
+                } else {
+                    $access_info = $this->get_access_info("timesheet_manage_permission");
+
+                    if ($access_info->access_type) {
+                        return true;
+                    } else if (count($access_info->allowed_members)) {
+                        return true;
+                    } else if ($show_all_personal_timesheets) {
+                        return true;
+                    }
+                }
+            }
+        } else {
+            //check settings for client's project permission
+            if (get_setting("client_can_view_timesheet")) {
+                //even the settings allow to view gantt, the client can only view on their own project's gantt
+                return $this->is_clients_project;
+            }
+        }
+    }
+
+    protected function can_access_clients($is_task = false) {
+        $permissions = $this->login_user->permissions;
+        if ($is_task) {
+            if (get_setting("client_can_view_tasks") && ($this->login_user->is_admin ||
+                    ($this->login_user->user_type == "staff" && get_array_value($permissions, "client") && get_array_value($permissions, "show_assigned_tasks_only") !== "1")
+                    )) {
+                return true;
+            }
+        } else {
+            if ($this->login_user->is_admin || get_array_value($permissions, "client")) {
+                return true;
+            }
+        }
+    }
+
+    protected function can_view_milestones() {
+        if ($this->login_user->user_type == "staff") {
+            if ($this->can_manage_all_projects()) {
+                return true;
+            } else {
+                //check is user a project member
+                return $this->is_user_a_project_member;
+            }
+        } else {
+            //check settings for client's project permission
+            if (get_setting("client_can_view_milestones")) {
+                //even the settings allow to view milestones, the client can only create their own project's milestones
+                return $this->is_clients_project;
+            }
+        }
+    }
+
+    protected function show_own_estimates_only_user_id() {
+        if ($this->login_user->user_type === "staff") {
+            return get_array_value($this->login_user->permissions, "estimate") == "own" ? $this->login_user->id : false;
+        }
+    }
+
+    protected function can_access_this_estimate($estimate_id = 0, $check_client = false) {
+        $permissions = $this->login_user->permissions;
+
+        if ($this->login_user->is_admin) {
+            return true;
+        } else if (get_array_value($permissions, "estimate") == "all") {
+            return true;
+        } else if (!$estimate_id && get_array_value($permissions, "estimate")) {
+            return true;
+        } else if ($estimate_id) {
+            $estimate_info = $this->Estimates_model->get_one($estimate_id);
+            if ($check_client && $this->login_user->user_type == "client" && $estimate_info->client_id === $this->login_user->client_id) {
+                return true;
+            } else if ($estimate_info->id && get_array_value($permissions, "estimate") == "own" && $estimate_info->created_by == $this->login_user->id) {
+                return true;
+            }
+        }
+    }
+
+    //prevent editing of invoice after certain state
+    protected function is_invoice_editable($_invoice, $is_clone = 0) {
+        if (get_setting("enable_invoice_lock_state")) {
+            $invoice_info = is_object($_invoice) ? $_invoice : $this->Invoices_model->get_one($_invoice);
+            if (!$invoice_info->id || $is_clone) {
+                return true;
+            }
+
+            if ($invoice_info->status == "draft") {
+                return true;
+            }
+        } else {
+            return true;
         }
     }
 

@@ -30,7 +30,7 @@ class Clients extends Security_Controller
     }
 
     //for team members, check only read_only permission here, since other permission will be checked accordingly
-    private function can_edit_clients()
+    protected function can_edit_clients($client_id = 0)
     {
         if ($this->login_user->is_admin) {
             return true;
@@ -841,7 +841,7 @@ class Clients extends Security_Controller
             "email" => $this->request->getPost("email"),
             "sat" => $this->request->getPost('sat'),
             "phone" => $this->request->getPost('phone'),
-            "alternative_phone" => $this->request->getPost('alternative_phone'),
+            "mobile" => $this->request->getPost('mobile'),
         );
 
         $this->validate_submitted_data(array(
@@ -1197,7 +1197,7 @@ class Clients extends Security_Controller
             $data->email,
             $data->sat ? $data->sat : "-",
             $data->phone ? $data->phone : "-",
-            $data->alternative_phone ? $data->alternative_phone : "-"
+            $data->mobile ? $data->mobile : "-"
         );
 
         $row_data[] = js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_contact'), "class" => "delete", "data-id" => "$data->id", "data-action-url" => get_uri("clients/delete_contact"), "data-action" => "delete"));
@@ -1339,7 +1339,7 @@ class Clients extends Security_Controller
             } else if ($header_key_value == "mobile") {
                 $contact_data["phone"] = $row_data_value;
             } else if ($header_key_value == "iridium_phone") {
-                $contact_data["alternative_phone"] = $row_data_value;
+                $contact_data["mobile"] = $row_data_value;
             } else if ($header_key_value == "type") {
                 $vessel_type_data["title"] = $row_data_value;
             } else {
@@ -1741,7 +1741,7 @@ class Clients extends Security_Controller
 
     private function _make_export_data($user_info)
     {
-        $required_general_info_array = array("first_name", "last_name", "email", "job_title", "phone", "gender", "skype", "created_at");
+        $required_general_info_array = array("first_name", "last_name", "email", "job_title", "phone", "gender", "linkedin", "created_at");
 
         $data = strtoupper(app_lang("general_info")) . "\n";
 
@@ -1752,7 +1752,7 @@ class Clients extends Security_Controller
                     $data .= app_lang("created") . ": " . format_to_datetime($user_info->$field) . "\n";
                 } else if ($field == "gender") {
                     $data .= app_lang($field) . ": " . ucfirst($user_info->$field) . "\n";
-                } else if ($field == "skype") {
+                } else if ($field == "linkedin") {
                     $data .= "Skype: " . ucfirst($user_info->$field) . "\n";
                 } else {
                     $data .= app_lang($field) . ": " . $user_info->$field . "\n";

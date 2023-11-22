@@ -9,7 +9,7 @@ use CodeIgniter\Config\BaseConfig;
 class Rise extends BaseConfig {
 
     public $app_settings_array = array(
-        "app_version" => "3.4",
+        "app_version" => "3.5.3",
         "app_update_url" => 'https://releases.fairsketch.com/rise/',
         "updates_path" => './updates/',
     );
@@ -28,7 +28,9 @@ class Rise extends BaseConfig {
         "events/snooze_reminder", "events/reminder_view", "events/save_reminder_status",
         "cron",
         "notifications/count_notifications",
+        "notifications/get_notifications",
         "messages/count_notifications",
+        "microsoft_api/save_outlook_smtp_access_token"
     );
 
     public function __construct() {

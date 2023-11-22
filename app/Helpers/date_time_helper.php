@@ -117,6 +117,10 @@ if (!function_exists('convert_time_to_24hours_format')) {
         $minute = get_array_value($array_time, 1) ? get_array_value($array_time, 1) : "00";
         $secound = get_array_value($array_time, 2) ? get_array_value($array_time, 2) : "00";
 
+        if($hour<10){
+            $hour = "0". ($hour*1);
+        }
+        
         return $hour . ":" . $minute . ":" . $secound;
     }
 
@@ -131,7 +135,7 @@ if (!function_exists('convert_time_to_24hours_format')) {
  */
 if (!function_exists('convert_time_to_12hours_format')) {
 
-    function convert_time_to_12hours_format($time = "") {
+    function convert_time_to_12hours_format($time = "", $is_short_time = false) {
         if ($time) {
             $am = " AM";
             $pm = " PM";
@@ -145,23 +149,24 @@ if (!function_exists('convert_time_to_12hours_format')) {
             $minute = ($minute < 10) ? "0" . $minute : $minute;
 
             $second = get_array_value($check_time, 2) * 1;
-            $second = ($second < 10) ? "0" . $second : $second;
+            $second = ($second < 10) ? ":0" . $second : ":" . $second;
             if (!$second) {
                 $second = "00";
+            } else if ($is_short_time) {
+                $second = "";
             }
 
-
             if ($hour == 0) {
-                $time = "12:" . $minute . ":" . $second . $am;
+                $time = "12:" . $minute . $second . $am;
             } else if ($hour == 12) {
-                $time = $hour . ":" . $minute . ":" . $second . $pm;
+                $time = $hour . ":" . $minute . $second . $pm;
             } else if ($hour > 12) {
                 $hour = $hour - 12;
                 $hour = ($hour < 10) ? "0" . $hour : $hour;
-                $time = $hour . ":" . $minute . ":" . $second . $pm;
+                $time = $hour . ":" . $minute . $second . $pm;
             } else {
                 $hour = ($hour < 10) ? "0" . $hour : $hour;
-                $time = $hour . ":" . $minute . ":" . $second . $am;
+                $time = $hour . ":" . $minute . $second . $am;
             }
             return $time;
         }
@@ -242,7 +247,7 @@ if (!function_exists('convert_time_string_to_second')) {
  */
 if (!function_exists('format_to_relative_time')) {
 
-    function format_to_relative_time($date_time, $convert_to_local = true, $is_short_date = false) {
+    function format_to_relative_time($date_time, $convert_to_local = true, $is_short_date = false, $is_short_time = false) {
         if ($convert_to_local) {
             $date_time = convert_date_utc_to_local($date_time);
         }
@@ -265,6 +270,12 @@ if (!function_exists('format_to_relative_time')) {
         }
         if ($is_short_date) {
             return $short_date;
+        } else if ($is_short_time) {
+            if (get_setting("time_format") == "24_hours") {
+                return $date . " " . $target_date->format("H:i");
+            } else {
+                return $date . " " . convert_time_to_12hours_format($target_date->format("H:i:s"), true);
+            }
         } else {
             if (get_setting("time_format") == "24_hours") {
                 return $date . " " . $target_date->format("H:i");
@@ -317,7 +328,7 @@ if (!function_exists('format_to_date')) {
  */
 if (!function_exists('format_to_time')) {
 
-    function format_to_time($date_time, $convert_to_local = true) {
+    function format_to_time($date_time, $convert_to_local = true, $is_short_time = false) {
         if (!$date_time) {
             return "";
         } else {
@@ -328,7 +339,6 @@ if (!function_exists('format_to_time')) {
             }
         }
 
-
         if ($convert_to_local) {
             $date_time = convert_date_utc_to_local($date_time);
         }
@@ -337,7 +347,11 @@ if (!function_exists('format_to_time')) {
         if (get_setting("time_format") == "24_hours") {
             return $target_date->format("H:i");
         } else {
-            return convert_time_to_12hours_format($target_date->format("H:i:s"));
+            if ($is_short_time) {
+                return convert_time_to_12hours_format($target_date->format("H:i:s"), true);
+            } else {
+                return convert_time_to_12hours_format($target_date->format("H:i:s"));
+            }
         }
     }
 
@@ -353,6 +367,9 @@ if (!function_exists('format_to_time')) {
 if (!function_exists('format_to_datetime')) {
 
     function format_to_datetime($date_time, $convert_to_local = true) {
+        if(!$date_time){
+            return "";
+        }
         if ($convert_to_local) {
             $date_time = convert_date_utc_to_local($date_time);
         }
@@ -551,3 +568,32 @@ if (!function_exists('prepare_last_recently_date_time')) {
 
 }
 
+/**
+ * return date from datetime
+ * 
+ * $date 
+ * 
+ * @return date
+ */
+if (!function_exists('get_date_from_datetime')) {
+
+    function get_date_from_datetime($date = "") {
+        return substr($date, 0, 10);
+    }
+
+}
+
+/**
+ * return time from datetime
+ * 
+ * $date 
+ * 
+ * @return date
+ */
+if (!function_exists('get_time_from_datetime')) {
+
+    function get_time_from_datetime($date = "") {
+        return substr($date, 11);
+    }
+
+}

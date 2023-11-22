@@ -11,6 +11,21 @@ class Subscriptions extends Security_Controller {
         $this->init_permission_checker("subscription");
     }
 
+    private function validate_subscription_access($subscription_id = 0) {
+        if (!$this->can_edit_subscriptions($subscription_id)) {
+            app_redirect("forbidden");
+        }
+    }
+
+    private function _can_update_subscription_status($subscription_id) {
+        if ($this->login_user->user_type == "client") {
+            $subscription_info = $this->Subscriptions_model->get_one($subscription_id);
+            return ($subscription_info->client_id === $this->login_user->client_id);
+        } else {
+            return $this->can_edit_subscriptions($subscription_id);
+        }
+    }
+
     /* load subscription list view */
 
     function index() {
@@ -41,10 +56,6 @@ class Subscriptions extends Security_Controller {
     /* load new subscription modal */
 
     function modal_form() {
-        if (!$this->can_edit_subscriptions()) {
-            app_redirect("forbidden");
-        }
-
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "client_id" => "numeric"
@@ -53,7 +64,7 @@ class Subscriptions extends Security_Controller {
         $client_id = $this->request->getPost('client_id');
         $subscription_id = $this->request->getPost('id');
         $model_info = $this->Subscriptions_model->get_one($subscription_id);
-        $this->can_edit_this_subscription($subscription_id);
+        $this->validate_subscription_access($subscription_id);
 
         //check if estimate_id/order_id/proposal_id/contract_id posted. if found, generate related information
         $estimate_id = $this->request->getPost('estimate_id');
@@ -93,10 +104,6 @@ class Subscriptions extends Security_Controller {
     /* add or edit an subscription */
 
     function save() {
-        if (!$this->can_edit_subscriptions()) {
-            app_redirect("forbidden");
-        }
-
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "subscription_client_id" => "required|numeric",
@@ -105,15 +112,22 @@ class Subscriptions extends Security_Controller {
 
         $client_id = $this->request->getPost('subscription_client_id');
         $id = $this->request->getPost('id');
-        $this->can_edit_this_subscription($id);
-
-        $target_path = get_setting("timeline_file_path");
-        $files_data = move_files_from_temp_dir_to_permanent_dir($target_path, "subscription");
-        $new_files = unserialize($files_data);
+        $this->validate_subscription_access($id);
 
         $bill_date = $this->request->getPost('subscription_bill_date');
         $repeat_every = $this->request->getPost('repeat_every') ? $this->request->getPost('repeat_every') : 1;
         $repeat_type = $this->request->getPost('repeat_type');
+        $today_date = get_today_date();
+
+        //the first billing date should be before the next billing date based on billing period
+        if ($bill_date && add_period_to_date($today_date, $repeat_every, $repeat_type) < $bill_date) {
+            echo json_encode(array("success" => false, 'message' => app_lang('subscription_first_billing_date_error_message')));
+            return false;
+        }
+
+        $target_path = get_setting("timeline_file_path");
+        $files_data = move_files_from_temp_dir_to_permanent_dir($target_path, "subscription");
+        $new_files = unserialize($files_data);
 
         $subscription_data = array(
             "title" => $this->request->getPost('title'),
@@ -150,33 +164,38 @@ class Subscriptions extends Security_Controller {
             }
         }
 
-        if (!$bill_date) {
-            $bill_date = get_today_date();
-        }
-
         if (!$subscription_data["bill_date"]) {
             $subscription_data["bill_date"] = NULL;
         }
 
-        if ($id) {
-            //update
-            if ($this->request->getPost('next_recurring_date')) { //submitted any recurring date? set it.
-                $subscription_data['next_recurring_date'] = $this->request->getPost('next_recurring_date');
-            } else {
-                //re-calculate the next recurring date, if any recurring fields has changed.
-                $subscription_info = $this->Subscriptions_model->get_one($id);
-                if ($subscription_info->repeat_every != $subscription_data['repeat_every'] || $subscription_info->repeat_type != $subscription_data['repeat_type'] || $subscription_info->bill_date != $subscription_data['bill_date']) {
-                    $subscription_data['next_recurring_date'] = add_period_to_date($bill_date, $repeat_every, $repeat_type);
-                }
-            }
+        if ($bill_date && $bill_date > $today_date) {
+            //save next recurring date same as the first billing date when the first billing date is a future date
+            $subscription_data['next_recurring_date'] = $bill_date;
         } else {
-            //insert new
-            $subscription_data['next_recurring_date'] = add_period_to_date($bill_date, $repeat_every, $repeat_type);
+            if (!$bill_date) {
+                $bill_date = $today_date;
+            }
+
+            if ($id) {
+                //update
+                if ($this->request->getPost('next_recurring_date')) { //submitted any recurring date? set it.
+                    $subscription_data['next_recurring_date'] = $this->request->getPost('next_recurring_date');
+                } else {
+                    //re-calculate the next recurring date, if any recurring fields has changed.
+                    $subscription_info = $this->Subscriptions_model->get_one($id);
+                    if ($subscription_info->repeat_every != $subscription_data['repeat_every'] || $subscription_info->repeat_type != $subscription_data['repeat_type'] || $subscription_info->bill_date != $subscription_data['bill_date']) {
+                        $subscription_data['next_recurring_date'] = add_period_to_date($bill_date, $repeat_every, $repeat_type);
+                    }
+                }
+            } else {
+                //insert new
+                $subscription_data['next_recurring_date'] = add_period_to_date($bill_date, $repeat_every, $repeat_type);
+            }
         }
 
 
         //recurring date must have to set a future date
-        if (get_array_value($subscription_data, "next_recurring_date") && get_today_date() >= $subscription_data['next_recurring_date']) {
+        if (get_array_value($subscription_data, "next_recurring_date") && $today_date >= $subscription_data['next_recurring_date']) {
             echo json_encode(array("success" => false, 'message' => app_lang('past_recurring_date_error_message_title'), 'next_recurring_date_error' => app_lang('past_recurring_date_error_message'), "next_recurring_date_value" => $subscription_data['next_recurring_date']));
             return false;
         }
@@ -253,15 +272,12 @@ class Subscriptions extends Security_Controller {
     /* delete or undo an subscription */
 
     function delete() {
-        if (!$this->can_edit_subscriptions()) {
-            app_redirect("forbidden");
-        }
-
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
         ));
 
         $id = $this->request->getPost('id');
+        $this->validate_subscription_access($id);
 
         $subscription_info = $this->Subscriptions_model->get_one($id);
 
@@ -360,12 +376,12 @@ class Subscriptions extends Security_Controller {
         $subscription_status = $this->_get_subscription_status_label($data, true);
         $cycle_class = "";
 
-        if (!$data->bill_date) {
-            $next_billing_date = "-";
-            $bill_date = 0;
+        if ($data->status!="active" || !$data->next_recurring_date) {
+            $next_recurring_date = "-";
+            $next_date = 0;
         } else {
-            $next_billing_date = format_to_date($data->bill_date, false);
-            $bill_date = $data->bill_date;
+            $next_recurring_date = format_to_date($data->next_recurring_date, false);
+            $next_date = $data->next_recurring_date;
         }
 
         if ($data->no_of_cycles_completed > 0 && $data->no_of_cycles_completed == $data->no_of_cycles) {
@@ -379,8 +395,8 @@ class Subscriptions extends Security_Controller {
             $data->title,
             $subscription_type,
             anchor(get_uri("clients/view/" . $data->client_id), $data->company_name),
-            $bill_date,
-            $next_billing_date,
+            $next_date,
+            $next_recurring_date,
             $data->repeat_every . " " . app_lang("interval_" . $data->repeat_type),
             "<span class='$cycle_class'>" . $cycles . "</span>",
             $subscription_status,
@@ -435,10 +451,7 @@ class Subscriptions extends Security_Controller {
         $view_data['subscription_status'] = $this->_get_subscription_status_label($view_data["subscription_info"], false);
         $view_data["can_edit_subscriptions"] = $this->can_edit_subscriptions();
 
-        $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("invoices", $this->login_user->is_admin, $this->login_user->user_type);
-        $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("invoices", $this->login_user->is_admin, $this->login_user->user_type);
-
-        $view_data["has_item_in_this_subscription"] = $this->has_item_in_this_subscription($subscription_id);
+        $view_data["can_view_invoices"] = (get_setting("module_invoice") && $this->can_view_invoices()) ? true : false;
 
         return $this->template->rander("subscriptions/view", $view_data);
     }
@@ -459,21 +472,17 @@ class Subscriptions extends Security_Controller {
     /* load item modal */
 
     function item_modal_form() {
-        if (!$this->can_edit_subscriptions()) {
-            app_redirect("forbidden");
-        }
-
         $this->validate_submitted_data(array(
             "id" => "numeric"
         ));
 
         $subscription_id = $this->request->getPost('subscription_id');
+        $this->validate_subscription_access($subscription_id);
 
         $view_data['model_info'] = $this->Subscription_items_model->get_one($this->request->getPost('id'));
         if (!$subscription_id) {
             $subscription_id = $view_data['model_info']->subscription_id;
         }
-        $this->can_edit_this_subscription($subscription_id);
         $view_data['subscription_id'] = $subscription_id;
         return $this->template->view('subscriptions/item_modal_form', $view_data);
     }
@@ -481,17 +490,14 @@ class Subscriptions extends Security_Controller {
     /* add or edit an subscription item */
 
     function save_item() {
-        if (!$this->can_edit_subscriptions()) {
-            app_redirect("forbidden");
-        }
-
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "subscription_id" => "required|numeric"
         ));
 
         $subscription_id = $this->request->getPost('subscription_id');
-        $this->can_edit_this_subscription($subscription_id);
+        $this->validate_subscription_access($subscription_id);
+
         $id = $this->request->getPost('id');
         if (!$id && $this->has_item_in_this_subscription($subscription_id)) {
             app_redirect("forbidden");
@@ -570,7 +576,7 @@ class Subscriptions extends Security_Controller {
     /* prepare suggestion of subscription item */
 
     function get_subscription_item_suggestion() {
-        $key =$this->request->getPost("q");
+        $key = $this->request->getPost("q");
         $suggestion = array();
 
         $items = $this->Subscription_items_model->get_item_suggestion($key);
@@ -635,23 +641,13 @@ class Subscriptions extends Security_Controller {
         }
     }
 
-    function get_subscription_status_bar($subscription_id = 0) {
-        if (!$this->can_view_subscriptions()) {
+    function update_subscription_status($subscription_id = 0, $status = "") {
+        validate_numeric_value($subscription_id);
+
+        if (!$this->_can_update_subscription_status($subscription_id)) {
             app_redirect("forbidden");
         }
 
-        validate_numeric_value($subscription_id);
-        $view_data["subscription_info"] = $this->Subscriptions_model->get_details(array("id" => $subscription_id))->getRow();
-        $view_data['subscription_status_label'] = $this->_get_subscription_status_label($view_data["subscription_info"]);
-        return $this->template->view('subscriptions/subscription_status_bar', $view_data);
-    }
-
-    function update_subscription_status($subscription_id = 0, $status = "", $client_id = 0) {
-        if (!$this->can_edit_subscriptions($client_id)) {
-            app_redirect("forbidden");
-        }
-
-        validate_numeric_value($subscription_id);
         if ($subscription_id && $status) {
             //change the draft status of the subscription
             $this->Subscriptions_model->update_subscription_status($subscription_id, $status);
@@ -680,15 +676,12 @@ class Subscriptions extends Security_Controller {
     }
 
     function activate_as_stripe_subscription_modal_form($subscription_id) {
-        if (!$this->can_edit_subscriptions()) {
-            app_redirect("forbidden");
-        }
-
         if (!$subscription_id) {
             show_404();
         }
 
         validate_numeric_value($subscription_id);
+        $this->validate_subscription_access($subscription_id);
         $view_data["subscription_info"] = $this->Subscriptions_model->get_one($subscription_id);
 
         $stripe = new Stripe();
@@ -710,10 +703,6 @@ class Subscriptions extends Security_Controller {
     }
 
     function activate_as_stripe_subscription() {
-        if (!$this->can_edit_subscriptions()) {
-            app_redirect("forbidden");
-        }
-
         $this->validate_submitted_data(array(
             "subscription_id" => "required|numeric",
             "stripe_product" => "required",
@@ -721,6 +710,8 @@ class Subscriptions extends Security_Controller {
         ));
 
         $subscription_id = $this->request->getPost('subscription_id');
+        $this->validate_subscription_access($subscription_id);
+
         $stripe_product = $this->request->getPost('stripe_product');
         $stripe_product_price_id = $this->request->getPost('stripe_product_price_id');
 
@@ -742,7 +733,7 @@ class Subscriptions extends Security_Controller {
         }
 
         if ($subscription_item_info->id) {
-            if (($stripe_price_info->unit_amount / 100) !== (int) $subscription_item_info->rate) {
+            if (($stripe_price_info->unit_amount / 100) != $subscription_item_info->rate) {
                 echo json_encode(array("success" => false, 'message' => app_lang("stripe_price_error_message")));
                 return false;
             }
@@ -784,7 +775,7 @@ class Subscriptions extends Security_Controller {
         try {
             $session = $stripe->get_stripe_checkout_session($this->request->getPost("input_data"), $this->login_user->id);
             if ($session->id) {
-                echo json_encode(array("success" => true, "session_id" => $session->id, "publishable_key" => $stripe->get_publishable_key()));
+                echo json_encode(array("success" => true, "checkout_url" => $session->url));
             } else {
                 echo json_encode(array('success' => false, 'message' => app_lang('error_occurred')));
             }
@@ -856,13 +847,11 @@ class Subscriptions extends Security_Controller {
     }
 
     function activate_as_internal_subscription_modal_form($subscription_id) {
-        if (!$this->can_edit_subscriptions()) {
-            app_redirect("forbidden");
-        }
-
         if (!$subscription_id) {
             show_404();
         }
+
+        $this->validate_subscription_access($subscription_id);
 
         validate_numeric_value($subscription_id);
         $view_data["subscription_id"] = $subscription_id;
@@ -871,13 +860,10 @@ class Subscriptions extends Security_Controller {
     }
 
     function activate_as_internal_subscription() {
-        if (!$this->can_edit_subscriptions()) {
-            app_redirect("forbidden");
-        }
-
         $subscription_id = $this->request->getPost('subscription_id');
-
         validate_numeric_value($subscription_id);
+        $this->validate_subscription_access($subscription_id);
+
         $subscription_info = $this->Subscriptions_model->get_subscription_total_summary($subscription_id);
 
         if (!$subscription_info->subscription_total) {
@@ -889,8 +875,12 @@ class Subscriptions extends Security_Controller {
             $this->Subscriptions_model->update_subscription_status($subscription_id, "active");
 
             //starting local subscription
-            create_invoice_from_subscription($subscription_id);
+            //create invoice if the first billing date is today or past
+            if (!$subscription_info->bill_date || $subscription_info->bill_date <= get_today_date()) {
+                create_invoice_from_subscription($subscription_id);
+            }
 
+            log_notification("subscription_started", array("subscription_id" => $subscription_id));
             echo json_encode(array("success" => true, 'message' => app_lang('record_saved')));
         }
     }
@@ -898,6 +888,59 @@ class Subscriptions extends Security_Controller {
     //prepare subscription type label 
     private function _get_subscription_type_label($data, $return_html = true) {
         return get_subscription_type_label($data, $return_html);
+    }
+
+    //load subscription details section
+    function details($subscription_id) {
+        if (!($this->can_view_subscriptions() && $subscription_id)) {
+            app_redirect("forbidden");
+        }
+
+        validate_numeric_value($subscription_id);
+        $view_data = get_subscription_making_data($subscription_id);
+        if (!$view_data) {
+            show_404();
+        }
+
+        $view_data['subscription_status'] = $this->_get_subscription_status_label($view_data["subscription_info"], false);
+        $view_data["can_edit_subscriptions"] = $this->can_edit_subscriptions();
+
+        $view_data["has_item_in_this_subscription"] = $this->has_item_in_this_subscription($subscription_id);
+
+        return $this->template->view("subscriptions/details", $view_data);
+    }
+
+    /* load invoices tab  */
+
+    function invoices($subscription_id) {
+        if (!$this->can_view_invoices()) {
+            app_redirect("forbidden");
+        }
+
+        validate_numeric_value($subscription_id);
+        if ($subscription_id) {
+            $view_data['subscription_id'] = $subscription_id;
+            $view_data['subscription_info'] = $this->Subscriptions_model->get_details(array("id" => $subscription_id))->getRow();
+
+            $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("invoices", $this->login_user->is_admin, $this->login_user->user_type);
+            $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("invoices", $this->login_user->is_admin, $this->login_user->user_type);
+
+            return $this->template->view("subscriptions/invoices/index", $view_data);
+        }
+    }
+
+    /* load tasks tab  */
+
+    function tasks($subscription_id) {
+        if (!($this->can_view_subscriptions() && $subscription_id)) {
+            app_redirect("forbidden");
+        }
+
+        $view_data["custom_field_headers_of_task"] = $this->Custom_fields_model->get_custom_field_headers_for_table("tasks", $this->login_user->is_admin, $this->login_user->user_type);
+
+        $view_data['subscription_id'] = clean_data($subscription_id);
+        $view_data["can_create_tasks"] = $this->can_edit_subscriptions();
+        return $this->template->view("subscriptions/tasks/index", $view_data);
     }
 
 }

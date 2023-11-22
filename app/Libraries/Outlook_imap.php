@@ -338,10 +338,37 @@ class Outlook_imap {
         }
     }
 
-    private function _prepare_replying_message($message = "") {
+    private function _prepare_replying_message_by_library($message = "") {
         try {
             $reply_parser = new \EmailReplyParser\EmailReplyParser();
             return $reply_parser->parseReply($message);
+        } catch (\Exception $ex) {
+            return "";
+        }
+    }
+
+    private function _prepare_replying_message($message = "") {
+        try {
+
+            if (get_setting("parse_outlook_email_reply_by_library")) {
+                return $this->_prepare_replying_message_by_library($message);
+            } else {
+
+                // Remove any inline images or attachments
+                $message = preg_replace('/<img[^>]+>/i', '', $message);
+
+                // Remove quoted text and signatures
+                $message = preg_replace('/<div class="gmail_quote">.*<\/div>|<div class="AppleMailSignature">.*<\/div>|<div class="OutlookMessageHeader">.*<\/div>/s', '', $message);
+
+                // Remove everything inside <!-- -->
+                $message = preg_replace('/<!--(.*?)-->/s', '', $message);
+
+                $pattern = '/<div style="border:none; border-top:solid #E1E1E1 1\.0pt; padding:3\.0pt 0cm 0cm 0cm">.*<\/div>/s';
+                $message = preg_replace($pattern, '', $message);
+
+                // Trim leading and trailing whitespace
+                return trim($message);
+            }
         } catch (\Exception $ex) {
             return "";
         }
