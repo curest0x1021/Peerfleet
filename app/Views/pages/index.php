@@ -32,6 +32,7 @@
                 {title: '<?php echo app_lang("title"); ?>'},
                 {title: '<?php echo app_lang("url"); ?>'},
                 {title: '<?php echo app_lang("status"); ?>'},
+                {title: '<?php echo app_lang("options"); ?>'},
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ]
         });

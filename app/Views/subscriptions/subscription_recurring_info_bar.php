@@ -25,7 +25,7 @@
     <span class="mr15 <?php echo $recurring_cycle_class ?>"><?php echo app_lang("cycles") . ": " . $cycles; ?></span>
 
     <?php
-    if (($subscription_info->status != "cancelled") && !$recurring_stopped && (int) $subscription_info->next_recurring_date && $subscription_info->type != "stripe") {
+    if (($subscription_info->status != "cancelled") && !$recurring_stopped && (int) $subscription_info->next_recurring_date) {
         ?>
         <span class="mr15"><?php echo app_lang("next_billing_date") . ": " . format_to_date($subscription_info->next_recurring_date, false); ?></span>
     <?php }; ?>

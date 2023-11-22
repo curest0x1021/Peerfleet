@@ -112,5 +112,26 @@
 
         initWYSIWYGEditor("#message", {height: 400, toolbar: []});
 
+        //load template view on changing of client contact
+        $("#contact_id").select2().on("change", function () {
+            var contact_id = $(this).val();
+            if (contact_id) {
+                $("#message").summernote("destroy");
+                $("#message").val("");
+                appLoader.show();
+                $.ajax({
+                    url: "<?php echo get_uri('proposals/get_send_proposal_template/' . $proposal_info->id) ?>" + "/" + contact_id + "/json",
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.success) {
+                            $("#message").val(result.message_view);
+                            initWYSIWYGEditor("#message", {height: 400, toolbar: []});
+                            appLoader.hide();
+                        }
+                    }
+                });
+            }
+        });
+
     });
 </script>

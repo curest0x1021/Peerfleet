@@ -1,108 +1,91 @@
-<div id="page-content" class="page-wrapper clearfix">
-    <div class="row">
-        <div class="col-sm-3 col-lg-2">
-            <?php
-            $tab_view['active_tab'] = "footer";
-            echo view("settings/tabs", $tab_view);
-            ?>
-        </div>
 
-        <div class="col-sm-9 col-lg-10">
-            <?php echo form_open(get_uri("settings/save_footer_settings"), array("id" => "footer-settings-form", "class" => "general-form dashed-row", "role" => "form")); ?>
-            <div class="card">
-                <div class=" card-header">
-                    <h4><?php echo app_lang("footer"); ?></h4>
-                </div>
-                <div class="card-body">
-                    <input type="hidden" id="footer-menus-data" name="footer_menus" value="" />
+<?php echo form_open(get_uri("settings/save_footer_settings"), array("id" => "footer-settings-form", "class" => "general-form dashed-row", "role" => "form")); ?>
 
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <i data-feather="info" class="icon-16"></i> <?php echo app_lang("footer_description_message"); ?>
-                            </div>
-                        </div>
-                    </div>
+<div class="card-body">
+    <input type="hidden" id="footer-menus-data" name="footer_menus" value="" />
 
-                    <div class="form-group">
-                        <div class="row">
-                            <label for="enable_footer" class=" col-md-2"><?php echo app_lang('enable_footer'); ?></label>
-                            <div class="col-md-10">
-                                <?php
-                                echo form_checkbox("enable_footer", "1", get_setting("enable_footer") ? true : false, "id='enable_footer' class='form-check-input ml15'");
-                                ?>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="footer-details-area" class="<?php echo get_setting("enable_footer") ? "" : "hide"; ?>">
-                        <div class="form-group" id="footer-menu-input-area">
-                            <div class="row">
-                                <label for="footer_menus" class=" col-md-2"><?php echo app_lang('footer_menus'); ?></label>
-                                <div class="col-md-10">
-                                    <div id="footer-menus-show-area">
-                                        <?php echo $footer_menus; ?>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <?php
-                                            echo form_input(array(
-                                                "id" => "menu_name",
-                                                "name" => "menu_name",
-                                                "class" => "form-control",
-                                                "placeholder" => app_lang('menu_name')
-                                            ));
-                                            ?>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <?php
-                                            echo form_input(array(
-                                                "id" => "url",
-                                                "name" => "url",
-                                                "class" => "form-control",
-                                                "placeholder" => "URL"
-                                            ));
-                                            ?>
-                                        </div>
-                                        <div id="footer-menus-options-area" class="col-md-12 mt15 hide">
-                                            <button id="footer-menus-add-button" type="button" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('add'); ?></button> 
-                                            <button id="footer-menus-close-button" type="button" class="btn btn-default"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('cancel'); ?></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="row">
-                                <label for="footer_copyright_text" class=" col-md-2"><?php echo app_lang('footer_copyright_text'); ?></label>
-                                <div class="col-md-10">
-                                    <?php
-                                    echo form_input(array(
-                                        "id" => "footer_copyright_text",
-                                        "name" => "footer_copyright_text",
-                                        "value" => get_setting("footer_copyright_text"),
-                                        "class" => "form-control",
-                                        "placeholder" => app_lang('footer_copyright_text')
-                                    ));
-                                    ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('save'); ?></button>
-                </div>
-
-                <?php echo form_close(); ?>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-12">
+                <i data-feather="info" class="icon-16"></i> <?php echo app_lang("footer_description_message"); ?>
             </div>
-
         </div>
     </div>
+
+    <div class="form-group">
+        <div class="row">
+            <label for="enable_footer" class=" col-md-2"><?php echo app_lang('enable_footer'); ?></label>
+            <div class="col-md-10">
+                <?php
+                echo form_checkbox("enable_footer", "1", get_setting("enable_footer") ? true : false, "id='enable_footer' class='form-check-input ml15'");
+                ?>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-details-area" class="<?php echo get_setting("enable_footer") ? "" : "hide"; ?>">
+        <div class="form-group" id="footer-menu-input-area">
+            <div class="row">
+                <label for="footer_menus" class=" col-md-2"><?php echo app_lang('footer_menus'); ?></label>
+                <div class="col-md-10">
+                    <div id="footer-menus-show-area">
+                        <?php echo $footer_menus; ?>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <?php
+                            echo form_input(array(
+                                "id" => "menu_name",
+                                "name" => "menu_name",
+                                "class" => "form-control",
+                                "placeholder" => app_lang('menu_name')
+                            ));
+                            ?>
+                        </div>
+                        <div class="col-md-6">
+                            <?php
+                            echo form_input(array(
+                                "id" => "url",
+                                "name" => "url",
+                                "class" => "form-control",
+                                "placeholder" => "URL"
+                            ));
+                            ?>
+                        </div>
+                        <div id="footer-menus-options-area" class="col-md-12 mt15 hide">
+                            <button id="footer-menus-add-button" type="button" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('add'); ?></button> 
+                            <button id="footer-menus-close-button" type="button" class="btn btn-default"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('cancel'); ?></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <label for="footer_copyright_text" class=" col-md-2"><?php echo app_lang('footer_copyright_text'); ?></label>
+                <div class="col-md-10">
+                    <?php
+                    echo form_input(array(
+                        "id" => "footer_copyright_text",
+                        "name" => "footer_copyright_text",
+                        "value" => get_setting("footer_copyright_text"),
+                        "class" => "form-control",
+                        "placeholder" => app_lang('footer_copyright_text')
+                    ));
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+<div class="card-footer">
+    <button type="submit" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('save'); ?></button>
+</div>
+
+<?php echo form_close(); ?>
 
 <script type="text/javascript">
     $(document).ready(function () {

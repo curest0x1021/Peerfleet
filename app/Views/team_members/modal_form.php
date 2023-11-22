@@ -54,21 +54,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="address" class=" col-md-3"><?php echo app_lang('mailing_address'); ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_textarea(array(
-                                "id" => "address",
-                                "name" => "address",
-                                "class" => "form-control",
-                                "placeholder" => app_lang('mailing_address')
-                            ));
-                            ?>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="form-group">
                     <div class="row">
                         <label for="phone" class=" col-md-3"><?php echo app_lang('phone'); ?></label>
@@ -138,36 +124,16 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <div class="row">
-                        <label for="salary" class=" col-md-3"><?php echo app_lang('salary'); ?></label>
+                        <label for="teams" class=" col-md-3"><?php echo app_lang('teams'); ?></label>
                         <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "salary",
-                                "name" => "salary",
-                                "class" => "form-control",
-                                "placeholder" => app_lang('salary')
-                            ));
-                            ?>
+                        <input type="text" value="" name="teams" id="teams_dropdown" class="w100p validate-hidden"  placeholder="<?php echo app_lang('teams'); ?>"  />
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="salary_term" class=" col-md-3"><?php echo app_lang('salary_term'); ?></label>
-                        <div class=" col-md-9">
-                            <?php
-                            echo form_input(array(
-                                "id" => "salary_term",
-                                "name" => "salary_term",
-                                "class" => "form-control",
-                                "placeholder" => app_lang('salary_term')
-                            ));
-                            ?>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="form-group">
                     <div class="row">
                         <label for="date_of_hire" class=" col-md-3"><?php echo app_lang('date_of_hire'); ?></label>
@@ -397,6 +363,11 @@
                 $("#password").removeAttr("data-rule-required");
                 $("#password").removeAttr("data-msg-required");
             }
+        });
+
+        $("#teams_dropdown").select2({
+            multiple: true,
+            data: <?php echo ($teams_dropdown); ?>
         });
     });
 </script>

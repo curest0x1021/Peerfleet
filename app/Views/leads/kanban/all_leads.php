@@ -7,18 +7,13 @@
 
         <div class="tab-title clearfix no-border">
             <div class="title-button-group">
-                <?php echo modal_anchor(get_uri("leads/import_leads_modal_form"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_leads'), array("class" => "btn btn-default", "title" => app_lang('import_leads'))); ?>
+                <?php echo modal_anchor(get_uri("leads/import_modal_form"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_leads'), array("class" => "btn btn-default", "title" => app_lang('import_leads'))); ?>
                 <?php echo modal_anchor(get_uri("leads/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_lead'), array("class" => "btn btn-default", "title" => app_lang('add_lead'))); ?>
             </div>
         </div>
     </ul>
-    <div class="bg-white kanban-filters-container">
-        <div class="row">
-            <div class="col-md-1 col-xs-2">
-                <button class="btn btn-default" id="reload-kanban-button"><i data-feather="refresh-cw" class="icon-16"></i></button>
-            </div>
-            <div id="kanban-filters" class="col-md-11 col-xs-10"></div>
-        </div>
+    <div class="bg-white">
+        <div id="kanban-filters"></div>
     </div>
 
     <div id="load-kanban"></div>

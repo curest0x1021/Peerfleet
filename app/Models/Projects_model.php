@@ -16,6 +16,7 @@ class Projects_model extends Crud_model {
         $project_members_table = $this->db->prefixTable('project_members');
         $clients_table = $this->db->prefixTable('clients');
         $tasks_table = $this->db->prefixTable('tasks');
+        $project_status_table = $this->db->prefixTable('project_status');
         $where = "";
 
         $id = $this->_get_clean_value($options, "id");
@@ -28,14 +29,14 @@ class Projects_model extends Crud_model {
             $where .= " AND $projects_table.client_id=$client_id AND $projects_table.project_type='client_project'";
         }
 
-        $status = $this->_get_clean_value($options, "status");
-        if ($status) {
-            $where .= " AND $projects_table.status='$status'";
+        $status_id = $this->_get_clean_value($options, "status_id");
+        if ($status_id) {
+            $where .= " AND $projects_table.status_id='$status_id'";
         }
 
-        $statuses = $this->_get_clean_value($options, "statuses");
-        if ($statuses) {
-            $where .= " AND (FIND_IN_SET($projects_table.status, '$statuses')) ";
+        $status_ids = $this->_get_clean_value($options, "status_ids");
+        if ($status_ids) {
+            $where .= " AND (FIND_IN_SET($projects_table.status_id, '$status_ids')) ";
         }
 
 
@@ -67,6 +68,13 @@ class Projects_model extends Crud_model {
         }
 
 
+        $start_date_from = $this->_get_clean_value($options, "start_date_from");
+        $start_date_to = $this->_get_clean_value($options, "start_date_to");
+        if ($start_date_from && $start_date_to) {
+            $where .= " AND ($projects_table.start_date BETWEEN '$start_date_from' AND '$start_date_to') ";
+        }
+
+
         $extra_join = "";
         $extra_where = "";
         $user_id = $this->_get_clean_value($options, "user_id");
@@ -93,11 +101,12 @@ class Projects_model extends Crud_model {
 
         $this->db->query('SET SQL_BIG_SELECTS=1');
 
-        $sql = "SELECT $projects_table.*, $clients_table.charter_name, total_points_table.total_points, completed_points_table.completed_points, $select_labels_data_query $select_custom_fieds
+        $sql = "SELECT $projects_table.*, $clients_table.charter_name, $clients_table.currency_symbol,  total_points_table.total_points, completed_points_table.completed_points, $project_status_table.key_name AS status_key_name, $project_status_table.title_language_key, $project_status_table.title AS status_title,  $project_status_table.icon AS status_icon, $select_labels_data_query $select_custom_fieds
         FROM $projects_table
         LEFT JOIN $clients_table ON $clients_table.id= $projects_table.client_id
         LEFT JOIN (SELECT project_id, SUM(points) AS total_points FROM $tasks_table WHERE deleted=0 GROUP BY project_id) AS  total_points_table ON total_points_table.project_id= $projects_table.id
         LEFT JOIN (SELECT project_id, SUM(points) AS completed_points FROM $tasks_table WHERE deleted=0 AND status_id=3 GROUP BY project_id) AS  completed_points_table ON completed_points_table.project_id= $projects_table.id
+        LEFT JOIN $project_status_table ON $projects_table.status_id = $project_status_table.id 
         $extra_join   
         $join_custom_fieds    
         WHERE $projects_table.deleted=0 $where $extra_where $custom_fields_where
@@ -125,20 +134,26 @@ class Projects_model extends Crud_model {
             $extra_where = " AND project_members_table.user_id=$user_id";
         }
 
-        $sql = "SELECT $projects_table.status, COUNT($projects_table.id) as total
+        $sql = "SELECT $projects_table.status_id, COUNT($projects_table.id) as total
         FROM $projects_table
-              $extra_join    
-        WHERE $projects_table.deleted=0 AND ($projects_table.status='open' OR  $projects_table.status='completed' OR $projects_table.status='hold') $extra_where
-        GROUP BY $projects_table.status";
+        $extra_join
+        WHERE $projects_table.deleted=0 AND ($projects_table.status_id=1 OR  $projects_table.status_id=2 OR $projects_table.status_id=3) $extra_where
+        GROUP BY $projects_table.status_id";
         $result = $this->db->query($sql)->getResult();
 
         $info = new \stdClass();
         $info->open = 0;
         $info->completed = 0;
         $info->hold = 0;
+
         foreach ($result as $value) {
-            $status = $value->status;
-            $info->$status = $value->total;
+            if ($value->status_id == 1) {
+                $info->open = $value->total;
+            } else if ($value->status_id == 2) {
+                $info->completed = $value->total;
+            } else if ($value->status_id == 3) {
+                $info->hold = $value->total;
+            }
         }
         return $info;
     }
@@ -163,7 +178,7 @@ class Projects_model extends Crud_model {
             $where .= " AND $tasks_table.project_id=$project_id";
         } else {
             //show only opened project's tasks on global view
-            $where .= " AND $tasks_table.project_id IN(SELECT $projects_table.id FROM $projects_table WHERE $projects_table.deleted=0 AND $projects_table.status='open')";
+            $where .= " AND $tasks_table.project_id IN(SELECT $projects_table.id FROM $projects_table WHERE $projects_table.deleted=0 AND $projects_table.status_id=1)";
         }
 
         $assigned_to = $this->_get_clean_value($options, "assigned_to");
@@ -232,9 +247,11 @@ class Projects_model extends Crud_model {
 
     function get_starred_projects($user_id) {
         $projects_table = $this->db->prefixTable('projects');
+        $project_status_table = $this->db->prefixTable('project_status');
 
-        $sql = "SELECT $projects_table.*
+        $sql = "SELECT $projects_table.*, $project_status_table.icon
         FROM $projects_table
+        LEFT JOIN $project_status_table ON $project_status_table.id = $projects_table.status_id
         WHERE $projects_table.deleted=0 AND FIND_IN_SET(':$user_id:',$projects_table.starred_by)
         ORDER BY $projects_table.title ASC";
         return $this->db->query($sql);
@@ -347,8 +364,107 @@ class Projects_model extends Crud_model {
         LEFT JOIN (SELECT project_id, SUM(points) AS total_points FROM $tasks_table WHERE deleted=0 GROUP BY project_id) AS  total_points_table ON total_points_table.project_id= $projects_table.id
         LEFT JOIN (SELECT project_id, SUM(points) AS completed_points FROM $tasks_table WHERE deleted=0 AND status_id=3 GROUP BY project_id) AS  completed_points_table ON completed_points_table.project_id= $projects_table.id  
         $extra_join
-        WHERE $projects_table.deleted=0 AND status='open' $where";
+        WHERE $projects_table.deleted=0 AND status_id=1 $where";
         return $this->db->query($sql)->getRow();
     }
 
+    function get_team_members_summary($options = array()) {
+        $projects_table = $this->db->prefixTable('projects');
+        $project_members_table = $this->db->prefixTable('project_members');
+        $users_table = $this->db->prefixTable('users');
+        $timesheet_table = $this->db->prefixTable('project_time');
+        $tasks_table = $this->db->prefixTable('tasks');
+
+        $timeZone = new \DateTimeZone(get_setting("timezone"));
+        $dateTime = new \DateTime("now", $timeZone);
+        $offset_in_gmt = $dateTime->format('P');
+
+        $select_tz_start_time = "CONVERT_TZ($timesheet_table.start_time,'+00:00','$offset_in_gmt')";
+        $select_tz_end_time = "CONVERT_TZ($timesheet_table.end_time,'+00:00','$offset_in_gmt')";
+
+        try {
+            $this->db->query("SET sql_mode = ''");
+        } catch (\Exception $e) {
+            
+        }
+
+        $projects_where = "";
+
+        $start_date_from = $this->_get_clean_value($options, "start_date_from");
+        $start_date_to = $this->_get_clean_value($options, "start_date_to");
+        if ($start_date_from && $start_date_to) {
+            $projects_where .= " AND ($projects_table.start_date BETWEEN '$start_date_from' AND '$start_date_to') ";
+        }
+
+        $sql = "SELECT  $users_table.id as team_member_id, CONCAT($users_table.first_name, ' ', $users_table.last_name) AS team_member_name, $users_table.image, 
+                SUM(project_details.open_tasks) AS open_tasks, SUM(project_details.completed_tasks) AS completed_tasks,
+                SUM(project_details.open_project) AS open_projects, SUM(project_details.completed_project) AS completed_projects , SUM(project_details.hold_project) AS hold_projects,
+                SUM(project_details.total_secconds_worked) AS total_secconds_worked
+                FROM $users_table
+                INNER JOIN (SELECT $project_members_table.user_id, $project_members_table.project_id, 
+                    tasks_table.open_tasks, tasks_table.completed_tasks, timesheet_table.total_secconds_worked,
+                    $projects_table.start_date, IF($projects_table.status_id=1,1,0) AS open_project,  IF($projects_table.status_id=2,1,0) AS completed_project,  IF($projects_table.status_id=3,1,0) AS hold_project
+                FROM  $project_members_table
+                LEFT JOIN (SELECT SUM(IF($tasks_table.status_id=3,1,0)) AS completed_tasks, SUM(IF($tasks_table.status_id!=3,1,0)) AS open_tasks, $tasks_table.project_id, $tasks_table.assigned_to FROM $tasks_table WHERE $tasks_table.deleted=0 AND $tasks_table.assigned_to!=0 AND $tasks_table.project_id!=0 GROUP BY $tasks_table.project_id, $tasks_table.assigned_to
+                           ) AS tasks_table ON tasks_table.project_id = $project_members_table.project_id AND tasks_table.assigned_to = $project_members_table.user_id
+                LEFT JOIN (SELECT SUM(TIME_TO_SEC(TIMEDIFF($select_tz_end_time,$select_tz_start_time))) + SUM(ROUND(($timesheet_table.hours * 60), 0) * 60) AS total_secconds_worked, $timesheet_table.project_id, $timesheet_table.user_id FROM $timesheet_table WHERE $timesheet_table.deleted=0 GROUP BY $timesheet_table.project_id, $timesheet_table.user_id 
+                           ) AS timesheet_table ON timesheet_table.project_id = $project_members_table.project_id AND timesheet_table.user_id = $project_members_table.user_id 
+                               
+                INNER JOIN $projects_table ON $projects_table.id = $project_members_table.project_id AND $projects_table.deleted=0 $projects_where) AS project_details ON project_details.user_id=$users_table.id
+                WHERE $users_table.deleted = 0 AND $users_table.status='active' AND $users_table.user_type='staff'
+                GROUP BY $users_table.id
+                ";
+
+        return $this->db->query($sql);
+    }
+
+    function get_clients_summary($options = array()) {
+        $projects_table = $this->db->prefixTable('projects');
+        $clients_table = $this->db->prefixTable('clients');
+        $timesheet_table = $this->db->prefixTable('project_time');
+        $tasks_table = $this->db->prefixTable('tasks');
+
+        $timeZone = new \DateTimeZone(get_setting("timezone"));
+        $dateTime = new \DateTime("now", $timeZone);
+        $offset_in_gmt = $dateTime->format('P');
+
+        $select_tz_start_time = "CONVERT_TZ($timesheet_table.start_time,'+00:00','$offset_in_gmt')";
+        $select_tz_end_time = "CONVERT_TZ($timesheet_table.end_time,'+00:00','$offset_in_gmt')";
+
+        try {
+            $this->db->query("SET sql_mode = ''");
+        } catch (\Exception $e) {
+            
+        }
+
+        $projects_where = "";
+
+        $start_date_from = $this->_get_clean_value($options, "start_date_from");
+        $start_date_to = $this->_get_clean_value($options, "start_date_to");
+        if ($start_date_from && $start_date_to) {
+            $projects_where .= " AND ($projects_table.start_date BETWEEN '$start_date_from' AND '$start_date_to') ";
+        }
+
+        $sql = "SELECT  $clients_table.id as client_id, $clients_table.charter_name AS client_name,
+                project_details.open_tasks, project_details.completed_tasks,
+                project_details.open_projects, project_details.completed_projects , project_details.hold_projects,
+                project_details.total_secconds_worked
+                FROM $clients_table
+                INNER JOIN (SELECT $projects_table.client_id,
+                    SUM(tasks_table.open_tasks) AS open_tasks, SUM(tasks_table.completed_tasks) AS completed_tasks, SUM(timesheet_table.total_secconds_worked) AS total_secconds_worked,
+                    SUM(IF($projects_table.status_id=1,1,0)) AS open_projects,  SUM(IF($projects_table.status_id=2,1,0)) AS completed_projects,  SUM(IF($projects_table.status_id=3,1,0)) AS hold_projects
+                FROM  $projects_table
+                LEFT JOIN (SELECT SUM(IF($tasks_table.status_id=3,1,0)) AS completed_tasks, SUM(IF($tasks_table.status_id!=3,1,0)) AS open_tasks, $tasks_table.project_id FROM $tasks_table WHERE $tasks_table.deleted=0 AND $tasks_table.project_id!=0 GROUP BY $tasks_table.project_id
+                           ) AS tasks_table ON tasks_table.project_id = $projects_table.id
+                LEFT JOIN (SELECT SUM(TIME_TO_SEC(TIMEDIFF($select_tz_end_time,$select_tz_start_time))) + SUM(ROUND(($timesheet_table.hours * 60), 0) * 60) AS total_secconds_worked, $timesheet_table.project_id FROM $timesheet_table WHERE $timesheet_table.deleted=0 GROUP BY $timesheet_table.project_id
+                           ) AS timesheet_table ON timesheet_table.project_id = $projects_table.id
+                WHERE $projects_table.deleted=0 $projects_where
+                GROUP BY $projects_table.client_id    
+                ) AS project_details ON project_details.client_id=$clients_table.id
+                WHERE $clients_table.deleted=0
+                GROUP BY $clients_table.id
+                ";
+
+        return $this->db->query($sql);
+    }
 }

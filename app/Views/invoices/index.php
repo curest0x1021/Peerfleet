@@ -35,12 +35,12 @@
     loadInvoicesTable = function (selector, dateRange) {
     var customDatePicker = "";
     if (dateRange === "custom") {
-        if(window.selectedInvoiceFilter){
-            customDatePicker = [{startDate: "", endDate: "", showClearButton: true}];
-        }else{
-            customDatePicker = [{startDate: {name: "start_date", value: moment().format("YYYY-MM-DD")}, endDate: {name: "end_date", value: moment().format("YYYY-MM-DD")}, showClearButton: true}];
-        }
-    
+    if (window.selectedInvoiceFilter){
+    customDatePicker = [{startDate: "", endDate: "", showClearButton: true}];
+    } else{
+    customDatePicker = [{startDate: {name: "start_date", value: moment().format("YYYY-MM-DD")}, endDate: {name: "end_date", value: moment().format("YYYY-MM-DD")}, showClearButton: true}];
+    }
+
     dateRange = "";
     }
 
@@ -63,17 +63,18 @@
             dateRangeType: dateRange,
             order: [[0, "desc"]],
             filterDropdown: [
+            {name: "type", class: "w150", options: <?php echo $types_dropdown; ?>},
             {name: "status", class: "w150", options: invoice_statuses_dropdown}
 <?php if ($currencies_dropdown) { ?>
                 , {name: "currency", class: "w150", options: <?php echo $currencies_dropdown; ?>}
 <?php } ?>
+
             , <?php echo $custom_field_filters; ?>
             ],
             rangeDatepicker: customDatePicker,
             columns: [
             {visible: false, searchable: false},
             {title: "<?php echo app_lang("invoice_id") ?>", "class": "w10p all", "iDataSort": 0},
-                     
             {title: "<?php echo app_lang("client") ?>", "class": ""},
             {title: "<?php echo app_lang("project") ?>", "class": "w15p"},
             {visible: false, searchable: false},
@@ -98,12 +99,11 @@
     };
     $(document).ready(function () {
     loadInvoicesTable("#monthly-invoice-table", "monthly");
-    
     setTimeout(function () {
-            var tab = "<?php echo $tab; ?>";
-            if (tab === "custom") {
-                $("[data-bs-target='#custom-invoices']").trigger("click");
-            }
-        }, 210);
+    var tab = "<?php echo $tab; ?>";
+    if (tab === "custom") {
+    $("[data-bs-target='#custom-invoices']").trigger("click");
+    }
+    }, 210);
     });
 </script>

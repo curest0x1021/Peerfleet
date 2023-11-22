@@ -51,6 +51,19 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <div class="row">
+                <label for="hide_from_non_project_related_tasks" class=" col-md-3"><?php echo app_lang('hide_from_non_project_related_tasks'); ?></label>
+                <div class="col-md-9">
+                    <?php
+                    echo form_checkbox(
+                            "hide_from_non_project_related_tasks", "1", $model_info->hide_from_non_project_related_tasks ? true : false, "id='hide_from_non_project_related_tasks' class='form-check-input'"
+                    );
+                    ?>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 

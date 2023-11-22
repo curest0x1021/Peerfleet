@@ -6,7 +6,7 @@
     ?>
 
     <div class="invoice-preview">
-        <?php if ($login_user->user_type === "client" && $subscription_total_summary->balance_due >= 1 && count($payment_methods) && !$client_info->disable_online_payment) { ?>
+        <?php if ($login_user->user_type === "client") { ?>
             <div class="page-title clearfix mt25">
                 <h1><?php echo get_subscription_id($subscription_info->id) . ": " . $subscription_info->title; ?></h1>
                 <?php if ($subscription_info->status == "pending" || $subscription_info->status == "active") { ?>
@@ -16,7 +16,7 @@
                                 <i data-feather="tool" class="icon-16"></i> <?php echo app_lang('actions'); ?>
                             </button>
                             <ul class="dropdown-menu" role="menu">
-                                <li role="presentation"><?php echo ajax_anchor(get_uri("subscriptions/update_subscription_status/" . $subscription_info->id . "/cancelled/$client_info->id"), "<i data-feather='x' class='icon-16'></i> " . app_lang('cancel_subscription'), array("class" => "dropdown-item", "title" => app_lang('cancel_subscription'), "data-reload-on-success" => "1")); ?> </li>
+                                <li role="presentation"><?php echo ajax_anchor(get_uri("subscriptions/update_subscription_status/" . $subscription_info->id . "/cancelled"), "<i data-feather='x' class='icon-16'></i> " . app_lang('cancel_subscription'), array("class" => "dropdown-item", "title" => app_lang('cancel_subscription'), "data-reload-on-success" => "1")); ?> </li>
                             </ul>
                         </span>
                     </div>
@@ -26,7 +26,7 @@
             <div class="pt15 bg-white mb15">
                 <?php echo view("subscriptions/subscription_recurring_info_bar"); ?>
             </div>
-            <?php if ($subscription_info->status === "pending" && $subscription_info->type !== "app") { ?>
+            <?php if ($subscription_total_summary->balance_due >= 1 && count($payment_methods) && !$client_info->disable_online_payment && $subscription_info->status === "pending" && $subscription_info->type !== "app") { ?>
                 <div class = "card d-block p15 no-border clearfix invoice-payment-button pb-0">
                     <div class = "inline-block strong float-start pt5 pr15">
                         <?php echo app_lang("start_subscription");

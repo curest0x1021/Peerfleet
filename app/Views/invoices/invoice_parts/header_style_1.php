@@ -1,4 +1,4 @@
-<table class="header-style">
+<table class="header-style" style="font-size: 13.5px;">
     <tr class="invoice-preview-header-row">
         <td style="width: 45%; vertical-align: top;">
             <?php echo view('invoices/invoice_parts/company_logo'); ?>

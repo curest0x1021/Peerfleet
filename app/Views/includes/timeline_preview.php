@@ -52,7 +52,15 @@ if ($files && count($files)) {
                 $mfp_class = "mfp-iframe";
             }
             echo "<a href='$url' class='$mfp_class' data-title='" . $actual_file_name . "'>$image</a>";
-        } else {
+        } else if (is_iframe_preview_available($file_name)) {
+
+            if (!$shown_preview_image) {
+                $image = "<div class='inline-block'><div class='file-mockup'><i data-feather='" . get_file_icon(strtolower(pathinfo($file_name, PATHINFO_EXTENSION))) . "' width='10rem' height='10rem' class='mt-12'></i></div></div>$more_image";
+                $shown_preview_image = true;
+            }
+            $mfp_class = "mfp-iframe";
+            echo "<a href='$url' class='$mfp_class' data-title='" . $actual_file_name . "'>$image</a>";
+        }  else {
             if (!$shown_preview_image) {
                 $image = "<div class='inline-block'><div class='file-mockup'><i data-feather='" . get_file_icon(strtolower(pathinfo($file_name, PATHINFO_EXTENSION))) . "' width='10rem' height='10rem' class='mt-12'></i></div></div>$more_image";
                 $shown_preview_image = true;

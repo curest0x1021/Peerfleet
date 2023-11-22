@@ -1,5 +1,5 @@
 <div id="page-content" class="page-wrapper clearfix help-page-container <?php echo "sub_" . $type ?>">
-    <div class="view-container">
+    <div class="view-container-large">
         <div class="row ">
             <div id="help-left-panel" class="col-md-3">
                 <?php echo view("help_and_knowledge_base/search_box", array("type" => $type)); ?>
@@ -43,7 +43,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         //load message notifications
-        $("#help-page-content").css({"min-height": $(window).height() - 110 + "px"});
+        $("#help-page-content").css({"min-height": $(window).height() - 160 + "px"});
 
 <?php if (isset($scroll_to_content)) { ?>
             if (isMobile()) {

@@ -83,6 +83,24 @@
                 </div>
             </div>
         </div>
+        <div class="form-group">
+            <div class="row">
+                <label for="sort" class=" col-md-3"><?php echo app_lang('articles_order'); ?></label>
+                <div class=" col-md-9">
+                    <?php
+                   
+                        echo form_dropdown(
+                                "articles_order", array(
+                            "" => "A-Z",
+                            "Z-A" => "Z-A"
+                                ), $model_info->articles_order, "class='select2 mini'"
+                        );
+                   
+                    ?>
+                </div>
+            </div>
+        </div>
+        
     </div>
 </div>
 
@@ -99,5 +117,7 @@
                 $("#category-table").appTable({newData: result.data, dataId: result.id});
             }
         });
+        
+        $("#category-form .select2").select2();
     });
 </script>    

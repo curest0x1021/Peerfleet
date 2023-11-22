@@ -24,7 +24,7 @@
 
 <div class="modal-footer">
     <div id="link-of-add-task-modal" class="hide">
-        <?php echo modal_anchor(get_uri("projects/task_modal_form"), "", array()); ?>
+        <?php echo modal_anchor(get_uri("tasks/modal_form"), "", array()); ?>
     </div>
 
     <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>

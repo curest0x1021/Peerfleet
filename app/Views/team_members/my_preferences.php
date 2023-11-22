@@ -130,7 +130,7 @@
                                 ), $disable_keyboard_shortcuts, "class='select2 mini'"
                         );
 
-                        echo modal_anchor(get_uri("team_members/keyboard_shortcut_modal_form/"), "<i data-feather='info' class='icon-16'></i>", array("class" => "btn btn-default keyboard-shortcut-info-icon ml10 float-end", "title" => app_lang('keyboard_shortcuts_info'), "data-post-user_id" => $login_user->id));
+                        echo modal_anchor(get_uri("team_members/keyboard_shortcut_modal_form"), "<i data-feather='info' class='icon-16'></i>", array("class" => "btn btn-default keyboard-shortcut-info-icon ml10 float-end", "title" => app_lang('keyboard_shortcuts_info'), "data-post-user_id" => $login_user->id));
                         ?>
                     </div>
                 </div>

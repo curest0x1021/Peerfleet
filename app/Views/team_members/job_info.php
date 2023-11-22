@@ -23,38 +23,16 @@
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="row">
-                    <label for="salary" class=" col-md-2"><?php echo app_lang('salary'); ?></label>
+                    <label for="teams" class=" col-md-2"><?php echo app_lang('teams'); ?></label>
                     <div class="col-md-10">
-                        <?php
-                        echo form_input(array(
-                            "id" => "salary",
-                            "name" => "salary",
-                            "value" => $job_info->salary ? to_decimal_format($job_info->salary) : "",
-                            "class" => "form-control",
-                            "placeholder" => app_lang('salary')
-                        ));
-                        ?>
+                    <input type="text" value="<?php echo $job_info->teams; ?>" name="teams" id="teams_dropdown" class="w100p validate-hidden"  placeholder="<?php echo app_lang('teams'); ?>"  />
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="row">
-                    <label for="salary_term" class=" col-md-2"><?php echo app_lang('salary_term'); ?></label>
-                    <div class="col-md-10">
-                        <?php
-                        echo form_input(array(
-                            "id" => "salary_term",
-                            "name" => "salary_term",
-                            "value" => $job_info->salary_term,
-                            "class" => "form-control",
-                            "placeholder" => app_lang('salary_term')
-                        ));
-                        ?>
-                    </div>
-                </div>
-            </div>
+
             <div class="form-group">
                 <div class="row">
                     <label for="date_of_hire" class=" col-md-2"><?php echo app_lang('date_of_hire'); ?></label>
@@ -95,7 +73,12 @@
         });
         $("#job-info-form .select2").select2();
 
+        $("#teams_dropdown").select2({
+            multiple: true,
+            data: <?php echo ($teams_dropdown); ?>
+        });
+
         setDatePicker("#date_of_hire");
 
     });
-</script>    
+</script>

@@ -13,7 +13,7 @@
         <?php
         if (!isset($is_editor_preview)) {
 
-            $action_buttons = "<div class='clearfix float-end'>";
+            $action_buttons = "<div class='clearfix float-end grid-button-group'>";
 
             if ($show_close_preview) {
                 echo "<div class='text-center'>" . anchor("proposals/view/" . $proposal_info->id, app_lang("close_preview"), array("class" => "btn btn-default round mb20 mr5")) . "</div>";
@@ -29,9 +29,9 @@
 
             if ($proposal_info->status === "accepted" || $proposal_info->status === "declined" || $proposal_info->status === "rejected") {
                 ?>
-                <div class = "card  p15 no-border">
-                    <div class="clearfix">
-                        <div class="float-start mt5">
+                <div class = "card  p15 no-border grid-button">
+                    <div class="clearfix proposal-preview-button">
+                        <div class="float-start mt5 grid-button-group">
                             <?php if ($proposal_info->status === "accepted") { ?>
                                 <i data-feather="check-circle" class="icon-16 text-success"></i> <?php echo app_lang("proposal_accepted"); ?>
                             <?php } else { ?>
@@ -47,10 +47,10 @@
                 if ($login_user->user_type === "staff" || ($login_user->user_type === "client" && $proposal_info->status == "new")) {
                     ?>
 
-                    <div class = "card  p15 no-border">
+                    <div class = "card  p15 no-border grid-button">
 
-                        <div class="clearfix">
-                            <div class="mr15 strong float-start">
+                        <div class="clearfix proposal-preview-button">
+                            <div class="mr15 strong float-start grid-button-group">
                                 <?php
                                 if ($login_user->user_type === "client" && get_setting("add_signature_option_on_accepting_proposal")) {
                                     echo modal_anchor(get_uri("offer/accept_proposal_modal_form/$proposal_info->id"), "<i data-feather='check-circle' class='icon-16'></i> " . app_lang('accept_proposal'), array("class" => "btn btn-success mr15", "title" => app_lang('accept_proposal')));

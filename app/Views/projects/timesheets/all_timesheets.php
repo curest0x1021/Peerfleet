@@ -1,3 +1,5 @@
+<?php echo get_reports_topbar(); ?>
+
 <div id="page-content" class="page-wrapper clearfix grid-button">
     <div class="card">
         <ul id="project-all-timesheet-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">
@@ -44,7 +46,7 @@
                 , <?php echo $custom_field_filters; ?>
             ],
 
-            rangeDatepicker: [{startDate: {name: "start_date", value: moment().format("YYYY-MM-DD")}, endDate: {name: "end_date", value: moment().format("YYYY-MM-DD")}, showClearButton: true}],
+            rangeDatepicker: [{startDate: {name: "start_date", value: moment().format("YYYY-MM-DD")}, endDate: {name: "end_date", value: moment().format("YYYY-MM-DD")}, showClearButton: true, label: "<?php echo app_lang('date'); ?>", ranges: ['this_month', 'last_month', 'this_year', 'last_year', 'last_30_days', 'last_7_days']}],
             columns: [
                 {title: "<?php echo app_lang('member') ?>", order_by: "member_name"},
                 {title: "<?php echo app_lang('project') ?>", order_by: "project"},

@@ -16,10 +16,7 @@
             </style>
         <?php } ?>
 
-        <?php if (get_setting("enable_footer")) { ?>
-            <div class="scrollable-page">
-            <?php } ?>
-
+        <div class="scrollable-page">
             <div class="form-signin">
                 <?php
                 if (isset($form_type) && $form_type == "request_reset_password") {
@@ -31,10 +28,15 @@
                 }
                 ?>
             </div>
+        </div>
 
-            <?php if (get_setting("enable_footer")) { ?>
-            </div>
-        <?php } ?>
+        <script>
+            $(document).ready(function () {
+                initScrollbar('.scrollable-page', {
+                    setHeight: $(window).height() - 50
+                });
+            });
+        </script>
 
         <?php echo view("includes/footer"); ?>
     </body>

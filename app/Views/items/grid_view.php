@@ -1,40 +1,48 @@
 <?php
 $checkout_button = "hide";
+$has_banner_image = (!isset($login_user->id) && get_setting("banner_image_on_public_store")) ? true : false;
 if ($cart_items_count) {
     $checkout_button = "";
 }
 ?>
 
-<div id="page-content" class="page-wrapper clearfix">
-    <div class="clearfix mb15">
-        <h4 class="float-start"><?php echo app_lang('store'); ?></h4>
-
-        <div class="float-end">
-            <?php echo anchor(get_uri("orders/process_order"), "<i data-feather='check-circle' class='icon-16'></i> " . app_lang("checkout"), array("id" => "item-checkout-button", "class" => "btn btn-success col-md-12 col-xs-12 col-sm-12 $checkout_button")); ?>
-        </div>
-
-        <div class="float-end">
-            <?php
-            echo form_input(array(
-                "id" => "item-search-box",
-                "class" => "form-control custom-filter-search item-search-box mr15",
-                "placeholder" => app_lang('search'),
-            ));
-            ?>
-        </div>
-        <div class="float-end custom-toolbar">
-            <?php
-            echo form_input(array(
-                "id" => "item-categories-filter",
-                "name" => "item-categories-filter",
-                "class" => "select2 w200 mr15"
-            ));
-            ?>
-        </div>
+<?php if ($has_banner_image) { ?>
+    <div class="clearfix mb30">
+        <img class="w100p" src="<?php echo get_file_from_setting("banner_image_on_public_store", false, get_setting("timeline_file_path")); ?>" alt="..." />
     </div>
+<?php } ?>
+<div id="page-content" class="page-wrapper clearfix <?php echo $has_banner_image ? "pt0" : ""; ?>">
+    <div class="<?php echo isset($login_user->id) ? "" : "container store-page"; ?>">
+        <div class="clearfix mb15">
+            <h4 class="float-start"><?php echo app_lang('store'); ?></h4>
 
-    <div class="row" id="items-container">
-        <?php echo view("items/items_grid_data"); ?>
+            <div class="float-end">
+                <?php echo anchor(get_uri("store/process_order"), "<i data-feather='check-circle' class='icon-16'></i> " . app_lang("checkout"), array("id" => "item-checkout-button", "class" => "btn btn-success $checkout_button ml15")); ?>
+            </div>
+
+            <div class="float-end item-search-box-section">
+                <?php
+                echo form_input(array(
+                    "id" => "item-search-box",
+                    "class" => "form-control custom-filter-search item-search-box",
+                    "placeholder" => app_lang('search'),
+                ));
+                ?>
+            </div>
+            <div class="float-end custom-toolbar item-categories-filter-section">
+                <?php
+                echo form_input(array(
+                    "id" => "item-categories-filter",
+                    "name" => "item-categories-filter",
+                    "class" => "select2 w200 mr15"
+                ));
+                ?>
+            </div>
+        </div>
+
+        <div class="row" id="items-container">
+            <?php echo view("items/items_grid_data"); ?>
+        </div>
     </div>
 </div>
 
@@ -62,7 +70,7 @@ if ($cart_items_count) {
             appLoader.show();
 
             $.ajax({
-                url: "<?php echo get_uri('items/grid_view/'); ?>",
+                url: "<?php echo get_uri('store/index/'); ?>",
                 data: {search: $searchBox.val(), item_search: true, category_id: $itemCategoriesFilter.val()},
                 cache: false,
                 type: 'POST',
@@ -84,7 +92,7 @@ if ($cart_items_count) {
 
             //add item to the order items table and show count on cart box
             $.ajax({
-                url: "<?php echo get_uri('items/add_item_to_cart'); ?>" + "/" + itemId,
+                url: "<?php echo get_uri('store/add_item_to_cart'); ?>" + "/" + itemId,
                 data: {id: itemId},
                 cache: false,
                 type: 'POST',

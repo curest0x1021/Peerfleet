@@ -6,17 +6,16 @@ class Checklist_template extends Security_Controller {
 
     function __construct() {
         parent::__construct();
+        $this->access_only_admin_or_settings_admin();
     }
 
     //load checklist template list view
     function index() {
-        $this->access_only_admin_or_settings_admin();
         return $this->template->view("checklist_template/index");
     }
 
     //load checklist template add/edit modal form
     function modal_form() {
-        $this->access_only_admin_or_settings_admin();
         $this->validate_submitted_data(array(
             "id" => "numeric"
         ));
@@ -27,7 +26,6 @@ class Checklist_template extends Security_Controller {
 
     //save checklist template 
     function save() {
-        $this->access_only_admin_or_settings_admin();
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
@@ -48,7 +46,6 @@ class Checklist_template extends Security_Controller {
 
     //delete/undo checklist template 
     function delete() {
-        $this->access_only_admin_or_settings_admin();
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
         ));
@@ -71,7 +68,6 @@ class Checklist_template extends Security_Controller {
 
     //get data for checklist template list
     function list_data() {
-        $this->access_only_admin_or_settings_admin();
         $list_data = $this->Checklist_template_model->get_details()->getResult();
         $result = array();
         foreach ($list_data as $data) {

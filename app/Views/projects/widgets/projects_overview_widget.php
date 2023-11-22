@@ -11,31 +11,31 @@ $progress = $total_points ? round(($completed_points / $total_points) * 100) : 0
     <div class="rounded-bottom pt-2">
         <div class="box">
             <div class="box-content">
-                <a href="<?php echo get_uri('projects/all_projects/open'); ?>" class="text-default">
+                <a href="<?php echo get_uri('projects/all_projects/1'); ?>" class="text-default">
                     <div class="pt-3 pb10 text-center">
                         <div class="b-r">
                             <h4 class="strong mb-1 mt-0" style="color: #01B393;"><?php echo $count_project_status->open; ?></h4>
-                            <span><?php echo app_lang("open"); ?></span>
+                            <span><?php echo $open_status_text; ?></span>
                         </div>
                     </div>
                 </a>
             </div>
             <div class="box-content">
-                <a href="<?php echo get_uri('projects/all_projects/completed'); ?>" class="text-default">
+                <a href="<?php echo get_uri('projects/all_projects/2'); ?>" class="text-default">
                     <div class="pt-3 pb10 text-center">
                         <div class="b-r">
                             <h4 class="strong mb-1 mt-0 text-danger"><?php echo $count_project_status->completed; ?></h4>
-                            <span><?php echo app_lang("completed"); ?></span>
+                            <span><?php echo $completed_status_text; ?></span>
                         </div>
                     </div>
                 </a>
             </div>
             <div class="box-content">
-                <a href="<?php echo get_uri('projects/all_projects/hold'); ?>" class="text-default">
+                <a href="<?php echo get_uri('projects/all_projects/3'); ?>" class="text-default">
                     <div class="pt-3 pb10 text-center">
                         <div>
                             <h4 class="strong mb-1 mt-0 text-warning"><?php echo $count_project_status->hold; ?></h4>
-                            <span><?php echo app_lang("hold"); ?></span>
+                            <span><?php echo $hold_status_text; ?></span>
                         </div>
                     </div>
                 </a>

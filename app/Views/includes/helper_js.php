@@ -40,8 +40,15 @@ $max_filesize = "";
 if (strtoupper($result[0]) == "M") {
     $max_filesize = $max_size[0] * 1024 * 1024; //convert MB to byte
 } else if (strtoupper($result[0]) == "G") {
-    $max_filesize = $$max_size[0] * 1024 * 1024 * 1024; //convert GB to byte.
+    $max_filesize = $max_size[0] * 1024 * 1024 * 1024; //convert GB to byte.
 }
+
+$custom_filters = get_setting("user_" . $user_id . "_filters");
+if (!$custom_filters) {
+    $custom_filters = "a:0:{}";
+}
+$custom_filters = unserialize($custom_filters);
+
 ?>
 
 
@@ -86,11 +93,10 @@ if (strtoupper($result[0]) == "M") {
     AppHelper.settings.timepickerMinutesInterval = <?php echo $timepicker_minutes_interval; ?>;
 
     AppHelper.settings.weekends = "<?php echo get_setting("weekends"); ?>";
+    AppHelper.settings.filters = <?php echo json_encode($custom_filters); ?>;
 
     AppHelper.serviceWorkerUrl = "<?php echo base_url("assets/js/sw/sw.js"); ?>";
-
     AppHelper.uploadPastedImageLink = "<?php echo get_uri("upload_pasted_image/save"); ?>";
-
-    AppHelper.uploadMaxFileSize = "<?php echo $max_filesize; ?>";
+    AppHelper.uploadMaxFileSize = <?php echo $max_filesize; ?>;
 
 </script>

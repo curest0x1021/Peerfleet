@@ -52,7 +52,7 @@
                         </div>
                     </div>
 
-                    <div id="mail-settings-area" class="form-group <?php echo get_setting('email_protocol') === "mail" ? "" : "hide"; ?>">
+                    <div id="mail-settings-area" class="form-group <?php echo (get_setting('email_protocol') === "mail" || !get_setting('email_protocol')) ? "" : "hide"; ?>">
                         <div class="row">
                             <label for="email_sent_from_address" class=" col-md-2"><?php echo app_lang('email_sent_from_address'); ?></label>
                             <div class=" col-md-10">
@@ -240,7 +240,10 @@
 
                     <div class="form-group">
                         <div class="row">
-                            <label for="send_test_mail_to" class=" col-md-2"><?php echo app_lang('send_test_mail_to'); ?></label>
+                            <label for="send_test_mail_to" class=" col-md-2"><?php echo app_lang('send_test_mail_to'); ?>
+                                <span class="help" data-container="body" data-bs-toggle="tooltip" title="Keep it blank if you are not interested to send test mail"><i data-feather="help-circle" class="icon-16"></i></span>
+
+                            </label>
                             <div class="col-md-10">
                                 <?php
                                 echo form_input(array(
@@ -248,7 +251,7 @@
                                     "name" => "send_test_mail_to",
                                     "value" => "",
                                     "class" => "form-control",
-                                    "placeholder" => "Keep it blank if you are not interested to send test mail",
+                                    "placeholder" => "youremail@address.com",
                                 ));
                                 ?>
                             </div>

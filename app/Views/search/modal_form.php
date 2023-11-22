@@ -113,7 +113,7 @@
                     $("#show_todo_hidden").trigger("click");
                 } else {
                     if (searchFieldValue === "task") {
-                        location = "<?php echo get_uri("projects/task_view"); ?>/" + this.value;
+                        location = "<?php echo get_uri("tasks/view"); ?>/" + this.value;
                     } else if (searchFieldValue === "project") {
                         location = "<?php echo get_uri("projects/view"); ?>/" + this.value;
                     } else if (searchFieldValue === "client") {

@@ -20,10 +20,16 @@ class Invoices_model extends Crud_model {
         $invoice_items_table = $this->db->prefixTable('invoice_items');
         $users_table = $this->db->prefixTable('users');
 
+        $tolarance = get_paid_status_tolarance();
+
         $where = "";
         $id = $this->_get_clean_value($options, "id");
         if ($id) {
             $where .= " AND $invoices_table.id=$id";
+        }
+        $type = $this->_get_clean_value($options, "type");
+        if ($type) {
+            $where .= " AND $invoices_table.type='$type'";
         }
         $client_id = $this->_get_clean_value($options, "client_id");
         if ($client_id) {
@@ -42,6 +48,11 @@ class Invoices_model extends Crud_model {
         $project_id = $this->_get_clean_value($options, "project_id");
         if ($project_id) {
             $where .= " AND $invoices_table.project_id=$project_id";
+        }
+
+        $order_id = $this->_get_clean_value($options, "order_id");
+        if ($order_id) {
+            $where .= " AND $invoices_table.order_id=$order_id";
         }
 
         $start_date = $this->_get_clean_value($options, "start_date");
@@ -79,24 +90,22 @@ class Invoices_model extends Crud_model {
         //  $options['status'] = "draft";
         $status = $this->_get_clean_value($options, "status");
 
-        $invoice_value_calculation_query = $this->_get_invoice_value_calculation_query($invoices_table);
-
-        $invoice_value_calculation = "TRUNCATE($invoice_value_calculation_query,2)";
-
         if ($status === "draft") {
             $where .= " AND $invoices_table.status='draft' AND IFNULL(payments_table.payment_received,0)<=0";
         } else if ($status === "not_paid") {
-            $where .= " AND $invoices_table.status !='draft' AND $invoices_table.status!='cancelled' AND IFNULL(payments_table.payment_received,0)<=0";
+            $where .= " AND $invoices_table.type = 'invoice' AND $invoices_table.status ='not_paid' AND IFNULL(payments_table.payment_received,0)<=0";
         } else if ($status === "partially_paid") {
-            $where .= " AND IFNULL(payments_table.payment_received,0)>0 AND IFNULL(payments_table.payment_received,0)<$invoice_value_calculation";
+            $where .= " AND $invoices_table.type = 'invoice' AND IFNULL(payments_table.payment_received,0)>0 AND IFNULL(payments_table.payment_received,0)<$invoices_table.invoice_total-$tolarance";
         } else if ($status === "fully_paid") {
-            $where .= " AND TRUNCATE(IFNULL(payments_table.payment_received,0),2)>=$invoice_value_calculation";
+            $where .= " AND $invoices_table.type = 'invoice' AND TRUNCATE(IFNULL(payments_table.payment_received,0),2)>=$invoices_table.invoice_total-$tolarance";
         } else if ($status === "overdue") {
-            $where .= " AND $invoices_table.status !='draft' AND $invoices_table.status!='cancelled' AND $invoices_table.due_date<'$now' AND TRUNCATE(IFNULL(payments_table.payment_received,0),2)<$invoice_value_calculation";
+            $where .= " AND $invoices_table.type = 'invoice' AND $invoices_table.status ='not_paid' AND $invoices_table.due_date<'$now' AND TRUNCATE(IFNULL(payments_table.payment_received,0),2)<$invoices_table.invoice_total-$tolarance";
         } else if ($status === "cancelled") {
-            $where .= " AND $invoices_table.status='cancelled' ";
-        }else if($status == "not_paid_and_partially_paid"){
-            $where .= " AND ($invoices_table.status !='draft' AND $invoices_table.status!='cancelled' AND IFNULL(payments_table.payment_received,0)<=0 OR IFNULL(payments_table.payment_received,0)>0 AND IFNULL(payments_table.payment_received,0)<$invoice_value_calculation)";
+            $where .= " AND $invoices_table.type = 'invoice' AND $invoices_table.status='cancelled' ";
+        } else if ($status == "not_paid_and_partially_paid") {
+            $where .= " AND $invoices_table.type = 'invoice' AND ($invoices_table.status ='not_paid' AND IFNULL(payments_table.payment_received,0)<=0 OR (IFNULL(payments_table.payment_received,0)>0 AND IFNULL(payments_table.payment_received,0)<$invoices_table.invoice_total-$tolarance))";
+        } else if ($status == "credited") {
+            $where .= " AND $invoices_table.type = 'invoice' AND $invoices_table.status='credited' ";
         }
 
 
@@ -130,9 +139,14 @@ class Invoices_model extends Crud_model {
         $join_custom_fieds = get_array_value($custom_field_query_info, "join_string");
         $custom_fields_where = get_array_value($custom_field_query_info, "where_string");
 
-        $sql = "SELECT $invoices_table.*, $clients_table.currency, $clients_table.currency_symbol, $clients_table.company_name, $projects_table.title AS project_title,
-           $invoice_value_calculation_query AS invoice_value, IFNULL(payments_table.payment_received,0) AS payment_received, tax_table.percentage AS tax_percentage, tax_table2.percentage AS tax_percentage2, tax_table3.percentage AS tax_percentage3, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS cancelled_by_user, $select_labels_data_query $select_custom_fieds
+        $sql = "SELECT $invoices_table.*, $clients_table.currency, $clients_table.currency_symbol, $clients_table.charter_name, $projects_table.title AS project_title, credit_note_table.id AS credit_note_id,
+           $invoices_table.invoice_total AS invoice_value, IFNULL(payments_table.payment_received,0) AS payment_received, tax_table.percentage AS tax_percentage, tax_table2.percentage AS tax_percentage2, tax_table3.percentage AS tax_percentage3, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS cancelled_by_user, $select_labels_data_query $select_custom_fieds
         FROM $invoices_table
+        LEFT JOIN (
+            SELECT $invoices_table.id, $invoices_table.main_invoice_id
+            FROM $invoices_table 
+            WHERE $invoices_table.deleted=0 AND $invoices_table.main_invoice_id!=0
+        ) AS credit_note_table ON credit_note_table.main_invoice_id=$invoices_table.id
         LEFT JOIN $clients_table ON $clients_table.id= $invoices_table.client_id
         LEFT JOIN $projects_table ON $projects_table.id= $invoices_table.project_id
         LEFT JOIN $users_table ON $users_table.id= $invoices_table.cancelled_by
@@ -146,85 +160,26 @@ class Invoices_model extends Crud_model {
         return $this->db->query($sql);
     }
 
-    function get_invoice_total_summary($invoice_id = 0) {
-        $invoice_items_table = $this->db->prefixTable('invoice_items');
+    function get_invoice_total_summary($invoice_id) {
         $invoice_payments_table = $this->db->prefixTable('invoice_payments');
-        $invoices_table = $this->db->prefixTable('invoices');
         $clients_table = $this->db->prefixTable('clients');
-        $taxes_table = $this->db->prefixTable('taxes');
+        $invoices_table = $this->db->prefixTable('invoices');
 
-        $item_sql = "SELECT SUM($invoice_items_table.total) AS invoice_subtotal
-        FROM $invoice_items_table
-        LEFT JOIN $invoices_table ON $invoices_table.id= $invoice_items_table.invoice_id    
-        WHERE $invoice_items_table.deleted=0 AND $invoice_items_table.invoice_id=$invoice_id AND $invoices_table.deleted=0";
-        $item = $this->db->query($item_sql)->getRow();
+        $result = $this->get_invoice_total_meta($invoice_id);
+
+        $client_sql = "SELECT $clients_table.currency_symbol, $clients_table.currency FROM $clients_table WHERE $clients_table.id=(SELECT $invoices_table.client_id FROM $invoices_table WHERE $invoices_table.id=$invoice_id LIMIT 1)";
+        $client = $this->db->query($client_sql)->getRow();
+
+        $result->currency_symbol = $client->currency_symbol ? $client->currency_symbol : get_setting("currency_symbol");
+        $result->currency = $client->currency ? $client->currency : get_setting("default_currency");
 
         $payment_sql = "SELECT SUM($invoice_payments_table.amount) AS total_paid
         FROM $invoice_payments_table
         WHERE $invoice_payments_table.deleted=0 AND $invoice_payments_table.invoice_id=$invoice_id";
         $payment = $this->db->query($payment_sql)->getRow();
 
-        $invoice_sql = "SELECT $invoices_table.*, tax_table.percentage AS tax_percentage, tax_table.title AS tax_name,
-            tax_table2.percentage AS tax_percentage2, tax_table2.title AS tax_name2, 
-            tax_table3.percentage AS tax_percentage3, tax_table3.title AS tax_name3
-        FROM $invoices_table
-        LEFT JOIN (SELECT $taxes_table.* FROM $taxes_table) AS tax_table ON tax_table.id = $invoices_table.tax_id
-        LEFT JOIN (SELECT $taxes_table.* FROM $taxes_table) AS tax_table2 ON tax_table2.id = $invoices_table.tax_id2
-        LEFT JOIN (SELECT $taxes_table.* FROM $taxes_table) AS tax_table3 ON tax_table3.id = $invoices_table.tax_id3
-        WHERE $invoices_table.deleted=0 AND $invoices_table.id=$invoice_id";
-        $invoice = $this->db->query($invoice_sql)->getRow();
-
-        $client_sql = "SELECT $clients_table.currency_symbol, $clients_table.currency FROM $clients_table WHERE $clients_table.id=$invoice->client_id";
-        $client = $this->db->query($client_sql)->getRow();
-
-        $result = new \stdClass();
-        $result->invoice_subtotal = $item->invoice_subtotal;
-        $result->tax_percentage = $invoice->tax_percentage;
-        $result->tax_percentage2 = $invoice->tax_percentage2;
-        $result->tax_percentage3 = $invoice->tax_percentage3;
-        $result->tax_name = $invoice->tax_name;
-        $result->tax_name2 = $invoice->tax_name2;
-        $result->tax_name3 = $invoice->tax_name3;
-        $result->tax = 0;
-        $result->tax2 = 0;
-        $result->tax3 = 0;
-
-        $invoice_subtotal = $result->invoice_subtotal;
-        $invoice_subtotal_for_taxes = $invoice_subtotal;
-        if ($invoice->discount_type == "before_tax") {
-            $invoice_subtotal_for_taxes = $invoice_subtotal - ($invoice->discount_amount_type == "percentage" ? ($result->invoice_subtotal * ($invoice->discount_amount / 100)) : $invoice->discount_amount);
-        }
-
-        if ($invoice->tax_percentage) {
-            $result->tax = $invoice_subtotal_for_taxes * ($invoice->tax_percentage / 100);
-        }
-        if ($invoice->tax_percentage2) {
-            $result->tax2 = $invoice_subtotal_for_taxes * ($invoice->tax_percentage2 / 100);
-        }
-        if ($invoice->tax_percentage3) {
-            $result->tax3 = $invoice_subtotal_for_taxes * ($invoice->tax_percentage3 / 100);
-        }
-        $result->invoice_total = ($item->invoice_subtotal + $result->tax + $result->tax2) - $result->tax3;
-
-        $result->total_paid = $payment->total_paid;
-
-        $result->currency_symbol = $client->currency_symbol ? $client->currency_symbol : get_setting("currency_symbol");
-        $result->currency = $client->currency ? $client->currency : get_setting("default_currency");
-
-        //get discount total
-        $result->discount_total = 0;
-        if ($invoice->discount_type == "after_tax") {
-            $invoice_subtotal = $result->invoice_total;
-        }
-
-        $result->discount_total = $invoice->discount_amount_type == "percentage" ? ($invoice_subtotal * ($invoice->discount_amount / 100)) : $invoice->discount_amount;
-
-        $result->discount_type = $invoice->discount_type;
-
-        $result->invoice_total = is_null($result->invoice_total) ? 0 : $result->invoice_total;
-        $payment->total_paid = is_null($payment->total_paid) ? 0 : $payment->total_paid;
-        $result->discount_total = is_null($result->discount_total) ? 0 : $result->discount_total;
-        $result->balance_due = number_format($result->invoice_total, 2, ".", "") - number_format($payment->total_paid, 2, ".", "") - number_format($result->discount_total, 2, ".", "");
+        $result->total_paid = is_null($payment->total_paid) ? 0 : $payment->total_paid;
+        $result->balance_due = number_format($result->invoice_total, 2, ".", "") - number_format($result->total_paid, 2, ".", "");
 
         return $result;
     }
@@ -232,8 +187,6 @@ class Invoices_model extends Crud_model {
     function invoice_statistics($options = array()) {
         $invoices_table = $this->db->prefixTable('invoices');
         $invoice_payments_table = $this->db->prefixTable('invoice_payments');
-        $invoice_items_table = $this->db->prefixTable('invoice_items');
-        $taxes_table = $this->db->prefixTable('taxes');
         $clients_table = $this->db->prefixTable('clients');
 
         $info = new \stdClass();
@@ -272,16 +225,11 @@ class Invoices_model extends Crud_model {
             $info->payments = $this->db->query($payments)->getResult();
         }
 
-        $invoice_value_calculation_query = $this->_get_invoice_value_calculation_query($invoices_table);
 
-        $invoices = "SELECT SUM(total) AS total, MONTH(bill_date) AS month FROM (SELECT $invoice_value_calculation_query AS total ,$invoices_table.bill_date
-            FROM $invoices_table
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table ON tax_table.id = $invoices_table.tax_id
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table2 ON tax_table2.id = $invoices_table.tax_id2
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table3 ON tax_table3.id = $invoices_table.tax_id3
-            LEFT JOIN (SELECT invoice_id, SUM(total) AS invoice_value FROM $invoice_items_table WHERE deleted=0 GROUP BY invoice_id) AS items_table ON items_table.invoice_id = $invoices_table.id 
-            WHERE $invoices_table.deleted=0 AND $invoices_table.status='not_paid' $where $invoice_date_where $invoices_where) as details_table
-            GROUP BY  MONTH(bill_date)";
+        $invoices = "SELECT SUM($invoices_table.invoice_total) AS total, MONTH(bill_date) AS month 
+            FROM $invoices_table  
+            WHERE $invoices_table.deleted=0 AND $invoices_table.status='not_paid' $where $invoice_date_where $invoices_where
+            GROUP BY MONTH(bill_date)";
 
         $info->invoices = $this->db->query($invoices)->getResult();
         $info->currencies = $this->get_used_currencies_of_client()->getResult();
@@ -305,11 +253,15 @@ class Invoices_model extends Crud_model {
         $invoices_table = $this->db->prefixTable('invoices');
         $invoice_payments_table = $this->db->prefixTable('invoice_payments');
         $clients_table = $this->db->prefixTable('clients');
-        $invoice_items_table = $this->db->prefixTable('invoice_items');
-        $taxes_table = $this->db->prefixTable('taxes');
+
         $info = new \stdClass();
 
+        $tolarance = get_paid_status_tolarance();
+
         $where = "";
+
+        $return_only = get_array_value($options, "return_only");
+
         $currency = $this->_get_clean_value($options, "currency");
         if ($currency) {
             $where .= $this->_get_clients_of_currency_query($currency, $invoices_table, $clients_table);
@@ -325,157 +277,134 @@ class Invoices_model extends Crud_model {
             WHERE $invoice_payments_table.deleted=0 AND $invoices_table.deleted=0
             GROUP BY currency";
 
-        $invoice_value_calculation_query = $this->_get_invoice_value_calculation_query($invoices_table);
-        $invoice_value_calculation = "TRUNCATE($invoice_value_calculation_query,2)";
         $now = get_my_local_time("Y-m-d");
 
-        $invoices = "SELECT SUM(total) AS total, currency FROM (SELECT $invoice_value_calculation_query AS total,
-            (SELECT $clients_table.currency FROM $clients_table WHERE $clients_table.id=$invoices_table.client_id) AS currency
+        $invoices = "SELECT SUM($invoices_table.invoice_total) AS total, SUM(1) AS count, (SELECT $clients_table.currency FROM $clients_table WHERE $clients_table.id=$invoices_table.client_id) AS currency
             FROM $invoices_table
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table ON tax_table.id = $invoices_table.tax_id
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table2 ON tax_table2.id = $invoices_table.tax_id2
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table3 ON tax_table3.id = $invoices_table.tax_id3
-            LEFT JOIN (SELECT invoice_id, SUM(total) AS invoice_value FROM $invoice_items_table WHERE deleted=0 GROUP BY invoice_id) AS items_table ON items_table.invoice_id = $invoices_table.id 
-            WHERE $invoices_table.deleted=0 AND $invoices_table.status='not_paid' $where) as details_table
+            WHERE $invoices_table.deleted=0 AND $invoices_table.status='not_paid' $where
             GROUP BY currency";
 
-        $draft = "SELECT SUM(total) AS total, currency FROM (SELECT $invoice_value_calculation_query AS total,
-            (SELECT $clients_table.currency FROM $clients_table WHERE $clients_table.id=$invoices_table.client_id) AS currency
+        $draft = "SELECT SUM($invoices_table.invoice_total) AS total, SUM(1) AS count, (SELECT $clients_table.currency FROM $clients_table WHERE $clients_table.id=$invoices_table.client_id) AS currency
             FROM $invoices_table
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table ON tax_table.id = $invoices_table.tax_id
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table2 ON tax_table2.id = $invoices_table.tax_id2
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table3 ON tax_table3.id = $invoices_table.tax_id3
-            LEFT JOIN (SELECT invoice_id, SUM(total) AS invoice_value FROM $invoice_items_table WHERE deleted=0 GROUP BY invoice_id) AS items_table ON items_table.invoice_id = $invoices_table.id 
-            WHERE $invoices_table.deleted=0 AND $invoices_table.status='draft' $where) as details_table
+            WHERE $invoices_table.deleted=0 AND $invoices_table.status='draft' $where
             GROUP BY currency";
 
-        $fully_paid = "SELECT SUM(total) AS total, currency FROM (SELECT $invoice_value_calculation_query AS total,
-            (SELECT $clients_table.currency FROM $clients_table WHERE $clients_table.id=$invoices_table.client_id) AS currency
+        $fully_paid = "SELECT SUM($invoices_table.invoice_total) AS total, SUM(1) AS count, (SELECT $clients_table.currency FROM $clients_table WHERE $clients_table.id=$invoices_table.client_id) AS currency
             FROM $invoices_table
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table ON tax_table.id = $invoices_table.tax_id
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table2 ON tax_table2.id = $invoices_table.tax_id2
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table3 ON tax_table3.id = $invoices_table.tax_id3
-            LEFT JOIN (SELECT invoice_id, SUM(total) AS invoice_value FROM $invoice_items_table WHERE deleted=0 GROUP BY invoice_id) AS items_table ON items_table.invoice_id = $invoices_table.id 
-            LEFT JOIN (SELECT invoice_id, SUM(amount) AS payment_received FROM $invoice_payments_table WHERE deleted=0 GROUP BY invoice_id) AS payments_table ON payments_table.invoice_id = $invoices_table.id 
-            WHERE $invoices_table.deleted=0 AND TRUNCATE(IFNULL(payments_table.payment_received,0),2)>=$invoice_value_calculation $where) as details_table
+            LEFT JOIN (SELECT invoice_id, SUM($invoice_payments_table.amount) AS payment_received FROM $invoice_payments_table WHERE deleted=0 GROUP BY invoice_id) AS payments_table ON payments_table.invoice_id = $invoices_table.id 
+            WHERE  $invoices_table.deleted=0 AND $invoices_table.status='not_paid' AND TRUNCATE(IFNULL(payments_table.payment_received,0),2)>=($invoices_table.invoice_total-$tolarance) $where
             GROUP BY currency";
 
-        $partially_paid = "SELECT SUM($invoice_payments_table.amount) AS total,
-            (SELECT $clients_table.currency FROM $clients_table WHERE $clients_table.id=(
-                SELECT $invoices_table.client_id FROM $invoices_table WHERE $invoices_table.id=$invoice_payments_table.invoice_id
-                )
-            ) AS currency
-            FROM $invoice_payments_table
-            LEFT JOIN $invoices_table ON $invoices_table.id=$invoice_payments_table.invoice_id    
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table ON tax_table.id = $invoices_table.tax_id
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table2 ON tax_table2.id = $invoices_table.tax_id2
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table3 ON tax_table3.id = $invoices_table.tax_id3
-            LEFT JOIN (SELECT invoice_id, SUM(amount) AS payment_received FROM $invoice_payments_table WHERE deleted=0 GROUP BY invoice_id) AS payments_table ON payments_table.invoice_id = $invoices_table.id 
-            LEFT JOIN (SELECT invoice_id, SUM(total) AS invoice_value FROM $invoice_items_table WHERE deleted=0 GROUP BY invoice_id) AS items_table ON items_table.invoice_id = $invoices_table.id 
-            WHERE $invoice_payments_table.deleted=0 AND $invoices_table.deleted=0 AND IFNULL(payments_table.payment_received,0)>0 AND IFNULL(payments_table.payment_received,0)<$invoice_value_calculation $where
-            GROUP BY currency";
-
-        $not_paid = "SELECT SUM(total) AS total, currency FROM (SELECT $invoice_value_calculation_query AS total,
-            (SELECT $clients_table.currency FROM $clients_table WHERE $clients_table.id=$invoices_table.client_id) AS currency
+        $partially_paid = "SELECT SUM($invoices_table.invoice_total) AS total, SUM(1) AS count, (SELECT $clients_table.currency FROM $clients_table WHERE $clients_table.id=$invoices_table.client_id) AS currency
             FROM $invoices_table
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table ON tax_table.id = $invoices_table.tax_id
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table2 ON tax_table2.id = $invoices_table.tax_id2
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table3 ON tax_table3.id = $invoices_table.tax_id3
-            LEFT JOIN (SELECT invoice_id, SUM(total) AS invoice_value FROM $invoice_items_table WHERE deleted=0 GROUP BY invoice_id) AS items_table ON items_table.invoice_id = $invoices_table.id 
             LEFT JOIN (SELECT invoice_id, SUM(amount) AS payment_received FROM $invoice_payments_table WHERE deleted=0 GROUP BY invoice_id) AS payments_table ON payments_table.invoice_id = $invoices_table.id 
-            WHERE $invoices_table.deleted=0 AND $invoices_table.status !='draft' AND $invoices_table.status!='cancelled' AND IFNULL(payments_table.payment_received,0)<=0 $where) as details_table
+            WHERE $invoices_table.deleted=0 AND $invoices_table.status='not_paid' AND IFNULL(payments_table.payment_received,0)>0 && TRUNCATE(IFNULL(payments_table.payment_received,0),2) < $invoices_table.invoice_total-$tolarance $where
             GROUP BY currency";
 
-        $overdue = "SELECT SUM(total) AS total, currency FROM (SELECT $invoice_value_calculation_query AS total,
-            (SELECT $clients_table.currency FROM $clients_table WHERE $clients_table.id=$invoices_table.client_id) AS currency
+        $not_paid = "SELECT SUM($invoices_table.invoice_total) AS total, SUM(1) AS count, (SELECT $clients_table.currency FROM $clients_table WHERE $clients_table.id=$invoices_table.client_id) AS currency
+            FROM $invoices_table            
+            LEFT JOIN (SELECT invoice_id, SUM(amount) AS payment_received FROM $invoice_payments_table WHERE deleted=0 GROUP BY invoice_id) AS payments_table ON payments_table.invoice_id = $invoices_table.id 
+            WHERE $invoices_table.deleted=0 AND $invoices_table.status='not_paid' AND IFNULL(payments_table.payment_received,0)<=0 $where
+            GROUP BY currency";
+
+        $overdue = "SELECT SUM($invoices_table.invoice_total - IFNULL(payments_table.payment_received,0)) AS total , SUM(1) AS count, (SELECT $clients_table.currency FROM $clients_table WHERE $clients_table.id=$invoices_table.client_id) AS currency
             FROM $invoices_table
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table ON tax_table.id = $invoices_table.tax_id
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table2 ON tax_table2.id = $invoices_table.tax_id2
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table3 ON tax_table3.id = $invoices_table.tax_id3
-            LEFT JOIN (SELECT invoice_id, SUM(total) AS invoice_value FROM $invoice_items_table WHERE deleted=0 GROUP BY invoice_id) AS items_table ON items_table.invoice_id = $invoices_table.id 
             LEFT JOIN (SELECT invoice_id, SUM(amount) AS payment_received FROM $invoice_payments_table WHERE deleted=0 GROUP BY invoice_id) AS payments_table ON payments_table.invoice_id = $invoices_table.id 
-            WHERE $invoices_table.deleted=0 AND $invoices_table.status !='draft' AND $invoices_table.status!='cancelled' AND $invoices_table.due_date<'$now' AND TRUNCATE(IFNULL(payments_table.payment_received,0),2)<$invoice_value_calculation $where) as details_table
+            WHERE $invoices_table.deleted=0  AND $invoices_table.status='not_paid' AND $invoices_table.due_date<'$now' AND TRUNCATE(IFNULL(payments_table.payment_received,0),2)<$invoices_table.invoice_total-$tolarance $where
             GROUP BY currency";
 
-        $overdue_paid = "SELECT SUM($invoice_payments_table.amount) AS total,
-            (SELECT $clients_table.currency FROM $clients_table WHERE $clients_table.id=(
-                SELECT $invoices_table.client_id FROM $invoices_table WHERE $invoices_table.id=$invoice_payments_table.invoice_id
-                )
-            ) AS currency
-            FROM $invoice_payments_table
-            LEFT JOIN $invoices_table ON $invoices_table.id=$invoice_payments_table.invoice_id    
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table ON tax_table.id = $invoices_table.tax_id
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table2 ON tax_table2.id = $invoices_table.tax_id2
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table3 ON tax_table3.id = $invoices_table.tax_id3
-            LEFT JOIN (SELECT invoice_id, SUM(amount) AS payment_received FROM $invoice_payments_table WHERE deleted=0 GROUP BY invoice_id) AS payments_table ON payments_table.invoice_id = $invoices_table.id 
-            LEFT JOIN (SELECT invoice_id, SUM(total) AS invoice_value FROM $invoice_items_table WHERE deleted=0 GROUP BY invoice_id) AS items_table ON items_table.invoice_id = $invoices_table.id 
-            WHERE $invoice_payments_table.deleted=0 AND $invoices_table.deleted=0 AND $invoices_table.status !='draft' AND $invoices_table.status!='cancelled' AND $invoices_table.due_date<'$now' AND TRUNCATE(IFNULL(payments_table.payment_received,0),2)<$invoice_value_calculation $where
-            GROUP BY currency";
-
-        //prepare payments
         $payments_total = 0;
-        $payments_result = $this->db->query($payments)->getResult();
-        foreach ($payments_result as $payment) {
-            $payments_total += get_converted_amount($payment->currency, $payment->total);
+
+        if (!$return_only || $return_only == "payments" || $return_only == "due") {
+            $payments_result = $this->db->query($payments)->getResult();
+            foreach ($payments_result as $payment) {
+                $payments_total += get_converted_amount($payment->currency, $payment->total);
+            }
         }
 
-        //prepare invoices
         $invoices_total = 0;
-        $invoices_result = $this->db->query($invoices)->getResult();
-        foreach ($invoices_result as $invoice) {
-            $invoices_total += get_converted_amount($invoice->currency, $invoice->total);
+        $invoices_count = 0;
+
+        if (!$return_only || $return_only == "invoices" || $return_only == "due") {
+            $invoices_result = $this->db->query($invoices)->getResult();
+            foreach ($invoices_result as $invoice) {
+                $invoices_count += $invoice->count;
+                $invoices_total += get_converted_amount($invoice->currency, $invoice->total);
+            }
         }
 
-        //prepare drafts
         $draft_total = 0;
-        $drafts_result = $this->db->query($draft)->getResult();
-        foreach ($drafts_result as $draft) {
-            $draft_total += get_converted_amount($draft->currency, $draft->total);
+        $draft_count = 0;
+        if (!$return_only || $return_only == "draft") {
+            $drafts_result = $this->db->query($draft)->getResult();
+            foreach ($drafts_result as $draft) {
+                $draft_count += $draft->count;
+                $draft_total += get_converted_amount($draft->currency, $draft->total);
+            }
         }
 
-        //prepare fully paid invoices value
         $fully_paid_total = 0;
-        $fully_paid_result = $this->db->query($fully_paid)->getResult();
-        foreach ($fully_paid_result as $fully_paid) {
-            $fully_paid_total += get_converted_amount($fully_paid->currency, $fully_paid->total);
+        $fully_paid_count = 0;
+        if (!$return_only || $return_only == "fully_paid") {
+            $fully_paid_result = $this->db->query($fully_paid)->getResult();
+            foreach ($fully_paid_result as $fully_paid) {
+                $fully_paid_count += $fully_paid->count;
+                $fully_paid_total += get_converted_amount($fully_paid->currency, $fully_paid->total);
+            }
         }
 
-        //prepare partially paid invoices value
         $partially_paid_total = 0;
-        $partially_paid_result = $this->db->query($partially_paid)->getResult();
-        foreach ($partially_paid_result as $partially_paid) {
-            $partially_paid_total += get_converted_amount($partially_paid->currency, $partially_paid->total);
+        $partially_paid_count = 0;
+        if (!$return_only || $return_only == "partially_paid") {
+            $partially_paid_result = $this->db->query($partially_paid)->getResult();
+            foreach ($partially_paid_result as $partially_paid) {
+                $partially_paid_count += $partially_paid->count;
+                $partially_paid_total += get_converted_amount($partially_paid->currency, $partially_paid->total);
+            }
         }
 
-        //prepare not paid invoices value
         $not_paid_total = 0;
-        $not_paid_result = $this->db->query($not_paid)->getResult();
-        foreach ($not_paid_result as $not_paid) {
-            $not_paid_total += get_converted_amount($not_paid->currency, $not_paid->total);
+        $not_paid_count = 0;
+        if (!$return_only || $return_only == "not_paid") {
+            $not_paid_result = $this->db->query($not_paid)->getResult();
+            foreach ($not_paid_result as $not_paid) {
+                $not_paid_count += $not_paid->count;
+                $not_paid_total += get_converted_amount($not_paid->currency, $not_paid->total);
+            }
         }
 
-        //prepare not paid invoices value
         $overdue_total = 0;
-        $overdue_result = $this->db->query($overdue)->getResult();
-        foreach ($overdue_result as $overdue) {
-            $overdue_total += get_converted_amount($overdue->currency, $overdue->total);
-        }
-
-        //prepare not paid invoices value
-        $overdue_paid_total = 0;
-        $overdue_paid_result = $this->db->query($overdue_paid)->getResult();
-        foreach ($overdue_paid_result as $overdue_paid) {
-            $overdue_paid_total += get_converted_amount($overdue_paid->currency, $overdue_paid->total);
+        $overdue_count = 0;
+        if (!$return_only || $return_only == "overdue") {
+            $overdue_result = $this->db->query($overdue)->getResult();
+            foreach ($overdue_result as $overdue) {
+                $overdue_count += $overdue->count;
+                $overdue_total += get_converted_amount($overdue->currency, $overdue->total);
+            }
         }
 
         $info->payments_total = $payments_total;
-        $info->invoices_total = (($invoices_total > $payments_total) && ($invoices_total - $payments_total) < 0.05 ) ? $payments_total : $invoices_total;
-        $info->due = $info->invoices_total - $info->payments_total;
+
+        $info->invoices_total = $invoices_total;
+        $info->invoices_count = $invoices_count;
+
         $info->draft_total = $draft_total;
+        $info->draft_count = $draft_count;
+
         $info->fully_paid_total = $fully_paid_total;
+        $info->fully_paid_count = $fully_paid_count;
+
         $info->partially_paid_total = $partially_paid_total;
+        $info->partially_paid_count = $partially_paid_count;
+
         $info->not_paid = $not_paid_total;
-        $info->overdue = $overdue_total - $overdue_paid_total;
+        $info->not_paid_count = $not_paid_count;
+
+        $info->overdue = $overdue_total;
+        $info->overdue_count = $overdue_count;
+
+        $info->due = ignor_minor_value($invoices_total - $payments_total);
+
         return $info;
     }
 
@@ -503,7 +432,7 @@ class Invoices_model extends Crud_model {
         $invoices_table = $this->db->prefixTable('invoices');
 
         $sql = "SELECT $invoices_table.id FROM $invoices_table
-                        WHERE $invoices_table.deleted=0 
+                        WHERE $invoices_table.deleted=0 AND $invoices_table.type = 'invoice'
                         ORDER BY $invoices_table.id DESC";
 
         return $this->db->query($sql);
@@ -536,49 +465,77 @@ class Invoices_model extends Crud_model {
         return $this->db->query($sql);
     }
 
-    //get invoices
-    function count_invoices($options = array()) {
+    function get_invoice_total_meta($invoice_id) {
+        $id = $this->db->escapeString($invoice_id);
         $invoices_table = $this->db->prefixTable('invoices');
-        $invoice_payments_table = $this->db->prefixTable('invoice_payments');
         $invoice_items_table = $this->db->prefixTable('invoice_items');
-        $taxes_table = $this->db->prefixTable('taxes');
-        $clients_table = $this->db->prefixTable('clients');
-
-        $where = "";
-        $now = get_my_local_time("Y-m-d");
-        $status = $this->_get_clean_value($options, "status");
-
-        $invoice_value_calculation_query = $this->_get_invoice_value_calculation_query($invoices_table);
-
-        $invoice_value_calculation = "TRUNCATE($invoice_value_calculation_query,2)";
-
-        if ($status === "draft") {
-            $where .= " AND $invoices_table.status='draft' AND IFNULL(payments_table.payment_received,0)<=0";
-        } else if ($status === "not_paid") {
-            $where .= " AND $invoices_table.status !='draft' AND $invoices_table.status!='cancelled' AND IFNULL(payments_table.payment_received,0)<=0";
-        } else if ($status === "partially_paid") {
-            $where .= " AND IFNULL(payments_table.payment_received,0)>0 AND IFNULL(payments_table.payment_received,0)<$invoice_value_calculation";
-        } else if ($status === "fully_paid") {
-            $where .= " AND TRUNCATE(IFNULL(payments_table.payment_received,0),2)>=$invoice_value_calculation";
-        } else if ($status === "overdue") {
-            $where .= " AND $invoices_table.status !='draft' AND $invoices_table.status!='cancelled' AND $invoices_table.due_date<'$now' AND TRUNCATE(IFNULL(payments_table.payment_received,0),2)<$invoice_value_calculation";
-        }
-
-        $currency = $this->_get_clean_value($options, "currency");
-        if ($currency) {
-            $where .= $this->_get_clients_of_currency_query($currency, $invoices_table, $clients_table);
-        }
-
-        $sql = "SELECT $invoices_table.status, COUNT($invoices_table.id) AS total
-        FROM $invoices_table
-        LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table ON tax_table.id = $invoices_table.tax_id
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table2 ON tax_table2.id = $invoices_table.tax_id2
-            LEFT JOIN (SELECT $taxes_table.id, $taxes_table.percentage FROM $taxes_table) AS tax_table3 ON tax_table3.id = $invoices_table.tax_id3
-        LEFT JOIN (SELECT invoice_id, SUM(amount) AS payment_received FROM $invoice_payments_table WHERE deleted=0 GROUP BY invoice_id) AS payments_table ON payments_table.invoice_id = $invoices_table.id 
-        LEFT JOIN (SELECT invoice_id, SUM(total) AS invoice_value FROM $invoice_items_table WHERE deleted=0 GROUP BY invoice_id) AS items_table ON items_table.invoice_id = $invoices_table.id 
-        WHERE $invoices_table.deleted=0 $where";
-
-        return $this->db->query($sql)->getRow()->total;
+        $info = $this->get_sales_total_meta($id, $invoices_table, $invoice_items_table);
+        return $info;
     }
 
+    function update_invoice_total_meta($invoice_id) {
+        $info = $this->get_invoice_total_meta($invoice_id);
+
+        $data = array(
+            "invoice_total" => $info->invoice_total,
+            "invoice_subtotal" => $info->invoice_subtotal,
+            "discount_total" => $info->discount_total,
+            "tax" => $info->tax,
+            "tax2" => $info->tax2,
+            "tax3" => $info->tax3
+        );
+
+        return $this->ci_save($data, $invoice_id);
+    }
+
+    function save_invoice_and_update_total($data, $id = 0) {
+        $save_id = $this->ci_save($data, $id);
+
+        $update_total = false;
+        $total_updateable_fields = array("tax_id", "tax_id2", "tax_id3", "discount_amount", "discount_amount_type", "discount_type");
+        foreach ($total_updateable_fields as $field) {
+            if (array_key_exists($field, $data)) {
+                $update_total = true;
+            }
+        }
+
+        if ($update_total) {
+            $this->update_invoice_total_meta($save_id);
+        }
+
+        return $save_id;
+    }
+
+    function get_invoices_summary($options = array()) {
+        $invoice_payments_table = $this->db->prefixTable('invoice_payments');
+        $clients_table = $this->db->prefixTable('clients');
+        $invoices_table = $this->db->prefixTable('invoices');
+
+        $where = "";
+        $start_date = $this->_get_clean_value($options, "start_date");
+        $end_date = $this->_get_clean_value($options, "end_date");
+        if ($start_date && $end_date) {
+            $where .= " AND ($invoices_table.due_date BETWEEN '$start_date' AND '$end_date') ";
+        }
+
+
+        $selected_currency = get_array_value($options, "currency");
+        $default_currency = get_setting("default_currency");
+        $currency = $selected_currency ? $selected_currency : get_setting("default_currency");
+        $currency = $this->db->escapeString($currency);
+
+        $where .= ($currency == $default_currency) ? " AND ($clients_table.currency='$default_currency' OR $clients_table.currency='' OR $clients_table.currency IS NULL)" : " AND $clients_table.currency='$currency'";
+
+        $sql = "SELECT COUNT($invoices_table.id) AS invoice_count, SUM($invoices_table.invoice_total) AS invoice_total, SUM($invoices_table.discount_total) AS discount_total, SUM($invoices_table.tax) AS tax_total, SUM($invoices_table.tax2) AS tax2_total, SUM($invoices_table.tax3) AS tax3_total,
+                $invoices_table.client_id, $clients_table.charter_name AS client_name, $clients_table.currency, $clients_table.currency_symbol,
+                SUM(payments_table.payment_received) AS payment_received
+            FROM $invoices_table
+            LEFT JOIN $clients_table ON $clients_table.id = $invoices_table.client_id             
+            LEFT JOIN (SELECT SUM($invoice_payments_table.amount) AS payment_received, $invoice_payments_table.invoice_id FROM $invoice_payments_table WHERE $invoice_payments_table.deleted=0 GROUP BY $invoice_payments_table.invoice_id) AS payments_table ON payments_table.invoice_id = $invoices_table.id
+            WHERE $invoices_table.deleted=0 AND $invoices_table.status = 'not_paid' $where
+            GROUP BY $invoices_table.client_id";
+        $result = $this->db->query($sql);
+
+        return $result;
+    }
 }

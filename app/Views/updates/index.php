@@ -106,20 +106,28 @@
 
         $('body').on('click', '.do-update', function () {
             var version = $(this).attr("data-version");
+            var acknowledged = $(this).attr("data-acknowledged");
+            if (!acknowledged) {
+                acknowledged = 0;
+            }
             $("#app-update-container").html("<h3><span class='download-loader-lg spinning-btn spinning'></span> Installing version - " + version + ". Please wait... </h3>");
             $.ajax({
-                url: "<?php echo_uri("updates/do_update/"); ?>" + "/" + version,
+                url: "<?php echo_uri("updates/do_update/"); ?>" + "/" + version + "/" + acknowledged,
                 dataType: "json",
                 success: function (response) {
                     $("#app-update-container").html("");
-                    if (response.success) {
+                    if (response.response_type === "success") {
                         appAlert.success(response.message, {container: "#app-update-container", animate: false});
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
+                    } else if (response.response_type === "acknowledgement_required") {
+                        appAlert.info(response.message, {container: "#app-update-container", animate: false});
+                        $("#app-update-container").append("<p><a class='do-update' data-acknowledged='1' data-version='" + version + "' href='#'>I understand, install the version - <b>" + version + "</b></a></p>");
                     } else {
                         appAlert.error(response.message, {container: "#app-update-container", animate: false});
                     }
-                    setTimeout(function () {
-                        location.reload();
-                    }, 2000);
+
                 }
             });
         });

@@ -18,7 +18,8 @@ class Orders_model extends Crud_model {
         $order_items_table = $this->db->prefixTable('order_items');
         $order_status_table = $this->db->prefixTable('order_status');
         $users_table = $this->db->prefixTable('users');
-        $projects_table = $this->db->prefixTable('projects');
+        $projects_table = $this->db->prefixTable('projects'); 
+        $invoices_table = $this->db->prefixTable('invoices');
 
         $where = "";
         $id = $this->_get_clean_value($options, "id");
@@ -65,7 +66,8 @@ class Orders_model extends Crud_model {
         $join_custom_fieds = get_array_value($custom_field_query_info, "join_string");
         $custom_fields_where = get_array_value($custom_field_query_info, "where_string");
 
-        $sql = "SELECT $orders_table.*, $clients_table.currency, $clients_table.currency_symbol, $clients_table.company_name, $projects_table.title as project_title,
+        $sql = "SELECT $orders_table.*, $clients_table.currency, $clients_table.currency_symbol, $clients_table.charter_name, $projects_table.title as project_title,
+           (SELECT GROUP_CONCAT(',', $invoices_table.id) FROM $invoices_table WHERE $invoices_table.deleted=0 AND $invoices_table.order_id=$orders_table.id) AS invoices,
            $order_value_calculation AS order_value, tax_table.percentage AS tax_percentage, tax_table2.percentage AS tax_percentage2, $order_status_table.title AS order_status_title, $order_status_table.color AS order_status_color, CONCAT($users_table.first_name, ' ', $users_table.last_name) AS created_by_user, $users_table.user_type AS created_by_user_type $select_custom_fieds
         FROM $orders_table
         LEFT JOIN $clients_table ON $clients_table.id= $orders_table.client_id
@@ -80,14 +82,22 @@ class Orders_model extends Crud_model {
         return $this->db->query($sql);
     }
 
-    function get_processing_order_total_summary($user_id) {
+    function get_processing_order_total_summary($user_id = 0, $created_by_hash = "") {
         $order_items_table = $this->db->prefixTable('order_items');
         $orders_table = $this->db->prefixTable('orders');
         $clients_table = $this->db->prefixTable('clients');
         $users_table = $this->db->prefixTable('users');
         $taxes_table = $this->db->prefixTable('taxes');
 
-        $where = " AND $order_items_table.created_by=$user_id";
+        if ($user_id) {
+            $where = " AND $order_items_table.created_by=$user_id ";
+        } else if ($created_by_hash) {
+            $where = " AND $order_items_table.created_by_hash='$created_by_hash' ";
+        }
+
+        if ($user_id && $created_by_hash) {
+            $where = " AND ($order_items_table.created_by=$user_id OR $order_items_table.created_by_hash='$created_by_hash') ";
+        }
 
         $order_tax_id = get_setting('order_tax_id') ? get_setting('order_tax_id') : 0;
         $order_tax_id2 = get_setting('order_tax_id2') ? get_setting('order_tax_id2') : 0;
@@ -147,7 +157,6 @@ class Orders_model extends Crud_model {
         WHERE $order_items_table.deleted=0 AND $order_items_table.order_id=$order_id AND $orders_table.deleted=0";
         $item = $this->db->query($item_sql)->getRow();
 
-
         $order_sql = "SELECT $orders_table.*, tax_table.percentage AS tax_percentage, tax_table.title AS tax_name,
             tax_table2.percentage AS tax_percentage2, tax_table2.title AS tax_name2
         FROM $orders_table
@@ -158,7 +167,6 @@ class Orders_model extends Crud_model {
 
         $client_sql = "SELECT $clients_table.currency_symbol, $clients_table.currency FROM $clients_table WHERE $clients_table.id=$order->client_id";
         $client = $this->db->query($client_sql)->getRow();
-
 
         $result = new \stdClass();
         $result->order_subtotal = $item->order_subtotal;

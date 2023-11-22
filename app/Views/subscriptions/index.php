@@ -43,7 +43,7 @@
     {title: "<?php echo app_lang("type") ?> ", "class": "w100"},
     {title: "<?php echo app_lang("client") ?>", "class": "w10p"},
     {visible: false, searchable: false},
-    {title: "<?php echo app_lang("first_billing_date") ?>", "iDataSort": 5, "class": "w10p"},
+    {title: "<?php echo app_lang("next_billing_date") ?>", "iDataSort": 5, "class": "w10p"},
     {title: "<?php echo app_lang("repeat_every") ?>", "class": "w10p text-center"},
     {title: "<?php echo app_lang("cycles") ?>", "class": "w100 text-center"},
     {title: "<?php echo app_lang("status") ?>", "class": "w100 text-center"},

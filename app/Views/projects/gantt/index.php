@@ -16,7 +16,7 @@ if (!$project_id) {
         <?php if (isset($show_tasks_tab) && $show_tasks_tab == true) { ?>
             <ul class="nav nav-tabs bg-white title" role="tablist">
                 <li class="title-tab"><h4 class="pl15 pt10 pr15"><?php echo app_lang("tasks"); ?></h4></li>
-                <?php echo view("projects/tasks/tabs", array("active_tab" => "gantt", "selected_tab" => "")); ?>       
+                <?php echo view("tasks/tabs", array("active_tab" => "gantt", "selected_tab" => "")); ?>       
             </ul>
         <?php } ?>
 
@@ -96,7 +96,7 @@ if (!$project_id) {
     echo "</div>";
 }
 
-echo modal_anchor(get_uri("projects/task_view"), "", array("id" => "show_task_hidden", "class" => "hide", "data-modal-lg" => "1"));
+echo modal_anchor(get_uri("tasks/view"), "", array("id" => "show_task_hidden", "class" => "hide", "data-modal-lg" => "1"));
 ?>
 
 <script type="text/javascript">
@@ -113,7 +113,7 @@ echo modal_anchor(get_uri("projects/task_view"), "", array("id" => "show_task_hi
         appLoader.show({container: "#gantt-chart", css: "right:50%;"});
 
         $.ajax({
-            url: "<?php echo get_uri("projects/gantt_data/"); ?>" + projectId + "/" + group_by + "/" + milestoneId + "/" + userId + "/" + status,
+            url: "<?php echo get_uri("tasks/gantt_data/"); ?>" + projectId + "/" + group_by + "/" + milestoneId + "/" + userId + "/" + status,
             type: 'POST',
             dataType: 'json',
             success: function (result) {
@@ -153,7 +153,7 @@ echo modal_anchor(get_uri("projects/task_view"), "", array("id" => "show_task_hi
                         };
 
                         $.ajax({
-                            url: "<?php echo get_uri('projects/save_gantt_task_date') ?>",
+                            url: "<?php echo get_uri('tasks/save_gantt_task_date') ?>",
                             type: 'POST',
                             dataType: 'json',
                             data: data,
@@ -276,7 +276,7 @@ echo modal_anchor(get_uri("projects/task_view"), "", array("id" => "show_task_hi
                 $ganttMilestone.hide();
                 appLoader.show();
                 $.ajax({
-                    url: "<?php echo get_uri('projects/get_milestones_for_filter') ?>",
+                    url: "<?php echo get_uri('tasks/get_milestones_for_filter') ?>",
                     dataType: "json",
                     type: 'POST',
                     data: {project_id: projectId},

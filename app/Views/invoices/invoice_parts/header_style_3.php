@@ -1,4 +1,4 @@
-<table class="header-style">
+<table class="header-style" style="font-size: 13.5px;">
     <tr class="invoice-preview-header-row">
         <td class="invoice-info-container invoice-header-style-two" style="width: 40%; vertical-align: top;"><?php
             $data = array(

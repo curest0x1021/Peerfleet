@@ -1,4 +1,7 @@
 <div class="card clearfix">
+    <div class="tab-title clearfix">
+        <h4> <?php echo app_lang('sub_invoices'); ?></h4>
+    </div>
     <div class="table-responsive">
         <table id="sub-invoice-table" class="display" cellspacing="0" width="100%">   
         </table>
@@ -7,9 +10,7 @@
 </div>
 
 <script type="text/javascript">
-
     $(document).ready(function () {
-
         $("#sub-invoice-table").appTable({
             source: '<?php echo_uri("invoices/sub_invoices_list_data/" . $recurring_invoice_id) ?>',
             order: [[0, "desc"]],

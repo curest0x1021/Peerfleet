@@ -7,6 +7,7 @@ foreach ($comments as $comment) {
     $type_id = $comment->project_id;
     $pin_status = "";
     $unpin_status = "";
+    $file_download_url = "projects/download_comment_files";
     if ($comment->file_id) {
         $type = "file";
         $type_id = $comment->file_id;
@@ -14,6 +15,7 @@ foreach ($comments as $comment) {
         $type = "task";
         $type_id = $comment->task_id;
         $task_id = $comment->task_id;
+        $file_download_url = "tasks/download_comment_files";
     } else if ($comment->customer_feedback_id) {
         $type = "customer_feedback";
         $type_id = $comment->customer_feedback_id;
@@ -124,7 +126,7 @@ foreach ($comments as $comment) {
                                     echo "<i data-feather='paperclip' class='icon-16'></i>";
                                 }
 
-                                echo anchor(get_uri("projects/download_comment_files/" . $comment->id), $download_caption, array("class" => "float-end", "title" => $download_caption));
+                                echo anchor(get_uri("$file_download_url/" . $comment->id), $download_caption, array("class" => "float-end", "title" => $download_caption));
                             }
                             ?>
                         </div>
@@ -217,7 +219,7 @@ foreach ($comments as $comment) {
         var taskId = $(this).attr('data-task-id');
         var tempInput = document.createElement("input");
         tempInput.style = "position: absolute; left: -1000px; top: -1000px";
-        tempInput.value = "<?php echo get_uri("projects/task_view"); ?>/" + taskId + "/#comment-" + commentId;
+        tempInput.value = "<?php echo get_uri("tasks/view"); ?>/" + taskId + "/#comment-" + commentId;
         document.body.appendChild(tempInput);
         tempInput.select();
         document.execCommand("copy");

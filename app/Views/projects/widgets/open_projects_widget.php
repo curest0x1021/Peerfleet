@@ -1,4 +1,4 @@
-<a href="<?php echo get_uri('projects/index'); ?>" class="white-link">
+<a href="<?php echo get_uri('projects/all_projects/1'); ?>" class="white-link">
     <div class="card dashboard-icon-widget">
         <div class="card-body ">
             <div class="widget-icon bg-primary">

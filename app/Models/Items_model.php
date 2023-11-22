@@ -40,8 +40,21 @@ class Items_model extends Crud_model {
 
         $extra_select = "";
         $login_user_id = $this->_get_clean_value($options, "login_user_id");
-        if ($login_user_id) {
-            $extra_select = ", (SELECT COUNT($order_items_table.id) FROM $order_items_table WHERE $order_items_table.deleted=0 AND $order_items_table.order_id=0 AND $order_items_table.created_by=$login_user_id AND $order_items_table.item_id=$items_table.id) AS added_to_cart";
+        $created_by_hash = $this->_get_clean_value($options, "created_by_hash");
+        if ($login_user_id || $created_by_hash) {
+
+            $extra_where = "";
+            if ($login_user_id) {
+                $extra_where = " AND $order_items_table.created_by=$login_user_id ";
+            } else if ($created_by_hash) {
+                $extra_where = " AND $order_items_table.created_by_hash='$created_by_hash' ";
+            }
+
+            if ($login_user_id && $created_by_hash) {
+                $extra_where = " AND ($order_items_table.created_by=$login_user_id OR $order_items_table.created_by_hash='$created_by_hash') ";
+            }
+
+            $extra_select = ", (SELECT COUNT($order_items_table.id) FROM $order_items_table WHERE $order_items_table.deleted=0 AND $order_items_table.order_id=0 AND $order_items_table.item_id=$items_table.id $extra_where ) AS added_to_cart";
         }
 
         $limit_query = "";
@@ -57,6 +70,7 @@ class Items_model extends Crud_model {
         WHERE $items_table.deleted=0 $where
         ORDER BY $items_table.title ASC
         $limit_query";
+
         return $this->db->query($sql);
     }
 

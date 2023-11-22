@@ -65,7 +65,7 @@ class Expenses_model extends Crud_model {
 
         $sql = "SELECT $expenses_table.*, $expense_categories_table.title as category_title, 
                  CONCAT($users_table.first_name, ' ', $users_table.last_name) AS linked_user_name,
-                 $clients_table.company_name AS linked_client_name,
+                 $clients_table.charter_name AS linked_client_name,
                  $projects_table.title AS project_title,
                  tax_table.percentage AS tax_percentage,
                  tax_table2.percentage AS tax_percentage2

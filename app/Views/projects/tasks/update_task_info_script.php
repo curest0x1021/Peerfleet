@@ -134,14 +134,13 @@ foreach ($points_dropdown as $key => $value) {
                         $("#task-table").appTable({newData: response.data, dataId: response.id});
 
                         appLoader.hide();
+                        
+                        window.reloadKanban = true; 
 
                         //reload gantt
                         if (typeof window.reloadGantt === "function") {
                             window.reloadGantt(true);
                         }
-
-                        //reload kanban
-                        $("#reload-kanban-button:visible").trigger("click");
                     }
                 }
             });

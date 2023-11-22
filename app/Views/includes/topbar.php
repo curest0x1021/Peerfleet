@@ -94,7 +94,7 @@
 
                     <?php if (can_access_reminders_module()) { ?>
                         <li class="nav-item dropdown">
-                            <?php echo modal_anchor(get_uri("events/reminders"), "<i data-feather='clock' class='icon'></i>", array("class" => "nav-link", "id" => "reminder-icon", "title" => app_lang('reminders') . " (" . app_lang('private') . ")")); ?>
+                            <?php echo modal_anchor(get_uri("events/reminders"), "<i data-feather='clock' class='icon'></i>", array("class" => "nav-link", "id" => "reminder-icon", "data-post-reminder_view_type" => "global", "title" => app_lang('reminders') . " (" . app_lang('private') . ")")); ?>
                         </li>
                         <?php reminders_widget(); ?>
                     <?php } ?>
@@ -136,8 +136,9 @@
                             </span>
                             <span class="user-name ml10"><?php echo $login_user->first_name . " " . $login_user->last_name; ?></span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end w200">
+                        <ul class="dropdown-menu dropdown-menu-end w200 user-dropdown-menu">
                             <?php if ($login_user->user_type == "client") { ?>
+                                <div class="company-switch-option d-none"><?php show_clients_of_this_client_contact($login_user, true); ?></div>
                                 <li><?php echo get_client_contact_profile_link($login_user->id . '/general', "<i data-feather='user' class='icon-16 me-2'></i>" . app_lang('my_profile'), array("class" => "dropdown-item")); ?></li>
                                 <li><?php echo get_client_contact_profile_link($login_user->id . '/account', "<i data-feather='key' class='icon-16 me-2'></i>" . app_lang('change_password'), array("class" => "dropdown-item")); ?></li>
                                 <li><?php echo get_client_contact_profile_link($login_user->id . '/my_preferences', "<i data-feather='settings' class='icon-16 me-2'></i>" . app_lang('my_preferences'), array("class" => "dropdown-item")); ?></li>
@@ -228,16 +229,9 @@
 
         $('body').on('click', "#reminder-icon", function () {
             $("#ajaxModal").addClass("reminder-modal");
-
-            //if there has reminder form on task details page, opening from topbar will give error
-            //to prevent this, on loading global reminders, remove task reminders content
-            //and reload page after closing modal
-            if ($("#task-reminders").length) {
-                $("#task-reminders").html("");
-            }
         });
 
-        $("body").on("click", ".notification-dropdown a[data-act='ajax-modal'], #js-quick-add-task, #js-quick-add-multiple-task, #task-details-edit-btn", function () {
+        $("body").on("click", ".notification-dropdown a[data-act='ajax-modal'], #js-quick-add-task, #js-quick-add-multiple-task, #task-details-edit-btn, #task-modal-view-link", function () {
             if ($(".task-preview").length) {
                 //remove task details view when it's already opened to prevent selector duplication
                 $("#page-content").remove();

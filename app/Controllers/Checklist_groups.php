@@ -6,17 +6,16 @@ class Checklist_groups extends Security_Controller {
 
     function __construct() {
         parent::__construct();
+        $this->access_only_admin_or_settings_admin();
     }
 
     //load checklist group list view
     function index() {
-        $this->access_only_admin_or_settings_admin();
         return $this->template->view("checklist_groups/index");
     }
 
     //load checklist group add/edit modal form
     function modal_form() {
-        $this->access_only_admin_or_settings_admin();
         $this->validate_submitted_data(array(
             "id" => "numeric"
         ));
@@ -35,7 +34,6 @@ class Checklist_groups extends Security_Controller {
 
     //save checklist group 
     function save() {
-        $this->access_only_admin_or_settings_admin();
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "title" => "required",
@@ -57,7 +55,6 @@ class Checklist_groups extends Security_Controller {
 
     //delete/undo checklist group 
     function delete() {
-        $this->access_only_admin_or_settings_admin();
         $this->validate_submitted_data(array(
             "id" => "required|numeric"
         ));
@@ -80,7 +77,6 @@ class Checklist_groups extends Security_Controller {
 
     //get data for checklist group list
     function list_data() {
-        $this->access_only_admin_or_settings_admin();
         $list_data = $this->Checklist_groups_model->get_details()->getResult();
         $result = array();
         foreach ($list_data as $data) {
@@ -109,7 +105,6 @@ class Checklist_groups extends Security_Controller {
     }
 
     function checklists_list() {
-        $this->access_only_admin_or_settings_admin();
         $view_data['checklists'] = $this->Checklist_template_model->get_checklists($this->request->getPost('checklists'))->getResult();
         return $this->template->view('checklist_groups/checklists_list', $view_data);
     }

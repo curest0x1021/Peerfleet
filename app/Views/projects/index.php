@@ -28,32 +28,26 @@
             optionVisibility = true;
         }
 
-        var selectOpenStatus = true, selectCompletedStatus = false, selectHoldStatus = false;
-<?php if (isset($status) && $status == "completed") { ?>
-            selectOpenStatus = false;
-            selectCompletedStatus = true;
-            selectHoldStatus = false;
-<?php } else if (isset($status) && $status == "hold") { ?>
-            selectOpenStatus = false;
-            selectCompletedStatus = false;
-            selectHoldStatus = true;
+
+        var ignoreSavedFilter = false;
+<?php if (isset($selected_status_id) && $selected_status_id) { ?>
+            ignoreSavedFilter = true;
 <?php } ?>
+
 
         $("#project-table").appTable({
             source: '<?php echo_uri("projects/list_data") ?>',
+            smartFilterIdentity: "all_projects_list", //a to z and _ only. should be unique to avoid conflicts 
+            ignoreSavedFilter: ignoreSavedFilter,
             multiSelect: [
                 {
-                    name: "status",
+                    name: "status_id",
                     text: "<?php echo app_lang('status'); ?>",
-                    options: [
-                        {text: '<?php echo app_lang("open") ?>', value: "open", isChecked: selectOpenStatus},
-                        {text: '<?php echo app_lang("completed") ?>', value: "completed", isChecked: selectCompletedStatus},
-                        {text: '<?php echo app_lang("hold") ?>', value: "hold", isChecked: selectHoldStatus},
-                        {text: '<?php echo app_lang("canceled") ?>', value: "canceled"}
-                    ]
+                    options: <?php echo view("project_status/project_status_dropdown", array("project_statuses" => $project_statuses, "selected_status_id" => $selected_status_id, "selected_status_key" => "open")); ?>
                 }
             ],
             filterDropdown: [{name: "project_label", class: "w200", options: <?php echo $project_labels_dropdown; ?>}, <?php echo $custom_field_filters; ?>],
+            rangeDatepicker: [{startDate: {name: "start_date_from", value: ""}, endDate: {name: "start_date_to", value: ""}, showClearButton: true, label: "<?php echo app_lang('start_date'); ?>", ranges: ['this_month', 'last_month', 'this_year', 'last_year', 'next_7_days', 'next_month']}],
             singleDatepicker: [{name: "deadline", defaultText: "<?php echo app_lang('deadline') ?>",
                     options: [
                         {value: "expired", text: "<?php echo app_lang('expired') ?>"},

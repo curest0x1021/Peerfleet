@@ -101,14 +101,16 @@
                 if (typeof RELOAD_VIEW_AFTER_UPDATE !== "undefined" && RELOAD_VIEW_AFTER_UPDATE) {
                     location.reload();
                 } else {
-                    if ($("#invoice-payment-table").length) {
+                    if ($("#invoice-status-bar").length) {
                         //it's from invoice details view
                         $("#invoice-payment-table").appTable({newData: result.data, dataId: result.id});
                         $("#invoice-total-section").html(result.invoice_total_view);
                         if (typeof updateInvoiceStatusBar == 'function') {
                             updateInvoiceStatusBar(result.invoice_id);
                         }
-                    } else {
+                    }
+
+                    if ($("#invoice-payment-table").length) {
                         //it's from invoices list view
                         //update table data
                         $("#" + $(".dataTable:visible").attr("id")).appTable({reload: true});
@@ -127,7 +129,7 @@
                 setCookie("user_" + "<?php echo $login_user->id; ?>" + "_payment_method", paymentMethodId);
             }
         });
-        
+
         //get due balance of selected invoice
         $("#invoice_id").select2().on("change", function () {
             var invoice_id = $(this).val();

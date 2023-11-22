@@ -80,13 +80,13 @@
 </div>
 <div class="form-group">
     <div class="row">
-        <label for="skype-<?php echo $model_info->id; ?>" class="<?php echo $label_column; ?>">Skype</label>
+        <label for="linkedin-<?php echo $model_info->id; ?>" class="<?php echo $label_column; ?>">Skype</label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_input(array(
-                "id" => "skype-$model_info->id",
-                "name" => "skype-$model_info->id",
-                "value" => $model_info->skype ? $model_info->skype : "",
+                "id" => "linkedin-$model_info->id",
+                "name" => "linkedin-$model_info->id",
+                "value" => $model_info->linkedin ? $model_info->linkedin : "",
                 "class" => "form-control",
                 "placeholder" => "Skype"
             ));

@@ -32,6 +32,12 @@ class Help_articles_model extends Crud_model {
         if ($only_active_categories) {
             $where .= " AND $help_categories_table.status='active'";
         }
+        
+        
+        $category_id = $this->_get_clean_value($options, "category_id");
+        if ($category_id) {
+            $where .= " AND $help_articles_table.category_id=$category_id";
+        }
 
         $extra_select = "";
         $login_user_id = $this->_get_clean_value($options, "login_user_id");
@@ -48,14 +54,19 @@ class Help_articles_model extends Crud_model {
         return $this->db->query($sql);
     }
 
-    function get_articles_of_a_category($category_id) {
+    function get_articles_of_a_category($category_id, $order="") {
         $help_articles_table = $this->db->prefixTable('help_articles');
 
+        $order_by = "ASC";
+        if($order == "Z-A"){
+            $order_by = "DESC";
+        }
+        
         $sql = "SELECT $help_articles_table.id, $help_articles_table.title
         FROM $help_articles_table
      
         WHERE $help_articles_table.deleted=0 AND $help_articles_table.status='active' AND $help_articles_table.category_id=$category_id
-        ORDER BY $help_articles_table.sort";
+        ORDER BY $help_articles_table.sort $order_by";
 
         return $this->db->query($sql);
     }

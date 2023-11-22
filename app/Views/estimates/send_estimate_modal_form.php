@@ -2,6 +2,7 @@
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="id" value="<?php echo $estimate_info->id; ?>" />
+        <input type="hidden" name="user_language" id="user_language" value="<?php echo $user_language; ?>" />
 
         <div class="form-group">
             <div class="row">
@@ -77,7 +78,7 @@
             </div>
         </div>
         <div class="form-group ml15">
-            <i data-feather="check-circle" class='icon-16' style="color: #5CB85C;"></i> <?php echo app_lang('attached') . ' ' . anchor(get_uri("estimates/download_pdf/" . $estimate_info->id), app_lang("estimate") . "-$estimate_info->id.pdf", array("target" => "_blank")); ?> 
+            <i data-feather="check-circle" class='icon-16' style="color: #5CB85C;"></i> <?php echo app_lang('attached') . ' ' . anchor(get_uri("estimates/download_pdf/" . $estimate_info->id . "/download/$user_language"), app_lang("estimate") . "-$estimate_info->id.pdf", array("target" => "_blank", "id" => "attachment-url")); ?> 
         </div>
 
     </div>
@@ -106,6 +107,7 @@
             onSuccess: function (result) {
                 if (result.success) {
                     appAlert.success(result.message, {duration: 10000});
+                    updateInvoiceStatusBar(result.estimate_id);
                 } else {
                     appAlert.error(result.message);
                 }
@@ -113,6 +115,30 @@
         });
 
         initWYSIWYGEditor("#message", {height: 400, toolbar: []});
+
+        //load template view on changing of client contact
+        $("#contact_id").select2().on("change", function () {
+            var contact_id = $(this).val();
+            if (contact_id) {
+                $("#message").summernote("destroy");
+                $("#message").val("");
+                appLoader.show();
+                $.ajax({
+                    url: "<?php echo get_uri('estimates/get_send_estimate_template/' . $estimate_info->id) ?>" + "/" + contact_id + "/json",
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.success) {
+                            $("#message").val(result.message_view);
+                            initWYSIWYGEditor("#message", {height: 400, toolbar: []});
+                            $("#user_language").val(result.user_language);
+                            $("#attachment-url").attr("href", "<?php echo get_uri('estimates/download_pdf/' . $estimate_info->id . '/download/'); ?>" + result.user_language);
+
+                            appLoader.hide();
+                        }
+                    }
+                });
+            }
+        });
 
     });
 </script>

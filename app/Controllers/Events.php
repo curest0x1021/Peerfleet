@@ -30,7 +30,11 @@ class Events extends Security_Controller {
 
     //show add/edit event modal form
     function modal_form() {
-        $event_id = decode_id($this->request->getPost('encrypted_event_id'), "event_id");
+        $encrypted_event_id = $this->request->getPost('encrypted_event_id');
+        if (!$encrypted_event_id) {
+            $encrypted_event_id = "";
+        }
+        $event_id = decode_id($encrypted_event_id, "event_id");
         $model_info = $this->Events_model->get_one($event_id);
 
         $model_info->start_date = $model_info->start_date ? $model_info->start_date : $this->request->getPost('start_date');
@@ -48,10 +52,10 @@ class Events extends Security_Controller {
         $view_data['client_id'] = $this->request->getPost('client_id');
 
         //don't show clients dropdown for lead's estimate editing
-        // $client_info = $this->Clients_model->get_one($model_info->client_id);
-        // if ($client_info->is_lead) {
-        //     $view_data['client_id'] = $client_info->id;
-        // }
+        $client_info = $this->Clients_model->get_one($model_info->client_id);
+        if ($client_info->is_lead) {
+            $view_data['client_id'] = $client_info->id;
+        }
 
         $view_data['model_info'] = $model_info;
         $view_data['members_and_teams_dropdown'] = json_encode(get_team_members_and_teams_select2_data_list(true));
@@ -87,8 +91,6 @@ class Events extends Security_Controller {
 
         if ($type === "reminder") {
             $validation_array["start_time"] = "required";
-        } else {
-            $validation_array["description"] = "required";
         }
 
         $this->validate_submitted_data($validation_array);
@@ -104,6 +106,9 @@ class Events extends Security_Controller {
             $end_time = convert_time_to_24hours_format($end_time);
         }
 
+
+
+
         //prepare share with data
         $share_with = $this->request->getPost('share_with');
         if ($share_with == "specific") {
@@ -114,6 +119,26 @@ class Events extends Security_Controller {
 
         $start_date = $this->request->getPost('start_date');
         $end_date = $this->request->getPost('end_date');
+
+        if ($type != "reminder") {
+
+            $_end_date = $end_date ? $end_date : $start_date; //we can save event without end data. It's for calculation only
+
+            if ($start_date == $_end_date && $start_time && $start_time != "00:00:00" && (!$end_time|| $end_time == "00:00:00")) {
+                //user added start date without any end date on the same day. Which is invalid. Add end of the day time. 
+                $end_time = "23:59:59";
+            }
+
+            $start_date_time = strtotime($start_date . " " . $start_time);
+            $end_date_time = strtotime($_end_date . " " . $end_time);
+
+            if ($start_date == $_end_date && ($end_date_time < $start_date_time)) {
+                echo json_encode(array("success" => false, 'message' => app_lang('end_date_must_be_equal_or_greater_than_start_date')));
+                exit();
+            }
+        }
+
+
 
         $recurring = $this->request->getPost('recurring') ? 1 : 0;
         $repeat_every = $this->request->getPost('repeat_every');
@@ -146,6 +171,12 @@ class Events extends Security_Controller {
             "project_id" => $this->request->getPost('project_id'),
             "lead_id" => $this->request->getPost('lead_id'),
             "ticket_id" => $this->request->getPost('ticket_id'),
+            "proposal_id" => $this->request->getPost('proposal_id'),
+            "contract_id" => $this->request->getPost('contract_id'),
+            "subscription_id" => $this->request->getPost('subscription_id'),
+            "invoice_id" => $this->request->getPost('invoice_id'),
+            "order_id" => $this->request->getPost('order_id'),
+            "estimate_id" => $this->request->getPost('estimate_id'),
         );
 
         if ($end_date) {
@@ -203,7 +234,7 @@ class Events extends Security_Controller {
         $save_id = $this->Events_model->ci_save($data, $id);
         if ($save_id) {
             //if the google calendar is integrated, add/modify the event
-            if (get_setting("enable_google_calendar_api") && get_setting('user_' . $this->login_user->id . '_integrate_with_google_calendar') && (get_setting("google_calendar_authorized") || get_setting('user_' . $this->login_user->id . '_google_calendar_authorized'))) {
+            if ($type !== "reminder" && get_setting("enable_google_calendar_api") && get_setting('user_' . $this->login_user->id . '_integrate_with_google_calendar') && (get_setting("google_calendar_authorized") || get_setting('user_' . $this->login_user->id . '_google_calendar_authorized'))) {
                 $this->Google_calendar_events->save_event($this->login_user->id, $save_id);
             }
 
@@ -334,7 +365,7 @@ class Events extends Security_Controller {
         if (in_array("project_deadline", $filter_values_array) || in_array("project_start_date", $filter_values_array)) {
             //get all project deadlines
             $options = array(
-                "status" => "open",
+                "status_id" => 1,
                 "start_date" => $start,
                 "deadline" => $end,
                 "client_id" => $client_id,
@@ -377,7 +408,7 @@ class Events extends Security_Controller {
             $options = array(
                 "start_date" => $start,
                 "deadline" => $end,
-                "project_status" => "open",
+                "project_status" => 1,
                 "show_assigned_tasks_only_user_id" => $this->show_assigned_tasks_only_user_id(),
                 "for_events" => true
             );
@@ -411,10 +442,15 @@ class Events extends Security_Controller {
     //prepare calendar event
     private function _make_calendar_event($data) {
 
+        $end_time = $data->end_time;
+        if ($data->start_date != $data->end_date && $end_time == "00:00:00") {
+            $end_time = "23:59:59";
+        }
+
         return array(
             "title" => $data->title,
             "start" => $data->start_date . " " . $data->start_time,
-            "end" => $data->end_date . " " . $data->end_time,
+            "end" => $data->end_date . " " . $end_time,
             "backgroundColor" => $data->color ? $data->color : "#83c340",
             "borderColor" => $data->color ? $data->color : "#83c340",
             "extendedProps" => array(
@@ -481,15 +517,27 @@ class Events extends Security_Controller {
     private function _make_task_event($data, $start_date_event = false) {
         $event_type = "task_deadline";
         $event_custom_class = "event-deadline-border";
+
+        $start = $data->deadline;
+        $end = $data->deadline;
+
         if ($start_date_event) {
+            //prepare the event based on start date.
             $event_type = "task_start_date";
             $event_custom_class = "";
+
+            $start = $data->start_date;
+            $end = $data->start_date;
+        }
+
+        if (date("H:i:s", strtotime($end)) == "00:00:00") {
+            $end = get_date_from_datetime($end) . " 23:59:59";
         }
 
         return array(
             "title" => $data->title,
-            "start" => ($start_date_event ? $data->start_date : $data->deadline) . " " . "00:00:00",
-            "end" => ($start_date_event ? $data->start_date : $data->deadline) . " " . "23:59:59", //show task deadline for the full day
+            "start" => $start,
+            "end" => $end, //show task deadline for the full day
             "backgroundColor" => $data->status_color,
             "borderColor" => $data->status_color,
             "classNames" => $event_custom_class,
@@ -723,21 +771,22 @@ class Events extends Security_Controller {
         $view_data["client_id"] = $this->request->getPost("client_id");
         $view_data["lead_id"] = $this->request->getPost("lead_id");
         $view_data["ticket_id"] = $this->request->getPost("ticket_id");
+        $view_data["reminder_view_type"] = $this->request->getPost("reminder_view_type");
         return $this->template->view("reminders/index", $view_data);
     }
 
-    function reminders_list_data($type = "", $task_id = 0, $project_id = 0, $client_id = 0, $lead_id = 0, $ticket_id = 0) {
+    function reminders_list_data($type = "", $reminder_context = "", $reminder_context_id = 0) {
         $this->can_create_reminders();
 
         $options = array(
             "user_id" => $this->login_user->id,
-            "type" => "reminder",
-            "task_id" => $task_id,
-            "project_id" => $project_id,
-            "client_id" => $client_id,
-            "lead_id" => $lead_id,
-            "ticket_id" => $ticket_id,
+            "type" => "reminder"
         );
+
+        if ($reminder_context != "global") {
+            $reminder_context_id_key = $reminder_context . "_id";
+            $options["$reminder_context_id_key"] = $reminder_context_id;
+        }
 
         if ($type !== "all") {
             $options["reminder_start_date_time"] = get_my_local_time("Y-m-d H:i") . ":00";

@@ -43,38 +43,6 @@
             </div>
             <div class="form-group">
                 <div class="row">
-                    <label for="address" class=" col-md-2"><?php echo app_lang('mailing_address'); ?></label>
-                    <div class=" col-md-10">
-                        <?php
-                        echo form_textarea(array(
-                            "id" => "address",
-                            "name" => "address",
-                            "value" => $user_info->address,
-                            "class" => "form-control",
-                            "placeholder" => app_lang('mailing_address')
-                        ));
-                        ?>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                    <label for="alternative_address" class=" col-md-2"><?php echo app_lang('alternative_address'); ?></label>
-                    <div class=" col-md-10">
-                        <?php
-                        echo form_textarea(array(
-                            "id" => "alternative_address",
-                            "name" => "alternative_address",
-                            "value" => $user_info->alternative_address,
-                            "class" => "form-control",
-                            "placeholder" => app_lang('alternative_address')
-                        ));
-                        ?>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
                     <label for="phone" class=" col-md-2"><?php echo app_lang('phone'); ?></label>
                     <div class=" col-md-10">
                         <?php
@@ -91,15 +59,15 @@
             </div>
             <div class="form-group">
                 <div class="row">
-                    <label for="alternative_phone" class=" col-md-2"><?php echo app_lang('alternative_phone'); ?></label>
+                    <label for="mobile" class=" col-md-2"><?php echo app_lang('mobile'); ?></label>
                     <div class=" col-md-10">
                         <?php
                         echo form_input(array(
-                            "id" => "alternative_phone",
-                            "name" => "alternative_phone",
-                            "value" => $user_info->alternative_phone,
+                            "id" => "mobile",
+                            "name" => "mobile",
+                            "value" => $user_info->mobile,
                             "class" => "form-control",
-                            "placeholder" => app_lang('alternative_phone')
+                            "placeholder" => app_lang('mobile')
                         ));
                         ?>
                     </div>
@@ -107,15 +75,15 @@
             </div>
             <div class="form-group">
                 <div class="row">
-                    <label for="skype" class=" col-md-2">Skype</label>
+                    <label for="linkedin" class=" col-md-2">Linkedin</label>
                     <div class=" col-md-10">
                         <?php
                         echo form_input(array(
-                            "id" => "skype",
-                            "name" => "skype",
-                            "value" => $user_info->skype ? $user_info->skype : "",
+                            "id" => "linkedin",
+                            "name" => "linkedin",
+                            "value" => $user_info->linkedin ? $user_info->linkedin : "",
                             "class" => "form-control",
-                            "placeholder" => "Skype"
+                            "placeholder" => "linkedin"
                         ));
                         ?>
                     </div>
@@ -133,22 +101,6 @@
                             "class" => "form-control",
                             "placeholder" => app_lang('date_of_birth'),
                             "autocomplete" => "off"
-                        ));
-                        ?>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                    <label for="ssn" class=" col-md-2"><?php echo app_lang('ssn'); ?></label>
-                    <div class=" col-md-10">
-                        <?php
-                        echo form_input(array(
-                            "id" => "ssn",
-                            "name" => "ssn",
-                            "value" => $user_info->ssn,
-                            "class" => "form-control",
-                            "placeholder" => app_lang('ssn')
                         ));
                         ?>
                     </div>
@@ -213,4 +165,4 @@
         setDatePicker("#dob");
 
     });
-</script>    
+</script>

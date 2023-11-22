@@ -157,7 +157,7 @@
                 echo js_anchor("<i data-feather='x-circle' class='icon-16'></i> " . app_lang('delete_event'), array("class" => "btn btn-default float-start", "id" => "delete_event", "data-encrypted_event_id" => $encrypted_event_id));
             }
 
-            echo modal_anchor(get_uri("events/modal_form/"), "<i data-feather='edit' class='icon-16'></i> " . app_lang('edit_event'), array("class" => "btn btn-default", "data-post-encrypted_event_id" => $encrypted_event_id, "title" => app_lang('edit_event')));
+            echo modal_anchor(get_uri("events/modal_form"), "<i data-feather='edit' class='icon-16'></i> " . app_lang('edit_event'), array("class" => "btn btn-default", "data-post-encrypted_event_id" => $encrypted_event_id, "title" => app_lang('edit_event')));
         }
     }
 
