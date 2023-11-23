@@ -13,7 +13,7 @@
         <?php
         if (!isset($is_editor_preview)) {
 
-            $action_buttons = "<div class='clearfix float-end'>";
+            $action_buttons = "<div class='clearfix float-end grid-button-group'>";
 
             if ($show_close_preview) {
                 echo "<div class='text-center'>" . anchor("contracts/view/" . $contract_info->id, app_lang("close_preview"), array("class" => "btn btn-default round mb20 mr5")) . "</div>";
@@ -29,9 +29,9 @@
 
             if ($contract_info->status === "accepted" || $contract_info->status === "declined" || $contract_info->status === "rejected") {
                 ?>
-                <div class = "card  p15 no-border">
-                    <div class="clearfix">
-                        <div class="float-start mt5">
+                <div class = "card  p15 no-border grid-button">
+                    <div class="clearfix contract-preview-button">
+                        <div class="float-start mt5 grid-button-group">
                             <?php if ($contract_info->status === "accepted") { ?>
                                 <i data-feather="check-circle" class="icon-16 text-success"></i> <?php echo app_lang("contract_accepted"); ?>
                             <?php } else { ?>
@@ -47,10 +47,10 @@
                 if ($login_user->user_type === "staff" || ($login_user->user_type === "client" && $contract_info->status == "new")) {
                     ?>
 
-                    <div class = "card  p15 no-border">
+                    <div class = "card  p15 no-border grid-button">
 
-                        <div class="clearfix">
-                            <div class="mr15 strong float-start">
+                        <div class="clearfix contract-preview-button">
+                            <div class="mr15 strong float-start grid-button-group">
                                 <?php
                                 if ($login_user->user_type === "client" && get_setting("add_signature_option_on_accepting_contract")) {
                                     echo modal_anchor(get_uri("contract/accept_contract_modal_form/$contract_info->id"), "<i data-feather='check-circle' class='icon-16'></i> " . app_lang('accept_contract'), array("class" => "btn btn-success mr15", "title" => app_lang('accept_contract')));

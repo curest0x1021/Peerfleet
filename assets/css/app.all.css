@@ -1511,6 +1511,9 @@ img.mfp-img {
   #timeline > .post-content:first-child {
     padding-top: 60px !important;
   }
+  .container.store-page {
+    max-width: 1440px;
+  }
 }
 @media screen and (max-width: 991px) {
   .task-title-left {
@@ -1810,6 +1813,74 @@ img.mfp-img {
   .invoice-preview-container {
     padding: 0 !important;
   }
+  .item-search-box-section {
+    margin-top: 5px;
+    width: 100%;
+  }
+  .item-search-box-section .item-search-box {
+    width: 100% !important;
+  }
+  .item-categories-filter-section {
+    margin-top: 15px;
+    width: 100%;
+  }
+  .item-categories-filter-section .w200 {
+    width: 100% !important;
+  }
+  .user-dropdown-menu .company-switch-option {
+    display: block !important;
+  }
+  .user-dropdown-menu .company-switch-option .nav-link {
+    display: none;
+  }
+  .user-dropdown-menu .company-switch-option .hidden-xs {
+    display: block !important;
+  }
+  .user-dropdown-menu .company-switch-option .dropdown-menu {
+    position: unset !important;
+    display: block;
+    box-shadow: none;
+    margin-top: 0;
+  }
+  .filter-section-flex-row, .filter-section-left {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: space-between !important;
+  }
+  #task-table_wrapper .filter-form .save-filter-box, #task-table_wrapper .filter-form .filter-cancel-box, #project-table_wrapper .filter-form .save-filter-box, #project-table_wrapper .filter-form .filter-cancel-box, #ticket-table_wrapper .filter-form .save-filter-box, #ticket-table_wrapper .filter-form .filter-cancel-box {
+    width: 47% !important;
+  }
+  #task-table_wrapper .filter-form .save-filter-box .save-filter-button, #task-table_wrapper .filter-form .save-filter-box .cancel-filter-button, #task-table_wrapper .filter-form .filter-cancel-box .save-filter-button, #task-table_wrapper .filter-form .filter-cancel-box .cancel-filter-button, #project-table_wrapper .filter-form .save-filter-box .save-filter-button, #project-table_wrapper .filter-form .save-filter-box .cancel-filter-button, #project-table_wrapper .filter-form .filter-cancel-box .save-filter-button, #project-table_wrapper .filter-form .filter-cancel-box .cancel-filter-button, #ticket-table_wrapper .filter-form .save-filter-box .save-filter-button, #ticket-table_wrapper .filter-form .save-filter-box .cancel-filter-button, #ticket-table_wrapper .filter-form .filter-cancel-box .save-filter-button, #ticket-table_wrapper .filter-form .filter-cancel-box .cancel-filter-button {
+    width: 100%;
+  }
+  #task-table_wrapper .filter-form .filter-item-box, #project-table_wrapper .filter-form .filter-item-box, #ticket-table_wrapper .filter-form .filter-item-box {
+    width: 100%;
+  }
+  #task-table_wrapper .filter-form .filter-item-box .filter-multi-select, #project-table_wrapper .filter-form .filter-item-box .filter-multi-select, #ticket-table_wrapper .filter-form .filter-item-box .filter-multi-select {
+    width: 100%;
+  }
+  #task-table_wrapper .filter-form .filter-item-box .filter-multi-select .dropdown-toggle, #project-table_wrapper .filter-form .filter-item-box .filter-multi-select .dropdown-toggle, #ticket-table_wrapper .filter-form .filter-item-box .filter-multi-select .dropdown-toggle {
+    width: 98%;
+  }
+  #task-table_wrapper .filter-form .filter-item-box .w200, #project-table_wrapper .filter-form .filter-item-box .w200, #ticket-table_wrapper .filter-form .filter-item-box .w200 {
+    width: 98%;
+  }
+  #task-table_wrapper .filter-form .filter-item-box .btn-group.filter, #project-table_wrapper .filter-form .filter-item-box .btn-group.filter, #ticket-table_wrapper .filter-form .filter-item-box .btn-group.filter {
+    width: 98%;
+  }
+  #task-table_wrapper .filter-form .datepicker-custom-selector, #project-table_wrapper .filter-form .datepicker-custom-selector, #ticket-table_wrapper .filter-form .datepicker-custom-selector {
+    width: 98%;
+  }
+  .h373 {
+    height: auto !important;
+  }
+  #all_tasks_overview-widget, #my_tasks_overview-widget, #leads-overview-widget {
+    height: auto !important;
+  }
+  #all_tasks_overview-widget .position-absolute, #my_tasks_overview-widget .position-absolute, #leads-overview-widget .position-absolute {
+    position: unset !important;
+    padding-top: 10px;
+  }
 }
 @media (max-width: 576px) {
   .public-navbar .navbar-collapse {
@@ -1966,6 +2037,18 @@ img.mfp-img {
     top: 58px;
     width: 100%;
     border-radius: 0;
+  }
+  .footer {
+    position: absolute;
+    padding-bottom: 5px !important;
+  }
+  .footer .float-start {
+    float: none !important;
+  }
+  .footer .float-end {
+    display: flex;
+    float: none !important;
+    justify-content: center;
   }
 }
 @media screen and (max-width: 530px) {
@@ -2149,6 +2232,25 @@ img.mfp-img {
     width: 100%;
     text-align: center;
   }
+  .grid-button .proposal-preview-button .grid-button-group, .grid-button .contract-preview-button .grid-button-group {
+    float: none !important;
+    display: inline-block;
+    width: 100%;
+    margin-top: 10px;
+    margin-right: 0 !important;
+  }
+  .grid-button .proposal-preview-button .grid-button-group .btn-success, .grid-button .contract-preview-button .grid-button-group .btn-success {
+    margin-right: 2px !important;
+    width: 49%;
+  }
+  .grid-button .proposal-preview-button .grid-button-group .btn-danger, .grid-button .contract-preview-button .grid-button-group .btn-danger {
+    width: 49%;
+    margin-right: 0 !important;
+  }
+  .grid-button .proposal-preview-button .grid-button-group .float-start, .grid-button .contract-preview-button .grid-button-group .float-start {
+    width: 50%;
+    text-align: center;
+  }
   .todo-page .w-filter-right {
     width: 100%;
   }
@@ -2219,6 +2321,12 @@ img.mfp-img {
   }
   .clients-project-page-title {
     margin-top: 6px !important;
+  }
+  .btn:not(.btn-lg) {
+    text-align: left;
+  }
+  .select2-container .select2-choice .select2-chosen {
+    text-align: left;
   }
 }
 @media screen and (max-width: 425px) and (max-width: 400px) {
@@ -2360,6 +2468,9 @@ img.mfp-img {
 }
 .p5 {
   padding: 5px;
+}
+.p8 {
+  padding: 8px;
 }
 .p10 {
   padding: 10px;
@@ -2887,6 +2998,16 @@ table.header-style {
 }
 .filter-multi-select .caret:after {
   color: #888888;
+  float: right;
+  margin-top: 9px !important;
+}
+.filter-multi-select .dropdown-toggle {
+  color: #555;
+  border-color: #f6f8f9 !important;
+  text-align: left;
+}
+.filter-multi-select .dropdown-toggle:hover, .filter-multi-select .dropdown-toggle:focus {
+  background: transparent;
 }
 .dt-print-view {
   overflow: auto !important;
@@ -3167,8 +3288,18 @@ td.option a.delete:hover {
 }
 .datepicker-custom-selector {
   background: #fff;
-  border-color: #f2f4f6;
-  color: #444;
+  border-color: #f6f8f9;
+  color: #555;
+  text-align: left;
+}
+.datepicker-custom-selector .dropdown-toggle {
+  float: right;
+}
+.datepicker-custom-selector .dropdown-toggle:after {
+  color: #888888;
+}
+.datepicker-custom-selector:hover, .datepicker-custom-selector:focus {
+  border-color: #f6f8f9;
 }
 /*timepicker*/
 .bootstrap-timepicker-widget table td input {
@@ -3316,6 +3447,61 @@ td.option a.delete:hover {
 div.dataTables_wrapper div.dataTables_processing {
   top: 20% !important;
 }
+div.dataTables_wrapper div.dataTables_info {
+  padding-top: 8px;
+  margin-left: 15px;
+  float: left;
+}
+#subscription-item-section table.dataTable thead th {
+  border-top: none !important;
+}
+#subscription-total-section table.dataTable tbody td {
+  border-top: none !important;
+}
+.filter-section-container .select2-choice, .datatable-tools .select2-choice {
+  background: transparent !important;
+}
+.filter-section-container input[type="radio"], .filter-section-container input[type="checkbox"], .datatable-tools input[type="radio"], .datatable-tools input[type="checkbox"] {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  pointer-events: none;
+}
+.non-round-option-button {
+  border-radius: 4px !important;
+  padding: 4px 10px !important;
+}
+#task-table_wrapper .filter-collapse-button, #project-table_wrapper .filter-collapse-button, #ticket-table_wrapper .filter-collapse-button {
+  display: none;
+}
+.custom-date-range-lable {
+  padding: 8px 14px 5px 10px !important;
+  border: 1px solid #f2f4f6;
+}
+.custom-date-range-dropdown .list-group {
+  list-style-type: none;
+}
+.custom-date-range-dropdown .dropdown-toggle {
+  margin: -4px -6px 0;
+  padding: 8px 12px 6px 10px !important;
+  border: 1px solid #f2f4f6;
+}
+.mfp-iframe-holder .mfp-content {
+  max-width: 100%;
+}
+.mfp-iframe-scaler iframe {
+  background: #fff;
+  color: #000;
+}
+.input-daterange .btn {
+  width: auto;
+  white-space: nowrap;
+}
+.bootstrap-timepicker-widget.dropdown-menu.open {
+  z-index: 1056;
+}
+.note-popover.popover {
+  position: absolute;
+}
 @keyframes spin {
   100% {
     transform: rotate(360deg);
@@ -3393,7 +3579,7 @@ div.dataTables_wrapper div.dataTables_processing {
   }
 }
 html, body {
-  background-color: #1ff;
+  background-color: #EEF1F9;
   color: #4e5e6a;
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13.5px;
@@ -5654,9 +5840,6 @@ a.badge:hover {
 .font-normal {
   font-weight: normal;
 }
-.kanban-widget-filters .custom-toolbar .DTTT_container:last-child {
-  margin-bottom: 15px;
-}
 .truncate-ellipsis {
   display: table;
   table-layout: fixed;
@@ -6559,4 +6742,94 @@ input[type="color"]::-webkit-color-swatch {
 
 .tab-content>.active {
   display: block !important;
+}
+
+/*pills tab*/
+.nav-pills {
+  background: #ffffff63;
+  border-radius: 5px;
+}
+.nav-pills li {
+  float: left;
+  margin: 10px 0 10px 10px;
+}
+.nav-pills li a {
+  padding: 10px 20px;
+  margin-right: 0;
+  border-radius: 5px;
+  color: inherit;
+  line-height: 1.42857143;
+}
+.nav-pills li .active, .nav-pills li.active {
+  font-weight: bold;
+  border: none;
+  background: #fff !important;
+  color: #20446f !important;
+  cursor: default;
+}
+.nav-pills li .active:focus, .nav-pills li.active:focus {
+  outline: none;
+}
+.custom-bg-modal.modal-dialog {
+  background: #EDF0F8;
+}
+.custom-bg-modal.modal-dialog .modal-content {
+  background: #EDF0F8;
+  height: auto;
+  box-shadow: none;
+}
+.custom-bg-modal.modal-dialog .modal-content .modal-header, .custom-bg-modal.modal-dialog .modal-content .modal-footer {
+  border-color: #d4d9e78c;
+}
+table.dataTable tbody td.reminder-title-section {
+  padding-left: 0 !important;
+}
+table.dataTable tbody td.reminder-option-section {
+  padding-right: 0 !important;
+}
+.filter-section-container {
+  padding: 10px 15px;
+}
+.filter-section-flex-row {
+  display: flex;
+}
+.filter-section-left {
+  flex: 1;
+}
+.filter-section-right {
+  flex: 0 0 auto;
+  text-align: right;
+}
+.filter-item-box {
+  display: inline-block;
+  margin: 5px;
+}
+.filter-form {
+  border-top: 1px solid #f2f2f2;
+  padding-top: 10px;
+  margin-top: 10px;
+}
+.smart-filter-list-group {
+  list-style-type: none;
+  border-radius: 0;
+}
+.smart-filter-dropdown-container .search-filter {
+  margin: 0 10px 10px 10px;
+  width: 280px;
+  border-color: #e2e7f1;
+}
+.smart-filter-item.active:hover, .smart-filter-item.active:focus {
+  color: #fff;
+}
+.dropdown-divider {
+  border-color: #e2e7f1 !important;
+}
+.public-page-container #pre-loader .app-loader {
+  right: 49%;
+}
+.navbar-toggler {
+  border: none !important;
+}
+.navbar-toggler:focus {
+  box-shadow: none !important;
 }

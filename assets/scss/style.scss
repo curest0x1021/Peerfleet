@@ -3829,3 +3829,129 @@ input[type="color"]::-webkit-color-swatch {
 #all-timesheet-users-summary{
     height: 63px;
 }
+
+/*pills tab*/
+.nav-pills{
+    background: #ffffff63;
+    border-radius: 5px;
+
+    li {
+        float: left;
+        margin: 10px 0 10px 10px;
+
+        a {
+            padding: 10px 20px;
+            margin-right: 0;
+            border-radius: 5px;
+            color: inherit;
+            line-height: 1.42857143;
+        }
+
+        .active, &.active {
+            font-weight: bold;
+            border: none;
+            background: $white !important;
+            color: $navy-blue !important;
+            cursor: default;
+
+            &:focus{
+                outline: none;
+            }
+        }
+    }
+}
+
+.custom-bg-modal{
+    &.modal-dialog{
+        background: #EDF0F8;
+
+        .modal-content{
+            background: #EDF0F8;
+            height: auto;
+            box-shadow: none;
+
+            .modal-header, .modal-footer{
+                border-color: #d4d9e78c;
+            }
+        }
+    }
+}
+
+table.dataTable {
+    tbody{
+        td.reminder-title-section{
+            padding-left: 0 !important;
+        }
+        td.reminder-option-section{
+            padding-right: 0 !important;
+        }
+    }
+}
+
+.filter-section-container {
+    padding: 10px 15px;
+}
+.filter-section-flex-row{
+    display: flex;
+}
+
+.filter-section-left {
+    flex: 1;
+}
+
+.filter-section-right {
+    flex: 0 0 auto;
+    text-align:right;
+}
+
+.filter-item-box{
+    display: inline-block;
+    margin: 5px;
+}
+
+.filter-form {
+    border-top: 1px solid #f2f2f2;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.smart-filter-list-group{
+    list-style-type: none;
+    border-radius: 0;
+}
+
+.smart-filter-dropdown-container{
+    .search-filter{
+        margin: 0 10px 10px 10px;
+        width: 280px;
+        border-color: #e2e7f1;
+    }
+}
+
+.smart-filter-item{
+    &.active{
+        &:hover, &:focus{
+            color: $white;
+        }
+    }
+}
+
+.dropdown-divider {
+    border-color: #e2e7f1 !important;
+}
+
+.public-page-container{
+    #pre-loader{
+        .app-loader{
+            right:49%;
+        }
+    }
+}
+
+.navbar-toggler{
+    border: none !important;
+
+    &:focus{
+        box-shadow: none !important;
+    }
+}

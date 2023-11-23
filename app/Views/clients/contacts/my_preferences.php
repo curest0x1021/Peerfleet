@@ -62,7 +62,7 @@
                             "0" => app_lang("no")
                                 ), $push_notification, "class='select2 mini' id='disable_push_notification'"
                         );
-                        ?>                       
+                        ?>
                     </div>
                 </div>
             </div>
