@@ -67,9 +67,9 @@ class Knowledge_base extends App_Controller {
         $view_data['page_type'] = "articles_list_view";
         $view_data['type'] = $category_info->type;
         $view_data['selected_category_id'] = $category_info->id;
-        $view_data['categories'] = $this->Help_categories_model->get_details(array("type" => $category_info->type))->getResult();
+        $view_data['categories'] = $this->Help_categories_model->get_details(array("type" => $category_info->type, "only_active_categories" => true))->getResult();
 
-        $view_data["articles"] = $this->Help_articles_model->get_articles_of_a_category($id)->getResult();
+        $view_data["articles"] = $this->Help_articles_model->get_articles_of_a_category($id, $category_info->articles_order)->getResult();
         $view_data["category_info"] = $category_info;
 
         if (!isset($this->login_user->id)) {
@@ -103,7 +103,7 @@ class Knowledge_base extends App_Controller {
 
         $view_data['selected_category_id'] = $model_info->category_id;
         $view_data['type'] = $model_info->type;
-        $view_data['categories'] = $this->Help_categories_model->get_details(array("type" => $model_info->type))->getResult();
+        $view_data['categories'] = $this->Help_categories_model->get_details(array("type" => $model_info->type, "only_active_categories" => true))->getResult();
         $view_data['page_type'] = "article_view";
 
         $view_data['article_info'] = $model_info;
@@ -163,7 +163,6 @@ class Knowledge_base extends App_Controller {
             echo json_encode(array("success" => false));
         }
     }
-
 }
 
 /* End of file help.php */

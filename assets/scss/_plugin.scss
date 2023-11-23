@@ -390,6 +390,18 @@ table.header-style{
     .caret {
         &:after{
             color: #888888;
+            float: right;
+            margin-top: 9px !important;
+        }
+    }
+
+    .dropdown-toggle{
+        color: #555;
+        border-color: #f6f8f9 !important;
+        text-align: left;
+
+        &:hover, &:focus {
+            background: transparent;
         }
     }
 }
@@ -748,6 +760,20 @@ td {
     background: #fff;
     border-color: #f2f4f6;
     color: #444;
+    text-align: left;
+
+    .dropdown-toggle{
+        float: right;
+
+        &:after{
+            color: #888888;
+        }
+
+    }
+
+    &:hover, &:focus {
+        border-color: #f6f8f9;
+    }
 }
 
 /*timepicker*/
@@ -938,5 +964,105 @@ td {
 div.dataTables_wrapper{
     div.dataTables_processing{
         top: 20% !important;
+    }
+
+    div.dataTables_info {
+        padding-top: 8px;
+        margin-left: 15px;
+        float: left;
+    }
+}
+
+#subscription-item-section{
+    table.dataTable{
+        thead{
+            th{
+                border-top: none !important;
+            }
+        }
+    }
+}
+
+#subscription-total-section{
+    table.dataTable{
+        tbody{
+            td{
+                border-top: none !important;
+            }
+        }
+    }
+}
+
+.filter-section-container, .datatable-tools {
+    .select2-choice {
+        background: transparent !important;
+    }
+
+    input[type="radio"], input[type="checkbox"] {
+        position: absolute;
+        clip: rect(0, 0, 0, 0);
+        pointer-events: none;
+    }
+}
+
+.non-round-option-button {
+    border-radius: 4px !important;
+    padding: 4px 10px !important;
+}
+
+#task-table_wrapper, #project-table_wrapper, #ticket-table_wrapper{
+    .filter-collapse-button{
+        display: none;
+    }
+}
+
+.custom-date-range-lable{
+    padding: 8px 14px 5px 10px !important;
+    border: 1px solid #f2f4f6;
+}
+
+.custom-date-range-dropdown {
+    .list-group{
+        list-style-type: none;
+    }
+
+    .dropdown-toggle{
+        margin:   -4px -6px 0;
+        padding: 8px 12px 6px 10px !important;
+        border: 1px solid #f2f4f6;
+    }
+}
+
+.mfp-iframe-holder {
+    .mfp-content{
+        max-width: 100%;
+    }
+}
+
+.mfp-iframe-scaler {
+    iframe{
+        background: #fff;
+        color:#000;
+    }
+}
+
+.input-daterange {
+    .btn {
+        width: auto;
+        white-space: nowrap;
+    }
+}
+
+.bootstrap-timepicker-widget {
+    &.dropdown-menu {
+        &.open {
+            z-index: 1056;
+        }
+    }
+}
+
+.note-popover{
+    &.popover{
+        position: absolute;
     }
 }

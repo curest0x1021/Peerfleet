@@ -75,14 +75,7 @@ class Notification_processor extends App_Controller {
             "proposal_id" => get_array_value($data, "proposal_id"),
             "estimate_comment_id" => get_array_value($data, "estimate_comment_id"),
             "subscription_id" => get_array_value($data, "subscription_id"),
-            "warehouse_id" => get_array_value($data, "warehouse_id"),
-            "warehouse_item_id" => get_array_value($data, "warehouse_item_id"),
-            "warehouse_tab" => get_array_value($data, "warehouse_tab"),
-            "wire_id" => get_array_value($data, "wire_id"),
-            "grommet_id" => get_array_value($data, "grommet_id"),
-            "shackle_id" => get_array_value($data, "shackle_id"),
-            "misc_id" => get_array_value($data, "misc_id"),
-            "lashing_id" => get_array_value($data, "lashing_id")
+            "expense_id" => get_array_value($data, "expense_id")
         );
 
         //get data from plugin by persing 'plugin_'
@@ -93,7 +86,7 @@ class Notification_processor extends App_Controller {
         }
 
         //clasified the task modification parts
-        if ($event == "project_task_updated") {
+        if ($event == "project_task_updated" || $event == "general_task_updated") {
             //overwrite event and options
             $notify_to_array = $this->_clasified_task_modification($event, $options, $activity_log_id);
 
@@ -149,6 +142,7 @@ class Notification_processor extends App_Controller {
                         "start_date" => $start_date,
                         "deadline" => $start_date, //both should be same
                         "exclude_reminder_date" => $date, //don't find tasks which reminder already sent today
+                        "context" => "project", //find project tasks only
                         "sort_by_project" => true
                     ))->getResult();
         }
@@ -168,7 +162,12 @@ class Notification_processor extends App_Controller {
 
                 //only chaged assigned_to field?
                 if (is_array($changes) && count($changes) == 1 && get_array_value($changes, "assigned_to")) {
-                    $event = "project_task_assigned";
+                    if ($event == "project_task_updated") {
+                        $event = "project_task_assigned";
+                    } else if ($event == "general_task_updated") {
+                        $event = "general_task_assigned";
+                    }
+
                     $assigned_to = get_array_value($changes, "assigned_to");
                     $new_assigned_to = get_array_value($assigned_to, "to");
 
@@ -177,23 +176,38 @@ class Notification_processor extends App_Controller {
                 }
 
 
-                //only chaged status field? find out the change event
-                if (is_array($changes) && count($changes) == 1 && get_array_value($changes, "status_id")) {
+                //chaged status field? find out the change event
+                if (is_array($changes) && get_array_value($changes, "status_id")) {
 
                     $status = get_array_value($changes, "status_id");
                     $new_status = get_array_value($status, "to");
 
-                    if ($new_status == "1") {
-                        $event = "project_task_reopened";
-                        $options["activity_log_id"] = ""; //remove activity log id
-                    } else if ($new_status == "2") {
-                        $event = "project_task_started";
-                        $options["activity_log_id"] = ""; //remove activity log id
-                    } else if ($new_status == "3") {
-                        $event = "project_task_finished";
-                        $options["activity_log_id"] = ""; //remove activity log id
-                    } else {
-                        $event = "project_task_updated";
+                    if ($event == "project_task_updated") {
+                        if ($new_status == "1") {
+                            $event = "project_task_reopened";
+                            $options["activity_log_id"] = ""; //remove activity log id
+                        } else if ($new_status == "2") {
+                            $event = "project_task_started";
+                            $options["activity_log_id"] = ""; //remove activity log id
+                        } else if ($new_status == "3") {
+                            $event = "project_task_finished";
+                            $options["activity_log_id"] = ""; //remove activity log id
+                        } else {
+                            $event = "project_task_updated";
+                        }
+                    } else if ($event == "general_task_updated") {
+                        if ($new_status == "1") {
+                            $event = "general_task_reopened";
+                            $options["activity_log_id"] = ""; //remove activity log id
+                        } else if ($new_status == "2") {
+                            $event = "general_task_started";
+                            $options["activity_log_id"] = ""; //remove activity log id
+                        } else if ($new_status == "3") {
+                            $event = "general_task_finished";
+                            $options["activity_log_id"] = ""; //remove activity log id
+                        } else {
+                            $event = "project_task_updated";
+                        }
                     }
                 }
 

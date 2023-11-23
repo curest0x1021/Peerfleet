@@ -17,10 +17,6 @@
     <div class="sidebar-scroll">
         <ul id="sidebar-menu" class="sidebar-menu">
             <?php
-            if (!$is_preview) {
-                $sidebar_menu = get_active_menu($sidebar_menu);
-            }
-
             foreach ($sidebar_menu as $main_menu) {
                 $main_menu_name = get_array_value($main_menu, "name");
                 if (!$main_menu_name) {
@@ -33,6 +29,21 @@
                 $class = get_array_value($main_menu, "class");
                 $custom_class = get_array_value($main_menu, "custom_class");
                 $submenu = get_array_value($main_menu, "submenu");
+
+                $has_any_submenu = false;
+                if ($submenu && count($submenu)) {
+
+                    foreach ($submenu as $s_menu) {
+                        if ($s_menu && count($s_menu)) {
+                            $has_any_submenu = true;
+                        }
+                    }
+
+                    if (!$has_any_submenu) {
+                        $submenu = "";
+                    }
+                }
+
 
                 $expend_class = $submenu ? " expand " : "";
                 $active_class = get_array_value($main_menu, "is_active_menu") ? "active" : "";
@@ -48,11 +59,7 @@
                         $main_menu_name = app_lang($language_key);
                     }
                 } else {
-                    if ($main_menu_name == 'clients') {
-                        $main_menu_name = app_lang('vessels');
-                    } else {
-                        $main_menu_name = app_lang($main_menu_name);
-                    }
+                    $main_menu_name = app_lang($main_menu_name);
                 }
 
                 $badge = get_array_value($main_menu, "badge");
@@ -61,52 +68,52 @@
                 ?>
 
                 <li class="<?php echo $active_class . " " . $expend_class . " " . $submenu_open_class . " "; ?> main">
-                    <a <?php echo $target; ?> href="<?php echo get_uri($url); ?>">
+                    <a <?php echo $target; ?> href="<?php echo $is_custom_menu_item ? $url : get_uri($url); ?>">
                         <i data-feather="<?php echo $class; ?>" class="icon"></i>
                         <span class="menu-text <?php echo $custom_class; ?>"><?php echo $main_menu_name; ?></span>
-                        <?php
-                        if ($badge) {
-                            echo "<span class='badge rounded-pill $badge_class'>$badge</span>";
-                        }
-                        ?>
+    <?php
+    if ($badge) {
+        echo "<span class='badge rounded-pill $badge_class'>$badge</span>";
+    }
+    ?>
                     </a>
-                    <?php
-                    if ($submenu) {
-                        echo "<ul>";
-                        foreach ($submenu as $s_menu) {
-                            $s_menu_name = get_array_value($s_menu, "name");
-                            if (!$s_menu_name) {
-                                continue;
-                            }
-
-                            $is_custom_menu_item = get_array_value($s_menu, "is_custom_menu_item");
-                            $url = get_array_value($s_menu, "url");
-
-                            if ($is_custom_menu_item) {
-                                $language_key = get_array_value($s_menu, "language_key");
-                                if ($language_key) {
-                                    $s_menu_name = app_lang($language_key);
+                        <?php
+                        if ($submenu) {
+                            echo "<ul>";
+                            foreach ($submenu as $s_menu) {
+                                $s_menu_name = get_array_value($s_menu, "name");
+                                if (!$s_menu_name) {
+                                    continue;
                                 }
-                            } else {
-                                $s_menu_name = app_lang($s_menu_name);
-                            }
 
-                            if ($s_menu_name) {
-                                $open_in_new_tab = get_array_value($s_menu, "open_in_new_tab");
-                                $sub_menu_target = ($is_custom_menu_item && $open_in_new_tab) ? "target='_blank'" : "";
-                                ?>
+                                $is_custom_menu_item = get_array_value($s_menu, "is_custom_menu_item");
+                                $url = get_array_value($s_menu, "url");
+
+                                if ($is_custom_menu_item) {
+                                    $language_key = get_array_value($s_menu, "language_key");
+                                    if ($language_key) {
+                                        $s_menu_name = app_lang($language_key);
+                                    }
+                                } else {
+                                    $s_menu_name = app_lang($s_menu_name);
+                                }
+
+                                if ($s_menu_name) {
+                                    $open_in_new_tab = get_array_value($s_menu, "open_in_new_tab");
+                                    $sub_menu_target = ($is_custom_menu_item && $open_in_new_tab) ? "target='_blank'" : "";
+                                    ?>
                             <li>
                                 <a <?php echo $sub_menu_target; ?> href="<?php echo $is_custom_menu_item ? $url : get_uri($url); ?>">
                                     <i data-feather='minus' width='12'></i>
                                     <span><?php echo $s_menu_name; ?></span>
                                 </a>
                             </li>
-                            <?php
-                        }
-                    }
-                    echo "</ul>";
-                }
-                ?>
+                <?php
+            }
+        }
+        echo "</ul>";
+    }
+    ?>
                 </li>
                 <?php
             }

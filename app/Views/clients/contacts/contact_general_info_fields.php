@@ -60,13 +60,13 @@
     </div>
     <div class="form-group">
         <div class="row">
-            <label for="alternative_phone" class="<?php echo $label_column; ?>"><?php echo app_lang('iridium_phone'); ?></label>
+            <label for="mobile" class="<?php echo $label_column; ?>"><?php echo app_lang('iridium_phone'); ?></label>
             <div class="<?php echo $field_column; ?>">
                 <?php
                 echo form_input(array(
-                    "id" => "alternative_phone",
-                    "name" => "alternative_phone",
-                    "value" => $model_info->alternative_phone ? $model_info->alternative_phone : "",
+                    "id" => "mobile",
+                    "name" => "mobile",
+                    "value" => $model_info->mobile ? $model_info->mobile : "",
                     "class" => "form-control",
                     "placeholder" => app_lang('iridium_phone')
                 ));

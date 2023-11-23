@@ -44,6 +44,10 @@
             padding-top: 60px !important;
         }
     }
+
+    .container.store-page {
+        max-width: 1440px;
+    }
 }
 
 @media screen and (max-width: 991px) {
@@ -424,6 +428,97 @@
     .invoice-preview-container{
         padding: 0 !important;
     }
+
+    .item-search-box-section{
+        margin-top: 5px;
+        width: 100%;
+
+        .item-search-box{
+            width: 100% !important;
+        }
+    }
+
+    .item-categories-filter-section{
+        margin-top: 15px;
+        width: 100%;
+
+        .w200{
+            width: 100% !important;
+        }
+    }
+
+    .user-dropdown-menu{
+        .company-switch-option{
+            display: block !important;
+
+            .nav-link{
+                display: none;
+            }
+
+            .hidden-xs{
+                display: block !important;
+            }
+
+            .dropdown-menu{
+                position: unset !important;
+                display: block;
+                box-shadow: none;
+                margin-top: 0;
+            }
+        }
+    }
+
+    .filter-section-flex-row, .filter-section-left{
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: space-between !important;
+    }
+
+    #task-table_wrapper, #project-table_wrapper, #ticket-table_wrapper{
+        .filter-form{
+            .save-filter-box, .filter-cancel-box{
+                width: 47% !important;
+                .save-filter-button , .cancel-filter-button{
+                    width: 100%;
+                }
+            }
+            .filter-item-box{
+                width: 100%;
+                .filter-multi-select{
+                    width: 100%;
+                    .dropdown-toggle{
+                        width: 98%;
+                    }
+                }
+                .w200{
+                    width: 98%;
+                }
+
+                .btn-group{
+                    &.filter{
+                        width: 98%;
+                    }
+                }
+            }
+
+            .datepicker-custom-selector{
+                width: 98%;
+            }
+        }
+    }
+
+    .h373{
+        height: auto !important;
+    }
+
+    #all_tasks_overview-widget, #my_tasks_overview-widget, #leads-overview-widget{
+        height: auto !important;
+        .position-absolute{
+            position: unset !important;
+            padding-top: 10px;
+        }
+    }
+
 }
 
 @media (max-width: 576px){
@@ -648,6 +743,21 @@
                 width: 100%;
                 border-radius: 0;
             }
+        }
+    }
+
+    .footer{
+        position: absolute;
+        padding-bottom: 5px !important;
+
+        .float-start{
+            float: none !important;
+        }
+
+        .float-end{
+            display: flex;
+            float: none !important;
+            justify-content: center;
         }
     }
 }
@@ -904,6 +1014,30 @@
                 text-align: center;
             }
         }
+
+        .proposal-preview-button, .contract-preview-button{
+            .grid-button-group{
+                float: none !important;
+                display: inline-block;
+                width: 100%;
+                margin-top: 10px;
+                margin-right: 0 !important;
+
+                .btn-success{
+                    margin-right: 2px !important;
+                    width: 49%;
+                }
+                .btn-danger{
+                    width: 49%;
+                    margin-right: 0 !important
+                }
+
+                .float-start{
+                    width: 50%;
+                    text-align: center;
+                }
+            }
+        }
     }
 
     .todo-page{
@@ -1010,6 +1144,18 @@
 
     .clients-project-page-title{
         margin-top: 6px !important;
+    }
+
+    .btn:not(.btn-lg) {
+        text-align: left;
+    }
+
+    .select2-container{
+        .select2-choice{
+            .select2-chosen{
+                text-align: left;
+            }
+        }
     }
 
 }

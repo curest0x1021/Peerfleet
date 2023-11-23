@@ -167,7 +167,7 @@ $(document).ready(function () {
     });
 
     //show push notification
-    if (AppHelper.userId && AppHelper.settings.enablePushNotification && AppHelper.settings.userEnableWebNotification && AppHelper.settings.userDisablePushNotification !== "1" && AppHelper.settings.pusherKey && AppHelper.settings.pusherCluster) {
+    if (AppHelper.userId && AppHelper.settings.enablePushNotification && AppHelper.settings.userEnableWebNotification && AppHelper.settings.userDisablePushNotification !== "1" && AppHelper.settings.pusherKey && AppHelper.settings.pusherCluster && typeof Pusher !== 'undefined') {
 
         var pusher = new Pusher(AppHelper.settings.pusherKey, {
             cluster: AppHelper.settings.pusherCluster,
@@ -209,6 +209,9 @@ $(document).ready(function () {
                 Notification.requestPermission();
             }
         });
+
+
+
     }
 
     //save the selected tab of ajax-tab list to cookie user-wise
@@ -283,6 +286,22 @@ $(document).ready(function () {
     if (color == "1E202D") {
         $(".g-recaptcha").attr("data-theme", "dark");
     }
+
+
+    setTimeout(function () {
+        $('body').on('click', '.note-btn', function () {
+            var $noteBtn = $(this);
+            setTimeout(function () {
+                if ($noteBtn.hasClass("note-icon-link") || $noteBtn.find(".note-icon-link").length) {
+                    bootstrap.Modal.getInstance($(".note-modal")).dispose();
+                }
+            }, 300);
+
+            $(".note-modal .btn-close, .note-link-btn").click(function () {
+                $(".note-modal").remove();
+            });
+        });
+    }, 1000);
 
 });
 
@@ -474,8 +493,7 @@ uploadPastedImage = function (file, $instance) {
 
 //initialize summernote
 setSummernote = function ($instance, notFocus) {
-    if (AppHelper.settings.enableRichTextEditor === "1" && $instance.attr("data-rich-text-editor")) {
-
+    if (AppHelper.settings.enableRichTextEditor === "1" && $instance.attr("data-rich-text-editor") != undefined) {
         var focus = true;
         if (notFocus) {
             focus = false;
@@ -502,10 +520,10 @@ setSummernote = function ($instance, notFocus) {
                 }
             };
 
-            if ($instance.attr("data-mention")) {
+
+            if ($instance.attr("data-mention") != undefined) {
                 //generate mention data for summernote
                 var source = $instance.attr("data-mention-source"), project_id = $instance.attr("data-mention-project_id");
-
                 $.ajax({
                     url: source,
                     data: {project_id: project_id},
@@ -552,6 +570,8 @@ function appendDropdownClone($dropdown, handlerId) {
 //set scrollbar on page
 setPageScrollable = function () {
 
+    $("#page-content").css("min-height", $(window).height() - 115);
+
     if ($(window).width() <= 640) {
         $('html').css({"overflow": "initial"});
         $('body').css({"overflow": "initial"});
@@ -559,9 +579,10 @@ setPageScrollable = function () {
         if ($("body").find("div.footer").length) {
             //has footer
             if ($("body").find("nav.navbar").length) {
+
                 //has topbar
                 initScrollbar('.scrollable-page', {
-                    setHeight: $(window).height() - 115
+                    setHeight: $(window).height() - 60
                 });
             } else {
                 initScrollbar('.scrollable-page', {
@@ -569,14 +590,13 @@ setPageScrollable = function () {
                 });
             }
         } else {
+
             initScrollbar('.scrollable-page', {
                 setHeight: $(window).height() - 65
             });
         }
     }
-
 };
-
 //set scrollbar on left menu
 setMenuScrollable = function () {
     initScrollbar('.sidebar-scroll', {
@@ -767,7 +787,7 @@ attachDropzoneWithForm = function (dropzoneTarget, uploadUrl, validationUrl, opt
     $dropzonePreviewArea.find("textarea").each(function () {
         var $textArea = $(this);
 
-        if (AppHelper.settings.enableRichTextEditor === "0" || !AppHelper.settings.enableRichTextEditor || (AppHelper.settings.enableRichTextEditor === "1" && !$textArea.attr("data-rich-text-editor"))) {
+        if (AppHelper.settings.enableRichTextEditor === "0" || !AppHelper.settings.enableRichTextEditor || (AppHelper.settings.enableRichTextEditor === "1" && $textArea.attr("data-rich-text-editor") == undefined)) {
             $textArea.on('paste', function (e) {
                 var data = e.originalEvent;
 
@@ -919,7 +939,10 @@ initWYSIWYGEditor = function (element, options) {
         disableDragAndDrop: true,
         callbacks: {
             onImageUpload: function (files, editor, $editable) {
-                uploadPastedImage(files[0], $(element));
+                for (var i = 0; i < files.length; i++) {
+                    uploadPastedImage(files[i], $(element));
+                }
+
             }
         }
     }, options);
@@ -982,6 +1005,14 @@ function setThemeColor() {
 
 function isMobile() {
     return window.outerWidth < 800 ? true : false;
+}
+
+
+function getUniqueArray(array) {
+    var returnUique = function (value, index, array) {
+        return array.indexOf(value) === index;
+    };
+    return array.filter(returnUique);
 }
 
 initSignature = function (element, options) {

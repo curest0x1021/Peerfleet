@@ -12,9 +12,9 @@
             columns: [
                 {visible: false, searchable: false},
                 {title: "<?php echo app_lang("team_member"); ?>", "iDataSort": 0},
-                {title: "<?php echo app_lang("date"); ?>", "bSortable": false, "class": "w20p"},
-                {title: "<?php echo app_lang("duration"); ?>", "bSortable": false, "class": "w20p text-right"},
-                {title: "<?php echo app_lang("hours"); ?>", "bSortable": false, "class": "w20p text-right"}
+                {title: "<?php echo app_lang("date"); ?>", sortable: false, "class": "w20p"},
+                {title: "<?php echo app_lang("duration"); ?>", sortable: false, "class": "w20p text-right"},
+                {title: "<?php echo app_lang("hours"); ?>", sortable: false, "class": "w20p text-right"}
             ],
             printColumns: [1, 2, 3, 4],
             xlsColumns: [1, 2, 3, 4],

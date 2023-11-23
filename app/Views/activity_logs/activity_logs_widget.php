@@ -63,7 +63,7 @@ foreach ($activity_logs as $log) {
                             echo app_lang($log->log_type) . ": " . remove_file_prefix(convert_mentions($log->log_type_title));
                         } else if ($log->action != "bitbucket_notification_received" && $log->action != "github_notification_received") {
                             if ($log->log_type === "task") {
-                                echo app_lang($log->log_type) . ": " . modal_anchor(get_uri("projects/task_view"), " #" . $log->log_type_id . " - " . convert_mentions(convert_comment_link(process_images_from_content($log->log_type_title))), array("title" => app_lang('task_info') . " #$log->log_type_id", "class" => "dark", "data-post-id" => $log->log_type_id, "data-modal-lg" => "1"));
+                                echo app_lang($log->log_type) . ": " . modal_anchor(get_uri("tasks/view"), " #" . $log->log_type_id . " - " . convert_mentions(convert_comment_link(process_images_from_content($log->log_type_title))), array("title" => app_lang('task_info') . " #$log->log_type_id", "class" => "dark", "id" => "task-modal-view-link", "data-post-id" => $log->log_type_id, "data-modal-lg" => "1"));
                             } else {
                                 echo app_lang($log->log_type) . ": " . convert_mentions(convert_comment_link(process_images_from_content($log->log_type_title)));
                             }
@@ -89,7 +89,7 @@ foreach ($activity_logs as $log) {
                 <?php if ($log->log_for2 && $log->log_for2 != "customer_feedback") { ?>
                     <p> <?php
                         if ($log->log_for2 === "task") {
-                            echo app_lang($log->log_for2) . ": " . modal_anchor(get_uri("projects/task_view"), " #" . $log->log_for_id2, array("title" => app_lang('task_info') . " #$log->log_for_id2", "class" => "dark", "data-post-id" => $log->log_for_id2, "data-modal-lg" => "1"));
+                            echo app_lang($log->log_for2) . ": " . modal_anchor(get_uri("tasks/view"), " #" . $log->log_for_id2, array("title" => app_lang('task_info') . " #$log->log_for_id2", "class" => "dark", "data-post-id" => $log->log_for_id2, "data-modal-lg" => "1"));
                         } else {
                             echo app_lang($log->log_for2) . ": #" . $log->log_for_id2;
                         }
@@ -98,7 +98,7 @@ foreach ($activity_logs as $log) {
                 <?php } ?>
 
                 <?php if ($log->action === "bitbucket_notification_received" || $log->action === "github_notification_received") { ?>
-                    <p> <?php echo app_lang($log->log_type) . ": " . modal_anchor(get_uri("projects/task_view"), " #" . $log->log_type_id . " - " . convert_mentions($log->log_type_title), array("title" => app_lang('task_info') . " #$log->log_type_id", "class" => "dark", "data-post-id" => $log->log_type_id, "data-modal-lg" => "1")); ?></p>
+                    <p> <?php echo app_lang($log->log_type) . ": " . modal_anchor(get_uri("tasks/view"), " #" . $log->log_type_id . " - " . convert_mentions($log->log_type_title), array("title" => app_lang('task_info') . " #$log->log_type_id", "class" => "dark", "data-post-id" => $log->log_type_id, "data-modal-lg" => "1")); ?></p>
                 <?php } ?>
 
                 <?php if (isset($log->log_for_title)) { ?>
