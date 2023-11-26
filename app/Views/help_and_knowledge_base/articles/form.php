@@ -151,7 +151,7 @@
 
 
         $("#category_id").select2();
-
+        $('#description').summernote();
 
         var uploadUrl = "<?php echo get_uri("help/upload_file"); ?>";
         var validationUrl = "<?php echo get_uri("help/validate_file"); ?>";

@@ -141,7 +141,7 @@ class Invoices extends Security_Controller {
 
         //make the drodown lists
         $view_data['taxes_dropdown'] = array("" => "-") + $this->Taxes_model->get_dropdown_list(array("title"));
-        $view_data['clients_dropdown'] = array("" => "-") + $this->Clients_model->get_dropdown_list(array("company_name"), "id", array("is_lead" => 0));
+        $view_data['clients_dropdown'] = array("" => "-") + $this->Clients_model->get_dropdown_list(array("charter_name"), "id", array("is_lead" => 0));
         $projects = $this->Projects_model->get_dropdown_list(array("title"), "id", array("client_id" => $project_client_id, "project_type" => "client_project"));
         $suggestion = array(array("id" => "", "text" => "-"));
         foreach ($projects as $key => $value) {
@@ -694,7 +694,7 @@ class Invoices extends Security_Controller {
         $row_data = array(
             $data->id,
             $invoice_url,
-            anchor(get_uri("clients/view/" . $data->client_id), $data->company_name),
+            anchor(get_uri("clients/view/" . $data->client_id), $data->charter_name),
             $data->project_title ? anchor(get_uri("projects/view/" . $data->project_id), $data->project_title) : "-",
             $data->bill_date,
             format_to_date($data->bill_date, false),
@@ -811,7 +811,7 @@ class Invoices extends Security_Controller {
         return array(
             $data->id,
             $invoice_url,
-            anchor(get_uri("clients/view/" . $data->client_id), $data->company_name),
+            anchor(get_uri("clients/view/" . $data->client_id), $data->charter_name),
             $data->project_title ? anchor(get_uri("projects/view/" . $data->project_id), $data->project_title) : "-",
             $next_recurring_date,
             $next_recurring,

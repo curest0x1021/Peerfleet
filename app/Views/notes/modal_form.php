@@ -106,7 +106,7 @@
         setTimeout(function () {
             $("#title").focus();
         }, 200);
-
+        $('#description').summernote();
         $("#note_labels").select2({multiple: true, data: <?php echo json_encode($label_suggestions); ?>});
 
         //show/hide mark as public help message

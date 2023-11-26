@@ -457,6 +457,6 @@ $(document).ready(function () {
             $("#sailingarea_id").trigger("change");
         }
     });
-
+    $('#description').summernote();
 });
 </script>

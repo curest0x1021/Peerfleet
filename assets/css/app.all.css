@@ -3288,8 +3288,8 @@ td.option a.delete:hover {
 }
 .datepicker-custom-selector {
   background: #fff;
-  border-color: #f6f8f9;
-  color: #555;
+  border-color: #f2f4f6;
+  color: #444;
   text-align: left;
 }
 .datepicker-custom-selector .dropdown-toggle {
@@ -5840,6 +5840,9 @@ a.badge:hover {
 .font-normal {
   font-weight: normal;
 }
+.kanban-widget-filters .custom-toolbar .DTTT_container:last-child {
+  margin-bottom: 15px;
+}
 .truncate-ellipsis {
   display: table;
   table-layout: fixed;
@@ -6731,19 +6734,6 @@ input[type="color"]::-webkit-color-swatch {
 #all-timesheet-users-summary {
   height: 63px;
 }
-
-#clients_list {
-  display: none;
-}
-
-#contacts {
-  display: none;
-}
-
-.tab-content>.active {
-  display: block !important;
-}
-
 /*pills tab*/
 .nav-pills {
   background: #ffffff63;

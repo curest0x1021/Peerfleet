@@ -353,12 +353,15 @@ class Events extends Security_Controller {
         if (in_array("leave", $filter_values_array) && $this->login_user->user_type == "staff") {
             //get all approved leaves
             $leave_access_info = $this->get_access_info("leave");
-            $options_of_leaves = array("start_date" => $start, "end_date" => $end, "login_user_id" => $this->login_user->id, "access_type" => $leave_access_info->access_type, "allowed_members" => $leave_access_info->allowed_members, "status" => "approved");
+            $options_of_leaves = array("start_date" => $start, "end_date" => $end, "login_user_id" => $this->login_user->id, "access_type" => $leave_access_info->access_type, "allowed_members" => $leave_access_info->allowed_members);
 
             $list_data_of_leaves = $this->Leave_applications_model->get_list($options_of_leaves)->getResult();
 
             foreach ($list_data_of_leaves as $leave) {
-                $result[] = $this->_make_leave_event($leave);
+                if ($leave->status == 'pending' || $leave->status == 'approved') {
+                    $result[] = $this->_make_leave_event($leave);    
+                }
+                
             }
         }
 
@@ -476,7 +479,8 @@ class Events extends Security_Controller {
                 "leave_id" => $data->id, //to make is secure we'll use the encrypted id
                 "cycle" => 0,
                 "event_type" => "leave",
-            )
+                "status" => $data->status
+            ),
         );
     }
 

@@ -54,6 +54,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#description').summernote();
         setEstimatePreviewScrollable();
         $(window).resize(function () {
             setEstimatePreviewScrollable();

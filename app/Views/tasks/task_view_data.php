@@ -3,6 +3,8 @@ $progress = 0;
 if ($total_sub_tasks) {
     $progress = round($completed_sub_tasks / $total_sub_tasks * 100);
 }
+$yes_icon = '<i data-feather="check-square" class="icon-16"></i>';
+$no_icon = '<i data-feather="square" class="icon-16"></i>';
 ?>
 
 <div class="row">
@@ -10,7 +12,7 @@ if ($total_sub_tasks) {
         <div class="clearfix">
             <div class="container-fluid">
                 <div class="row">
-                    <div  class="col-md-12 mb15 task-title-right d-none">
+                    <div class="col-md-12 mb15 task-title-right d-none">
                         <strong><?php echo $model_info->title; ?></strong>
                     </div>
 
@@ -24,7 +26,7 @@ if ($total_sub_tasks) {
                             <div>
                                 <?php echo get_update_task_info_anchor_data($model_info, "user", $can_edit_tasks, "", $show_assign_to_dropdown); ?>
                             </div>
-                            <p> 
+                            <p>
                                 <span class='badge badge-light mr5' title='Point'><?php echo get_update_task_info_anchor_data($model_info, "points", $can_edit_tasks); ?></span>
 
                                 <?php
@@ -93,7 +95,7 @@ if ($total_sub_tasks) {
 
                     <?php if ($model_info->recurring_task_id) { ?>
                         <div class="col-md-12 mb15">
-                            <strong><?php echo app_lang('created_from') . ": "; ?> </strong> 
+                            <strong><?php echo app_lang('created_from') . ": "; ?> </strong>
                             <?php
                             echo modal_anchor(get_uri("tasks/view"), app_lang("task") . " " . $model_info->recurring_task_id, array("title" => app_lang('task_info') . " #$model_info->recurring_task_id", "data-post-id" => $model_info->recurring_task_id, "data-modal-lg" => "1"));
                             ?>
@@ -141,7 +143,7 @@ if ($total_sub_tasks) {
                             if ($show_timer) {
                                 echo view("tasks/task_timer");
                             }
-                            ?> 
+                            ?>
                         </div>
 
                         <?php if (get_setting("module_project_timesheet") == "1" && $show_timesheet_info) { ?>
@@ -187,13 +189,13 @@ if ($total_sub_tasks) {
         <div class="clearfix">
             <div class="container-fluid">
                 <div class="row">
-                    <div  class="col-md-12 mb15 task-title-left">
+                <div  class="col-md-12 mb15 task-title-left">
                         <strong><?php echo $model_info->title; ?></strong>
                     </div>
 
                     <?php if ($model_info->parent_task_id) { ?>
                         <div class="col-md-12 mb15">
-                            <strong><?php echo app_lang("main_task") . ": "; ?></strong><?php echo modal_anchor(get_uri("tasks/view"), $parent_task_title, array("title" => app_lang('task_info') . " #$model_info->parent_task_id", "data-post-id" => $model_info->parent_task_id, "data-modal-lg" => "1")); ?>
+                        <strong><?php echo app_lang("main_task") . ": "; ?></strong><?php echo modal_anchor(get_uri("tasks/view"), $parent_task_title, array("title" => app_lang('task_info') . " #$model_info->parent_task_id", "data-post-id" => $model_info->parent_task_id, "data-modal-lg" => "1")); ?>
                         </div>
                     <?php } ?>
 
@@ -205,8 +207,155 @@ if ($total_sub_tasks) {
 
                     <?php if ($model_info->project_id) { ?>
                         <div class="col-md-12 mb15">
-                            <strong><?php echo app_lang('project') . ": "; ?> </strong> <?php echo anchor(get_uri("projects/view/" . $model_info->project_id), $model_info->project_title); ?>
+                        <strong><?php echo app_lang('project') . ": "; ?> </strong> <?php echo anchor(get_uri("projects/view/" . $model_info->project_id), $model_info->project_title); ?>
+                    </div>
+                    <?php } ?>
+                    <?php if ($model_info->parent_task_id == 0) { ?>
+                        <?php if ($model_info->dock_list_number) { ?>
+                            <div class="col-md-12 mb15 mb15">
+                                <strong><?php echo app_lang('dock_list_number') . ": "; ?></strong> <?php echo $model_info->dock_list_number; ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($model_info->reference_drawing) { ?>
+                            <div class="col-md-12 mb15">
+                                <strong><?php echo app_lang('reference_drawing') . ": "; ?></strong> <?php echo $model_info->reference_drawing; ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($model_info->location) { ?>
+                            <div class="col-md-12 mb15">
+                                <strong><?php echo app_lang('location') . ": "; ?> </strong> <?php echo $model_info->location; ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($model_info->specification) { ?>
+                            <div class="col-md-12 mb15">
+                                <strong><?php echo app_lang('specification') . ": "; ?> </strong> <?php echo $model_info->specification; ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($model_info->requisition_number) { ?>
+                            <div class="col-md-12 mb15">
+                                <strong><?php echo app_lang('requisition_number') . ": "; ?> </strong> <?php echo $model_info->requisition_number; ?>
+                            </div>
+                        <?php } ?>
+
+                        <strong><?php echo app_lang('to_be_included') . ":" ?></strong>
+                        <div class="col-md-12 mb15">
+                            <div class="row">
+                                <div class="col-6 border-bottom">
+                                    <div class="row">
+                                        <span class="col-9"><?php echo app_lang('gas_free_certificate') . ": "; ?></span>
+                                        <span class="col-3"><?php echo $model_info->gas_free_certificate ? $yes_icon : $no_icon ?></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 border-bottom">
+                                    <div class="row">
+                                        <span class="col-9"><?php echo app_lang('painting_after_completion') . ": "; ?></span>
+                                        <span class="col-3"><?php echo $model_info->painting_after_completion ? $yes_icon : $no_icon ?></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 border-bottom">
+                                    <div class="row">
+                                        <span class="col-9"><?php echo app_lang('light') . ": "; ?></span>
+                                        <span class="col-3"><?php echo $model_info->light ? $yes_icon : $no_icon ?></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 border-bottom">
+                                    <div class="row">
+                                        <span class="col-9"><?php echo app_lang('parts_on_board') . ": "; ?></span>
+                                        <span class="col-3"><?php echo $model_info->parts_on_board ? $yes_icon : $no_icon ?></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 border-bottom">
+                                    <div class="row">
+                                        <span class="col-9"><?php echo app_lang('ventilation') . ": "; ?></span>
+                                        <span class="col-3"><?php echo $model_info->ventilation ? $yes_icon : $no_icon ?></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 border-bottom">
+                                    <div class="row">
+                                        <span class="col-9"><?php echo app_lang('transport_to_yard_workshop') . ": "; ?></span>
+                                        <span class="col-3"><?php echo $model_info->transport_to_yard_workshop ? $yes_icon : $no_icon ?></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 border-bottom">
+                                    <div class="row">
+                                        <span class="col-9"><?php echo app_lang('crane_assistance') . ": "; ?></span>
+                                        <span class="col-3"><?php echo $model_info->crane_assistance ? $yes_icon : $no_icon ?></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 border-bottom">
+                                    <div class="row">
+                                        <span class="col-9"><?php echo app_lang('transport_outside_yard') . ": "; ?></span>
+                                        <span class="col-3"><?php echo $model_info->transport_outside_yard ? $yes_icon : $no_icon ?></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 border-bottom">
+                                    <div class="row">
+                                        <span class="col-9"><?php echo app_lang('cleaning_before') . ": "; ?></span>
+                                        <span class="col-3"><?php echo $model_info->cleaning_before ? $yes_icon : $no_icon ?></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 border-bottom">
+                                    <div class="row">
+                                        <span class="col-9"><?php echo app_lang('material_yards_supply') . ": "; ?></span>
+                                        <span class="col-3"><?php echo $model_info->material_yards_supply ? $yes_icon : $no_icon ?></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 border-bottom">
+                                    <div class="row">
+                                        <span class="col-9"><?php echo app_lang('cleaning_after') . ": "; ?></span>
+                                        <span class="col-3"><?php echo $model_info->cleaning_after ? $yes_icon : $no_icon ?></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 border-bottom">
+                                    <div class="row">
+                                        <span class="col-9"><?php echo app_lang('material_owners_supply') . ": "; ?></span>
+                                        <span class="col-3"><?php echo $model_info->material_owners_supply ? $yes_icon : $no_icon ?></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 border-bottom">
+                                    <div class="row">
+                                        <span class="col-9"><?php echo app_lang('work_permit') . ": "; ?></span>
+                                        <span class="col-3"><?php echo $model_info->work_permit ? $yes_icon : $no_icon ?></span>
+                                    </div>
+                                </div>
+                                <div class="col-6 border-bottom">
+                                    <div class="row">
+                                        <span class="col-9"><?php echo app_lang('risk_assessment') . ": "; ?></span>
+                                        <span class="col-3"><?php echo $model_info->risk_assessment ? $yes_icon : $no_icon ?></span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+                        <strong><?php echo app_lang('maker_informations') . ":"; ?></strong>
+                        <?php if ($model_info->maker) { ?>
+                            <div class="col-md-12 mb15">
+                                <?php echo app_lang('maker') . ": "; ?> <?php echo $model_info->maker; ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($model_info->type) { ?>
+                            <div class="col-md-12 mb15">
+                                <?php echo app_lang('type') . ": "; ?> <?php echo $model_info->type; ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($model_info->serial_number) { ?>
+                            <div class="col-md-12 mb15">
+                                <?php echo app_lang('serial_number') . ": "; ?> <?php echo $model_info->serial_number; ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($model_info->pms_scs_number) { ?>
+                            <div class="col-md-12 mb15">
+                                <?php echo app_lang('pms_scs_number') . ": "; ?> <?php echo $model_info->pms_scs_number; ?>
+                            </div>
+                        <?php } ?>
+
                     <?php } ?>
 
                     <?php if ($model_info->client_id) { ?>
@@ -273,11 +422,11 @@ if ($total_sub_tasks) {
                     if (count($custom_fields_list)) {
                         foreach ($custom_fields_list as $data) {
                             if ($data->value) {
-                                ?>
+                    ?>
                                 <div class="col-md-12 mb15">
                                     <strong><?php echo $data->title . ": "; ?> </strong> <?php echo view("custom_fields/output_" . $data->field_type, array("value" => $data->value)); ?>
                                 </div>
-                                <?php
+                    <?php
                             }
                         }
                     }
@@ -339,7 +488,7 @@ if ($total_sub_tasks) {
                         <?php } ?>
 
                         <input type="hidden" name="context" value="<?php echo $model_info->context; ?>" />
-                        <input type="hidden" name="parent_task_id" value="<?php echo $task_id; ?>" />
+                         <input type="hidden" name="parent_task_id" value="<?php echo $task_id; ?>" />
                         <input type="hidden" name="milestone_id" value="<?php echo $model_info->milestone_id; ?>" />
 
                         <div class="checklist-items" id="sub-tasks">
@@ -361,7 +510,7 @@ if ($total_sub_tasks) {
                                 </div>
                             </div>
                             <div id="sub-task-options-panel" class="col-md-12 mb15 p0 hide">
-                                <button type="submit" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('create'); ?></button> 
+                                <button type="submit" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('create'); ?></button>
                                 <button id="sub-task-options-panel-close" type="button" class="btn btn-default"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('cancel'); ?></button>
                             </div>
                         <?php } ?>
@@ -418,7 +567,7 @@ if ($total_sub_tasks) {
                         </div>
 
                         <div class="p0 mt10">
-                            <button type="submit" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('add'); ?></button> 
+                            <button type="submit" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('add'); ?></button>
                             <button type="button" class="dependency-tasks-close btn btn-default"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('cancel'); ?></button>
                         </div>
 

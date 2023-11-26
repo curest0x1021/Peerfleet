@@ -145,5 +145,6 @@
         }, 200);
 
         $("#ticket-form .select2").select2();
+        $('#description').summernote();
     });
 </script>

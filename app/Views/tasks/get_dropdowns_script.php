@@ -47,8 +47,8 @@ if (!isset($contexts)) {
             $("#assigned_to").hide();
             $('#collaborators').select2("destroy");
             $("#collaborators").hide();
-            $('#project_labels').select2("destroy");
-            $("#project_labels").hide();
+            $('#labels').select2("destroy");
+            $("#labels").hide();
             $('#task_status_id').select2("destroy");
             $("#task_status_id").hide();
             if (context && reload_context) {
@@ -105,14 +105,14 @@ if (!isset($contexts)) {
                 $("#milestone_id").show().val("");
                 $("#assigned_to").show().val("");
                 $("#collaborators").show().val("");
-                $("#project_labels").show().val("");
+                $("#labels").show().val("");
                 $("#task_status_id").show().val(result.statuses_dropdown[0].id);
             }
 
             $('#milestone_id').select2({data: result.milestones_dropdown});
             $('#assigned_to').select2({data: result.assign_to_dropdown});
             $('#collaborators').select2({multiple: true, data: result.collaborators_dropdown});
-            $('#project_labels').select2({multiple: true, data: result.label_suggestions});
+            $('#labels').select2({multiple: true, data: result.label_suggestions});
             $('#task_status_id').select2({data: result.statuses_dropdown});
         }
 

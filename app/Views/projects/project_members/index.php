@@ -9,20 +9,24 @@
     </div>
 
     <div class="table-responsive">
-        <table id="project-member-table" class="b-b-only no-thead" width="100%">            
+        <table id="project-member-table" class="b-b-only no-thead" width="100%">
         </table>
     </div>
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
         $("#project-member-table").appTable({
             source: '<?php echo_uri("projects/project_member_list_data/" . $project_id) ?>',
             hideTools: true,
             displayLength: 500,
-            columns: [
-                {title: ''},
-                {title: '', "class": "text-center option w100"}
+            columns: [{
+                    title: ''
+                },
+                {
+                    title: '',
+                    "class": "text-center option w100"
+                }
             ]
         });
     });

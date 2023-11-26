@@ -262,6 +262,6 @@
                 $("#copy_milestones").removeAttr("disabled");
             }
         });
-
+        $('#description').summernote();
     });
 </script>    

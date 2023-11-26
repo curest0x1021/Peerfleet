@@ -85,6 +85,6 @@
         setTimeout(function () {
             $("#name").focus();
         }, 200);
-
+        $('#description').summernote();
     });
 </script>    

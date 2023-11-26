@@ -17,9 +17,9 @@
         </div>
     </div>
     <div class="table-responsive">
-        <table id="task-table" class="display" width="100%">            
+        <table id="task-table" class="display" width="100%">
         </table>
-    </div>    
+    </div>
 </div>
 
 <?php
@@ -108,16 +108,23 @@ foreach ($task_statuses as $status) {
                     {visible: false, searchable: false},
                     {title: '<?php echo app_lang("id") ?>', "class": idColumnClass, order_by: "id"},
                     {title: '<?php echo app_lang("title") ?>', "class": titleColumnClass, order_by: "title"},
+                    {title: '<?php echo app_lang("dock_list_number") ?>', visible: showResponsiveOption, order_by: "dock_list_number"},
+                    {title: '<?php echo app_lang("reference_drawing") ?>', visible: showResponsiveOption, order_by: "reference_drawing"},
                     {visible: false, searchable: false, order_by: "start_date"},
                     {title: '<?php echo app_lang("start_date") ?>', "iDataSort": 3, visible: showResponsiveOption, order_by: "start_date"},
                     {visible: false, searchable: false, order_by: "deadline"},
                     {title: '<?php echo app_lang("deadline") ?>', "iDataSort": 5, visible: showResponsiveOption, order_by: "deadline"},
-                    {title: '<?php echo app_lang("milestone") ?>', visible: milestoneVisibility, order_by: "milestone"},
                     {visible: false, searchable: false},
                     {visible: false, searchable: false},
                     {visible: false, searchable: false},
                     {title: '<?php echo app_lang("status") ?>', visible: showResponsiveOption, order_by: "status"}
                     <?php echo $custom_field_headers; ?>,
+                    {visible: false, searchable: false},
+                    {visible: false, searchable: false},
+                    {visible: false, searchable: false},
+                    {visible: false, searchable: false},
+                    {visible: false, searchable: false},
+                    {visible: false, searchable: false},
                     {title: '<i data-feather="menu" class="icon-16"></i>', visible: optionVisibility, "class": "text-center option " + optionColumnClass}
                 ],
                 printColumns: combineCustomFieldsColumns([1, 2, 4, 6, 7, 12], '<?php echo $custom_field_headers; ?>'),
@@ -167,6 +174,8 @@ foreach ($task_statuses as $status) {
                     {visible: false, searchable: false},
                     {title: '<?php echo app_lang("id") ?>', "class": idColumnClass, order_by: "id"},
                     {title: '<?php echo app_lang("title") ?>', "class": titleColumnClass, order_by: "title"},
+                    {title: '<?php echo app_lang("dock_list_number") ?>', visible: showResponsiveOption, order_by: "dock_list_number"},
+                    {title: '<?php echo app_lang("reference_drawing") ?>', visible: showResponsiveOption, order_by: "reference_drawing"},
                     {visible: false, searchable: false, order_by: "start_date"},
                     {title: '<?php echo app_lang("start_date") ?>', "iDataSort": 3, visible: showResponsiveOption, order_by: "start_date"},
                     {visible: false, searchable: false, order_by: "deadline"},
@@ -177,6 +186,12 @@ foreach ($task_statuses as $status) {
                     {title: '<?php echo app_lang("collaborators") ?>', visible: showResponsiveOption},
                     {title: '<?php echo app_lang("status") ?>', visible: showResponsiveOption, order_by: "status"}
                     <?php echo $custom_field_headers; ?>,
+                    {visible: false, searchable: false},
+                    {visible: false, searchable: false},
+                    {visible: false, searchable: false},
+                    {visible: false, searchable: false},
+                    {visible: false, searchable: false},
+                    {visible: false, searchable: false},
                     {title: '<i data-feather="menu" class="icon-16"></i>', visible: optionVisibility, "class": "text-center option " + optionColumnClass}
                 ],
                 printColumns: combineCustomFieldsColumns([1, 2, 4, 6, 7, 9, 10, 12], '<?php echo $custom_field_headers; ?>'),

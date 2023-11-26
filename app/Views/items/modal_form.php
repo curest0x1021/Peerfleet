@@ -157,7 +157,7 @@
                 }
             }
         });
-
+        $('#description').summernote();
         $("#item-form .select2").select2();
     });
 </script>
