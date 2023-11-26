@@ -1,7 +1,9 @@
 <div id="page-content" class="page-wrapper clearfix grid-button all-tasks-view">
 
     <ul class="nav nav-tabs bg-white title" role="tablist">
-        <li class="title-tab my-tasks"><h4 class="pl15 pt10 pr15"><?php echo app_lang("tasks"); ?></h4></li>
+        <li class="title-tab my-tasks">
+            <h4 class="pl15 pt10 pr15"><?php echo app_lang("tasks"); ?></h4>
+        </li>
 
         <?php echo view("tasks/tabs", array("active_tab" => "tasks_list", "selected_tab" => $tab)); ?>
 
@@ -27,7 +29,7 @@
 
     <div class="card">
         <div class="table-responsive" id="task-table-container">
-            <table id="task-table" class="display" cellspacing="0" width="100%">            
+            <table id="task-table" class="display" cellspacing="0" width="100%">
             </table>
         </div>
     </div>
@@ -67,11 +69,11 @@ if (isset($selected_priority_id) && $selected_priority_id) {
 ?>
 
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
 
         var showOption = true,
-                idColumnClass = "w10p",
-                titleColumnClass = "";
+            idColumnClass = "w10p",
+            titleColumnClass = "";
 
         if (isMobile()) {
             showOption = false;
@@ -88,13 +90,23 @@ if (isset($selected_priority_id) && $selected_priority_id) {
         $("#task-table").appTable({
             source: '<?php echo_uri("tasks/all_tasks_list_data") ?>',
             serverSide: true,
-            order: [[1, "desc"]],
+            order: [
+                [1, "desc"]
+            ],
             smartFilterIdentity: "all_tasks_list", //a to z and _ only. should be unique to avoid conflicts 
             ignoreSavedFilter: ignoreSavedFilter,
             responsive: false, //hide responsive (+) icon
-            filterDropdown: [
-                {name: "quick_filter", class: "w200", showHtml: true, options: <?php echo view("tasks/quick_filters_dropdown"); ?>},
-                {name: "context", class: "w200", options: <?php echo $contexts_dropdown; ?>, onChangeCallback: function (value, filterParams) {
+            filterDropdown: [{
+                    name: "quick_filter",
+                    class: "w200",
+                    showHtml: true,
+                    options: <?php echo view("tasks/quick_filters_dropdown"); ?>
+                },
+                {
+                    name: "context",
+                    class: "w200",
+                    options: <?php echo $contexts_dropdown; ?>,
+                    onChangeCallback: function(value, filterParams) {
                         var $tableWrapper = $("#task-table_wrapper");
                         if (!(value == "" || value == "project")) {
 
@@ -120,53 +132,182 @@ if (isset($selected_priority_id) && $selected_priority_id) {
 
                     }
                 },
-                {name: "project_id", class: "w200", options: <?php echo $projects_dropdown; ?>, dependent: ["milestone_id"]}, //reset milestone on changing of project
-                {name: "milestone_id", class: "w200", options: [{id: "", text: "- <?php echo app_lang('milestone'); ?> -"}], dependency: ["project_id"], dataSource: '<?php echo_uri("tasks/get_milestones_for_filter") ?>'}, //milestone is dependent on project
-                {name: "specific_user_id", class: "w200", options: <?php echo $team_members_dropdown; ?>},
-                {name: "priority_id", class: "w200", options: <?php echo $priorities_dropdown; ?>},
-                {name: "label_id", class: "w200", options: <?php echo $labels_dropdown; ?>}
-
-                , <?php echo $custom_field_filters; ?>
-            ],
-            singleDatepicker: [{name: "deadline", class: "w200", defaultText: "<?php echo app_lang('deadline') ?>",
-                    options: [
-                        {value: "expired", text: "<?php echo app_lang('expired') ?>"},
-                        {value: moment().format("YYYY-MM-DD"), text: "<?php echo app_lang('today') ?>"},
-                        {value: moment().add(1, 'days').format("YYYY-MM-DD"), text: "<?php echo app_lang('tomorrow') ?>"},
-                        {value: moment().add(7, 'days').format("YYYY-MM-DD"), text: "<?php echo sprintf(app_lang('in_number_of_days'), 7); ?>"},
-                        {value: moment().add(15, 'days').format("YYYY-MM-DD"), text: "<?php echo sprintf(app_lang('in_number_of_days'), 15); ?>"}
-                    ]}],
-            multiSelect: [
                 {
+                    name: "project_id",
                     class: "w200",
-                    name: "status_id",
-                    text: "<?php echo app_lang('status'); ?>",
-                    options: <?php echo json_encode($statuses); ?>
+                    options: <?php echo $projects_dropdown; ?>,
+                    dependent: ["milestone_id"]
+                }, //reset milestone on changing of project
+                {
+                    name: "milestone_id",
+                    class: "w200",
+                    options: [{
+                        id: "",
+                        text: "- <?php echo app_lang('milestone'); ?> -"
+                    }],
+                    dependency: ["project_id"],
+                    dataSource: '<?php echo_uri("tasks/get_milestones_for_filter") ?>'
+                }, //milestone is dependent on project
+                {
+                    name: "specific_user_id",
+                    class: "w200",
+                    options: <?php echo $team_members_dropdown; ?>
+                },
+                {
+                    name: "priority_id",
+                    class: "w200",
+                    options: <?php echo $priorities_dropdown; ?>
+                },
+                {
+                    name: "label_id",
+                    class: "w200",
+                    options: <?php echo $labels_dropdown; ?>
                 }
+
+                ,
+                <?php echo $custom_field_filters; ?>
             ],
-            columns: [
-                {visible: false, searchable: false},
-                {title: '<?php echo app_lang("id") ?>', "class": idColumnClass, order_by: "id"},
-                {title: '<?php echo app_lang("title") ?>', "class": titleColumnClass, order_by: "title"},
-                {visible: false, searchable: false, order_by: "start_date"},
-                {title: '<?php echo app_lang("start_date") ?>', "iDataSort": 3, visible: showOption, order_by: "start_date"},
-                {visible: false, searchable: false, order_by: "deadline"},
-                {title: '<?php echo app_lang("deadline") ?>', "iDataSort": 5, visible: showOption, order_by: "deadline"},
-                {title: '<?php echo app_lang("milestone") ?>', visible: showOption, order_by: "milestone"},
-                {title: '<?php echo app_lang("related_to") ?>', visible: showOption},
-                {title: '<?php echo app_lang("assigned_to") ?>', "class": "min-w150", visible: showOption, order_by: "assigned_to"},
-                {title: '<?php echo app_lang("collaborators") ?>', visible: showOption},
-                {title: '<?php echo app_lang("status") ?>', visible: showOption, order_by: "status"}
-<?php echo $custom_field_headers; ?>,
-               {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option "}
+            singleDatepicker: [{
+                name: "deadline",
+                class: "w200",
+                defaultText: "<?php echo app_lang('deadline') ?>",
+                options: [{
+                        value: "expired",
+                        text: "<?php echo app_lang('expired') ?>"
+                    },
+                    {
+                        value: moment().format("YYYY-MM-DD"),
+                        text: "<?php echo app_lang('today') ?>"
+                    },
+                    {
+                        value: moment().add(1, 'days').format("YYYY-MM-DD"),
+                        text: "<?php echo app_lang('tomorrow') ?>"
+                    },
+                    {
+                        value: moment().add(7, 'days').format("YYYY-MM-DD"),
+                        text: "<?php echo sprintf(app_lang('in_number_of_days'), 7); ?>"
+                    },
+                    {
+                        value: moment().add(15, 'days').format("YYYY-MM-DD"),
+                        text: "<?php echo sprintf(app_lang('in_number_of_days'), 15); ?>"
+                    }
+                ]
+            }],
+            multiSelect: [{
+                class: "w200",
+                name: "status_id",
+                text: "<?php echo app_lang('status'); ?>",
+                options: <?php echo json_encode($statuses); ?>
+            }],
+            columns: [{
+                    visible: false,
+                    searchable: false
+                },
+                {
+                    title: '<?php echo app_lang("id") ?>',
+                    "class": idColumnClass,
+                    order_by: "id"
+                },
+                {
+                    title: '<?php echo app_lang("title") ?>',
+                    "class": titleColumnClass,
+                    order_by: "title"
+                },
+                {
+                    visible: false,
+                    searchable: false,
+                    order_by: "dock_list_number"
+                },
+                {
+                    visible: false,
+                    searchable: false,
+                    order_by: "reference_drawing"
+                },
+
+                {
+                    visible: false,
+                    searchable: false,
+                    order_by: "start_date"
+                },
+                {
+                    title: '<?php echo app_lang("start_date") ?>',
+                    "iDataSort": 3,
+                    visible: showOption,
+                    order_by: "start_date"
+                },
+                {
+                    visible: false,
+                    searchable: false,
+                    order_by: "deadline"
+                },
+                {
+                    title: '<?php echo app_lang("deadline") ?>',
+                    "iDataSort": 5,
+                    visible: showOption,
+                    order_by: "deadline"
+                },
+                {
+                    title: '<?php echo app_lang("milestone") ?>',
+                    visible: showOption,
+                    order_by: "milestone"
+                },
+
+                {
+                    title: '<?php echo app_lang("project") ?>',
+                    visible: showOption
+                },
+                {
+                    title: '<?php echo app_lang("assigned_to") ?>',
+                    "class": "min-w150",
+                    visible: showOption,
+                    order_by: "assigned_to"
+                },
+                {
+                    title: '<?php echo app_lang("collaborators") ?>',
+                    visible: showOption
+                },
+                {
+                    title: '<?php echo app_lang("status") ?>',
+                    visible: showOption,
+                    order_by: "status"
+                }
+                <?php echo $custom_field_headers; ?>,
+                {
+                    title: '<?php echo app_lang("category") ?>',
+                    visible: false
+                },
+                {
+                    title: '<?php echo app_lang("description") ?>',
+                    visible: false
+                },
+                {
+                    title: '<?php echo app_lang("location") ?>',
+                    visible: false
+                },
+                {
+                    title: '<?php echo app_lang("specification") ?>',
+                    visible: false
+                },
+                {
+                    title: '<?php echo app_lang("maker") ?>',
+                    visible: false
+                },
+                {
+                    title: '<?php echo app_lang("type") ?>',
+                    visible: false
+                },
+                {
+                    title: '<i data-feather="menu" class="icon-16"></i>',
+                    "class": "text-center option "
+                }
             ],
             printColumns: combineCustomFieldsColumns([1, 2, 4, 6, 7, 8, 9, 10, 12], '<?php echo $custom_field_headers; ?>'),
             xlsColumns: combineCustomFieldsColumns([1, 2, 4, 6, 7, 8, 9, 10, 12], '<?php echo $custom_field_headers; ?>'),
             rowCallback: tasksTableRowCallback, //load this function from the task_table_common_script.php 
-            onRelaodCallback: function () {
+            onRelaodCallback: function() {
                 hideBatchTasksBtn(true);
             },
-            onInitComplete: function () {
+            onInitComplete: function() {
                 if (!showOption) {
                     window.scrollTo(0, 210); //scroll to the content for mobile devices
                 }
@@ -184,7 +325,7 @@ if (isset($selected_priority_id) && $selected_priority_id) {
             $("#preview_task_link").trigger("click");
         }
 
-        setTimeout(function () {
+        setTimeout(function() {
             var tab = "<?php echo $tab; ?>";
             if (tab === "tasks_list") {
                 $("[data-tab='#tasks_list']").trigger("click");

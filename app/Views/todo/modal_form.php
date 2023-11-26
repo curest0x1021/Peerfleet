@@ -177,6 +177,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#description').summernote();
         $("#todo-form").appForm({
             onSuccess: function (result) {
                 $("#todo-table").appTable({newData: result.data, dataId: result.id});

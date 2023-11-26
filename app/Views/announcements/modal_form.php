@@ -181,6 +181,7 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#description').summernote();
         $("#announcement-form").appForm({
             isModal: false,
             onSuccess: function (response) {

@@ -468,6 +468,6 @@
         });
 
         $('[data-bs-toggle="tooltip"]').tooltip();
-
+        $('#description').summernote();
     });
 </script>

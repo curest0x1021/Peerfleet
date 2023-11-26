@@ -12,7 +12,7 @@
                         <div class="select-member-form clearfix pb10">
                             <?php echo form_dropdown("user_id[]", $users_dropdown, array($model_info->user_id), "class='user_select2 col-md-10 p0' id='user_id'"); ?>
                             <?php echo js_anchor("<i data-feather='x' class='icon-16'></i> ", array("class" => "remove-member delete ml20")); ?>
-                        </div>                                
+                        </div>
                     </div>
                     <?php echo js_anchor("<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_more'), array("class" => "add-member", "id" => "add-more-user")); ?>
                 </div>

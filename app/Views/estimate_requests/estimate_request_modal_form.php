@@ -97,7 +97,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-
+        $('#description').summernote();
         $("#estimate-form").appForm({
             onSuccess: function (result) {
                 if (result.newData) {

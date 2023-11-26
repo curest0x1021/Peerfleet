@@ -2,11 +2,12 @@
     <?php echo view('includes/meta'); ?>
     <?php echo view('includes/helper_js'); ?>
     <?php echo view('includes/plugin_language_js'); ?>
+    <script src="https://unpkg.com/feather-icons"></script>
 
     <?php
     //We'll merge all css and js into sigle files. If you want to use the css separately, you can use it.
 
-/*
+    /*
     $css = array(
         "assets/js/datatable/datatables.min.css",
         "assets/js/datatable/css/responsive.dataTables.min.css",
@@ -81,9 +82,9 @@
     ?>
 
     <?php echo view("includes/csrf_ajax"); ?>
-    
+
     <?php app_hooks()->do_action('app_hook_head_extension'); ?>
-    
+
     <?php echo view("includes/custom_head"); ?>
 
 </head>

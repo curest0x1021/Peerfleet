@@ -173,6 +173,7 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        $('#description').summernote();
         $("#sea-valve-form").appForm({
             onSuccess: function(result) {
                 $("#sea-valve-table").appTable({newData: result.data, dataId: result.id});;

@@ -90,7 +90,7 @@
         }, 200);
 
         $("#ticket-template-form .select2").select2();
-
+        $('#description').summernote();
     });
 
 </script>

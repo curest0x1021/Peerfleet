@@ -117,7 +117,7 @@
                 $("#category-table").appTable({newData: result.data, dataId: result.id});
             }
         });
-        
+        $('#description').summernote();
         $("#category-form .select2").select2();
     });
 </script>    

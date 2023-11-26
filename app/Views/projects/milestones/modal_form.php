@@ -79,6 +79,6 @@
         }, 200);
 
         setDatePicker("#due_date");
-
+        $('#description').summernote();
     });
 </script>    

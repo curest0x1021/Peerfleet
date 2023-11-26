@@ -37,11 +37,12 @@ if (!function_exists("make_project_tabs_data")) {
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
+                <a onclick="history.back()" style="cursor: pointer; font-size: 16px;"><i data-feather="arrow-left" class="icon-24"></i><?php echo app_lang("back"); ?></a>
+
                 <div class="project-title-section">
                     <div class="page-title no-bg clearfix mb5 no-border">
                         <div>
                             <h1 class="pl0">
-                                <span title="<?php echo $project_info->title_language_key ? app_lang($project_info->title_language_key) : $project_info->status_title; ?>"><i data-feather="<?php echo $project_info->status_icon; ?>" class='icon'></i></span>
 
                                 <?php echo $project_info->title; ?>
 

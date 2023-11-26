@@ -210,5 +210,6 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#country_id').select2();
+        $('#description').summernote();
     });
 </script>

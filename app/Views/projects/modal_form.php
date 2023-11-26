@@ -252,6 +252,6 @@
         setTimeout(function () {
             validateClientDropdown();
         });
-
+        $('#description').summernote();
     });
 </script>    

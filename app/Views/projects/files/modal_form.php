@@ -54,7 +54,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-
+        $('#description').summernote();
         $("#file-form").appForm({
             onSuccess: function (result) {
                 $("#project-file-table").appTable({reload: true});

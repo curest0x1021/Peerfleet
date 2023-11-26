@@ -318,7 +318,7 @@
                 });
             }
         });
-
+        $('#description').summernote();
         $(".select2").select2();
         setDatePicker("#supplied_date");
         $("#property").select2({

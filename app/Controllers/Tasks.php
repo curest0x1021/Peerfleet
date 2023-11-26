@@ -579,7 +579,6 @@ class Tasks extends Security_Controller {
             $selected_context = $model_info->context; //has highest priority 
             $context_id_key = $model_info->context."_id";
             $selected_context_id = $model_info->{$context_id_key};
-            
         }
 
         $dropdowns = $this->_get_task_related_dropdowns($selected_context, $selected_context_id, $selected_context_id ? true : false);
@@ -927,6 +926,25 @@ class Tasks extends Security_Controller {
             }
         }
 
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "title" => "required|max_length[60]",
+            "project_id" => "required",
+            "labels" => "required",
+            "dock_list_number" => "max_length[15]",
+            "reference_drawing" => "max_length[30]",
+            "location" => "max_length[300]",
+            "specification" => "max_length[300]",
+            "requisition_number" => "max_length[30]",
+            "maker" => "max_length[30]",
+            "type" => "max_length[30]",
+            "serial_number" => "max_length[30]",
+            "pms_scs_number" => "max_length[30]"
+        ));
+
+        $points = $this->request->getPost('points') ?? 1;
+        $milestone_id = $this->request->getPost('milestone_id') ?? 0;
+        $start_date = $this->request->getPost('start_date');
         $assigned_to = $this->request->getPost('assigned_to');
         $collaborators = $this->request->getPost('collaborators');
         $recurring = $this->request->getPost('recurring') ? 1 : 0;
@@ -934,55 +952,46 @@ class Tasks extends Security_Controller {
         $repeat_type = $this->request->getPost('repeat_type');
         $no_of_cycles = $this->request->getPost('no_of_cycles');
         $status_id = $this->request->getPost('status_id');
-        $priority_id = $this->request->getPost('priority_id');
-        $milestone_id = $this->request->getPost('milestone_id');
-
-        $start_date = $this->request->getPost('start_date');
-        $deadline = $this->request->getPost('deadline');
-
-        //convert to 24hrs time format
-        $start_time = $this->request->getPost('start_time');
-        $end_time = $this->request->getPost('end_time');
-        if (get_setting("time_format") != "24_hours") {
-            $start_time = convert_time_to_24hours_format($start_time);
-            $end_time = convert_time_to_24hours_format($end_time);
-        }
-        if ($start_date) {
-            //join date with time
-            if ($start_time) {
-                $start_date = $start_date . " " . $start_time;
-            }
-        }
-        if ($deadline) {
-            if ($end_time) {
-                $deadline = $deadline . " " . $end_time;
-            }
-        }
+        $priority_id = $this->request->getPost('priority_id') ?? 0;
 
         $data = array(
             "title" => $this->request->getPost('title'),
             "description" => $this->request->getPost('description'),
             "project_id" => $project_id ? $project_id : 0,
             "milestone_id" => $milestone_id ? $milestone_id : 0,
-            "points" => $this->request->getPost('points'),
+            "points" => $points,
             "status_id" => $status_id,
-            "client_id" => $client_id ? $client_id : 0,
-            "lead_id" => $lead_id ? $lead_id : 0,
-            "invoice_id" => $invoice_id ? $invoice_id : 0,
-            "estimate_id" => $estimate_id ? $estimate_id : 0,
-            "order_id" => $order_id ? $order_id : 0,
-            "contract_id" => $contract_id ? $contract_id : 0,
-            "proposal_id" => $proposal_id ? $proposal_id : 0,
-            "expense_id" => $expense_id ? $expense_id : 0,
-            "subscription_id" => $subscription_id ? $subscription_id : 0,
-            "priority_id" => $priority_id ? $priority_id : 0,
+            "priority_id" => $priority_id,
             "labels" => $this->request->getPost('labels'),
             "start_date" => $start_date,
-            "deadline" => $deadline,
+            "deadline" => $this->request->getPost('deadline'),
             "recurring" => $recurring,
             "repeat_every" => $repeat_every ? $repeat_every : 0,
             "repeat_type" => $repeat_type ? $repeat_type : NULL,
             "no_of_cycles" => $no_of_cycles ? $no_of_cycles : 0,
+            "dock_list_number" => $this->request->getPost("dock_list_number"),
+            "reference_drawing" => $this->request->getPost("reference_drawing"),
+            "location" => $this->request->getPost("location"),
+            "specification" => $this->request->getPost("specification"),
+            "requisition_number" => $this->request->getPost("requisition_number"),
+            "gas_free_certificate" => $this->request->getPost("gas_free_certificate"),
+            "light" => $this->request->getPost("light"),
+            "ventilation" => $this->request->getPost("ventilation"),
+            "crane_assistance" => $this->request->getPost("crane_assistance"),
+            "cleaning_before" => $this->request->getPost("cleaning_before"),
+            "cleaning_after" => $this->request->getPost("cleaning_after"),
+            "work_permit" => $this->request->getPost("work_permit"),
+            "painting_after_completion" => $this->request->getPost("painting_after_completion"),
+            "parts_on_board" => $this->request->getPost("parts_on_board"),
+            "transport_to_yard_workshop" => $this->request->getPost("transport_to_yard_workshop"),
+            "transport_outside_yard" => $this->request->getPost("transport_outside_yard"),
+            "material_yards_supply" => $this->request->getPost("material_yards_supply"),
+            "material_owners_supply" => $this->request->getPost("material_owners_supply"),
+            "risk_assessment" => $this->request->getPost("risk_assessment"),
+            "maker" => $this->request->getPost("maker"),
+            "type" => $this->request->getPost("type"),
+            "serial_number" => $this->request->getPost("serial_number"),
+            "pms_scs_number" => $this->request->getPost("pms_scs_number"),
         );
 
         if (!$id) {
@@ -1434,6 +1443,8 @@ class Tasks extends Security_Controller {
             $data->status_color,
             $check_status,
             $title,
+            $data->dock_list_number,
+            $data->reference_drawing,
             $data->start_date,
             $start_date,
             $data->deadline,
@@ -1442,7 +1453,13 @@ class Tasks extends Security_Controller {
             $context_title,
             $assigned_to,
             $collaborators,
-            $status
+            $status,
+            $task_labels,
+            $data->description,
+            $data->location,
+            $data->specification,
+            $data->maker,
+            $data->type,
         );
 
         foreach ($custom_fields as $field) {

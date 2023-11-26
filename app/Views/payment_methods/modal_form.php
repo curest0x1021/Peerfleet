@@ -135,5 +135,6 @@
             $("#title").focus();
         }, 200);
         $('[data-bs-toggle="tooltip"]').tooltip();
+        $('#description').summernote();
     });
 </script>    

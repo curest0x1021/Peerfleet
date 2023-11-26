@@ -120,8 +120,4 @@
             ?>
         </ul>
     </div>
-</div><!-- sidebar menu end -->
-
-<script type='text/javascript'>
-    feather.replace();
-</script>
+</div>

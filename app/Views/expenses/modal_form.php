@@ -324,6 +324,6 @@
         setDatePicker("#next_recurring_date", {
             startDate: moment().add(1, 'days').format("YYYY-MM-DD") //set min date = tomorrow
         });
-
+        $('#description').summernote();
     });
 </script>
