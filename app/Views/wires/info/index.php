@@ -20,7 +20,7 @@
             order: [[0, "asc"]],
             columns: [
                 {visible: false, searchable: false},
-                {title: '<?php echo app_lang("crane") ?>'},
+                {title: '<?php echo app_lang("equipment") ?>'},
                 {title: '<?php echo app_lang("wire") ?>'},
                 {title: '<?php echo app_lang("diameter") . ' in mm' ?>'},
                 {title: '<?php echo app_lang("length") . ' in m' ?>'},

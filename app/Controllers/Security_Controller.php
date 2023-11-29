@@ -846,6 +846,34 @@ class Security_Controller extends App_Controller {
         return json_encode($dropdown);
     }
 
+    protected function get_equipments_dropdown($show_header = false) {
+        $list = $this->Equipments_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array();
+        if ($show_header) {
+            $dropdown[] = array("id" => "", "text" => "-");
+        }
+        foreach ($list as $item) {
+            $dropdown[] = array("id" => $item->id, "text" => $item->name);
+        }
+
+        return json_encode($dropdown);
+    }
+
+    protected function get_wire_type_dropdown($show_header = false) {
+        $list = $this->Wire_type_model->get_all_where(array("deleted" => 0))->getResult();
+
+        $dropdown = array();
+        if ($show_header) {
+            $dropdown[] = array("id" => "", "text" => "-");
+        }
+        foreach ($list as $item) {
+            $dropdown[] = array("id" => $item->id, "text" => $item->name);
+        }
+
+        return json_encode($dropdown);
+    }
+
     protected function get_ship_machinery_equipments_dropdown($show_header = false) {
         $list = $this->Ship_equipments_model->get_all_where(array("deleted" => 0))->getResult();
 
@@ -1420,5 +1448,4 @@ class Security_Controller extends App_Controller {
             return true;
         }
     }
-
 }

@@ -29,6 +29,8 @@ $settings_menu = array(
         array("name" => "units", "url" => "units"),
         array("name" => "manufacturers", "url" => "manufacturers"),
         array("name" => "applicable_equipments", "url" => "applicable_equipments"),
+        array("name" => "equipments", "url" => "equipments"),
+        array("name" => "wire_type", "url" => "wire_type"),
         array("name" => "ship_equipments", "url" => "ship_equipments"),
         array("name" => "lifting_gear_types", "url" => "lifting_gear_types"),
         array("name" => "tasks", "url" => "settings/tasks"),

@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <a onclick="history.back()" style="cursor: pointer; font-size: 16px;"><i data-feather="arrow-left" class="icon-24"></i><?php echo app_lang("back"); ?></a>
                 <div class="page-title clearfix no-border no-border-top-radius no-bg">
-                    <h1 class="pl0"><?php echo $model_info->crane . " - " . $model_info->wire; ?></h1>
+                    <h1 class="pl0"><?php echo $model_info->name; ?></h1>
                 </div>
                 <div class="clearfix grid-button">
                     <ul id="loadtest-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">

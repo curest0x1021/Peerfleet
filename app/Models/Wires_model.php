@@ -11,9 +11,23 @@ class Wires_model extends Crud_model {
         parent::__construct($this->table);
     }
 
+    function get_one($id = 0) {
+        $wires_table = $this->db->prefixTable("wires");
+        $type_table = $this->db->prefixTable("wire_type");
+        $equipments_table = $this->db->prefixTable("equipments");
+
+        $sql = "SELECT $wires_table.*, CONCAT($equipments_table.name, ' - ', $type_table.name) as name
+        FROM $wires_table
+        LEFT JOIN $type_table ON $wires_table.wire_type = $type_table.id
+        LEFT JOIN $equipments_table ON $wires_table.equipment = $equipments_table.id
+        WHERE $wires_table.deleted = 0 AND $wires_table.id = $id";
+        return $this->db->query($sql)->getRow();
+    }
     function get_details($options = array()) {
         $clients_table = $this->db->prefixTable("clients");
         $wires_table = $this->db->prefixTable("wires");
+        $type_table = $this->db->prefixTable("wire_type");
+        $equipments_table = $this->db->prefixTable("equipments");
         $history_table = $this->db->prefixTable("wires_history");
         $loadtest_table = $this->db->prefixTable("wires_loadtest");
         $inspection_table = $this->db->prefixTable("wires_inspection");
@@ -29,13 +43,13 @@ class Wires_model extends Crud_model {
         }
 
         $sql = "SELECT $clients_table.id as client_id, $clients_table.charter_name as name,
-                    IFNULL(k0.cranes, 0) as cranes, IFNULL(k0.wires, 0) as wires,
+                    IFNULL(k0.equipments, 0) as equipments, IFNULL(k0.wires, 0) as wires,
                     (IFNULL(k0.wires, 0) - IFNULL(k1.passed, 0)) as required_exchanges,
                     (IFNULL(k0.wires, 0) - IFNULL(k2.passed, 0)) as required_loadtests,
                     (IFNULL(k0.wires, 0) - IFNULL(k3.passed, 0)) as required_inspections
                 FROM $clients_table
                 LEFT JOIN (
-                    SELECT client_id, COUNT(DISTINCT(crane)) as cranes, COUNT(wire) as wires
+                    SELECT client_id, COUNT(DISTINCT(equipment)) as equipments, COUNT(wire_type) as wires
                     FROM $wires_table
                     WHERE deleted = 0
                     GROUP BY client_id

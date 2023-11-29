@@ -1,7 +1,8 @@
 <?php
 
 //copy from default_lang.php file and update
-
+$lang["import_team_members_error_header"] = "There has an invalid header. The indicated field should be <b>%s</b>.";
+$lang["import_team_members"] = "Import Team Members";
 $lang["example"] = "Example";
 $lang["vessels"] = "Vessels";
 $lang["vessel"] = "Vessel";
@@ -114,9 +115,14 @@ $lang["already_exists_manufacturer_name"] = "This manufacturer already exists.";
 $lang["applicable_equipments"] = "Applicable machinery equipments";
 $lang["applicable_equipment"] = "Applicable machinery equipment";
 $lang["equipment"] = "Equipment";
+$lang["equipments"] = "Equipments";
+$lang["wire_type"] = "Wire Type";
+$lang["wire_types"] = "Wire Types";
+$lang["add_wire_type"] = "Add Wire Type";
 $lang["add_equipment"] = "Add equipment";
 $lang["edit_equipment"] = "Edit equipment";
 $lang["delete_equipment"] = "Delete equipment";
+$lang["already_exists_wire_type_name"] = "This Wire Type already exists.";
 $lang["ship_equipments"] = "Ship machinery equipments";
 $lang["ship_equipment"] = "Ship machinery equipment";
 $lang["already_exists_equipment_name"] = "This equipment already exists.";

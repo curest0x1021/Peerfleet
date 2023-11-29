@@ -4,7 +4,6 @@
         <?php if ($can_edit_items) { ?>
             <div class="title-button-group">
                 <?php echo modal_anchor(get_uri("wires/import_modal_form/" . $client_id . "/inspection"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_items'), array("class" => "btn btn-default", "title" => app_lang('import_items'))); ?>
-                <?php echo modal_anchor(get_uri("wires/inspection_modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_inspection'), array("class" => "btn btn-default", "title" => app_lang('add_inspection'), "data-post-client_id" => $client_id)); ?>
             </div>
         <?php } ?>
     </div>

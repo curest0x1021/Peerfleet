@@ -4,6 +4,12 @@
             <li><a role="presentation" data-bs-toggle="tab" class="active show"><?php echo app_lang('wires'); ?></a></li>
         </ul>
         <div class="card">
+            <div class="tab-title clearfix">
+                <div class="title-button-group pt10 pb10">
+                    <?php echo anchor(get_uri("equipments"), app_lang('equipments') . " <i data-feather='external-link' class='icon-16'></i>", array("class" => " align-items-center mr15 pt10 pb10", "target" => "_blank")); ?>
+                    <?php echo anchor(get_uri("wire_type"), app_lang('wire_type') . " <i data-feather='external-link' class='icon-16'></i>", array("class" => "align-items-center pt10 pb10", "target" => "_blank")); ?>
+                </div>
+            </div>           
             <div class="table-responsive">
                 <table id="wire-table" class="display" cellspacing="0" width="100%">
                 </table>
@@ -25,7 +31,7 @@
                     "class": "all"
                 },
                 {
-                    title: "<?php echo app_lang("cranes") ?>",
+                    title: "<?php echo app_lang("equipment") ?>",
                     "class": "text-center w15p"
                 },
                 {
