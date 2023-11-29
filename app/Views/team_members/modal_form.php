@@ -150,6 +150,24 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <label for="leave_days" class=" col-md-3"><?php echo app_lang('leave_days'); ?></label>
+                        <div class=" col-md-9">
+                            <?php
+                            echo form_input(array(
+                                "id" => "leave_days",
+                                "name" => "leave_days",
+                                "class" => "form-control",
+                                "placeholder" => app_lang('leave_days'),
+                                "data-rule-required" => true,
+                                "data-msg-required" => app_lang("field_required"),
+                            ));
+                            ?>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div role="tabpanel" class="tab-pane" id="account-info-tab">
                 <div class="form-group">

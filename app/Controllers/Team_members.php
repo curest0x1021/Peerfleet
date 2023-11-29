@@ -42,6 +42,287 @@ class Team_members extends Security_Controller
         }
     }
 
+    function upload_excel_file()
+    {
+        upload_file_to_temp(true);
+    }
+
+    function import_team_member_modal_form()
+    {
+        $this->access_only_admin_or_member_creator();
+
+        return $this->template->view("team_members/import_team_member_modal_form");
+    }
+
+    function download_sample_excel_file()
+    {
+        $this->access_only_admin_or_member_creator();
+        return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => "import-team-members-sample.xlsx"))));
+    }
+
+    function validate_import_team_members_file()
+    {
+        $this->access_only_admin_or_member_creator();
+
+        $file_name = $this->request->getPost("file_name");
+        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        if (!is_valid_file_to_upload($file_name)) {
+            echo json_encode(array("success" => false, 'message' => app_lang('invalid_file_type')));
+            exit();
+        }
+
+        if ($file_ext == "xlsx") {
+            echo json_encode(array("success" => true));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('please_upload_a_excel_file') . " (.xlsx)"));
+        }
+    }
+
+    function validate_import_team_members_file_data($check_on_submit = false)
+    {
+        $this->access_only_admin_or_member_creator();
+
+        $table_data = "";
+        $error_message = "";
+        $headers = array();
+        $got_error_header = false; //we've to check the valid headers first, and a single header at a time
+        $got_error_table_data = false;
+
+        $file_name = $this->request->getPost("file_name");
+
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+
+        $temp_file_path = get_setting("temp_file_path");
+        $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
+        $excel_file = $excel_file->getActiveSheet()->toArray();
+
+        $table_data .= '<table class="table table-responsive table-bordered table-hover" style="width: 100%; color: #444;">';
+
+        $table_data_header_array = array();
+        $table_data_body_array = array();
+
+        foreach ($excel_file as $row_key => $value) {
+            if ($row_key == 0) { //validate headers
+                $headers = $this->_store_headers_position($value);
+
+                foreach ($headers as $row_data) {
+                    $has_error_class = false;
+                    if (get_array_value($row_data, "has_error") && !$got_error_header) {
+                        $has_error_class = true;
+                        $got_error_header = true;
+
+                        $error_message = sprintf(app_lang("import_team_members_error_header"), app_lang(get_array_value($row_data, "key_value")));
+                    }
+
+                    array_push($table_data_header_array, array("has_error_class" => $has_error_class, "value" => get_array_value($row_data, "value")));
+                }
+            } else { //validate data
+                if (!array_filter($value)) {
+                    continue;
+                }
+
+                $error_message_on_this_row = "<ol class='pl15'>";
+
+                foreach ($value as $key => $row_data) {
+                    $has_error_class = false;
+
+                    if (!$got_error_header) {
+                        $row_data_validation = $this->_row_data_validation_and_get_error_message($key, $row_data);
+                        if ($row_data_validation) {
+                            $has_error_class = true;
+                            $error_message_on_this_row .= "<li>" . $row_data . ": " . $row_data_validation . "</li>";
+                            $got_error_table_data = true;
+                        }
+                    }
+
+                    if (count($headers) > $key) {
+                        $table_data_body_array[$row_key][] = array("has_error_class" => $has_error_class, "value" => $row_data);
+                    }
+                }
+
+                $error_message_on_this_row .= "</ol>";
+
+                //error messages for this row
+                if ($got_error_table_data) {
+                    $table_data_body_array[$row_key][] = array("has_error_text" => true, "value" => $error_message_on_this_row);
+                }
+            }
+        }
+
+        //return false if any error found on submitting file
+        if ($check_on_submit) {
+            return ($got_error_header || $got_error_table_data) ? false : true;
+        }
+
+        //add error header if there is any error in table body
+        if ($got_error_table_data) {
+            array_push($table_data_header_array, array("has_error_text" => true, "value" => app_lang("error")));
+        }
+
+        //add headers to table
+        $table_data .= "<tr>";
+        foreach ($table_data_header_array as $table_data_header) {
+            $error_class = get_array_value($table_data_header, "has_error_class") ? "error" : "";
+            $error_text = get_array_value($table_data_header, "has_error_text") ? "text-danger" : "";
+            $value = get_array_value($table_data_header, "value");
+            $table_data .= "<th class='$error_class $error_text'>" . $value . "</th>";
+        }
+        $table_data .= "</tr>";
+
+        //add body data to table
+        foreach ($table_data_body_array as $table_data_body_row) {
+            $table_data .= "<tr>";
+            $error_text = "";
+
+            foreach ($table_data_body_row as $table_data_body_row_data) {
+                $error_class = get_array_value($table_data_body_row_data, "has_error_class") ? "error" : "";
+                $error_text = get_array_value($table_data_body_row_data, "has_error_text") ? "text-danger" : "";
+                $value = get_array_value($table_data_body_row_data, "value");
+                $table_data .= "<td class='$error_class $error_text'>" . $value . "</td>";
+            }
+
+            if ($got_error_table_data && !$error_text) {
+                $table_data .= "<td></td>";
+            }
+
+            $table_data .= "</tr>";
+        }
+
+        //add error message for header
+        if ($error_message) {
+            $total_columns = count($table_data_header_array);
+            $table_data .= "<tr><td class='text-danger' colspan='$total_columns'><i data-feather='alert-triangle' class='icon-16'></i> " . $error_message . "</td></tr>";
+        }
+
+        $table_data .= "</table>";
+
+        echo json_encode(array("success" => true, 'table_data' => $table_data, 'got_error' => ($got_error_header || $got_error_table_data) ? true : false));
+    }
+
+    private function _row_data_validation_and_get_error_message($key, $data)
+    {
+        $allowed_headers = $this->_get_allowed_headers();
+        $header_value = get_array_value($allowed_headers, $key);
+
+        if (((count($allowed_headers)) > $key) && empty($data)) {
+            if (
+                $header_value == "first_name" ||
+                $header_value == "last_name" ||
+                $header_value == "job_title" ||
+                $header_value == "email" ||
+                $header_value == "leave_days"
+            ) {
+                $error_message = sprintf(app_lang("import_data_empty_message"), $header_value);
+                return $error_message;
+            }
+        }
+    }
+
+    private function _get_allowed_headers()
+    {
+        return array(
+            "first_name",
+            "last_name",
+            "job_title",
+            "email",
+            "leave_days"
+        );
+    }
+    
+    private function _store_headers_position($headers_row = array())
+    {
+        $allowed_headers = $this->_get_allowed_headers();
+
+        //check if all headers are correct and on the right position
+        $final_headers = array();
+        foreach ($headers_row as $key => $header) {
+            if (!$header) {
+                continue;
+            }
+
+            $key_value = str_replace(' ', '_', strtolower(trim($header, " ")));
+            $header_on_this_position = get_array_value($allowed_headers, $key);
+            $header_array = array("key_value" => $header_on_this_position, "value" => $header);
+
+            if ($header_on_this_position == $key_value) {
+                //allowed headers
+                //the required headers should be on the correct positions
+                //the rest headers will be treated as custom fields
+                //pushed header at last of this loop
+            } else { //invalid header, flag as red
+                $header_array["has_error"] = true;
+            }
+
+            if ($key_value) {
+                array_push($final_headers, $header_array);
+            }
+        }
+
+        return $final_headers;
+    }
+
+    function save_team_members_from_excel_file()
+    {
+        $this->access_only_admin_or_member_creator();
+
+        if (!$this->validate_import_team_members_file_data(true)) {
+            echo json_encode(array('success' => false, 'message' => app_lang('error_occurred')));
+        }
+
+        $file_name = $this->request->getPost('file_name');
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+
+        $temp_file_path = get_setting("temp_file_path");
+        $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
+        $excel_file = $excel_file->getActiveSheet()->toArray();
+
+        $allowed_headers = $this->_get_allowed_headers();
+        $now = get_current_utc_time();
+        foreach ($excel_file as $key => $value) { //rows
+            if ($key === 0) { //first line is headers, continue for the next loop
+                continue;
+            }
+
+            $team_member_data_array = $this->_prepare_team_member_data($value, $allowed_headers);
+            $client_data = get_array_value($team_member_data_array, "team_member_data");
+
+            //add client id to contact data
+            if (isset($client_data["email"])) {
+                //validate duplicate email address
+                if ($this->Users_model->is_email_exists($client_data["email"])) {
+                    continue;
+                }
+                $client_data["user_type"] = 'staff';
+                $client_data["status"] = 'active';
+                $this->Users_model->ci_save($client_data);
+            }
+        }
+
+        delete_file_from_directory($temp_file_path . $file_name); //delete temp file
+
+        echo json_encode(array('success' => true, 'message' => app_lang("record_saved")));
+    }
+
+    private function _prepare_team_member_data($data_row, $allowed_headers) {
+        //prepare leave data
+        $team_member_data = array();
+
+        foreach ($data_row as $row_data_key => $row_data_value) { //row values
+            if (!$row_data_value) {
+                continue;
+            }
+
+            $header_key_value = get_array_value($allowed_headers, $row_data_key);
+            if ($header_key_value == "name") {
+            } else {
+                $team_member_data[$header_key_value] = $row_data_value;
+            }
+        }
+
+        return array(
+            "team_member_data" => $team_member_data
+        );
+    }
     //only admin can change other user's info
     //none admin users can only change his/her own info
     //allowed members can update other members info
@@ -163,6 +444,7 @@ class Team_members extends Security_Controller
             "first_name" => "required",
             "last_name" => "required",
             "job_title" => "required",
+            "leave_days" => "required|numeric",
             "role" => "required"
         ));
 
@@ -178,7 +460,7 @@ class Team_members extends Security_Controller
             "gender" => $this->request->getPost('gender'),
             "job_title" => $this->request->getPost('job_title'),
             "phone" => $this->request->getPost('phone'),
-            "gender" => $this->request->getPost('gender'),
+            "leave_days" => $this->request->getPost('leave_days'),
             "user_type" => "staff",
             "created_at" => get_current_utc_time()
         );

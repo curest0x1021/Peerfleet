@@ -7,7 +7,7 @@
             <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
 
             <div class="form-group notepad-title">
-                <strong><?php echo $wire->crane . " - " . $wire->wire ; ?></strong>
+                <strong><?php echo $wire->name ; ?></strong>
             </div>
 
             <div class="form-group">

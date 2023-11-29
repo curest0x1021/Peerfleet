@@ -107,6 +107,7 @@ $lang["admin_user_has_all_power"] = "Admin user's has power to access/modify eve
 $lang["no_posts_to_show"] = "No posts to show";
 
 /* team_member */
+$lang["leave_days"] = "Leave days";
 $lang["add_team_member"] = "Add member";
 $lang["edit_team_member"] = "Edit team member";
 $lang["delete_team_member"] = "Delete team member";
@@ -184,8 +185,10 @@ $lang["leave_type"] = "Leave type";
 $lang["leave_types"] = "Leave types";
 
 /* leave */
+$lang["leave_duration_overview"] = "Holiday overview for the entire year";
 $lang["apply_leave"] = "Apply leave";
 $lang["assign_leave"] = "Assign leave";
+$lang["assign_leave_days_user"] = "Assign leave days";
 $lang["leaves"] = "Leave";
 $lang["pending_approval"] = "Pending approval";
 $lang["all_applications"] = "All applications";
@@ -2183,7 +2186,7 @@ $lang["all_plugins"] = "All plugins";
 
 $lang["payments_summary"] = "Payments Summary";
 $lang["yearly_summary"] = "Yearly summary";
-$lang["clients_summary"] = "Clients summary";
+$lang["clients_summary"] = "Fleet summary";
 
 $lang["import_leave_status_error_message"] = "Status is invalid. Valid statuses are: ";
 

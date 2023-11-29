@@ -289,10 +289,15 @@ class Leaves extends Security_Controller {
     // prepare a row of leave application list table
     private function _make_row_for_summary($data) {
         $meta_info = $this->_prepare_leave_info($data);
+        $actions = '';
+        if ($this->login_user->is_admin) {
+            $actions .= modal_anchor(get_uri("leaves/application_leave_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('assign_leave_days_user'), "data-post-id" => $data->applicant_id));
+        }
 
         return array(
             get_team_member_profile_link($data->applicant_id, $meta_info->applicant_meta),
-            $meta_info->duration_meta
+            modal_anchor(get_uri("leaves/application_duration_details"), $meta_info->duration_meta, array("class" => "edit", "title" => app_lang('leave_duration_overview'), "data-post-id" => $data->applicant_id)),
+            $actions
         );
     }
 
@@ -368,6 +373,91 @@ class Leaves extends Security_Controller {
         return $this->template->view("leaves/application_details", $view_data);
     }
 
+    // reaturn a row of leave application list table
+    function application_duration_details() {
+        $this->validate_submitted_data(array(
+            "id" => "required|numeric"
+        ));
+
+        $firstDayOfYear = mktime(0, 0, 0, 1, 1, date("Y"));
+        $start_date = date("Y-m-d", $firstDayOfYear);
+
+        $firstDayOfYear = mktime(0, 0, 0, 12, 31, date("Y"));
+        $end_date = date("Y-m-d", $firstDayOfYear);
+
+        $applicaiton_id = $this->request->getPost('id');
+        $options = array("start_date" => $start_date, "end_date" => $end_date, "access_type" => $this->access_type, "status" => 'approved', "allowed_members" => $this->allowed_members, "applicant_id" => $applicaiton_id);
+
+        $info = $this->Leave_applications_model->get_list($options)->getResult();;
+        if (!$info) {
+            show_404();
+        }
+
+        $ticks = array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+        for ($i = 1; $i <= 12; $i++) {
+            $tickets_array[] = 0;
+        }
+        $total_leaves = 0;
+        $user_leaves = 0;
+        foreach($info as $item) {
+            for ($i = 1; $i <= 12; $i++) {
+                $firstDayOfYear = mktime(0, 0, 0, $i, 1, date("Y"));
+                $start_month_date = date("Y-m-d", $firstDayOfYear);
+                $endDayOfYear = mktime(0, 0, 0, $i, 31, date("Y"));
+                if ($i == 4 || $i ==6 || $i == 9 || $i == 11) {
+                    $endDayOfYear = mktime(0, 0, 0, $i, 30, date("Y"));
+                } else if ($i === 2) {
+                    $endDayOfYear = mktime(0, 0, 0, $i, 29, date("Y"));
+                }
+                $end_month_date = date("Y-m-d", $endDayOfYear);
+                if (($item->start_date >= $start_month_date) && ($item->end_date <= $end_month_date)){
+                    $tickets_array[$i - 1] += $item->total_hours / 8;
+                } else if (($item->start_date >= $start_month_date) && $item->start_date <= $end_month_date && ($item->end_date > $end_month_date)){
+                    $tickets_array[$i - 1] += $item->total_hours / 8;
+                } else if (($item->start_date < $start_month_date) && $item->end_date >= $start_month_date && ($item->end_date <= $end_month_date)){
+                    // $tickets_array[$i - 1] += $item->total_hours;
+                }
+            }
+            $total_leaves += $item->total_hours;
+            $user_leaves = $item->leave_days;
+        }
+        $view_data['total_leaves'] = $total_leaves / 8;
+        $view_data['user_leaves'] = $user_leaves;
+        $view_data['leave_info'] = $info;
+        $view_data["ticks"] = json_encode($ticks);
+        $view_data["total_tickets"] = json_encode($tickets_array);
+        return $this->template->view("leaves/application_duration_details", $view_data);
+    }
+
+    // reaturn a row of leave application list table
+    function application_leave_form() {
+        $this->validate_submitted_data(array(
+            "id" => "required|numeric"
+        ));
+
+        $applicaiton_id = $this->request->getPost('id');
+        $view_data['form_type'] = 'assign_leave';
+        $view_data['team_members_info'] = $this->Users_model->get_one($applicaiton_id);
+        return $this->template->view("leaves/application_leave_form", $view_data);
+    }
+    function save_live_days() {
+        $this->validate_submitted_data(array(
+            "applicant_id" => "required|numeric",
+            "leave_days" => "required|numeric"
+        ));
+        $applicant_id = $this->request->getPost('applicant_id');
+        $leave_days = $this->request->getPost('leave_days');
+        $leave_data = array(
+            "leave_days" => $leave_days
+        );
+        $save_id = $this->Users_model->ci_save($leave_data, $applicant_id);
+        if ($save_id) {
+            log_notification("leave_application_submitted", array("leave_id" => $save_id));
+            echo json_encode(array("success" => true, "data" => '', 'id' => $save_id, 'message' => app_lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+    }
     //update leave status
     function update_status() {
 

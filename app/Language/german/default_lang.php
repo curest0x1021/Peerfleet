@@ -182,6 +182,7 @@ $lang["leave_type"] = "Freistellungsart";
 $lang["leave_types"] = "Freistellungen";
 
 /* leave */
+$lang["leave_duration_overview"] = "Vakantieoverzicht voor het hele jaar";
 $lang["apply_leave"] = "Freistellung beantragen";
 $lang["assign_leave"] = "Freistellung vergeben";
 $lang["leaves"] = "Freistellungen";

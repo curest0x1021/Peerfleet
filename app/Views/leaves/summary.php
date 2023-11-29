@@ -66,7 +66,8 @@ if (isset($client_id)) {
                 },
                 {
                     title: '<?php echo app_lang("total_leave_yearly") ?>'
-                }
+                },
+                {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
             printColumns: [0, 1, 2],
             xlsColumns: [0, 1, 2]
@@ -150,7 +151,7 @@ if (isset($client_id)) {
                 var title = element.event.title;
                 var status = element.event.extendedProps.status;
                 if (icon) {
-                    title = "<span class='clickable p5 w100p inline-block' style='background-color: " + element.event.backgroundColor + "; color: #fff'><span><i data-feather='" + icon + "' class='icon-16'></i> " + title + "(" + status + ")" + "</span></span>";
+                    title = "<span class='clickable w100p inline-block' style='background-color: " + element.event.backgroundColor + "; color: #fff'><span><i data-feather='" + icon + "' class='icon-16'></i> " + title + "(" + status + ")" + "</span></span>";
                 }
 
                 return {

@@ -14,6 +14,8 @@ class Wires_info_model extends Crud_model {
     function get_details($options = array()) {
         $info_table = $this->db->prefixTable("wires_info");
         $wires_table = $this->db->prefixTable("wires");
+        $type_table = $this->db->prefixTable("wire_type");
+        $equipments_table = $this->db->prefixTable("equipments");
 
         $where = "";
         $wire_id = $this->_get_clean_value($options, "wire_id");
@@ -25,9 +27,11 @@ class Wires_info_model extends Crud_model {
             $where .= " AND $wires_table.client_id = $client_id";
         }
 
-        $sql = "SELECT $wires_table.id as wire_id, $wires_table.client_id, $wires_table.crane, $wires_table.wire, $info_table.id, $info_table.diameter, $info_table.length, $info_table.swl
+        $sql = "SELECT $wires_table.id as wire_id, $wires_table.client_id, $equipments_table.name as crane, $type_table.name as wire, $info_table.id, $info_table.diameter, $info_table.length, $info_table.swl
                 FROM $wires_table
                 LEFT JOIN $info_table ON $wires_table.id = $info_table.wire_id
+                LEFT JOIN $type_table ON $wires_table.wire_type = $type_table.id
+                LEFT JOIN $equipments_table ON $wires_table.equipment = $equipments_table.id
                 WHERE $wires_table.deleted = 0 $where";
 
         return $this->db->query($sql);

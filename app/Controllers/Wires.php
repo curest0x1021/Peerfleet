@@ -27,8 +27,8 @@ class Wires extends Security_Controller {
             "id" => "numeric"
         ));
 
-        $view_data["label_column"] = "col-md-4";
-        $view_data["field_column"] = "col-md-8";
+        $view_data['equipments_dropdown'] = $this->get_equipments_dropdown();
+        $view_data['wire_type_dropdown'] = $this->get_wire_type_dropdown();
         $view_data["client_id"] = $client_id;
 
         return $this->template->view("wires/modal_form", $view_data);
@@ -41,144 +41,20 @@ class Wires extends Security_Controller {
             app_redirect("forbidden");
         }
 
-        $cranes = array(
-            "crane1" => $this->request->getPost("crane1"),
-            "crane2" => $this->request->getPost("crane2"),
-            "crane3" => $this->request->getPost("crane3"),
-            "gangway" => $this->request->getPost("gangway"),
-            "provision" => $this->request->getPost("provision"),
-            "rescueboat" => $this->request->getPost("rescueboat"),
-            "liferaft" => $this->request->getPost("liferaft"),
-            "freefallboat" => $this->request->getPost("freefallboat")
-        );
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "equipments" => "required|numeric",
+            "wire_type" => "required|numeric",
+        ));
 
-        $this->save_wires($client_id, $cranes);
+        $item = array(
+            'client_id' => $client_id,
+            'equipment' => $this->request->getPost('equipments'),
+            'wire_type' => $this->request->getPost('wire_type')
+        );
+        $this->Wires_model->ci_save($item, null);
 
         echo json_encode(array("success" => true, 'message' => app_lang('record_saved')));
-    }
-
-    function save_wires($client_id, $cranes) {
-        $data = array();
-        if ($cranes["crane1"]) {
-            // Crane #1
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Crane #1',
-                'wire' => 'Luffing wire'
-            );
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Crane #1',
-                'wire' => 'Hoisting wire'
-            );
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Crane #1',
-                'wire' => 'Aux. wire'
-            );
-        }
-
-        if ($cranes["crane2"]) {
-            // Crane #2
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Crane #2',
-                'wire' => 'Luffing wire'
-            );
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Crane #2',
-                'wire' => 'Hoisting wire'
-            );
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Crane #2',
-                'wire' => 'Aux. wire'
-            );
-        }
-
-        if ($cranes["crane3"]) {
-            // Crane #3
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Crane #3',
-                'wire' => 'Luffing wire'
-            );
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Crane #3',
-                'wire' => 'Hoisting wire'
-            );
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Crane #3',
-                'wire' => 'Aux. wire'
-            );
-        }
-
-        if ($cranes["gangway"]) {
-            // Gangway
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Gangway',
-                'wire' => 'S/S'
-            );
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Gangway',
-                'wire' => 'P/S'
-            );
-        }
-
-        if ($cranes["provision"]) {
-            // Provision
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Provision',
-                'wire' => ''
-            );
-        }
-
-        if ($cranes["rescueboat"]) {
-            // Rescueboat
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Rescueboat',
-                'wire' => 'L. raft'
-            );
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Rescueboat',
-                'wire' => 'Boat + L. raft'
-            );
-        }
-
-        if ($cranes["liferaft"]) {
-            // Liferaft
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Liferaft',
-                'wire' => ''
-            );
-        }
-
-        if ($cranes["freefallboat"]) {
-            // Freefallboat
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Freefallboat',
-                'wire' => '(SB)'
-            );
-            $data[] = array(
-                'client_id' => $client_id,
-                'crane' => 'Freefallboat',
-                'wire' => '(PS)'
-            );
-        }
-
-        foreach ($data as $item) {
-            $this->Wires_model->ci_save($item, null);
-        }
     }
 
     function list_data() {
@@ -198,11 +74,8 @@ class Wires extends Security_Controller {
         $name = $data->name;
         $action = "";
         if ($this->can_access_own_client($data->client_id)) {
-            if ($data->cranes > 0) {
-                $name = anchor(get_uri("wires/view/" . $data->client_id), $data->name);
-            } else {
-                $action = modal_anchor(get_uri("wires/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('add_crane'), "data-post-client_id" => $data->client_id));
-            }
+            $name = anchor(get_uri("wires/view/" . $data->client_id), $data->name);
+            $action = modal_anchor(get_uri("wires/modal_form"), "<i data-feather='plus' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('add_equipment'), "data-post-client_id" => $data->client_id));
         }
 
         $required_exchanges = "---";
@@ -221,7 +94,7 @@ class Wires extends Security_Controller {
         return array(
             $data->client_id,
             $name,
-            $data->cranes,
+            $data->equipments,
             $data->wires,
             $required_exchanges,
             $required_loadtests,
@@ -498,7 +371,7 @@ class Wires extends Security_Controller {
             "wire_id" => intval($this->request->getPost("wire_id")),
             "test_date" => $this->request->getPost("test_date"),
             "location" => $this->request->getPost("location"),
-            "passed" => $this->request->getPost("passed"),
+            "passed" => $this->request->getPost("passed") || true,
             "result" => $this->request->getPost("result"),
         );
 

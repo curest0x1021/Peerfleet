@@ -739,7 +739,7 @@ A HORIZONTAL event
 .fc .fc-daygrid-day-number {
     position: relative;
     z-index: 4;
-    padding: 4px;
+    padding: 2px;
   }
 .fc {
 

@@ -14,10 +14,14 @@ class Wires_loadtest_model extends Crud_model {
     function get_loadtests($client_id) {
         $loadtest_table = $this->db->prefixTable("wires_loadtest");
         $wires_table = $this->db->prefixTable("wires");
+        $type_table = $this->db->prefixTable("wire_type");
+        $equipments_table = $this->db->prefixTable("equipments");
 
-        $sql = "SELECT $wires_table.id, $wires_table.client_id, CONCAT($wires_table.crane, ' - ', $wires_table.wire) as name, IFNULL(k.passed, 0) as passed,
+        $sql = "SELECT $wires_table.id, $wires_table.client_id, CONCAT($equipments_table.name, ' - ', $type_table.name) as name, IFNULL(k.passed, 0) as passed,
                     k.test_date, k.location, k.result, k.files
                 FROM $wires_table
+                LEFT JOIN $type_table ON $wires_table.wire_type = $type_table.id
+                LEFT JOIN $equipments_table ON $wires_table.equipment = $equipments_table.id
                 LEFT JOIN (
                     SELECT $loadtest_table.*
                     FROM $loadtest_table

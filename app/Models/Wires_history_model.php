@@ -14,11 +14,16 @@ class Wires_history_model extends Crud_model {
     function get_details($client_id) {
         $wires_table = $this->db->prefixTable("wires");
         $history_table = $this->db->prefixTable("wires_history");
+        $type_table = $this->db->prefixTable("wire_type");
+        $equipments_table = $this->db->prefixTable("equipments");
 
-        $sql = "SELECT id as wire_id, client_id, CONCAT(crane, ' - ', wire) as name
+        $sql = "SELECT $wires_table.id as wire_id, client_id, CONCAT($equipments_table.name, ' - ', $type_table.name) as name
                 FROM $wires_table
-                WHERE client_id = $client_id
-                ORDER BY id ASC";
+                LEFT JOIN $type_table ON $wires_table.wire_type = $type_table.id
+                LEFT JOIN $equipments_table ON $wires_table.equipment = $equipments_table.id
+                WHERE $wires_table.deleted = 0 AND $wires_table.client_id = $client_id
+                ORDER BY $wires_table.id ASC";
+
         $wires = $this->db->query($sql)->getResult();
 
         $sql1 = "SELECT * FROM $history_table WHERE client_id = $client_id ORDER BY wire_id ASC, replacement ASC";
@@ -51,9 +56,13 @@ class Wires_history_model extends Crud_model {
         $wires_table = $this->db->prefixTable("wires");
         $clients_table = $this->db->prefixTable("clients");
         $history_table = $this->db->prefixTable("wires_history");
+        $type_table = $this->db->prefixTable("wire_type");
+        $equipments_table = $this->db->prefixTable("equipments");
 
-        $sql = "SELECT $wires_table.id as wire_id, $wires_table.client_id, CONCAT($wires_table.crane, ' - ', $wires_table.wire) as name, $clients_table.charter_name as vessel, MAX($history_table.replacement) as last_replacement
+        $sql = "SELECT $wires_table.id as wire_id, $wires_table.client_id, CONCAT($equipments_table.name, ' - ', $type_table.name) as name, $clients_table.charter_name as vessel, MAX($history_table.replacement) as last_replacement
                 FROM $wires_table
+                LEFT JOIN $type_table ON $wires_table.wire_type = $type_table.id
+                LEFT JOIN $equipments_table ON $wires_table.equipment = $equipments_table.id
                 JOIN $clients_table ON $clients_table.id = $wires_table.client_id
                 LEFT JOIN $history_table ON $wires_table.id = $history_table.wire_id
                 WHERE $wires_table.id = $wire_id";

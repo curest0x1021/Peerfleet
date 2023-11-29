@@ -83,7 +83,7 @@
                             "name" => "linkedin",
                             "value" => $user_info->linkedin ? $user_info->linkedin : "",
                             "class" => "form-control",
-                            "placeholder" => "linkedin"
+                            "placeholder" => "link"
                         ));
                         ?>
                     </div>

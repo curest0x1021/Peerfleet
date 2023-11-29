@@ -77,7 +77,7 @@
 </div>
 <div class="form-group">
     <div class="row">
-        <label for="linkedin" class="<?php echo $label_column; ?>">Skype</label>
+        <label for="linkedin" class="<?php echo $label_column; ?>">Linkedin</label>
         <div class="<?php echo $field_column; ?>">
             <?php
             echo form_input(array(
@@ -85,7 +85,7 @@
                 "name" => "linkedin",
                 "value" => $model_info->linkedin ? $model_info->linkedin : "",
                 "class" => "form-control",
-                "placeholder" => "Skype"
+                "placeholder" => "link"
             ));
             ?>
         </div>
