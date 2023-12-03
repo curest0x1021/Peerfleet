@@ -16,7 +16,7 @@ class Wires extends Security_Controller {
         return $this->template->rander("wires/index");
     }
 
-    /* load crane add/edit modal */
+    /* load equipment add/edit modal */
     function modal_form() {
         $client_id = $this->request->getPost('client_id');
         if (!$this->can_access_own_client($client_id)) {
@@ -34,7 +34,7 @@ class Wires extends Security_Controller {
         return $this->template->view("wires/modal_form", $view_data);
     }
 
-    /* insert or update a crane */
+    /* insert or update a equipment */
     function save() {
         $client_id = $this->request->getPost('client_id');
         if (!$this->can_access_own_client($client_id)) {
@@ -103,7 +103,7 @@ class Wires extends Security_Controller {
         );
     }
 
-    /* load crane details view */
+    /* load equipment details view */
     function view($client_id, $tab = "") {
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
@@ -113,7 +113,7 @@ class Wires extends Security_Controller {
             $model_info = $this->Wires_model->get_details(array("client_id" => $client_id))->getRow();
             if ($model_info) {
                 $view_data["tab"] = $tab;
-                $view_data["crane"] = $model_info;
+                $view_data["equipment"] = $model_info;
 
                 $info = $this->Wires_model->get_warnning_info($client_id);
                 $require_exchanges = ($info && $info->require_exchanges > 0) ? $info->require_exchanges : 0;
@@ -135,7 +135,23 @@ class Wires extends Security_Controller {
         }
     }
 
-    function info_tab($client_id) {
+    function info_tab($client_id, $equipment) {
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+
+        if ($client_id) {
+
+            $view_data['client_id'] = $client_id;
+            $view_data['equipment'] = $this->Equipments_model->get_one($equipment);
+            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
+            return $this->template->view("wires/info/index", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
+    function summary_tab($client_id) {
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
@@ -143,7 +159,7 @@ class Wires extends Security_Controller {
         if ($client_id) {
             $view_data['client_id'] = $client_id;
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
-            return $this->template->view("wires/info/index", $view_data);
+            return $this->template->view("wires/summary/index", $view_data);
         } else {
             show_404();
         }
@@ -155,12 +171,13 @@ class Wires extends Security_Controller {
         }
 
         $wire_id = $this->request->getPost("wire_id");
-        $model_info = $this->Wires_info_model->get_details(array("wire_id" => $wire_id))->getRow();
+        $model_info = $this->Wires_info_model->get_details(array("wire_id" => $wire_id, "client_id" => $client_id))->getRow();
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
         $view_data["wire_id"] = $wire_id;
         $view_data["client_id"] = $client_id;
         $view_data["model_info"] = $model_info;
+        $view_data["manufacturers_dropdown"] = $this->get_manufacturers_dropdown();
 
         return $this->template->view("wires/info/modal_form", $view_data);
     }
@@ -189,6 +206,8 @@ class Wires extends Security_Controller {
             "diameter" => floatval($this->request->getPost("diameter")),
             "length" => floatval($this->request->getPost("length")),
             "swl" => floatval($this->request->getPost("swl")),
+            "manufacturer_id" => $this->request->getPost("manufacturer_id"),
+            "delivered" => $this->request->getPost("delivered"),
         );
 
         $save_id = $this->Wires_info_model->ci_save($data, $id);
@@ -200,8 +219,8 @@ class Wires extends Security_Controller {
         }
     }
 
-    function info_list_data($client_id) {
-        $list = $this->Wires_info_model->get_details(array("client_id" => $client_id))->getResult();
+    function info_list_data($client_id, $equipment_id) {
+        $list = $this->Wires_info_model->get_details(array("client_id" => $client_id, "equipment_id" => $equipment_id))->getResult();
         $result = [];
         foreach ($list as $data) {
             $result[] = $this->_info_make_row($data);
@@ -210,18 +229,122 @@ class Wires extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
 
-    private function _info_make_row($data) {
+    function info_summary_data($client_id) {
+        $list = $this->Wires_model->get_summary_details(array("client_id" => $client_id))->getResult();
+        $nextdate_list = $this->Wires_model->get_next_details(array("client_id" => $client_id))->getResult();
+        $result = [];
+        foreach ($list as $data) {
+            $filtered = [];
+            
+            foreach ($nextdate_list as $next_data) {
+                if ($next_data->equipment === $data->equipment) {
+                    $filtered[] = $next_data;
+                }
+            }
+            
+            $min_test_date = array_reduce($filtered, function($min, $details) {
+                if ($details->test_date == NULL) {
+                    return $min;
+                }
+                return min($min, strtotime($details->test_date));
+            }, strtotime("3000-01-01"));
+
+            $min_inspection_date = array_reduce($filtered, function($min, $details) {
+                if ($details->inspection_date == NULL) {
+                    return $min;
+                }
+                return min($min, strtotime($details->inspection_date));
+            }, strtotime("3000-01-01"));
+
+            $final_test_date = date("Y-m-d", strtotime("+57 months", $min_test_date));
+            $final_inspection_date = date("Y-m-d", strtotime("+9 months", $min_inspection_date));
+            $result[] = $this->_summary_make_row($data, $final_test_date, $final_inspection_date, $filtered);
+        }
+
+        echo json_encode(array("data" => $result));
+    }
+
+    private function _summary_make_row($data, $final_test_date, $final_inspection_date, $nextdate_list) {
+        return array(
+            $data->client_id,
+            anchor(get_uri("wires/main_view/" . $data->client_id . "/" . $data->equipment), $data->equipment_name),
+            $data->wires,
+            $final_test_date == '3004-10-01' ? '' : $final_test_date,
+            $final_inspection_date == '3000-10-01' ? '' : $final_inspection_date,
+        );
+    }
+
+    private function _info_make_row($data, $last_date = true) {
         $action = modal_anchor(get_uri("wires/info_modal_form/" . $data->client_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit') . " - " . $data->crane . " " . $data->wire, "data-post-wire_id" => $data->wire_id));
+
+        $loadtest_passed = '';
+        if ($data->loadtest_passed) {
+            $loadtest_reminder_date = get_loadtest_reminder_date();
+            if ($last_date && $loadtest_reminder_date > $data->test_date) {
+                $loadtest_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Due to over due"></div>';
+            } else {
+                $loadtest_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;" title="Passed"></div>';
+            }
+        } else {
+            $loadtest_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Not passed"></div>';
+        }
+
+        $visual_inspection_passed = '';
+        if ($data->inspection_date) {
+            $inspection_reminder_date = get_visual_inspection_reminder_date();
+            if ($last_date && $inspection_reminder_date > $data->inspection_date) {
+                $visual_inspection_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Due to over due"></div>';
+            } else {
+                $visual_inspection_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;" title="Passed"></div>';
+            }
+        } else {
+            $visual_inspection_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Not passed"></div>';
+        }
 
         return array(
             $data->wire_id,
-            $data->crane,
             $data->wire,
             $data->diameter,
             $data->length,
             $data->swl,
+            $data->manufacturer,
+            $data->delivered,
+            $loadtest_passed,
+            $visual_inspection_passed,
             $action
         );
+    }
+
+    /* load main_view view */
+    function main_view($client_id = 0, $equipment = 0) {
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+        // return $client_id . $equipment;
+        if ($equipment) {
+            $model_info = $this->Wires_model->get_details(array("client_id" => $client_id))->getRow();
+            if ($model_info) {
+                $view_data["crane"] = $model_info;
+                $view_data["equipment"] = $this->Equipments_model->get_one($equipment);
+
+                $info = $this->Wires_model->get_warnning_info($client_id);
+                $require_exchanges = ($info && $info->require_exchanges > 0) ? $info->require_exchanges : 0;
+                $require_loadtests = ($info && $info->require_loadtests > 0) ? $info->require_loadtests : 0;
+                $require_inspections = ($info && $info->require_inspections > 0) ? $info->require_inspections : 0;
+                $warnning = array(
+                    "exchanges" => $require_exchanges > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_exchanges . '</span>' : "",
+                    "loadtests" => $require_loadtests > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_loadtests . '</span>' : "",
+                    "inspections" => $require_inspections > 0 ? '<span style="width: 18px; height: 18px; color: #ffffff; background-color: #d50000; border-radius: 6px; padding-left: 4px; padding-right: 4px; margin-left: 4px;">' . $require_inspections . '</span>' : ""
+                );
+                $view_data['warnning'] = $warnning;
+
+                return $this->template->rander("wires/main_view", $view_data);
+            } else {
+                show_404();
+            }
+        } else {
+            show_404();
+        }
     }
 
     function history_tab($client_id) {
@@ -534,6 +657,20 @@ class Wires extends Security_Controller {
         }
     }
 
+    function certificates_tab($client_id) {
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+
+        if ($client_id) {
+            $view_data["client_id"] = $client_id;
+            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
+            return $this->template->view("wires/certificates/index", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
     function inspection_modal_form($wire_id) {
         $wire = $this->Wires_model->get_one($wire_id);
         if (!$this->can_access_own_client($wire->client_id)) {
@@ -735,6 +872,31 @@ class Wires extends Security_Controller {
     }
 
     // Import data from excel
+    function upload_certificate_form($client_id, $tab) {
+        if (!$this->can_access_own_client($client_id)) {
+            app_redirect("forbidden");
+        }
+        $view_data["tab"] = $tab;
+        $view_data["client_id"] = $client_id;
+        return $this->template->view("wires/upload_certificate_form", $view_data);
+    }
+
+    function validate_certificate_file() {
+        $file_name = $this->request->getPost("file_name");
+        $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+        if (!is_valid_file_to_upload($file_name)) {
+            echo json_encode(array("success" => false, 'message' => app_lang('invalid_file_type')));
+            exit();
+        }
+
+        if ($file_ext == "png" || $file_ext == "jpg" || $file_ext == "jpeg") {
+            echo json_encode(array("success" => true));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('please_upload_a_image_file') . " (.png|.jpg)"));
+        }
+    }
+
+    // Import data from excel
     function import_modal_form($client_id, $tab) {
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
@@ -780,15 +942,15 @@ class Wires extends Security_Controller {
     private function _get_allowed_headers($tab) {
         if ($tab == "info") {
             return array(
-                [ "key" => "crane", "required" => true ],
-                [ "key" => "wire", "required" => false ],
+                [ "key" => "equipment", "required" => true ],
+                [ "key" => "wire", "required" => true ],
                 [ "key" => "diameter", "required" => false ],
                 [ "key" => "length", "required" => false ],
                 [ "key" => "swl", "required" => false ]
             );
         } else if ($tab == "history") {
             return array(
-                [ "key" => "crane", "required" => true ],
+                [ "key" => "equipment", "required" => true ],
                 [ "key" => "wire", "required" => false ],
                 [ "key" => "initial", "required" => false ],
                 [ "key" => "1st_replacement", "required" => false ],
@@ -799,7 +961,7 @@ class Wires extends Security_Controller {
             );
         } else if ($tab == "loadtest") {
             return array(
-                [ "key" => "crane", "required" => true ],
+                [ "key" => "equipment", "required" => true ],
                 [ "key" => "wire", "required" => false ],
                 [ "key" => "test_date", "required" => false ],
                 [ "key" => "location", "required" => false ],
@@ -808,7 +970,7 @@ class Wires extends Security_Controller {
             );
         } else if ($tab == "inspection") {
             return array(
-                [ "key" => "crane", "required" => true ],
+                [ "key" => "equipment", "required" => true ],
                 [ "key" => "wire", "required" => false ],
                 [ "key" => "inspection_date", "required" => false ],
                 [ "key" => "location", "required" => false ],
@@ -874,6 +1036,7 @@ class Wires extends Security_Controller {
         //prepare data
         $item_data = array();
         $wire_data = array();
+        $equipment_data = array();
 
         foreach ($data_row as $row_data_key => $row_data_value) { //row values
             if (!$row_data_value) {
@@ -881,8 +1044,8 @@ class Wires extends Security_Controller {
             }
 
             $header_key_value = get_array_value($allowed_headers, $row_data_key);
-            if ($header_key_value == "crane") {
-                $wire_data["crane"] = $row_data_value;
+            if ($header_key_value == "equipment") {
+                $equipment_data["equipment"] = $row_data_value;
             } else if ($header_key_value == 'wire') {
                 $wire_data["wire"] = $row_data_value;
             } else {
@@ -892,7 +1055,8 @@ class Wires extends Security_Controller {
 
         return array(
             "item_data" => $item_data,
-            "wire_data" => $wire_data
+            "wire_data" => $wire_data,
+            "equipment_data" => $equipment_data,
         );
     }
 
@@ -1053,8 +1217,8 @@ class Wires extends Security_Controller {
     }
 
     private function _save_wire_info_from_excel_file($client_id, $allowed_headers, $excel_file) {
-        $wire_list = $this->Wires_model->get_all_where(array("client_id" => $client_id))->getResult();
-        $info_list = $this->Wires_info_model->get_all_where(array("client_id" => $client_id))->getResult();
+        $equipment_list = $this->Equipments_model->get_all()->getResult();
+        $wire_type_list = $this->Wire_type_model->get_all()->getResult();
 
         foreach ($excel_file as $key => $value) { //rows
             if ($key === 0) { //first line is headers, continue for the next loop
@@ -1064,44 +1228,46 @@ class Wires extends Security_Controller {
             $data_array = $this->_prepare_item_data($value, $allowed_headers);
             $item_data = get_array_value($data_array, "item_data");
             $wire_data = get_array_value($data_array, "wire_data");
+            $equipment_data = get_array_value($data_array, "equipment_data");
 
-            //couldn't prepare valid data
-            if (!($item_data && count($item_data))) {
-                continue;
+            // Wires
+            $wire_type = find_object_by_key($wire_type_list, $wire_data["wire"], "name");
+            $equipment = find_object_by_key($equipment_list, $equipment_data["equipment"], "name");
+            
+            if (!$wire_type) {
+                $wire_type_data = array(
+                    "name" => $wire_data["wire"]
+                );
+                $mt_save_id = $this->Wire_type_model->ci_save($wire_type_data);
+                $wire_type = new stdClass();
+                $wire_type->id = $mt_save_id;
+                $wire_type->name = $wire_data["wire"];
+                $wire_type_list[] = $wire_type;
             }
 
-            try {
-                // Wires
-                $wire = $this->_find_wire($wire_data, $wire_list);
-                if ($wire) {
-                    $item_data["wire_id"] = $wire->id;
-                } else {
-                    $wire_data["client_id"] = $client_id;
-                    $m_save_id = $this->Wires_model->ci_save($wire_data);
-                    $item_data["wire_id"] = $m_save_id;
-
-                    $temp = new stdClass();
-                    $temp->id = $m_save_id;
-                    $temp->crane = $wire_data["crane"];
-                    $temp->wire = $wire_data["wire"];
-                    $wire_list[] = $temp;
-                }
-
-                $item_data["client_id"] = $client_id;
-                $wire_info = $this->_find_wire_info($item_data["wire_id"], $info_list);
-                if ($wire_info) {
-                    $this->Wires_info_model->ci_save($item_data, $wire_info->id);
-                } else {
-                    $m_save_id = $this->Wires_info_model->ci_save($item_data);
-
-                    $temp = new stdClass();
-                    $temp->id = $m_save_id;
-                    $temp->wire_id = $item_data["wire_id"];
-                    $info_list[] = $temp;
-                }
-            } catch (Exception $e) {
-                continue;
+            
+            if (!$equipment) {
+                $e_data = array(
+                    "name" => $equipment_data["equipment"],
+                );
+                $me_save_id = $this->Equipments_model->ci_save($e_data);
+                $equipment = new stdClass();
+                $equipment->id = $me_save_id;
+                $equipment->name = $equipment_data["equipment"];
+                $equipment_list[] = $equipment;
             }
+            $new_wire_data = array(
+                "client_id" => $client_id,
+                "equipment" => $equipment->id,
+                "wire_type" => $wire_type->id,
+            );
+            
+            $m_save_id = $this->Wires_model->ci_save($new_wire_data, null);
+
+            $item_data["wire_id"] = $m_save_id;
+            $item_data["client_id"] = $client_id;
+            $this->Wires_info_model->ci_save($item_data, null);
+
         }
     }
 
@@ -1134,7 +1300,7 @@ class Wires extends Security_Controller {
 
                     $temp = new stdClass();
                     $temp->id = $m_save_id;
-                    $temp->crane = $wire_data["crane"];
+                    $temp->equipment = $wire_data["equipment"];
                     $temp->wire = $wire_data["wire"];
                     $wire_list[] = $temp;
                 }
@@ -1236,7 +1402,7 @@ class Wires extends Security_Controller {
 
                     $temp = new stdClass();
                     $temp->id = $m_save_id;
-                    $temp->crane = $wire_data["crane"];
+                    $temp->equipment = $wire_data["equipment"];
                     $temp->wire = $wire_data["wire"];
                     $wire_list[] = $temp;
                 }
@@ -1282,7 +1448,7 @@ class Wires extends Security_Controller {
 
                     $temp = new stdClass();
                     $temp->id = $m_save_id;
-                    $temp->crane = $wire_data["crane"];
+                    $temp->equipment = $wire_data["equipment"];
                     $temp->wire = $wire_data["wire"];
                     $wire_list[] = $temp;
                 }
@@ -1300,11 +1466,11 @@ class Wires extends Security_Controller {
     }
 
     private function _find_wire($data, $arr) {
-        $crane = strtolower(trim($data["crane"]));
+        $equipment = strtolower(trim($data["equipment"]));
         $wire = $data["wire"] ? strtolower(trim($data["wire"])) : "";
 
         foreach ($arr as $item) {
-            if (strtolower($item->crane) == $crane && strtolower($item->wire) == $wire) {
+            if (strtolower($item->equipment) == $equipment && strtolower($item->wire) == $wire) {
                 return $item;
             }
         }

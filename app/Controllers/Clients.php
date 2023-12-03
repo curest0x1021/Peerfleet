@@ -100,29 +100,30 @@ class Clients extends Security_Controller
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
-            "charter_name" => "required|max_length[30]",
-            "christian_name" => "required|max_length[30]",
+            "charter_name" => "required",
+            "christian_name" => "required",
             "owner_id" => "required",
             "vessel_type" => "required",
-            "imo_number" => "required|max_length[7]",
-            "call_sign" => "required|max_length[15]",
-            "offical_number" => "required|max_length[15]",
-            "class_number" => "required|max_length[15]",
-            "mmsi" => "required|exact_length[9]",
-            "build_number" => "required|max_length[15]",
+            "call_sign" => "required",
+            "offical_number" => "required",
+            "class_number" => "required",
+            "mmsi" => "required",
+            "build_number" => "required",
             // "ice_class" => "required|max_length[5]",
-            "classification_society" => "required|max_length[30]",
-            "build_yard" => "required|max_length[40]",
-            "build_series" => "required|max_length[20]",
+            "classification_society" => "required",
+            "build_yard" => "required",
+            "build_series" => "required",
             // "sister" => "required|max_length[30]",
-            "flag_state" => "required|max_length[40]",
-            "port_of_registry" => "required|max_length[40]"
+            "flag_state" => "required",
+            "port_of_registry" => "required"
         ));
 
         $data = array(
             "charter_name" => $this->request->getPost('charter_name'),
             "christian_name" => $this->request->getPost('christian_name'),
             "owner_id" => $this->request->getPost('owner_id'),
+            "backup_id" => $this->request->getPost('backup_id'),
+            "tech_id" => $this->request->getPost('tech_id'),
             "type" => $this->request->getPost('vessel_type'),
             "imo_number" => $this->request->getPost('imo_number'),
             "call_sign" => $this->request->getPost('call_sign'),
@@ -2311,8 +2312,8 @@ class Clients extends Security_Controller
     {
         $this->validate_submitted_data(array(
             "id" => "numeric",
-            "code" => "required|max_length[30]",
-            "name" => "required|max_length[50]",
+            "code" => "required",
+            "name" => "required",
         ));
 
         $id = $this->request->getPost("id");

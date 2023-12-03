@@ -1,12 +1,4 @@
 <?php
-load_css(array(
-    "assets/js/fullcalendar/fullcalendar.min.css"
-));
-
-load_js(array(
-    "assets/js/fullcalendar/fullcalendar.min.js",
-    "assets/js/fullcalendar/locales-all.min.js"
-));
 
 $client = "";
 if (isset($client_id)) {
@@ -112,11 +104,11 @@ if (isset($client_id)) {
 
         window.fullCalendar = new FullCalendar.Calendar($eventCalendar, {
             locale: AppLanugage.locale,
-            height: $(window).height() - 210,
+            height: $(window).height() - 110,
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+                right: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay,listMonth'
             },
             events: "<?php echo_uri("events/calendar_events/"); ?>" + filter_values + "/" + event_label,
             dayMaxEvents: false,

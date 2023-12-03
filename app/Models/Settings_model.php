@@ -16,6 +16,7 @@ class Settings_model extends Crud_model {
         if (count($result->getResult()) == 1) {
             return $result->getRow()->setting_value;
         }
+        return @serialize(array());
     }
 
     function save_setting($setting_name, $setting_value, $type = "app") {

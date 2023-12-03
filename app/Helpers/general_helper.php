@@ -2954,6 +2954,21 @@ if (!function_exists('get_project_status_text_info')) {
 
 }
 
+/**
+ * find item from key and value
+ * @return string
+ */
+if (!function_exists('find_object_by_key')) {
+    function find_object_by_key($arr, $data, $key) {
+        $data = trim($data);
+        foreach ($arr as $item) {
+            if ($data == $item->$key) {
+                return $item;
+            }
+        }
+        return;
+    }
+}
 
 /**
  * get rope exchange reminder date

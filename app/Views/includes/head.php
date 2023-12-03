@@ -3,6 +3,7 @@
     <?php echo view('includes/helper_js'); ?>
     <?php echo view('includes/plugin_language_js'); ?>
     <script src="https://unpkg.com/feather-icons"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
 
     <?php
     //We'll merge all css and js into sigle files. If you want to use the css separately, you can use it.

@@ -3,7 +3,6 @@
         <h4><?php echo app_lang('history'); ?></h4>
         <?php if ($can_edit_items) { ?>
             <div class="title-button-group">
-                <?php echo modal_anchor(get_uri("wires/import_modal_form/" . $client_id . "/history"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_items'), array("class" => "btn btn-default", "title" => app_lang('import_items'))); ?>
             </div>
         <?php } ?>
     </div>
