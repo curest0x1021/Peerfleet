@@ -1,6 +1,11 @@
 <?php
 
 //copy from default_lang.php file and update
+$lang["backup_person"] = "Backup Person";
+$lang["tech_person"] = "Tech Person";
+$lang["certificates"] = "Certificates";
+$lang["next_load_test"] = "Next Load test";
+$lang["next_visual_inspection"] = "Next visual inspection";
 $lang["import_team_members_error_header"] = "There has an invalid header. The indicated field should be <b>%s</b>.";
 $lang["import_team_members"] = "Import Team Members";
 $lang["example"] = "Example";

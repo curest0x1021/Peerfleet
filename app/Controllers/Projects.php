@@ -2397,6 +2397,38 @@ class Projects extends Security_Controller {
         return $this->template->view("projects/comments/reply_form", $view_data);
     }
 
+    /* load checklist view */
+
+    function checklist($project_id) {
+        validate_numeric_value($project_id);
+
+        $this->init_project_permission_checker($project_id);
+
+        if (!$this->can_view_files()) {
+            app_redirect("forbidden");
+        }
+
+        $view_data['can_add_files'] = $this->can_add_files();
+        $options = array("project_id" => $project_id);
+        $view_data['files'] = $this->Project_files_model->get_details($options)->getResult();
+        $view_data['project_id'] = $project_id;
+
+        $file_categories = $this->File_category_model->get_details()->getResult();
+        $file_categories_dropdown = array(array("id" => "", "text" => "- " . app_lang("category") . " -"));
+
+        if ($file_categories) {
+            foreach ($file_categories as $file_category) {
+                $file_categories_dropdown[] = array("id" => $file_category->id, "text" => $file_category->name);
+            }
+        }
+
+        $view_data["file_categories_dropdown"] = json_encode($file_categories_dropdown);
+
+        $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("project_files", $this->login_user->is_admin, $this->login_user->user_type);
+        $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("project_files", $this->login_user->is_admin, $this->login_user->user_type);
+
+        return $this->template->view("projects/checklist/index", $view_data);
+    }
     /* load files view */
 
     function files($project_id) {

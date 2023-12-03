@@ -65,6 +65,48 @@
 
 <div class="form-group">
     <div class="row">
+        <label for="backup_id" class="<?php echo $label_column; ?>"><?php echo app_lang('backup_person'); ?>
+            <span class="help" data-container="body" data-bs-toggle="tooltip"></span>
+        </label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_input(array(
+                "id" => "backup_id",
+                "name" => "backup_id",
+                "value" => $model_info->backup_id ? $model_info->backup_id : "",
+                "class" => "form-control",
+                "placeholder" => app_lang('backup_person'),
+                "data-rule-required" => true,
+                "data-msg-required" => app_lang("field_required")
+            ));
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="row">
+        <label for="tech_id" class="<?php echo $label_column; ?>"><?php echo app_lang('tech_person'); ?>
+            <span class="help" data-container="body" data-bs-toggle="tooltip"></span>
+        </label>
+        <div class="<?php echo $field_column; ?>">
+            <?php
+            echo form_input(array(
+                "id" => "tech_id",
+                "name" => "tech_id",
+                "value" => $model_info->tech_id ? $model_info->tech_id : "",
+                "class" => "form-control",
+                "placeholder" => app_lang('tech_person'),
+                "data-rule-required" => true,
+                "data-msg-required" => app_lang("field_required")
+            ));
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="row">
         <label for="vessel_type" class="<?php echo $label_column; ?>"><?php echo app_lang('vessel_type'); ?></label>
         <div class="<?php echo $field_column; ?>">
             <?php
@@ -350,6 +392,14 @@
         <?php } ?>
 
         $('#owner_id').select2({
+            data: <?php echo $team_members_dropdown; ?>
+        });
+
+        $('#backup_id').select2({
+            data: <?php echo $team_members_dropdown; ?>
+        });
+
+        $('#tech_id').select2({
             data: <?php echo $team_members_dropdown; ?>
         });
 

@@ -208,8 +208,16 @@ class Team_members extends Security_Controller
             if (
                 $header_value == "first_name" ||
                 $header_value == "last_name" ||
+                $header_value == "phone" ||
+                $header_value == "mobile" ||
+                $header_value == "dob" ||
+                $header_value == "gender" ||
                 $header_value == "job_title" ||
+                $header_value == "teams" ||
+                $header_value == "date_of_hire" ||
+                $header_value == "role_id" ||
                 $header_value == "email" ||
+                $header_value == "password" ||
                 $header_value == "leave_days"
             ) {
                 $error_message = sprintf(app_lang("import_data_empty_message"), $header_value);
@@ -223,8 +231,16 @@ class Team_members extends Security_Controller
         return array(
             "first_name",
             "last_name",
+            "phone",
+            "mobile",
+            "dob",
+            "gender",
             "job_title",
+            "teams",
+            "date_of_hire",
+            "role_id",
             "email",
+            "password",
             "leave_days"
         );
     }
@@ -283,18 +299,58 @@ class Team_members extends Security_Controller
                 continue;
             }
 
-            $team_member_data_array = $this->_prepare_team_member_data($value, $allowed_headers);
-            $client_data = get_array_value($team_member_data_array, "team_member_data");
+            $import_data = $this->_prepare_team_member_data($value, $allowed_headers);
+            $user_data = get_array_value($import_data, "user_data");
+            $job_info_data = get_array_value($import_data, "job_info_data");
+            $team_data = get_array_value($import_data, "team_data");
 
             //add client id to contact data
-            if (isset($client_data["email"])) {
+            if (isset($user_data["email"])) {
                 //validate duplicate email address
-                if ($this->Users_model->is_email_exists($client_data["email"])) {
+                if ($this->Users_model->is_email_exists($user_data["email"])) {
                     continue;
                 }
-                $client_data["user_type"] = 'staff';
-                $client_data["status"] = 'active';
-                $this->Users_model->ci_save($client_data);
+                $user_data["user_type"] = 'staff';
+                $user_data["status"] = 'active';
+                $user_data = clean_data($user_data);
+                $save_id = $this->Users_model->ci_save($user_data);
+
+                $job_data = array(
+                    "user_id" => $save_id,
+                    "date_of_hire" => $job_info_data["date_of_hire"]
+                );
+                $job_data = clean_data($job_data);
+
+                $this->Team_member_job_info_model->ci_save($job_data);
+
+                if ($team_data["teams"]) {
+                    // we'll save the team
+                    $team_name = $team_data["teams"];
+
+                    $list_data = $this->Team_model->get_details()->getResult();
+
+                    $result = array();
+
+                    $find_team = false;
+                    $exist_id = -1;
+                    $members = $save_id;
+                    foreach ($list_data as $data) {
+                        if ($data->title == $team_name) {
+                            $find_team = true;
+                            $exist_id = $data->id;
+                            $members = $data->members . "," . $save_id;
+                        }
+                    }
+                    $teams_data = array(
+                        "title" => $team_name,
+                        "members" => $members
+                    );
+                    if ($find_team == true) { // update team
+                        $this->Team_model->ci_save($teams_data, $exist_id);
+                    } else { // create
+                        $this->Team_model->ci_save($teams_data);
+                    }
+                }
             }
         }
 
@@ -305,7 +361,9 @@ class Team_members extends Security_Controller
 
     private function _prepare_team_member_data($data_row, $allowed_headers) {
         //prepare leave data
-        $team_member_data = array();
+        $user_data = array();
+        $job_info_data = array();
+        $team_data = array();
 
         foreach ($data_row as $row_data_key => $row_data_value) { //row values
             if (!$row_data_value) {
@@ -313,14 +371,21 @@ class Team_members extends Security_Controller
             }
 
             $header_key_value = get_array_value($allowed_headers, $row_data_key);
-            if ($header_key_value == "name") {
+            if ($header_key_value == "password") {
+                $user_data["password"] = password_hash($row_data_value, PASSWORD_DEFAULT);
+            } else if ($header_key_value == "date_of_hire") {
+                $job_info_data["date_of_hire"] = $row_data_value;
+            } else if ($header_key_value == "teams") {
+                $team_data["teams"] = $row_data_value;
             } else {
-                $team_member_data[$header_key_value] = $row_data_value;
+                $user_data[$header_key_value] = $row_data_value;
             }
         }
 
         return array(
-            "team_member_data" => $team_member_data
+            "user_data" => $user_data,
+            "job_info_data" => $job_info_data,
+            "team_data" => $team_data
         );
     }
     //only admin can change other user's info

@@ -21,6 +21,7 @@ class App_Controller extends Controller {
     public $Settings_model;
     public $Users_model;
     public $Team_model;
+    public $Team_member_job_info_model;
     public $Attendance_model;
     public $Leave_types_model;
     public $Leave_applications_model;
@@ -180,6 +181,7 @@ class App_Controller extends Controller {
             'Settings_model',
             'Users_model',
             'Team_model',
+            'Team_member_job_info_model',
             'Attendance_model',
             'Leave_types_model',
             'Leave_applications_model',

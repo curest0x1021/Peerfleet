@@ -20,5 +20,12 @@ class Equipments_model extends Crud_model {
             return false;
         }
     }
+    function get_one($id = 0) {
+        $equipments_table = $this->db->prefixTable("equipments");
 
+        $sql = "SELECT $equipments_table.*
+        FROM $equipments_table
+        WHERE $equipments_table.deleted = 0 AND $equipments_table.id = $id";
+        return $this->db->query($sql)->getRow();
+    }
 }
