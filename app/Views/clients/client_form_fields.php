@@ -13,7 +13,7 @@
                 "class" => "form-control charter_name_input_section",
                 "placeholder" => app_lang('charter_name'),
                 "autofocus" => true,
-                "maxlength" => 30,
+                "maxlength" => 255,
                 "data-rule-required" => true,
                 "data-msg-required" => app_lang("field_required"),
             ));
@@ -33,7 +33,7 @@
                 "value" => $model_info->christian_name ? $model_info->christian_name : "",
                 "class" => "form-control christian_name_input_section",
                 "placeholder" => app_lang('christian_name'),
-                "maxlength" => 30,
+                "maxlength" => 255,
                 "data-rule-required" => true,
                 "data-msg-required" => app_lang("field_required"),
             ));
@@ -273,7 +273,7 @@
                 "value" => $model_info->classification_society ? $model_info->classification_society : "",
                 "class" => "form-control",
                 "placeholder" => app_lang('classification_society'),
-                "maxlength" => 30,
+                "maxlength" => 255,
                 "data-rule-required" => true,
                 "data-msg-required" => app_lang("field_required")
             ));
@@ -293,7 +293,7 @@
                 "value" => $model_info->build_yard ? $model_info->build_yard : "",
                 "class" => "form-control",
                 "placeholder" => app_lang('build_yard'),
-                "maxlength" => 40,
+                "maxlength" => 255,
                 "data-rule-required" => true,
                 "data-msg-required" => app_lang("field_required")
             ));
@@ -313,7 +313,7 @@
                 "value" => $model_info->build_series ? $model_info->build_series : "",
                 "class" => "form-control",
                 "placeholder" => app_lang('build_series'),
-                "maxlength" => 20,
+                "maxlength" => 255,
                 "data-rule-required" => true,
                 "data-msg-required" => app_lang("field_required")
             ));
@@ -333,7 +333,7 @@
                 "value" => $model_info->sister ? $model_info->sister : "",
                 "class" => "form-control",
                 "placeholder" => app_lang('sister'),
-                "maxlength" => 30,
+                "maxlength" => 255,
             ));
             ?>
         </div>
@@ -351,7 +351,7 @@
                 "value" => $model_info->flag_state ? $model_info->flag_state : "",
                 "class" => "form-control",
                 "placeholder" => app_lang('flag_state'),
-                "maxlength" => 40,
+                "maxlength" => 255,
                 "data-rule-required" => true,
                 "data-msg-required" => app_lang("field_required")
             ));
@@ -371,7 +371,7 @@
                 "value" => $model_info->port_of_registry ? $model_info->port_of_registry : "",
                 "class" => "form-control",
                 "placeholder" => app_lang('port_of_registry'),
-                "maxlength" => 40,
+                "maxlength" => 255,
                 "data-rule-required" => true,
                 "data-msg-required" => app_lang("field_required")
             ));

@@ -246,9 +246,12 @@ class Clients extends Security_Controller
         $contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->owner_name";
         $owner_name = get_team_member_profile_link($data->owner_id, $contact);
 
+        $image_url = get_avatar($data->image);
+        $client_contact = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->charter_name";
+
         $name = $data->charter_name;
         if ($this->can_access_own_client($data->id)) {
-            $name = anchor(get_uri("clients/view/" . $data->id), $data->charter_name);
+            $name = anchor(get_uri("clients/view/" . $data->id), $client_contact);
         }
         $row_data = array(
             $data->id,
@@ -1034,16 +1037,14 @@ class Clients extends Security_Controller
     }
 
     //save profile image of a contact
-    function save_profile_image($user_id = 0)
+    function save_profile_image($client_id = 0)
     {
         if (!$this->can_edit_clients()) {
             app_redirect("forbidden");
         }
 
-        $this->access_only_allowed_members_or_contact_personally($user_id);
-        $user_info = $this->Users_model->get_one($user_id);
-        $this->can_access_own_client($user_info->client_id);
-
+        $client_info = $this->Clients_model->get_one($client_id);
+        
         //process the the file which has uploaded by dropzone
         $profile_image = str_replace("~", ":", $this->request->getPost("profile_image"));
 
@@ -1051,10 +1052,10 @@ class Clients extends Security_Controller
             $profile_image = serialize(move_temp_file("avatar.png", get_setting("profile_image_path"), "", $profile_image));
 
             //delete old file
-            delete_app_files(get_setting("profile_image_path"), array(@unserialize($user_info->image)));
+            delete_app_files(get_setting("profile_image_path"), array(@unserialize($client_info->image)));
 
             $image_data = array("image" => $profile_image);
-            $this->Users_model->ci_save($image_data, $user_id);
+            $this->Clients_model->ci_save($image_data, $client_id);
             echo json_encode(array("success" => true, 'message' => app_lang('profile_image_changed')));
         }
 
@@ -1071,10 +1072,10 @@ class Clients extends Security_Controller
                 $profile_image = serialize(move_temp_file("avatar.png", get_setting("profile_image_path"), "", $image_file_name));
 
                 //delete old file
-                delete_app_files(get_setting("profile_image_path"), array(@unserialize($user_info->image)));
+                delete_app_files(get_setting("profile_image_path"), array(@unserialize($client_info->image)));
 
                 $image_data = array("image" => $profile_image);
-                $this->Users_model->ci_save($image_data, $user_id);
+                $this->Clients_model->ci_save($image_data, $client_id);
                 echo json_encode(array("success" => true, 'message' => app_lang('profile_image_changed'), "reload_page" => true));
             }
         }
