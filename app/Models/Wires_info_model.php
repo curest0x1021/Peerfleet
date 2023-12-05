@@ -35,7 +35,7 @@ class Wires_info_model extends Crud_model {
             $where .= " AND $wires_table.equipment = $equipment_id";
         }
 
-        $sql = "SELECT $wires_table.id as wire_id, $wires_table.client_id, $equipments_table.name as crane, $type_table.name as wire, $info_table.id, $info_table.diameter, $info_table.length, $info_table.swl, $info_table.manufacturer_id, $manufacturers_table.name as manufacturer, $info_table.delivered, k1.passed as loadtest_passed, k1.test_date, k.passed as visual_inspection_passed, k.inspection_date
+        $sql = "SELECT $info_table.files, $wires_table.id as wire_id, $wires_table.client_id, $equipments_table.name as crane, $type_table.name as wire, $info_table.id, $info_table.diameter, $info_table.length, $info_table.swl, $info_table.manufacturer_id, $manufacturers_table.name as manufacturer, $info_table.delivered, k1.passed as loadtest_passed, k1.test_date, k.passed as visual_inspection_passed, k.inspection_date
                 FROM $wires_table
                 LEFT JOIN $info_table ON $wires_table.id = $info_table.wire_id
                 LEFT JOIN $type_table ON $wires_table.wire_type = $type_table.id

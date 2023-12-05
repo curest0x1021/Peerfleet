@@ -210,6 +210,15 @@ class Wires extends Security_Controller {
             "delivered" => $this->request->getPost("delivered"),
         );
 
+        $target_path = getcwd() . "/" . get_general_file_path("wires", $data["client_id"]);
+        $files_data = move_files_from_temp_dir_to_permanent_dir($target_path);
+        $new_files = unserialize($files_data);
+
+        if ($id) {
+            $model_info = $this->Wires_info_model->get_one($id);
+            $new_files = update_saved_files($target_path, $model_info->files, $new_files);
+        }
+        $data["files"] = serialize($new_files);
         $save_id = $this->Wires_info_model->ci_save($data, $id);
 
         if ($save_id) {
@@ -220,6 +229,16 @@ class Wires extends Security_Controller {
     }
 
     function info_list_data($client_id, $equipment_id) {
+        $list = $this->Wires_info_model->get_details(array("client_id" => $client_id, "equipment_id" => $equipment_id))->getResult();
+        $result = [];
+        foreach ($list as $data) {
+            $result[] = $this->_info_make_row($data);
+        }
+
+        echo json_encode(array("data" => $result));
+    }
+
+    function certificate_list_data($client_id, $equipment_id) {
         $list = $this->Wires_info_model->get_details(array("client_id" => $client_id, "equipment_id" => $equipment_id))->getResult();
         $result = [];
         foreach ($list as $data) {
@@ -301,6 +320,16 @@ class Wires extends Security_Controller {
             $visual_inspection_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Not passed"></div>';
         }
 
+        $files_str = "";
+        $files = unserialize($data->files);
+        if (is_array($files)) {
+            foreach ($files as $key => $file) {
+                if ($key > 0) {
+                    $files_str .= ", ";
+                }
+                $files_str .= anchor(get_uri("wires/download_certificate_file/" . $data->id . "/" .$key), remove_file_prefix($file["file_name"]));
+            }
+        }
         return array(
             $data->wire_id,
             $data->wire,
@@ -311,6 +340,7 @@ class Wires extends Security_Controller {
             $data->delivered,
             $loadtest_passed,
             $visual_inspection_passed,
+            $files_str,
             $action
         );
     }
@@ -549,6 +579,14 @@ class Wires extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
 
+    function download_certificate_file($id, $key) {
+        $model_info = $this->Wires_info_model->get_one($id);
+        $files = unserialize($model_info->files);
+        $client_id = $model_info->client_id;
+        $file_data = serialize(array($files[$key]));
+        return $this->download_app_files(get_general_file_path("wires", $client_id), $file_data);
+    }
+
     function download_loadtest_file($id, $key) {
         $model_info = $this->Wires_loadtest_model->get_one($id);
         $files = unserialize($model_info->files);
@@ -657,13 +695,14 @@ class Wires extends Security_Controller {
         }
     }
 
-    function certificates_tab($client_id) {
+    function certificates_tab($client_id, $equipment) {
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
 
         if ($client_id) {
             $view_data["client_id"] = $client_id;
+            $view_data['equipment'] = $this->Equipments_model->get_one($equipment);
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
             return $this->template->view("wires/certificates/index", $view_data);
         } else {
@@ -1273,6 +1312,8 @@ class Wires extends Security_Controller {
 
     private function _save_wire_history_from_excel_file($client_id, $allowed_headers, $excel_file) {
         $wire_list = $this->Wires_model->get_all_where(array("client_id" => $client_id))->getResult();
+        $equipment_list = $this->Equipments_model->get_all()->getResult();
+        $wire_type_list = $this->Wire_type_model->get_all()->getResult();
 
         foreach ($excel_file as $key => $value) { //rows
             if ($key === 0) { //first line is headers, continue for the next loop
@@ -1282,92 +1323,103 @@ class Wires extends Security_Controller {
             $data_array = $this->_prepare_item_data($value, $allowed_headers);
             $item_data = get_array_value($data_array, "item_data");
             $wire_data = get_array_value($data_array, "wire_data");
+            $equipment_data = get_array_value($data_array, "equipment_data");
 
-            //couldn't prepare valid data
-            if (!($item_data && count($item_data))) {
-                continue;
+            // Wires
+            $wire_type = find_object_by_key($wire_type_list, $wire_data["wire"], "name");
+            $equipment = find_object_by_key($equipment_list, $equipment_data["equipment"], "name");
+
+            if (!$wire_type) {
+                $wire_type_data = array(
+                    "name" => $wire_data["wire"]
+                );
+                $mt_save_id = $this->Wire_type_model->ci_save($wire_type_data);
+                $wire_type = new stdClass();
+                $wire_type->id = $mt_save_id;
+                $wire_type->name = $wire_data["wire"];
+                $wire_type_list[] = $wire_type;
             }
 
-            try {
-                // Wires
-                $wire = $this->_find_wire($wire_data, $wire_list);
-                if ($wire) {
-                    $wire_id = $wire->id;
-                } else {
-                    $wire_data["client_id"] = $client_id;
-                    $m_save_id = $this->Wires_model->ci_save($wire_data);
-                    $wire_id = $m_save_id;
+            
+            if (!$equipment) {
+                $e_data = array(
+                    "name" => $equipment_data["equipment"],
+                );
+                $me_save_id = $this->Equipments_model->ci_save($e_data);
+                $equipment = new stdClass();
+                $equipment->id = $me_save_id;
+                $equipment->name = $equipment_data["equipment"];
+                $equipment_list[] = $equipment;
+            }
 
-                    $temp = new stdClass();
-                    $temp->id = $m_save_id;
-                    $temp->equipment = $wire_data["equipment"];
-                    $temp->wire = $wire_data["wire"];
-                    $wire_list[] = $temp;
-                }
+            $new_wire_data = array(
+                "client_id" => $client_id,
+                "equipment" => $equipment->id,
+                "wire_type" => $wire_type->id,
+            );
+            
+            $wire_id = $this->Wires_model->ci_save($new_wire_data, null);
 
-                // Wires history
-                if (isset($item_data["initial"]) && is_valid_date($item_data["initial"])) {
-                    $replacement = date_format(date_create($item_data["initial"]), "Y-m-d");
-                    $data = array(
-                        "client_id" => $client_id,
-                        "wire_id" => $wire_id,
-                        "replacement" => $replacement,
-                        "is_initial" => 1
-                    );
-                    $this->Wires_history_model->ci_save($data);
-                }
+            // Wires history
+            if (isset($item_data["initial"]) && is_valid_date($item_data["initial"])) {
+                $replacement = date_format(date_create($item_data["initial"]), "Y-m-d");
+                $data = array(
+                    "client_id" => $client_id,
+                    "wire_id" => $wire_id,
+                    "replacement" => $replacement,
+                    "is_initial" => 1
+                );
+                $this->Wires_history_model->ci_save($data);
+            }
 
-                if (isset($item_data["1st_replacement"]) && is_valid_date($item_data["1st_replacement"])) {
-                    $replacement = date_format(date_create($item_data["1st_replacement"]), "Y-m-d");
-                    $data = array(
-                        "client_id" => $client_id,
-                        "wire_id" => $wire_id,
-                        "replacement" => $replacement
-                    );
-                    $this->Wires_history_model->ci_save($data);
-                }
+            if (isset($item_data["1st_replacement"]) && is_valid_date($item_data["1st_replacement"])) {
+                $replacement = date_format(date_create($item_data["1st_replacement"]), "Y-m-d");
+                $data = array(
+                    "client_id" => $client_id,
+                    "wire_id" => $wire_id,
+                    "replacement" => $replacement
+                );
+                $this->Wires_history_model->ci_save($data);
+            }
 
-                if (isset($item_data["2nd_replacement"]) && is_valid_date($item_data["2nd_replacement"])) {
-                    $replacement = date_format(date_create($item_data["2nd_replacement"]), "Y-m-d");
-                    $data = array(
-                        "client_id" => $client_id,
-                        "wire_id" => $wire_id,
-                        "replacement" => $replacement
-                    );
-                    $this->Wires_history_model->ci_save($data);
-                }
+            if (isset($item_data["2nd_replacement"]) && is_valid_date($item_data["2nd_replacement"])) {
+                $replacement = date_format(date_create($item_data["2nd_replacement"]), "Y-m-d");
+                $data = array(
+                    "client_id" => $client_id,
+                    "wire_id" => $wire_id,
+                    "replacement" => $replacement
+                );
+                $this->Wires_history_model->ci_save($data);
+            }
 
-                if (isset($item_data["3rd_replacement"]) && is_valid_date($item_data["3rd_replacement"])) {
-                    $replacement = date_format(date_create($item_data["3rd_replacement"]), "Y-m-d");
-                    $data = array(
-                        "client_id" => $client_id,
-                        "wire_id" => $wire_id,
-                        "replacement" => $replacement
-                    );
-                    $this->Wires_history_model->ci_save($data);
-                }
+            if (isset($item_data["3rd_replacement"]) && is_valid_date($item_data["3rd_replacement"])) {
+                $replacement = date_format(date_create($item_data["3rd_replacement"]), "Y-m-d");
+                $data = array(
+                    "client_id" => $client_id,
+                    "wire_id" => $wire_id,
+                    "replacement" => $replacement
+                );
+                $this->Wires_history_model->ci_save($data);
+            }
 
-                if (isset($item_data["4th_replacement"]) && is_valid_date($item_data["4th_replacement"])) {
-                    $replacement = date_format(date_create($item_data["4th_replacement"]), "Y-m-d");
-                    $data = array(
-                        "client_id" => $client_id,
-                        "wire_id" => $wire_id,
-                        "replacement" => $replacement
-                    );
-                    $this->Wires_history_model->ci_save($data);
-                }
+            if (isset($item_data["4th_replacement"]) && is_valid_date($item_data["4th_replacement"])) {
+                $replacement = date_format(date_create($item_data["4th_replacement"]), "Y-m-d");
+                $data = array(
+                    "client_id" => $client_id,
+                    "wire_id" => $wire_id,
+                    "replacement" => $replacement
+                );
+                $this->Wires_history_model->ci_save($data);
+            }
 
-                if (isset($item_data["5th_replacement"]) && is_valid_date($item_data["5th_replacement"])) {
-                    $replacement = date_format(date_create($item_data["5th_replacement"]), "Y-m-d");
-                    $data = array(
-                        "client_id" => $client_id,
-                        "wire_id" => $wire_id,
-                        "replacement" => $replacement
-                    );
-                    $this->Wires_history_model->ci_save($data);
-                }
-            } catch (Exception $e) {
-                continue;
+            if (isset($item_data["5th_replacement"]) && is_valid_date($item_data["5th_replacement"])) {
+                $replacement = date_format(date_create($item_data["5th_replacement"]), "Y-m-d");
+                $data = array(
+                    "client_id" => $client_id,
+                    "wire_id" => $wire_id,
+                    "replacement" => $replacement
+                );
+                $this->Wires_history_model->ci_save($data);
             }
 
         }
@@ -1375,6 +1427,8 @@ class Wires extends Security_Controller {
 
     private function _save_wire_loadtest_from_excel_file($client_id, $allowed_headers, $excel_file) {
         $wire_list = $this->Wires_model->get_all_where(array("client_id" => $client_id))->getResult();
+        $equipment_list = $this->Equipments_model->get_all()->getResult();
+        $wire_type_list = $this->Wire_type_model->get_all()->getResult();
 
         foreach ($excel_file as $key => $value) { //rows
             if ($key === 0) { //first line is headers, continue for the next loop
@@ -1384,43 +1438,56 @@ class Wires extends Security_Controller {
             $data_array = $this->_prepare_item_data($value, $allowed_headers);
             $item_data = get_array_value($data_array, "item_data");
             $wire_data = get_array_value($data_array, "wire_data");
+            $equipment_data = get_array_value($data_array, "equipment_data");
 
-            //couldn't prepare valid data
-            if (!($item_data && count($item_data))) {
-                continue;
+            // Wires
+            $wire_type = find_object_by_key($wire_type_list, $wire_data["wire"], "name");
+            $equipment = find_object_by_key($equipment_list, $equipment_data["equipment"], "name");
+            
+            if (!$wire_type) {
+                $wire_type_data = array(
+                    "name" => $wire_data["wire"]
+                );
+                $mt_save_id = $this->Wire_type_model->ci_save($wire_type_data);
+                $wire_type = new stdClass();
+                $wire_type->id = $mt_save_id;
+                $wire_type->name = $wire_data["wire"];
+                $wire_type_list[] = $wire_type;
             }
 
-            try {
-                // Wires
-                $wire = $this->_find_wire($wire_data, $wire_list);
-                if ($wire) {
-                    $item_data["wire_id"] = $wire->id;
-                } else {
-                    $wire_data["client_id"] = $client_id;
-                    $m_save_id = $this->Wires_model->ci_save($wire_data);
-                    $item_data["wire_id"] = $m_save_id;
+            
+            if (!$equipment) {
+                $e_data = array(
+                    "name" => $equipment_data["equipment"],
+                );
+                $me_save_id = $this->Equipments_model->ci_save($e_data);
+                $equipment = new stdClass();
+                $equipment->id = $me_save_id;
+                $equipment->name = $equipment_data["equipment"];
+                $equipment_list[] = $equipment;
+            }
+            $new_wire_data = array(
+                "client_id" => $client_id,
+                "equipment" => $equipment->id,
+                "wire_type" => $wire_type->id,
+            );
+            
+            $m_save_id = $this->Wires_model->ci_save($new_wire_data, null);
+            $item_data["wire_id"] = $m_save_id;
+            $item_data["client_id"] = $client_id;
 
-                    $temp = new stdClass();
-                    $temp->id = $m_save_id;
-                    $temp->equipment = $wire_data["equipment"];
-                    $temp->wire = $wire_data["wire"];
-                    $wire_list[] = $temp;
-                }
-
-                $item_data["client_id"] = $client_id;
-                if (isset($item_data["test_date"]) && is_valid_date($item_data["test_date"])) {
-                    $test_date = date_format(date_create($item_data["test_date"]), "Y-m-d");
-                    $item_data["test_date"] = $test_date;
-                    $this->Wires_loadtest_model->ci_save($item_data);
-                }
-            } catch (Exception $e) {
-                continue;
+            if (isset($item_data["test_date"]) && is_valid_date($item_data["test_date"])) {
+                $test_date = date_format(date_create($item_data["test_date"]), "Y-m-d");
+                $item_data["test_date"] = $test_date;
+                $this->Wires_loadtest_model->ci_save($item_data);
             }
         }
     }
 
     private function _save_wire_inspection_from_excel_file($client_id, $allowed_headers, $excel_file) {
         $wire_list = $this->Wires_model->get_all_where(array("client_id" => $client_id))->getResult();
+        $equipment_list = $this->Equipments_model->get_all()->getResult();
+        $wire_type_list = $this->Wire_type_model->get_all()->getResult();
 
         foreach ($excel_file as $key => $value) { //rows
             if ($key === 0) { //first line is headers, continue for the next loop
@@ -1430,37 +1497,50 @@ class Wires extends Security_Controller {
             $data_array = $this->_prepare_item_data($value, $allowed_headers);
             $item_data = get_array_value($data_array, "item_data");
             $wire_data = get_array_value($data_array, "wire_data");
+            
+            $equipment_data = get_array_value($data_array, "equipment_data");
 
-            //couldn't prepare valid data
-            if (!($item_data && count($item_data))) {
-                continue;
+            // Wires
+            $wire_type = find_object_by_key($wire_type_list, $wire_data["wire"], "name");
+            $equipment = find_object_by_key($equipment_list, $equipment_data["equipment"], "name");
+
+            if (!$wire_type) {
+                $wire_type_data = array(
+                    "name" => $wire_data["wire"]
+                );
+                $mt_save_id = $this->Wire_type_model->ci_save($wire_type_data);
+                $wire_type = new stdClass();
+                $wire_type->id = $mt_save_id;
+                $wire_type->name = $wire_data["wire"];
+                $wire_type_list[] = $wire_type;
             }
 
-            try {
-                // Wires
-                $wire = $this->_find_wire($wire_data, $wire_list);
-                if ($wire) {
-                    $item_data["wire_id"] = $wire->id;
-                } else {
-                    $wire_data["client_id"] = $client_id;
-                    $m_save_id = $this->Wires_model->ci_save($wire_data);
-                    $item_data["wire_id"] = $m_save_id;
+            
+            if (!$equipment) {
+                $e_data = array(
+                    "name" => $equipment_data["equipment"],
+                );
+                $me_save_id = $this->Equipments_model->ci_save($e_data);
+                $equipment = new stdClass();
+                $equipment->id = $me_save_id;
+                $equipment->name = $equipment_data["equipment"];
+                $equipment_list[] = $equipment;
+            }
 
-                    $temp = new stdClass();
-                    $temp->id = $m_save_id;
-                    $temp->equipment = $wire_data["equipment"];
-                    $temp->wire = $wire_data["wire"];
-                    $wire_list[] = $temp;
-                }
+            $new_wire_data = array(
+                "client_id" => $client_id,
+                "equipment" => $equipment->id,
+                "wire_type" => $wire_type->id,
+            );
+            
+            $wire_id = $this->Wires_model->ci_save($new_wire_data, null);
 
-                $item_data["client_id"] = $client_id;
-                if (isset($item_data["inspection_date"]) && is_valid_date($item_data["inspection_date"])) {
-                    $inspection_date = date_format(date_create($item_data["inspection_date"]), "Y-m-d");
-                    $item_data["inspection_date"] = $inspection_date;
-                    $this->Wires_inspection_model->ci_save($item_data);
-                }
-            } catch (Exception $e) {
-                continue;
+            $item_data["wire_id"] = $wire_id;
+            $item_data["client_id"] = $client_id;
+            if (isset($item_data["inspection_date"]) && is_valid_date($item_data["inspection_date"])) {
+                $inspection_date = date_format(date_create($item_data["inspection_date"]), "Y-m-d");
+                $item_data["inspection_date"] = $inspection_date;
+                $this->Wires_inspection_model->ci_save($item_data);
             }
         }
     }

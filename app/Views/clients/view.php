@@ -1,3 +1,4 @@
+<?php echo view("includes/cropbox"); ?>
 <div id="page-content" class="clearfix page-content">
     <div class="container-fluid  full-width-button">
         <div class="row clients-view-button">
@@ -24,9 +25,40 @@
                     <?php } ?>
                 </div>
 
-                <div>
-                    <?php echo view("clients/info_widgets/index"); ?>
+                <div class="row">
+                    <div class="col-md-3 widget-container card">
+                        <div class="box-content w200 text-center profile-image  card-body dashboard-icon-widget">
+                            <?php
+                            echo form_open(get_uri("clients/save_profile_image/" . $client_info->id), array("id" => "profile-image-form", "class" => "general-form", "role" => "form"));
+                            ?>
+                            
+                            <div class="file-upload btn mt0 p0 profile-image-upload" data-bs-toggle="tooltip" title="<?php echo app_lang("upload_and_crop"); ?>" data-placement="right">
+                                <span class="btn color-gray"><i data-feather="camera" class="icon-16"></i></span> 
+                                <input id="profile_image_file" class="upload" name="profile_image_file" type="file" data-height="200" data-width="200" data-preview-container="#profile-image-preview" data-input-field="#profile_image" />
+                            </div>
+                            <div class="file-upload btn p0 profile-image-upload profile-image-direct-upload" data-bs-toggle="tooltip" title="<?php echo app_lang("upload"); ?> (200x200 px)" data-placement="right">
+                                <?php
+                                echo form_upload(array(
+                                    "id" => "profile_image_file_upload",
+                                    "name" => "profile_image_file",
+                                    "class" => "no-outline hidden-input-file upload"
+                                ));
+                                ?>
+                                <label for="profile_image_file_upload" class="clickable">
+                                    <span class="btn color-gray ml2"><i data-feather="upload" class="icon-16"></i></span>
+                                </label>
+                            </div>
+                            <input type="hidden" id="profile_image" name="profile_image" value=""  />
+                            
+                            <span class="avatar avatar-md"><img id="profile-image-preview" src="<?php echo get_avatar($client_info->image); ?>" alt="..."></span> 
+                            <?php echo form_close(); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <?php echo view("clients/info_widgets/index"); ?>
+                    </div>
                 </div>
+                
 
                 <ul id="vessel-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs" role="tablist">
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/company_info_tab/" . $client_info->id); ?>" data-bs-target="#client-info"> <?php echo app_lang('vessel_info'); ?></a></li>
@@ -77,7 +109,36 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $(".upload").change(function () {
+            if (typeof FileReader == 'function' && !$(this).hasClass("hidden-input-file")) {
+                showCropBox(this);
+            } else {
+                $("#profile-image-form").submit();
+            }
+        });
+        $("#profile_image").change(function () {
+            $("#profile-image-form").submit();
+        });
 
+
+        $("#profile-image-form").appForm({
+            isModal: false,
+            beforeAjaxSubmit: function (data) {
+                $.each(data, function (index, obj) {
+                    if (obj.name === "profile_image") {
+                        var profile_image = replaceAll(":", "~", data[index]["value"]);
+                        data[index]["value"] = profile_image;
+                    }
+                });
+            },
+            onSuccess: function (result) {
+                if (typeof FileReader == 'function' && !result.reload_page) {
+                    appAlert.success(result.message, {duration: 10000});
+                } else {
+                    location.reload();
+                }
+            }
+        });
         setTimeout(function () {
             var tab = "<?php echo $tab; ?>";
             if (tab === "info") {

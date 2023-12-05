@@ -2,7 +2,7 @@
 
 //copy from default_lang.php file and update
 $lang["backup_person"] = "Backup Person";
-$lang["tech_person"] = "Tech Person";
+$lang["tech_person"] = "Technical Support Manager";
 $lang["certificates"] = "Certificates";
 $lang["next_load_test"] = "Next Load test";
 $lang["next_visual_inspection"] = "Next visual inspection";
