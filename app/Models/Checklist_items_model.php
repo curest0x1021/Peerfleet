@@ -40,8 +40,9 @@ class Checklist_items_model extends Crud_model {
         $checklist_items_table = $this->db->prefixTable('checklist_items');
         $tasks_table = $this->db->prefixTable('tasks');
 
-        $sql = "SELECT $checklist_items_table.task_id, $checklist_items_table.title
+        $sql = "SELECT $tasks_table.title as task_title, $checklist_items_table.*, $checklist_items_table.title
         FROM $checklist_items_table
+        LEFT JOIN $tasks_table ON $tasks_table.id=$checklist_items_table.task_id
         WHERE $checklist_items_table.deleted=0 AND $checklist_items_table.task_id IN(SELECT $tasks_table.id FROM $tasks_table WHERE $tasks_table.deleted=0 AND $tasks_table.project_id=$project_id)";
         return $this->db->query($sql);
     }

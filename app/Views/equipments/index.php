@@ -12,6 +12,7 @@
                 <div class="page-title clearfix">
                     <h4> <?php echo app_lang('equipments'); ?></h4>
                     <div class="title-button-group">
+                        <?php echo modal_anchor(get_uri("equipments/import_modal_form"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import'), array("class" => "btn btn-default", "title" => app_lang('import'))); ?>
                         <?php echo modal_anchor(get_uri("equipments/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_equipment'), array("class" => "btn btn-default", "title" => app_lang('add_equipment'))); ?>
                     </div>
                 </div>

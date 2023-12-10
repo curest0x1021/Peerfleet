@@ -257,7 +257,6 @@ load_js(array(
         if ($("#preview_task_link").length) {
             $("#preview_task_link").trigger("click");
         }
-
     });
 </script>
 

@@ -966,6 +966,33 @@ class Projects extends Security_Controller {
         return $this->template->rander("projects/details_view", $view_data);
     }
 
+    private function _make_checklist_item_row($data = array(), $flag_add, $task_title) {
+        $checkbox_class = "checkbox-blank";
+        $title_class = "";
+        $is_checked_value = 1;
+        $title_value = link_it($data->title);
+
+        if ($data->is_checked == 1) {
+            $is_checked_value = 0;
+            $checkbox_class = "checkbox-checked";
+            $title_class = "text-line-through text-off";
+            $title_value = $data->title;
+        }
+
+        $status = js_anchor("<span class='$checkbox_class mr15 float-start'></span>", array('title' => "", "data-id" => $data->id, "data-value" => $is_checked_value, "data-act" => "update-checklist-item-status-checkbox"));
+        
+        $title = "<span class='font-13 $title_class'>" . $title_value . "</span>";
+
+        $delete = ajax_anchor(get_uri("tasks/delete_checklist_item/$data->id"), "<div class='float-end'><i data-feather='x' class='icon-16'></i></div>", array("class" => "delete-checklist-item", "title" => app_lang("delete_checklist_item"), "data-fade-out-on-success" => "#checklist-item-row-$data->id"));
+        
+        $row_data = "<div id='checklist-item-row-$data->id' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='$data->id'>" . $status . $delete . $title . "</div>";
+        if ($flag_add) {
+            $row_data = "<div class='task-item mt10'>" . $task_title . "</div>" . $row_data;
+        }
+
+        return $row_data;
+    }
+
     private function can_edit_timesheet_settings($project_id) {
         $this->init_project_permission_checker($project_id);
         if ($project_id && $this->login_user->user_type === "staff" && $this->can_view_timesheet($project_id)) {
@@ -1056,6 +1083,24 @@ class Projects extends Security_Controller {
 
         $info = $this->Timesheets_model->count_total_time($options);
         $view_data["total_project_hours"] = to_decimal_format($info->timesheet_total / 60 / 60);
+
+        //get checklist items
+        $checklist_items_array = array();
+        $checklist_items = $this->Checklist_items_model->get_all_checklist_of_project($project_id)->getResult();
+        $task_title = '';
+        $flag_add = false;
+        foreach ($checklist_items as $checklist_item) {
+            if ($task_title != $checklist_item->task_title) {
+                $task_title = $checklist_item->task_title;
+                $flag_add = true;
+            } else {
+                $flag_add = false;
+            }
+            $checklist_items_array[] = $this->_make_checklist_item_row($checklist_item, $flag_add, $task_title);
+        }
+        $view_data["checklist_items"] = json_encode($checklist_items_array);
+        // $tasks = $this->Tasks_model->get_all_where(array("project_id" => $project_id, "deleted" => 0, "parent_task_id" => 0))->getResult();
+        // $view_data["tasks"] = json_encode($tasks);
 
         return $this->template->view('projects/overview', $view_data);
     }
