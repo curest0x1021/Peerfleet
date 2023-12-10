@@ -359,7 +359,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     ?>
 
                     <!--checklist-->
-                    <?php echo form_open(get_uri("projects/save_checklist_item"), array("id" => "checklist_form", "class" => "general-form", "role" => "form")); ?>
+                    <?php echo form_open(get_uri("tasks/save_checklist_item"), array("id" => "checklist_form", "class" => "general-form", "role" => "form")); ?>
                     <div class="col-md-12 mb15 b-t">
                         <div class="pb10 pt10">
                             <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count">0</span><span>/</span><span class="chcklists_count"></span>

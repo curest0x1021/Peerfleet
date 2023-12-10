@@ -1,6 +1,7 @@
 <?php
 
 //copy from default_lang.php file and update
+$lang["import"] = "Import";
 $lang["backup_person"] = "Backup Person";
 $lang["tech_person"] = "Technical Support Manager";
 $lang["certificates"] = "Certificates";
