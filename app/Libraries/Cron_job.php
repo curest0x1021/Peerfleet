@@ -6,6 +6,7 @@ use App\Controllers\App_Controller;
 use App\Libraries\Google_calendar_events;
 use App\Libraries\Imap;
 use App\Libraries\Outlook_imap;
+use App\Libraries\Guzzle;
 
 class Cron_job {
 
@@ -18,8 +19,12 @@ class Cron_job {
         $this->ci = new App_Controller();
         $this->current_time = strtotime(get_current_utc_time());
 
-        $this->call_hourly_jobs();
-        $this->call_daily_jobs();
+        try {
+            $this->call_hourly_jobs();
+            $this->call_daily_jobs();
+        } catch (\Exception $e) {
+            echo $e;
+        }
 
         try {
             $this->run_imap();
@@ -38,6 +43,12 @@ class Cron_job {
         } catch (\Exception $e) {
             echo $e;
         }
+
+        // try {
+        //     $this->shipservScrap();
+        // } catch (\Exception $e) {
+        //     echo $e;
+        // }
     }
 
     private function call_hourly_jobs() {
@@ -1135,5 +1146,10 @@ class Cron_job {
         $last_weak_date = subtract_period_from_date($this->today, 7, "days");
 
         $Ci_sessions_model->delete_session_by_date($last_weak_date);
+    }
+
+    private function shipservScrap() {
+        $imap = new Guzzle();
+        $imap->run_guzzle();
     }
 }

@@ -12,38 +12,13 @@
             <?php } ?>
         </ul>
         <div class="card">
-            <div class="table-responsive">
-                <table id="service-table" class="display" cellspacing="0" width="100%">
-                </table>
-            </div>
+        <div class="services-items" id="services-items">
+
+        </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    loadServicesTable = function(selector) {
-        $(selector).appTable({
-            source: '<?php echo_uri("services/list_data") ?>',
-            columns: [
-                { visible: false, searchable: false },
-                { title: "<?php echo app_lang("company") ?>", "class": "all" },
-                { title: "<?php echo app_lang("serviced_ports") ?>", "class": "w15p" },
-                { title: "<?php echo app_lang("service_type") ?>", "class": "w15p" },
-                { title: "<?php echo app_lang("website") ?>", visible: false },
-                { title: "<?php echo app_lang("email") ?>", "class": "w15p" },
-                { title: "<?php echo app_lang("phone") ?>", visible: false },
-                { title: "<?php echo app_lang("fax") ?>", visible: false },
-                { title: "<?php echo app_lang("country") ?>", "class": "w100" },
-                { title: "<?php echo app_lang("address") ?>", visible: false  },
-                { title: "<?php echo app_lang("city") ?>", visible: false  },
-                { title: "<?php echo app_lang("po_box") ?>", visible: false },
-                {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
-            ],
-            printColumns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-            xlsColumns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-        });
-    };
-    $(document).ready(function() {
-        loadServicesTable("#service-table");
-    });
+    $("#services-items").html(<?php echo $services_items; ?>);
 </script>

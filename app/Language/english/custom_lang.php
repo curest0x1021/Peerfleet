@@ -1,6 +1,9 @@
 <?php
 
 //copy from default_lang.php file and update
+$lang["installed"] = "Installed";
+$lang["ports_served"] = "Ports served";
+$lang["service_image_changed"] = "The service image has been changed.";
 $lang["import"] = "Import";
 $lang["backup_person"] = "Backup Person";
 $lang["tech_person"] = "Technical Support Manager";
