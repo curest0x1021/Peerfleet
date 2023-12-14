@@ -207,7 +207,7 @@ class Wires extends Security_Controller {
             "length" => floatval($this->request->getPost("length")),
             "swl" => floatval($this->request->getPost("swl")),
             "manufacturer_id" => $this->request->getPost("manufacturer_id"),
-            "delivered" => $this->request->getPost("delivered"),
+            "installed" => $this->request->getPost("installed"),
         );
 
         $target_path = getcwd() . "/" . get_general_file_path("wires", $data["client_id"]);
@@ -337,7 +337,7 @@ class Wires extends Security_Controller {
             $data->length,
             $data->swl,
             $data->manufacturer,
-            $data->delivered,
+            $data->installed,
             $loadtest_passed,
             $visual_inspection_passed,
             $files_str,
@@ -985,7 +985,10 @@ class Wires extends Security_Controller {
                 [ "key" => "wire", "required" => true ],
                 [ "key" => "diameter", "required" => false ],
                 [ "key" => "length", "required" => false ],
-                [ "key" => "swl", "required" => false ]
+                [ "key" => "swl", "required" => false ],
+                [ "key" => "manufacturer", "required" => false ],
+                [ "key" => "installed", "required" => false ],
+                [ "key" => "wire_exchange", "required" => false ],
             );
         } else if ($tab == "history") {
             return array(

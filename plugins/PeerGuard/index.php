@@ -19,28 +19,6 @@ Apiinit::the_da_vinci_code('PeerGuard');
 Apiinit::ease_of_mind('PeerGuard');
 
 app_hooks()->add_filter('app_filter_staff_left_menu', function ($sidebar_menu) {
-    $peerguard_submenu = [];
-
-    $peerguard_submenu[] = array(
-        'name'  => 'dashboard',
-        'url'   => 'peerguard/peerguard_log',
-        'class' => 'book',
-    );
-
-    $peerguard_submenu[] = array(
-        'name'  => 'settings',
-        'url'   => 'peerguard/settings',
-        'class' => 'minimize-2',
-    );
-
-    $sidebar_menu['PeerGuard'] = array(
-        'name'     => 'PeerGuard',
-        'url'      => 'peerguard',
-        'class'    => 'minimize-2',
-        'position' => 3,
-        'submenu'  => $peerguard_submenu
-    );
-
     return $sidebar_menu;
 });
 

@@ -14,7 +14,125 @@ class Services extends Security_Controller {
     //load services list view
     function index() {
         $view_data["can_edit_items"] = $this->can_edit_items();
+        $list_data = $this->Services_model->get_details()->getResult();
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_make_service_row($data);
+        }
+        $view_data["services_items"] = json_encode($result);
         return $this->template->rander("services/index", $view_data);
+    }
+
+    //prepare an service list row
+    private function _make_service_row($data) {
+        $company = $data->company;
+        $action = "";
+
+        $website = $data->website;
+        if (strpos($website, "http") !== 0) {
+            $website = "https://" . $website;
+        }
+        $link = anchor($website, "<i data-feather='external-link' class='icon-16'></i>", array("class" => "ml15", "target" => "_blank"));
+
+        if ($this->can_edit_items()) {
+            $company = anchor(get_uri('services/view/' . $data->id), $company);
+            $action = modal_anchor(get_uri("services/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("services/delete"), "data-action" => "delete-confirmation"));
+        }
+
+        return "<div class='col-md-12 col-sm-12'>
+            <div class='card'>
+                <div class='card-body'>
+                    <div style='display: flex; justify-content: space-between; width: 100%; position: relative;'>
+                        <div style='display: flex; flex-direction: column; flex: 1 1 0%;'>
+                            <div class='d-flex'>
+                                <div class=''>
+                                    <a href='". get_uri('services/view/' . $data->id) . "'>
+                                        <div display='flex' class=''>
+                                            <div class=''>
+                                                <img src='" . get_avatar($data->image) . "' class='service-brand'>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div style='display: flex; flex-direction: column; align-items: flex-start;'>
+                                    <a href='". get_uri('services/view/' . $data->id) . "'>
+                                        <h3 style='margin: 0 20px'>" . $data->company . "</h3>
+                                    </a>
+                                    
+                                    <div style='margin-left: 20px'>
+                                        <svg viewBox='0 0 13 12' width='14' height='14' preserveAspectRatio='xMidYMid meet'>
+                                        <path fill-rule='evenodd' clip-rule='evenodd' d='M10.985 4.84c-.035-.115-.14-.195-.26-.205l-3.2-.275-1.25-2.96c-.095-.22-.46-.22-.555 0L4.47 4.36l-3.195.275c-.12.01-.225.09-.26.205-.035.115 0 .24.09.32L3.53 7.265l-.725 3.13c-.025.115.02.24.115.31s.23.075.33.015L6 9.06l2.75 1.66c.05.03.1.045.155.045.06 0 .125-.02.175-.055.1-.07.145-.195.115-.31L8.47 7.27l2.425-2.105c.095-.085.125-.21.09-.325z' fill='#ffc107'></path>
+                                        </svg>
+                                        <svg viewBox='0 0 13 12' width='14' height='14' preserveAspectRatio='xMidYMid meet'><path fill-rule='evenodd' clip-rule='evenodd' d='M10.985 4.84c-.035-.115-.14-.195-.26-.205l-3.2-.275-1.25-2.96c-.095-.22-.46-.22-.555 0L4.47 4.36l-3.195.275c-.12.01-.225.09-.26.205-.035.115 0 .24.09.32L3.53 7.265l-.725 3.13c-.025.115.02.24.115.31s.23.075.33.015L6 9.06l2.75 1.66c.05.03.1.045.155.045.06 0 .125-.02.175-.055.1-.07.145-.195.115-.31L8.47 7.27l2.425-2.105c.095-.085.125-.21.09-.325z' fill='#ffc107'></path>
+                                        </svg>
+                                        <svg viewBox='0 0 13 12' width='14' height='14' preserveAspectRatio='xMidYMid meet'><path fill-rule='evenodd' clip-rule='evenodd' d='M10.985 4.84c-.035-.115-.14-.195-.26-.205l-3.2-.275-1.25-2.96c-.095-.22-.46-.22-.555 0L4.47 4.36l-3.195.275c-.12.01-.225.09-.26.205-.035.115 0 .24.09.32L3.53 7.265l-.725 3.13c-.025.115.02.24.115.31s.23.075.33.015L6 9.06l2.75 1.66c.05.03.1.045.155.045.06 0 .125-.02.175-.055.1-.07.145-.195.115-.31L8.47 7.27l2.425-2.105c.095-.085.125-.21.09-.325z' fill='#ffc107'></path>
+                                        </svg>
+                                        <svg viewBox='0 0 13 12' width='14' height='14' preserveAspectRatio='xMidYMid meet'><path fill-rule='evenodd' clip-rule='evenodd' d='M10.985 4.84c-.035-.115-.14-.195-.26-.205l-3.2-.275-1.25-2.96c-.095-.22-.46-.22-.555 0L4.47 4.36l-3.195.275c-.12.01-.225.09-.26.205-.035.115 0 .24.09.32L3.53 7.265l-.725 3.13c-.025.115.02.24.115.31s.23.075.33.015L6 9.06l2.75 1.66c.05.03.1.045.155.045.06 0 .125-.02.175-.055.1-.07.145-.195.115-.31L8.47 7.27l2.425-2.105c.095-.085.125-.21.09-.325z' fill='#ffc107'></path>
+                                        </svg>
+                                        <svg viewBox='0 0 13 12' width='14' height='14' preserveAspectRatio='xMidYMid meet'><path fill-rule='evenodd' clip-rule='evenodd' d='M10.985 4.84c-.035-.115-.14-.195-.26-.205l-3.2-.275-1.25-2.96c-.095-.22-.46-.22-.555 0L4.47 4.36l-3.195.275c-.12.01-.225.09-.26.205-.035.115 0 .24.09.32L3.53 7.265l-.725 3.13c-.025.115.02.24.115.31s.23.075.33.015L6 9.06l2.75 1.66c.05.03.1.045.155.045.06 0 .125-.02.175-.055.1-.07.145-.195.115-.31L8.47 7.27l2.425-2.105c.095-.085.125-.21.09-.325z' fill='#ffc107'></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                
+                            
+                            </div>
+
+                            <div style='display: flex; flex-direction: column; width: 100%;'>
+                                <div height='auto' class='d-flex'>
+                                    <div class=''>
+                                        <p class=''>
+                                            <div style='display: -webkit-box; overflow: hidden; -webkit-line-clamp: 2; -webkit-box-orient: vertical;'>" . $data->description . "</div>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div width='100%' class=''>
+                                <div class='d-flex align-items-center'>
+                                    <div>
+                                        <div class='d-flex align-items-center'>
+                                            <div style='display: flex; margin-right: 0.5rem;'>
+                                                <svg viewBox='0 0 24 24' width='1rem' height='1rem' preserveAspectRatio='xMidYMid meet'><rect width='24' height='24' fill='none' rx='0' ry='0'></rect><path fill-rule='evenodd' clip-rule='evenodd' d='M18.8 8.85C18.68 5.35 15.64 2.5 12.01 2.5C8.24995 2.5 5.19995 5.44 5.19995 9.05C5.19995 9.83 5.37995 10.7 5.72995 11.54L5.68995 11.56L10.77 20.78C11.01 21.22 11.48 21.5 12 21.5C12.52 21.5 12.99 21.22 13.23 20.78L17.81 12.46L17.83 12.47L18.32 11.54L18.28 11.52C18.64 10.66 18.82 9.7 18.8 8.85ZM14.2 9.3C14.2 10.51 13.21 11.5 12 11.5C10.79 11.5 9.79995 10.51 9.79995 9.3C9.79995 8.09 10.79 7.1 12 7.1C13.21 7.1 14.2 8.09 14.2 9.3Z' fill='#000000'></path></svg>
+                                            </div>
+                                            <div style='display: flex;'>
+                                                <span class=''>" . $data->country . "</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='d-flex align-items-center'>
+                                        <div style='display: flex; margin-right: 0.5rem; margin-left: 1.5rem;'>
+                                            <svg viewBox='0 0 16 16' width='1rem' height='1rem' preserveAspectRatio='xMidYMid meet'><path fill-rule='evenodd' d='M8 1c1.127 0 2.041.91 2.041 2.03 0 .792-.46 1.491-1.145 1.825l-.11.05-.084.031v1.4h.829c.335 0 .616.235.685.548l.013.074.004.076c0 .359-.275.656-.626.694l-.076.004h-.83v4.822l.16-.028c1.323-.266 2.437-1.133 3.026-2.312l.074-.156.048-.113-.892.227c-.17.043-.342-.059-.385-.228-.027-.105.002-.216.076-.295l2.445-2.608.194.444.197.457c.022.037.041.077.05.103l.006.02.942 2.159c.07.16-.003.347-.163.416-.097.043-.209.034-.298-.023l-.747-.48-.043.125c-.65 1.755-2.137 3.1-3.967 3.567l-.19.045-.065.012-.667.87c-.213.278-.61.33-.887.118-.044-.034-.084-.073-.117-.117l-.668-.87-.064-.013c-1.856-.405-3.385-1.707-4.09-3.436l-.07-.18-.044-.125-.743.477c-.147.094-.343.051-.438-.096-.056-.089-.065-.2-.023-.297l1.38-3.175 2.453 2.6c.12.127.114.327-.014.447-.078.074-.19.103-.295.076l-.894-.229.05.117c.542 1.207 1.623 2.117 2.91 2.432l.17.038.164.03h.016V7.733h-.83c-.334 0-.616-.236-.685-.549l-.012-.073-.004-.076c0-.36.274-.656.625-.694l.077-.004h.83v-1.4l-.086-.032c-.67-.278-1.15-.898-1.24-1.626l-.011-.13-.004-.118C5.958 1.91 6.873 1 8 1zm0 1.396c-.354 0-.638.283-.638.634 0 .352.284.635.638.635.353 0 .638-.283.638-.635 0-.351-.285-.634-.638-.634z' fill='#000000'></path></svg>
+                                        </div>
+                                        <div style='display: flex;'>
+                                            <span class=''>" . $data->serviced_ports . " ports</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        
+                        </div>
+                        <div class='css-rv28wb'>
+                            <div class='css-1wjjitw'><div style='padding-bottom: 2.25rem;'>
+                                <a href='". get_uri('services/view/' . $data->id) . "'>
+                                    <button class='btn btn-light' tabindex='0' type='button'>View Supplier</button>
+                                </a>
+                            </div>
+                            <div class='css-1ldukxh'>
+                                <a href='". get_uri('services/view/' . $data->id) . "'>
+                                    <div class=''>
+                                        <div class=''>
+                                            <img class='service-thumbnail' src='https://cdn1.shipserv.com/Shipserv/pages/profiles/65511/thumbnail/047b92d906fa0a8e0c83ac0b5e3483b9.jpg'>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+        </div>";
     }
 
     private function can_edit_items() {
@@ -175,6 +293,55 @@ class Services extends Security_Controller {
         return $this->template->view("services/contacts/index", $view_data);
     }
 
+    // ports served tab
+    function ports($id) {
+        $view_data["service_id"] = $id;
+        $view_data["can_edit_items"] = $this->can_edit_items();
+
+        return $this->template->view("services/ports/index", $view_data);
+    }
+
+    // get data for port list
+    function ports_list_data($service_id) {
+        $options = array(
+            "service_id"=> $service_id
+        );
+        $list_data = $this->Service_ports_model->get_details($options)->getResult();
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_make_port_row($data);
+        }
+        echo json_encode(array("data" => $result));
+    }
+
+    private function _port_row_data($id) {
+        $options = array(
+            "id"=> $id
+        );
+        $list_data = $this->Service_ports_model->get_details($options)->getResult();
+        return $this->_make_port_row($list_data[0]);
+    }
+    //prepare an service list row
+    private function _make_port_row($data) {
+        $company = $data->company;
+        $action = "";
+
+        if ($this->can_edit_items()) {
+            $company = anchor(get_uri('services/view/' . $data->id), $company);
+            $action = modal_anchor(get_uri("services/ports_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id, "data-post-service_id" => $data->service_id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("services/delete_port"), "data-action" => "delete-confirmation"));
+        }
+
+        return array(
+            $data->id,
+            $company,
+            $data->address,
+            $data->city,
+            $data->country,
+            $action
+        );
+    }
+
     function contact_modal_form() {
         if (!$this->can_edit_items()) {
             app_redirect("forbidden");
@@ -188,6 +355,59 @@ class Services extends Security_Controller {
         $view_data['field_column'] = "col-md-9";
 
         return $this->template->view("services/contacts/modal_form", $view_data);
+    }
+
+    function ports_modal_form() {
+        if (!$this->can_edit_items()) {
+            app_redirect("forbidden");
+        }
+
+        $service_id = $this->request->getPost("service_id");
+        $id = $this->request->getPost("id");
+        $view_data["model_info"] = $this->Service_ports_model->get_one($id);
+        $view_data["service_id"] = $service_id;
+        $view_data['label_column'] = "col-md-3";
+        $view_data['field_column'] = "col-md-9";
+        $view_data["countries_dropdown"] = $this->_get_countries_dropdown();
+        return $this->template->view("services/ports/modal_form", $view_data);
+    }
+
+    private function _get_countries_dropdown() {
+        $list = $this->Shipyards_model->get_countries();
+        $dropdown = array("" => "-");
+        foreach ($list as $item) {
+            $dropdown[$item->id] = $item->name;
+        }
+        return $dropdown;
+    }
+
+    // save service contact
+    function save_port() {
+        if (!$this->can_edit_items()) {
+            app_redirect("forbidden");
+        }
+
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "service_id" => "required",
+            "city" => "required",
+            "address" => "required",
+            "country_id" => "required"
+        ));
+
+        $id = $this->request->getPost('id');
+        $data = array(
+            "service_id" => $this->request->getPost('service_id'),
+            "city" => $this->request->getPost('city'),
+            "address" => $this->request->getPost('address'),
+            "country_id" => $this->request->getPost('country_id')
+        );
+        $save_id = $this->Service_ports_model->ci_save($data, $id);
+        if ($save_id) {
+            echo json_encode(array("success" => true, "data" => $this->_port_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
     }
 
     // save service contact
@@ -276,8 +496,6 @@ class Services extends Security_Controller {
             $action
         );
     }
-
-
 
     // Import data from excel
     function import_modal_form() {
@@ -607,6 +825,49 @@ class Services extends Security_Controller {
             }
         }
         return false;
+    }
+
+    // 
+    //save profile image of a contact
+    function save_profile_image($service_id = 0)
+    {
+
+        $service_info = $this->Services_model->get_one($service_id);
+        
+        //process the the file which has uploaded by dropzone
+        $profile_image = str_replace("~", ":", $this->request->getPost("profile_image"));
+
+        if ($profile_image) {
+            $profile_image = serialize(move_temp_file("avatar.png", get_setting("profile_image_path"), "", $profile_image));
+
+            //delete old file
+            delete_app_files(get_setting("profile_image_path"), array(@unserialize($service_info->image)));
+
+            $image_data = array("image" => $profile_image);
+            $this->Services_model->ci_save($image_data, $service_id);
+            echo json_encode(array("success" => true, 'message' => app_lang('service_image_changed')));
+        }
+
+        //process the the file which has uploaded using manual file submit
+        if ($_FILES) {
+            $profile_image_file = get_array_value($_FILES, "profile_image_file");
+            $image_file_name = get_array_value($profile_image_file, "tmp_name");
+            if ($image_file_name) {
+                if (!$this->check_profile_image_dimension($image_file_name)) {
+                    echo json_encode(array("success" => false, 'message' => app_lang('profile_image_error_message')));
+                    exit();
+                }
+
+                $profile_image = serialize(move_temp_file("avatar.png", get_setting("profile_image_path"), "", $image_file_name));
+
+                //delete old file
+                delete_app_files(get_setting("profile_image_path"), array(@unserialize($service_info->image)));
+
+                $image_data = array("image" => $profile_image);
+                $this->Services_model->ci_save($image_data, $service_id);
+                echo json_encode(array("success" => true, 'message' => app_lang('profile_image_changed'), "reload_page" => true));
+            }
+        }
     }
 }
 

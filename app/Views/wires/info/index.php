@@ -27,7 +27,7 @@
                 {title: '<?php echo app_lang("length") . ' in m' ?>'},
                 {title: '<?php echo app_lang("swl") . ' in mt' ?>'},
                 {title: '<?php echo app_lang("manufacturer") ?>'},
-                {title: '<?php echo app_lang("delivered") ?>'},
+                {title: '<?php echo app_lang("installed") ?>'},
                 {title: '<?php echo app_lang("loadtest") ?>'},
                 {title: '<?php echo app_lang("visual_inspection") ?>'},
                 {visible: false, searchable: false},

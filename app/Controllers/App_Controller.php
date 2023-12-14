@@ -29,6 +29,7 @@ class App_Controller extends Controller {
     public $Announcements_model;
     public $Messages_model;
     public $Clients_model;
+    public $Service_ports_model;
     public $Projects_model;
     public $Milestones_model;
     public $Task_status_model;
@@ -189,6 +190,7 @@ class App_Controller extends Controller {
             'Announcements_model',
             'Messages_model',
             'Clients_model',
+            'Service_ports_model',
             'Projects_model',
             'Milestones_model',
             'Task_status_model',

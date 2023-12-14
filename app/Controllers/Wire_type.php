@@ -138,6 +138,11 @@ class Wire_type extends Security_Controller {
                 continue;
             }
 
+            //check duplicate equipment name, if found then show an error message
+            if ($this->Wire_type_model->is_duplicate_equipment_name($import_data["name"])) {
+                continue;
+            }
+
             //save leave data
             $leave_save_id = $this->Wire_type_model->ci_save($import_data);
             if (!$leave_save_id) {

@@ -18,26 +18,7 @@
         ?>
     </div>
 </div>
-
-<div class="form-group row">
-    <div class="<?php echo $label_column; ?>">
-        <span><?php echo app_lang("serviced_ports"); ?>:</span>
-    </div>
-    <div class="<?php echo $field_column; ?>">
-        <?php
-        echo form_input(array(
-            "id" => "serviced_ports",
-            "name" => "serviced_ports",
-            "value" => $model_info->serviced_ports ? $model_info->serviced_ports : "",
-            "placeholder" => app_lang('serviced_ports'),
-            "class" => "form-control",
-            "data-rule-required" => true,
-            "data-msg-required" => app_lang("field_required"),
-        ));
-        ?>
-    </div>
-</div>
-
+<input type="hidden" name="serviced_ports" value="<?php echo $model_info->serviced_ports; ?>" />
 <div class="form-group row">
     <div class="<?php echo $label_column; ?>">
         <span><?php echo app_lang("service_type"); ?>:</span>

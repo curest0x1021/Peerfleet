@@ -523,6 +523,31 @@ class Left_menu {
             $shipyards_submenu[] = array("name" => "services", "url" => "services", "class" => "server");
             $sidebar_menu["shipyards_services"] = array("name" => "shipyards_services", "url" => "shipyards", "class" => "map", "submenu" => $shipyards_submenu);
 
+
+            if ($this->ci->login_user->is_admin || get_array_value($this->ci->login_user->permissions, "can_manage_all_kinds_of_settings")) {
+                $peerguard_submenu = [];
+
+                $peerguard_submenu[] = array(
+                    'name'  => 'dashboard',
+                    'url'   => 'peerguard/peerguard_log',
+                    'class' => 'book',
+                );
+
+                $peerguard_submenu[] = array(
+                    'name'  => 'settings',
+                    'url'   => 'peerguard/settings',
+                    'class' => 'shield',
+                );
+
+                $sidebar_menu['PeerGuard'] = array(
+                    'name'     => 'PeerGuard',
+                    'url'      => 'peerguard',
+                    'class'    => 'shield',
+                    'position' => 3,
+                    'submenu'  => $peerguard_submenu
+                );
+            }
+
             $sidebar_menu = app_hooks()->apply_filters('app_filter_staff_left_menu', $sidebar_menu);
         } else {
             //client menu

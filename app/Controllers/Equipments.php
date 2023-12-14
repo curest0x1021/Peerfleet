@@ -139,6 +139,11 @@ class Equipments extends Security_Controller {
                 continue;
             }
 
+            //check duplicate equipment name, if found then show an error message
+            if ($this->Equipments_model->is_duplicate_equipment_name($import_data["name"])) {
+                continue;
+            }
+
             //save leave data
             $leave_save_id = $this->Equipments_model->ci_save($import_data);
             if (!$leave_save_id) {
