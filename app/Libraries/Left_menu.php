@@ -528,12 +528,6 @@ class Left_menu {
                 $peerguard_submenu = [];
 
                 $peerguard_submenu[] = array(
-                    'name'  => 'dashboard',
-                    'url'   => 'peerguard/peerguard_log',
-                    'class' => 'book',
-                );
-
-                $peerguard_submenu[] = array(
                     'name'  => 'settings',
                     'url'   => 'peerguard/settings',
                     'class' => 'shield',

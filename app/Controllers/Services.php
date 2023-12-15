@@ -20,7 +20,23 @@ class Services extends Security_Controller {
             $result[] = $this->_make_service_row($data);
         }
         $view_data["services_items"] = json_encode($result);
+        $view_data['country_dropdown'] = $this->get_country_table_dropdown(true);
         return $this->template->rander("services/index", $view_data);
+    }
+
+    //search services list view
+    function search() {
+        $search = $this->request->getPost("search");
+        $options = array(
+            "search" => $search,
+            "country_id" => $this->request->getPost("country_id"),
+        );
+        $list_data = $this->Services_model->get_details($options)->getResult();
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_make_service_row($data);
+        }
+        return json_encode(array("data" => $result));
     }
 
     //prepare an service list row
@@ -40,99 +56,98 @@ class Services extends Security_Controller {
                 . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("services/delete"), "data-action" => "delete-confirmation"));
         }
 
-        return "<div class='col-md-12 col-sm-12'>
-            <div class='card'>
-                <div class='card-body'>
-                    <div style='display: flex; justify-content: space-between; width: 100%; position: relative;'>
-                        <div style='display: flex; flex-direction: column; flex: 1 1 0%;'>
-                            <div class='d-flex'>
-                                <div class=''>
-                                    <a href='". get_uri('services/view/' . $data->id) . "'>
-                                        <div display='flex' class=''>
-                                            <div class=''>
-                                                <img src='" . get_avatar($data->image) . "' class='service-brand'>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div style='display: flex; flex-direction: column; align-items: flex-start;'>
-                                    <a href='". get_uri('services/view/' . $data->id) . "'>
-                                        <h3 style='margin: 0 20px'>" . $data->company . "</h3>
-                                    </a>
-                                    
-                                    <div style='margin-left: 20px'>
-                                        <svg viewBox='0 0 13 12' width='14' height='14' preserveAspectRatio='xMidYMid meet'>
-                                        <path fill-rule='evenodd' clip-rule='evenodd' d='M10.985 4.84c-.035-.115-.14-.195-.26-.205l-3.2-.275-1.25-2.96c-.095-.22-.46-.22-.555 0L4.47 4.36l-3.195.275c-.12.01-.225.09-.26.205-.035.115 0 .24.09.32L3.53 7.265l-.725 3.13c-.025.115.02.24.115.31s.23.075.33.015L6 9.06l2.75 1.66c.05.03.1.045.155.045.06 0 .125-.02.175-.055.1-.07.145-.195.115-.31L8.47 7.27l2.425-2.105c.095-.085.125-.21.09-.325z' fill='#ffc107'></path>
-                                        </svg>
-                                        <svg viewBox='0 0 13 12' width='14' height='14' preserveAspectRatio='xMidYMid meet'><path fill-rule='evenodd' clip-rule='evenodd' d='M10.985 4.84c-.035-.115-.14-.195-.26-.205l-3.2-.275-1.25-2.96c-.095-.22-.46-.22-.555 0L4.47 4.36l-3.195.275c-.12.01-.225.09-.26.205-.035.115 0 .24.09.32L3.53 7.265l-.725 3.13c-.025.115.02.24.115.31s.23.075.33.015L6 9.06l2.75 1.66c.05.03.1.045.155.045.06 0 .125-.02.175-.055.1-.07.145-.195.115-.31L8.47 7.27l2.425-2.105c.095-.085.125-.21.09-.325z' fill='#ffc107'></path>
-                                        </svg>
-                                        <svg viewBox='0 0 13 12' width='14' height='14' preserveAspectRatio='xMidYMid meet'><path fill-rule='evenodd' clip-rule='evenodd' d='M10.985 4.84c-.035-.115-.14-.195-.26-.205l-3.2-.275-1.25-2.96c-.095-.22-.46-.22-.555 0L4.47 4.36l-3.195.275c-.12.01-.225.09-.26.205-.035.115 0 .24.09.32L3.53 7.265l-.725 3.13c-.025.115.02.24.115.31s.23.075.33.015L6 9.06l2.75 1.66c.05.03.1.045.155.045.06 0 .125-.02.175-.055.1-.07.145-.195.115-.31L8.47 7.27l2.425-2.105c.095-.085.125-.21.09-.325z' fill='#ffc107'></path>
-                                        </svg>
-                                        <svg viewBox='0 0 13 12' width='14' height='14' preserveAspectRatio='xMidYMid meet'><path fill-rule='evenodd' clip-rule='evenodd' d='M10.985 4.84c-.035-.115-.14-.195-.26-.205l-3.2-.275-1.25-2.96c-.095-.22-.46-.22-.555 0L4.47 4.36l-3.195.275c-.12.01-.225.09-.26.205-.035.115 0 .24.09.32L3.53 7.265l-.725 3.13c-.025.115.02.24.115.31s.23.075.33.015L6 9.06l2.75 1.66c.05.03.1.045.155.045.06 0 .125-.02.175-.055.1-.07.145-.195.115-.31L8.47 7.27l2.425-2.105c.095-.085.125-.21.09-.325z' fill='#ffc107'></path>
-                                        </svg>
-                                        <svg viewBox='0 0 13 12' width='14' height='14' preserveAspectRatio='xMidYMid meet'><path fill-rule='evenodd' clip-rule='evenodd' d='M10.985 4.84c-.035-.115-.14-.195-.26-.205l-3.2-.275-1.25-2.96c-.095-.22-.46-.22-.555 0L4.47 4.36l-3.195.275c-.12.01-.225.09-.26.205-.035.115 0 .24.09.32L3.53 7.265l-.725 3.13c-.025.115.02.24.115.31s.23.075.33.015L6 9.06l2.75 1.66c.05.03.1.045.155.045.06 0 .125-.02.175-.055.1-.07.145-.195.115-.31L8.47 7.27l2.425-2.105c.095-.085.125-.21.09-.325z' fill='#ffc107'></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                                
-                            
-                            </div>
-
-                            <div style='display: flex; flex-direction: column; width: 100%;'>
-                                <div height='auto' class='d-flex'>
+        return array(
+            "<div style='display: flex; justify-content: space-between; width: 100%; position: relative;'>
+                <div style='display: flex; flex-direction: column; flex: 1 1 0%;'>
+                    <div class='d-flex'>
+                        <div class=''>
+                            <a href='". get_uri('services/view/' . $data->id) . "'>
+                                <div display='flex' class=''>
                                     <div class=''>
-                                        <p class=''>
-                                            <div style='display: -webkit-box; overflow: hidden; -webkit-line-clamp: 2; -webkit-box-orient: vertical;'>" . $data->description . "</div>
-                                        </p>
+                                        <img src='" . get_avatar($data->image) . "' class='service-brand'>
                                     </div>
                                 </div>
-                            </div>
-                            <div width='100%' class=''>
-                                <div class='d-flex align-items-center'>
-                                    <div>
-                                        <div class='d-flex align-items-center'>
-                                            <div style='display: flex; margin-right: 0.5rem;'>
-                                                <svg viewBox='0 0 24 24' width='1rem' height='1rem' preserveAspectRatio='xMidYMid meet'><rect width='24' height='24' fill='none' rx='0' ry='0'></rect><path fill-rule='evenodd' clip-rule='evenodd' d='M18.8 8.85C18.68 5.35 15.64 2.5 12.01 2.5C8.24995 2.5 5.19995 5.44 5.19995 9.05C5.19995 9.83 5.37995 10.7 5.72995 11.54L5.68995 11.56L10.77 20.78C11.01 21.22 11.48 21.5 12 21.5C12.52 21.5 12.99 21.22 13.23 20.78L17.81 12.46L17.83 12.47L18.32 11.54L18.28 11.52C18.64 10.66 18.82 9.7 18.8 8.85ZM14.2 9.3C14.2 10.51 13.21 11.5 12 11.5C10.79 11.5 9.79995 10.51 9.79995 9.3C9.79995 8.09 10.79 7.1 12 7.1C13.21 7.1 14.2 8.09 14.2 9.3Z' fill='#000000'></path></svg>
-                                            </div>
-                                            <div style='display: flex;'>
-                                                <span class=''>" . $data->country . "</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class='d-flex align-items-center'>
-                                        <div style='display: flex; margin-right: 0.5rem; margin-left: 1.5rem;'>
-                                            <svg viewBox='0 0 16 16' width='1rem' height='1rem' preserveAspectRatio='xMidYMid meet'><path fill-rule='evenodd' d='M8 1c1.127 0 2.041.91 2.041 2.03 0 .792-.46 1.491-1.145 1.825l-.11.05-.084.031v1.4h.829c.335 0 .616.235.685.548l.013.074.004.076c0 .359-.275.656-.626.694l-.076.004h-.83v4.822l.16-.028c1.323-.266 2.437-1.133 3.026-2.312l.074-.156.048-.113-.892.227c-.17.043-.342-.059-.385-.228-.027-.105.002-.216.076-.295l2.445-2.608.194.444.197.457c.022.037.041.077.05.103l.006.02.942 2.159c.07.16-.003.347-.163.416-.097.043-.209.034-.298-.023l-.747-.48-.043.125c-.65 1.755-2.137 3.1-3.967 3.567l-.19.045-.065.012-.667.87c-.213.278-.61.33-.887.118-.044-.034-.084-.073-.117-.117l-.668-.87-.064-.013c-1.856-.405-3.385-1.707-4.09-3.436l-.07-.18-.044-.125-.743.477c-.147.094-.343.051-.438-.096-.056-.089-.065-.2-.023-.297l1.38-3.175 2.453 2.6c.12.127.114.327-.014.447-.078.074-.19.103-.295.076l-.894-.229.05.117c.542 1.207 1.623 2.117 2.91 2.432l.17.038.164.03h.016V7.733h-.83c-.334 0-.616-.236-.685-.549l-.012-.073-.004-.076c0-.36.274-.656.625-.694l.077-.004h.83v-1.4l-.086-.032c-.67-.278-1.15-.898-1.24-1.626l-.011-.13-.004-.118C5.958 1.91 6.873 1 8 1zm0 1.396c-.354 0-.638.283-.638.634 0 .352.284.635.638.635.353 0 .638-.283.638-.635 0-.351-.285-.634-.638-.634z' fill='#000000'></path></svg>
-                                        </div>
-                                        <div style='display: flex;'>
-                                            <span class=''>" . $data->serviced_ports . " ports</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        
-                        
+                            </a>
                         </div>
-                        <div class='css-rv28wb'>
-                            <div class='css-1wjjitw'><div style='padding-bottom: 2.25rem;'>
-                                <a href='". get_uri('services/view/' . $data->id) . "'>
-                                    <button class='btn btn-light' tabindex='0' type='button'>View Supplier</button>
-                                </a>
+                        <div style='display: flex; flex-direction: column; align-items: flex-start;'>
+                            <a href='". get_uri('services/view/' . $data->id) . "'>
+                                <h3 style='margin: 0 20px'>" . $data->company . "</h3>
+                            </a>
+                            
+                            <div style='margin-left: 20px'>
+                                <svg viewBox='0 0 13 12' width='14' height='14' preserveAspectRatio='xMidYMid meet'>
+                                <path fill-rule='evenodd' clip-rule='evenodd' d='M10.985 4.84c-.035-.115-.14-.195-.26-.205l-3.2-.275-1.25-2.96c-.095-.22-.46-.22-.555 0L4.47 4.36l-3.195.275c-.12.01-.225.09-.26.205-.035.115 0 .24.09.32L3.53 7.265l-.725 3.13c-.025.115.02.24.115.31s.23.075.33.015L6 9.06l2.75 1.66c.05.03.1.045.155.045.06 0 .125-.02.175-.055.1-.07.145-.195.115-.31L8.47 7.27l2.425-2.105c.095-.085.125-.21.09-.325z' fill='#ffc107'></path>
+                                </svg>
+                                <svg viewBox='0 0 13 12' width='14' height='14' preserveAspectRatio='xMidYMid meet'><path fill-rule='evenodd' clip-rule='evenodd' d='M10.985 4.84c-.035-.115-.14-.195-.26-.205l-3.2-.275-1.25-2.96c-.095-.22-.46-.22-.555 0L4.47 4.36l-3.195.275c-.12.01-.225.09-.26.205-.035.115 0 .24.09.32L3.53 7.265l-.725 3.13c-.025.115.02.24.115.31s.23.075.33.015L6 9.06l2.75 1.66c.05.03.1.045.155.045.06 0 .125-.02.175-.055.1-.07.145-.195.115-.31L8.47 7.27l2.425-2.105c.095-.085.125-.21.09-.325z' fill='#ffc107'></path>
+                                </svg>
+                                <svg viewBox='0 0 13 12' width='14' height='14' preserveAspectRatio='xMidYMid meet'><path fill-rule='evenodd' clip-rule='evenodd' d='M10.985 4.84c-.035-.115-.14-.195-.26-.205l-3.2-.275-1.25-2.96c-.095-.22-.46-.22-.555 0L4.47 4.36l-3.195.275c-.12.01-.225.09-.26.205-.035.115 0 .24.09.32L3.53 7.265l-.725 3.13c-.025.115.02.24.115.31s.23.075.33.015L6 9.06l2.75 1.66c.05.03.1.045.155.045.06 0 .125-.02.175-.055.1-.07.145-.195.115-.31L8.47 7.27l2.425-2.105c.095-.085.125-.21.09-.325z' fill='#ffc107'></path>
+                                </svg>
+                                <svg viewBox='0 0 13 12' width='14' height='14' preserveAspectRatio='xMidYMid meet'><path fill-rule='evenodd' clip-rule='evenodd' d='M10.985 4.84c-.035-.115-.14-.195-.26-.205l-3.2-.275-1.25-2.96c-.095-.22-.46-.22-.555 0L4.47 4.36l-3.195.275c-.12.01-.225.09-.26.205-.035.115 0 .24.09.32L3.53 7.265l-.725 3.13c-.025.115.02.24.115.31s.23.075.33.015L6 9.06l2.75 1.66c.05.03.1.045.155.045.06 0 .125-.02.175-.055.1-.07.145-.195.115-.31L8.47 7.27l2.425-2.105c.095-.085.125-.21.09-.325z' fill='#ffc107'></path>
+                                </svg>
+                                <svg viewBox='0 0 13 12' width='14' height='14' preserveAspectRatio='xMidYMid meet'><path fill-rule='evenodd' clip-rule='evenodd' d='M10.985 4.84c-.035-.115-.14-.195-.26-.205l-3.2-.275-1.25-2.96c-.095-.22-.46-.22-.555 0L4.47 4.36l-3.195.275c-.12.01-.225.09-.26.205-.035.115 0 .24.09.32L3.53 7.265l-.725 3.13c-.025.115.02.24.115.31s.23.075.33.015L6 9.06l2.75 1.66c.05.03.1.045.155.045.06 0 .125-.02.175-.055.1-.07.145-.195.115-.31L8.47 7.27l2.425-2.105c.095-.085.125-.21.09-.325z' fill='#ffc107'></path>
+                                </svg>
+
+                                <div style='display: flex;'>
+                                    <span class=''>" . $data->service_type . "</span>
+                                </div>
                             </div>
-                            <div class='css-1ldukxh'>
-                                <a href='". get_uri('services/view/' . $data->id) . "'>
-                                    <div class=''>
-                                        <div class=''>
-                                            <img class='service-thumbnail' src='https://cdn1.shipserv.com/Shipserv/pages/profiles/65511/thumbnail/047b92d906fa0a8e0c83ac0b5e3483b9.jpg'>
-                                        </div>
-                                    </div>
-                                </a>
+                        </div>
+                        
+                    
+                    </div>
+
+                    <div style='display: flex; flex-direction: column; width: 100%;'>
+                        <div height='auto' class='d-flex'>
+                            <div class=''>
+                                <p class=''>
+                                    <div style='display: -webkit-box; overflow: hidden; -webkit-line-clamp: 2; -webkit-box-orient: vertical;'>" . $data->description . "</div>
+                                </p>
                             </div>
                         </div>
                     </div>
+                    <div width='100%' class=''>
+                        <div class='d-flex align-items-center'>
+                            <div>
+                                <div class='d-flex align-items-center'>
+                                    <div style='display: flex; margin-right: 0.5rem;'>
+                                        <svg viewBox='0 0 24 24' width='1rem' height='1rem' preserveAspectRatio='xMidYMid meet'><rect width='24' height='24' fill='none' rx='0' ry='0'></rect><path fill-rule='evenodd' clip-rule='evenodd' d='M18.8 8.85C18.68 5.35 15.64 2.5 12.01 2.5C8.24995 2.5 5.19995 5.44 5.19995 9.05C5.19995 9.83 5.37995 10.7 5.72995 11.54L5.68995 11.56L10.77 20.78C11.01 21.22 11.48 21.5 12 21.5C12.52 21.5 12.99 21.22 13.23 20.78L17.81 12.46L17.83 12.47L18.32 11.54L18.28 11.52C18.64 10.66 18.82 9.7 18.8 8.85ZM14.2 9.3C14.2 10.51 13.21 11.5 12 11.5C10.79 11.5 9.79995 10.51 9.79995 9.3C9.79995 8.09 10.79 7.1 12 7.1C13.21 7.1 14.2 8.09 14.2 9.3Z' fill='#000000'></path></svg>
+                                    </div>
+                                    <div style='display: flex;'>
+                                        <span class=''>" . $data->country . "</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='d-flex align-items-center'>
+                                <div style='display: flex; margin-right: 0.5rem; margin-left: 1.5rem;'>
+                                    <svg viewBox='0 0 16 16' width='1rem' height='1rem' preserveAspectRatio='xMidYMid meet'><path fill-rule='evenodd' d='M8 1c1.127 0 2.041.91 2.041 2.03 0 .792-.46 1.491-1.145 1.825l-.11.05-.084.031v1.4h.829c.335 0 .616.235.685.548l.013.074.004.076c0 .359-.275.656-.626.694l-.076.004h-.83v4.822l.16-.028c1.323-.266 2.437-1.133 3.026-2.312l.074-.156.048-.113-.892.227c-.17.043-.342-.059-.385-.228-.027-.105.002-.216.076-.295l2.445-2.608.194.444.197.457c.022.037.041.077.05.103l.006.02.942 2.159c.07.16-.003.347-.163.416-.097.043-.209.034-.298-.023l-.747-.48-.043.125c-.65 1.755-2.137 3.1-3.967 3.567l-.19.045-.065.012-.667.87c-.213.278-.61.33-.887.118-.044-.034-.084-.073-.117-.117l-.668-.87-.064-.013c-1.856-.405-3.385-1.707-4.09-3.436l-.07-.18-.044-.125-.743.477c-.147.094-.343.051-.438-.096-.056-.089-.065-.2-.023-.297l1.38-3.175 2.453 2.6c.12.127.114.327-.014.447-.078.074-.19.103-.295.076l-.894-.229.05.117c.542 1.207 1.623 2.117 2.91 2.432l.17.038.164.03h.016V7.733h-.83c-.334 0-.616-.236-.685-.549l-.012-.073-.004-.076c0-.36.274-.656.625-.694l.077-.004h.83v-1.4l-.086-.032c-.67-.278-1.15-.898-1.24-1.626l-.011-.13-.004-.118C5.958 1.91 6.873 1 8 1zm0 1.396c-.354 0-.638.283-.638.634 0 .352.284.635.638.635.353 0 .638-.283.638-.635 0-.351-.285-.634-.638-.634z' fill='#000000'></path></svg>
+                                </div>
+                                <div style='display: flex;'>
+                                    <span class=''>" . $data->served_ports . " ports</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                
                 </div>
-            </div>
-            <hr/>
-        </div>";
+                <div class='css-rv28wb'>
+                    <div class='css-1wjjitw'><div style='padding-bottom: 2.25rem;'>
+                        <a href='". get_uri('services/view/' . $data->id) . "'>
+                            <button class='btn btn-light' tabindex='0' type='button'>View Supplier</button>
+                        </a>
+                    </div>
+                    <div class='css-1ldukxh'>
+                        <a href='". get_uri('services/view/' . $data->id) . "'>
+                            <div class=''>
+                                <div class=''>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>",
+        $data->country_id,
+    );
     }
 
     private function can_edit_items() {

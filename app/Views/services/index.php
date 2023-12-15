@@ -12,13 +12,59 @@
             <?php } ?>
         </ul>
         <div class="card">
-        <div class="services-items" id="services-items">
-
+        <div class="table-responsive">
+            <table id="services-table" class="display" cellspacing="0" width="100%">
+            </table>
         </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    $("#services-items").html(<?php echo $services_items; ?>);
+
+    $(document).ready(function () {
+        $("#services-table").appTable({
+            source: '<?php echo_uri("services/search") ?>',
+            filterDropdown: [
+                {name: "country_id", class: "w200", options:  <?php echo $country_dropdown; ?>},
+            ],
+            columns: [
+                {title: '', "class": "all"},
+                {visible: false, searchable: true},
+            ],
+            printColumns: [2, 3, 4, 6, 8],
+            xlsColumns: [2, 3, 4, 6, 8],
+            rowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $('td:eq(0)', nRow).addClass(aData[0]);
+            }
+        });
+
+        var $searchBox = $("#service-search-box");
+        var $spinningBtn = $(".spinning-btn");
+        var $servicesitems = $("#services-items")
+        $servicesitems.html(<?php echo $services_items; ?>);
+        $searchBox.on("keyup", function (e) {
+            if (e.which == 13) {
+                //show/hide loder icon in searchbox
+                if (this.value) {
+                    $spinningBtn.addClass("spinning");
+                } else {
+                    $spinningBtn.removeClass("spinning");
+                }
+
+                $.ajax({
+                    url: "<?php echo get_uri('services/search'); ?>",
+                    data: {search: $searchBox.val()},
+                    quietMillis: 250,
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (response) {
+                        //show a loader icon in search box
+                        $spinningBtn.removeClass("spinning");
+                        $servicesitems.html(response);
+                    }
+                });
+            }
+        });
+    })
 </script>
