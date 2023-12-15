@@ -1079,6 +1079,8 @@ class Wires extends Security_Controller {
         $item_data = array();
         $wire_data = array();
         $equipment_data = array();
+        $history_data = array();
+        $manufacture_data = array();
 
         foreach ($data_row as $row_data_key => $row_data_value) { //row values
             if (!$row_data_value) {
@@ -1090,6 +1092,10 @@ class Wires extends Security_Controller {
                 $equipment_data["equipment"] = $row_data_value;
             } else if ($header_key_value == 'wire') {
                 $wire_data["wire"] = $row_data_value;
+            } else if ($header_key_value == 'wire_exchange') {
+                $history_data["replacement"] = $row_data_value;
+            } else if ($header_key_value == 'manufacturer') {
+                $manufacture_data["manufacturer"] = $row_data_value;
             } else {
                 $item_data[$header_key_value] = $row_data_value;
             }
@@ -1098,6 +1104,8 @@ class Wires extends Security_Controller {
         return array(
             "item_data" => $item_data,
             "wire_data" => $wire_data,
+            "history_data" => $history_data,
+            "manufacture_data" => $manufacture_data,
             "equipment_data" => $equipment_data,
         );
     }
@@ -1261,6 +1269,7 @@ class Wires extends Security_Controller {
     private function _save_wire_info_from_excel_file($client_id, $allowed_headers, $excel_file) {
         $equipment_list = $this->Equipments_model->get_all()->getResult();
         $wire_type_list = $this->Wire_type_model->get_all()->getResult();
+        $manufactures_list = $this->Manufacturers_model->get_all()->getResult();
 
         foreach ($excel_file as $key => $value) { //rows
             if ($key === 0) { //first line is headers, continue for the next loop
@@ -1271,10 +1280,14 @@ class Wires extends Security_Controller {
             $item_data = get_array_value($data_array, "item_data");
             $wire_data = get_array_value($data_array, "wire_data");
             $equipment_data = get_array_value($data_array, "equipment_data");
+            $history_data = get_array_value($data_array, "history_data");
+            $manufacture_data = get_array_value($data_array, "manufacture_data");
 
             // Wires
             $wire_type = find_object_by_key($wire_type_list, $wire_data["wire"], "name");
             $equipment = find_object_by_key($equipment_list, $equipment_data["equipment"], "name");
+            $manufacturer = find_object_by_key($manufactures_list, $manufacture_data["manufacturer"], "name");
+
             
             if (!$wire_type) {
                 $wire_type_data = array(
@@ -1298,6 +1311,18 @@ class Wires extends Security_Controller {
                 $equipment->name = $equipment_data["equipment"];
                 $equipment_list[] = $equipment;
             }
+
+            if (!$manufacturer) {
+                $e_data = array(
+                    "name" => $manufacture_data["manufacturer"],
+                );
+                $me_save_id = $this->Manufacturers_model->ci_save($e_data);
+                $manufacturer = new stdClass();
+                $manufacturer->id = $me_save_id;
+                $manufacturer->name = $manufacture_data["manufacturer"];
+                $manufactures_list[] = $manufacturer;
+            }
+
             $new_wire_data = array(
                 "client_id" => $client_id,
                 "equipment" => $equipment->id,
@@ -1306,9 +1331,22 @@ class Wires extends Security_Controller {
             
             $m_save_id = $this->Wires_model->ci_save($new_wire_data, null);
 
+            $installed = date_format(date_create($item_data["installed"]), "Y-m-d");
+
             $item_data["wire_id"] = $m_save_id;
             $item_data["client_id"] = $client_id;
+            $item_data["manufacturer_id"] = $manufacturer->id;
+            $item_data["installed"] = $installed;
             $this->Wires_info_model->ci_save($item_data, null);
+
+            $replacement = date_format(date_create($history_data["replacement"]), "Y-m-d");
+
+            $history = array(
+                "client_id" => $client_id,
+                "wire_id" => $m_save_id,
+                "replacement" => $replacement,
+            );
+            $this->Wires_history_model->ci_save($history, null);
 
         }
     }

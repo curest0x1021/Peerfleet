@@ -7,6 +7,7 @@
 
         <div class="tab-title clearfix no-border">
             <div class="title-button-group">
+                <?php echo modal_anchor(get_uri("checklist_template/import_modal_form"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import'), array("class" => "btn btn-default", "title" => app_lang('import'))); ?>
                 <?php echo modal_anchor(get_uri("checklist_template/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_checklist_template'), array("class" => "btn btn-default", "title" => app_lang('add_checklist_template'), "id" => "add_checklist-button")); ?>
             </div>
         </div>
