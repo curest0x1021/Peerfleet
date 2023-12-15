@@ -227,6 +227,11 @@ Events::on('post_controller_constructor', function () {
     if ($controller == "\App\Controllers\Signin" && $method == "index" && $session->getFlashdata("flag") == false && !empty($session->getFlashdata("signin_validation_errors"))) {
         // login failed method
         $email = $session->getFlashdata("signin_email");
+
+        if (empty($email)) {
+            return;
+        }
+        
         $ipLogData = [];
 
         // Get the user's IP address and use the ip-api.com API to get additional IP details
@@ -256,6 +261,7 @@ Events::on('post_controller_constructor', function () {
         $db = db_connect('default');
         $builder = $db->table('PeerGuard_logs');
         $builder->insert(array_merge($logData, $ipLogData));
+
     }
 
     // for reset session page hook => app_hook_signin_extension
