@@ -524,7 +524,7 @@ class Left_menu {
             $sidebar_menu["shipyards_services"] = array("name" => "shipyards_services", "url" => "shipyards", "class" => "map", "submenu" => $shipyards_submenu);
 
 
-            if ($this->ci->login_user->is_admin || get_array_value($this->ci->login_user->permissions, "can_manage_all_kinds_of_settings")) {
+            if ($this->ci->login_user->is_admin || get_array_value($this->ci->login_user->permissions, "peerguard_manage_permission")) {
                 $peerguard_submenu = [];
 
                 $peerguard_submenu[] = array(

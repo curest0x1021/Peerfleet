@@ -2737,6 +2737,21 @@ class Tasks extends Security_Controller {
         $this->init_project_permission_checker($project_id);
 
         $view_data['project_id'] = $project_id;
+        $view_data['can_edit_tasks'] = $this->_can_edit_project_tasks($project_id);
+        $view_data['can_create_tasks'] = $this->can_create_tasks("project");
+        return $this->template->view("projects/tasks/kanban/project_tasks", $view_data);
+    }
+
+    function project_tasks_kanban_kanban($project_id) {
+        validate_numeric_value($project_id);
+
+        if (!$this->can_view_tasks("project", $project_id)) {
+            app_redirect("forbidden");
+        }
+
+        $this->init_project_permission_checker($project_id);
+
+        $view_data['project_id'] = $project_id;
 
         $view_data['can_create_tasks'] = $this->can_create_tasks("project");
         $view_data["show_milestone_info"] = $this->can_view_milestones();
@@ -2751,7 +2766,34 @@ class Tasks extends Security_Controller {
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("tasks", $this->login_user->is_admin, $this->login_user->user_type);
         $view_data['labels_dropdown'] = json_encode($this->make_labels_dropdown("task", "", true));
 
-        return $this->template->view("projects/tasks/kanban/project_tasks", $view_data);
+        return $this->template->view("projects/tasks/kanban/kanban_tasks", $view_data);
+    }
+
+    function project_tasks_kanban_list($project_id) {
+        validate_numeric_value($project_id);
+
+        if (!$this->can_view_tasks("project", $project_id)) {
+            app_redirect("forbidden");
+        }
+
+        $this->init_project_permission_checker($project_id);
+
+        $view_data['project_id'] = $project_id;
+
+        $view_data['can_create_tasks'] = $this->can_create_tasks("project");
+        $view_data["show_milestone_info"] = $this->can_view_milestones();
+
+        $view_data['milestone_dropdown'] = $this->_get_milestones_dropdown_list($project_id);
+        $view_data['priorities_dropdown'] = $this->_get_priorities_dropdown_list();
+        $view_data['assigned_to_dropdown'] = $this->_get_project_members_dropdown_list($project_id);
+
+        $exclude_status_ids = $this->get_removed_task_status_ids($project_id);
+        $view_data['task_statuses'] = $this->Task_status_model->get_details(array("exclude_status_ids" => $exclude_status_ids))->getResult();
+        $view_data['can_edit_tasks'] = $this->_can_edit_project_tasks($project_id);
+        $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("tasks", $this->login_user->is_admin, $this->login_user->user_type);
+        $view_data['labels_dropdown'] = json_encode($this->make_labels_dropdown("task", "", true));
+
+        return $this->template->view("projects/tasks/kanban/list_tasks", $view_data);
     }
 
     private function _get_milestones_dropdown_list($project_id = 0) {
@@ -3100,6 +3142,86 @@ class Tasks extends Security_Controller {
             $view_data['column_tasks_count'] = $column_tasks_count;
             $view_data['tasks_list'] = $tasks_list;
             return $this->template->view('tasks/kanban/kanban_view', $view_data);
+        }
+    }
+
+    function project_tasks_kanban_list_data($project_id = 0) {
+        validate_numeric_value($project_id);
+
+        if (!$this->can_view_tasks("project", $project_id)) {
+            app_redirect("forbidden");
+        }
+
+        $specific_user_id = $this->request->getPost('specific_user_id');
+
+        $options = array(
+            "specific_user_id" => $specific_user_id,
+            "project_id" => $project_id,
+            "assigned_to" => $this->request->getPost('assigned_to'),
+            "milestone_id" => $this->request->getPost('milestone_id'),
+            "priority_id" => $this->request->getPost('priority_id'),
+            "deadline" => $this->request->getPost('deadline'),
+            "search" => $this->request->getPost('search'),
+            "unread_status_user_id" => $this->login_user->id,
+            "show_assigned_tasks_only_user_id" => $this->show_assigned_tasks_only_user_id(),
+            "quick_filter" => $this->request->getPost('quick_filter'),
+            "label_id" => $this->request->getPost('label_id'),
+            "custom_field_filter" => $this->prepare_custom_field_filter_values("tasks", $this->login_user->is_admin, $this->login_user->user_type)
+        );
+
+        $view_data['can_edit_project_tasks'] = $this->_can_edit_project_tasks($project_id);
+        $view_data['project_id'] = $project_id;
+
+        $max_sort = $this->request->getPost('max_sort');
+        $column_id = $this->request->getPost('kanban_column_id');
+
+        if ($column_id) {
+            //load only signle column data. load more.. 
+            $options["get_after_max_sort"] = $max_sort;
+            $options["status_id"] = $column_id;
+            $options["limit"] = 100;
+            $view_data["tasks"] = $this->Tasks_model->get_kanban_details($options)->getResult();
+            $tasks_edit_permissions = $this->_get_tasks_status_edit_permissions($view_data["tasks"]);
+            $view_data["tasks_edit_permissions"] = $tasks_edit_permissions;
+            return $this->template->view('tasks/kanban/kanban_column_items', $view_data);
+        } else {
+            //load initial data. full view.
+            $task_count_query_options = $options;
+            $task_count_query_options["return_task_counts_only"] = true;
+            $task_counts = $this->Tasks_model->get_kanban_details($task_count_query_options)->getResult();
+            $column_tasks_count = [];
+            foreach ($task_counts as $task_count) {
+                $column_tasks_count[$task_count->status_id] = $task_count->tasks_count;
+            }
+
+            $exclude_status_ids = $this->get_removed_task_status_ids($project_id);
+            $statuses = $this->Task_status_model->get_details(array("hide_from_kanban" => 0, "exclude_status_ids" => $exclude_status_ids));
+
+            $view_data["total_columns"] = $statuses->resultID->num_rows;
+            $columns = $statuses->getResult();
+
+            $tasks_list = array();
+            $tasks_edit_permissions_list = array();
+
+            foreach ($columns as $column) {
+                $status_id = $column->id;
+
+                //find the tasks if there is any task
+                if (get_array_value($column_tasks_count, $status_id)) {
+                    $options["status_id"] = $status_id;
+                    $options["limit"] = 15;
+
+                    $tasks = $this->Tasks_model->get_kanban_details($options)->getResult();
+                    $tasks_list[$status_id] = $tasks;
+                    $tasks_edit_permissions_list[$status_id] = $this->_get_tasks_status_edit_permissions($tasks);
+                }
+            }
+
+            $view_data["tasks_edit_permissions_list"] = $tasks_edit_permissions_list;
+            $view_data["columns"] = $columns;
+            $view_data['column_tasks_count'] = $column_tasks_count;
+            $view_data['tasks_list'] = $tasks_list;
+            return $this->template->view('tasks/kanban/kanban_list_view', $view_data);
         }
     }
 

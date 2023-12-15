@@ -119,6 +119,7 @@ class Roles extends Security_Controller {
             $view_data['message_permission_specific'] = get_array_value($permissions, "message_permission_specific");
 
             $view_data['job_info_manage_permission'] = get_array_value($permissions, "job_info_manage_permission");
+            $view_data['peerguard_manage_permission'] = get_array_value($permissions, "peerguard_manage_permission");
 
             $view_data['can_manage_all_kinds_of_settings'] = get_array_value($permissions, "can_manage_all_kinds_of_settings");
             $view_data['can_manage_user_role_and_permissions'] = get_array_value($permissions, "can_manage_user_role_and_permissions");
@@ -280,6 +281,7 @@ class Roles extends Security_Controller {
         }
 
         $job_info_manage_permission = $this->request->getPost('job_info_manage_permission');
+        $peerguard_manage_permission = $this->request->getPost('peerguard_manage_permission');
 
         $timeline_permission = "";
         $timeline_permission_specific = "";
@@ -344,6 +346,7 @@ class Roles extends Security_Controller {
             "message_permission" => $message_permission,
             "message_permission_specific" => $message_permission_specific,
             "job_info_manage_permission" => $job_info_manage_permission,
+            "peerguard_manage_permission" => $peerguard_manage_permission,
             "can_manage_all_kinds_of_settings" => $can_manage_all_kinds_of_settings,
             "can_manage_user_role_and_permissions" => $can_manage_user_role_and_permissions,
             "can_add_or_invite_new_team_members" => $can_add_or_invite_new_team_members,
