@@ -1,6 +1,8 @@
 <?php
 
 //copy from default_lang.php file and update
+$lang["can_manage_peerguard"] = "Can manage peerguard?";
+$lang["cant_see_the_peerguard"] = "Can't see the peerguard";
 $lang["installed"] = "Installed";
 $lang["ports_served"] = "Ports served";
 $lang["service_image_changed"] = "The service image has been changed.";

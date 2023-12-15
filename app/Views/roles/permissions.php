@@ -1009,6 +1009,36 @@
                 <?php } ?>
 
 
+                <li>
+                    <span data-feather="key" class="icon-14 ml-20"></span>
+                    <h5><?php echo app_lang("can_manage_peerguard"); ?></h5>
+                    <div>
+                        <?php
+                        if (is_null($peerguard_manage_permission)) {
+                            $peerguard_manage_permission = "";
+                        }
+                        echo form_radio(array(
+                            "id" => "peerguard_manage_permission_no",
+                            "name" => "peerguard_manage_permission",
+                            "value" => "",
+                            "class" => "form-check-input",
+                                ), $peerguard_manage_permission, ($peerguard_manage_permission === "") ? true : false);
+                        ?>
+                        <label for="peerguard_manage_permission_no"><?php echo app_lang("no"); ?> </label>
+                    </div>
+                    <div>
+                        <?php
+                        echo form_radio(array(
+                            "id" => "peerguard_manage_permission_yes",
+                            "name" => "peerguard_manage_permission",
+                            "value" => "all",
+                            "class" => "form-check-input",
+                                ), $peerguard_manage_permission, ($peerguard_manage_permission === "all") ? true : false);
+                        ?>
+                        <label for="peerguard_manage_permission_yes"><?php echo app_lang("yes"); ?></label>
+                    </div>
+                </li>
+                
                 <?php app_hooks()->do_action('app_hook_role_permissions_extension'); ?>
 
             </ul>
