@@ -72,8 +72,8 @@ if (!function_exists("make_project_tabs_data")) {
                             //default tab order
                             $project_tabs = array(
                                 "overview" => "projects/overview/" . $project_info->id,
-                                "tasks_list" => "tasks/project_tasks/" . $project_info->id,
-                                "tasks_kanban" => "tasks/project_tasks_kanban/" . $project_info->id,
+                                "tasks_list" => "tasks/project_tasks_kanban_list/" . $project_info->id,
+                                "tasks_kanban" => "tasks/project_tasks_kanban_kanban/" . $project_info->id,
                             );
 
                             if ($show_milestone_info) {
