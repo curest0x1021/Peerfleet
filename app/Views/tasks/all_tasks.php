@@ -214,11 +214,13 @@ if (isset($selected_priority_id) && $selected_priority_id) {
                     order_by: "title"
                 },
                 {
+                    title: '<?php echo app_lang("dock_list_number") ?>',
                     visible: false,
                     searchable: false,
                     order_by: "dock_list_number"
                 },
                 {
+                    title: '<?php echo app_lang("reference_drawing") ?>',
                     visible: false,
                     searchable: false,
                     order_by: "reference_drawing"
@@ -297,12 +299,18 @@ if (isset($selected_priority_id) && $selected_priority_id) {
                     visible: false
                 },
                 {
+                    title: '<?php echo app_lang("link_to_task") ?>', visible: false
+                },
+                {
+                    title: '<?php echo app_lang("title") ?>', visible: false, searchable: false
+                },
+                {
                     title: '<i data-feather="menu" class="icon-16"></i>',
                     "class": "text-center option "
                 }
             ],
-            printColumns: combineCustomFieldsColumns([1, 2, 4, 6, 7, 8, 9, 10, 12], '<?php echo $custom_field_headers; ?>'),
-            xlsColumns: combineCustomFieldsColumns([1, 2, 4, 6, 7, 8, 9, 10, 12], '<?php echo $custom_field_headers; ?>'),
+            printColumns: combineCustomFieldsColumns([14, 3, 21, 15, 16, 17, 18, 19, 20], '<?php echo $custom_field_headers; ?>'),
+            xlsColumns: combineCustomFieldsColumns([14, 3, 21, 15, 16, 17, 18, 19, 20], '<?php echo $custom_field_headers; ?>'),
             rowCallback: tasksTableRowCallback, //load this function from the task_table_common_script.php 
             onRelaodCallback: function() {
                 hideBatchTasksBtn(true);

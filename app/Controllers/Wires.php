@@ -275,8 +275,17 @@ class Wires extends Security_Controller {
                 return min($min, strtotime($details->inspection_date));
             }, strtotime("3000-01-01"));
 
-            $final_test_date = date("Y-m-d", strtotime("+57 months", $min_test_date));
-            $final_inspection_date = date("Y-m-d", strtotime("+9 months", $min_inspection_date));
+            $final_test_date = date("Y-m-d", strtotime("+" . $data->load_test_year . " years", $min_test_date));
+            if ($min_test_date == strtotime("3000-01-01")) {
+                $final_test_date = '';
+            }
+            
+            $final_inspection_date = date("Y-m-d", strtotime("+" . $data->visual_inspection_month ." months", $min_inspection_date));
+
+            if ($min_inspection_date == strtotime("3000-01-01")) {
+                $final_inspection_date = '';
+            }
+
             $result[] = $this->_summary_make_row($data, $final_test_date, $final_inspection_date, $filtered);
         }
 
@@ -284,12 +293,20 @@ class Wires extends Security_Controller {
     }
 
     private function _summary_make_row($data, $final_test_date, $final_inspection_date, $nextdate_list) {
+
+        $action = modal_anchor(get_uri("equipments/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_equipment'), "data-post-id" => $data->equipment))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_equipment'), "class" => "delete", "data-id" => $data->equipment, "data-action-url" => get_uri("equipments/delete"), "data-action" => "delete-confirmation"));
+
         return array(
             $data->client_id,
             anchor(get_uri("wires/main_view/" . $data->client_id . "/" . $data->equipment), $data->equipment_name),
             $data->wires,
-            $final_test_date == '3004-10-01' ? '' : $final_test_date,
-            $final_inspection_date == '3000-10-01' ? '' : $final_inspection_date,
+            $final_test_date,
+            $final_inspection_date,
+            $data->visual_inspection_month,
+            $data->load_test_year,
+            $data->wire_exchange_year,
+            $action
         );
     }
 
@@ -842,7 +859,7 @@ class Wires extends Security_Controller {
         }
         $next_suggested_inspection = "";
         if ($data->inspection_date) {
-            $next_suggested_inspection = date('Y-m-d', strtotime($data->inspection_date . ' + 12 months'));
+            $next_suggested_inspection = date('Y-m-d', strtotime($data->inspection_date . " + " . $data->visual_inspection_month . " months"));
         }
 
         if ($is_detail) {

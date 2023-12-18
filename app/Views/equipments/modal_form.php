@@ -24,6 +24,69 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <div class="row">
+                <label for="visual_inspection_month" class="<?php echo $label_column; ?>"><?php echo (app_lang('visual_inspection') . " (" . app_lang('months') . ")"); ?></label>
+                <div class="<?php echo $field_column; ?>">
+                    <?php
+                    echo form_input(array(
+                        "id" => "visual_inspection_month",
+                        "name" => "visual_inspection_month",
+                        "value" => $model_info->visual_inspection_month ? $model_info->visual_inspection_month : "",
+                        "class" => "form-control",
+                        "placeholder" => app_lang('months'),
+                        "autofocuse" => true,
+                        "maxlength" => 250,
+                        "data-rule-required" => true,
+                        "data-msg-required" => app_lang("field_required"),
+                    ));
+                    ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <label for="load_test_year" class="<?php echo $label_column; ?>"><?php echo app_lang('load_test') . " (" . app_lang('years') . ")"; ?></label>
+                <div class="<?php echo $field_column; ?>">
+                    <?php
+                    echo form_input(array(
+                        "id" => "load_test_year",
+                        "name" => "load_test_year",
+                        "value" => $model_info->load_test_year ? $model_info->load_test_year : "",
+                        "class" => "form-control",
+                        "placeholder" => app_lang('years'),
+                        "autofocuse" => true,
+                        "maxlength" => 250,
+                        "data-rule-required" => true,
+                        "data-msg-required" => app_lang("field_required"),
+                    ));
+                    ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <label for="wire_exchange_year" class="<?php echo $label_column; ?>"><?php echo app_lang('wire_exchange') . " (" . app_lang('years') . ")"; ?></label>
+                <div class="<?php echo $field_column; ?>">
+                    <?php
+                    echo form_input(array(
+                        "id" => "wire_exchange_year",
+                        "name" => "wire_exchange_year",
+                        "value" => $model_info->wire_exchange_year ? $model_info->wire_exchange_year : "",
+                        "class" => "form-control",
+                        "placeholder" => app_lang('years'),
+                        "autofocuse" => true,
+                        "maxlength" => 250,
+                        "data-rule-required" => true,
+                        "data-msg-required" => app_lang("field_required"),
+                    ));
+                    ?>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -39,6 +102,7 @@
             onSuccess: function(result) {
                 appAlert.success(result.message, {duration: 10000});
                 $("#equipment-table").appTable({ reload: true });
+                $("#wire-info-table").appTable({ reload: true });
             }
         });
 

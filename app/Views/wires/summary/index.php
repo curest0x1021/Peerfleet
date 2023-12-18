@@ -26,6 +26,10 @@
                 {title: '<?php echo app_lang("wire") ?>'},
                 {title: '<?php echo app_lang("next_load_test") ?>'},
                 {title: '<?php echo app_lang("next_visual_inspection") ?>'},
+                {title: '<?php echo app_lang("visual_inspection") . " (" . app_lang("months") . ")"?>'},
+                {title: '<?php echo app_lang("load_test") . " (" . app_lang("years") . ")"?>'},
+                {title: '<?php echo app_lang("wire_exchange") . " (" . app_lang("years") . ")" ?>'},
+                {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
             printColumns: [1, 2, 3, 4, 5],
             xlsColumns: [1, 2, 3, 4, 5]

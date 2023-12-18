@@ -29,7 +29,10 @@ class Equipments extends Security_Controller {
         $id = $this->request->getPost("id");
 
         $data = array(
-            "name" => $this->request->getPost("name")
+            "name" => $this->request->getPost("name"),
+            "visual_inspection_month" => $this->request->getPost("visual_inspection_month"),
+            "load_test_year" => $this->request->getPost("load_test_year"),
+            "wire_exchange_year" => $this->request->getPost("wire_exchange_year")
         );
         $data = clean_data($data);
 
@@ -54,6 +57,7 @@ class Equipments extends Security_Controller {
 
         $id = $this->request->getPost("id");
         if ($this->Equipments_model->delete($id)) {
+            $this->Wires_model->delete_wire_by_equipment($id);
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));

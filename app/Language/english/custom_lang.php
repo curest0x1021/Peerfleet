@@ -1,6 +1,12 @@
 <?php
 
 //copy from default_lang.php file and update
+$lang["year"] = "Year";
+$lang["years"] = "Years";
+$lang["months"] = "Months";
+$lang["add_port"] = "Add port";
+$lang["load_test"] = "Load test";
+$lang["wire_exchange"] = "Wire exchange";
 $lang["can_manage_peerguard"] = "Can manage peerguard?";
 $lang["cant_see_the_peerguard"] = "Can't see the peerguard";
 $lang["installed"] = "Installed";

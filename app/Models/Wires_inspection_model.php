@@ -18,7 +18,7 @@ class Wires_inspection_model extends Crud_model {
         $equipments_table = $this->db->prefixTable("equipments");
 
         $sql = "SELECT $wires_table.id, $wires_table.client_id, CONCAT($equipments_table.name, ' - ', $type_table.name) as name, IFNULL(k.passed, 0) as passed,
-                    k.inspection_date, k.location, k.result, k.files
+                    k.inspection_date, k.location, k.result, k.files, $equipments_table.visual_inspection_month , $equipments_table.load_test_year, $equipments_table.wire_exchange_year
                 FROM $wires_table
                 LEFT JOIN $type_table ON $wires_table.wire_type = $type_table.id
                 LEFT JOIN $equipments_table ON $wires_table.equipment = $equipments_table.id
