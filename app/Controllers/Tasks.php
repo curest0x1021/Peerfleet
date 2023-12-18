@@ -1439,6 +1439,8 @@ class Tasks extends Security_Controller {
             $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_task'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("tasks/delete"), "data-action" => "delete-confirmation"));
         }
 
+        $link_to_task = get_uri("task_view/index/" . $data->id);
+
         $row_data = array(
             $data->status_color,
             $check_status,
@@ -1460,6 +1462,8 @@ class Tasks extends Security_Controller {
             $data->specification,
             $data->maker,
             $data->type,
+            $link_to_task,
+            $data->title,
         );
 
         foreach ($custom_fields as $field) {

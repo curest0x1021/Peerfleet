@@ -97,14 +97,10 @@ class Wires_model extends Crud_model {
         $loadtest_table = $this->db->prefixTable("wires_loadtest");
         $inspection_table = $this->db->prefixTable("wires_inspection");
 
-        $wire_exchange_date = get_wire_exchange_reminder_date();
-        $loadtest_reminder_date = get_loadtest_reminder_date();
-        $inspection_reminder_date = get_visual_inspection_reminder_date();
-
         $where = "";
         $client_id = $this->_get_clean_value($options, "client_id");
        
-        $sql = "SELECT client_id, equipment, COUNT(wire_type) as wires, $equipments_table.name as equipment_name
+        $sql = "SELECT client_id, equipment, COUNT(wire_type) as wires, $equipments_table.name as equipment_name, $equipments_table.visual_inspection_month , $equipments_table.load_test_year, $equipments_table.wire_exchange_year
                     FROM $wires_table
                     LEFT JOIN $equipments_table ON $wires_table.equipment = $equipments_table.id
                     WHERE $wires_table.deleted = 0 AND $wires_table.client_id = $client_id
@@ -121,10 +117,6 @@ class Wires_model extends Crud_model {
         $history_table = $this->db->prefixTable("wires_history");
         $loadtest_table = $this->db->prefixTable("wires_loadtest");
         $inspection_table = $this->db->prefixTable("wires_inspection");
-
-        $wire_exchange_date = get_wire_exchange_reminder_date();
-        $loadtest_reminder_date = get_loadtest_reminder_date();
-        $inspection_reminder_date = get_visual_inspection_reminder_date();
 
         $where = "";
         $client_id = $this->_get_clean_value($options, "client_id");
@@ -282,15 +274,16 @@ class Wires_model extends Crud_model {
         $clients_table = $this->db->prefixTable("clients");
         $loadtest_table = $this->db->prefixTable("wires_loadtest");
 
-        $sql = "SELECT a.id, $clients_table.charter_name as vessel, CONCAT(a.crane, ' - ', a.wire) as name, MAX(b.test_date) as last_test_date
+        $sql = "SELECT a.id, $clients_table.charter_name as vessel, CONCAT(a.crane, ' - ', a.wire) as name, MAX(b.test_date) as last_test_date, $equipments_table.visual_inspection_month , $equipments_table.load_test_year, $equipments_table.wire_exchange_year
                 FROM (SELECT * FROM $wires_table WHERE id = $wire_id) a
                 JOIN $clients_table ON $clients_table.id = a.client_id
+                LEFT JOIN $equipments_table ON $wires_table.equipment = $equipments_table.id
                 LEFT JOIN (SELECT * FROM $loadtest_table WHERE deleted=0 AND wire_id = $wire_id AND test_date IS NOT NULL) b
                     ON a.id = b.wire_id";
 
         $row = $this->db->query($sql)->getRow();
         // Loadtest: 5 years
-        $row->due_date = date("Y-m-d", strtotime($row->last_test_date . ' + 5 years'));
+        $row->due_date = date("Y-m-d", strtotime($row->last_test_date . " + " . $row->load_test_year . " years"));
         return $row;
     }
 
@@ -298,16 +291,47 @@ class Wires_model extends Crud_model {
         $wires_table = $this->db->prefixTable("wires");
         $clients_table = $this->db->prefixTable("clients");
         $inspection_table = $this->db->prefixTable("wires_inspection");
+        $equipments_table = $this->db->prefixTable("equipments");
 
-        $sql = "SELECT a.id, $clients_table.charter_name as vessel, CONCAT(a.crane, ' - ', a.wire) as name, MAX(b.inspection_date) as last_inspection_date
+        $sql = "SELECT a.id, $clients_table.charter_name as vessel, CONCAT(a.crane, ' - ', a.wire) as name, MAX(b.inspection_date) as last_inspection_date, $equipments_table.visual_inspection_month , $equipments_table.load_test_year, $equipments_table.wire_exchange_year
                 FROM (SELECT * FROM $wires_table WHERE id = $wire_id) a
                 JOIN $clients_table ON $clients_table.id = a.client_id
+                LEFT JOIN $equipments_table ON $wires_table.equipment = $equipments_table.id
                 LEFT JOIN (SELECT * FROM $inspection_table WHERE deleted=0 AND wire_id = $wire_id AND inspection_date IS NOT NULL) b
                     ON a.id = b.wire_id";
 
         $row = $this->db->query($sql)->getRow();
-        // Visual inspection: 12 months
-        $row->due_date = date("Y-m-d", strtotime($row->last_inspection_date . ' + 12 months'));
+        // Visual inspection: 12 months from equipment table
+        $row->due_date = date("Y-m-d", strtotime($row->last_inspection_date . " + " . $row->visual_inspection_month . " months"));
         return $row;
+    }
+
+
+    function delete_wire_by_equipment($equipment) {
+        $wires_table = $this->db->prefixTable("wires");
+        $history_table = $this->db->prefixTable("wires_history");
+        $info_table = $this->db->prefixTable("wires_info");
+        $loadtest_table = $this->db->prefixTable("wires_loadtest");
+        $inspection_table = $this->db->prefixTable("wires_inspection");
+
+        $wires_sql = "SELECT * FROM $wires_table WHERE $wires_table.deleted=0 AND $wires_table.equipment=$equipment; ";
+        $wires = $this->db->query($wires_sql)->getResult();
+
+        foreach ($wires as $wire) {
+            $delete_history_sql = "UPDATE $history_table SET $history_table.deleted=1 WHERE $history_table.wire_id=$wire->id; ";
+            $this->db->query($delete_history_sql);
+
+            $delete_history_sql = "UPDATE $info_table SET $info_table.deleted=1 WHERE $info_table.wire_id=$wire->id; ";
+            $this->db->query($delete_history_sql);
+
+            $delete_history_sql = "UPDATE $loadtest_table SET $loadtest_table.deleted=1 WHERE $loadtest_table.wire_id=$wire->id; ";
+            $this->db->query($delete_history_sql);
+
+            $delete_history_sql = "UPDATE $inspection_table SET $inspection_table.deleted=1 WHERE $inspection_table.wire_id=$wire->id; ";
+            $this->db->query($delete_history_sql);
+        }
+
+        $delete_wires_sql = "UPDATE $wires_table SET $wires_table.deleted=1 WHERE $wires_table.equipment=$equipment; ";
+        $this->db->query($delete_wires_sql);
     }
 }

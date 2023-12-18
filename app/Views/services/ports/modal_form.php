@@ -70,7 +70,7 @@
                 appAlert.success(result.message, {
                     duration: 5000
                 });
-                $("#contact-table").appTable({
+                $("#port-table").appTable({
                     newData: result.data,
                     dataId: result.id
                 });

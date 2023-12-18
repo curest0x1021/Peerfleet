@@ -20,5 +20,4 @@ class Wire_type_model extends Crud_model {
             return false;
         }
     }
-
 }
