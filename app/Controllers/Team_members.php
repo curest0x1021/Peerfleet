@@ -711,6 +711,7 @@ class Team_members extends Security_Controller
             "status" => $this->request->getPost("status"),
             "user_type" => "staff",
             "custom_fields" => $custom_fields,
+            "non_admin_users_only" => true,
             "custom_field_filter" => $this->prepare_custom_field_filter_values("team_members", $this->login_user->is_admin, $this->login_user->user_type)
         );
 

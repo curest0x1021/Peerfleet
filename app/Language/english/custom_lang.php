@@ -1,6 +1,7 @@
 <?php
 
 //copy from default_lang.php file and update
+$lang["vessel_contacts"] = "Vessel Contacts";
 $lang["year"] = "Year";
 $lang["years"] = "Years";
 $lang["months"] = "Months";

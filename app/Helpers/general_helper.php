@@ -2069,12 +2069,12 @@ if (!function_exists('prepare_contract_view')) {
             $view_data["is_preview"] = true;
             $parser_data["CONTRACT_TO_INFO"] = view("contracts/contract_parts/contract_to", $view_data);
             $parser_data["CONTRACT_TO_COMPANY_NAME"] = $client_info->charter_name;
-            $parser_data["CONTRACT_TO_ADDRESS"] = $client_info->address;
-            $parser_data["CONTRACT_TO_CITY"] = $client_info->city;
-            $parser_data["CONTRACT_TO_STATE"] = $client_info->state;
-            $parser_data["CONTRACT_TO_ZIP"] = $client_info->zip;
-            $parser_data["CONTRACT_TO_COUNTRY"] = $client_info->country;
-            $parser_data["CONTRACT_TO_VAT_NUMBER"] = $client_info->vat_number;
+            $parser_data["CONTRACT_TO_ADDRESS"] = '';
+            $parser_data["CONTRACT_TO_CITY"] = '';
+            $parser_data["CONTRACT_TO_STATE"] = '';
+            $parser_data["CONTRACT_TO_ZIP"] = '';
+            $parser_data["CONTRACT_TO_COUNTRY"] = '';
+            $parser_data["CONTRACT_TO_VAT_NUMBER"] = '';
 
             //perse custom fields
             if (isset($contract_info->custom_fields) && $contract_info->custom_fields) {

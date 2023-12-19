@@ -41,6 +41,7 @@ class Project_members_model extends Crud_model {
     function get_details($options = array()) {
         $project_members_table = $this->db->prefixTable('project_members');
         $users_table = $this->db->prefixTable('users');
+        $clients_table = $this->db->prefixTable('clients');
 
         $where = "";
         $id = $this->_get_clean_value($options, "id");
@@ -63,9 +64,10 @@ class Project_members_model extends Crud_model {
             }
         }
 
-        $sql = "SELECT $project_members_table.*, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS member_name, $users_table.image as member_image, $users_table.job_title, $users_table.user_type
+        $sql = "SELECT $project_members_table.*, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS member_name, $clients_table.charter_name, $users_table.image as member_image, $users_table.job_title, $users_table.user_type
         FROM $project_members_table
         LEFT JOIN $users_table ON $users_table.id= $project_members_table.user_id
+        LEFT JOIN $clients_table ON $clients_table.id=$users_table.client_id
         WHERE $project_members_table.deleted=0 $where";
         return $this->db->query($sql);
     }
@@ -127,14 +129,16 @@ class Project_members_model extends Crud_model {
         $project_members_table = $this->db->prefixTable('project_members');
         $users_table = $this->db->prefixTable('users');
         $projects_table = $this->db->prefixTable('projects');
+        $clients_table = $this->db->prefixTable('clients');
 
-        $sql = "SELECT $users_table.id, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS contact_name
+        $sql = "SELECT $users_table.id, $clients_table.charter_name AS member_name
         FROM $users_table
         LEFT JOIN $project_members_table ON $project_members_table.user_id=$users_table.id
-        WHERE $users_table.user_type='client' AND $users_table.deleted=0 AND $users_table.client_id=(SELECT $projects_table.client_id FROM $projects_table WHERE $projects_table.id=$project_id) AND $users_table.id NOT IN (SELECT $project_members_table.user_id FROM $project_members_table WHERE $project_members_table.project_id='$project_id' AND deleted=0)
+        LEFT JOIN $clients_table ON $clients_table.id=$users_table.client_id
+        WHERE $users_table.user_type='client' AND $users_table.deleted=0 AND $users_table.id NOT IN (SELECT $project_members_table.user_id FROM $project_members_table WHERE $project_members_table.project_id='$project_id' AND deleted=0)
         ORDER BY $users_table.first_name ASC";
 
         return $this->db->query($sql);
     }
-
+// /$users_table.client_id=(SELECT $projects_table.client_id FROM $projects_table WHERE $projects_table.id=$project_id) AND
 }

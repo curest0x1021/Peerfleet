@@ -1189,9 +1189,9 @@ class Projects extends Security_Controller {
                 app_redirect("forbidden");
             }
 
-            $contacts = $this->Project_members_model->get_client_contacts_of_the_project_client($project_id)->getResult();
-            foreach ($contacts as $contact) {
-                $users_dropdown[$contact->id] = $contact->contact_name;
+            $users = $this->Project_members_model->get_client_contacts_of_the_project_client($project_id)->getResult();
+            foreach ($users as $user) {
+                $users_dropdown[$user->id] = $user->member_name;
             }
         } else {
             $users = $this->Project_members_model->get_rest_team_members_for_a_project($project_id)->getResult();
@@ -1334,7 +1334,7 @@ class Projects extends Security_Controller {
             $member_name = get_team_member_profile_link($data->user_id, $data->member_name, array("class" => "dark strong"));
         } else {
             $member = get_client_contact_profile_link($data->user_id, $member_image);
-            $member_name = get_client_contact_profile_link($data->user_id, $data->member_name, array("class" => "dark strong"));
+            $member_name = get_client_contact_profile_link($data->user_id, $data->charter_name, array("class" => "dark strong"));
         }
 
         $link = "";
