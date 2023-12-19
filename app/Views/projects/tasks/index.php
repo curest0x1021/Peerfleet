@@ -117,8 +117,8 @@ foreach ($task_statuses as $status) {
                     {visible: false, searchable: false},
                     {visible: false, searchable: false},
                     {visible: false, searchable: false},
-                    {title: '<?php echo app_lang("status") ?>', visible: showResponsiveOption, order_by: "status"}
-                    <?php echo $custom_field_headers; ?>,
+                    {visible: false, searchable: false},
+                    {title: '<?php echo app_lang("status") ?>', visible: showResponsiveOption, order_by: "status"},
                     {title: '<?php echo app_lang("category") ?>', visible: false},
                     {title: '<?php echo app_lang("description") ?>', visible: false},
                     {title: '<?php echo app_lang("location") ?>', visible: false},
@@ -129,8 +129,8 @@ foreach ($task_statuses as $status) {
                     {title: '<?php echo app_lang("title") ?>', visible: false, searchable: false},
                     {title: '<i data-feather="menu" class="icon-16"></i>', visible: optionVisibility, "class": "text-center option " + optionColumnClass}
                 ],
-                printColumns: [13, 3, 20, 14, 15, 16, 17, 18, 19],
-                xlsColumns: [13, 3, 20, 14, 15, 16, 17, 18, 19],
+                printColumns: [14, 3, 21, 15, 16, 17, 18, 19, 20],
+                xlsColumns: [14, 3, 21, 15, 16, 17, 18, 19, 20],
                 rowCallback: tasksTableRowCallback //load this function from the task_table_common_script.php 
             });
         } else {

@@ -5,7 +5,7 @@
         echo (anchor(get_uri("leads/view/" . $contract_info->client_id), $contract_info->company_name));
     } else {
         echo app_lang("client") . ": ";
-        echo (anchor(get_uri("clients/view/" . $contract_info->client_id), $contract_info->company_name));
+        echo (anchor(get_uri("clients/view/" . $contract_info->client_id), $contract_info->charter_name));
     }
     ?>
 </div>

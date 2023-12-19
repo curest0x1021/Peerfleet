@@ -383,7 +383,7 @@ class Contracts extends Security_Controller {
             $contract_url = anchor(get_uri("contracts/preview/" . $data->id), $data->title);
         }
 
-        $client = anchor(get_uri("clients/view/" . $data->client_id), $data->company_name);
+        $client = anchor(get_uri("clients/view/" . $data->client_id), $data->charter_name);
         if ($data->is_lead) {
             $client = anchor(get_uri("leads/view/" . $data->client_id), $data->company_name);
         }
