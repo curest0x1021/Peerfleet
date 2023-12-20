@@ -98,6 +98,7 @@ class App_Controller extends Controller {
     public $Equipments_model;
     public $Wire_type_model;
     public $Ship_equipments_model;
+    public $Shipserv_model;
     public $Warehouses_model;
     public $Warehouse_chemicals_model;
     public $Warehouse_oils_model;
@@ -259,6 +260,7 @@ class App_Controller extends Controller {
             'Equipments_model',
             'Wire_type_model',
             'Ship_equipments_model',
+            'Shipserv_model',
             'Warehouses_model',
             'Warehouse_chemicals_model',
             'Warehouse_oils_model',

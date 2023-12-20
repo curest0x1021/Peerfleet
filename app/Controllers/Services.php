@@ -477,8 +477,8 @@ class Services extends Security_Controller {
     }
 
     //get data for service contacts list
-    function contact_list_data() {
-        $list_data = $this->Service_contacts_model->get_all_where(array("deleted" => 0))->getResult();
+    function contact_list_data($service_id) {
+        $list_data = $this->Service_contacts_model->get_all_where(array("deleted" => 0, "service_id" => $service_id))->getResult();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_contact_make_row($data);
