@@ -20,7 +20,7 @@ class Cron extends App_Controller {
 
         $current_time = strtotime(get_current_utc_time());
 
-        if ($last_cron_job_time == "" || ($current_time > ($last_cron_job_time * 1 + 60))) {
+        if ($last_cron_job_time == "" || ($current_time > ($last_cron_job_time * 1 + 2))) {
             $this->cron_job->run();
             app_hooks()->do_action("app_hook_after_cron_run");
             $this->Settings_model->save_setting("last_cron_job_time", $current_time);

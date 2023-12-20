@@ -27,7 +27,7 @@ interface LoggerInterface
      *
      * @return void
      */
-    public function emergency(string|\Stringable $message, array $context = []): void;
+    public function emergency(string $message, array $context = []): void;
 
     /**
      * Action must be taken immediately.
