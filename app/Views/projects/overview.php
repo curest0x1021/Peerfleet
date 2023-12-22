@@ -38,7 +38,7 @@
 
                 <?php if ($can_access_clients && $project_info->project_type === "client_project") { ?>
                     <div class="col-md-12 col-sm-12">
-                        <?php echo view("projects/client_contacts/index"); ?>
+                        <?php echo view("projects/supplier_contacts/index"); ?>
                     </div>  
                 <?php } ?>
 

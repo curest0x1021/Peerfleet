@@ -748,7 +748,7 @@ class Security_Controller extends App_Controller {
     }
 
     protected function get_team_members_dropdown($is_filter = false) {
-        $team_members = $this->Users_model->get_all_where(array("user_type" => "staff", "deleted" => 0, "status" => "active"))->getResult();
+        $team_members = $this->Users_model->get_all_where(array("user_type" => "staff", "is_admin" => 0, "deleted" => 0, "status" => "active"))->getResult();
 
         $team_members_dropdown = array();
         if ($is_filter) {

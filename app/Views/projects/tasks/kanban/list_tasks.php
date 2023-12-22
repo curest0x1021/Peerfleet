@@ -1,10 +1,11 @@
 <div class="card mb0 mt10">
     <ul id="project-files-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs bg-white title" role="tablist">
-        <li class="nav-item title-tab"><h4 class="pl15 pt10 pr15"><?php echo app_lang('tasks') . " " . app_lang('kanban'); ?></h4></li>
+        <li class="nav-item title-tab"><h4 class="pl15 pt10 pr15"><?php echo app_lang('tasks') . " " . app_lang('list'); ?></h4></li>
 
         <div class="tab-title clearfix no-border">
             <div class="title-button-group">
             <?php
+
             if ($login_user->user_type == "staff" && $can_edit_tasks) {
                 echo modal_anchor("", "<i data-feather='edit' class='icon-16'></i> " . app_lang('batch_update'), array("class" => "btn btn-info text-white hide batch-update-btn", "title" => app_lang('batch_update'), "data-post-project_id" => $project_id));
                 echo js_anchor("<i data-feather='check-square' class='icon-16'></i> " . app_lang("cancel_selection"), array("class" => "hide btn btn-default batch-cancel-btn"));
@@ -13,6 +14,9 @@
                 echo modal_anchor(get_uri("tasks/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_multiple_tasks'), array("class" => "btn btn-default", "title" => app_lang('add_multiple_tasks'), "data-post-project_id" => $project_id, "data-post-add_type" => "multiple"));
                 echo modal_anchor(get_uri("tasks/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_task'), array("class" => "btn btn-default", "title" => app_lang('add_task'), "data-post-project_id" => $project_id));
             }
+            echo modal_anchor(get_uri("tasks/import_tasks_modal_form"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_tasks'), array("class" => "btn btn-default import_tasks_btn", "title" => app_lang('import_tasks'), "data-post-project_id" => $project_id));
+
+            echo js_anchor("" . app_lang("excel"), array("class" => "btn btn-default export-excel-btn"));
             ?>
             </div>
         </div>
@@ -53,7 +57,6 @@
             smartFilter = false;
         }
 
-        var scrollLeft = 0;
         $("#kanban-list-filters").appFilters({
             source: '<?php echo_uri("tasks/project_tasks_kanban_list_data/" . $project_id) ?>',
             targetSelector: '#load-kanban-list',
@@ -70,36 +73,6 @@
                         {value: moment().add(7, 'days').format("YYYY-MM-DD"), text: "<?php echo sprintf(app_lang('in_number_of_days'), 7); ?>"},
                         {value: moment().add(15, 'days').format("YYYY-MM-DD"), text: "<?php echo sprintf(app_lang('in_number_of_days'), 15); ?>"}
                     ]}],
-            beforeRelaodCallback: function () {
-                scrollLeft = $("#kanban-wrapper").scrollLeft();
-            },
-            afterRelaodCallback: function () {
-                setTimeout(function () {
-                    $("#kanban-wrapper").animate({scrollLeft: scrollLeft}, 'slow');
-                }, 500);
-                hideBatchTasksBtn();
-            }
-        });
-
-        $('body').on('click', '.project-title-section-hide-button', function (e) {
-            $(".project-title-section").addClass("hide");
-            $(this).addClass("project-title-section-show-button");
-            $(this).removeClass("project-title-section-hide-button");
-
-            $(this).html("<?php echo "<i data-feather='arrow-down' class='icon-16'></i> "; ?>");
-            feather.replace();
-
-            adjustViewHeightWidth();
-        });
-
-        $('body').on('click', '.project-title-section-show-button', function (e) {
-            $(".project-title-section").removeClass("hide");
-            $(this).addClass("project-title-section-hide-button");
-            $(this).removeClass("project-title-section-show-button");
-
-            $(this).html("<?php echo "<i data-feather='arrow-up' class='icon-16'></i> "; ?>");
-            feather.replace();
-            adjustViewHeightWidth();
         });
 
     });

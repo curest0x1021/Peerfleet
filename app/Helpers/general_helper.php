@@ -1647,6 +1647,32 @@ if (!function_exists("make_labels_view_data")) {
 
 }
 
+//make labels view data for different contexts
+if (!function_exists("make_labels_export_data")) {
+
+    function make_labels_export_data($labels_list = "", $clickable = false, $large = false) {
+        $labels = "";
+
+        if ($labels_list) {
+            $labels_array = explode(":--::--:", $labels_list);
+
+            foreach ($labels_array as $label) {
+                if (!$label) {
+                    continue;
+                }
+
+                $label_parts = explode("--::--", $label);
+                $label_title = get_array_value($label_parts, 1);
+
+                $labels .= $label_title;
+            }
+        }
+
+        return $labels;
+    }
+
+}
+
 //get update task info anchor data
 if (!function_exists("get_update_task_info_anchor_data")) {
 

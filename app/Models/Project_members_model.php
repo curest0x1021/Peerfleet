@@ -58,9 +58,9 @@ class Project_members_model extends Crud_model {
         $show_user_wise = $this->_get_clean_value($options, "show_user_wise");
         if ($show_user_wise) {
             if ($user_type == "client_contacts") {
-                $where .= " AND $project_members_table.user_id IN (SELECT $users_table.id FROM $users_table WHERE $users_table.deleted=0 AND $users_table.user_type='client')";
+                $where .= " AND $project_members_table.user_id IN (SELECT $users_table.id FROM $users_table WHERE $users_table.deleted=0 AND $users_table.is_admin=0 AND $users_table.user_type='client')";
             } else {
-                $where .= " AND $project_members_table.user_id IN (SELECT $users_table.id FROM $users_table WHERE $users_table.deleted=0 AND $users_table.user_type='staff')";
+                $where .= " AND $project_members_table.user_id IN (SELECT $users_table.id FROM $users_table WHERE $users_table.deleted=0 AND $users_table.is_admin=0 AND $users_table.user_type='staff')";
             }
         }
 
@@ -93,7 +93,7 @@ class Project_members_model extends Crud_model {
         }
 
         if ($user_where) {
-            $where .= " AND $project_members_table.user_id IN (SELECT $users_table.id FROM $users_table WHERE $users_table.deleted=0 $user_where)";
+            $where .= " AND $project_members_table.user_id IN (SELECT $users_table.id FROM $users_table WHERE $users_table.deleted=0 AND $users_table.is_admin=0 $user_where)";
         }
 
         $sql = "SELECT $project_members_table.user_id, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS member_name, $users_table.status AS member_status, $users_table.user_type
@@ -119,7 +119,7 @@ class Project_members_model extends Crud_model {
         $sql = "SELECT $users_table.id, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS member_name
         FROM $users_table
         LEFT JOIN $project_members_table ON $project_members_table.user_id=$users_table.id
-        WHERE $users_table.user_type='staff' AND $users_table.status='active' AND $users_table.deleted=0 AND $users_table.id NOT IN (SELECT $project_members_table.user_id FROM $project_members_table WHERE $project_members_table.project_id='$project_id' AND deleted=0)
+        WHERE $users_table.user_type='staff' AND $users_table.status='active' AND $users_table.is_admin=0 AND $users_table.deleted=0 AND $users_table.id NOT IN (SELECT $project_members_table.user_id FROM $project_members_table WHERE $project_members_table.project_id='$project_id' AND deleted=0)
         ORDER BY $users_table.first_name ASC";
 
         return $this->db->query($sql);
@@ -135,7 +135,7 @@ class Project_members_model extends Crud_model {
         FROM $users_table
         LEFT JOIN $project_members_table ON $project_members_table.user_id=$users_table.id
         LEFT JOIN $clients_table ON $clients_table.id=$users_table.client_id
-        WHERE $users_table.user_type='client' AND $users_table.deleted=0 AND $users_table.id NOT IN (SELECT $project_members_table.user_id FROM $project_members_table WHERE $project_members_table.project_id='$project_id' AND deleted=0)
+        WHERE $users_table.user_type='client' AND $users_table.deleted=0 AND $users_table.is_admin=0 AND $users_table.id NOT IN (SELECT $project_members_table.user_id FROM $project_members_table WHERE $project_members_table.project_id='$project_id' AND deleted=0)
         ORDER BY $users_table.first_name ASC";
 
         return $this->db->query($sql);

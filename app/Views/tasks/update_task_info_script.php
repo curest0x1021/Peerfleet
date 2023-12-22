@@ -1,4 +1,12 @@
 <?php
+$status_dropdown_for_update = array();
+if (isset($statuses)) {
+    foreach ($statuses as $status) {
+        $status_dropdown_for_update[] = array("id" => $status->id, "text" => $status->key_name ? app_lang($status->key_name) : $status->title);
+    }
+}
+
+
 $points_dropdown_for_update = array();
 foreach ($points_dropdown as $key => $value) {
     $points_dropdown_for_update[] = array("id" => $key, "text" => $value);

@@ -98,12 +98,12 @@ class Clients_model extends Crud_model {
         CONCAT(t.first_name, ' ', t.last_name) AS primary_contact, t.id AS primary_contact_id, t.image AS tech_avatar,
                 owner_details.owner_name, owner_details.owner_avatar
         FROM $clients_table
-        LEFT JOIN $users_table ON $users_table.client_id = $clients_table.id AND $users_table.deleted=0 AND $users_table.is_primary_contact = 1
+        LEFT JOIN $users_table ON $users_table.client_id = $clients_table.id AND $users_table.deleted=0 AND $users_table.is_admin=0 AND $users_table.is_primary_contact = 1
         LEFT JOIN $users_table as b ON b.client_id = $clients_table.id AND b.deleted=0 AND b.is_primary_contact = 2
         LEFT JOIN $users_table as t ON t.client_id = $clients_table.id AND t.deleted=0 AND t.is_primary_contact = 3
         LEFT JOIN $vessel_types_table ON $vessel_types_table.id = $clients_table.type
         LEFT JOIN (SELECT client_id, COUNT(id) AS total_projects FROM $projects_table WHERE deleted=0 AND project_type='client_project' GROUP BY client_id) AS project_table ON project_table.client_id= $clients_table.id
-        LEFT JOIN (SELECT $users_table.id, CONCAT($users_table.first_name, ' ', $users_table.last_name) AS owner_name, $users_table.image AS owner_avatar FROM $users_table WHERE $users_table.deleted=0 AND $users_table.user_type='staff') AS owner_details ON owner_details.id=$clients_table.owner_id
+        LEFT JOIN (SELECT $users_table.id, CONCAT($users_table.first_name, ' ', $users_table.last_name) AS owner_name, $users_table.image AS owner_avatar FROM $users_table WHERE $users_table.deleted=0 AND $users_table.is_admin=0 AND $users_table.user_type='staff') AS owner_details ON owner_details.id=$clients_table.owner_id
         WHERE $clients_table.deleted=0 $where
         $order $limit_offset";
 
@@ -148,7 +148,7 @@ class Clients_model extends Crud_model {
 
         $sql = "SELECT $users_table.id, $users_table.first_name, $users_table.last_name, $users_table.email, $users_table.sat, $users_table.phone, $users_table.mobile
         FROM $users_table
-        WHERE $users_table.deleted=0 AND $users_table.client_id=$client_id AND $users_table.is_primary_contact=1";
+        WHERE $users_table.deleted=0 AND $users_table.is_admin=0 AND $users_table.client_id=$client_id AND $users_table.is_primary_contact=1";
         $result = $this->db->query($sql);
         if ($result->resultID->num_rows) {
             if ($info) {

@@ -3,7 +3,7 @@
     <ul class="nav nav-tabs bg-white title" role="tablist">
         <li class="title-tab my-tasks"><h4 class="pl15 pt10 pr15"><?php echo app_lang("tasks"); ?></h4></li>
 
-        <?php echo view("projects/tasks/tabs", array("active_tab" => "tasks_list", "selected_tab" => $tab)); ?>
+        <?php echo view("tasks/tabs", array("active_tab" => "tasks_list", "selected_tab" => $tab)); ?>
 
         <div class="tab-title clearfix no-border">
             <div class="title-button-group">
@@ -15,8 +15,6 @@
                     echo js_anchor("<i data-feather='x' class='icon-16'></i> " . app_lang("cancel_selection"), array("class" => "hide btn btn-default batch-cancel-btn"));
                 }
                 if ($can_create_tasks) {
-                    // echo modal_anchor(get_uri("projects/import_tasks_modal_form"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_tasks'), array("class" => "btn btn-default", "title" => app_lang('import_tasks')));
-                    // echo modal_anchor(get_uri("projects/task_modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_multiple_tasks'), array("class" => "btn btn-default", "title" => app_lang('add_multiple_tasks'), "data-post-add_type" => "multiple"));
                     echo modal_anchor(get_uri("projects/task_modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_task'), array("class" => "btn btn-default", "title" => app_lang('add_task')));
                 }
                 ?>
@@ -164,7 +162,7 @@ foreach ($task_statuses as $status) {
     });
 </script>
 
-<?php echo view("projects/tasks/batch_update/batch_update_script"); ?>
-<?php echo view("projects/tasks/update_task_script"); ?>
-<?php echo view("projects/tasks/update_task_read_comments_status_script"); ?>
-<?php echo view("projects/tasks/quick_filters_helper_js"); ?>
+<?php echo view("tasks/batch_update/batch_update_script"); ?>
+<?php echo view("tasks/update_task_script"); ?>
+<?php echo view("tasks/update_task_read_comments_status_script"); ?>
+<?php echo view("tasks/quick_filters_helper_js"); ?>

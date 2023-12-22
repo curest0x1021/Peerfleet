@@ -22,6 +22,7 @@
                         <?php } ?>
 
                     </div>
+
                     <div class="card-body">
                         <?php echo view("tasks/task_view_data"); ?>
                     </div>
