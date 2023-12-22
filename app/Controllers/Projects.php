@@ -3570,6 +3570,124 @@ class Projects extends Security_Controller {
         }
     }
 
+    /** project supplier */
+    /* load project members add/edit modal */
+
+    function project_supplier_modal_form() {
+        $view_data['model_info'] = $this->Project_supplier_model->get_one($this->request->getPost('id'));
+        $project_id = $this->request->getPost('project_id') ? $this->request->getPost('project_id') : $view_data['model_info']->project_id;
+        $this->init_project_permission_checker($project_id);
+
+        $view_data['project_id'] = $project_id;
+
+        return $this->template->view('projects/supplier_contacts/modal_form', $view_data);
+    }
+
+    /* add a project members  */
+
+    function save_project_supplier() {
+        $project_id = $this->request->getPost('project_id');
+
+        $this->init_project_permission_checker($project_id);
+
+        if (!$this->can_add_remove_project_members()) {
+            app_redirect("forbidden");
+        }
+
+        $this->validate_submitted_data(array(
+            "supplier" => "required",
+            "contact_person" => "required",
+        ));
+
+        $id = $this->request->getPost('id');
+        $data = array(
+            "project_id" => $project_id,
+            "supplier" => $this->request->getPost('supplier'),
+            "contact_person" => $this->request->getPost('contact_person'),
+            "email" => $this->request->getPost('email'),
+            "phone" => $this->request->getPost('phone'),
+            "mobile" => $this->request->getPost('mobile'),
+            "description" => $this->request->getPost('description')
+        );
+
+        $save_id = $this->Project_supplier_model->ci_save($data, $id);
+        
+        if ($save_id) {
+            echo json_encode(array("success" => true, 'id' => $save_id, 'message' => app_lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+    }
+
+    /* delete/undo a project members  */
+
+    function delete_project_supplier() {
+        $id = $this->request->getPost('id');
+        $project_supplier_info = $this->Project_supplier_model->get_one($id);
+
+        $this->init_project_permission_checker($project_supplier_info->project_id);
+        if (!$this->can_add_remove_project_members()) {
+            app_redirect("forbidden");
+        }
+
+
+        if ($this->request->getPost('undo')) {
+            if ($this->Project_supplier_model->delete($id, true)) {
+                echo json_encode(array("success" => true, "data" => $this->_project_supplier_row_data($id), "message" => app_lang('record_undone')));
+            } else {
+                echo json_encode(array("success" => false, app_lang('error_occurred')));
+            }
+        } else {
+            if ($this->Project_supplier_model->delete($id)) {
+
+                $project_supplier_info = $this->Project_supplier_model->get_one($id);
+
+                echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
+            } else {
+                echo json_encode(array("success" => false, 'message' => app_lang('record_cannot_be_deleted')));
+            }
+        }
+    }
+
+    /* list of project members, prepared for datatable  */
+
+    function project_supplier_list_data($project_id = 0) {
+        validate_numeric_value($project_id);
+        $this->access_only_team_members();
+        $this->init_project_permission_checker($project_id);
+
+        $options = array("project_id" => $project_id);
+        $list_data = $this->Project_supplier_model->get_details($options)->getResult();
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_make_project_supplier_row($data);
+        }
+        echo json_encode(array("data" => $result));
+    }
+
+    /* return a row of project supplier list */
+
+    private function _project_supplier_row_data($id) {
+        $options = array("id" => $id);
+        $data = $this->Project_supplier_model->get_details($options)->getRow();
+        return $this->_make_project_supplier_row($data);
+    }
+
+    /* prepare a row of project supplier list */
+
+    private function _make_project_supplier_row($data) {
+        $link = '';
+        if ($this->can_add_remove_project_members()) {
+            $delete_link = modal_anchor(get_uri("projects/project_supplier_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_supplier_contact'), "data-post-id" => $data->id)) 
+            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_member'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("projects/delete_project_supplier"), "data-action" => "delete"));
+
+            $link .= $delete_link;
+        }
+
+        $member = '<div class="p-2 w-100"><div>' . $data->supplier . '</div><div>' . $data->contact_person . '</div><label class="text-off">' . $data->email . '</label></div>';
+
+        return array($member, $link);
+    }
 }
 
 /* End of file projects.php */

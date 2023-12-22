@@ -84,6 +84,7 @@ class App_Controller extends Controller {
     public $Checklist_template_model;
     public $Checklist_groups_model;
     public $Project_status_model;
+    public $Project_supplier_model;
     public $Subscriptions_model;
     public $Subscription_items_model;
     public $Sea_valves_model;
@@ -246,6 +247,7 @@ class App_Controller extends Controller {
             'Checklist_template_model',
             'Checklist_groups_model',
             'Project_status_model',
+            'Project_supplier_model',
             'Subscriptions_model',
             'Subscription_items_model',
             'Sea_valves_model',

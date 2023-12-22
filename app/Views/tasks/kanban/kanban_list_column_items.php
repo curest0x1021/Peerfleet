@@ -116,8 +116,12 @@ foreach ($tasks as $task) {
         $parent_task = "<div class=' text-truncate text-off'>" . $parent_task_id . $task->parent_task_title . "</div>";
     }
 
-    echo modal_anchor(get_uri("tasks/view"), "<div class='d-flex'><span class='avatar'>" .
-            "<img style='width: 30px; height: 30px;' src='" . get_avatar($task->assigned_to_avatar) . "'>" .
-            "</span><div class='w400'>" . $sub_task_icon . $task_id . $task->title . $toggle_sub_task_icon . $batch_operation_checkbox . "</div><div class='clearfix w200'>" . $start_date . $end_date . "</div></div><div class='d-flex'>" . $project_name . $client_name . $kanban_custom_fields_data .
-            $task_labels . $task_checklist_status . $sub_task_status . "<div class='clearfix'></div>" . $parent_task . "</div>", array("class" => "kanban-list-item $disable_dragging $unread_comments_class", "data-status_id" => $task->status_id, "data-id" => $task->id, "data-project_id" => $task->project_id, "data-sort" => $task->new_sort, "data-post-id" => $task->id, "title" => app_lang('task_info') . " #$task->id", "data-modal-lg" => "1"));
+    echo modal_anchor(get_uri("tasks/view"), "<div class='d-flex'>
+                <span class='avatar'><img style='width: 30px; height: 30px;' src='" . get_avatar($task->assigned_to_avatar) . "'></span>
+                <div class='w400'>" . $sub_task_icon . $task_id . $task->title . $toggle_sub_task_icon . $batch_operation_checkbox . "</div>
+                <div class='clearfix w200'>" . $start_date . $end_date . "</div>
+            </div>
+            <div class='d-flex'>" . $project_name . $client_name . $kanban_custom_fields_data . $task_labels . $task_checklist_status . $sub_task_status . "
+                <div class='clearfix'></div>" . $parent_task . "
+            </div>", array("class" => "kanban-list-item $disable_dragging $unread_comments_class", "data-status_id" => $task->status_id, "data-id" => $task->id, "data-project_id" => $task->project_id, "data-sort" => $task->new_sort, "data-post-id" => $task->id, "title" => app_lang('task_info') . " #$task->id", "data-modal-lg" => "1"));
 }

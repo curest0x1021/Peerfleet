@@ -13,6 +13,7 @@
             ?>
         </div>
         <input type="hidden" name="file_name" id="import_file_name" value="" />
+        <input type="hidden" name="project_id" value="<?php echo $project_id; ?>" />
         <div id="preview-area"></div>
     </div>
 </div>

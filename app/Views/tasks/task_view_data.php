@@ -150,7 +150,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                             <div class="col-md-12 mb15">
                                 <strong><?php echo app_lang("total_time_logged") . ": "; ?></strong>
                                 <?php
-                                echo ajax_anchor(get_uri("projects/task_timesheet/" . $model_info->id . "/" . $model_info->project_id), $total_task_hours, array("data-real-target" => "#task-timesheet", "class" => "strong"));
+                                echo ajax_anchor(get_uri("tasks/task_timesheet/" . $model_info->id . "/" . $model_info->project_id), $total_task_hours, array("data-real-target" => "#task-timesheet", "class" => "strong"));
                                 ?>
                             </div>
                             <div class="col-md-12 mb15">

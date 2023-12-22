@@ -143,6 +143,7 @@
                     </div>
                 </div>
 
+
             <?php } else { ?>
                 <input type="hidden" name="context" id="task-context" value="<?php echo $selected_context; ?>" />
             <?php } ?>
@@ -250,7 +251,7 @@
                     </div>
                 </div>
             </div> -->
-            <!-- <div class="form-group">
+            <div class="form-group">
                 <div class="row">
                     <label for="milestone_id" class=" col-md-3"><?php echo app_lang('milestone'); ?></label>
                     <div class="col-md-9" id="dropdown-apploader-section">
@@ -265,7 +266,7 @@
                         ?>
                     </div>
                 </div>
-            </div> -->
+            </div>
 
             <?php if ($show_assign_to_dropdown) { ?>
                 <div class="form-group">

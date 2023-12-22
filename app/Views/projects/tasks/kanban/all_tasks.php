@@ -3,7 +3,7 @@
     <ul class="nav nav-tabs bg-white title" role="tablist">
         <li class="title-tab all-tasks-kanban"><h4 class="pl15 pt10 pr15"><?php echo app_lang("tasks"); ?></h4></li>
 
-        <?php echo view("projects/tasks/tabs", array("active_tab" => "tasks_kanban", "selected_tab" => "")); ?>       
+        <?php echo view("tasks/tabs", array("active_tab" => "tasks_kanban", "selected_tab" => "")); ?>       
 
         <div class="tab-title clearfix no-border">
             <div class="title-button-group">
@@ -39,6 +39,6 @@
     });
 </script>
 
-<?php echo view("projects/tasks/batch_update/batch_update_script"); ?>
-<?php echo view("projects/tasks/kanban/all_tasks_kanban_helper_js"); ?>
-<?php echo view("projects/tasks/quick_filters_helper_js"); ?>
+<?php echo view("tasks/batch_update/batch_update_script"); ?>
+<?php echo view("tasks/kanban/all_tasks_kanban_helper_js"); ?>
+<?php echo view("tasks/quick_filters_helper_js"); ?>
