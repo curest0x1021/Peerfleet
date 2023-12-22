@@ -1,5 +1,0 @@
-{
-    "require": {
-        "chrome-php/chrome": "^v1.9.1"
-    }
-}
