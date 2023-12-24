@@ -34,8 +34,8 @@ class Chrome {
             $page = $browser->createPage();
             $navigation = $page->navigate('https://www.shipserv.com/search?page=' . $service_page);
             // $navigation = $page->navigate('https://stackoverflow.com/questions/47220255/how-to-set-timeout-for-headless-chrome');
-            // $navigation->waitForNavigation();
-            $navigation->waitForNavigation(Page::DOM_CONTENT_LOADED, 10000);
+            $navigation->waitForNavigation();
+            // $navigation->waitForNavigation(Page::DOM_CONTENT_LOADED, 10000);
             // $page->screenshot()->saveToFile('/foo/bar.png');
             $htmlContent = $page->getHtml(10000);
 
@@ -44,7 +44,7 @@ class Chrome {
             
             $find_href = false;
             foreach ($cardContents as $cardContent) {
-                // echo pq($cardContent)->html() . PHP_EOL;
+                echo pq($cardContent)->html() . PHP_EOL;
                 $links = pq($cardContent)->find('a');
                 $link_href = pq($links)->attr('href');
                 

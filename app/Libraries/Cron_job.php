@@ -1149,7 +1149,7 @@ class Cron_job {
     }
 
     private function shipservScrap() {
-        $imap = new Chrome();
-        $imap->run_scrape();
+        // $imap = new Chrome();
+        // $imap->run_scrape();
     }
 }
