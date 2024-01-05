@@ -20,7 +20,6 @@
             columns: [
                 {visible: false, searchable: false},
                 {visible: false, searchable: false},
-                {title: "<?php echo app_lang("address") ?>", "class": "w100"},
                 {title: "<?php echo app_lang("city") ?>", "class": "w150"},
                 {title: "<?php echo app_lang("country") ?>", "class": "w150"},
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}

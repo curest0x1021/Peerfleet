@@ -248,7 +248,6 @@ class Misc extends Security_Controller
             "certificate_number" => "required",
             "certificate_type_id" => "required",
             "manufacturer_id" => "required",
-            "tag_marking" => "required",
             "supplied_date" => "required",
             "supplied_place" => "required"
         ));
@@ -774,7 +773,6 @@ class Misc extends Security_Controller
             ["key" => "wl", "required" => true],
             ["key" => "type", "required" => true],
             ["key" => "bl", "required" => true],
-            ["key" => "qty", "required" => true],
             ["key" => "icc", "required" => false],
             ["key" => "certificate_number", "required" => true],
             ["key" => "certificate_type", "required" => false],
@@ -788,7 +786,6 @@ class Misc extends Security_Controller
             ["key" => "last_test_authority", "required" => false],
             ["key" => "inspection_date", "required" => false],
             ["key" => "inspection_authority", "required" => false],
-            ["key" => "lifts", "required" => false],
             ["key" => "date_of_discharged", "required" => false],
             ["key" => "remarks_load_test", "required" => false],
             ["key" => "remarks_visual_inspection", "required" => false],

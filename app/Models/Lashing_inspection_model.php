@@ -25,7 +25,7 @@ class Lashing_inspection_model extends Crud_model {
             $where .= " AND $lashing_table.client_id = $client_id";
         }
 
-        $sql = "SELECT CONCAT('#', $lashing_table.no, ' - ', $lashing_table.name) as name, $lashing_table.id as lashing_id, c.id, c.inspection_date, c.inspected_by, c.location, c.passed, c.remarks
+        $sql = "SELECT CONCAT('#', $lashing_table.no, ' - ', $lashing_table.name) as name, $lashing_table.qty as qty, $lashing_table.id as lashing_id, c.id, c.inspection_date, c.inspected_by, c.location, c.passed, c.remarks
                 FROM $lashing_table
                 LEFT JOIN (
                     SELECT a.* FROM $inspection_table a

@@ -73,6 +73,10 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     </div>
 
                     <div class="col-md-12 mb15">
+                        <strong><?php echo app_lang('budget') . ": "; ?></strong> <?php echo $model_info->budget; ?>
+                    </div>
+
+                    <div class="col-md-12 mb15">
                         <strong><?php echo app_lang('priority') . ": "; ?></strong> <?php echo get_update_task_info_anchor_data($model_info, "priority", $can_edit_tasks); ?>
                     </div>
 

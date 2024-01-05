@@ -67,11 +67,20 @@
 
         <div class="form-group row">
             <div class="<?php echo $label_column; ?>">
-                <span><?php echo app_lang("passed"); ?>:</span>
+                <span><?php echo app_lang("quantity") . " " . app_lang("passed"); ?>:</span>
             </div>
             <div class="<?php echo $field_column; ?>">
                 <?php
-                echo form_checkbox("passed", "1", $model_info->passed ? $model_info->passed == "1" : false, "id='passed' class='form-check-input mt-2'");
+                    echo form_input(array(
+                        "id" => "passed",
+                        "name" => "passed",
+                        "value" => $model_info->passed ? $model_info->passed : "",
+                        "class" => "form-control",
+                        "placeholder" => app_lang('passed'),
+                        "type" => "number",
+                        "data-rule-required" => true,
+                        "data-msg-required" => app_lang("field_required"),
+                    ));
                 ?>
             </div>
         </div>
@@ -104,19 +113,17 @@
 <script type="text/javascript">
     $(document).ready(function() {
         const forceRefresh = '<?php echo $force_refresh; ?>';
-        console.log(forceRefresh);
+
         $("#inspection-form").appForm({
             onSuccess: function(result) {
                 appAlert.success(result.message, {
                     duration: 5000
                 });
-                if (forceRefresh) {
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 500);
-                } else {
-                    $("#inspection-detail-table").appTable({newData: result.data, dataId: result.id});;
-                }
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500);
+
             }
         });
 

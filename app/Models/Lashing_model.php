@@ -32,7 +32,7 @@ class Lashing_model extends Crud_model {
                 LEFT JOIN (
                     SELECT $lashing_table.client_id, SUM(bb.passed) as passed
                     FROM $lashing_table
-                    JOIN (SELECT $inspection_table.lashing_id, IF(($inspection_table.passed = 1 AND $inspection_table.inspection_date > '$inspection_reminder_date'), 1, 0) as passed FROM $inspection_table
+                    JOIN (SELECT $inspection_table.lashing_id, IF(($inspection_table.passed > 0 AND $inspection_table.inspection_date > '$inspection_reminder_date'), 1, 0) as passed FROM $inspection_table
                         JOIN (SELECT lashing_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 GROUP BY lashing_id) b
                         ON $inspection_table.lashing_id = b.lashing_id AND $inspection_table.inspection_date = b.inspection_date) bb
                     ON $lashing_table.id = bb.lashing_id
@@ -56,7 +56,7 @@ class Lashing_model extends Crud_model {
                 LEFT JOIN (
                     SELECT $lashing_table.client_id, SUM(bb.passed) as passed
                     FROM $lashing_table
-                    JOIN (SELECT $inspection_table.lashing_id, IF(($inspection_table.passed = 1 AND $inspection_table.inspection_date > '$inspection_reminder_date'), 1, 0) as passed FROM $inspection_table
+                    JOIN (SELECT $inspection_table.lashing_id, IF(($inspection_table.passed > 0 AND $inspection_table.inspection_date > '$inspection_reminder_date'), 1, 0) as passed FROM $inspection_table
                         JOIN (SELECT lashing_id, MAX(inspection_date) as inspection_date FROM $inspection_table WHERE deleted = 0 GROUP BY lashing_id) b
                         ON $inspection_table.lashing_id = b.lashing_id AND $inspection_table.inspection_date = b.inspection_date) bb
                     ON $lashing_table.id = bb.lashing_id

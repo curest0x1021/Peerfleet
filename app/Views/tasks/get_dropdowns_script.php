@@ -15,6 +15,7 @@ if (!isset($contexts)) {
         dropdowns.collaborators_dropdown = <?php echo json_encode($collaborators_dropdown); ?>;
         dropdowns.label_suggestions = <?php echo json_encode($label_suggestions); ?>;
         dropdowns.statuses_dropdown = <?php echo json_encode($statuses_dropdown); ?>;
+        dropdowns.projects_dropdown = <?php echo json_encode($projects_dropdown); ?>;
 
 
         showHideRelatedToDropdowns = function (selectedContext) {
@@ -133,13 +134,8 @@ if (!isset($contexts)) {
         }
 
         if ($("#project_id").length) {
-            $("#project_id").select2({data: relatedToDropdowns[context]}).on("change", function () {
-                showRelatedDropdowns("project", false);
-            });
+            $("#project_id").select2({data: dropdowns.projects_dropdown});
         }
-
-
-
 
     });
 </script>

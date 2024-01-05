@@ -255,7 +255,7 @@ class Lashing extends Security_Controller
         } else {
             $save_id = $this->Lashing_inspection_model->ci_save($data, $id);
             if ($save_id) {
-                echo json_encode(array("success" => true, "data" => $this->_inspection_row_data($save_id, $client_id), "id" => $save_id, 'message' => app_lang('record_saved')));
+                echo json_encode(array("success" => true, 'message' => app_lang('record_saved')));
             } else {
                 echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
             }
@@ -321,13 +321,16 @@ class Lashing extends Security_Controller
             $reminder_date = get_visual_inspection_reminder_date();
             if ($last_date && $reminder_date > $data->inspection_date) {
                 $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Due to over due"></div>';
-            } else {
+            } else if ($data->passed == $data->qty) {
                 $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;" title="Passed"></div>';
+            } else {
+                $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Not passed"></div>';
             }
         } else {
             $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Not passed"></div>';
         }
 
+        $passed .= '<div>' . ($data->passed ? $data->passed : '0') . ' of ' . $data->qty . '</div>';
         $next_inspection_date = "";
         if ($data->inspection_date && $showInternalId) {
             $next_inspection_date = date('Y-m-d', strtotime($data->inspection_date. ' + 1 years'));

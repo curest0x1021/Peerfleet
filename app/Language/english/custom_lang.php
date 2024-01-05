@@ -165,6 +165,7 @@ $lang["reference_drawing"] = "Reference drawing";
 $lang["specification"] = "Specification";
 $lang["specification_placeholder"] = "Detailed specification incl. size, amount, dimensions and material.";
 $lang["requisition_number"] = "Requisition number";
+$lang["budget"] = "Budget";
 $lang["to_be_included"] = "To be included";
 $lang["maker_informations"] = "Maker informations";
 $lang["gas_free_certificate"] = "Gas free certificate";
