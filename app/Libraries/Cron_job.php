@@ -15,40 +15,40 @@ class Cron_job {
     private $ci = null;
 
     function run() {
-        // $this->today = get_today_date();
-        // $this->ci = new App_Controller();
-        // $this->current_time = strtotime(get_current_utc_time());
-
-        // try {
-        //     $this->call_hourly_jobs();
-        //     $this->call_daily_jobs();
-        // } catch (\Exception $e) {
-        //     echo $e;
-        // }
-
-        // try {
-        //     $this->run_imap();
-        // } catch (\Exception $e) {
-        //     echo $e;
-        // }
-
-        // try {
-        //     $this->get_google_calendar_events();
-        // } catch (\Exception $e) {
-        //     echo $e;
-        // }
-
-        // try {
-        //     $this->close_inactive_tickets();
-        // } catch (\Exception $e) {
-        //     echo $e;
-        // }
+        $this->today = get_today_date();
+        $this->ci = new App_Controller();
+        $this->current_time = strtotime(get_current_utc_time());
 
         try {
-            $this->shipservScrap();
+            $this->call_hourly_jobs();
+            $this->call_daily_jobs();
         } catch (\Exception $e) {
             echo $e;
         }
+
+        try {
+            $this->run_imap();
+        } catch (\Exception $e) {
+            echo $e;
+        }
+
+        try {
+            $this->get_google_calendar_events();
+        } catch (\Exception $e) {
+            echo $e;
+        }
+
+        try {
+            $this->close_inactive_tickets();
+        } catch (\Exception $e) {
+            echo $e;
+        }
+
+        // try {
+        //     $this->shipservScrap();
+        // } catch (\Exception $e) {
+        //     echo $e;
+        // }
     }
 
     private function call_hourly_jobs() {
