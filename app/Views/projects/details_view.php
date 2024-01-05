@@ -266,75 +266,86 @@ load_js(array(
                 type: 'POST',
                 dataType: 'json',
                 data: {project_id:<?php echo $project_info->id; ?> },
-                success: function (result) {
-                    var CSV = '';
-                    //Set Report title in first row or line
-                    var ReportTitle = 'export-tasks';
-                    var ShowLabel = true;
-                    CSV += ReportTitle + '\r\n\n';
+                success: async function (result) {
 
-                    //This condition will generate the Label/Header
-                    if (ShowLabel) {
-                        var row = "";
+                    /* dynamically import the scripts in the event listener */
+                    const XLSX = await import("https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs");
+                    const cptable = await import("https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/cpexcel.full.mjs");
+                    XLSX.set_cptable(cptable);
 
-                        //This loop will extract the label from 1st index of on array
-                        for (var index in result[0]) {
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.json_to_sheet(result);
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                    XLSX.writeFile(wb, "Mytasks.xlsx");
+                    
+                    // var CSV = '';
+                    // //Set Report title in first row or line
+                    // var ReportTitle = 'export-tasks';
+                    // var ShowLabel = true;
+                    // CSV += ReportTitle + '\r\n\n';
 
-                            //Now convert each value to string and comma-seprated
-                            row += index + ',';
-                        }
+                    // //This condition will generate the Label/Header
+                    // if (ShowLabel) {
+                    //     var row = "";
 
-                        row = row.slice(0, -1);
+                    //     //This loop will extract the label from 1st index of on array
+                    //     for (var index in result[0]) {
 
-                        //append Label row with line break
-                        CSV += row + '\r\n';
-                    }
+                    //         //Now convert each value to string and comma-seprated
+                    //         row += index + ',';
+                    //     }
 
-                    //1st loop is to extract each row
-                    for (var i = 0; i < result.length; i++) {
-                        var row = "";
+                    //     row = row.slice(0, -1);
 
-                        //2nd loop will extract each column and convert it in string comma-seprated
-                        for (var index in result[i]) {
-                            row += '"' + result[i][index] + '",';
-                        }
+                    //     //append Label row with line break
+                    //     CSV += row + '\r\n';
+                    // }
 
-                        row.slice(0, row.length - 1);
+                    // //1st loop is to extract each row
+                    // for (var i = 0; i < result.length; i++) {
+                    //     var row = "";
 
-                        //add a line break after each row
-                        CSV += row + '\r\n';
-                    }
+                    //     //2nd loop will extract each column and convert it in string comma-seprated
+                    //     for (var index in result[i]) {
+                    //         row += '"' + result[i][index] + '",';
+                    //     }
 
-                    if (CSV == '') {
-                        alert("Invalid data");
-                        return;
-                    }
+                    //     row.slice(0, row.length - 1);
 
-                    //Generate a file name
-                    var fileName = "MyReport_";
-                    //this will remove the blank-spaces from the title and replace it with an underscore
-                    fileName += ReportTitle.replace(/ /g, "_");
+                    //     //add a line break after each row
+                    //     CSV += row + '\r\n';
+                    // }
 
-                    //Initialize file format you want csv or xls
-                    var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
+                    // if (CSV == '') {
+                    //     alert("Invalid data");
+                    //     return;
+                    // }
 
-                    // Now the little tricky part.
-                    // you can use either>> window.open(uri);
-                    // but this will not work in some browsers
-                    // or you will not get the correct file extension    
+                    // //Generate a file name
+                    // var fileName = "MyReport_";
+                    // //this will remove the blank-spaces from the title and replace it with an underscore
+                    // fileName += ReportTitle.replace(/ /g, "_");
 
-                    //this trick will generate a temp <a /> tag
-                    var link = document.createElement("a");
-                    link.href = uri;
+                    // //Initialize file format you want csv or xls
+                    // var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
 
-                    //set the visibility hidden so it will not effect on your web-layout
-                    link.style = "visibility:hidden";
-                    link.download = fileName + ".csv";
+                    // // Now the little tricky part.
+                    // // you can use either>> window.open(uri);
+                    // // but this will not work in some browsers
+                    // // or you will not get the correct file extension    
 
-                    //this part will append the anchor tag and remove it after automatic click
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                    // //this trick will generate a temp <a /> tag
+                    // var link = document.createElement("a");
+                    // link.href = uri;
+
+                    // //set the visibility hidden so it will not effect on your web-layout
+                    // link.style = "visibility:hidden";
+                    // link.download = fileName + ".xls";
+
+                    // //this part will append the anchor tag and remove it after automatic click
+                    // document.body.appendChild(link);
+                    // link.click();
+                    // document.body.removeChild(link);
                 }
             });
 

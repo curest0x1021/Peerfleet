@@ -144,6 +144,12 @@
                                                     </div>
                                                 <?php } ?>
 
+                                                <?php if ($model_info->budget) { ?>
+                                                    <div class="col-md-12 mb15">
+                                                        <strong><?php echo app_lang('budget') . ": "; ?> </strong> <?php echo $model_info->budget; ?>
+                                                    </div>
+                                                <?php } ?>
+
                                                 <strong><?php echo app_lang('to_be_included') . ":" ?></strong>
                                                 <div class="col-md-12 mb15">
                                                     <div class="row">

@@ -100,7 +100,6 @@ class Shackles extends Security_Controller
             "certificate_number" => "required",
             "certificate_type_id" => "required",
             "manufacturer_id" => "required",
-            "tag_marking" => "required",
             "supplied_date" => "required",
             "supplied_place" => "required",
             "lifts" => "required"
@@ -786,7 +785,6 @@ class Shackles extends Security_Controller
             ["key" => "iw", "required" => false],
             ["key" => "pd", "required" => false],
             ["key" => "il", "required" => false],
-            ["key" => "qty", "required" => false],
             ["key" => "icc", "required" => false],
             ["key" => "certificate_number", "required" => true],
             ["key" => "certificate_type", "required" => false],
@@ -800,7 +798,6 @@ class Shackles extends Security_Controller
             ["key" => "last_test_authority", "required" => false],
             ["key" => "inspection_date", "required" => false],
             ["key" => "inspection_authority", "required" => false],
-            ["key" => "lifts", "required" => false],
             ["key" => "date_of_discharged", "required" => false],
             ["key" => "remarks_load_test", "required" => false],
             ["key" => "remarks_visual_inspection", "required" => false],

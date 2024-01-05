@@ -253,7 +253,6 @@ class Grommets extends Security_Controller
             "certificate_number" => "required",
             "certificate_type_id" => "required",
             "manufacturer_id" => "required",
-            "tag_marking" => "required",
             "supplied_date" => "required",
             "supplied_place" => "required",
             "lifts" => "required"
@@ -441,9 +440,9 @@ class Grommets extends Security_Controller
             "test_date" => $this->request->getPost("test_date"),
             "tested_by" => $this->request->getPost("tested_by"),
             "location" => $this->request->getPost("location"),
-            "passed" => $this->request->getPost("passed"),
+            "passed" => $this->request->getPost("passed") || false,
             "remarks" => $this->request->getPost("remarks"),
-            "initial_test" => $this->request->getPost("initial_test")
+            "initial_test" => $this->request->getPost("initial_test") || false
         );
 
         if (empty($id) && $data["initial_test"] == 0 && !$this->Grommets_loadtest_model->check_valid_loadtest($data["grommet_id"], $data["test_date"])) {
@@ -618,7 +617,7 @@ class Grommets extends Security_Controller
             "inspection_date" => $this->request->getPost("inspection_date"),
             "inspected_by" => $this->request->getPost("inspected_by"),
             "location" => $this->request->getPost("location"),
-            "passed" => $this->request->getPost("passed"),
+            "passed" => $this->request->getPost("passed") || false,
             "remarks" => $this->request->getPost("remarks")
         );
 
@@ -781,7 +780,6 @@ class Grommets extends Security_Controller
             ["key" => "type", "required" => true],
             ["key" => "dia", "required" => true],
             ["key" => "bl", "required" => true],
-            ["key" => "qty", "required" => true],
             ["key" => "icc", "required" => false],
             ["key" => "certificate_number", "required" => true],
             ["key" => "certificate_type", "required" => false],
@@ -795,7 +793,6 @@ class Grommets extends Security_Controller
             ["key" => "last_test_authority", "required" => false],
             ["key" => "inspection_date", "required" => false],
             ["key" => "inspection_authority", "required" => false],
-            ["key" => "lifts", "required" => false],
             ["key" => "date_of_discharged", "required" => false],
             ["key" => "remarks_load_test", "required" => false],
             ["key" => "remarks_visual_inspection", "required" => false],

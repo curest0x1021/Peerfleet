@@ -350,7 +350,6 @@ class Services extends Security_Controller {
         return array(
             $data->id,
             $company,
-            $data->address,
             $data->city,
             $data->country,
             $action
@@ -406,7 +405,6 @@ class Services extends Security_Controller {
             "id" => "numeric",
             "service_id" => "required",
             "city" => "required",
-            "address" => "required",
             "country_id" => "required"
         ));
 
@@ -414,7 +412,6 @@ class Services extends Security_Controller {
         $data = array(
             "service_id" => $this->request->getPost('service_id'),
             "city" => $this->request->getPost('city'),
-            "address" => $this->request->getPost('address'),
             "country_id" => $this->request->getPost('country_id')
         );
         $save_id = $this->Service_ports_model->ci_save($data, $id);

@@ -11,12 +11,17 @@
             foreach ($contexts as $context) {
                 $context_id_key = $context . "_id";
 
-                $contexts_dropdown[$context] = app_lang($context);
+                if ($context_id_key == 'project_id' && !$project_id) {
+
+                } else {
+                    $contexts_dropdown[$context] = app_lang($context);
             ?>
 
                 <input type="hidden" name="<?php echo $context_id_key; ?>" value="<?php echo ${$context_id_key}; ?>" />
 
-            <?php } ?>
+            <?php 
+                }
+            } ?>
 
             <?php if ($is_clone) { ?>
                 <input type="hidden" name="is_clone" value="1" />
@@ -28,7 +33,13 @@
                         <label for="project_id" class=" col-md-3"><?php echo app_lang('project'); ?></label>
                         <div class="col-md-9">
                             <?php
-                            echo form_dropdown("project_id", $projects_dropdown, array($model_info->project_id), "class='select2 validate-hidden' id='project_id' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
+                            echo form_input(array(
+                                "id" => "project_id",
+                                "name" => "project_id",
+                                "value" => $model_info->project_id,
+                                "class" => "form-control",
+                                "placeholder" => app_lang('project')
+                            ));
                             ?>
                         </div>
                     </div>
@@ -162,7 +173,12 @@
 
                 foreach ($contexts as $context) {
                     $context_id_key = $context . "_id";
-                    $related_to_dropdowns[$context] = ${$context . "s_dropdown"};
+
+                    if ($context_id_key == 'project_id' && !$project_id) {
+
+                    } else {
+                        $contexts_dropdown[$context] = app_lang($context);
+                        $related_to_dropdowns[$context] = ${$context . "s_dropdown"};
             ?>
                     <div class="form-group hide" id="<?php echo $context; ?>-dropdown">
                         <div class="row">
@@ -182,6 +198,7 @@
                         </div>
                     </div>
             <?php
+                    }
                 }
             }
             ?>
@@ -373,6 +390,23 @@
                             "placeholder" => "YYYY-MM-DD",
                             "data-rule-greaterThanOrEqual" => "#start_date",
                             "data-msg-greaterThanOrEqual" => app_lang("deadline_must_be_equal_or_greater_than_start_date")
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="budget" class=" col-md-3"><?php echo app_lang('budget'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "budget",
+                            "name" => "budget",
+                            "value" => $add_type == "multiple" ? "" : $model_info->budget,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('budget'),
                         ));
                         ?>
                     </div>
@@ -1049,5 +1083,6 @@ echo view("tasks/get_dropdowns_script", array(
     "collaborators_dropdown" => $collaborators_dropdown,
     "statuses_dropdown" => $statuses_dropdown,
     "label_suggestions" => $label_suggestions,
-    "priorities_dropdown" => $priorities_dropdown
+    "priorities_dropdown" => $priorities_dropdown,
+    "projects_dropdown" => $projects_dropdown,
 ));
