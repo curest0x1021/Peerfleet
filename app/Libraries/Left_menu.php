@@ -542,6 +542,16 @@ class Left_menu {
                 );
             }
 
+            if ($this->ci->login_user->is_admin) {
+
+                $sidebar_menu['API'] = array(
+                    'name'     => 'api',
+                    'url'      => 'api_settings',
+                    'class'    => 'tag',
+                    'position' => 6,
+                );
+            }
+
             $sidebar_menu = app_hooks()->apply_filters('app_filter_staff_left_menu', $sidebar_menu);
         } else {
             //client menu

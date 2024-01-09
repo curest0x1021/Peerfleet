@@ -21,11 +21,11 @@ class Grommets_main_model extends Crud_model {
         $loadtest_reminder_date = get_loadtest_reminder_date();
         $inspection_reminder_date = get_visual_inspection_reminder_date();
 
-        $sql = "SELECT $main_table.*, $types_table.name as type, b.qty, b.loadtest_passed, b.inspection_passed, b.total_test, b.supplied_date, b.supplied_place
+        $sql = "SELECT $main_table.*, $types_table.name as type, b.loadtest_passed, b.inspection_passed, b.total_test, b.supplied_date, b.supplied_place
                 FROM $main_table
                 JOIN $types_table ON $types_table.id = $main_table.type_id
                 JOIN (
-                    SELECT kk.main_id, MAX(kk.supplied_date) as supplied_date, MAX(kk.supplied_place) as supplied_place, SUM(kk.qty) as qty, SUM(kk.loadtest_passed) as loadtest_passed, SUM(kk.inspection_passed) as inspection_passed, COUNT(kk.id) as total_test
+                    SELECT kk.main_id, MAX(kk.supplied_date) as supplied_date, MAX(kk.supplied_place) as supplied_place, SUM(kk.loadtest_passed) as loadtest_passed, SUM(kk.inspection_passed) as inspection_passed, COUNT(kk.id) as total_test
                     FROM (
                         SELECT $grommets_table.*, t.passed as loadtest_passed, s.passed as inspection_passed
                         FROM $grommets_table
