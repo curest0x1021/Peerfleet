@@ -39,7 +39,7 @@ class Lashing_inspection_model extends Crud_model {
 
     function get_history($options = array()) {
         $inspection_table = $this->db->prefixTable("lashing_inspection");
-
+        $lashing_table = $this->db->prefixTable("lashing");
         $where = "";
         $lashing_id = $this->_get_clean_value($options, "lashing_id");
         if ($lashing_id) {
@@ -51,9 +51,10 @@ class Lashing_inspection_model extends Crud_model {
             $where .= " AND $inspection_table.id = $id";
         }
 
-        $sql = "SELECT * FROM $inspection_table
-                WHERE deleted=0 $where
-                ORDER BY inspection_date DESC";
+        $sql = "SELECT *, $lashing_table.qty FROM $inspection_table 
+        LEFT JOIN $lashing_table ON $lashing_table.id= $inspection_table.lashing_id 
+                WHERE $inspection_table.deleted=0 $where
+                ORDER BY $inspection_table.inspection_date DESC";
 
         return $this->db->query($sql);
     }

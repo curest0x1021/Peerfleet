@@ -16,19 +16,6 @@ use RestApi\Libraries\Apiinit;
   Author URL: https://codecanyon.net/user/themesic/portfolio
  */
 
-
-
-app_hooks()->add_filter('app_filter_staff_left_menu', function ($sidebar_menu) {
-	$sidebar_menu["API"] = [
-		"name"     => "api",
-		"url"      => "api_settings",
-		"class"    => "tag",
-		"position" => 6
-	];
-
-	return $sidebar_menu;
-});
-
 app_hooks()->add_filter('app_filter_app_csrf_exclude_uris', function ($urls) {
 	Apiinit::check_url("RestApi");
 	$urls[] = "api/*";

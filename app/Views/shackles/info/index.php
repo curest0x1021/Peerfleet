@@ -28,7 +28,6 @@
                 {title: "IW (mm)"},
                 {title: "PD (mm)"},
                 {title: "IL (mm)"},
-                {title: "Qty"},
                 {title: "<?php echo app_lang("icc") ?>"},
                 {title: "<?php echo app_lang("manufacturer") ?>"},
                 {title: "<?php echo app_lang("delivered") ?>"},

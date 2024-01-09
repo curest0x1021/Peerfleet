@@ -1,6 +1,13 @@
 <?php
 
 //copy from default_lang.php file and update
+$lang["export_project_form"] = "Export project form";
+$lang["export_quotation_form"] = "Export quotation form";
+$lang["export_project_zip"] = "Export project zip";
+$lang["project_form"] = "PROJECT FORM";
+$lang["quotation_form"] = "QUOTATION FORM";
+$lang["download_all"] = "Download all";
+$lang["export_project"] = "Export Project";
 $lang["contact_person"] = "Contact person";
 $lang["supplier_contacts"] = "Supplier contacts";
 $lang["edit_supplier_contact"] = "Edit supplier contacts";

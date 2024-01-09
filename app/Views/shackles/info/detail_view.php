@@ -73,15 +73,6 @@
 
                 <div class="form-group row">
                     <div class="col-md-5">
-                        <span>Qty:</span>
-                    </div>
-                    <div class="col-md-7">
-                        <strong><?php echo $model_info->qty; ?></strong>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-md-5">
                         <span><?php echo app_lang("icc"); ?>:</span>
                     </div>
                     <div class="col-md-7">

@@ -2706,6 +2706,34 @@ class Projects extends Security_Controller {
         }
     }
 
+    /* download all project files */
+    function download_project_file($project_id) {
+        $files_info = $this->Project_files_model->get_all_where(array("project_id" => $project_id, "deleted" => 0))->getResult();
+
+        $project_id = 0;
+        $file_path_array = array();
+        foreach ($files_info as $file_info) {
+            //we have to check the permission for each file
+            //initialize the permission check only if the project id is different
+
+            if ($project_id != $file_info->project_id) {
+                $this->init_project_permission_checker($file_info->project_id);
+                $project_id = $file_info->project_id;
+            }
+
+            if (!$this->can_view_files()) {
+                app_redirect("forbidden");
+            }
+
+            $file_path_array[] = array("file_name" => $file_info->project_id . "/" . $file_info->file_name, "file_id" => $file_info->file_id, "service_type" => $file_info->service_type);
+
+        }
+        
+        $serialized_file_data = serialize($file_path_array);
+
+        return $this->download_app_files(get_setting("project_file_path"), $serialized_file_data);
+
+    }
     /* download a file */
 
     function download_file($id) {

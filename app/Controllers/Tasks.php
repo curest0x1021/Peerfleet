@@ -706,16 +706,12 @@ class Tasks extends Security_Controller {
             }
         }
 
-
         //properties dropdown 
         $priorities = $this->Task_priority_model->get_details()->getResult();
         $priorities_dropdown = array(array("id" => "", "text" => "-"));
         foreach ($priorities as $priority) {
             $priorities_dropdown[] = array("id" => $priority->id, "text" => $priority->title);
         }
-
-
-
 
         $projects_dropdown = array(array("id" => "", "text" => "-"));
         if ($context == "project" && !$return_empty_context) {
@@ -734,7 +730,6 @@ class Tasks extends Security_Controller {
                 $projects_dropdown[] = array("id" => $project->id, "text" => $project->title);
             }
         }
-
 
         $clients_dropdown = array(array("id" => "", "text" => "-"));
         if ($context === "client" && !$return_empty_context) {
@@ -2160,6 +2155,15 @@ class Tasks extends Security_Controller {
         return $this->template->view("tasks/import_tasks_modal_form", $view_data);
     }
 
+    function export_project_modal_form() {
+        $this->access_only_team_members();
+        if (!$this->can_create_tasks()) {
+            app_redirect("forbidden");
+        }
+        $view_data['project_id'] = $this->request->getPost('project_id');
+        return $this->template->view("tasks/export_project_modal_form", $view_data);
+    }
+
     function upload_excel_file() {
         upload_file_to_temp(true);
     }
@@ -2766,37 +2770,13 @@ class Tasks extends Security_Controller {
         return $this->template->view("projects/tasks/index", $view_data);
     }
 
-    function project_tasks_data() {
+    function export_project_tasks_data() {
         $this->access_only_team_members();
 
         $project_id = $this->request->getPost('project_id');
 
-        $specific_user_id = $this->request->getPost('specific_user_id');
-
-        $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("tasks", $this->login_user->is_admin, $this->login_user->user_type);
-
-        $quick_filter = $this->request->getPost('quick_filter');
-        if ($quick_filter) {
-            $status = "";
-        } else {
-            $status = $this->request->getPost('status_id') ? implode(",", $this->request->getPost('status_id')) : "";
-        }
-
-        $context = $this->request->getPost('context');
-
         $options = array(
-            "specific_user_id" => $specific_user_id,
             "project_id" => $project_id,
-            "context" => $context,
-            "milestone_id" => $this->request->getPost('milestone_id'),
-            "priority_id" => $this->request->getPost('priority_id'),
-            "deadline" => $this->request->getPost('deadline'),
-            "custom_fields" => $custom_fields,
-            "status_ids" => $status,
-            "unread_status_user_id" => $this->login_user->id,
-            "quick_filter" => $quick_filter,
-            "label_id" => $this->request->getPost('label_id'),
-            "custom_field_filter" => $this->prepare_custom_field_filter_values("tasks", $this->login_user->is_admin, $this->login_user->user_type)
         );
 
         $all_options = append_server_side_filtering_commmon_params($options);
@@ -2812,6 +2792,101 @@ class Tasks extends Security_Controller {
             $result_data[] = $this->_make_export($data, $show_time_with_task);
         }
         echo json_encode($result_data);
+    }
+
+    function export_quotation_project_data() {
+        $this->access_only_team_members();
+
+        $project_id = $this->request->getPost('project_id');
+
+        $options = array(
+            "project_id" => $project_id,
+        );
+
+        $all_options = append_server_side_filtering_commmon_params($options);
+
+        $result = $this->Tasks_model->get_details($all_options);
+
+        $show_time_with_task = (get_setting("show_time_with_task_start_date_and_deadline")) ? true : false;
+
+        $list_data = $result->getResult();
+
+        $result_data = array();
+        foreach ($list_data as $data) {
+            $result_data[] = $this->_make_quoation_export($data, $show_time_with_task);
+        }
+        echo json_encode($result_data);
+    }
+
+    private function _make_quoation_export($data, $show_time_with_task) {
+
+        $task_labels = make_labels_export_data($data->labels_list, true);
+
+        $milestone_title = "-";
+        if ($data->milestone_title) {
+            $milestone_title = $data->milestone_title;
+        }
+
+        $assigned_to = "-";
+        $assigned_to_user = "";
+        if ($data->assigned_to) {
+            $image_url = get_avatar($data->assigned_to_avatar);
+            $assigned_to_user = $data->assigned_to_user;
+        }
+
+
+        $collaborators = $this->_get_collaborators($data->collaborator_list);
+
+        if (!$collaborators) {
+            $collaborators = "-";
+        }
+
+        $status = $data->status_key_name ? app_lang($data->status_key_name) : $data->status_title;
+
+
+
+        $deadline_text = "-";
+        if ($data->deadline && is_date_exists($data->deadline)) {
+
+            if ($show_time_with_task) {
+                if (date("H:i:s", strtotime($data->deadline)) == "00:00:00") {
+                    $deadline_text = format_to_date($data->deadline, false);
+                } else {
+                    $deadline_text = format_to_relative_time($data->deadline, false, false, true);
+                }
+            } else {
+                $deadline_text = format_to_date($data->deadline, false);
+            }
+        }
+
+
+        $start_date = "-";
+        if (is_date_exists($data->start_date)) {
+            if ($show_time_with_task) {
+                if (date("H:i:s", strtotime($data->start_date)) == "00:00:00") {
+                    $start_date = format_to_date($data->start_date, false);
+                } else {
+                    $start_date = format_to_relative_time($data->start_date, false, false, true);
+                }
+            } else {
+                $start_date = format_to_date($data->start_date, false);
+            }
+        }
+
+        $link_to_task = get_uri("task_view/index/" . $data->id);
+
+        $row_data = array(
+            "Category" => $task_labels,
+            "Dock list number" => $data->dock_list_number,
+            "Title" => $data->title,
+            "Desciption" => $data->description,
+            "Location" => $data->location,
+            "Specification" => $data->specification,
+            "Reference drawing" => $data->reference_drawing,
+            "Link to task" => $link_to_task,
+        );
+
+        return $row_data;
     }
 
     private function _make_export($data, $show_time_with_task) {

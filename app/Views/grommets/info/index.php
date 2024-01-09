@@ -27,7 +27,6 @@
                 { title: "<?php echo app_lang("type"); ?>", "class": "text-center w100" },
                 {title: "Dia [mm]"},
                 {title: "BL [kN]"},
-                {title: "Qty"},
                 {title: "<?php echo app_lang("icc") ?>"},
                 {title: "<?php echo app_lang("manufacturer") ?>"},
                 {title: "<?php echo app_lang("delivered") ?>"},

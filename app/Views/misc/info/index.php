@@ -26,7 +26,6 @@
                 {title: "WL (m)"},
                 {title: "<?php echo app_lang("type") ?>"},
                 {title: "BL (kN)"},
-                {title: "Qty"},
                 {title: "<?php echo app_lang("icc") ?>"},
                 {title: "<?php echo app_lang("manufacturer") ?>"},
                 {title: "<?php echo app_lang("delivered") ?>"},
