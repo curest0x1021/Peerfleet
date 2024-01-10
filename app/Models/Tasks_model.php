@@ -362,6 +362,7 @@ class Tasks_model extends Crud_model
             "start_date" => $tasks_table . ".start_date",
             "deadline" => $tasks_table . ".deadline",
             "milestone" => "milestone_title",
+            "labels" => "labels_list",
             "assigned_to" => "assigned_to_user",
             "status" => $tasks_table . ".status_id",
             "project" => $projects_table . ".title",

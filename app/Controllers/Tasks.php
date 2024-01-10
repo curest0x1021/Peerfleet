@@ -2783,6 +2783,7 @@ class Tasks extends Security_Controller {
 
         $options = array(
             "project_id" => $project_id,
+            "order_by" => 'labels'
         );
 
         $all_options = append_server_side_filtering_commmon_params($options);
@@ -2807,6 +2808,7 @@ class Tasks extends Security_Controller {
 
         $options = array(
             "project_id" => $project_id,
+            "order_by" => 'labels'
         );
 
         $all_options = append_server_side_filtering_commmon_params($options);
