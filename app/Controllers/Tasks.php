@@ -906,6 +906,8 @@ class Tasks extends Security_Controller {
         $subscription_id = $this->request->getPost('subscription_id');
         $expense_id = $this->request->getPost('expense_id');
         $ticket_id = $this->request->getPost('ticket_id');
+        $estimated_quantity = $this->request->getPost('estimated_quantity');
+        $supplier = $this->request->getPost('supplier');
 
         $context_data = $this->get_context_and_id();
         $context = $context_data["context"] ? $context_data["context"] : "project";
@@ -923,6 +925,8 @@ class Tasks extends Security_Controller {
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
+            "estimated_quantity" => "numeric",
+            "supplier" => "numeric",
             "title" => "required|max_length[60]",
             "project_id" => "required",
             "labels" => "required",
@@ -958,6 +962,8 @@ class Tasks extends Security_Controller {
             "points" => $points,
             "status_id" => $status_id,
             "priority_id" => $priority_id,
+            "supplier" => $supplier,
+            "estimated_quantity" => $estimated_quantity,
             "labels" => $this->request->getPost('labels'),
             "start_date" => $start_date,
             "deadline" => $this->request->getPost('deadline'),
@@ -2815,6 +2821,31 @@ class Tasks extends Security_Controller {
         foreach ($list_data as $data) {
             $result_data[] = $this->_make_quoation_export($data, $show_time_with_task);
         }
+        $result_data[0]["Cost type"] = "per_unit";
+        $result_data[1]["Cost type"] = "lump_sum";
+        $result_data[0]["Quote"] = 100;
+        $result_data[0]["Discount (0-100)"] = 20;
+        $result_data[0]["Discount quote"] = 80;
+
+        $result_data[0]["Measurement unit"] = "move";
+        $result_data[1]["Measurement unit"] = "certificate";
+        $result_data[2]["Measurement unit"] = "day";
+        $result_data[3]["Measurement unit"] = "hour";
+        $result_data[4]["Measurement unit"] = "kW/h";
+        $result_data[5]["Measurement unit"] = "cubic meter (m^3)";
+        $result_data[6]["Measurement unit"] = "lamp batch";
+        $result_data[7]["Measurement unit"] = "lamp batch day";
+        $result_data[8]["Measurement unit"] = "letters";
+        $result_data[9]["Measurement unit"] = "liters";
+        $result_data[10]["Measurement unit"] = "square meter (m^2)";
+        $result_data[11]["Measurement unit"] = "positions";
+        $result_data[12]["Measurement unit"] = "line";
+        $result_data[13]["Measurement unit"] = "line day";
+        $result_data[14]["Measurement unit"] = "ton";
+        $result_data[15]["Measurement unit"] = "meter";
+        $result_data[16]["Measurement unit"] = "container";
+        $result_data[17]["Measurement unit"] = "drum";
+
         echo json_encode($result_data);
     }
 
@@ -2884,6 +2915,15 @@ class Tasks extends Security_Controller {
             "Specification" => $data->specification,
             "Reference drawing" => $data->reference_drawing,
             "Link to task" => $link_to_task,
+            "Cost type" => "",
+            "Est. quantity" => $data->estimated_quantity,
+            "Measurement unit" => "",
+            "Unit price" => "",
+            "Unit price currency" => "",
+            "Quote" => "",
+            "Discount (0-100)" => "",
+            "Discount quote" => "",
+            "Remarks" => "",
         );
 
         return $row_data;

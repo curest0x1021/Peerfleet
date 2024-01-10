@@ -222,6 +222,23 @@
             </div>
             <div class="form-group">
                 <div class="row">
+                    <label for="estimated_quantity" class=" col-md-3"><?php echo app_lang('estimated_quantity'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "estimated_quantity",
+                            "name" => "estimated_quantity",
+                            "value" => $add_type == "multiple" ? "" : $model_info->estimated_quantity,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('estimated_quantity'),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
                     <label for="specification" class=" col-md-3"><?php echo app_lang('specification'); ?></label>
                     <div class=" col-md-9">
                         <?php
@@ -233,6 +250,22 @@
                             "placeholder" => app_lang('specification_placeholder'),
                             "maxlength" => 300,
                             "data-rich-text-editor" => true,
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="supplier" class=" col-md-3"><?php echo app_lang('supplier'); ?></label>
+                    <div class="col-md-9" id="dropdown-apploader-section">
+                        <?php
+                        echo form_input(array(
+                            "id" => "supplier",
+                            "name" => "supplier",
+                            "value" => $model_info->supplier,
+                            "class" => "form-control",
+                            "placeholder" => app_lang('supplier')
                         ));
                         ?>
                     </div>
