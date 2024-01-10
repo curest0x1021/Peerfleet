@@ -111,6 +111,7 @@ if (!isset($contexts)) {
             }
 
             $('#milestone_id').select2({data: result.milestones_dropdown});
+            $('#supplier').select2({data: result.assign_to_dropdown});
             $('#assigned_to').select2({data: result.assign_to_dropdown});
             $('#collaborators').select2({multiple: true, data: result.collaborators_dropdown});
             $('#labels').select2({multiple: true, data: result.label_suggestions});

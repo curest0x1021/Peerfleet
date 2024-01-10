@@ -247,6 +247,8 @@ class Lashing extends Security_Controller
             "inspected_by" => $this->request->getPost("inspected_by"),
             "location" => $this->request->getPost("location"),
             "passed" => $this->request->getPost("passed"),
+            "remaining" => $this->request->getPost("remaining"),
+            "discarded" => $this->request->getPost("discarded"),
             "remarks" => $this->request->getPost("remarks")
         );
 
@@ -330,7 +332,7 @@ class Lashing extends Security_Controller
             $passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Not passed"></div>';
         }
 
-        $passed .= '<div>' . ($data->passed ? $data->passed : '0') . ' of ' . $data->qty . '</div>';
+        $passed .= '<div>' . ($data->passed ? $data->passed : '0') . ' of ' . $data->remaining . '</div>';
         $next_inspection_date = "";
         if ($data->inspection_date && $showInternalId) {
             $next_inspection_date = date('Y-m-d', strtotime($data->inspection_date. ' + 1 years'));
@@ -357,8 +359,8 @@ class Lashing extends Security_Controller
         $view_data["model_info"] = $this->Lashing_inspection_model->get_one($this->request->getPost("id"));
         $view_data["lashing"] = $lashing;
         $view_data["force_refresh"] = $this->request->getPost("force_refresh");
-        $view_data["label_column"] = "col-md-3";
-        $view_data["field_column"] = "col-md-9";
+        $view_data["label_column"] = "col-md-2";
+        $view_data["field_column"] = "col-md-10";
 
         return $this->template->view("lashing/inspection/modal_form", $view_data);
     }

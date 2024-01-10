@@ -1,6 +1,9 @@
 <?php
 
 //copy from default_lang.php file and update
+$lang["estimated_quantity"] = "Estimated quantity";
+$lang["remaining"] = "Remaining";
+$lang["discarded"] = "Discarded";
 $lang["export_project_form"] = "Export project form";
 $lang["export_quotation_form"] = "Export quotation form";
 $lang["export_project_zip"] = "Export project zip";

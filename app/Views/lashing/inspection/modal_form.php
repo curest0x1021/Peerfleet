@@ -66,10 +66,10 @@
         </div>
 
         <div class="form-group row">
-            <div class="<?php echo $label_column; ?>">
+            <div class="col-md-2">
                 <span><?php echo app_lang("quantity") . " " . app_lang("passed"); ?>:</span>
             </div>
-            <div class="<?php echo $field_column; ?>">
+            <div class="col-md-2">
                 <?php
                     echo form_input(array(
                         "id" => "passed",
@@ -77,6 +77,40 @@
                         "value" => $model_info->passed ? $model_info->passed : "",
                         "class" => "form-control",
                         "placeholder" => app_lang('passed'),
+                        "type" => "number",
+                        "data-rule-required" => true,
+                        "data-msg-required" => app_lang("field_required"),
+                    ));
+                ?>
+            </div>
+            <div class="col-md-2">
+                <span><?php echo app_lang("remaining"); ?>:</span>
+            </div>
+            <div class="col-md-2">
+                <?php
+                    echo form_input(array(
+                        "id" => "remaining",
+                        "name" => "remaining",
+                        "value" => $model_info->remaining ? $model_info->remaining : "",
+                        "class" => "form-control",
+                        "placeholder" => app_lang('remaining'),
+                        "type" => "number",
+                        "data-rule-required" => true,
+                        "data-msg-required" => app_lang("field_required"),
+                    ));
+                ?>
+            </div>
+            <div class="col-md-2">
+                <span><?php echo app_lang("discarded"); ?>:</span>
+            </div>
+            <div class="col-md-2">
+                <?php
+                    echo form_input(array(
+                        "id" => "discarded",
+                        "name" => "discarded",
+                        "value" => $model_info->discarded ? $model_info->discarded : "",
+                        "class" => "form-control",
+                        "placeholder" => app_lang('discarded'),
                         "type" => "number",
                         "data-rule-required" => true,
                         "data-msg-required" => app_lang("field_required"),

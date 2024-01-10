@@ -106,9 +106,50 @@
                     const wb = XLSX.utils.book_new();
                     const ws = XLSX.utils.json_to_sheet(result);
                     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-                    XLSX.writeFile(wb, "project_name.xlsx");
+                    XLSX.writeFile(wb, "Quotation_project_name.xlsx");
                 }
             });
+
+        })
+
+        $('body').on('click', '.export_project_all', async function (e) {
+
+            /* dynamically import the scripts in the event listener */
+            const XLSX = await import("https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs");
+            const cptable = await import("https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/cpexcel.full.mjs");
+            XLSX.set_cptable(cptable);
+            
+            var result = $.ajax({
+                url: "<?php echo get_uri('tasks/export_project_tasks_data') ?>",
+                type: 'POST',
+                dataType: 'json',
+                data: {project_id:<?php echo $project_id; ?> },
+                async: false,
+            });
+            if (result) {
+
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.json_to_sheet(result.responseJSON);
+                XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                XLSX.writeFile(wb, "project_name.xlsx");
+            }
+
+            result = $.ajax({
+                url: "<?php echo get_uri('tasks/export_quotation_project_data') ?>",
+                type: 'POST',
+                dataType: 'json',
+                data: {project_id:<?php echo $project_id; ?> },
+                async: false,
+            });
+
+            if (result) {
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.json_to_sheet(result.responseJSON);
+                XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                XLSX.writeFile(wb, "Quotation_project_name.xlsx");
+            }
+
+            location.href = "/index.php/projects/download_project_file/" + <?php echo $project_id; ?>;
 
         })
     });
