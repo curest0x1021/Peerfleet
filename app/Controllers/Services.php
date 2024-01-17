@@ -16,11 +16,26 @@ class Services extends Security_Controller {
         $view_data["can_edit_items"] = $this->can_edit_items();
         $list_data = $this->Services_model->get_details()->getResult();
         $result = array();
+        $service_dropdown = array();
+
+        $service_dropdown[] = array("id" => "", "text" => "- Service type -");
+
         foreach ($list_data as $data) {
             $result[] = $this->_make_service_row($data);
+
+            
+            if ($data->service_type != '') {
+                $temp = array(
+                    'id'=> $data->service_type,
+                    'text'=> $data->service_type,
+                );
+                if (!in_array($temp, $service_dropdown))
+                    $service_dropdown[] = $temp;
+            }
         }
         $view_data["services_items"] = json_encode($result);
         $view_data['country_dropdown'] = $this->get_country_table_dropdown(true);
+        $view_data['service_dropdown'] = json_encode($service_dropdown);
         return $this->template->rander("services/index", $view_data);
     }
 
@@ -30,6 +45,7 @@ class Services extends Security_Controller {
         $options = array(
             "search" => $search,
             "country_id" => $this->request->getPost("country_id"),
+            "service_type" => $this->request->getPost("service_type"),
         );
         $list_data = $this->Services_model->get_details($options)->getResult();
         $result = array();
@@ -86,10 +102,6 @@ class Services extends Security_Controller {
                                 </svg>
                                 <svg viewBox='0 0 13 12' width='14' height='14' preserveAspectRatio='xMidYMid meet'><path fill-rule='evenodd' clip-rule='evenodd' d='M10.985 4.84c-.035-.115-.14-.195-.26-.205l-3.2-.275-1.25-2.96c-.095-.22-.46-.22-.555 0L4.47 4.36l-3.195.275c-.12.01-.225.09-.26.205-.035.115 0 .24.09.32L3.53 7.265l-.725 3.13c-.025.115.02.24.115.31s.23.075.33.015L6 9.06l2.75 1.66c.05.03.1.045.155.045.06 0 .125-.02.175-.055.1-.07.145-.195.115-.31L8.47 7.27l2.425-2.105c.095-.085.125-.21.09-.325z' fill='#ffc107'></path>
                                 </svg>
-
-                                <div style='display: flex;'>
-                                    <span class=''>" . $data->service_type . "</span>
-                                </div>
                             </div>
                         </div>
                         
@@ -124,6 +136,13 @@ class Services extends Security_Controller {
                                 <div style='display: flex;'>
                                     <span class=''>" . $data->served_ports . " ports</span>
                                 </div>
+                            </div>
+
+                            <div class='d-flex align-items-center'>
+                                <div style='display: flex; margin-right: 0.5rem; margin-left: 1.5rem;'>
+                                    <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'></circle><path d='M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z'></path></svg>
+                                </div>
+                                <span class=''>" . $data->service_type . "</span>
                             </div>
                         </div>
                     </div>
@@ -179,9 +198,7 @@ class Services extends Security_Controller {
         $this->validate_submitted_data(array(
             "id" => "numeric",
             "company" => "required",
-            "serviced_ports" => "required",
             "service_type" => "required",
-            "email" => "required",
             "country_id" => "required"
         ));
 
