@@ -24,6 +24,7 @@ class Services_model extends Crud_model {
 
         $search = $this->_get_clean_value($options, "search");
         $country_id = $this->_get_clean_value($options, "country_id");
+        $service_type = $this->_get_clean_value($options, "service_type");
 
         if ($search) {
             $search = $this->db->escapeLikeString($search);
@@ -35,6 +36,10 @@ class Services_model extends Crud_model {
 
         if ($country_id) {
             $where .= " AND $service_table.country_id='$country_id'";
+        }
+
+        if ($service_type) {
+            $where .= " AND $service_table.service_type='$service_type'";
         }
 
         $sql = "SELECT $service_table.*, $country_table.name as country, d2.served_ports 

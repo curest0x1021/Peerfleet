@@ -27,6 +27,7 @@
             source: '<?php echo_uri("services/search") ?>',
             filterDropdown: [
                 {name: "country_id", class: "w200", options:  <?php echo $country_dropdown; ?>},
+                {name: "service_type", class: "w200", options:  <?php echo $service_dropdown; ?>},
             ],
             columns: [
                 {title: '', "class": "all"},

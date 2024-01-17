@@ -68,8 +68,6 @@
             "class" => "form-control",
             "placeholder" => app_lang('email'),
             "type" => "email",
-            "data-rule-required" => true,
-            "data-msg-required" => app_lang("field_required"),
         ));
         ?>
     </div>
