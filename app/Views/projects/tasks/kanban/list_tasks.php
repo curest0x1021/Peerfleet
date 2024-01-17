@@ -21,8 +21,17 @@
             </div>
         </div>
     </ul>
-    <div class="bg-white">
-        <div id="kanban-list-filters"></div>       
+    <div class="bg-white kanban-filters-container">
+        <div class="row">
+            <div id="kanban-list-filters" class="col-md-12 col-xs-12"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-xs-12">
+                <button class="btn btn-default" id="reload-kanban-button"><i data-feather="refresh-cw" class="icon-16"></i></button>
+            </div>
+            
+        </div>
+        
     </div>
 </div>
 <div id="load-kanban-list"></div>
@@ -34,10 +43,10 @@
 
         if ("<?php echo $login_user->user_type ?>" == "staff") {
             filterDropdown = [
+                {name: "sort_by", class: "w200", options: [{'id': 'category', text: 'Category'}, {'id': 'sort-dln', text: 'Dock list number'}]},
                 {name: "quick_filter", class: "w200", showHtml: true, options: <?php echo view("tasks/quick_filters_dropdown"); ?>},
                 {name: "milestone_id", class: "w200", options: <?php echo $milestone_dropdown; ?>},
                 {name: "priority_id", class: "w200", options: <?php echo $priorities_dropdown; ?>},
-                {name: "label_id", class: "w200", options: <?php echo $labels_dropdown; ?>},
                 {name: "specific_user_id", class: "w200", options: <?php echo $assigned_to_dropdown; ?>}
                 , <?php echo $custom_field_filters; ?>
             ];
@@ -56,7 +65,6 @@
         if ("<?php echo $login_user->user_type ?>" == "client") {
             smartFilter = false;
         }
-
         $("#kanban-list-filters").appFilters({
             source: '<?php echo_uri("tasks/project_tasks_kanban_list_data/" . $project_id) ?>',
             targetSelector: '#load-kanban-list',

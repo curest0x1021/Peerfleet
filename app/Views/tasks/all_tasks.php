@@ -23,11 +23,15 @@
     </ul>
     <div class="bg-white kanban-filters-container">
         <div class="row">
-            <div class="col-md-1 col-xs-2">
+            <div id="kanban-filters" class="col-md-12 col-xs-12"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-xs-12">
                 <button class="btn btn-default" id="reload-kanban-button"><i data-feather="refresh-cw" class="icon-16"></i></button>
             </div>
-            <div id="kanban-filters" class="col-md-11 col-xs-10"></div>
+            
         </div>
+        
     </div>
 
     <div id="load-kanban-list"></div>

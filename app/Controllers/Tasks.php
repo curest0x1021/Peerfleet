@@ -15,6 +15,7 @@ class Tasks extends Security_Controller {
     private $can_access_estimate_memory = array(); //array([client_id]=>true/false, [any_estimates]=>true/false)
     private $can_edit_subscription_memory = array(); //array([client_id]=>true/false, [any_subscriptions]=>true/false)
     private $can_edit_ticket_memory = array(); //array([client_id]=>true/false, [any_tickets]=>true/false)
+    private $sort_by = 'category';
 
     public function __construct() {
         parent::__construct();
@@ -906,7 +907,6 @@ class Tasks extends Security_Controller {
         $subscription_id = $this->request->getPost('subscription_id');
         $expense_id = $this->request->getPost('expense_id');
         $ticket_id = $this->request->getPost('ticket_id');
-        $estimated_quantity = $this->request->getPost('estimated_quantity');
         $supplier = $this->request->getPost('supplier');
 
         $context_data = $this->get_context_and_id();
@@ -925,7 +925,6 @@ class Tasks extends Security_Controller {
 
         $this->validate_submitted_data(array(
             "id" => "numeric",
-            "estimated_quantity" => "numeric",
             "supplier" => "numeric",
             "title" => "required|max_length[60]",
             "project_id" => "required",
@@ -963,7 +962,6 @@ class Tasks extends Security_Controller {
             "status_id" => $status_id,
             "priority_id" => $priority_id,
             "supplier" => $supplier,
-            "estimated_quantity" => $estimated_quantity,
             "labels" => $this->request->getPost('labels'),
             "start_date" => $start_date,
             "deadline" => $this->request->getPost('deadline'),
@@ -995,6 +993,14 @@ class Tasks extends Security_Controller {
             "type" => $this->request->getPost("type"),
             "serial_number" => $this->request->getPost("serial_number"),
             "pms_scs_number" => $this->request->getPost("pms_scs_number"),
+            "cost_type" => $this->request->getPost("cost_type"),
+            "est_quantity" => $this->request->getPost("est_quantity"),
+            "measurement_unit" => $this->request->getPost("measurement_unit"),
+            "unit_price" => $this->request->getPost("unit_price"),
+            "unit_price_currency" => $this->request->getPost("unit_price_currency"),
+            "quote" => $this->request->getPost("quote"),
+            "discount" => $this->request->getPost("discount"),
+            "remarks" => $this->request->getPost("remarks"),
         );
 
         if (!$id) {
@@ -1397,8 +1403,6 @@ class Tasks extends Security_Controller {
             $status = $data->status_key_name ? app_lang($data->status_key_name) : $data->status_title;
         }
 
-
-
         $deadline_text = "-";
         if ($data->deadline && is_date_exists($data->deadline)) {
 
@@ -1418,7 +1422,6 @@ class Tasks extends Security_Controller {
                 $deadline_text = "<span class='text-warning'>" . $deadline_text . "</span> ";
             }
         }
-
 
         $start_date = "-";
         if (is_date_exists($data->start_date)) {
@@ -2823,30 +2826,30 @@ class Tasks extends Security_Controller {
         foreach ($list_data as $data) {
             $result_data[] = $this->_make_quoation_export($data, $show_time_with_task);
         }
-        $result_data[0]["Cost type"] = "per_unit";
-        $result_data[1]["Cost type"] = "lump_sum";
-        $result_data[0]["Quote"] = 100;
-        $result_data[0]["Discount (0-100)"] = 20;
-        $result_data[0]["Discount quote"] = 80;
+        // $result_data[0]["Cost type"] = "per_unit";
+        // $result_data[1]["Cost type"] = "lump_sum";
+        // $result_data[0]["Quote"] = 100;
+        // $result_data[0]["Discount (0-100)"] = 20;
+        // $result_data[0]["Discount quote"] = 80;
 
-        $result_data[0]["Measurement unit"] = "move";
-        $result_data[1]["Measurement unit"] = "certificate";
-        $result_data[2]["Measurement unit"] = "day";
-        $result_data[3]["Measurement unit"] = "hour";
-        $result_data[4]["Measurement unit"] = "kW/h";
-        $result_data[5]["Measurement unit"] = "cubic meter (m^3)";
-        $result_data[6]["Measurement unit"] = "lamp batch";
-        $result_data[7]["Measurement unit"] = "lamp batch day";
-        $result_data[8]["Measurement unit"] = "letters";
-        $result_data[9]["Measurement unit"] = "liters";
-        $result_data[10]["Measurement unit"] = "square meter (m^2)";
-        $result_data[11]["Measurement unit"] = "positions";
-        $result_data[12]["Measurement unit"] = "line";
-        $result_data[13]["Measurement unit"] = "line day";
-        $result_data[14]["Measurement unit"] = "ton";
-        $result_data[15]["Measurement unit"] = "meter";
-        $result_data[16]["Measurement unit"] = "container";
-        $result_data[17]["Measurement unit"] = "drum";
+        // $result_data[0]["Measurement unit"] = "move";
+        // $result_data[1]["Measurement unit"] = "certificate";
+        // $result_data[2]["Measurement unit"] = "day";
+        // $result_data[3]["Measurement unit"] = "hour";
+        // $result_data[4]["Measurement unit"] = "kW/h";
+        // $result_data[5]["Measurement unit"] = "cubic meter (m^3)";
+        // $result_data[6]["Measurement unit"] = "lamp batch";
+        // $result_data[7]["Measurement unit"] = "lamp batch day";
+        // $result_data[8]["Measurement unit"] = "letters";
+        // $result_data[9]["Measurement unit"] = "liters";
+        // $result_data[10]["Measurement unit"] = "square meter (m^2)";
+        // $result_data[11]["Measurement unit"] = "positions";
+        // $result_data[12]["Measurement unit"] = "line";
+        // $result_data[13]["Measurement unit"] = "line day";
+        // $result_data[14]["Measurement unit"] = "ton";
+        // $result_data[15]["Measurement unit"] = "meter";
+        // $result_data[16]["Measurement unit"] = "container";
+        // $result_data[17]["Measurement unit"] = "drum";
 
         echo json_encode($result_data);
     }
@@ -2917,15 +2920,15 @@ class Tasks extends Security_Controller {
             "Specification" => $data->specification,
             "Reference drawing" => $data->reference_drawing,
             "Link to task" => $link_to_task,
-            "Cost type" => "",
-            "Est. quantity" => $data->estimated_quantity,
-            "Measurement unit" => "",
-            "Unit price" => "",
-            "Unit price currency" => "",
-            "Quote" => "",
-            "Discount (0-100)" => "",
-            "Discount quote" => "",
-            "Remarks" => "",
+            "Cost type" => $data->cost_type,
+            "Est. quantity" => $data->est_quantity,
+            "Measurement unit" => $data->measurement_unit,
+            "Unit price" => $data->unit_price,
+            "Unit price currency" => $data->unit_price_currency,
+            "Quote" => $data->quote,
+            "Discount (0-100)" => $data->discount,
+            "Discount quote" => $data->quote - $data->discount,
+            "Remarks" => $data->remarks,
         );
 
         return $row_data;
@@ -3064,6 +3067,7 @@ class Tasks extends Security_Controller {
         $this->init_project_permission_checker($project_id);
 
         $view_data['project_id'] = $project_id;
+        $view_data['sort_by'] = 'category';
 
         $view_data['can_create_tasks'] = $this->can_create_tasks("project");
         $view_data["show_milestone_info"] = $this->can_view_milestones();
@@ -3311,8 +3315,6 @@ class Tasks extends Security_Controller {
                 //find the tasks if there is any task
                 if (get_array_value($column_tasks_count, $status_id)) {
                     $options["status_id"] = $status_id;
-                    $options["limit"] = 15;
-
                     $tasks = $this->Tasks_model->get_kanban_details($options)->getResult();
                     $tasks_list[$status_id] = $tasks;
                     $tasks_edit_permissions_list[$status_id] = $this->_get_tasks_status_edit_permissions($tasks);
@@ -3327,6 +3329,7 @@ class Tasks extends Security_Controller {
         }
     }
 
+    // task/list
     function all_tasks_kanban_list_data() {
 
         $this->access_only_team_members();
@@ -3351,71 +3354,76 @@ class Tasks extends Security_Controller {
 
         $view_data['can_edit_project_tasks'] = $this->_can_edit_project_tasks($project_id);
         $view_data['project_id'] = $project_id;
+        
+        $sort_by = $this->request->getPost('sort_by');
+        if (!$sort_by)  $sort_by = 'category';
+        
+        $tasks = $this->Tasks_model->get_kanban_details($options)->getResult();
+        $tasks_list = array();
+        $tasks_edit_permissions_list = array();
+        $columns = array();
 
-        //prepare accessible query parameters
-        $contexts = $this->_get_accessible_contexts("view");
-        $options = array_merge($options, $this->_prepare_query_parameters_for_accessible_contexts($contexts));
+        $tasks_list['-1'] = array();
+        $temp = new \stdClass();
+        $temp->id = '-1';
+        $temp->color = "#2e4053";
+        $temp->title = "Others";
 
-        if (count($contexts) == 0) {
-            //don't show anything 
-            $options["context"] = "noting";
-        }
-
-        $max_sort = $this->request->getPost('max_sort');
-        $column_id = $this->request->getPost('kanban_column_id');
-
-        if ($column_id) {
-            //load only signle column data. load more.. 
-            $options["get_after_max_sort"] = $max_sort;
-            $options["status_id"] = $column_id;
-            $options["limit"] = 100;
-
-            $view_data["tasks"] = $this->Tasks_model->get_kanban_details($options)->getResult();
-            $tasks_edit_permissions = $this->_get_tasks_status_edit_permissions($view_data["tasks"]);
-            $view_data["tasks_edit_permissions"] = $tasks_edit_permissions;
-            return $this->template->view('tasks/kanban/kanban_list_column_items', $view_data);
-        } else {
-            $task_count_query_options = $options;
-            $task_count_query_options["return_task_counts_only"] = true;
-            $task_counts = $this->Tasks_model->get_kanban_details($task_count_query_options)->getResult();
-            $column_tasks_count = array();
-            foreach ($task_counts as $task_count) {
-                $column_tasks_count[$task_count->status_id] = $task_count->tasks_count;
-            }
-
-            $exclude_status_ids = $this->get_removed_task_status_ids($project_id);
-            $task_status_options = array("hide_from_kanban" => 0, "exclude_status_ids" => $exclude_status_ids);
-            if (!$project_id) {
-                $task_status_options["hide_from_non_project_related_tasks"] = 0;
-            }
-            $statuses = $this->Task_status_model->get_details($task_status_options);
-
-            $view_data["total_columns"] = $statuses->resultID->num_rows;
-            $columns = $statuses->getResult();
-
-            $tasks_list = array();
-            $tasks_edit_permissions_list = array();
-
-            foreach ($columns as $column) {
-                $status_id = $column->id;
-
-                //find the tasks if there is any task
-                if (get_array_value($column_tasks_count, $status_id)) {
-                    $options["status_id"] = $status_id;
-                    $options["limit"] = 15;
-
-                    $tasks = $this->Tasks_model->get_kanban_details($options)->getResult();
-                    $tasks_list[$status_id] = $tasks;
-                    $tasks_edit_permissions_list[$status_id] = $this->_get_tasks_status_edit_permissions($tasks);
+        $columns[] = $temp;
+        foreach ($tasks as $task) {
+            if ($sort_by == 'category') {
+                $ids = $task->labels;
+                if ($ids) {
+                    $id_array = explode(',', $ids);
+                    $id = array_shift($id_array);
+                    if (!get_array_value($tasks_list, $id)) {
+                        $tasks_list[$id] = array();
+                        $label = $this->Labels_model->get_one(intval($id));
+        
+                        $temp = new \stdClass();
+                        $temp->id = $id;
+                        $temp->color = $label->color;
+                        $temp->title = $label->title;
+        
+                        $columns[] = $temp;
+                    }
+                    $tasks_list[$id][] = $task;
+                    $tasks_edit_permissions_list[$id] = $this->_get_tasks_status_edit_permissions($tasks);
+    
+                } else {
+                    $tasks_list['-1'][] = $task;
+                    $tasks_edit_permissions_list['-1'] = $this->_get_tasks_status_edit_permissions($tasks);
+                }
+    
+            } else {
+                if ($task->dock_list_number) {
+                    if (!get_array_value($tasks_list, $task->dock_list_number)) {
+                        $tasks_list[$task->dock_list_number] = array();
+                        $temp = new \stdClass();
+                        $temp->id = $task->dock_list_number;
+                        $temp->color = '#2e4053';
+                        $temp->title = $task->dock_list_number;
+        
+                        $columns[] = $temp;
+                    }
+                    $tasks_list[$task->dock_list_number][] = $task;
+                    $tasks_edit_permissions_list[$task->dock_list_number] = $this->_get_tasks_status_edit_permissions($tasks);
+    
+                } else {
+                    $tasks_list['-1'][] = $task;
+                    $tasks_edit_permissions_list['-1'] = $this->_get_tasks_status_edit_permissions($tasks);
                 }
             }
-            $view_data["tasks_edit_permissions_list"] = $tasks_edit_permissions_list;
-            $view_data["columns"] = $columns;
-            $view_data['column_tasks_count'] = $column_tasks_count;
-            $view_data['tasks_list'] = $tasks_list;
-
-            return $this->template->view('tasks/kanban/kanban_list_view', $view_data);
         }
+
+        $first_item = array_shift($columns);
+        $columns[] = $first_item;
+        $view_data['tasks_list'] = $tasks_list;
+        $view_data['columns'] = $columns;
+        $view_data["tasks_edit_permissions_list"] = $tasks_edit_permissions_list;
+
+        return $this->template->view('tasks/kanban/kanban_list_view', $view_data);
+
     }
 
     private function _get_tasks_edit_permissions($tasks = array()) {
@@ -3505,8 +3513,6 @@ class Tasks extends Security_Controller {
                 //find the tasks if there is any task
                 if (get_array_value($column_tasks_count, $status_id)) {
                     $options["status_id"] = $status_id;
-                    $options["limit"] = 15;
-
                     $tasks = $this->Tasks_model->get_kanban_details($options)->getResult();
                     $tasks_list[$status_id] = $tasks;
                     $tasks_edit_permissions_list[$status_id] = $this->_get_tasks_status_edit_permissions($tasks);
@@ -3521,6 +3527,7 @@ class Tasks extends Security_Controller {
         }
     }
 
+    // project/task/list
     function project_tasks_kanban_list_data($project_id = 0) {
         validate_numeric_value($project_id);
 
@@ -3541,64 +3548,82 @@ class Tasks extends Security_Controller {
             "unread_status_user_id" => $this->login_user->id,
             "show_assigned_tasks_only_user_id" => $this->show_assigned_tasks_only_user_id(),
             "quick_filter" => $this->request->getPost('quick_filter'),
-            "label_id" => $this->request->getPost('label_id'),
+            "status_id" => $this->request->getPost('status_id'),
             "custom_field_filter" => $this->prepare_custom_field_filter_values("tasks", $this->login_user->is_admin, $this->login_user->user_type)
         );
 
         $view_data['can_edit_project_tasks'] = $this->_can_edit_project_tasks($project_id);
         $view_data['project_id'] = $project_id;
 
-        $max_sort = $this->request->getPost('max_sort');
-        $column_id = $this->request->getPost('kanban_column_id');
+        $sort_by = $this->request->getPost('sort_by');
+        if (!$sort_by)  $sort_by = 'category';
 
-        if ($column_id) {
-            //load only signle column data. load more.. 
-            $options["get_after_max_sort"] = $max_sort;
-            $options["status_id"] = $column_id;
-            $options["limit"] = 100;
-            $view_data["tasks"] = $this->Tasks_model->get_kanban_details($options)->getResult();
-            $tasks_edit_permissions = $this->_get_tasks_status_edit_permissions($view_data["tasks"]);
-            $view_data["tasks_edit_permissions"] = $tasks_edit_permissions;
-            return $this->template->view('tasks/kanban/kanban_column_items', $view_data);
-        } else {
-            //load initial data. full view.
-            $task_count_query_options = $options;
-            $task_count_query_options["return_task_counts_only"] = true;
-            $task_counts = $this->Tasks_model->get_kanban_details($task_count_query_options)->getResult();
-            $column_tasks_count = [];
-            foreach ($task_counts as $task_count) {
-                $column_tasks_count[$task_count->status_id] = $task_count->tasks_count;
-            }
+        $tasks = $this->Tasks_model->get_kanban_details($options)->getResult();
+        $tasks_list = array();
+        $tasks_edit_permissions_list = array();
+        $columns = array();
 
-            $exclude_status_ids = $this->get_removed_task_status_ids($project_id);
-            $statuses = $this->Task_status_model->get_details(array("hide_from_kanban" => 0, "exclude_status_ids" => $exclude_status_ids));
+        $tasks_list['-1'] = array();
+        $temp = new \stdClass();
+        $temp->id = '-1';
+        $temp->color = "#2e4053";
+        $temp->title = "Others";
 
-            $view_data["total_columns"] = $statuses->resultID->num_rows;
-            $columns = $statuses->getResult();
-
-            $tasks_list = array();
-            $tasks_edit_permissions_list = array();
-
-            foreach ($columns as $column) {
-                $status_id = $column->id;
-
-                //find the tasks if there is any task
-                if (get_array_value($column_tasks_count, $status_id)) {
-                    $options["status_id"] = $status_id;
-                    $options["limit"] = 15;
-
-                    $tasks = $this->Tasks_model->get_kanban_details($options)->getResult();
-                    $tasks_list[$status_id] = $tasks;
-                    $tasks_edit_permissions_list[$status_id] = $this->_get_tasks_status_edit_permissions($tasks);
+        $columns[] = $temp;
+        foreach ($tasks as $task) {
+            if ($sort_by == 'category') {
+                $ids = $task->labels;
+                if ($ids) {
+                    $id_array = explode(',', $ids);
+                    $id = array_shift($id_array);
+                    if (!get_array_value($tasks_list, $id)) {
+                        $tasks_list[$id] = array();
+                        $label = $this->Labels_model->get_one(intval($id));
+        
+                        $temp = new \stdClass();
+                        $temp->id = $id;
+                        $temp->color = $label->color;
+                        $temp->title = $label->title;
+        
+                        $columns[] = $temp;
+                    }
+                    $tasks_list[$id][] = $task;
+                    $tasks_edit_permissions_list[$id] = $this->_get_tasks_status_edit_permissions($tasks);
+    
+                } else {
+                    $tasks_list['-1'][] = $task;
+                    $tasks_edit_permissions_list['-1'] = $this->_get_tasks_status_edit_permissions($tasks);
+                }
+    
+            } else {
+                if ($task->dock_list_number) {
+                    if (!get_array_value($tasks_list, $task->dock_list_number)) {
+                        $tasks_list[$task->dock_list_number] = array();
+                        $temp = new \stdClass();
+                        $temp->id = $task->dock_list_number;
+                        $temp->color = '#2e4053';
+                        $temp->title = $task->dock_list_number;
+        
+                        $columns[] = $temp;
+                    }
+                    $tasks_list[$task->dock_list_number][] = $task;
+                    $tasks_edit_permissions_list[$task->dock_list_number] = $this->_get_tasks_status_edit_permissions($tasks);
+    
+                } else {
+                    $tasks_list['-1'][] = $task;
+                    $tasks_edit_permissions_list['-1'] = $this->_get_tasks_status_edit_permissions($tasks);
                 }
             }
-
-            $view_data["tasks_edit_permissions_list"] = $tasks_edit_permissions_list;
-            $view_data["columns"] = $columns;
-            $view_data['column_tasks_count'] = $column_tasks_count;
-            $view_data['tasks_list'] = $tasks_list;
-            return $this->template->view('tasks/kanban/kanban_list_view', $view_data);
         }
+
+        $first_item = array_shift($columns);
+        $columns[] = $first_item;
+        $view_data['tasks_list'] = $tasks_list;
+        $view_data['columns'] = $columns;
+        $view_data["tasks_edit_permissions_list"] = $tasks_edit_permissions_list;
+
+        return $this->template->view('tasks/kanban/kanban_list_view', $view_data);
+
     }
 
     function set_task_comments_as_read($task_id = 0) {

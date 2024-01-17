@@ -222,23 +222,6 @@
             </div>
             <div class="form-group">
                 <div class="row">
-                    <label for="estimated_quantity" class=" col-md-3"><?php echo app_lang('estimated_quantity'); ?></label>
-                    <div class=" col-md-9">
-                        <?php
-                        echo form_input(array(
-                            "id" => "estimated_quantity",
-                            "name" => "estimated_quantity",
-                            "value" => $add_type == "multiple" ? "" : $model_info->estimated_quantity,
-                            "class" => "form-control",
-                            "maxlength" => 30,
-                            "placeholder" => app_lang('estimated_quantity'),
-                        ));
-                        ?>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
                     <label for="specification" class=" col-md-3"><?php echo app_lang('specification'); ?></label>
                     <div class=" col-md-9">
                         <?php
@@ -851,6 +834,153 @@
                 </div>
             </div>
             <!--  -->
+            <!-- quotation section -->
+            <div>
+                <h4><?php echo app_lang("quotation"); ?>:</h4>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="cost_type" class=" col-md-3"><?php echo app_lang('cost_type'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "cost_type",
+                            "name" => "cost_type",
+                            "value" => $model_info->cost_type,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('cost_type'),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label for="est_quantity" class=" col-md-3"><?php echo app_lang('est_quantity'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "est_quantity",
+                            "name" => "est_quantity",
+                            "value" => $model_info->est_quantity,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('est_quantity'),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label for="measurement_unit" class=" col-md-3"><?php echo app_lang('measurement_unit'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "measurement_unit",
+                            "name" => "measurement_unit",
+                            "value" => $model_info->measurement_unit,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('measurement_unit'),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label for="unit_price" class=" col-md-3"><?php echo app_lang('unit_price'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "unit_price",
+                            "name" => "unit_price",
+                            "value" => $model_info->unit_price,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('unit_price'),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label for="unit_price_currency" class=" col-md-3"><?php echo app_lang('unit_price_currency'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "unit_price_currency",
+                            "name" => "unit_price_currency",
+                            "value" => $model_info->unit_price_currency,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('unit_price_currency'),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label for="quote" class=" col-md-3"><?php echo app_lang('quote'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "quote",
+                            "name" => "quote",
+                            "value" => $model_info->quote,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('quote'),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label for="discount" class=" col-md-3"><?php echo app_lang('discount'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "discount",
+                            "name" => "discount",
+                            "value" => $model_info->discount,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('discount'),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label for="remarks" class=" col-md-3"><?php echo app_lang('remarks'); ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "remarks",
+                            "name" => "remarks",
+                            "value" => $model_info->remarks,
+                            "class" => "form-control",
+                            "maxlength" => 30,
+                            "placeholder" => app_lang('remarks'),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
 
             <?php if (get_setting("enable_recurring_option_for_tasks")) { ?>
 
