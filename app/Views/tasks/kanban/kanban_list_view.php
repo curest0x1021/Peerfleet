@@ -1,20 +1,16 @@
 <div id="kanban-wrapper">
     <ul id="kanban-list-container" class="kanban-list-container clearfix">
-
-        <?php foreach ($columns as $column) { ?>
+        <?php $index = 0; foreach ($columns as $column) { ?>
             <li class="kanban-list-col kanban-<?php
             echo $column->id;
-            $tasks_count = get_array_value($column_tasks_count, $column->id);
-            if (!$tasks_count) {
-                $tasks_count = 0;
-            }
-
             $tasks = get_array_value($tasks_list, $column->id);
+            $tasks_count = count($tasks);
+            $index++;
             if (!$tasks) {
                 $tasks = array();
             }
             ?>" >
-                <div class="kanban-list-col-title" style="background-color: <?php echo $column->color ? $column->color : "#2e4053"; ?>;"> <?php echo $column->key_name ? app_lang($column->key_name) : $column->title; ?> <span class="kanban-item-count <?php echo $column->id; ?>-task-count float-end ml10"><?php echo $tasks_count; ?> </span></div>
+                <div class="kanban-list-col-title  mt20 mb10" style="background-color: <?php echo $column->color ? $column->color : "#2e4053"; ?>;"> <?php echo $column->title; ?> <span class="kanban-item-count <?php echo $column->id; ?>-task-count float-end ml10"><?php echo $tasks_count; ?> </span></div>
 
                 <div class="kanban-input general-form hide">
                     <?php
@@ -28,7 +24,20 @@
                     ?>
                 </div>
 
-                <div  id="kanban-item-list-<?php echo $column->id; ?>" class="kanban-list-items" data-status_id="<?php echo $column->id; ?>">
+                <table class="w-100 display dataTable no-footer" id="kanban-item-list-<?php echo $column->id; ?>" class="kanban-list-items" data-status_id="<?php echo $column->id; ?>">
+                <thead style="visibility: <?php echo($index == 1 ? 'visible' : 'collapse'); ?> ">
+                    <tr role="row">
+                        <th width="50px" class="sorting_desc"  aria-controls="task-table"  aria-sort="descending" aria-label=""></th>
+                        <th width="10%" class="sorting"  aria-controls="task-table"  aria-label="">Dock list number</th>
+                        <th width="42%" class="sorting"  aria-controls="task-table"  aria-label="">Title</th>
+                        <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Reference drawing</th>
+                        <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Start date</th>
+                        <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Deadline</th>
+                        <th width="12%" class="min-w150 sorting"  aria-controls="task-table"  aria-label="">Assigned to</th>
+                        <th width="8%" class="sorting_disabled"  aria-label="">Status</th>
+                        <th width="8%" class="sorting"  aria-controls="task-table"  aria-label=""></th>
+                    </tr>
+                </thead>
                     <?php
                     echo view("tasks/kanban/kanban_list_column_items", array(
                         "tasks" => $tasks,
@@ -37,7 +46,7 @@
                         "tasks_edit_permissions"=> get_array_value($tasks_edit_permissions_list, $column->id)
                     ));
                     ?>
-                </div>
+                </table>
             </li>
         <?php } ?>
 
@@ -56,7 +65,7 @@
         }
 
 
-        var totalColumns = "<?php echo $total_columns ?>";
+        var totalColumns = "<?php echo count($columns); ?>";
         var columnWidth = (335 * totalColumns) + 5;
 
         $("#kanban-list-container").css({width: "100%"});
@@ -222,47 +231,8 @@
         }
 
         adjustViewHeightWidth();
-        setLoadmoreButton();
 
         $('[data-bs-toggle="tooltip"]').tooltip();
-
-
-        $(".kanban-list-items").scroll(function () {
-            var $instance = $(this);
-            var status_id = $instance.data("status_id");
-            if ($instance.hasClass("js-load-more-on-scroll")) {
-                var scrollTop = $instance.scrollTop();
-                var columnHeight = $instance.get(0).scrollHeight - $instance.height();
-
-                if (scrollTop > columnHeight - 200) {
-                    //load more item once the scroll reach at to bootom (200px above)
-
-                    if (!$instance.find(".kanban-item-loading").length) {
-
-                        $instance.append("<div class='text-center kanban-item-loading'><div class='inline-loader' ></div></div>");
-
-                        var $lastChild = $instance.find("a.kanban-item").last();
-
-                        var filterParams = window.InstanceCollection["kanban-filters"].filterParams;
-
-                        var postData = $.extend({}, filterParams);
-                        postData.max_sort = $lastChild.data("sort") || 0;
-                        postData.kanban_column_id = status_id;
-
-                        $.ajax({
-                            url: window.InstanceCollection["kanban-filters"].source,
-                            type: 'POST',
-                            data: postData,
-                            success: function (response) {
-                                $instance.find(".kanban-item-loading").remove();
-                                $instance.append(response);
-                                setLoadmoreButton();
-                            }
-                        });
-                    }
-                }
-            }
-        });
 
     });
 
@@ -276,3 +246,4 @@
 </script>
 
 <?php echo view("tasks/update_task_read_comments_status_script"); ?>
+<?php echo view("tasks/task_table_common_script"); ?>

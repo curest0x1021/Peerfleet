@@ -10,6 +10,7 @@
             smartFilterIdentity: "all_tasks_kanban", //a to z and _ only. should be unique to avoid conflicts 
             search: {name: "search"},
             filterDropdown: [
+                {name: "sort_by", class: "w200", options: [{'id': 'category', text: 'Category'}, {'id': 'sort-dln', text: 'Dock list number'}]},
                 {name: "quick_filter", class: "w200", showHtml: true, options: <?php echo view("tasks/quick_filters_dropdown"); ?>},
                 {name: "context", class: "w200", options: <?php echo $contexts_dropdown; ?>, onChangeCallback: function (value, filterParams) {
                         var $tableWrapper = $("#js-kanban-filter-container");

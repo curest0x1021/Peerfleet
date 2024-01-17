@@ -531,7 +531,7 @@ class Security_Controller extends App_Controller {
             show_404();
         }
 
-        $labels_dropdown = $is_filter ? array(array("id" => "", "text" => "- " . ($custom_filter_title ? $custom_filter_title : app_lang("label")) . " -")) : array();
+        $labels_dropdown = $is_filter ? array(array("id" => "", "text" => "- " . ($custom_filter_title ? $custom_filter_title : app_lang("category")) . " -")) : array();
 
         $options = array(
             "context" => $type

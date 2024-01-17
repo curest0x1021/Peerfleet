@@ -1,7 +1,16 @@
 <?php
 
 //copy from default_lang.php file and update
-$lang["estimated_quantity"] = "Estimated quantity";
+$lang["quotation"] = "Quotation";
+$lang["cost_type"] = "Cost Yype";
+$lang["est_quantity"] = "Est. quantity";
+$lang["measurement_unit"] = "Measurement unit";
+$lang["unit_price"] = "Unit price";
+$lang["quote"] = "Quote";
+$lang["remarks"] = "Remarks";
+$lang["discount_quote"] = "Discount quote";
+$lang["discount"] = "Discount";
+$lang["unit_price_currency"] = "Unit price currency";
 $lang["remaining"] = "Remaining";
 $lang["discarded"] = "Discarded";
 $lang["export_project_form"] = "Export project form";

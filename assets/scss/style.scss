@@ -3946,7 +3946,7 @@ table.dataTable {
 }
 
 .filter-section-right {
-    flex: 0 0 auto;
+    display: flex;
     text-align:right;
 }
 
@@ -4073,4 +4073,8 @@ table.dataTable {
     right: 20px;
     animation: spin 0.35s infinite linear;
     -webkit-animation: spin 0.35s infinite linear;
+}
+
+.w55px {
+    width: 55px;
 }

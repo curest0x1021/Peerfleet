@@ -3,125 +3,184 @@
 $show_in_kanban = get_setting("show_in_kanban");
 $show_in_kanban_items = explode(',', $show_in_kanban);
 
-foreach ($tasks as $task) {
-    $task_labels = "";
-    $task_checklist_status = "";
-    $checklist_label_color = "#6690F4";
-
-    if ($task->total_checklist_checked <= 0) {
-        $checklist_label_color = "#E18A00";
-    } else if ($task->total_checklist_checked == $task->total_checklist) {
-        $checklist_label_color = "#01B392";
-    }
-
-    if ($task->priority_id) {
-        $task_labels .= "<div class='meta w60 float-start mr5'><span class='sub-task-icon priority-badge' data-bs-toggle='tooltip' title='" . app_lang("priority") . ": " . $task->priority_title . "' style='background: $task->priority_color'><i data-feather='$task->priority_icon' class='icon-14'></i></span></div>";
-    }
-
-    if ($task->total_checklist) {
-        $task_checklist_status .= "<div class='meta w60 float-start badge rounded-pill mr5 mt0' style='background-color:$checklist_label_color'><span data-bs-toggle='tooltip' title='" . app_lang("checklist_status") . "'><i data-feather='check' class='icon-14'></i> $task->total_checklist_checked/$task->total_checklist</span></div>";
-    }
-
-    $task_labels_data = make_labels_view_data($task->labels_list);
-    $sub_task_icon = "";
-    if ($task->parent_task_id) {
-        $sub_task_icon = "<span class='sub-task-icon mr20' title='" . app_lang("sub_task") . "'><i data-feather='git-merge' class='icon-14'></i></span>";
-    }
-
-    if ($task_labels_data) {
-        $task_labels .= "<div class='meta w60 float-start mr20'>$task_labels_data</div>";
-    }
-
+foreach ($tasks as $data) {
     $unread_comments_class = "";
-    if (isset($task->unread) && $task->unread && $task->unread != "0") {
-        $unread_comments_class = "unread-comments-of-kanban unread";
+    $icon = "";
+    if (isset($data->unread) && $data->unread && $data->unread != "0") {
+        $unread_comments_class = "unread-comments-of-tasks";
+        $icon = "<i data-feather='message-circle' class='icon-16 ml5 unread-comments-of-tasks-icon'></i>";
     }
 
-    $batch_operation_checkbox = "";
-    if ($login_user->user_type == "staff" && $can_edit_project_tasks && $project_id) {
-        $batch_operation_checkbox = "<span data-act='batch-operation-task-checkbox' title='" . app_lang("batch_update") . "' class='checkbox-blank-sm float-end invisible'></span>";
+    $title = "";
+    $main_task_id = "#" . $data->id;
+    $sub_task_search_column = "#" . $data->id;
+
+    if ($data->parent_task_id) {
+        $sub_task_search_column = "#" . $data->parent_task_id;
+        //this is a sub task
+        $title = "<span class='sub-task-icon mr5 ml10' title='" . app_lang("sub_task") . "'><i data-feather='git-merge' class='icon-14'></i></span>";
     }
 
     $toggle_sub_task_icon = "";
 
-    if ($task->has_sub_tasks) {
-        $toggle_sub_task_icon = "<span class='filter-sub-task-kanban-button clickable float-end ml5' title='" . app_lang("show_sub_tasks") . "' main-task-id= '#$task->id'><i data-feather='filter' class='icon-14'></i></span>";
+    if ($data->has_sub_tasks) {
+        $toggle_sub_task_icon = "<span class='filter-sub-task-button clickable ml5' title='" . app_lang("show_sub_tasks") . "' main-task-id= '$main_task_id'><i data-feather='filter' class='icon-16'></i></span>";
     }
 
-    $disable_dragging = get_array_value($tasks_edit_permissions, $task->id) ? "" : "disable-dragging";
+    $title .= modal_anchor(get_uri("tasks/view"), $data->title . $icon, array("title" => app_lang('task_info') . " #$data->id", "data-post-id" => $data->id, "data-search" => $sub_task_search_column, "class" => $unread_comments_class, "data-modal-lg" => "1"));
 
-    //custom fields to show in kanban
-    $kanban_custom_fields_data = "";
-    $kanban_custom_fields = get_custom_variables_data("tasks", $task->id, $login_user->is_admin);
-    if ($kanban_custom_fields) {
-        foreach ($kanban_custom_fields as $kanban_custom_field) {
-            $kanban_custom_fields_data .= "<div class='mt5 font-12'>" . get_array_value($kanban_custom_field, "custom_field_title") . ": " . view("custom_fields/output_" . get_array_value($kanban_custom_field, "custom_field_type"), array("value" => get_array_value($kanban_custom_field, "value"))) . "</div>";
-        }
+    // $task_point = "";
+    // if ($data->points > 1) {
+    //     $task_point .= "<span class='badge badge-light clickable mt0' title='" . app_lang('points') . "'>" . $data->points . "</span> ";
+    // }
+    // $title .= "<span class='float-end ml5'>" . $task_point . "</span>";
+
+    if ($data->priority_id) {
+        $title .= "<span class='float-end' title='" . app_lang('priority') . ": " . $data->priority_title . "'>
+                        <span class='sub-task-icon priority-badge' style='background: $data->priority_color'><i data-feather='$data->priority_icon' class='icon-14'></i></span> $toggle_sub_task_icon
+                    </span>";
     }
 
-    $start_date = "";
-    if ($task->start_date) {
-        $start_date = "<div class='font-12 float-start' title='" . app_lang("start_date") . "'><i data-feather='calendar' class='icon-14 text-off mr5'></i> " . format_to_date($task->start_date, false) . "</div>";
+    $task_labels = make_labels_view_data($data->labels_list, true);
+
+    $title .= "<span class='float-end mr5'>" . $task_labels . "</span>";
+
+    $context_title = "";
+    if ($data->project_id) {
+        $context_title = anchor(get_uri("projects/view/" . $data->project_id), $data->project_title ? $data->project_title : "");
+    } else if ($data->client_id) {
+        $context_title = anchor(get_uri("clients/view/" . $data->client_id), $data->charter_name ? $data->charter_name : "");
+    } else if ($data->lead_id) {
+        $context_title = anchor(get_uri("leads/view/" . $data->lead_id), $data->company_name ? $data->company_name : "");
+    } else if ($data->invoice_id) {
+        $context_title = anchor(get_uri("invoices/view/" . $data->invoice_id), get_invoice_id($data->invoice_id));
+    } else if ($data->estimate_id) {
+        $context_title = anchor(get_uri("estimates/view/" . $data->estimate_id), get_estimate_id($data->estimate_id));
+    } else if ($data->order_id) {
+        $context_title = anchor(get_uri("orders/view/" . $data->order_id), get_order_id($data->order_id));
+    } else if ($data->contract_id) {
+        $context_title = anchor(get_uri("contracts/view/" . $data->contract_id), $data->contract_title ? $data->contract_title : "");
+    } else if ($data->proposal_id) {
+        $context_title = anchor(get_uri("proposals/view/" . $data->proposal_id), get_proposal_id($data->proposal_id));
+    } else if ($data->subscription_id) {
+        $context_title = anchor(get_uri("subscriptions/view/" . $data->subscription_id), $data->subscription_title ? $data->subscription_title : "");
+    } else if ($data->expense_id) {
+        $context_title = modal_anchor(get_uri("expenses/expense_details"), ($data->expense_title ? $data->expense_title : format_to_date($data->expense_date, false)), array("title" => app_lang("expense_details"), "data-post-id" => $data->expense_id, "data-modal-lg" => "1"));
+    } else if ($data->ticket_id) {
+        $context_title = anchor(get_uri("tickets/view/" . $data->ticket_id), $data->ticket_title ? $data->ticket_title : "");
     }
+
+    $milestone_title = "-";
+    if ($data->milestone_title) {
+        $milestone_title = $data->milestone_title;
+    }
+
+    $assigned_to = "-";
+
+    if ($data->assigned_to) {
+        $image_url = get_avatar($data->assigned_to_avatar);
+        $assigned_to_user = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->assigned_to_user";
+        $assigned_to = get_team_member_profile_link($data->assigned_to, $assigned_to_user);
+
+        // if ($data->user_type != "staff") {
+        //     $assigned_to = get_client_contact_profile_link($data->assigned_to, $assigned_to_user);
+        // }
+    }
+
+
+    // $collaborators = $this->_get_collaborators($data->collaborator_list);
+
+    // if (!$collaborators) {
+    //     $collaborators = "-";
+    // }
+
+
+    $checkbox_class = "checkbox-blank";
+    if ($data->status_key_name === "done") {
+        $checkbox_class = "checkbox-checked";
+    }
+
+    // if (get_array_value($tasks_status_edit_permissions, $data->id)) {
+        //show changeable status checkbox and link to team members
+        $check_status = js_anchor("<span class='$checkbox_class mr15 float-start'></span>", array('title' => "", "class" => "js-task", "data-id" => $data->id, "data-value" => $data->status_key_name === "done" ? "1" : "3", "data-act" => "update-task-status-checkbox"));
+        $status = js_anchor($data->status_key_name ? app_lang($data->status_key_name) : $data->status_title, array('title' => "", "class" => "", "data-id" => $data->id, "data-value" => $data->status_id, "data-act" => "update-task-status"));
+    // } else {
+    //     //don't show clickable checkboxes/status to client
+    //     if ($checkbox_class == "checkbox-blank") {
+    //         $checkbox_class = "checkbox-un-checked";
+    //     }
+    //     $check_status = "<span class='$checkbox_class mr15 float-start'></span> " . $data->id;
+    //     $status = $data->status_key_name ? app_lang($data->status_key_name) : $data->status_title;
+    // }
+
+
 
     $deadline_text = "-";
-    if ($task->deadline && is_date_exists($task->deadline)) {
-        $deadline_text = format_to_date($task->deadline, false);
-        if (get_my_local_time("Y-m-d") > $task->deadline && $task->status_id != "3") {
+    if ($data->deadline && is_date_exists($data->deadline)) {
+
+        // if ($show_time_with_task) {
+            if (date("H:i:s", strtotime($data->deadline)) == "00:00:00") {
+                $deadline_text = format_to_date($data->deadline, false);
+            } else {
+                $deadline_text = format_to_relative_time($data->deadline, false, false, true);
+            }
+        // } else {
+        //     $deadline_text = format_to_date($data->deadline, false);
+        // }
+
+        if (get_my_local_time("Y-m-d") > $data->deadline && $data->status_id != "3") {
             $deadline_text = "<span class='text-danger'>" . $deadline_text . "</span> ";
-        } else if (format_to_date(get_my_local_time(), false) == format_to_date($task->deadline, false) && $task->status_id != "3") {
+        } else if (format_to_date(get_my_local_time(), false) == format_to_date($data->deadline, false) && $data->status_id != "3") {
             $deadline_text = "<span class='text-warning'>" . $deadline_text . "</span> ";
         }
     }
 
-    $end_date = "";
-    if ($task->deadline) {
-        $end_date = "<div class='font-12 float-end' title='" . app_lang("deadline") . "'><i data-feather='calendar' class='icon-14 text-off mr5'></i> " . $deadline_text . "</div>";
+
+    $start_date = "-";
+    if (is_date_exists($data->start_date)) {
+        // if ($show_time_with_task) {
+            if (date("H:i:s", strtotime($data->start_date)) == "00:00:00") {
+                $start_date = format_to_date($data->start_date, false);
+            } else {
+                $start_date = format_to_relative_time($data->start_date, false, false, true);
+            }
+        // } else {
+        //     $start_date = format_to_date($data->start_date, false);
+        // }
     }
 
-    $task_id = "";
-    $parent_task_id = "";
-    if (in_array("id", $show_in_kanban_items)) {
-        $task_id = $task->id . ". ";
-        $parent_task_id = $task->parent_task_id . ". ";
+    $options = "";
+
+    if (get_array_value($tasks_edit_permissions, $data->id)) {
+        $options .= modal_anchor(get_uri("tasks/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_task'), "data-post-id" => $data->id));
     }
-
-    $project_name = "";
-    if ($task->project_title && in_array("project_name", $show_in_kanban_items)) {
-        $project_name = "<div class='clearfix  text-truncate'><i data-feather='grid' class='icon-14 text-off mr5'></i> " . $task->project_title . "</div>";
-    }
-
-    $client_name = "";
-    if (in_array("client_name", $show_in_kanban_items) && $task->project_type == "client_project") {
-        $client_name = "<div class='clearfix  text-truncate'><i data-feather='briefcase' class='icon-14 text-off mr5'></i> " . $task->client_name . "</div>";
-    }
-
-    $sub_task_status = "";
-    $sub_task_label_color = "#6690F4";
-
-    if ($task->total_sub_tasks_done <= 0) {
-        $sub_task_label_color = "#E18A00";
-    } else if ($task->total_sub_tasks_done == $task->total_sub_tasks) {
-        $sub_task_label_color = "#01B392";
-    }
-
-    if ($task->total_sub_tasks) {
-        $sub_task_status .= "<div class='meta w60 float-start badge rounded-pill' style='background-color:$sub_task_label_color'><span data-bs-toggle='tooltip' title='" . app_lang("sub_task_status") . "'><i data-feather='git-merge' class='icon-14'></i> " . ($task->total_sub_tasks_done ? $task->total_sub_tasks_done : 0) . "/$task->total_sub_tasks</span></div>";
-    } else {
-        $sub_task_status .= "<span/>";
-    }
-
-    $parent_task = "";
-    if (in_array("parent_task", $show_in_kanban_items) && $task->parent_task_title) {
-        $parent_task = "<div class=' text-truncate text-off'>" . $parent_task_id . $task->parent_task_title . "</div>";
-    }
-
-    echo modal_anchor(get_uri("tasks/view"), "<div class='d-flex'>
-                <span class='avatar'><img style='width: 30px; height: 30px;' src='" . get_avatar($task->assigned_to_avatar) . "'></span>
-                <div class='w400'>" . $sub_task_icon . $task_id . $task->title . $toggle_sub_task_icon . $batch_operation_checkbox . "</div>
-                <div class='clearfix w200'>" . $start_date . $end_date . "</div>
-            </div>
-            <div class='d-flex'>" . $project_name . $client_name . $kanban_custom_fields_data . $task_labels . $task_checklist_status . $sub_task_status . "
-                <div class='clearfix'></div>" . $parent_task . "
-            </div>", array("class" => "kanban-list-item $disable_dragging $unread_comments_class", "data-status_id" => $task->status_id, "data-id" => $task->id, "data-project_id" => $task->project_id, "data-sort" => $task->new_sort, "data-post-id" => $task->id, "title" => app_lang('task_info') . " #$task->id", "data-modal-lg" => "1"));
+    // if ($this->can_delete_tasks($data)) {
+        $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_task'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("tasks/delete"), "data-action" => "delete-confirmation"));
+    // }
+    echo '<tr><td class="">' . 
+    $check_status . '</td><td>' . 
+    $data->dock_list_number . 
+    "</td><td>" . 
+    $title . 
+    "</td><td>" . 
+    $data->reference_drawing . 
+    "</td><td>" .  
+    '<span class="">' . $start_date . '</span>' . 
+    "</td><td>" . 
+    '<span class="text-danger">' . $deadline_text . '</span>' . 
+    "</td><td>" . 
+    $assigned_to . 
+    "</td><td>" . 
+    $status . 
+    "</td><td class='text-center option '>" . 
+    $options . 
+    "</td></tr>";
+    // echo modal_anchor(get_uri("tasks/view"), "<div class='d-flex'>
+    //             <span class='avatar'><img style='width: 30px; height: 30px;' src='" . get_avatar($task->assigned_to_avatar) . "'></span>
+    //             <div class='w400'>" . $sub_task_icon . $task_id . $task->title . $toggle_sub_task_icon . $batch_operation_checkbox . "</div>
+    //             <div class='clearfix w200'>" . $start_date . $end_date . "</div>
+    //         </div>
+    //         <div class='d-flex'>" . $project_name . $client_name . $kanban_custom_fields_data . $task_labels . $task_checklist_status . $sub_task_status . "
+    //             <div class='clearfix'></div>" . $parent_task . "
+    //         </div>", array("class" => "kanban-list-item $disable_dragging $unread_comments_class", "data-status_id" => $task->status_id, "data-id" => $task->id, "data-project_id" => $task->project_id, "data-sort" => $task->new_sort, "data-post-id" => $task->id, "title" => app_lang('task_info') . " #$task->id", "data-modal-lg" => "1"));
 }

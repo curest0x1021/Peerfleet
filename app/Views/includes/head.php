@@ -8,7 +8,6 @@
     <?php
     //We'll merge all css and js into sigle files. If you want to use the css separately, you can use it.
 
-    /*
     $css = array(
         "assets/js/datatable/datatables.min.css",
         "assets/js/datatable/css/responsive.dataTables.min.css",
@@ -60,7 +59,6 @@
     write_scss($scss);
     write_js($js);
 
-*/
 
     $css_files = array(
         "assets/bootstrap/css/bootstrap.min.css",

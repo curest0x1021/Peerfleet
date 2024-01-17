@@ -51,7 +51,7 @@ if (!isset($project_id)) {
                 data: {value: $(this).attr('data-value')},
                 success: function (response) {
                     if (response.success) {
-                        $("#task-table").appTable({newData: response.data, dataId: response.id});
+                        $("#reload-kanban-button:visible").trigger("click");
                     }
                 }
             });
