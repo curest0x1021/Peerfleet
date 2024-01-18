@@ -1,7 +1,24 @@
 <div id="kanban-wrapper">
     <ul id="kanban-list-container" class="kanban-list-container clearfix">
+        <li class="kanban-list-col kanban--1" >
+            <table class="w-100 display dataTable no-footer" id="kanban-item-list--1" class="kanban-list-items" data-status_id="-1">
+                <thead>
+                    <tr role="row">
+                        <th width="50px" style="min-width: 35px;" class="sorting"  aria-controls="task-table"  aria-sort="descending" aria-label=""></th>
+                        <th width="10%" class="sorting"  aria-controls="task-table"  aria-label="">Dock list number</th>
+                        <th width="40%" class="sorting"  aria-controls="task-table"  aria-label="">Title</th>
+                        <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Reference drawing</th>
+                        <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Start date</th>
+                        <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Deadline</th>
+                        <th width="12%" class="min-w150 sorting"  aria-controls="task-table"  aria-label="">Assigned to</th>
+                        <th width="8%" class="sorting_disabled"  aria-label="">Status</th>
+                        <th width="8%" class="sorting"  aria-controls="task-table"  aria-label=""></th>
+                    </tr>
+                </thead>
+            </table>
+        </li>
         <?php $index = 0; foreach ($columns as $column) { ?>
-            <li class="kanban-list-col kanban-<?php
+            <div class="kanban-list-col kanban-<?php
             echo $column->id;
             $tasks = get_array_value($tasks_list, $column->id);
             $tasks_count = count($tasks);
@@ -10,7 +27,8 @@
                 $tasks = array();
             }
             ?>" >
-                <div class="kanban-list-col-title  mt20 mb10" style="background-color: <?php echo $column->color ? $column->color : "#2e4053"; ?>;"> <?php echo $column->title; ?> <span class="kanban-item-count <?php echo $column->id; ?>-task-count float-end ml10"><?php echo $tasks_count; ?> </span></div>
+                <input checked type="checkbox" id="list-item-<?php echo $column->id;?>">
+                <label for="list-item-<?php echo $column->id;?>" class="kanban-list-col-title  mt20 mb10" style="background-color: <?php echo $column->color ? $column->color : "#2e4053"; ?>;"> <?php echo $column->title; ?> <span class="kanban-item-count <?php echo $column->id; ?>-task-count float-end ml10"><?php echo $tasks_count; ?> </span></label>
 
                 <div class="kanban-input general-form hide">
                     <?php
@@ -25,19 +43,20 @@
                 </div>
 
                 <table class="w-100 display dataTable no-footer" id="kanban-item-list-<?php echo $column->id; ?>" class="kanban-list-items" data-status_id="<?php echo $column->id; ?>">
-                <thead style="visibility: <?php echo($index == 1 ? 'visible' : 'collapse'); ?> ">
+                <thead style="visibility:collapse;">
                     <tr role="row">
-                        <th width="50px" class="sorting_desc"  aria-controls="task-table"  aria-sort="descending" aria-label=""></th>
+                        <th width="50px" class="sorting"  aria-controls="task-table"  aria-sort="descending" aria-label=""></th>
                         <th width="10%" class="sorting"  aria-controls="task-table"  aria-label="">Dock list number</th>
-                        <th width="42%" class="sorting"  aria-controls="task-table"  aria-label="">Title</th>
+                        <th width="40%" class="sorting"  aria-controls="task-table"  aria-label="">Title</th>
                         <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Reference drawing</th>
-                        <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Start date</th>
+                        <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Start date</th>
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Deadline</th>
                         <th width="12%" class="min-w150 sorting"  aria-controls="task-table"  aria-label="">Assigned to</th>
                         <th width="8%" class="sorting_disabled"  aria-label="">Status</th>
                         <th width="8%" class="sorting"  aria-controls="task-table"  aria-label=""></th>
                     </tr>
                 </thead>
+                <tbody>
                     <?php
                     echo view("tasks/kanban/kanban_list_column_items", array(
                         "tasks" => $tasks,
@@ -46,8 +65,9 @@
                         "tasks_edit_permissions"=> get_array_value($tasks_edit_permissions_list, $column->id)
                     ));
                     ?>
+                </tbody>
                 </table>
-            </li>
+            </div>
         <?php } ?>
 
     </ul>
