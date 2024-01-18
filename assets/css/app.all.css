@@ -5440,17 +5440,52 @@ svg:not(.gantt) {
   padding-bottom: 15px;
   background: #fff;
 }
-.kanban-list-col-title {
+.kanban-list-container .kanban-list-col .kanban-list-col-title {
   display: flex;
   align-items: center;
   height: 24px;
+  cursor: pointer;
   margin-right: 8px;
   padding: 4px 8px 4px 5px;
   border-radius: 5px;
   background-color: #e8eaed;
   color: #fff;
-  width: fit-content;
+  width: 100%;
   min-width: 200px;
+}
+.kanban-list-container .kanban-list-col .kanban-list-col-title:hover {
+  background: #eee;
+}
+.kanban-list-container .kanban-list-col input[type="checkbox"] ~ label:after {
+  content: "";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 13.1l-8-8 2.1-2.2 5.9 5.9 5.9-5.9 2.1 2.2z'/%3E%3C/svg%3E");
+  position: absolute;
+  background-size: 15px;
+  width: 15px;
+  height: 15px;
+  right: 65px;
+  background-repeat: no-repeat;
+  transform: rotate(-90deg);
+}
+.kanban-list-container .kanban-list-col input[type="checkbox"] {
+  position: absolute;
+  left: -9999px;
+}
+.kanban-list-container .kanban-list-col input[type="checkbox"] ~ table {
+  height: 0;
+  display: none;
+  transform: scaleY(0);
+  transform-origin: top;
+}
+.kanban-list-container .kanban-list-col input[type="checkbox"]:checked ~ table {
+  height: 100%;
+  display: table;
+  transform-origin: top;
+  transition: transform 0.2s ease-out;
+  transform: scaleY(1);
+}
+.kanban-list-container .kanban-list-col input[type="checkbox"]:checked + label:after {
+  transform: rotate(0deg);
 }
 .kanban-sortable-chosen {
   opacity: 0.2;
