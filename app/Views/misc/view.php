@@ -10,11 +10,13 @@
                     <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("misc/info_tab/" . $client_id . "/" . $main_id); ?>" data-bs-target="#misc-info"> <?php echo $main_info->item_description; ?></a></li>
                     <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("misc/loadtest_tab/" . $client_id . "/" . $main_id); ?>" data-bs-target="#misc-loadtest"> <?php echo app_lang('loadtest') . $warnning["loadtests"]; ?></a></li>
                     <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("misc/inspection_tab/" . $client_id . "/" . $main_id); ?>" data-bs-target="#misc-inspection"> <?php echo app_lang('visual_inspection') . $warnning["inspections"]; ?></a></li>
+                    <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("misc/certificate_tab/" . $client_id . "/" . $main_id); ?>" data-bs-target="#misc-certificate"> <?php echo app_lang('certificates'); ?></a></li>
                 </ul>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane fade" id="misc-info"></div>
                     <div role="tabpanel" class="tab-pane fade" id="misc-loadtest"></div>
                     <div role="tabpanel" class="tab-pane fade" id="misc-inspection"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="misc-certificate"></div>
                 </div>
             </div>
         </div>

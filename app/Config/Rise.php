@@ -34,7 +34,7 @@ class Rise extends BaseConfig {
     );
 
     public function __construct() {
-        $this->app_csrf_exclude_uris = app_hooks()->apply_filters('app_filter_app_csrf_exclude_uris', $this->app_csrf_exclude_uris);
+        // $this->app_csrf_exclude_uris = app_hooks()->apply_filters('app_filter_app_csrf_exclude_uris', $this->app_csrf_exclude_uris);
     }
 
 }
