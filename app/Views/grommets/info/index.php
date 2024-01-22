@@ -33,6 +33,7 @@
                 {title: "<?php echo app_lang("lifts") ?>"},
                 {title: "<?php echo app_lang("loadtest") ?>", "class": "text-center w50"},
                 {title: "<?php echo app_lang("visual_inspection") ?>", "class": "text-center w50"},
+                {visible: false, searchable: false},
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
             printColumns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],

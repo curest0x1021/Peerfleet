@@ -1,0 +1,1 @@
+ALTER TABLE `pf_grommets` ADD `files` TEXT NULL DEFAULT NULL AFTER `deleted`;

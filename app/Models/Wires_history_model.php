@@ -33,13 +33,15 @@ class Wires_history_model extends Crud_model {
         $result = array();
         foreach ($wires as $item) {
             $reminder_date = date('Y-m-d', strtotime(' - ' . $item->wire_exchange_year * 12 - 8 . ' months'));
-
+            
             $history = array_filter($history_data, function($k) use($item) { return $k->wire_id == $item->wire_id; });
+
             $item->required_exchanges = false;
             if (count($history) > 0) {
                 $item->required_exchanges = end($history)->replacement < $reminder_date;
             } else {
-                $item->required_exchanges = true;
+                // $item->required_exchanges = true;
+                continue;
             }
             $item->initial = count($history) > 0 ? array_values($history)[0]->replacement : null;
             $item->first = count($history) > 1 ? array_values($history)[1]->replacement : null;

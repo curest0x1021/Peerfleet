@@ -16,7 +16,7 @@ class App extends BaseConfig {
     private function set_base_url() {
         if (!$this->baseURL) {
 
-            $domain = $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
+            $domain = (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'http://localhost/') . $_SERVER['SCRIPT_NAME'];
 
             $domain = preg_replace('/index.php.*/', '', $domain);
             $domain = strtolower($domain);
@@ -46,8 +46,9 @@ class App extends BaseConfig {
     }
 
     private function set_cookie_domain() {
-        if (!$this->cookieDomain && $_SERVER['HTTP_HOST']) {
-            $this->cookieDomain = $_SERVER['HTTP_HOST'];
+        $domain_name = (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'http://localhost/');
+        if (!$this->cookieDomain && $domain_name) {
+            $this->cookieDomain = $domain_name;
         }
     }
 

@@ -264,6 +264,16 @@ class Misc extends Security_Controller
             "date_of_discharged" => $this->request->getPost("date_of_discharged"),
         );
 
+        $target_path = getcwd() . "/" . get_general_file_path("misc", $data["client_id"]);
+        $files_data = move_files_from_temp_dir_to_permanent_dir($target_path);
+        $new_files = unserialize($files_data);
+
+        if ($id) {
+            $model_info = $this->Misc_model->get_one($id);
+            $new_files = update_saved_files($target_path, $model_info->files, $new_files);
+        }
+        $data["files"] = serialize($new_files);
+
         $save_id = $this->Misc_model->ci_save($data, $id);
         if ($save_id) {
             echo json_encode(array("success" => true, "data" => $this->_info_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved')));
@@ -301,11 +311,11 @@ class Misc extends Security_Controller
         return $this->_info_make_row($row);
     }
 
-    private function _info_make_row($data) {
+    private function _info_make_row($data, $is_certificate = false) {
         $internal_id = $data->internal_id;
         $action = "";
         if ($this->can_access_own_client($data->client_id)) {
-            $internal_id = modal_anchor(get_uri("misc/info_detail_view/" . $data->id), $data->internal_id, array("class" => "edit", "title" => app_lang('misc'), "data-post-id" => $data->id));
+            $internal_id = $is_certificate ? $data->internal_id : modal_anchor(get_uri("misc/info_detail_view/" . $data->id), $data->internal_id, array("class" => "edit", "title" => app_lang('misc'), "data-post-id" => $data->id));
             $action = modal_anchor(get_uri("misc/info_modal_form/" . $data->client_id . "/" . $data->main_id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_item'), "data-post-id" => $data->id))
                 . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("misc/delete_info"), "data-action" => "delete-confirmation"));
         }
@@ -335,6 +345,17 @@ class Misc extends Security_Controller
             $inspection_passed = '<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="Not Passed"></div>';
         }
 
+        $files_str = "";
+        $files = unserialize($data->files);
+        if (is_array($files)) {
+            foreach ($files as $key => $file) {
+                if ($key > 0) {
+                    $files_str .= ", ";
+                }
+                $files_str .= anchor(get_uri("misc/download_certificate_file/" . $data->id . "/" .$key), remove_file_prefix($file["file_name"]));
+            }
+        }
+
         return array(
             $data->id,
             $internal_id,
@@ -349,6 +370,7 @@ class Misc extends Security_Controller
             $data->lifts,
             $loadtest_passed,
             $inspection_passed,
+            $files_str,
             $action
         );
     }
@@ -587,6 +609,18 @@ class Misc extends Security_Controller
         }
     }
 
+    // Load misc certificate tab
+    function certificate_tab($client_id, $main_id) {
+        if ($client_id && $main_id) {
+            $view_data['client_id'] = $client_id;
+            $view_data['main_id'] = $main_id;
+            $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
+            return $this->template->view("misc/certificate/index", $view_data);
+        } else {
+            show_404();
+        }
+    }
+
     function save_inspection() {
         $client_id = $this->request->getPost("client_id");
         $id = $this->request->getPost("id");
@@ -730,6 +764,24 @@ class Misc extends Security_Controller
         return $this->template->rander("misc/inspection/detail_view", $view_data);
     }
 
+    function certificate_list_data($client_id, $main_id) {
+        $list = $this->Misc_model->get_misc_details(array("client_id" => $client_id, "main_id" => $main_id))->getResult();
+        $result = [];
+        foreach ($list as $data) {
+            $result[] = $this->_info_make_row($data, true);
+        }
+
+        echo json_encode(array("data" => $result));
+    }
+
+    function download_certificate_file($id, $key) {
+        $model_info = $this->Misc_model->get_one($id);
+        $files = unserialize($model_info->files);
+        $client_id = $model_info->client_id;
+        $file_data = serialize(array($files[$key]));
+        return $this->download_app_files(get_general_file_path("misc", $client_id), $file_data);
+    }
+
     // Import data from excel
     function import_modal_form($client_id) {
         $view_data["client_id"] = $client_id;
@@ -753,6 +805,16 @@ class Misc extends Security_Controller
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('please_upload_a_excel_file') . " (.xlsx)"));
         }
+    }
+
+    /* upload a post file */
+    function upload_file() {
+        upload_file_to_temp();
+    }
+
+    /* check valid file for client */
+    function validate_file() {
+        return validate_post_file($this->request->getPost("file_name"));
     }
 
     function download_sample_excel_file() {

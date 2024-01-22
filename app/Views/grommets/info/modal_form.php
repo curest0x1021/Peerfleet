@@ -1,5 +1,5 @@
 <div id="page-content" class="page-wrapper pb0 clearfix task-view-modal-body task-preview">
-    <div class="card">
+    <div id="grommets-info-dropzone" class="card">
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-4 order-lg-last">
@@ -209,8 +209,20 @@
                                     ?>
                                 </div>
                             </div>
+
+                            <div class="form-group row">
+                                <div class="<?php echo $label_column; ?>"></div>
+                                <div class="<?php echo $field_column; ?>">
+                                <?php
+                                echo view("includes/file_list", array("files" => $model_info->files));
+                                ?>
+                                </div>
+                                
+                                <?php echo view("includes/dropzone_preview"); ?>
+                            </div>
                         </div>
                         <div class="modal-footer">
+                            <button class="btn btn-default upload-file-button float-start btn-sm round me-auto" type="button" style="color:#7988a2"><i data-feather="file" class="icon-16"></i> <?php echo app_lang("upload_file"); ?></button>
                             <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
                             <button type="submit" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('save'); ?></button>
                         </div>
@@ -235,11 +247,36 @@
                     newData: result.data,
                     dataId: result.id
                 });
+                $("#grommet-certificates-table").appTable({
+                    reload: true
+                });
             }
         });
 
         $(".select2").select2();
         setDatePicker("#supplied_date");
         setDatePicker("#date_of_discharged");
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var uploadUrl = "<?php echo get_uri("grommets/upload_file"); ?>";
+        var validationUri = "<?php echo get_uri("grommets/validate_file"); ?>";
+
+        var dropzone = attachDropzoneWithForm("#grommets-info-dropzone", uploadUrl, validationUri);
+
+        $("#grommet-form").appForm({
+            onSuccess: function(result) {
+                appAlert.success(result.message, {duration: 5000});
+                // $("#grommet-certificates-table").appTable({
+                //     reload: true
+                // });
+                // setTimeout(() => {
+                //     window.location.reload();
+                // }, 500);
+            }
+        });
+        setDatePicker("#installed");
     });
 </script>
