@@ -16,7 +16,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $("#wire-loadtest-table").appTable({
-            source: '<?php echo_uri("wires/loadtest_list_data/" . $client_id) ?>',
+            source: '<?php echo_uri("wires/loadtest_list_data/" . $client_id . '/' . $equipment) ?>',
             order: [[0, "asc"]],
             columns: [
                 {visible: false, searchable: false},

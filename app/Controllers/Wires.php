@@ -374,7 +374,7 @@ class Wires extends Security_Controller {
                 $view_data["crane"] = $model_info;
                 $view_data["equipment"] = $this->Equipments_model->get_one($equipment);
 
-                $info = $this->Wires_model->get_warnning_info($client_id);
+                $info = $this->Wires_model->get_warnning_info($client_id, $equipment);
                 $require_exchanges = ($info && $info->require_exchanges > 0) ? $info->require_exchanges : 0;
                 $require_loadtests = ($info && $info->require_loadtests > 0) ? $info->require_loadtests : 0;
                 $require_inspections = ($info && $info->require_inspections > 0) ? $info->require_inspections : 0;
@@ -394,13 +394,14 @@ class Wires extends Security_Controller {
         }
     }
 
-    function history_tab($client_id) {
+    function history_tab($client_id, $equipment = 0) {
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
 
         if ($client_id) {
             $view_data["client_id"] = $client_id;
+            $view_data["equipment"] = $equipment;
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
             return $this->template->view("wires/history/index", $view_data);
         } else {
@@ -450,8 +451,8 @@ class Wires extends Security_Controller {
         }
     }
 
-    function history_list_data($client_id) {
-        $list_data = $this->Wires_history_model->get_details($client_id);
+    function history_list_data($client_id, $equipment = 0) {
+        $list_data = $this->Wires_history_model->get_details($client_id, $equipment);
         $result_data = [];
         foreach ($list_data as $data) {
             $result_data[] = $this->_history_make_row($data);
@@ -481,13 +482,14 @@ class Wires extends Security_Controller {
         );
     }
 
-    function loadtest_tab($client_id) {
+    function loadtest_tab($client_id, $equipment = 0) {
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
 
         if ($client_id) {
             $view_data["client_id"] = $client_id;
+            $view_data["equipment"] = $equipment;
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
             return $this->template->view("wires/loadtest/index", $view_data);
         } else {
@@ -587,8 +589,8 @@ class Wires extends Security_Controller {
         }
     }
 
-    function loadtest_list_data($client_id) {
-        $list = $this->Wires_loadtest_model->get_loadtests($client_id);
+    function loadtest_list_data($client_id, $equipment = 0) {
+        $list = $this->Wires_loadtest_model->get_loadtests($client_id, $equipment);
         $result = [];
         foreach ($list as $data) {
             $result[] = $this->_loadtest_make_row($data);
@@ -698,13 +700,14 @@ class Wires extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
 
-    function inspection_tab($client_id) {
+    function inspection_tab($client_id, $equipment = 0) {
         if (!$this->can_access_own_client($client_id)) {
             app_redirect("forbidden");
         }
 
         if ($client_id) {
             $view_data["client_id"] = $client_id;
+            $view_data["equipment"] = $equipment;
             $view_data['can_edit_items'] = $this->can_access_own_client($client_id);
             return $this->template->view("wires/inspection/index", $view_data);
         } else {
@@ -808,8 +811,8 @@ class Wires extends Security_Controller {
         }
     }
 
-    function inspection_list_data($client_id) {
-        $list_data = $this->Wires_inspection_model->get_inspections($client_id);
+    function inspection_list_data($client_id, $equipment = 0) {
+        $list_data = $this->Wires_inspection_model->get_inspections($client_id, $equipment);
         $result_data = [];
         foreach ($list_data as $data) {
             $result_data[] = $this->_inspection_make_row($data);

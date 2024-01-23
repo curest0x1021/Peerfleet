@@ -1,7 +1,7 @@
 <?php echo form_open(get_uri("equipments/save"), array("id" => "equipment-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="container-fluid">
-        <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
+        <input type="hidden" name="id" value="<?php echo $model_info ? $model_info->id : 0; ?>" />
 
         <div class="form-group">
             <div class="row">
@@ -11,7 +11,7 @@
                     echo form_input(array(
                         "id" => "name",
                         "name" => "name",
-                        "value" => $model_info->name ? $model_info->name : "",
+                        "value" => $model_info ? $model_info->name : "",
                         "class" => "form-control",
                         "placeholder" => app_lang('name'),
                         "autofocuse" => true,
@@ -32,7 +32,7 @@
                     echo form_input(array(
                         "id" => "visual_inspection_month",
                         "name" => "visual_inspection_month",
-                        "value" => $model_info->visual_inspection_month ? $model_info->visual_inspection_month : "",
+                        "value" => $model_info ? $model_info->visual_inspection_month : "",
                         "class" => "form-control",
                         "placeholder" => app_lang('months'),
                         "autofocuse" => true,
@@ -53,7 +53,7 @@
                     echo form_input(array(
                         "id" => "load_test_year",
                         "name" => "load_test_year",
-                        "value" => $model_info->load_test_year ? $model_info->load_test_year : "",
+                        "value" => $model_info ? $model_info->load_test_year : "",
                         "class" => "form-control",
                         "placeholder" => app_lang('years'),
                         "autofocuse" => true,
@@ -74,7 +74,7 @@
                     echo form_input(array(
                         "id" => "wire_exchange_year",
                         "name" => "wire_exchange_year",
-                        "value" => $model_info->wire_exchange_year ? $model_info->wire_exchange_year : "",
+                        "value" => $model_info ? $model_info->wire_exchange_year : "",
                         "class" => "form-control",
                         "placeholder" => app_lang('years'),
                         "autofocuse" => true,

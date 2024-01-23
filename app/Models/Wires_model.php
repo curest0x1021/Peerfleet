@@ -144,7 +144,7 @@ class Wires_model extends Crud_model {
         return $this->db->query($sql);
     }
 
-    function get_warnning_info($client_id) {
+    function get_warnning_info($client_id, $equipment = 0) {
         $wires_table = $this->db->prefixTable("wires");
         $history_table = $this->db->prefixTable("wires_history");
         $loadtest_table = $this->db->prefixTable("wires_loadtest");
@@ -154,9 +154,11 @@ class Wires_model extends Crud_model {
         $loadtest_reminder_date = get_loadtest_reminder_date();
         $inspection_reminder_date = get_visual_inspection_reminder_date();
 
+        $equipment_query = $equipment > 0 ? "AND equipment = $equipment GROUP BY client_id, equipment" : "GROUP BY client_id";
+
         $sql = "SELECT a.client_id, (a.total_wires - IFNULL(k1.passed, 0)) as require_exchanges,
                     (a.total_wires - IFNULL(k2.passed, 0)) as require_loadtests, (a.total_wires - IFNULL(k3.passed, 0)) as require_inspections
-                FROM (SELECT client_id, COUNT(id) as total_wires FROM $wires_table WHERE deleted = 0 AND client_id = $client_id GROUP BY client_id) a
+                FROM (SELECT client_id, COUNT(id) as total_wires FROM $wires_table WHERE deleted = 0 AND client_id = $client_id $equipment_query) a
                 LEFT JOIN (
                     SELECT bb.client_id, SUM(bb.passed) as passed
                     FROM (
@@ -190,7 +192,7 @@ class Wires_model extends Crud_model {
                     GROUP BY dd.client_id
                 ) k3 ON a.client_id = k3.client_id";
 
-        return $this->db->query($sql)->getRow();
+            return $this->db->query($sql)->getRow();
     }
 
     function get_cranes_dropdown($client_id) {
