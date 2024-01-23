@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controllers;
 
 class Equipments extends Security_Controller {
@@ -14,7 +13,7 @@ class Equipments extends Security_Controller {
     }
 
     function modal_form() {
-        $view_data["model_info"] = $this->Equipments_model->get_one($this->request->getPost("id"));
+        $view_data["model_info"] = $this->Equipments_model->get_one($this->request->getPost("id") ? : 0);
         $view_data["label_column"] = "col-md-3";
         $view_data["field_column"] = "col-md-9";
         return $this->template->view('equipments/modal_form', $view_data);

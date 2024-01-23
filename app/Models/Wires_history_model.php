@@ -11,17 +11,18 @@ class Wires_history_model extends Crud_model {
         parent::__construct($this->table);
     }
 
-    function get_details($client_id) {
+    function get_details($client_id, $equipment) {
         $wires_table = $this->db->prefixTable("wires");
         $history_table = $this->db->prefixTable("wires_history");
         $type_table = $this->db->prefixTable("wire_type");
         $equipments_table = $this->db->prefixTable("equipments");
+        $equipment_query = $equipment > 0 ? "AND $wires_table.equipment = $equipment" : "";
 
         $sql = "SELECT $wires_table.id as wire_id, client_id, CONCAT($equipments_table.name, ' - ', $type_table.name) as name, $equipments_table.visual_inspection_month , $equipments_table.load_test_year, $equipments_table.wire_exchange_year
                 FROM $wires_table
                 LEFT JOIN $type_table ON $wires_table.wire_type = $type_table.id
                 LEFT JOIN $equipments_table ON $wires_table.equipment = $equipments_table.id
-                WHERE $wires_table.deleted = 0 AND $wires_table.client_id = $client_id
+                WHERE $wires_table.deleted = 0 AND $wires_table.client_id = $client_id $equipment_query
                 ORDER BY $wires_table.id ASC";
 
         $wires = $this->db->query($sql)->getResult();
@@ -40,8 +41,7 @@ class Wires_history_model extends Crud_model {
             if (count($history) > 0) {
                 $item->required_exchanges = end($history)->replacement < $reminder_date;
             } else {
-                // $item->required_exchanges = true;
-                continue;
+                $item->required_exchanges = true;
             }
             $item->initial = count($history) > 0 ? array_values($history)[0]->replacement : null;
             $item->first = count($history) > 1 ? array_values($history)[1]->replacement : null;

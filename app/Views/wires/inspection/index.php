@@ -16,7 +16,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $("#wire-inspection-table").appTable({
-            source: '<?php echo_uri("wires/inspection_list_data/" . $client_id) ?>',
+            source: '<?php echo_uri("wires/inspection_list_data/" . $client_id . '/' . $equipment) ?>',
             order: [[0, "asc"]],
             columns: [
                 {visible: false, searchable: false},

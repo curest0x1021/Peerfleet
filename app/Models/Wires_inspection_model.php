@@ -11,11 +11,12 @@ class Wires_inspection_model extends Crud_model {
         parent::__construct($this->table);
     }
 
-    function get_inspections($client_id) {
+    function get_inspections($client_id, $equipment) {
         $inspection_table = $this->db->prefixTable("wires_inspection");
         $wires_table = $this->db->prefixTable("wires");
         $type_table = $this->db->prefixTable("wire_type");
         $equipments_table = $this->db->prefixTable("equipments");
+        $equipment_query = $equipment > 0 ? "AND $wires_table.equipment = $equipment" : "";
 
         $sql = "SELECT $wires_table.id, $wires_table.client_id, CONCAT($equipments_table.name, ' - ', $type_table.name) as name, IFNULL(k.passed, 0) as passed,
                     k.inspection_date, k.location, k.result, k.files, $equipments_table.visual_inspection_month , $equipments_table.load_test_year, $equipments_table.wire_exchange_year
@@ -29,7 +30,7 @@ class Wires_inspection_model extends Crud_model {
                     ON $inspection_table.wire_id = a.wire_id AND $inspection_table.inspection_date = a.inspection_date
                     WHERE $inspection_table.deleted = 0 AND $inspection_table.client_id = $client_id
                 ) k ON $wires_table.id = k.wire_id
-                WHERE $wires_table.deleted = 0 AND $wires_table.client_id = $client_id";
+                WHERE $wires_table.deleted = 0 AND $wires_table.client_id = $client_id $equipment_query";
 
         return $this->db->query($sql)->getResult();
     }

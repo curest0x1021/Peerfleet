@@ -11,11 +11,12 @@ class Wires_loadtest_model extends Crud_model {
         parent::__construct($this->table);
     }
 
-    function get_loadtests($client_id) {
+    function get_loadtests($client_id, $equipment) {
         $loadtest_table = $this->db->prefixTable("wires_loadtest");
         $wires_table = $this->db->prefixTable("wires");
         $type_table = $this->db->prefixTable("wire_type");
         $equipments_table = $this->db->prefixTable("equipments");
+        $equipment_query = $equipment > 0 ? "AND $wires_table.equipment = $equipment" : "";
 
         $sql = "SELECT $wires_table.id, $wires_table.client_id, CONCAT($equipments_table.name, ' - ', $type_table.name) as name, IFNULL(k.passed, 0) as passed,
                     k.test_date, k.location, k.result, k.files
@@ -29,7 +30,7 @@ class Wires_loadtest_model extends Crud_model {
                     ON $loadtest_table.wire_id = a.wire_id AND $loadtest_table.test_date = a.test_date
                     WHERE $loadtest_table.deleted = 0 AND $loadtest_table.client_id = $client_id
                 ) k ON $wires_table.id = k.wire_id
-                WHERE $wires_table.deleted = 0 AND $wires_table.client_id = $client_id";
+                WHERE $wires_table.deleted = 0 AND $wires_table.client_id = $client_id $equipment_query";
 
         return $this->db->query($sql)->getResult();
     }
