@@ -13,7 +13,6 @@ class Tasks_model extends Crud_model
         parent::__construct($this->table);
         parent::init_activity_log("task", "title", "project", "project_id");
     }
-
     function schema()
     {
         if (get_setting("show_time_with_task_start_date_and_deadline")) {
@@ -974,6 +973,17 @@ class Tasks_model extends Crud_model
 
         return $this->db->query($sql);
     }
+
+    // function get_all()
+    // {
+    //     $tasks_table = $this->db->prefixTable('tasks');
+
+    //     $sql = "SELECT $tasks_table.id, $tasks_table.blocked_by, $tasks_table.blocking
+    //     FROM $tasks_table  
+    //     ";
+
+    //     return $this->db->query($sql);
+    // }
 
     function save_gantt_task_date($data, $task_id)
     {
