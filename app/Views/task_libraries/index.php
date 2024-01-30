@@ -14,7 +14,9 @@
                     <h4>Task Name</h4>
                     <div>
                         <button class="btn btn-danger" ><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</button>
-                        <button type="submit" id="btn-task-save" class="btn btn-primary" ><i data-feather="check-circle" class="icon-16"></i> Save</button>
+                        <button type="submit" 
+                        old-id="btn-task-save" 
+                        class="btn btn-primary" ><i data-feather="check-circle" class="icon-16"></i> Save</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -44,33 +46,12 @@
                                     <label for="category" class="col-md-4"><?php echo app_lang('category'); ?></label>
                                     <div class="col-md-8">
                                     <?php
-                                    // $category_dropdown = array(
-                                    //     array("id" => "0", "text" => "Development"),
-                                    //     array("id" => "1", "text" => "Bug"),
-                                    //     array("id" => "2", "text" => "New Idea"),
-                                    //     array("id" => "3", "text" => "General"),
-                                    //     array("id" => "4", "text" => "Engine"),
-                                    //     array("id" => "5", "text" => "Deck")
-                                    // );
-                                    // $category_dropdown=array();
-                                    $category_dropdown = array(
-                                        array("id" => "project", "text" => "project"),
-                                        array("id" => "client", "text" => "client"),
-                                        array("id" => "lead", "text" => "lead"),
-                                        array("id" => "invoice", "text" => "invoice"),
-                                        array("id" => "estimate", "text" => "estimate"),
-                                        array("id" => "order", "text" => "order"),
-                                        array("id" => "contract", "text" => "contract"),
-                                        array("id" => "proposal", "text" => "proposal"),
-                                        array("id" => "subscription", "text" => "subscription"),
-                                        array("id" => "ticker", "text" => "ticker"),
-                                        array("id" => "expence", "text" => "expence"),
-                                    );
-                                    // 'project','client','lead','invoice','estimate','order','contract','proposal','subscription','ticket','expense'
-                                    // foreach($allCategories as $oneCategory){
-                                    //     $category_dropdown[]=array(
-                                    //         "id"=>$oneCategory["id"],"text"=>$oneCategory["title"]);
-                                    // }
+                                    $category_dropdown = array();
+                                    
+                                    foreach($allContexts as $oneCategory){
+                                        $category_dropdown[]=array(
+                                            "id"=>$oneCategory,"text"=>$oneCategory);
+                                    }
 
                                     echo form_input(array(
                                         "id" => "category",

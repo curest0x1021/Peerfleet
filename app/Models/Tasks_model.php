@@ -1095,10 +1095,9 @@ class Tasks_model extends Crud_model
         $table="pf_tasks";
         $field="context";
         $query = $this->db->query("SHOW COLUMNS FROM $table LIKE '$field'");
-        $row = $query->row();
+        $row = $query->getRow();
         $enum_str = $row->Type;
-        preg_match_all("/'([^']+)'/", $enum_str, $matches);
-        $enum_values = $matches[1];
-        return $enum_values;
+        preg_match_all("/'(.*?)'/", $enum_str, $matches);
+        return $matches[1];
     }
 }
