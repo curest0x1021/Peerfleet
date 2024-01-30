@@ -8,12 +8,13 @@
         </div>
 
         <div class="col-sm-9 col-lg-10">
+            <?php echo form_open(get_uri("task_libraries"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h4>Task Name</h4>
                     <div>
                         <button class="btn btn-danger" ><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</button>
-                        <button id="btn-task-save" class="btn btn-primary" ><i data-feather="check-circle" class="icon-16"></i> Save</button>
+                        <button type="submit" id="btn-task-save" class="btn btn-primary" ><i data-feather="check-circle" class="icon-16"></i> Save</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -815,9 +816,11 @@
                         
                     </div>
                     <button id="file-selector-btn" class="btn btn-default" ><i data-feather="file" class=""></i> Upload File</button>
-                    <input type="file" id="file-selector" hidden/>
+                    <input type="file" id="file-selector" hidden/> 
                 </div>
+                
             </div>
+            <?php echo form_close(); ?>
         </div>
     </div>
 </div>
@@ -851,8 +854,9 @@
             console.log(myForm.get("description"))
             $.ajax({
                 type: 'POST',
-                url: '<?php echo_uri("task_libraries/save") ?>', // Replace with your controller/method URL
-                data: "kkk",
+                url: '/peerfleet/index.php/task_libraries', // Replace with your controller/method URL
+                data: myForm,
+                headers: {'X-Requested-With': 'XMLHttpRequest'},
                 processData: false, // Prevent jQuery from automatically processing the data
                 contentType: false, // Set content type to false to prevent jQuery from adding a Content-Type header
                 success: function(response) {

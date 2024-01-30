@@ -1,19 +1,21 @@
 <?php
-$settings_menu = array();
+$settings_menu = array(
+);
 foreach($allCategories as $oneCategory){
     $settings_menu[$oneCategory['title']][]=array();
 }
 foreach($allTasks as $oneTask){
-    $labels=explode(",",$oneTask["labels"]);
-    $label=$labels[0];
-    $labelText="General";
-    foreach($allCategories as $oneCategory){
-        if($oneCategory["id"]==$label) {
-            $labelText=$oneCategory["title"];
-            break;
-        }
-    }
-    $settings_menu[$labelText][]=array("name"=>$oneTask["title"],"url"=>$oneTask["id"]);
+    // $labels=explode(",",$oneTask["labels"]);
+    // $label=$labels[0];
+    // $labelText="General";
+    // foreach($allCategories as $oneCategory){
+    //     if($oneCategory["id"]==$label) {
+    //         $labelText=$oneCategory["title"];
+    //         break;
+    //     }
+    // }
+    // $settings_menu[$labelText][]=array("name"=>$oneTask["title"],"url"=>$oneTask["id"]);
+    $settings_menu[$oneTask["context"]][]=array("name"=>$oneTask["title"],"url"=>$oneTask["id"]);
 }
 ?>
 
