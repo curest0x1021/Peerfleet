@@ -11,11 +11,12 @@ class Task_libraries extends Security_Controller {
     function index() {
         $allTasks=$this->Tasks_model->get_all()->getResultarray();
         $allCategories=$this->Labels_model->get_all()->getResultArray();
+        // $allContexts=$this->Tasks_model->get_enum_values();
         return $this->template->rander('task_libraries/index',["allTasks"=>$allTasks,'allCategories'=>$allCategories]);
     }
 
     function save(){
-        redirect("/task_libraries");
+        return $this->request->getPost("description");
     }
 
 }

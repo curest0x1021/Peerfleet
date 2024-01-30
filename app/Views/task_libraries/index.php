@@ -52,12 +52,25 @@
                                     //     array("id" => "4", "text" => "Engine"),
                                     //     array("id" => "5", "text" => "Deck")
                                     // );
-                                    $category_dropdown=array();
-
-                                    foreach($allCategories as $oneCategory){
-                                        $category_dropdown[]=array(
-                                            "id"=>$oneCategory["id"],"text"=>$oneCategory["title"]);
-                                    }
+                                    // $category_dropdown=array();
+                                    $category_dropdown = array(
+                                        array("id" => "project", "text" => "project"),
+                                        array("id" => "client", "text" => "client"),
+                                        array("id" => "lead", "text" => "lead"),
+                                        array("id" => "invoice", "text" => "invoice"),
+                                        array("id" => "estimate", "text" => "estimate"),
+                                        array("id" => "order", "text" => "order"),
+                                        array("id" => "contract", "text" => "contract"),
+                                        array("id" => "proposal", "text" => "proposal"),
+                                        array("id" => "subscription", "text" => "subscription"),
+                                        array("id" => "ticker", "text" => "ticker"),
+                                        array("id" => "expence", "text" => "expence"),
+                                    );
+                                    // 'project','client','lead','invoice','estimate','order','contract','proposal','subscription','ticket','expense'
+                                    // foreach($allCategories as $oneCategory){
+                                    //     $category_dropdown[]=array(
+                                    //         "id"=>$oneCategory["id"],"text"=>$oneCategory["title"]);
+                                    // }
 
                                     echo form_input(array(
                                         "id" => "category",

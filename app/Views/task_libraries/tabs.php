@@ -1,9 +1,20 @@
 <?php
 $settings_menu = array(
+    'project'=>array(),
+    'client'=>array(),
+    'lead'=>array(),
+    'invoice'=>array(),
+    'estimate'=>array(),
+    'order'=>array(),
+    'contract'=>array(),
+    'proposal'=>array(),
+    'subscription'=>array(),
+    'ticket'=>array(),
+    'expense'=>array()
 );
-foreach($allCategories as $oneCategory){
-    $settings_menu[$oneCategory['title']][]=array();
-}
+// foreach($allCategories as $oneCategory){
+//     $settings_menu[$oneCategory['title']][]=array();
+// }
 foreach($allTasks as $oneTask){
     // $labels=explode(",",$oneTask["labels"]);
     // $label=$labels[0];
@@ -21,6 +32,7 @@ foreach($allTasks as $oneTask){
 
 <ul class="nav nav-tabs vertical settings d-block" role="tablist">
     <?php
+    
     foreach ($settings_menu as $key => $value) {
 
         //collapse the selected settings tab panel
