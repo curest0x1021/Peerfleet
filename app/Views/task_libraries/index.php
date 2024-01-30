@@ -48,9 +48,9 @@
                                     <?php
                                     $category_dropdown = array();
                                     
-                                    foreach($allContexts as $oneCategory){
+                                    foreach($allCategories as $oneCategory){
                                         $category_dropdown[]=array(
-                                            "id"=>$oneCategory,"text"=>$oneCategory);
+                                            "id"=>$oneCategory["id"],"text"=>$oneCategory["title"]);
                                     }
 
                                     echo form_input(array(

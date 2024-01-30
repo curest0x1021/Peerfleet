@@ -10,7 +10,7 @@ class Task_libraries extends Security_Controller {
 
     function index() {
         $allTasks=$this->Tasks_model->get_all()->getResultarray();
-        $allCategories=$this->Labels_model->get_all()->getResultArray();
+        $allCategories=$this->Labels_model->get_all_where(array("context"=>"task"))->getResultArray();
         $allContexts = $this->Tasks_model->get_enum_values('pf_tasks', 'context');
         return $this->template->rander('task_libraries/index',["allTasks"=>$allTasks,"allContexts"=>$allContexts,'allCategories'=>$allCategories]);
     }
