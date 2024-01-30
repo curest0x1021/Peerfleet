@@ -10,6 +10,7 @@ class Tasks_model extends Crud_model
     function __construct()
     {
         $this->table = 'tasks';
+        $this->allowedFields=["title","start_date","deadline","context","description"];
         parent::__construct($this->table);
         parent::init_activity_log("task", "title", "project", "project_id");
     }

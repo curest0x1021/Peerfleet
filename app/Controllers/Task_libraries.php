@@ -16,6 +16,17 @@ class Task_libraries extends Security_Controller {
     }
 
     function save(){
+        $last_id = $this->Tasks_model->getInsertId();
+        $id=0;
+        if ($last_id) {
+            // The last inserted ID exists
+            // echo "Last Inserted ID: " . $last_id;
+            $id=$last_id+1;
+        } else {
+            // No rows were inserted
+            // echo "No rows were inserted.";
+            $id=0;
+        }
         $data = array(
             "title" => $this->request->getPost('title'),
             "description" => $this->request->getPost('description'),
@@ -23,7 +34,7 @@ class Task_libraries extends Security_Controller {
             "deadline" => $this->request->getPost('deadline'),
             "context" => $this->request->getPost('category'),
         );
-        $save_id = $this->Tasks_model->allowEmptyInserts()->ci_save($data);
+        $save_id = $this->Tasks_model->insert($data);
  
         return $this->index();
     }
