@@ -43,14 +43,20 @@
                                     <label for="category" class="col-md-4"><?php echo app_lang('category'); ?></label>
                                     <div class="col-md-8">
                                     <?php
-                                    $category_dropdown = array(
-                                        array("id" => "0", "text" => "Development"),
-                                        array("id" => "1", "text" => "Bug"),
-                                        array("id" => "2", "text" => "New Idea"),
-                                        array("id" => "3", "text" => "General"),
-                                        array("id" => "4", "text" => "Engine"),
-                                        array("id" => "5", "text" => "Deck")
-                                    );
+                                    // $category_dropdown = array(
+                                    //     array("id" => "0", "text" => "Development"),
+                                    //     array("id" => "1", "text" => "Bug"),
+                                    //     array("id" => "2", "text" => "New Idea"),
+                                    //     array("id" => "3", "text" => "General"),
+                                    //     array("id" => "4", "text" => "Engine"),
+                                    //     array("id" => "5", "text" => "Deck")
+                                    // );
+                                    $category_dropdown=array();
+
+                                    foreach($allCategories as $oneCategory){
+                                        $category_dropdown[]=array(
+                                            "id"=>$oneCategory["id"],"text"=>$oneCategory["title"]);
+                                    }
 
                                     echo form_input(array(
                                         "id" => "category",
@@ -242,8 +248,8 @@
 
                     <div class="form-group">
                         <div class="row">
-                            <label for="description" class=" col-md-2"><?php echo app_lang('description'); ?></label>
-                            <div class=" col-md-10">
+                            <label for="description" class="col-md-1"><?php echo app_lang('description'); ?></label>
+                            <div class="col-md-11">
                                 <?php
                                 echo form_textarea(array(
                                     "id" => "description",
@@ -806,8 +812,10 @@
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
-                    
+                    <button id="file-selector-btn" class="btn btn-default" ><i data-feather="file" class=""></i> Upload File</button>
+                    <input type="file" id="file-selector" hidden/>
                 </div>
             </div>
         </div>
@@ -819,12 +827,15 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $("#category").select2({
-            multiple: true,
+            multiple: false,
             data: <?php echo (json_encode($category_dropdown)); ?>
         });
         $('#description').summernote({
             height:500
         });
+        $("#file-selector-btn").on('click',function(){
+            $("#file-selector").click()
+        })
         setDatePicker("#start_date");
         setDatePicker("#deadline");
     });

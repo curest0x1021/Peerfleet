@@ -9,6 +9,8 @@ class Task_libraries extends Security_Controller {
     }
 
     function index() {
-        return $this->template->rander('task_libraries/index');
+        $allTasks=$this->Tasks_model->get_all()->getResultarray();
+        $allCategories=$this->Labels_model->get_all()->getResultArray();
+        return $this->template->rander('task_libraries/index',["allTasks"=>$allTasks,'allCategories'=>$allCategories]);
     }
 }
