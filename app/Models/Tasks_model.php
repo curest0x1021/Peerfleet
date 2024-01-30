@@ -1080,4 +1080,25 @@ class Tasks_model extends Crud_model
     //     $tasks_table = $this->db->prefixTable('tasks');
     //     $sql="SELECT * FROM $tasks_table"
     // }
+    function get_all_contexts(){
+        $query = $this->db->query("SELECT COLUMN_TYPE
+            FROM information_schema.COLUMNS
+            WHERE TABLE_SCHEMA = 'peerfleet_app' 
+            AND TABLE_NAME = 'pf_tasks' 
+            AND COLUMN_NAME = 'context'");
+        // $row = $query->rows();
+        // $enumValues = explode(',', str_replace(array('enum(', ')', "'"), '', $row->COLUMN_TYPE));
+        // return $enumValues;
+        return $query;
+    }
+    function get_enum_values() {
+        $table="pf_tasks";
+        $field="context";
+        $query = $this->db->query("SHOW COLUMNS FROM $table LIKE '$field'");
+        $row = $query->row();
+        $enum_str = $row->Type;
+        preg_match_all("/'([^']+)'/", $enum_str, $matches);
+        $enum_values = $matches[1];
+        return $enum_values;
+    }
 }

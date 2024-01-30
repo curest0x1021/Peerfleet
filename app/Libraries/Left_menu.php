@@ -220,6 +220,7 @@ class Left_menu {
 
         $view_data["is_preview"] = $is_preview;
         $view_data["login_user"] = $this->ci->login_user;
+
         return view("includes/left_menu", $view_data);
     }
 
