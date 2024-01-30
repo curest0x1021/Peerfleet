@@ -1,20 +1,20 @@
 <?php
 $settings_menu = array(
-    'project'=>array(),
-    'client'=>array(),
-    'lead'=>array(),
-    'invoice'=>array(),
-    'estimate'=>array(),
-    'order'=>array(),
-    'contract'=>array(),
-    'proposal'=>array(),
-    'subscription'=>array(),
-    'ticket'=>array(),
-    'expense'=>array()
+    // 'project'=>array(),
+    // 'client'=>array(),
+    // 'lead'=>array(),
+    // 'invoice'=>array(),
+    // 'estimate'=>array(),
+    // 'order'=>array(),
+    // 'contract'=>array(),
+    // 'proposal'=>array(),
+    // 'subscription'=>array(),
+    // 'ticket'=>array(),
+    // 'expense'=>array()
 );
-// foreach($allCategories as $oneCategory){
-//     $settings_menu[$oneCategory['title']][]=array();
-// }
+foreach($allContexts as $oneCategory){
+    $settings_menu[$oneCategory][]=array();
+}
 foreach($allTasks as $oneTask){
     // $labels=explode(",",$oneTask["labels"]);
     // $label=$labels[0];
