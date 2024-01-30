@@ -13,4 +13,9 @@ class Task_libraries extends Security_Controller {
         $allCategories=$this->Labels_model->get_all()->getResultArray();
         return $this->template->rander('task_libraries/index',["allTasks"=>$allTasks,'allCategories'=>$allCategories]);
     }
+
+    function save(){
+        redirect("/task_libraries");
+    }
+
 }

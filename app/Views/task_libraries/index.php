@@ -13,7 +13,7 @@
                     <h4>Task Name</h4>
                     <div>
                         <button class="btn btn-danger" ><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</button>
-                        <button class="btn btn-primary" ><i data-feather="check-circle" class="icon-16"></i> Save</button>
+                        <button id="btn-task-save" class="btn btn-primary" ><i data-feather="check-circle" class="icon-16"></i> Save</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -838,6 +838,33 @@
         })
         setDatePicker("#start_date");
         setDatePicker("#deadline");
+        $("#btn-task-save").on("click",function(){
+            // console.log($("#title")[0].value)
+            if(!$("#title")[0].value) return;
+            var myForm=new FormData();
+            myForm.append("aaefsef","fsefsef");
+            myForm.append("title",$("#title")[0].value);
+            myForm.append("start_data",$("#start_date")[0].value);
+            myForm.append("deadline",$("#deadline")[0].value);
+            myForm.append("category",$("#category")[0].value)
+            myForm.append("description",$("#description").summernote("code"))
+            console.log(myForm.get("description"))
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo_uri("task_libraries/save") ?>', // Replace with your controller/method URL
+                data: "kkk",
+                processData: false, // Prevent jQuery from automatically processing the data
+                contentType: false, // Set content type to false to prevent jQuery from adding a Content-Type header
+                success: function(response) {
+                    // Handle success response
+                    console.log(response);
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response
+                    console.error(xhr.responseText);
+                }
+            });
+        })
     });
 
     

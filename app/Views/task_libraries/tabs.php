@@ -4,7 +4,16 @@ foreach($allCategories as $oneCategory){
     $settings_menu[$oneCategory['title']][]=array();
 }
 foreach($allTasks as $oneTask){
-    $settings_menu["Deck"][]=array("name"=>$oneTask["title"],"url"=>"/");
+    $labels=explode(",",$oneTask["labels"]);
+    $label=$labels[0];
+    $labelText="General";
+    foreach($allCategories as $oneCategory){
+        if($oneCategory["id"]==$label) {
+            $labelText=$oneCategory["title"];
+            break;
+        }
+    }
+    $settings_menu[$labelText][]=array("name"=>$oneTask["title"],"url"=>$oneTask["id"]);
 }
 ?>
 
@@ -19,14 +28,15 @@ foreach($allTasks as $oneTask){
             $collapse_in = "show";
             $collapsed_class = "";
         }
+        $keys=explode(" ",$key);
         ?>
 
-        <div class="clearfix settings-anchor <?php echo $collapsed_class; ?>" data-bs-toggle="collapse" data-bs-target="#settings-tab-<?php echo $key; ?>">
+        <div class="clearfix settings-anchor <?php echo $collapsed_class; ?>" data-bs-toggle="collapse" data-bs-target="#settings-tab-<?php echo $keys[0]; ?>">
             <?php echo $key; ?>
         </div>
 
         <?php
-        echo "<div id='settings-tab-$key' class='collapse show'>";
+        echo "<div id='settings-tab-".$keys[0]."' class='collapse show'>";
         echo "<ul class='list-group help-catagory'>";
 
         foreach ($value as $sub_setting) {
