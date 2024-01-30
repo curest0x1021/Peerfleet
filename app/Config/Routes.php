@@ -66,6 +66,8 @@ $routes->get("Updates", "Updates::index");
 $routes->get("Updates/(:any)", "Updates::$1");
 $routes->post("Updates/(:any)", "Updates::$1");
 
+
+$routes->post("task_libraries","Task_libraries::save");
 /*
  * --------------------------------------------------------------------
  * Additional Routing

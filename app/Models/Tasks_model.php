@@ -1050,6 +1050,8 @@ class Tasks_model extends Crud_model
         return true;
     }
 
+
+
     function get_next_sort_value($project_id = 0, $status_id = 1)
     {
         $tasks_table = $this->db->prefixTable('tasks');
@@ -1073,4 +1075,9 @@ class Tasks_model extends Crud_model
             return 1000; //could be any positive value
         }
     }
+
+    // function get_all_tasks_with_labels(){
+    //     $tasks_table = $this->db->prefixTable('tasks');
+    //     $sql="SELECT * FROM $tasks_table"
+    // }
 }
