@@ -3,7 +3,7 @@ $settings_menu = array(
 
 );
 foreach($allCategories as $oneCategory){
-    $settings_menu[$oneCategory['title']][]=array();
+    $settings_menu[$oneCategory['title']]=array();
 }
 foreach($allTasks as $oneTask){
     $labels=explode(",",$oneTask["labels"]);
@@ -15,7 +15,7 @@ foreach($allTasks as $oneTask){
             break;
         }
     }
-    $settings_menu[$labelText][]=array("name"=>$oneTask["title"],"url"=>$oneTask["id"]);
+    $settings_menu[$labelText][]=array("name"=>$oneTask["title"],"url"=>'task_libraries/'.$oneTask["id"].'/edit');
     // $settings_menu[$oneTask["context"]][]=array("name"=>$oneTask["title"],"url"=>$oneTask["id"]);
 }
 ?>

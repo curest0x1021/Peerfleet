@@ -56,9 +56,9 @@ class Tasks_model extends Crud_model
             ),
             "labels" => array(
                 "label" => app_lang("labels"),
-                "type" => "foreign_key",
-                "link_type" => "label_group_list",
-                "linked_model" => model("App\Models\Labels_model"),
+                "type" => "text",
+                // "link_type" => "label_group_list",
+                // "linked_model" => model("App\Models\Labels_model"),
                 "label_fields" => array("label_group_name"),
             ),
             "status" => array(
