@@ -38,6 +38,7 @@ $routes->add('about/(:any)', 'About::index/$1');
 //add routing for controllers
 $excluded_controllers = array("About", "App_Controller", "Security_Controller");
 $routes->get("task_libraries/(:any)/edit","Task_libraries::view/$1");
+$routes->post("task_libraries/(:any)/edit","Task_libraries::update/$1");
 $routes->post("task_libraries","Task_libraries::save");
 $controller_dropdown = array();
 $dir = "./app/Controllers/";

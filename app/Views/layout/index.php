@@ -10,7 +10,6 @@ $left_menu_minimized = get_cookie("left_menu_minimized");
 <!DOCTYPE html>
 <html lang="en" dir="<?php echo $dir; ?>">
 <?php echo view('includes/head'); ?>
-
 <body class="<?php echo $left_menu_minimized ? "sidebar-toggled" : ""; ?>">
 
     <?php
