@@ -9,11 +9,12 @@ class Task_libraries extends Security_Controller {
     }
 
     function index() {
+        $allProjectIds=$this->Projects_model->get_dropdown_list(array("id","id"));
         $allProjects=$this->Projects_model->get_dropdown_list(array("id","title"));
         $allTasks=$this->Tasks_model->get_all()->getResultarray();
         $allCategories=$this->Labels_model->get_all_where(array("context"=>"task"))->getResultArray();
         $allContexts = $this->Tasks_model->get_enum_values('pf_tasks', 'context');
-        return $this->template->rander('task_libraries/index',["allProjects"=>$allProjects,"allTasks"=>$allTasks,"allContexts"=>$allContexts,'allCategories'=>$allCategories]);
+        return $this->template->rander('task_libraries/index',["allProjectIds"=>$allProjectIds,"allProjects"=>$allProjects,"allTasks"=>$allTasks,"allContexts"=>$allContexts,'allCategories'=>$allCategories]);
     }
 
     function save(){
@@ -41,8 +42,10 @@ class Task_libraries extends Security_Controller {
         $ticket_id = $this->request->getPost('ticket_id');
         $supplier = $this->request->getPost('supplier');
 
-        $context_data = $this->get_context_and_id();
-        $context = $context_data["context"] ? $context_data["context"] : "project";
+        // $context_data = $this->get_context_and_id();
+        
+        // $context = $context_data["context"] ? $context_data["context"] : "project";
+        $context="project";
 
         if ($id) {
             $task_info = $this->Tasks_model->get_one($id);
@@ -138,7 +141,7 @@ class Task_libraries extends Security_Controller {
         if (!$id) {
             $data["created_date"] = $now;
             $data["context"] = $context;
-            $data["sort"] = $this->Tasks_model->get_next_sort_value($project_id, $status_id);
+            // $data["sort"] = $this->Tasks_model->get_next_sort_value($project_id, $status_id);
         }
 
         if ($ticket_id) {
@@ -328,22 +331,64 @@ class Task_libraries extends Security_Controller {
                 }
             }
 
-            return redirect()->to('task_libraries');
+            return redirect()->to('/task_libraries');
             // echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved'), "add_type" => $add_type));
         } else {
-            return redirect()->to('task_libraries');
+            return redirect()->to('/task_libraries');
             // echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
         
+    }
+
+    private function get_context_and_id($model_info = null) {
+        $context_id_pairs = $this->get_context_id_pairs();
+
+        foreach ($context_id_pairs as $pair) {
+            $id_key = $pair["id_key"];
+            $id = $model_info ? ($model_info->$id_key ? $model_info->$id_key : null) : null;
+
+            $request = request(); //needed when loading controller from widget helper
+
+            if ($id !== null) {
+                $pair["id"] = $id;
+            } else if ($request->getPost($id_key)) {
+                $pair["id"] = $request->getPost($id_key);
+            }
+
+            if ($pair["id"] !== null) {
+                return $pair;
+            }
+        }
+
+        return array("context" => "project", "id" => null);
+    }
+
+    private function get_context_id_pairs() {
+        return array(
+            array("context" => "project", "id_key" => "project_id", "id" => null), //keep the 1st item as project since it'll be used maximum times
+            array("context" => "client", "id_key" => "client_id", "id" => null),
+            array("context" => "contract", "id_key" => "contract_id", "id" => null),
+            array("context" => "estimate", "id_key" => "estimate_id", "id" => null),
+            array("context" => "expense", "id_key" => "expense_id", "id" => null),
+            array("context" => "invoice", "id_key" => "invoice_id", "id" => null),
+            array("context" => "lead", "id_key" => "lead_id", "id" => null),
+            array("context" => "order", "id_key" => "order_id", "id" => null),
+            array("context" => "proposal", "id_key" => "proposal_id", "id" => null),
+            array("context" => "subscription", "id_key" => "subscription_id", "id" => null),
+            array("context" => "ticket", "id_key" => "ticket_id", "id" => null)
+        );
     }
 
     function view($parameter){
         $allProjects=$this->Projects_model->get_dropdown_list(array("id","title"));
         $allTasks=$this->Tasks_model->get_all()->getResultarray();
         $gotTask=$this->Tasks_model->get_one(array("id"=>$parameter));
+        $gotLabels=explode(",",$gotTask->labels);
+        $gotLabel=$gotLabels[0];
+        $gotProject=$this->Projects_model->get_one(array("id"=>$gotTask->project_id));
         $allCategories=$this->Labels_model->get_all_where(array("context"=>"task"))->getResultArray();
         $allContexts = $this->Tasks_model->get_enum_values('pf_tasks', 'context');
-        return $this->template->rander('task_libraries/edit',["gotTask"=>$gotTask,"allProjects"=>$allProjects,"allTasks"=>$allTasks,"allContexts"=>$allContexts,'allCategories'=>$allCategories]);
+        return $this->template->rander('task_libraries/edit',["gotProject"=>$gotProject,"gotLabel"=>$gotLabel,"gotTask"=>$gotTask,"allProjects"=>$allProjects,"allTasks"=>$allTasks,"allContexts"=>$allContexts,'allCategories'=>$allCategories]);
     }
 
 }

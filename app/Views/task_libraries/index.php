@@ -8,7 +8,7 @@
         </div>
 
         <div class="col-sm-9 col-lg-10">
-            <?php echo form_open(get_uri("tasks/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
+            <?php echo form_open(get_uri("task_libraries"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h4>Task Name</h4>
@@ -50,7 +50,7 @@
                                     
                                     foreach($allProjects as $key=>$oneProject){
                                         $project_dropdown[]=array(
-                                            "id"=>$key,"text"=>$oneProject);
+                                            "id"=>$allProjectIds[$key],"text"=>$oneProject);
                                     }
 
                                     echo form_input(array(
