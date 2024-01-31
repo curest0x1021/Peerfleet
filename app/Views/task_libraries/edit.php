@@ -11,7 +11,7 @@
             <?php echo form_open(get_uri("tasks/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h4>Task Name</h4>
+                    <h4><?php echo $gotTask->title; ?></h4>
                     <div>
                         <button class="btn btn-danger" ><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</button>
                         <button type="submit" 
@@ -30,7 +30,7 @@
                                         echo form_input(array(
                                             "id" => "title",
                                             "name" => "title",
-                                            "value" => "",
+                                            "value" => $gotTask->title,
                                             "class" => "form-control",
                                             "placeholder" => app_lang('title'),
                                             "autofocus" => true,
@@ -56,7 +56,7 @@
                                     echo form_input(array(
                                         "id" => "project",
                                         "name" => "project_id",
-                                        "value" => "",
+                                        "value" => $gotTask->labels,
                                         "class" => "form-control",
                                         "placeholder" => app_lang('project'),
                                         "data-rule-required" => true,
@@ -99,7 +99,7 @@
                                         echo form_input(array(
                                             "id" => "dock_list_number",
                                             "name" => "dock_list_number",
-                                            "value" => "",
+                                            "value" => $gotTask->dock_list_number,
                                             "class" => "form-control",
                                             "maxlength" => 15,
                                             "placeholder" => app_lang('dock_list_number'),
@@ -116,7 +116,7 @@
                                         echo form_input(array(
                                             "id" => "reference_drawing",
                                             "name" => "reference_drawing",
-                                            "value" => "",
+                                            "value" => $gotTask->reference_drawing,
                                             "class" => "form-control",
                                             "maxlength" => 30,
                                             "placeholder" => app_lang('reference_drawing'),
@@ -136,7 +136,7 @@
                                         echo form_input(array(
                                             "id" => "assigned_to",
                                             "name" => "assigned_to",
-                                            "value" => "",
+                                            "value" => $gotTask->assigned_to,
                                             "class" => "form-control",
                                             "placeholder" => app_lang('assign_to')
                                         ));
@@ -152,7 +152,7 @@
                                     echo form_input(array(
                                         "id" => "collaborators",
                                         "name" => "collaborators",
-                                        "value" => "",
+                                        "value" => $gotTask->collaborators,
                                         "class" => "form-control",
                                         "placeholder" => app_lang('collaborators')
                                     ));
@@ -168,7 +168,7 @@
                                         echo form_input(array(
                                             "id" => "task_status_id",
                                             "name" => "status_id",
-                                            "value" => "",
+                                            "value" => $gotTask->status_id,
                                             "class" => "form-control"
                                         ));
                                         ?>
@@ -183,7 +183,7 @@
                                         echo form_input(array(
                                             "id" => "priority_id",
                                             "name" => "priority_id",
-                                            "value" => "",
+                                            "value" => $gotTask->priority_id,
                                             "class" => "form-control",
                                             "maxlength" => 15,
                                             "placeholder" => app_lang('priority'),
@@ -204,7 +204,7 @@
                                             "id" => "start_date",
                                             "name" => "start_date",
                                             "autocomplete" => "off",
-                                            "value" => "",
+                                            "value" => $gotTask->start_date,
                                             "class" => "form-control",
                                             "placeholder" => "YYYY-MM-DD"
                                         ));
