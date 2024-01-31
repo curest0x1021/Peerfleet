@@ -56,7 +56,7 @@
                                     echo form_input(array(
                                         "id" => "project",
                                         "name" => "project_id",
-                                        "value" => $gotTask->labels,
+                                        "value" => $gotProject->id,
                                         "class" => "form-control",
                                         "placeholder" => app_lang('project'),
                                         "data-rule-required" => true,
@@ -81,7 +81,7 @@
                                     echo form_input(array(
                                         "id" => "category",
                                         "name" => "labels",
-                                        "value" => "",
+                                        "value" => $gotLabel,
                                         "class" => "form-control",
                                         "placeholder" => app_lang('category'),
                                         "data-rule-required" => true,
@@ -204,7 +204,7 @@
                                             "id" => "start_date",
                                             "name" => "start_date",
                                             "autocomplete" => "off",
-                                            "value" => $gotTask->start_date,
+                                            "value" =>date('d.m.Y', strtotime($gotTask->start_date)),
                                             "class" => "form-control",
                                             "placeholder" => "YYYY-MM-DD"
                                         ));
@@ -221,7 +221,7 @@
                                         "id" => "deadline",
                                         "name" => "deadline",
                                         "autocomplete" => "off",
-                                        "value" => "",
+                                        "value" => date('d.m.Y', strtotime($gotTask->deadline)),
                                         "class" => "form-control",
                                         "placeholder" => "YYYY-MM-DD",
                                         "data-rule-greaterThanOrEqual" => "#start_date",
