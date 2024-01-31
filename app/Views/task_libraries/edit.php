@@ -8,15 +8,17 @@
         </div>
 
         <div class="col-sm-9 col-lg-10">
-            <?php echo form_open(get_uri("tasks/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
+            <?php echo form_open(get_uri("task_libraries/".$task_id."/edit"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
+            <input hidden name="task_id" value="<?php echo $task_id; ?>" />
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h4><?php echo $gotTask->title; ?></h4>
                     <div>
-                        <button class="btn btn-danger" ><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</button>
+                        <button type="button" class="btn btn-danger" style="margin-right:10px"><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</ type="button">
                         <button type="submit" 
                         old-id="btn-task-save" 
-                        class="btn btn-primary" ><i data-feather="check-circle" class="icon-16"></i> Save</button>
+                        class="btn btn-primary"
+                        ><i data-feather="check-circle" class="icon-16"></i> Save</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -34,6 +36,7 @@
                                             "class" => "form-control",
                                             "placeholder" => app_lang('title'),
                                             "autofocus" => true,
+                                            "require"=>true,
                                             "data-rule-required" => true,
                                             "data-msg-required" => app_lang("field_required"),
                                         ));
@@ -265,21 +268,27 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <div class="form-group">
                         <div class="row">
                             <label for="description" class="col-md-1"><?php echo app_lang('description'); ?></label>
-                            <div class="col-md-11">
-                                <?php
-                                echo form_textarea(array(
-                                    "id" => "description",
-                                    "name" => "description",
-                                    "value" => "",
-                                    "class" => "form-control",
-                                    "placeholder" => app_lang('description'),
-                                    "data-rich-text-editor" => true
-                                ));
-                                ?>
+                            <div class="col-md-11"    >
+                                <div class="row" >
+                                    <div style='width:3%' ></div>
+                                    <div style='width:97%' >
+                                        <?php
+                                        echo form_textarea(array(
+                                            "id" => "description",
+                                            "name" => "description",
+                                            "value" => $gotTask->description,
+                                            "class" => "form-control",
+                                            "placeholder" => app_lang('description'),
+                                            "data-rich-text-editor" => true
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -311,7 +320,7 @@
                                 echo form_textarea(array(
                                     "id" => "specification",
                                     "name" => "specification",
-                                    "value" => "",
+                                    "value" => $gotTask->specification,
                                     "class" => "form-control",
                                     "placeholder" => app_lang('specification_placeholder'),
                                     "maxlength" => 300,
@@ -857,7 +866,8 @@
             data: <?php echo (json_encode($project_dropdown)); ?>
         });
         $('#description').summernote({
-            height:500
+            height:250,
+            width:"100%"
         });
         $("#file-selector-btn").on('click',function(){
             $("#file-selector").click()

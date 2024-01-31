@@ -40,7 +40,7 @@ foreach($allTasks as $oneTask){
         </div>
 
         <?php
-        echo "<div id='settings-tab-".$keys[0]."' class='collapse show'>";
+        echo "<div id='settings-tab-".$keys[0]."' class='collapse $collapse_in'>";
         echo "<ul class='list-group help-catagory'>";
 
         foreach ($value as $sub_setting) {
