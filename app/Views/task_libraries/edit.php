@@ -86,6 +86,7 @@
                                         "name" => "labels",
                                         "value" => $gotLabel,
                                         "class" => "form-control",
+                                        "required"=>true,
                                         "placeholder" => app_lang('category'),
                                         "data-rule-required" => true,
                                         "data-msg-required" => app_lang("field_required"),
@@ -295,38 +296,48 @@
 
                     <div class="form-group">
                         <div class="row">
-                            <label for="location" class=" col-md-2"><?php echo app_lang('location'); ?></label>
-                            <div class=" col-md-10">
-                                <?php
-                                echo form_textarea(array(
-                                    "id" => "location",
-                                    "name" => "location",
-                                    "value" => "",
-                                    "class" => "form-control",
-                                    "placeholder" => app_lang('location'),
-                                    "maxlength" => 300,
-                                    "data-rich-text-editor" => true,
-                                ));
-                                ?>
+                            <label for="location" class=" col-md-1"><?php echo app_lang('location'); ?></label>
+                            <div class=" col-md-11">
+                                <div class="row" >
+                                    <div style='width:3%' ></div>
+                                    <div style='width:97%' >
+                                        <?php
+                                        echo form_textarea(array(
+                                            "id" => "location",
+                                            "name" => "location",
+                                            "value" => $gotTask->location,
+                                            "class" => "form-control",
+                                            "placeholder" => app_lang('location'),
+                                            "maxlength" => 300,
+                                            "data-rich-text-editor" => true,
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="row">
-                            <label for="specification" class=" col-md-2"><?php echo app_lang('specification'); ?></label>
-                            <div class=" col-md-10">
-                                <?php
-                                echo form_textarea(array(
-                                    "id" => "specification",
-                                    "name" => "specification",
-                                    "value" => $gotTask->specification,
-                                    "class" => "form-control",
-                                    "placeholder" => app_lang('specification_placeholder'),
-                                    "maxlength" => 300,
-                                    "data-rich-text-editor" => true,
-                                ));
-                                ?>
+                            <label for="specification" class=" col-md-1"><?php echo app_lang('specification'); ?></label>
+                            <div class=" col-md-11">
+                                <div class="row" >
+                                    <div style='width:3%' ></div>
+                                    <div style='width:97%' >
+                                        <?php
+                                        echo form_textarea(array(
+                                            "id" => "specification",
+                                            "name" => "specification",
+                                            "value" => $gotTask->specification,
+                                            "class" => "form-control",
+                                            "placeholder" => app_lang('specification_placeholder'),
+                                            "maxlength" => 300,
+                                            "data-rich-text-editor" => true,
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
