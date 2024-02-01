@@ -733,4 +733,20 @@ class Task_libraries extends Security_Controller {
         }
     }
 
+    function upload_modal() {
+        $this->access_only_team_members();
+        if (!$this->can_create_tasks()) {
+            app_redirect("forbidden");
+        }
+        return $this->template->view("task_libraries/upload_modal");
+    }
+
+    function download_modal() {
+        $this->access_only_team_members();
+        if (!$this->can_create_tasks()) {
+            app_redirect("forbidden");
+        }
+        return $this->template->view("task_libraries/download_modal");
+    }
+
 }
