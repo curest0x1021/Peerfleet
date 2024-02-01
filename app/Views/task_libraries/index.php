@@ -3,15 +3,26 @@
         <div class="col-sm-3 col-lg-2">
             <?php
             $tab_view['active_tab'] = "general";
-            echo view("task_libraries/tabs", $tab_view);
+            echo view("task_libraries/tabs_new", $tab_view);
             ?>
         </div>
-
+        
         <div class="col-sm-9 col-lg-10">
+            <div class="card">
+                <div class="card-body">
+                    <div class="display-flex" style="align-items:center" >
+                        <div style="flex-grow:1" ></div>
+                        <label for="title" style="margin:10px" >Search:</label>
+                        <input class="form-control" type="text" style="width:20%"  name="search" />
+                        <?php echo modal_anchor(get_uri("task_libraries/upload_modal"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_tasks'), array("class" => "btn btn-default import_tasks_btn", "title" => app_lang('import_tasks'))); ?>
+                        <?php echo modal_anchor(get_uri("task_libraries/download_modal"), "<i data-feather='external-link' class='icon-16'></i> " . app_lang('export'), array("class" => "btn btn-default export-excel-btn", "title" => app_lang('export_project'))); ?>
+                    </div>
+                </div>
+            </div>
             <?php echo form_open(get_uri("task_libraries"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h4>Task Name</h4>
+                    <h4>Task Template Edit</h4>
                     <div>
                         <button type="button" class="btn btn-danger" style="margin-right:10" ><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</button>
                         <button type="submit" 
@@ -864,7 +875,6 @@
 </div>
 
 <?php echo view("includes/cropbox"); ?>
-
 <script type="text/javascript">
     $(document).ready(function () {
         $("#category").select2({
