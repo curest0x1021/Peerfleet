@@ -98,53 +98,45 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <label for="reference_drawing" class="col-md-4"><?php echo app_lang('reference_drawing'); ?></label>
-                                    <div class="col-md-8">
-                                        <?php
-                                        echo form_input(array(
-                                            "id" => "reference_drawing",
-                                            "name" => "reference_drawing",
-                                            "value" => "",
-                                            "class" => "form-control",
-                                            "maxlength" => 30,
-                                            "placeholder" => app_lang('reference_drawing'),
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <div class="row">
-                                    <label for="assigned_to" class="col-md-3"><?php echo app_lang('assign_to'); ?></label>
-                                    <div class="col-md-9">
-                                        <?php
-                                        echo form_input(array(
-                                            "id" => "assigned_to",
-                                            "name" => "assigned_to",
-                                            "value" => "",
-                                            "class" => "form-control",
-                                            "placeholder" => app_lang('assign_to')
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="form-group">
                                 <div class="row">
                                     <label for="collaborators" class="col-md-3"><?php echo app_lang('collaborators'); ?></label>
                                     <div class="col-md-9">
                                     <?php
+                                    $collaborators_dropdown = array(
+                                        array(
+                                            "id"=>"Ines Erna",
+                                            "text"=>"Ines Erna"
+                                        ),
+                                        array(
+                                            "id"=>"Reinhold Gereit",
+                                            "text"=>"Reinhold Gereit"
+                                        ),
+                                        array(
+                                            "id"=>"Dominik Darnell",
+                                            "text"=>"Dominik Darnell"
+                                        ),
+                                        array(
+                                            "id"=>"Olav Lakshmi",
+                                            "text"=>"Olav Lakshmi"
+                                        ),
+                                        array(
+                                            "id"=>"Paul Winfred",
+                                            "text"=>"Paul Winfred"
+                                        ),
+                                    );
+
                                     echo form_input(array(
                                         "id" => "collaborators",
                                         "name" => "collaborators",
                                         "value" => "",
                                         "class" => "form-control",
-                                        "placeholder" => app_lang('collaborators')
+                                        "required"=>true,
+                                        "placeholder" => app_lang('collaborators'),
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
                                     ));
                                     ?>
                                     </div>
@@ -152,16 +144,43 @@
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="status_id" class="col-md-3"><?php echo app_lang('status'); ?></label>
+                                    <label for="status" class="col-md-3"><?php echo app_lang('status'); ?></label>
                                     <div class="col-md-9">
-                                        <?php
+                                    <?php
+                                        $status_dropdown = array(
+                                            array(
+                                                "id"=>"To Do",
+                                                "text"=>"To Do"
+                                            ),
+                                            array(
+                                                "id"=>"Approved",
+                                                "text"=>"Approved"
+                                            ),
+                                            array(
+                                                "id"=>"In Progress",
+                                                "text"=>"In Progress"
+                                            ),
+                                            array(
+                                                "id"=>"Done",
+                                                "text"=>"Done"
+                                            ),
+                                            array(
+                                                "id"=>"Rejected",
+                                                "text"=>"Rejected"
+                                            ),
+                                        );
+
                                         echo form_input(array(
-                                            "id" => "task_status_id",
-                                            "name" => "status_id",
+                                            "id" => "status",
+                                            "name" => "status",
                                             "value" => "",
-                                            "class" => "form-control"
+                                            "class" => "form-control",
+                                            "required"=>true,
+                                            "placeholder" => app_lang('status'),
+                                            "data-rule-required" => true,
+                                            "data-msg-required" => app_lang("field_required"),
                                         ));
-                                        ?>
+                                    ?>
                                     </div>
                                 </div>
                             </div>
@@ -185,20 +204,26 @@
                         </div>
 
                         <div class="col-md-4">
-                            
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="milestone_id" class="col-md-3"><?php echo app_lang('milestone'); ?></label>
+                                    <label for="milestone" class="col-md-3"><?php echo app_lang('milestone'); ?></label>
                                     <div class="col-md-9">
-                                        <?php
+                                    <?php
+                                        $milestone_dropdown = array(
+                                            array("name"=>"-","id"=>"-")
+                                        );
+
                                         echo form_input(array(
-                                            "id" => "milestone_id",
-                                            "name" => "milestone_id",
+                                            "id" => "milestone",
+                                            "name" => "milestone",
                                             "value" => "",
                                             "class" => "form-control",
-                                            "placeholder" => app_lang('milestone')
+                                            "required"=>true,
+                                            "placeholder" => app_lang('milestone'),
+                                            "data-rule-required" => true,
+                                            "data-msg-required" => app_lang("field_required"),
                                         ));
-                                        ?>
+                                    ?>
                                     </div>
                                 </div>
                             </div>
@@ -206,13 +231,47 @@
                                 <div class="row">
                                     <label for="supplier" class="col-md-3"><?php echo app_lang('supplier'); ?></label>
                                     <div class="col-md-9">
+                                    <?php
+                                    $supplier_dropdown = array(
+                                        array(
+                                            "id"=>"Yard",
+                                            "text"=>"Yard"
+                                        ),
+                                        array(
+                                            "id"=>"Specialist",
+                                            "text"=>"Specialist"
+                                        ),
+                                        array(
+                                            "id"=>"Both",
+                                            "text"=>"Both"
+                                        ),
+                                    );
+
+                                    echo form_input(array(
+                                        "id" => "supplier",
+                                        "name" => "supplier",
+                                        "value" => "",
+                                        "class" => "form-control",
+                                        "required"=>true,
+                                        "placeholder" => app_lang('supplier'),
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
+                                    ));
+                                    ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label for="assigned_to" class="col-md-3"><?php echo app_lang('assign_to'); ?></label>
+                                    <div class="col-md-9">
                                         <?php
                                         echo form_input(array(
-                                            "id" => "supplier",
-                                            "name" => "supplier",
+                                            "id" => "assigned_to",
+                                            "name" => "assigned_to",
                                             "value" => "",
                                             "class" => "form-control",
-                                            "placeholder" => app_lang('priority'),
+                                            "placeholder" => app_lang('assign_to')
                                         ));
                                         ?>
                                     </div>
@@ -822,6 +881,22 @@
             multiple: false,
             data: <?php echo (json_encode($category_dropdown)); ?>
         });
+        $("#supplier").select2({
+            multiple: false,
+            data: <?php echo (json_encode($supplier_dropdown)); ?>
+        });
+        $("#milestone").select2({
+            multiple: false,
+            data: <?php echo (json_encode($milestone_dropdown)); ?>
+        });
+        $("#status").select2({
+            multiple: false,
+            data: <?php echo (json_encode($status_dropdown)); ?>
+        });
+        $("#collaborators").select2({
+            multiple: false,
+            data: <?php echo (json_encode($collaborators_dropdown)); ?>
+        });
         
         $('#description').summernote({
             height:250
@@ -831,34 +906,6 @@
         })
         setDatePicker("#start_date");
         setDatePicker("#deadline");
-        // $("#btn-task-save").on("click",function(){
-        //     // console.log($("#title")[0].value)
-        //     if(!$("#title")[0].value) return;
-        //     var myForm=new FormData();
-        //     myForm.append("aaefsef","fsefsef");
-        //     myForm.append("title",$("#title")[0].value);
-        //     myForm.append("start_data",$("#start_date")[0].value);
-        //     myForm.append("deadline",$("#deadline")[0].value);
-        //     myForm.append("category",$("#category")[0].value)
-        //     myForm.append("description",$("#description").summernote("code"))
-        //     console.log(myForm.get("description"))
-        //     $.ajax({
-        //         type: 'POST',
-        //         url: '/peerfleet/index.php/task_libraries', // Replace with your controller/method URL
-        //         data: myForm,
-        //         headers: {'X-Requested-With': 'XMLHttpRequest'},
-        //         processData: false, // Prevent jQuery from automatically processing the data
-        //         contentType: false, // Set content type to false to prevent jQuery from adding a Content-Type header
-        //         success: function(response) {
-        //             // Handle success response
-        //             console.log(response);
-        //         },
-        //         error: function(xhr, status, error) {
-        //             // Handle error response
-        //             console.error(xhr.responseText);
-        //         }
-        //     });
-        // })
     });
 
     
