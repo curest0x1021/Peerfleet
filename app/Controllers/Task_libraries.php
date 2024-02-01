@@ -3,19 +3,21 @@
 namespace App\Controllers;
 
 class Task_libraries extends Security_Controller {
+    private $TaskLibrary_model;
     public function __construct() {
         parent::__construct();
         // $this->access_only_admin_or_settings_admin();
+        $this->TaskLibrary_model = model('App\Models\TaskLibrary_model');
     }
 
     function index() {
         // $allProjectIds=$this->Projects_model->get_dropdown_list(array("id","id"));
         $allProjects=$this->Projects_model->get_dropdown_list(array("id","title"));
         // $allTasks=$this->Tasks_model->get_all()->getResultarray();
-        // $allTaskLibraries=$this->TaskLibrary_model->get_all()->getResultArray();
+        $allTaskLibraries=$this->TaskLibrary_model->get_all()->getResultArray();
         $allCategories=$this->Labels_model->get_all_where(array("context"=>"task"))->getResultArray();
         $allContexts = $this->Tasks_model->get_enum_values('pf_tasks', 'context');
-        return $this->template->rander('task_libraries/index',["allContexts"=>$allContexts,'allCategories'=>$allCategories]);
+        return $this->template->rander('task_libraries/index',["allTaskLibraries"=>$allTaskLibraries,"allContexts"=>$allContexts,'allCategories'=>$allCategories]);
     }
 
     function save(){

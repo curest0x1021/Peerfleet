@@ -1,32 +1,43 @@
 <?php
 $settings_menu = array(
-    "General & Docking"=>array(),
-    "Hull"=>array(),
-    "Equipment for Cargo"=>array(),
-    "Ship Equipment"=>array(),
-    "Safety & Crew Equipment"=>array(),
-    "Machinery Main Components"=>array(),
-    "Systems machinery main components"=>array(),
-    "Common Systems"=>array(),
-    "Others"=>array(),
+    // "General & Docking"=>array(),
+    // "Hull"=>array(),
+    // "Equipment for Cargo"=>array(),
+    // "Ship Equipment"=>array(),
+    // "Safety & Crew Equipment"=>array(),
+    // "Machinery Main Components"=>array(),
+    // "Systems machinery main components"=>array(),
+    // "Common Systems"=>array(),
+    // "Others"=>array(),
     
 );
 // foreach($allCategories as $oneCategory){
 //     $settings_menu[$oneCategory['title']]=array();
 // }
-// foreach($allTasks as $oneTask){
-//     $labels=explode(",",$oneTask["labels"]);
-//     $label=$labels[0];
-//     $labelText="General";
-//     foreach($allCategories as $oneCategory){
-//         if($oneCategory["id"]==$label) {
-//             $labelText=$oneCategory["title"];
-//             break;
-//         }
-//     }
-//     $settings_menu[$labelText][]=array("name"=>$oneTask["title"],"url"=>'task_libraries/'.$oneTask["id"].'/edit');
-//     // $settings_menu[$oneTask["context"]][]=array("name"=>$oneTask["title"],"url"=>$oneTask["id"]);
-// }
+foreach($allTaskLibraries as $oneTask){
+    // if($oneTask['category']==""){
+    //     $settings_menu["Others"][]=array("name"=>$oneTask["title"],"url"=>'task_libraries/'.$oneTask["id"].'/edit');
+    // }
+    // if($oneTask['category']=="general"){
+    //     $settings_menu["Others"][]=array("name"=>$oneTask["title"],"url"=>'task_libraries/'.$oneTask["id"].'/edit');
+    // }
+    // else{
+
+    // }
+    if($oneTask['category']=="") $settings_menu["Others"][]=array("name"=>$oneTask["title"],"url"=>'task_libraries/'.$oneTask["id"].'/edit');
+    else $settings_menu[$oneTask['category']][]=array("name"=>$oneTask["title"],"url"=>'task_libraries/'.$oneTask["id"].'/edit');
+    // $labels=explode(",",$oneTask["labels"]);
+    // $label=$labels[0];
+    // $labelText="General";
+    // foreach($allCategories as $oneCategory){
+    //     if($oneCategory["id"]==$label) {
+    //         $labelText=$oneCategory["title"];
+    //         break;
+    //     }
+    // }
+    // $settings_menu[$labelText][]=array("name"=>$oneTask["title"],"url"=>'task_libraries/'.$oneTask["id"].'/edit');
+    // $settings_menu[$oneTask["context"]][]=array("name"=>$oneTask["title"],"url"=>$oneTask["id"]);
+}
 ?>
 
 <ul class="nav nav-tabs vertical settings d-block" role="tablist">
