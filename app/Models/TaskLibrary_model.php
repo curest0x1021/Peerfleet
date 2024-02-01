@@ -65,6 +65,10 @@ class TaskLibrary_model extends Crud_model
                 "label" => app_lang("status"),
                 "type" => "language_key" //we'are not using this field from 1.9 but don't delete it for existing data.
             ),
+            "category"=>array(
+                "label"=>app_lang("category"),
+                "type"=>"text"
+            ),
             "status_id" => array(
                 "label" => app_lang("status"),
                 "type" => "foreign_key",

@@ -2236,7 +2236,7 @@ class TaskLibraries extends Security_Controller {
             } else if ($header_key_value == "priority") {
                 $task_data["priority_id"] = $this->_get_priority_id($row_data_value);
             } else if ($header_key_value == "category") {
-                $task_data["labels"] = $this->_get_label_ids($row_data_value);
+                $task_data["category"] = $row_data_value;
             } else if ($header_key_value == "start_date") {
                 $task_data["start_date"] = $this->_check_valid_date($row_data_value);
             } else if ($header_key_value == "deadline") {
@@ -3000,7 +3000,7 @@ class TaskLibraries extends Security_Controller {
         $link_to_task = get_uri("task_view/index/" . $data->id);
 
         $row_data = array(
-            "Category" => $task_labels,
+            "Category" => $data->category,
             "Dock list number" => $data->dock_list_number,
             "Title" => $data->title,
             "Desciption" => $data->description,
