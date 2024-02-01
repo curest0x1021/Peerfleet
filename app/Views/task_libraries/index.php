@@ -14,8 +14,10 @@
                         <div style="flex-grow:1" ></div>
                         <label for="title" style="margin:10px" >Search:</label>
                         <input class="form-control" type="text" style="width:20%"  name="search" />
-                        <?php echo modal_anchor(get_uri("task_libraries/upload_modal"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_tasks'), array("class" => "btn btn-default import_tasks_btn", "title" => app_lang('import_tasks'))); ?>
-                        <?php echo modal_anchor(get_uri("task_libraries/download_modal"), "<i data-feather='external-link' class='icon-16'></i> " . app_lang('export'), array("class" => "btn btn-default export-excel-btn", "title" => app_lang('export_project'))); ?>
+                        <div style="margin:5px" >
+                        <?php echo modal_anchor(get_uri("task_libraries/upload_modal"), "<i data-feather='upload' class='icon-16'></i> " . "Import Libraries", array("class" => "btn btn-default import_tasks_btn", "title" => "Import Task Libraries")); ?>
+                        </div>
+                        <?php echo modal_anchor(get_uri("task_libraries/download_modal"), "<i data-feather='external-link' class='icon-16'></i> " . "Export", array("class" => "btn btn-default export-excel-btn", "title" => "Export Task Libraries")); ?>
                     </div>
                 </div>
             </div>
@@ -50,32 +52,6 @@
                                             "data-msg-required" => app_lang("field_required"),
                                         ));
                                         ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <label for="project" class="col-md-4"><?php echo app_lang('project'); ?></label>
-                                    <div class="col-md-8">
-                                    <?php
-                                    $project_dropdown = array();
-                                    
-                                    foreach($allProjects as $key=>$oneProject){
-                                        $project_dropdown[]=array(
-                                            "id"=>$allProjectIds[$key],"text"=>$oneProject);
-                                    }
-
-                                    echo form_input(array(
-                                        "id" => "project",
-                                        "name" => "project_id",
-                                        "value" => "",
-                                        "required"=>true,
-                                        "class" => "form-control",
-                                        "placeholder" => app_lang('project'),
-                                        "data-rule-required" => true,
-                                        "data-msg-required" => app_lang("field_required"),
-                                    ));
-                                    ?>
                                     </div>
                                 </div>
                             </div>
@@ -209,42 +185,7 @@
                         </div>
 
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <div class="row">
-                                    <label for="start_date" class="col-md-3"><?php echo app_lang('start_date'); ?></label>
-                                    <div class="col-md-9">
-                                        <?php
-                                        echo form_input(array(
-                                            "id" => "start_date",
-                                            "name" => "start_date",
-                                            "autocomplete" => "off",
-                                            "value" => "",
-                                            "class" => "form-control",
-                                            "placeholder" => "YYYY-MM-DD"
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <label for="deadline" class="col-md-3"><?php echo app_lang('deadline'); ?></label>
-                                    <div class="col-md-9">
-                                    <?php
-                                    echo form_input(array(
-                                        "id" => "deadline",
-                                        "name" => "deadline",
-                                        "autocomplete" => "off",
-                                        "value" => "",
-                                        "class" => "form-control",
-                                        "placeholder" => "YYYY-MM-DD",
-                                        "data-rule-greaterThanOrEqual" => "#start_date",
-                                        "data-msg-greaterThanOrEqual" => app_lang("deadline_must_be_equal_or_greater_than_start_date")
-                                    ));
-                                    ?>
-                                    </div>
-                                </div>
-                            </div>
+                            
                             <div class="form-group">
                                 <div class="row">
                                     <label for="milestone_id" class="col-md-3"><?php echo app_lang('milestone'); ?></label>
@@ -881,10 +822,7 @@
             multiple: false,
             data: <?php echo (json_encode($category_dropdown)); ?>
         });
-        $("#project").select2({
-            multiple: false,
-            data: <?php echo (json_encode($project_dropdown)); ?>
-        });
+        
         $('#description').summernote({
             height:250
         });

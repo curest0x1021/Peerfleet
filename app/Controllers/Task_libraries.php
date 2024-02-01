@@ -9,12 +9,13 @@ class Task_libraries extends Security_Controller {
     }
 
     function index() {
-        $allProjectIds=$this->Projects_model->get_dropdown_list(array("id","id"));
+        // $allProjectIds=$this->Projects_model->get_dropdown_list(array("id","id"));
         $allProjects=$this->Projects_model->get_dropdown_list(array("id","title"));
-        $allTasks=$this->Tasks_model->get_all()->getResultarray();
+        // $allTasks=$this->Tasks_model->get_all()->getResultarray();
+        // $allTaskLibraries=$this->TaskLibrary_model->get_all()->getResultArray();
         $allCategories=$this->Labels_model->get_all_where(array("context"=>"task"))->getResultArray();
         $allContexts = $this->Tasks_model->get_enum_values('pf_tasks', 'context');
-        return $this->template->rander('task_libraries/index',["allProjectIds"=>$allProjectIds,"allProjects"=>$allProjects,"allTasks"=>$allTasks,"allContexts"=>$allContexts,'allCategories'=>$allCategories]);
+        return $this->template->rander('task_libraries/index',["allContexts"=>$allContexts,'allCategories'=>$allCategories]);
     }
 
     function save(){

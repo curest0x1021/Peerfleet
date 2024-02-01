@@ -39,7 +39,7 @@
             <div class=" card border p-2">
                 <div class="card-title  d-flex flex-column align-items-center">
                     <h5><?php echo app_lang('zip'); ?></h5>
-                    <div>All files that are attached to the project will be contained in this zip file.
+                    <div>All files that are attached to the Task Libraries will be contained in this zip file.
 
                     </div>
                 </div>
