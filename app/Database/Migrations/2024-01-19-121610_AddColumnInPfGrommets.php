@@ -10,10 +10,10 @@ class AddColumnInPfGrommets extends Migration
     {
 
         $fields = [
-            'files' => [
-                'type' => 'TEXT',
-                'null' => true,
-            ],
+            // 'files' => [
+            //     'type' => 'TEXT',
+            //     'null' => true,
+            // ],
         ];
 
         $this->forge->addColumn('grommets', $fields);
