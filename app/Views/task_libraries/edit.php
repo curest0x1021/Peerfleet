@@ -14,7 +14,7 @@
                 <div class="card-header d-flex justify-content-between">
                     <h4><?php echo $gotTaskLibrary->title; ?></h4>
                     <div>
-                        <button type="button" class="btn btn-danger" style="margin-right:10px"><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</ type="button">
+                        <!-- <button type="button" class="btn btn-danger" style="margin-right:10px"><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</ type="button"> -->
                         <button type="submit" 
                         old-id="btn-task-save" 
                         class="btn btn-primary"

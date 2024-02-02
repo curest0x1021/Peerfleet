@@ -26,7 +26,7 @@
                 <div class="card-header d-flex justify-content-between">
                     <h4>Task Template Edit</h4>
                     <div>
-                        <button type="button" class="btn btn-danger" style="margin-right:10" ><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</button>
+                        <!-- <button type="button" class="btn btn-danger" style="margin-right:10" ><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</button> -->
                         <button type="submit" 
                         old-id="btn-task-save" 
                         class="btn btn-primary" ><i data-feather="check-circle" class="icon-16"></i> Save</button>
@@ -819,7 +819,7 @@
                             </div>
                         </div>
                         <div class="col-md-6" ></div>
-                        <div class="col-md-6" >
+                        <!-- <div class="col-md-6" >
                             <div class="card" style="border: solid 1px lightgray;">
                                 <div class="card-header d-flex">
                                     <b>Owner's supply</b>
@@ -837,24 +837,14 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <!-- <tr>
-                                            <td>Initial Visit Incl Transport</td>
-                                            <td>1.0 visit X USD 0.00 (Per unit)</td>
-                                            <td>USD 0.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Subsequent Visits Incl Transport</td>
-                                            <td>20.0 visit X USD 0.00 (Per unit)</td>
-                                            <td>USD 0.00</td>
-                                        </tr> -->
                                         </tbody>
                                     </table>
                                 </div>
                                 
                             </div>
-                        </div>
-                        <div class="col-md-6" ></div>
-                        <div class="col-md-6" >
+                        </div> -->
+                        <!-- <div class="col-md-6" ></div> -->
+                        <!-- <div class="col-md-6" >
                             <div class="card" style="border: solid 1px lightgray;">
                                 <div class="card-header d-flex">
                                     <b>Work order quotes</b>
@@ -888,7 +878,7 @@
                                     </table>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         
                     </div>
                     <button id="file-selector-btn" class="btn btn-default" ><i data-feather="file" class=""></i> Upload File</button>
