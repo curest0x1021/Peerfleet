@@ -378,6 +378,29 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="checklists" class=" col-md-1"><?php echo app_lang('checklists'); ?></label>
+                            <div class=" col-md-11">
+                                <div class="row" >
+                                    <div style='width:3%' ></div>
+                                    <div style='width:97%' >
+                                        <?php
+                                        echo form_textarea(array(
+                                            "id" => "checklists",
+                                            "name" => "checklists",
+                                            "value" => "",
+                                            "class" => "form-control",
+                                            "placeholder" => "checklists",
+                                            "maxlength" => 300,
+                                            "data-rich-text-editor" => true,
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="row">
                         <div class="col-md-8">

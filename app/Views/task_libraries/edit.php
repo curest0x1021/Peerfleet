@@ -395,6 +395,29 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="checklists" class=" col-md-1"><?php echo app_lang('checklists'); ?></label>
+                            <div class=" col-md-11">
+                                <div class="row" >
+                                    <div style='width:3%' ></div>
+                                    <div style='width:97%' >
+                                        <?php
+                                        echo form_textarea(array(
+                                            "id" => "checklists",
+                                            "name" => "checklists",
+                                            "value" => $gotTaskLibrary->checklists,
+                                            "class" => "form-control",
+                                            "placeholder" => "checklists",
+                                            "maxlength" => 300,
+                                            "data-rich-text-editor" => true,
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="row">
                         <div class="col-md-8">
@@ -836,76 +859,6 @@
                             </div>
                         </div>
                         <div class="col-md-6" ></div>
-                        <div class="col-md-6" >
-                            <div class="card" style="border: solid 1px lightgray;">
-                                <div class="card-header d-flex">
-                                    <b>Owner's supply</b>
-                                </div>
-                                <div class="card-body" style="padding:1px" >
-                                    <table class="table " style="margin:0" >
-                                        <thead>
-                                        <tr>
-                                            <td>SUPPLY<br/>PO NUMBER</td>
-                                            <td>SUPPLIER</td>
-                                            <td>STATUS</td>
-                                            <td>COST</td>
-                                            <td>SHARED WITH</td>
-                                            <td style="float:right" ><button class="btn btn-default btn-sm" ><i data-feather="plus" class ></i></button></td>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <!-- <tr>
-                                            <td>Initial Visit Incl Transport</td>
-                                            <td>1.0 visit X USD 0.00 (Per unit)</td>
-                                            <td>USD 0.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Subsequent Visits Incl Transport</td>
-                                            <td>20.0 visit X USD 0.00 (Per unit)</td>
-                                            <td>USD 0.00</td>
-                                        </tr> -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                                
-                            </div>
-                        </div>
-                        <div class="col-md-6" ></div>
-                        <div class="col-md-6" >
-                            <div class="card" style="border: solid 1px lightgray;">
-                                <div class="card-header d-flex">
-                                    <b>Work order quotes</b>
-                                </div>
-                                <div class="card-body" style="padding:1px" >
-                                    <table class="table " style="margin:0" >
-                                        <thead>
-                                        <tr>
-                                            <td>QUOTE</td>
-                                            <td>COST</td>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>Estimated cost</td>
-                                            <td>USD 0.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Quoted cost</td>
-                                            <td>USD 0.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Billed cost</td>
-                                            <td>USD 0.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Final cost</td>
-                                            <td>USD 0.00</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
                         
                     </div>
                     <button id="file-selector-btn" class="btn btn-default" ><i data-feather="file" class=""></i> Upload File</button>
