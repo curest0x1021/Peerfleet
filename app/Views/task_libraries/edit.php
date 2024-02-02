@@ -8,6 +8,19 @@
         </div>
 
         <div class="col-sm-9 col-lg-10">
+            <div class="card">
+                <div class="card-body">
+                    <div class="display-flex" style="align-items:center" >
+                        <div style="flex-grow:1" ></div>
+                        <label for="title" style="margin:10px" >Search:</label>
+                        <input class="form-control" type="text" style="width:20%"  name="search" />
+                        <div style="margin:5px" >
+                        <?php echo modal_anchor(get_uri("task_libraries/upload_modal"), "<i data-feather='upload' class='icon-16'></i> " . "Import Libraries", array("class" => "btn btn-default import_tasks_btn", "title" => "Import Task Libraries")); ?>
+                        </div>
+                        <?php echo modal_anchor(get_uri("task_libraries/download_modal"), "<i data-feather='external-link' class='icon-16'></i> " . "Export", array("class" => "btn btn-default export-excel-btn", "title" => "Export Task Libraries")); ?>
+                    </div>
+                </div>
+            </div>
             <?php echo form_open(get_uri("tasklibraries/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
             <input hidden name="id" value="<?php echo $task_id; ?>" />
             <div class="card">
@@ -65,7 +78,7 @@
 
                                     echo form_input(array(
                                         "id" => "category",
-                                        "name" => "labels",
+                                        "name" => "category",
                                         "value" => $gotTaskLibrary->category,
                                         "class" => "form-control",
                                         "required"=>true,
@@ -236,13 +249,14 @@
                                     <div class="col-md-9">
                                     <?php
                                         $milestone_dropdown = array(
-                                            array("name"=>"-","id"=>"-")
+                                            array("id"=>$gotTaskLibrary->milestone?$gotTaskLibrary->milestone:"-","text"=>$gotTaskLibrary->milestone?$gotTaskLibrary->milestone:"-"),
+                                            array("text"=>"-","id"=>"-")
                                         );
 
                                         echo form_input(array(
                                             "id" => "milestone",
                                             "name" => "milestone",
-                                            "value" => $gotTaskLibrary->milestone,
+                                            "value" => $gotTaskLibrary->milestone?$gotTaskLibrary->milestone:"-",
                                             "class" => "form-control",
                                             "required"=>true,
                                             "placeholder" => app_lang('milestone'),
@@ -260,8 +274,8 @@
                                     <?php
                                     $supplier_dropdown = array(
                                         array(
-                                            "id"=>$gotTaskLibrary->supplier,
-                                            "text"=>$gotTaskLibrary->supplier
+                                            "id"=>$gotTaskLibrary->supplier?$gotTaskLibrary->supplier:"-",
+                                            "text"=>$gotTaskLibrary->supplier?$gotTaskLibrary->supplier:"-"
                                         ),
                                         array(
                                             "id"=>"Yard",
@@ -280,7 +294,7 @@
                                     echo form_input(array(
                                         "id" => "supplier",
                                         "name" => "supplier",
-                                        "value" => $gotTaskLibrary->supplier,
+                                        "value" => $gotTaskLibrary->supplier?$gotTaskLibrary->supplier:"-",
                                         "class" => "form-control",
                                         "required"=>true,
                                         "placeholder" => app_lang('supplier'),

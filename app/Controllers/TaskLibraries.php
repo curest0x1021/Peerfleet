@@ -964,6 +964,7 @@ class TaskLibraries extends Security_Controller {
             // "points" => $points,
             // "status_id" => $status_id,
             "status"=>$this->request->getPost('status'),
+            "category"=>$this->request->getPost('category'),
             // "priority_id" => $priority_id,
             "priority" => $this->request->getPost('priority'),
             "supplier" => $supplier,
@@ -1011,8 +1012,8 @@ class TaskLibraries extends Security_Controller {
 
         if (!$id) {
             $data["created_date"] = $now;
-            $data["context"] = $context;
-            $data["sort"] = $this->Tasks_model->get_next_sort_value($project_id, $status_id);
+            // $data["context"] = $context;
+            // $data["sort"] = $this->Tasks_model->get_next_sort_value($project_id, $status_id);
         }
 
         // if ($ticket_id) {
@@ -2556,7 +2557,10 @@ class TaskLibraries extends Security_Controller {
             "maker",
             "type",
             "serial_number",
-            "pms_scs_number"
+            "pms_scs_number",
+            "created_date",
+            "checklists",
+            "dependencies"
         );
     }
 

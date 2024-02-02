@@ -5,6 +5,7 @@ $settings_menu = array(
 );
 
 foreach($allTaskLibraries as $oneTask){
+    if($oneTask["category"]=="") $oneTask["category"]="Others";
     if(!isset($settings_menu[$oneTask["category"]])) $settings_menu[$oneTask["category"]]=array();
     if($oneTask['category']=="") $settings_menu["Others"][]=array("name"=>$oneTask["title"],"url"=>'task_libraries/'.$oneTask["id"].'/edit');
     else $settings_menu[$oneTask['category']][]=array("name"=>strtoupper(substr($oneTask['category'], 0, 1)).sprintf("%02d", count($settings_menu[$oneTask['category']])+1).". ".$oneTask["title"],"url"=>'task_libraries/'.$oneTask["id"].'/edit');

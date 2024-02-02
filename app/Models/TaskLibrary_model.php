@@ -125,6 +125,18 @@ class TaskLibrary_model extends Crud_model
                 "label" => app_lang("repeat_every"),
                 "type" => "int"
             ),
+            "checklists"=>array(
+                "label"=>"checklists",
+                "type"=>"text"
+            ),
+            "dependencies"=>array(
+                "label"=>"dependencies",
+                "type"=>"text"
+            ),
+            "created_date"=>array(
+                "label"=>"created_date",
+                "type"=>"date"
+            ),
             
             // "priority_id" => array(
             //     "label" => app_lang("priority"),
