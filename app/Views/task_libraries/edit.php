@@ -230,19 +230,26 @@
                         </div>
 
                         <div class="col-md-4">
-                            <div class="form-group">
+                        <div class="form-group">
                                 <div class="row">
-                                    <label for="milestone_id" class="col-md-3"><?php echo app_lang('milestone'); ?></label>
+                                    <label for="milestone" class="col-md-3"><?php echo app_lang('milestone'); ?></label>
                                     <div class="col-md-9">
-                                        <?php
+                                    <?php
+                                        $milestone_dropdown = array(
+                                            array("name"=>"-","id"=>"-")
+                                        );
+
                                         echo form_input(array(
-                                            "id" => "milestone_id",
-                                            "name" => "milestone_id",
-                                            "value" => "",
+                                            "id" => "milestone",
+                                            "name" => "milestone",
+                                            "value" => $gotTaskLibrary->milestone,
                                             "class" => "form-control",
-                                            "placeholder" => app_lang('milestone')
+                                            "required"=>true,
+                                            "placeholder" => app_lang('milestone'),
+                                            "data-rule-required" => true,
+                                            "data-msg-required" => app_lang("field_required"),
                                         ));
-                                        ?>
+                                    ?>
                                     </div>
                                 </div>
                             </div>
@@ -250,15 +257,37 @@
                                 <div class="row">
                                     <label for="supplier" class="col-md-3"><?php echo app_lang('supplier'); ?></label>
                                     <div class="col-md-9">
-                                        <?php
-                                        echo form_input(array(
-                                            "id" => "supplier",
-                                            "name" => "supplier",
-                                            "value" => "",
-                                            "class" => "form-control",
-                                            "placeholder" => app_lang('supplier'),
-                                        ));
-                                        ?>
+                                    <?php
+                                    $supplier_dropdown = array(
+                                        array(
+                                            "id"=>$gotTaskLibrary->supplier,
+                                            "text"=>$gotTaskLibrary->supplier
+                                        ),
+                                        array(
+                                            "id"=>"Yard",
+                                            "text"=>"Yard"
+                                        ),
+                                        array(
+                                            "id"=>"Specialist",
+                                            "text"=>"Specialist"
+                                        ),
+                                        array(
+                                            "id"=>"Both",
+                                            "text"=>"Both"
+                                        ),
+                                    );
+
+                                    echo form_input(array(
+                                        "id" => "supplier",
+                                        "name" => "supplier",
+                                        "value" => $gotTaskLibrary->supplier,
+                                        "class" => "form-control",
+                                        "required"=>true,
+                                        "placeholder" => app_lang('supplier'),
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
+                                    ));
+                                    ?>
                                     </div>
                                 </div>
                             </div>
@@ -903,7 +932,7 @@
             multiple: false,
             data: <?php echo (json_encode($collaborators_dropdown)); ?>
         });
-        
+
         $('#description').summernote({
             height:250,
             width:"100%"
