@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class AddFieldsToTaskLibraries extends Migration
+class AddFieldsToTaskLibraries_deleted extends Migration
 {
     public function up()
     {
