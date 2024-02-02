@@ -980,6 +980,7 @@ class TaskLibraries extends Security_Controller {
             "location" => $this->request->getPost("location"),
             "specification" => $this->request->getPost("specification"),
             "checklists" => $this->request->getPost("checklists"),
+            "dependencies" => $this->request->getPost("dependencies"),
             // "requisition_number" => $this->request->getPost("requisition_number"),
             "budget" => $this->request->getPost("budget"),
             "gas_free_certificate" => $this->request->getPost("gas_free_certificate"),
