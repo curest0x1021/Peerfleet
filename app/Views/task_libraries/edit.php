@@ -3,16 +3,16 @@
         <div class="col-sm-3 col-lg-2">
             <?php
             $tab_view['active_tab'] = "general";
-            echo view("task_libraries/tabs", $tab_view);
+            echo view("task_libraries/tabs_new", $tab_view);
             ?>
         </div>
 
         <div class="col-sm-9 col-lg-10">
-            <?php echo form_open(get_uri("task_libraries/".$task_id."/edit"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
-            <input hidden name="task_id" value="<?php echo $task_id; ?>" />
+            <?php echo form_open(get_uri("tasklibraries/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
+            <input hidden name="id" value="<?php echo $task_id; ?>" />
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h4><?php echo $gotTask->title; ?></h4>
+                    <h4><?php echo $gotTaskLibrary->title; ?></h4>
                     <div>
                         <button type="button" class="btn btn-danger" style="margin-right:10px"><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</ type="button">
                         <button type="submit" 
@@ -32,7 +32,7 @@
                                         echo form_input(array(
                                             "id" => "title",
                                             "name" => "title",
-                                            "value" => $gotTask->title,
+                                            "value" => $gotTaskLibrary->title,
                                             "class" => "form-control",
                                             "placeholder" => app_lang('title'),
                                             "autofocus" => true,
@@ -46,45 +46,27 @@
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="project" class="col-md-4"><?php echo app_lang('project'); ?></label>
-                                    <div class="col-md-8">
-                                    <?php
-                                    $project_dropdown = array();
-                                    
-                                    foreach($allProjects as $key=>$oneProject){
-                                        $project_dropdown[]=array(
-                                            "id"=>$key,"text"=>$oneProject);
-                                    }
-
-                                    echo form_input(array(
-                                        "id" => "project",
-                                        "name" => "project_id",
-                                        "value" => $gotProject->id,
-                                        "class" => "form-control",
-                                        "placeholder" => app_lang('project'),
-                                        "data-rule-required" => true,
-                                        "data-msg-required" => app_lang("field_required"),
-                                    ));
-                                    ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
                                     <label for="category" class="col-md-4"><?php echo app_lang('category'); ?></label>
                                     <div class="col-md-8">
                                     <?php
-                                    $category_dropdown = array();
+                                    $category_dropdown = array(
+                                        array("id"=>$gotTaskLibrary->category,"text"=>$gotTaskLibrary->category),
+                                        array("id"=>"General & Docking","text"=>"General & Docking"),
+                                        array("id"=>"Hull","text"=>"Hull"),
+                                        array("id"=>"Equipment for Cargo","text"=>"Equipment for Cargo"),
+                                        array("id"=>"Ship Equipment","text"=>"Ship Equipment"),
+                                        array("id"=>"Safety & Crew Equipment","text"=>"Safety & Crew Equipment"),
+                                        array("id"=>"Machinery Main Components","text"=>"Machinery Main Components"),
+                                        array("id"=>"Systems machinery main components","text"=>"Systems machinery main components"),
+                                        array("id"=>"Common systems","text"=>"Common systems"),
+                                        array("id"=>"Others","text"=>"Others"),
+                                    );
                                     
-                                    foreach($allCategories as $oneCategory){
-                                        $category_dropdown[]=array(
-                                            "id"=>$oneCategory["id"],"text"=>$oneCategory["title"]);
-                                    }
 
                                     echo form_input(array(
                                         "id" => "category",
                                         "name" => "labels",
-                                        "value" => $gotLabel,
+                                        "value" => $gotTaskLibrary->category,
                                         "class" => "form-control",
                                         "required"=>true,
                                         "placeholder" => app_lang('category'),
@@ -103,7 +85,7 @@
                                         echo form_input(array(
                                             "id" => "dock_list_number",
                                             "name" => "dock_list_number",
-                                            "value" => $gotTask->dock_list_number,
+                                            "value" => $gotTaskLibrary->dock_list_number,
                                             "class" => "form-control",
                                             "maxlength" => 15,
                                             "placeholder" => app_lang('dock_list_number'),
@@ -112,53 +94,50 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <label for="reference_drawing" class="col-md-4"><?php echo app_lang('reference_drawing'); ?></label>
-                                    <div class="col-md-8">
-                                        <?php
-                                        echo form_input(array(
-                                            "id" => "reference_drawing",
-                                            "name" => "reference_drawing",
-                                            "value" => $gotTask->reference_drawing,
-                                            "class" => "form-control",
-                                            "maxlength" => 30,
-                                            "placeholder" => app_lang('reference_drawing'),
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <div class="row">
-                                    <label for="assigned_to" class="col-md-3"><?php echo app_lang('assign_to'); ?></label>
-                                    <div class="col-md-9">
-                                        <?php
-                                        echo form_input(array(
-                                            "id" => "assigned_to",
-                                            "name" => "assigned_to",
-                                            "value" => $gotTask->assigned_to,
-                                            "class" => "form-control",
-                                            "placeholder" => app_lang('assign_to')
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
+                        <div class="form-group">
                                 <div class="row">
                                     <label for="collaborators" class="col-md-3"><?php echo app_lang('collaborators'); ?></label>
                                     <div class="col-md-9">
                                     <?php
+                                    $collaborators_dropdown = array(
+                                        array(
+                                            "id"=>$gotTaskLibrary->collaborators?$gotTaskLibrary->collaborators:"",
+                                            "text"=>$gotTaskLibrary->collaborators?$gotTaskLibrary->collaborators:""
+                                        ),
+                                        array(
+                                            "id"=>"Ines Erna",
+                                            "text"=>"Ines Erna"
+                                        ),
+                                        array(
+                                            "id"=>"Reinhold Gereit",
+                                            "text"=>"Reinhold Gereit"
+                                        ),
+                                        array(
+                                            "id"=>"Dominik Darnell",
+                                            "text"=>"Dominik Darnell"
+                                        ),
+                                        array(
+                                            "id"=>"Olav Lakshmi",
+                                            "text"=>"Olav Lakshmi"
+                                        ),
+                                        array(
+                                            "id"=>"Paul Winfred",
+                                            "text"=>"Paul Winfred"
+                                        ),
+                                    );
+
                                     echo form_input(array(
                                         "id" => "collaborators",
                                         "name" => "collaborators",
-                                        "value" => $gotTask->collaborators,
+                                        "value" => $gotTaskLibrary->collaborators?$gotTaskLibrary->collaborators:"",
                                         "class" => "form-control",
-                                        "placeholder" => app_lang('collaborators')
+                                        // "required"=>true,
+                                        "placeholder" => app_lang('collaborators'),
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
                                     ));
                                     ?>
                                     </div>
@@ -166,75 +145,91 @@
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="status_id" class="col-md-3"><?php echo app_lang('status'); ?></label>
+                                    <label for="status" class="col-md-3"><?php echo app_lang('status'); ?></label>
                                     <div class="col-md-9">
-                                        <?php
+                                    <?php
+                                        $status_dropdown = array(
+                                            array(
+                                                "id"=>"To Do",
+                                                "text"=>"To Do"
+                                            ),
+                                            array(
+                                                "id"=>"Approved",
+                                                "text"=>"Approved"
+                                            ),
+                                            array(
+                                                "id"=>"In Progress",
+                                                "text"=>"In Progress"
+                                            ),
+                                            array(
+                                                "id"=>"Done",
+                                                "text"=>"Done"
+                                            ),
+                                            array(
+                                                "id"=>"Rejected",
+                                                "text"=>"Rejected"
+                                            ),
+                                        );
+
                                         echo form_input(array(
-                                            "id" => "task_status_id",
-                                            "name" => "status_id",
-                                            "value" => $gotTask->status_id,
-                                            "class" => "form-control"
+                                            "id" => "status",
+                                            "name" => "status",
+                                            "value" => $gotTaskLibrary->status,
+                                            "class" => "form-control",
+                                            "required"=>true,
+                                            "placeholder" => app_lang('status'),
+                                            "data-rule-required" => true,
+                                            "data-msg-required" => app_lang("field_required"),
                                         ));
-                                        ?>
+                                    ?>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="priority_id" class="col-md-3"><?php echo app_lang('priority'); ?></label>
+                                    <label for="priority" class="col-md-3"><?php echo app_lang('priority'); ?></label>
                                     <div class="col-md-9">
-                                        <?php
+                                    <?php
+                                        $priority_dropdown = array(
+                                            array(
+                                                "id"=>$gotTaskLibrary->priority,
+                                                "text"=>$gotTaskLibrary->priority,
+                                            ),
+                                            array(
+                                                "id"=>"Minor",
+                                                "text"=>"Minor"
+                                            ),
+                                            array(
+                                                "id"=>"Major",
+                                                "text"=>"Major"
+                                            ),
+                                            array(
+                                                "id"=>"Critical",
+                                                "text"=>"Critical"
+                                            ),
+                                            array(
+                                                "id"=>"Blocker",
+                                                "text"=>"Blocker"
+                                            )
+                                        );
+
                                         echo form_input(array(
-                                            "id" => "priority_id",
-                                            "name" => "priority_id",
-                                            "value" => $gotTask->priority_id,
+                                            "id" => "priority",
+                                            "name" => "priority",
+                                            "value" => $gotTaskLibrary->priority,
                                             "class" => "form-control",
-                                            "maxlength" => 15,
+                                            "required"=>true,
                                             "placeholder" => app_lang('priority'),
+                                            "data-rule-required" => true,
+                                            "data-msg-required" => app_lang("field_required"),
                                         ));
-                                        ?>
+                                    ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <div class="row">
-                                    <label for="start_date" class="col-md-3"><?php echo app_lang('start_date'); ?></label>
-                                    <div class="col-md-9">
-                                        <?php
-                                        echo form_input(array(
-                                            "id" => "start_date",
-                                            "name" => "start_date",
-                                            "autocomplete" => "off",
-                                            "value" =>date('d.m.Y', strtotime($gotTask->start_date)),
-                                            "class" => "form-control",
-                                            "placeholder" => "YYYY-MM-DD"
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <label for="deadline" class="col-md-3"><?php echo app_lang('deadline'); ?></label>
-                                    <div class="col-md-9">
-                                    <?php
-                                    echo form_input(array(
-                                        "id" => "deadline",
-                                        "name" => "deadline",
-                                        "autocomplete" => "off",
-                                        "value" => date('d.m.Y', strtotime($gotTask->deadline)),
-                                        "class" => "form-control",
-                                        "placeholder" => "YYYY-MM-DD",
-                                        "data-rule-greaterThanOrEqual" => "#start_date",
-                                        "data-msg-greaterThanOrEqual" => app_lang("deadline_must_be_equal_or_greater_than_start_date")
-                                    ));
-                                    ?>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="form-group">
                                 <div class="row">
                                     <label for="milestone_id" class="col-md-3"><?php echo app_lang('milestone'); ?></label>
@@ -261,7 +256,23 @@
                                             "name" => "supplier",
                                             "value" => "",
                                             "class" => "form-control",
-                                            "placeholder" => app_lang('priority'),
+                                            "placeholder" => app_lang('supplier'),
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label for="assigned_to" class="col-md-3"><?php echo app_lang('assign_to'); ?></label>
+                                    <div class="col-md-9">
+                                        <?php
+                                        echo form_input(array(
+                                            "id" => "assigned_to",
+                                            "name" => "assigned_to",
+                                            "value" => $gotTaskLibrary->assigned_to,
+                                            "class" => "form-control",
+                                            "placeholder" => app_lang('assign_to')
                                         ));
                                         ?>
                                     </div>
@@ -281,7 +292,7 @@
                                         echo form_textarea(array(
                                             "id" => "description",
                                             "name" => "description",
-                                            "value" => $gotTask->description,
+                                            "value" => $gotTaskLibrary->description,
                                             "class" => "form-control",
                                             "placeholder" => app_lang('description'),
                                             "data-rich-text-editor" => true
@@ -305,7 +316,7 @@
                                         echo form_textarea(array(
                                             "id" => "location",
                                             "name" => "location",
-                                            "value" => $gotTask->location,
+                                            "value" => $gotTaskLibrary->location,
                                             "class" => "form-control",
                                             "placeholder" => app_lang('location'),
                                             "maxlength" => 300,
@@ -329,7 +340,7 @@
                                         echo form_textarea(array(
                                             "id" => "specification",
                                             "name" => "specification",
-                                            "value" => $gotTask->specification,
+                                            "value" => $gotTaskLibrary->specification,
                                             "class" => "form-control",
                                             "placeholder" => app_lang('specification_placeholder'),
                                             "maxlength" => 300,
@@ -872,10 +883,27 @@
             multiple: false,
             data: <?php echo (json_encode($category_dropdown)); ?>
         });
-        $("#project").select2({
+        $("#supplier").select2({
             multiple: false,
-            data: <?php echo (json_encode($project_dropdown)); ?>
+            data: <?php echo (json_encode($supplier_dropdown)); ?>
         });
+        $("#milestone").select2({
+            multiple: false,
+            data: <?php echo (json_encode($milestone_dropdown)); ?>
+        });
+        $("#status").select2({
+            multiple: false,
+            data: <?php echo (json_encode($status_dropdown)); ?>
+        });
+        $("#priority").select2({
+            multiple: false,
+            data: <?php echo (json_encode($priority_dropdown)); ?>
+        });
+        $("#collaborators").select2({
+            multiple: false,
+            data: <?php echo (json_encode($collaborators_dropdown)); ?>
+        });
+        
         $('#description').summernote({
             height:250,
             width:"100%"
@@ -885,34 +913,6 @@
         })
         setDatePicker("#start_date");
         setDatePicker("#deadline");
-        // $("#btn-task-save").on("click",function(){
-        //     // console.log($("#title")[0].value)
-        //     if(!$("#title")[0].value) return;
-        //     var myForm=new FormData();
-        //     myForm.append("aaefsef","fsefsef");
-        //     myForm.append("title",$("#title")[0].value);
-        //     myForm.append("start_data",$("#start_date")[0].value);
-        //     myForm.append("deadline",$("#deadline")[0].value);
-        //     myForm.append("category",$("#category")[0].value)
-        //     myForm.append("description",$("#description").summernote("code"))
-        //     console.log(myForm.get("description"))
-        //     $.ajax({
-        //         type: 'POST',
-        //         url: '/peerfleet/index.php/task_libraries', // Replace with your controller/method URL
-        //         data: myForm,
-        //         headers: {'X-Requested-With': 'XMLHttpRequest'},
-        //         processData: false, // Prevent jQuery from automatically processing the data
-        //         contentType: false, // Set content type to false to prevent jQuery from adding a Content-Type header
-        //         success: function(response) {
-        //             // Handle success response
-        //             console.log(response);
-        //         },
-        //         error: function(xhr, status, error) {
-        //             // Handle error response
-        //             console.error(xhr.responseText);
-        //         }
-        //     });
-        // })
     });
 
     

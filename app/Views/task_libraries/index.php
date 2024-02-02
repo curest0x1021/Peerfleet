@@ -60,12 +60,18 @@
                                     <label for="category" class="col-md-4"><?php echo app_lang('category'); ?></label>
                                     <div class="col-md-8">
                                     <?php
-                                    $category_dropdown = array();
+                                    $category_dropdown = array(
+                                        array("id"=>"General & Docking","text"=>"General & Docking"),
+                                        array("id"=>"Hull","text"=>"Hull"),
+                                        array("id"=>"Equipment for Cargo","text"=>"Equipment for Cargo"),
+                                        array("id"=>"Ship Equipment","text"=>"Ship Equipment"),
+                                        array("id"=>"Safety & Crew Equipment","text"=>"Safety & Crew Equipment"),
+                                        array("id"=>"Machinery Main Components","text"=>"Machinery Main Components"),
+                                        array("id"=>"Systems machinery main components","text"=>"Systems machinery main components"),
+                                        array("id"=>"Common systems","text"=>"Common systems"),
+                                        array("id"=>"Others","text"=>"Others"),
+                                    );
                                     
-                                    foreach($allCategories as $oneCategory){
-                                        $category_dropdown[]=array(
-                                            "id"=>$oneCategory["id"],"text"=>$oneCategory["title"]);
-                                    }
 
                                     echo form_input(array(
                                         "id" => "category",
@@ -186,18 +192,39 @@
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="priority_id" class="col-md-3"><?php echo app_lang('priority'); ?></label>
+                                    <label for="priority" class="col-md-3"><?php echo app_lang('priority'); ?></label>
                                     <div class="col-md-9">
-                                        <?php
+                                    <?php
+                                        $priority_dropdown = array(
+                                            array(
+                                                "id"=>"Minor",
+                                                "text"=>"Minor"
+                                            ),
+                                            array(
+                                                "id"=>"Major",
+                                                "text"=>"Major"
+                                            ),
+                                            array(
+                                                "id"=>"Critical",
+                                                "text"=>"Critical"
+                                            ),
+                                            array(
+                                                "id"=>"Blocker",
+                                                "text"=>"Blocker"
+                                            )
+                                        );
+
                                         echo form_input(array(
-                                            "id" => "priority_id",
-                                            "name" => "priority_id",
+                                            "id" => "priority",
+                                            "name" => "priority",
                                             "value" => "",
                                             "class" => "form-control",
-                                            "maxlength" => 15,
+                                            "required"=>true,
                                             "placeholder" => app_lang('priority'),
+                                            "data-rule-required" => true,
+                                            "data-msg-required" => app_lang("field_required"),
                                         ));
-                                        ?>
+                                    ?>
                                     </div>
                                 </div>
                             </div>
@@ -892,6 +919,10 @@
         $("#status").select2({
             multiple: false,
             data: <?php echo (json_encode($status_dropdown)); ?>
+        });
+        $("#priority").select2({
+            multiple: false,
+            data: <?php echo (json_encode($priority_dropdown)); ?>
         });
         $("#collaborators").select2({
             multiple: false,

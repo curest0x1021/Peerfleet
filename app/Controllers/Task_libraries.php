@@ -11,13 +11,8 @@ class Task_libraries extends Security_Controller {
     }
 
     function index() {
-        // $allProjectIds=$this->Projects_model->get_dropdown_list(array("id","id"));
-        $allProjects=$this->Projects_model->get_dropdown_list(array("id","title"));
-        // $allTasks=$this->Tasks_model->get_all()->getResultarray();
         $allTaskLibraries=$this->TaskLibrary_model->get_all()->getResultArray();
-        $allCategories=$this->Labels_model->get_all_where(array("context"=>"task"))->getResultArray();
-        $allContexts = $this->Tasks_model->get_enum_values('pf_tasks', 'context');
-        return $this->template->rander('task_libraries/index',["allTaskLibraries"=>$allTaskLibraries,"allContexts"=>$allContexts,'allCategories'=>$allCategories]);
+        return $this->template->rander('task_libraries/index',["allTaskLibraries"=>$allTaskLibraries]);
     }
 
     function save(){
@@ -383,15 +378,9 @@ class Task_libraries extends Security_Controller {
     }
 
     function view($parameter){
-        $allProjects=$this->Projects_model->get_dropdown_list(array("id","title"));
-        $allTasks=$this->Tasks_model->get_all()->getResultarray();
-        $gotTask=$this->Tasks_model->get_one(array("id"=>$parameter));
-        $gotLabels=explode(",",$gotTask->labels);
-        $gotLabel=$gotLabels[0];
-        $gotProject=$this->Projects_model->get_one(array("id"=>$gotTask->project_id));
-        $allCategories=$this->Labels_model->get_all_where(array("context"=>"task"))->getResultArray();
-        $allContexts = $this->Tasks_model->get_enum_values('pf_tasks', 'context');
-        return $this->template->rander('task_libraries/edit',["task_id"=>$parameter,"gotProject"=>$gotProject,"gotLabel"=>$gotLabel,"gotTask"=>$gotTask,"allProjects"=>$allProjects,"allTasks"=>$allTasks,"allContexts"=>$allContexts,'allCategories'=>$allCategories]);
+        $gotTaskLibrary=$this->TaskLibrary_model->get_one(array("id"=>$parameter));
+        $allTaskLibraries=$this->TaskLibrary_model->get_all()->getResultArray();
+        return $this->template->rander('task_libraries/edit',["task_id"=>$parameter,"gotTaskLibrary"=>$gotTaskLibrary,"allTaskLibraries"=>$allTaskLibraries]);
     }
 
     function update($parameter){
@@ -651,22 +640,22 @@ class Task_libraries extends Security_Controller {
             }
 
             //save next recurring date 
-            if ($next_recurring_date) {
-                $recurring_task_data = array(
-                    "next_recurring_date" => $next_recurring_date
-                );
-                $this->Tasks_model->save_reminder_date($recurring_task_data, $save_id);
-            }
+            // if ($next_recurring_date) {
+            //     $recurring_task_data = array(
+            //         "next_recurring_date" => $next_recurring_date
+            //     );
+            //     $this->Tasks_model->save_reminder_date($recurring_task_data, $save_id);
+            // }
 
-            // if created from ticket then save the task id
-            if ($ticket_id) {
-                $data = array("task_id" => $save_id);
-                $this->Tickets_model->ci_save($data, $ticket_id);
-            }
+            // // if created from ticket then save the task id
+            // if ($ticket_id) {
+            //     $data = array("task_id" => $save_id);
+            //     $this->Tickets_model->ci_save($data, $ticket_id);
+            // }
 
-            $activity_log_id = get_array_value($data, "activity_log_id");
+            // $activity_log_id = get_array_value($data, "activity_log_id");
 
-            $new_activity_log_id = save_custom_fields("tasks", $save_id, $this->login_user->is_admin, $this->login_user->user_type, $activity_log_id);
+            // $new_activity_log_id = save_custom_fields("tasks", $save_id, $this->login_user->is_admin, $this->login_user->user_type, $activity_log_id);
 
             if ($id) {
                 //updated

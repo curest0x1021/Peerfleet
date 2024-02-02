@@ -63,30 +63,34 @@ class TaskLibrary_model extends Crud_model
             // ),
             "status" => array(
                 "label" => app_lang("status"),
-                "type" => "language_key" //we'are not using this field from 1.9 but don't delete it for existing data.
+                "type" => "text" //we'are not using this field from 1.9 but don't delete it for existing data.
+            ),
+            "priority" => array(
+                "label" => app_lang("priority"),
+                "type" => "text" //we'are not using this field from 1.9 but don't delete it for existing data.
             ),
             "category"=>array(
                 "label"=>app_lang("category"),
                 "type"=>"text"
             ),
-            "status_id" => array(
-                "label" => app_lang("status"),
-                "type" => "foreign_key",
-                "linked_model" => model("App\Models\Task_status_model"),
-                "label_fields" => array("title"),
-            ),
-            "start_date" => array(
-                "label" => app_lang("start_date"),
-                "type" => $type
-            ),
-            "deadline" => array(
-                "label" => app_lang("deadline"),
-                "type" => $type
-            ),
-            "project_id" => array(
-                "label" => app_lang("project"),
-                "type" => "foreign_key"
-            ),
+            // "status_id" => array(
+            //     "label" => app_lang("status"),
+            //     "type" => "foreign_key",
+            //     "linked_model" => model("App\Models\Task_status_model"),
+            //     "label_fields" => array("title"),
+            // ),
+            // "start_date" => array(
+            //     "label" => app_lang("start_date"),
+            //     "type" => $type
+            // ),
+            // "deadline" => array(
+            //     "label" => app_lang("deadline"),
+            //     "type" => $type
+            // ),
+            // "project_id" => array(
+            //     "label" => app_lang("project"),
+            //     "type" => "foreign_key"
+            // ),
             "points" => array(
                 "label" => app_lang("points"),
                 "type" => "int"
@@ -95,10 +99,10 @@ class TaskLibrary_model extends Crud_model
                 "label" => app_lang("deleted"),
                 "type" => "int"
             ),
-            "sort" => array(
-                "label" => app_lang("priority"),
-                "type" => "int"
-            ),
+            // "sort" => array(
+            //     "label" => app_lang("priority"),
+            //     "type" => "int"
+            // ),
             "ticket_id" => array(
                 "label" => app_lang("ticket"),
                 "type" => "foreign_key",
@@ -121,12 +125,13 @@ class TaskLibrary_model extends Crud_model
                 "label" => app_lang("repeat_every"),
                 "type" => "int"
             ),
-            "priority_id" => array(
-                "label" => app_lang("priority"),
-                "type" => "foreign_key",
-                "linked_model" => model("App\Models\Task_priority_model"),
-                "label_fields" => array("title"),
-            ),
+            
+            // "priority_id" => array(
+            //     "label" => app_lang("priority"),
+            //     "type" => "foreign_key",
+            //     "linked_model" => model("App\Models\Task_priority_model"),
+            //     "label_fields" => array("title"),
+            // ),
         );
     }
 
@@ -368,7 +373,7 @@ class TaskLibrary_model extends Crud_model
             "milestone" => "milestone_title",
             "labels" => "labels_list",
             "assigned_to" => "assigned_to_user",
-            "status" => $tasks_table . ".status_id",
+            "status" => $tasks_table . ".status",
             "project" => $projects_table . ".title",
         );
 
@@ -978,17 +983,6 @@ class TaskLibrary_model extends Crud_model
 
         return $this->db->query($sql);
     }
-
-    // function get_all()
-    // {
-    //     $tasks_table = $this->db->prefixTable('tasks');
-
-    //     $sql = "SELECT $tasks_table.id, $tasks_table.blocked_by, $tasks_table.blocking
-    //     FROM $tasks_table  
-    //     ";
-
-    //     return $this->db->query($sql);
-    // }
 
     function save_gantt_task_date($data, $task_id)
     {
