@@ -21,7 +21,7 @@
                     </div>
                 </div>
             </div>
-            <?php echo form_open(get_uri("task_libraries"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
+            <?php echo form_open(get_uri("tasklibraries/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h4>Task Template Edit</h4>
@@ -237,7 +237,7 @@
                                     <div class="col-md-9">
                                     <?php
                                         $milestone_dropdown = array(
-                                            array("name"=>"-","id"=>"-")
+                                            array("text"=>"-","id"=>"-")
                                         );
 
                                         echo form_input(array(
