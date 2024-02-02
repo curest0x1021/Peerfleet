@@ -418,7 +418,29 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="dependencies" class=" col-md-1">Dependencies</label>
+                            <div class=" col-md-11">
+                                <div class="row" >
+                                    <div style='width:3%' ></div>
+                                    <div style='width:97%' >
+                                        <?php
+                                        echo form_textarea(array(
+                                            "id" => "dependencies",
+                                            "name" => "dependencies",
+                                            "value" => $gotTaskLibrary->dependencies,
+                                            "class" => "form-control",
+                                            "placeholder" => "dependencies",
+                                            "maxlength" => 300,
+                                            "data-rich-text-editor" => true,
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-8">
                             <div class="form-group">
