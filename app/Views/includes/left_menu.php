@@ -103,7 +103,7 @@
                                     $sub_menu_target = ($is_custom_menu_item && $open_in_new_tab) ? "target='_blank'" : "";
                                     ?>
                             <li>
-                                <a <?php echo $sub_menu_target; ?> href="<?php echo $is_custom_menu_item ? get_uri($url) : get_uri($url); ?>">
+                                <a <?php echo $sub_menu_target; ?> href="<?php echo  get_uri($url); ?>">
                                     <i data-feather='minus' width='12'></i>
                                     <span><?php echo $s_menu_name; ?></span>
                                 </a>

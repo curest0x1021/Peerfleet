@@ -10,10 +10,10 @@ class Tasks_model extends Crud_model
     function __construct()
     {
         $this->table = 'tasks';
-        $this->allowedFields=["title","start_date","deadline","context","description"];
         parent::__construct($this->table);
         parent::init_activity_log("task", "title", "project", "project_id");
     }
+
     function schema()
     {
         if (get_setting("show_time_with_task_start_date_and_deadline")) {
@@ -56,9 +56,9 @@ class Tasks_model extends Crud_model
             ),
             "labels" => array(
                 "label" => app_lang("labels"),
-                "type" => "text",
-                // "link_type" => "label_group_list",
-                // "linked_model" => model("App\Models\Labels_model"),
+                "type" => "foreign_key",
+                "link_type" => "label_group_list",
+                "linked_model" => model("App\Models\Labels_model"),
                 "label_fields" => array("label_group_name"),
             ),
             "status" => array(
@@ -975,17 +975,6 @@ class Tasks_model extends Crud_model
         return $this->db->query($sql);
     }
 
-    // function get_all()
-    // {
-    //     $tasks_table = $this->db->prefixTable('tasks');
-
-    //     $sql = "SELECT $tasks_table.id, $tasks_table.blocked_by, $tasks_table.blocking
-    //     FROM $tasks_table  
-    //     ";
-
-    //     return $this->db->query($sql);
-    // }
-
     function save_gantt_task_date($data, $task_id)
     {
         parent::disable_log_activity();
@@ -1051,8 +1040,6 @@ class Tasks_model extends Crud_model
         return true;
     }
 
-
-
     function get_next_sort_value($project_id = 0, $status_id = 1)
     {
         $tasks_table = $this->db->prefixTable('tasks');
@@ -1075,30 +1062,5 @@ class Tasks_model extends Crud_model
         } else {
             return 1000; //could be any positive value
         }
-    }
-
-    // function get_all_tasks_with_labels(){
-    //     $tasks_table = $this->db->prefixTable('tasks');
-    //     $sql="SELECT * FROM $tasks_table"
-    // }
-    function get_all_contexts(){
-        $query = $this->db->query("SELECT COLUMN_TYPE
-            FROM information_schema.COLUMNS
-            WHERE TABLE_SCHEMA = 'peerfleet_app' 
-            AND TABLE_NAME = 'pf_tasks' 
-            AND COLUMN_NAME = 'context'");
-        // $row = $query->rows();
-        // $enumValues = explode(',', str_replace(array('enum(', ')', "'"), '', $row->COLUMN_TYPE));
-        // return $enumValues;
-        return $query;
-    }
-    function get_enum_values() {
-        $table="pf_tasks";
-        $field="context";
-        $query = $this->db->query("SHOW COLUMNS FROM $table LIKE '$field'");
-        $row = $query->getRow();
-        $enum_str = $row->Type;
-        preg_match_all("/'(.*?)'/", $enum_str, $matches);
-        return $matches[1];
     }
 }

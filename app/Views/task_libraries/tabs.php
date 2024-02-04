@@ -1,28 +1,26 @@
 <?php
 $settings_menu = array(
-
+    "General & Docking"=>array(),
+    "Hull"=>array(),
+    "Equipment for Cargo"=>array(),
+    "Ship Equipment"=>array(),
+    "Safety & Crew Equipment"=>array(),
+    "Machinery Main Components"=>array(),
+    "Systems machinery main components"=>array(),
+    "Common systems"=>array(),
+    "Others"=>array(),
 );
-foreach($allCategories as $oneCategory){
-    $settings_menu[$oneCategory['title']]=array();
-}
-foreach($allTasks as $oneTask){
-    $labels=explode(",",$oneTask["labels"]);
-    $label=$labels[0];
-    $labelText="General";
-    foreach($allCategories as $oneCategory){
-        if($oneCategory["id"]==$label) {
-            $labelText=$oneCategory["title"];
-            break;
-        }
-    }
-    $settings_menu[$labelText][]=array("name"=>$oneTask["title"],"url"=>'task_libraries/'.$oneTask["id"].'/edit');
-    // $settings_menu[$oneTask["context"]][]=array("name"=>$oneTask["title"],"url"=>$oneTask["id"]);
+foreach ($allTasklibraries as $oneTasklibrary) {
+    # code...
+    if($oneTasklibrary["category"]=="") $oneTasklibrary["category"]="Others";
+    if(!isset($settings_menu[$oneTasklibrary['category']])) $settings_menu[$oneTasklibrary['category']]=array();
+    if($oneTasklibrary['category']=="") $settings_menu["Others"][]=array("name"=>$oneTasklibrary["title"],"url"=>'task_libraries/'.$oneTasklibrary["id"].'/edit');
+    else $settings_menu[$oneTasklibrary['category']][]=array("name"=>strtoupper(substr($oneTasklibrary['category'], 0, 1)).sprintf("%02d", count($settings_menu[$oneTasklibrary['category']])+1).". ".$oneTasklibrary["title"],"url"=>'task_libraries/view/'.$oneTasklibrary["id"].'/');
 }
 ?>
 
 <ul class="nav nav-tabs vertical settings d-block" role="tablist">
     <?php
-    
     foreach ($settings_menu as $key => $value) {
 
         //collapse the selected settings tab panel
@@ -32,15 +30,15 @@ foreach($allTasks as $oneTask){
             $collapse_in = "show";
             $collapsed_class = "";
         }
-        $keys=explode(" ",$key);
         ?>
 
-        <div class="clearfix settings-anchor <?php echo $collapsed_class; ?>" data-bs-toggle="collapse" data-bs-target="#settings-tab-<?php echo $keys[0]; ?>">
+        <div class="clearfix settings-anchor <?php echo $collapsed_class; ?>" data-bs-toggle="collapse" data-bs-target="#settings-tab-<?php echo explode(" ",$key)[0]; ?>">
             <?php echo $key; ?>
         </div>
 
         <?php
-        echo "<div id='settings-tab-".$keys[0]."' class='collapse $collapse_in'>";
+        // echo "<div id='settings-tab-$key' class='collapse $collapse_in'>";
+        echo "<div id='settings-tab-".explode(" ",$key)[0]."' class='collapse'>";
         echo "<ul class='list-group help-catagory'>";
 
         foreach ($value as $sub_setting) {
