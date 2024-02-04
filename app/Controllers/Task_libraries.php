@@ -574,5 +574,8 @@ class Task_libraries extends Security_Controller {
             $this->Custom_field_values_model->ci_save($field_value_data);
         }
     }
+    function get_count($category){
+        echo $this->Task_libraries_model->getCount("category",$category);
+    }
 
 }
