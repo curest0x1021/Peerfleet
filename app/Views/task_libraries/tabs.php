@@ -15,7 +15,7 @@ foreach ($allTasklibraries as $oneTasklibrary) {
     if($oneTasklibrary["category"]=="") $oneTasklibrary["category"]="Others";
     if(!isset($settings_menu[$oneTasklibrary['category']])) $settings_menu[$oneTasklibrary['category']]=array();
     if($oneTasklibrary['category']=="") $settings_menu["Others"][]=array("name"=>$oneTasklibrary["title"],"url"=>'task_libraries/'.$oneTasklibrary["id"].'/edit');
-    else $settings_menu[$oneTasklibrary['category']][]=array("name"=>strtoupper(substr($oneTasklibrary['category'], 0, 1)).sprintf("%02d", count($settings_menu[$oneTasklibrary['category']])+1).". ".$oneTasklibrary["title"],"url"=>'task_libraries/view/'.$oneTasklibrary["id"].'/');
+    else $settings_menu[$oneTasklibrary['category']][]=array("name"=>$oneTasklibrary['dock_list_number'].". ".$oneTasklibrary["title"],"url"=>'task_libraries/view/'.$oneTasklibrary["id"].'/');
 }
 ?>
 
