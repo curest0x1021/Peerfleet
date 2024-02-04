@@ -79,6 +79,14 @@ class CreateTaskLibraries extends Migration
                 'type'=>'FLOAT',
                 'default'=>0
             ],
+            'start_date'=>[
+                'type'=>'DATE',
+                'null'=>true
+            ],
+            'deadline'=>[
+                'type'=>'DATE',
+                'null'=>true
+            ],
             'gas_free_certificate'=>[
                 'type'=>'TINYINT',
                 'default'=>0
