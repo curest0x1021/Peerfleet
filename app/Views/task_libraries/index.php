@@ -3,10 +3,10 @@
         <div class="col-sm-3 col-lg-2">
             <?php
             $tab_view['active_tab'] = "general";
-            echo view("task_libraries/tabs_new", $tab_view);
+            echo view("task_libraries/tabs", $tab_view);
             ?>
         </div>
-        
+
         <div class="col-sm-9 col-lg-10">
             <div class="card">
                 <div class="card-body">
@@ -15,16 +15,19 @@
                         <label for="title" style="margin:10px" >Search:</label>
                         <input class="form-control" type="text" style="width:20%"  name="search" />
                         <div style="margin:5px" >
-                        <?php echo modal_anchor(get_uri("task_libraries/upload_modal"), "<i data-feather='upload' class='icon-16'></i> " . "Import Libraries", array("class" => "btn btn-default import_tasks_btn", "title" => "Import Task Libraries")); ?>
+                        <?php echo modal_anchor(get_uri("task_libraries/import_modal"), "<i data-feather='upload' class='icon-16'></i> " . "Import Libraries", array("class" => "btn btn-default import_tasks_btn", "title" => "Import Task Libraries")); ?>
                         </div>
-                        <?php echo modal_anchor(get_uri("task_libraries/download_modal"), "<i data-feather='external-link' class='icon-16'></i> " . "Export", array("class" => "btn btn-default export-excel-btn", "title" => "Export Task Libraries")); ?>
+                        <?php echo modal_anchor(get_uri("task_libraries/export_modal"), "<i data-feather='external-link' class='icon-16'></i> " . "Export", array("class" => "btn btn-default export-excel-btn", "title" => "Export Task Libraries")); ?>
                     </div>
                 </div>
             </div>
-            <?php echo form_open(get_uri("tasklibraries/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
             <div class="card">
+                <?php echo form_open(get_uri("task_libraries/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
+                <?php if(isset($gotTasklibrary))
+                    echo '<input hidden name="id" value="'.$gotTasklibrary->id.'" />';
+                ?>
                 <div class="card-header d-flex justify-content-between">
-                    <h4>Task Template Edit</h4>
+                    <h4>Task Library Edit</h4>
                     <div>
                         <!-- <button type="button" class="btn btn-danger" style="margin-right:10" ><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</button> -->
                         <button type="submit" 
@@ -33,6 +36,7 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -43,11 +47,11 @@
                                         echo form_input(array(
                                             "id" => "title",
                                             "name" => "title",
-                                            "value" => "",
+                                            "value" => isset($gotTasklibrary) ?$gotTasklibrary->title:"",
                                             "class" => "form-control",
                                             "placeholder" => app_lang('title'),
-                                            "required"=>true,
                                             "autofocus" => true,
+                                            "required"=>true,
                                             "data-rule-required" => true,
                                             "data-msg-required" => app_lang("field_required"),
                                         ));
@@ -71,14 +75,12 @@
                                         array("id"=>"Common systems","text"=>"Common systems"),
                                         array("id"=>"Others","text"=>"Others"),
                                     );
-                                    
 
                                     echo form_input(array(
                                         "id" => "category",
                                         "name" => "category",
-                                        "value" => "",
+                                        "value" => isset($gotTasklibrary)?$gotTasklibrary->category:"",
                                         "class" => "form-control",
-                                        "required"=>true,
                                         "placeholder" => app_lang('category'),
                                         "data-rule-required" => true,
                                         "data-msg-required" => app_lang("field_required"),
@@ -95,7 +97,7 @@
                                         echo form_input(array(
                                             "id" => "dock_list_number",
                                             "name" => "dock_list_number",
-                                            "value" => "",
+                                            "value" => isset($gotTasklibrary)?$gotTasklibrary->dock_list_number:"",
                                             "class" => "form-control",
                                             "maxlength" => 15,
                                             "placeholder" => app_lang('dock_list_number'),
@@ -105,13 +107,34 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <label for="assigned_to" class="col-md-3"><?php echo app_lang('assign_to'); ?></label>
+                                    <div class="col-md-9">
+                                        <?php
+                                        echo form_input(array(
+                                            "id" => "assigned_to",
+                                            "name" => "assigned_to",
+                                            "value" => isset($gotTasklibrary)?$gotTasklibrary->assigned_to:"",
+                                            "class" => "form-control",
+                                            "placeholder" => app_lang('assign_to')
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <div class="row">
                                     <label for="collaborators" class="col-md-3"><?php echo app_lang('collaborators'); ?></label>
                                     <div class="col-md-9">
                                     <?php
                                     $collaborators_dropdown = array(
+                                        array(
+                                            "id"=>"-",
+                                            "text"=>"-"
+                                        ),
                                         array(
                                             "id"=>"Ines Erna",
                                             "text"=>"Ines Erna"
@@ -137,7 +160,7 @@
                                     echo form_input(array(
                                         "id" => "collaborators",
                                         "name" => "collaborators",
-                                        "value" => "",
+                                        "value" => isset($gotTasklibrary)?$gotTasklibrary->collaborators:"-",
                                         "class" => "form-control",
                                         "required"=>true,
                                         "placeholder" => app_lang('collaborators'),
@@ -150,107 +173,65 @@
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="status" class="col-md-3"><?php echo app_lang('status'); ?></label>
+                                    <label for="status_id" class="col-md-3"><?php echo app_lang('status'); ?></label>
                                     <div class="col-md-9">
-                                    <?php
-                                        $status_dropdown = array(
-                                            array(
-                                                "id"=>"To Do",
-                                                "text"=>"To Do"
-                                            ),
-                                            array(
-                                                "id"=>"Approved",
-                                                "text"=>"Approved"
-                                            ),
-                                            array(
-                                                "id"=>"In Progress",
-                                                "text"=>"In Progress"
-                                            ),
-                                            array(
-                                                "id"=>"Done",
-                                                "text"=>"Done"
-                                            ),
-                                            array(
-                                                "id"=>"Rejected",
-                                                "text"=>"Rejected"
-                                            ),
-                                        );
-
+                                        <?php
+                                        $status_dropdown=array();
+                                        foreach($allStatus as $oneStatus){
+                                            $status_dropdown[]=array("id"=>$oneStatus['id'],'text'=>$oneStatus['title']);
+                                        }
                                         echo form_input(array(
-                                            "id" => "status",
-                                            "name" => "status",
-                                            "value" => "",
-                                            "class" => "form-control",
-                                            "required"=>true,
-                                            "placeholder" => app_lang('status'),
-                                            "data-rule-required" => true,
-                                            "data-msg-required" => app_lang("field_required"),
+                                            "id" => "status_id",
+                                            "name" => "status_id",
+                                            "value" => isset($gotTasklibrary)?$gotTasklibrary->status_id:"",
+                                            "class" => "form-control"
                                         ));
-                                    ?>
+                                        ?>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <label for="priority" class="col-md-3"><?php echo app_lang('priority'); ?></label>
-                                    <div class="col-md-9">
-                                    <?php
-                                        $priority_dropdown = array(
-                                            array(
-                                                "id"=>"Minor",
-                                                "text"=>"Minor"
-                                            ),
-                                            array(
-                                                "id"=>"Major",
-                                                "text"=>"Major"
-                                            ),
-                                            array(
-                                                "id"=>"Critical",
-                                                "text"=>"Critical"
-                                            ),
-                                            array(
-                                                "id"=>"Blocker",
-                                                "text"=>"Blocker"
-                                            )
-                                        );
-
-                                        echo form_input(array(
-                                            "id" => "priority",
-                                            "name" => "priority",
-                                            "value" => "",
-                                            "class" => "form-control",
-                                            "required"=>true,
-                                            "placeholder" => app_lang('priority'),
-                                            "data-rule-required" => true,
-                                            "data-msg-required" => app_lang("field_required"),
-                                        ));
-                                    ?>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="milestone" class="col-md-3"><?php echo app_lang('milestone'); ?></label>
+                                    <label for="priority_id" class="col-md-3"><?php echo app_lang('priority'); ?></label>
                                     <div class="col-md-9">
-                                    <?php
-                                        $milestone_dropdown = array(
-                                            array("text"=>"-","id"=>"-")
-                                        );
-
+                                        <?php
+                                        $priority_dropdown=array();
+                                        foreach($allPriorities as $onePriority){
+                                            $priority_dropdown[]=array("id"=>$onePriority['id'],'text'=>$onePriority['title']);
+                                        }
                                         echo form_input(array(
-                                            "id" => "milestone",
-                                            "name" => "milestone",
-                                            "value" => "",
+                                            "id" => "priority_id",
+                                            "name" => "priority_id",
+                                            "value" => isset($gotTasklibrary)?$gotTasklibrary->priority_id:"",
                                             "class" => "form-control",
-                                            "required"=>true,
-                                            "placeholder" => app_lang('milestone'),
-                                            "data-rule-required" => true,
-                                            "data-msg-required" => app_lang("field_required"),
+                                            "maxlength" => 15,
+                                            "placeholder" => app_lang('priority'),
                                         ));
-                                    ?>
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label for="milestone_id" class="col-md-3"><?php echo app_lang('milestone'); ?></label>
+                                    <div class="col-md-9">
+                                        <?php
+                                        $milestone_dropdown=array();
+                                        foreach ($allMilestones as $oneMilestone) {
+                                            $milestone_dropdown[]=array("id"=>$oneMilestone['id'],"text"=>$oneMilestone['title']);
+                                        }
+                                        echo form_input(array(
+                                            "id" => "milestone_id",
+                                            "name" => "milestone_id",
+                                            "value" => isset($gotTasklibrary)?$gotTasklibrary->milestone_id:"",
+                                            "class" => "form-control",
+                                            "placeholder" => app_lang('milestone')
+                                        ));
+                                        ?>
                                     </div>
                                 </div>
                             </div>
@@ -258,47 +239,27 @@
                                 <div class="row">
                                     <label for="supplier" class="col-md-3"><?php echo app_lang('supplier'); ?></label>
                                     <div class="col-md-9">
-                                    <?php
-                                    $supplier_dropdown = array(
-                                        array(
-                                            "id"=>"Yard",
-                                            "text"=>"Yard"
-                                        ),
-                                        array(
-                                            "id"=>"Specialist",
-                                            "text"=>"Specialist"
-                                        ),
-                                        array(
-                                            "id"=>"Both",
-                                            "text"=>"Both"
-                                        ),
-                                    );
-
-                                    echo form_input(array(
-                                        "id" => "supplier",
-                                        "name" => "supplier",
-                                        "value" => "",
-                                        "class" => "form-control",
-                                        "required"=>true,
-                                        "placeholder" => app_lang('supplier'),
-                                        "data-rule-required" => true,
-                                        "data-msg-required" => app_lang("field_required"),
-                                    ));
-                                    ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <label for="assigned_to" class="col-md-3"><?php echo app_lang('assign_to'); ?></label>
-                                    <div class="col-md-9">
                                         <?php
+                                        $suppliers_dropdown=array(
+                                            array(
+                                                "id"=>"Yard",
+                                                "text"=>"Yard"
+                                            ),
+                                            array(
+                                                "id"=>"Specialist",
+                                                "text"=>"Specialist"
+                                            ),
+                                            array(
+                                                "id"=>"Both",
+                                                "text"=>"Both"
+                                            ),
+                                        );
                                         echo form_input(array(
-                                            "id" => "assigned_to",
-                                            "name" => "assigned_to",
-                                            "value" => "",
+                                            "id" => "supplier",
+                                            "name" => "supplier",
+                                            "value" => isset($gotTasklibrary)?$gotTasklibrary->supplier:"",
                                             "class" => "form-control",
-                                            "placeholder" => app_lang('assign_to')
+                                            "placeholder" => app_lang('supplier'),
                                         ));
                                         ?>
                                     </div>
@@ -309,24 +270,23 @@
 
                     <div class="form-group">
                         <div class="row">
-                            <label for="description" class="col-md-1"><?php echo app_lang('description'); ?></label>
-                            <div class="col-md-11"    >
+                            <label for="description" class=" col-md-1"><?php echo app_lang('description'); ?></label>
+                            <div class=" col-md-11">
                                 <div class="row" >
-                                    <div style='width:3%' ></div>
-                                    <div style='width:97%' >
-                                        <?php
-                                        echo form_textarea(array(
-                                            "id" => "description",
-                                            "name" => "description",
-                                            "value" => "",
-                                            "class" => "form-control",
-                                            "placeholder" => app_lang('description'),
-                                            "data-rich-text-editor" => true
-                                        ));
-                                        ?>
+                                    <div style="width:3%" ></div>
+                                    <div style="width:97%" >
+                                    <?php
+                                    echo form_textarea(array(
+                                        "id" => "description",
+                                        "name" => "description",
+                                        "value" => isset($gotTasklibrary)?$gotTasklibrary->description:"",
+                                        "class" => "form-control",
+                                        "placeholder" => app_lang('description'),
+                                        "data-rich-text-editor" => true,
+                                    ));
+                                    ?>
                                     </div>
                                 </div>
-                                
                             </div>
                         </div>
                     </div>
@@ -336,19 +296,19 @@
                             <label for="location" class=" col-md-1"><?php echo app_lang('location'); ?></label>
                             <div class=" col-md-11">
                                 <div class="row" >
-                                    <div style='width:3%' ></div>
-                                    <div style='width:97%' >
-                                        <?php
-                                        echo form_textarea(array(
-                                            "id" => "location",
-                                            "name" => "location",
-                                            "value" => "",
-                                            "class" => "form-control",
-                                            "placeholder" => app_lang('location'),
-                                            "maxlength" => 300,
-                                            "data-rich-text-editor" => true,
-                                        ));
-                                        ?>
+                                    <div style="width:3%" ></div>
+                                    <div style="width:97%" >
+                                    <?php
+                                    echo form_textarea(array(
+                                        "id" => "location",
+                                        "name" => "location",
+                                        "value" => isset($gotTasklibrary)?$gotTasklibrary->location:"",
+                                        "class" => "form-control",
+                                        "placeholder" => app_lang('location'),
+                                        "maxlength" => 300,
+                                        "data-rich-text-editor" => true,
+                                    ));
+                                    ?>
                                     </div>
                                 </div>
                             </div>
@@ -360,70 +320,25 @@
                             <label for="specification" class=" col-md-1"><?php echo app_lang('specification'); ?></label>
                             <div class=" col-md-11">
                                 <div class="row" >
-                                    <div style='width:3%' ></div>
-                                    <div style='width:97%' >
-                                        <?php
-                                        echo form_textarea(array(
-                                            "id" => "specification",
-                                            "name" => "specification",
-                                            "value" => "",
-                                            "class" => "form-control",
-                                            "placeholder" => app_lang('specification_placeholder'),
-                                            "maxlength" => 300,
-                                            "data-rich-text-editor" => true,
-                                        ));
-                                        ?>
+                                    <div style="width:3%" ></div>
+                                    <div style="width:97%" >
+                                    <?php
+                                    echo form_textarea(array(
+                                        "id" => "specification",
+                                        "name" => "specification",
+                                        "value" => isset($gotTasklibrary)?$gotTasklibrary->specification:"",
+                                        "class" => "form-control",
+                                        "placeholder" => app_lang('specification_placeholder'),
+                                        "maxlength" => 300,
+                                        "data-rich-text-editor" => true,
+                                    ));
+                                    ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label for="checklists" class=" col-md-1"><?php echo app_lang('checklists'); ?></label>
-                            <div class=" col-md-11">
-                                <div class="row" >
-                                    <div style='width:3%' ></div>
-                                    <div style='width:97%' >
-                                        <?php
-                                        echo form_textarea(array(
-                                            "id" => "checklists",
-                                            "name" => "checklists",
-                                            "value" => "",
-                                            "class" => "form-control",
-                                            "placeholder" => "checklists",
-                                            "maxlength" => 300,
-                                            "data-rich-text-editor" => true,
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label for="dependencies" class=" col-md-1">Dependencies</label>
-                            <div class=" col-md-11">
-                                <div class="row" >
-                                    <div style='width:3%' ></div>
-                                    <div style='width:97%' >
-                                        <?php
-                                        echo form_textarea(array(
-                                            "id" => "dependencies",
-                                            "name" => "dependencies",
-                                            "value" => "",
-                                            "class" => "form-control",
-                                            "placeholder" => "dependencies",
-                                            "maxlength" => 300,
-                                            "data-rich-text-editor" => true,
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                     <div class="row">
                         <div class="col-md-8">
                             <div class="form-group">
@@ -831,6 +746,8 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="row" >
                         <div class="col-md-6" >
                             <div class="card" style="border: solid 1px lightgray;">
                                 <div class="card-header d-flex">
@@ -863,117 +780,201 @@
                                 
                             </div>
                         </div>
-                        <div class="col-md-6" ></div>
-                        <!-- <div class="col-md-6" >
-                            <div class="card" style="border: solid 1px lightgray;">
-                                <div class="card-header d-flex">
-                                    <b>Owner's supply</b>
+                        <div class="col-md-5" >
+                            <!--checklist-->
+                            <?php 
+                            // echo form_open(get_uri("tasks/save_checklist_item"), array("id" => "checklist_form", "class" => "general-form", "role" => "form")); 
+                            ?>
+                            <div class="col-md-12 mb15 b-t">
+                                <div class="pb10 pt10">
+                                    <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count">0</span><span>/</span><span class="chcklists_count"></span>
                                 </div>
-                                <div class="card-body" style="padding:1px" >
-                                    <table class="table " style="margin:0" >
-                                        <thead>
-                                        <tr>
-                                            <td>SUPPLY<br/>PO NUMBER</td>
-                                            <td>SUPPLIER</td>
-                                            <td>STATUS</td>
-                                            <td>COST</td>
-                                            <td>SHARED WITH</td>
-                                            <td style="float:right" ><button class="btn btn-default btn-sm" ><i data-feather="plus" class ></i></button></td>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
+                                <input type="hidden" id="is_checklist_group" name="is_checklist_group" value="" />
+
+                                <div class="checklist-items" id="checklist-items">
+
                                 </div>
-                                
+                                    <div class="mb5 mt5 btn-group checklist-options-panel hide" role="group">
+                                        <button id="type-new-item-button" type="button" class="btn btn-default checklist_button active"> <?php echo app_lang('type_new_item'); ?></button>
+                                        <button id="select-from-template-button" type="button" class="btn btn-default checklist_button"> <?php echo app_lang('select_from_template'); ?></button>
+                                        <button id="select-from-checklist-group-button" type="button" class="btn btn-default checklist_button"> <?php echo app_lang('select_from_checklist_group'); ?></button>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="mt5 p0">
+                                            <?php
+                                            echo form_input(array(
+                                                "id" => "checklist-add-item",
+                                                "name" => "checklist-add-item",
+                                                "class" => "form-control",
+                                                "placeholder" => app_lang('add_item'),
+                                                "data-rule-required" => true,
+                                                "data-msg-required" => app_lang("field_required"),
+                                                "autocomplete" => "off"
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="mb10 p0 checklist-options-panel hide">
+                                        <button type="button" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('add'); ?></button>
+                                        <button id="checklist-options-panel-close" type="button" class="btn btn-default ms-2"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('cancel'); ?></button>
+                                    </div>
                             </div>
-                        </div> -->
-                        <!-- <div class="col-md-6" ></div> -->
-                        <!-- <div class="col-md-6" >
-                            <div class="card" style="border: solid 1px lightgray;">
-                                <div class="card-header d-flex">
-                                    <b>Work order quotes</b>
-                                </div>
-                                <div class="card-body" style="padding:1px" >
-                                    <table class="table " style="margin:0" >
-                                        <thead>
-                                        <tr>
-                                            <td>QUOTE</td>
-                                            <td>COST</td>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>Estimated cost</td>
-                                            <td>USD 0.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Quoted cost</td>
-                                            <td>USD 0.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Billed cost</td>
-                                            <td>USD 0.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Final cost</td>
-                                            <td>USD 0.00</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div> -->
-                        
+                            <?php 
+                            // echo form_close(); 
+                            ?> 
+                        </div>
                     </div>
-                    <button id="file-selector-btn" class="btn btn-default" ><i data-feather="file" class=""></i> Upload File</button>
-                    <input type="file" id="file-selector" hidden/> 
+                    
                 </div>
-                
+                <?php echo form_close(); ?>
             </div>
-            <?php echo form_close(); ?>
         </div>
     </div>
 </div>
 
 <?php echo view("includes/cropbox"); ?>
+
 <script type="text/javascript">
     $(document).ready(function () {
         $("#category").select2({
-            multiple: false,
             data: <?php echo (json_encode($category_dropdown)); ?>
         });
-        $("#supplier").select2({
-            multiple: false,
-            data: <?php echo (json_encode($supplier_dropdown)); ?>
-        });
-        $("#milestone").select2({
-            multiple: false,
-            data: <?php echo (json_encode($milestone_dropdown)); ?>
-        });
-        $("#status").select2({
-            multiple: false,
-            data: <?php echo (json_encode($status_dropdown)); ?>
-        });
-        $("#priority").select2({
-            multiple: false,
-            data: <?php echo (json_encode($priority_dropdown)); ?>
-        });
         $("#collaborators").select2({
-            multiple: false,
             data: <?php echo (json_encode($collaborators_dropdown)); ?>
         });
-        
-        $('#description').summernote({
-            height:250
+        $("#status_id").select2({
+            data: <?php echo (json_encode($status_dropdown)); ?>
         });
-        $("#file-selector-btn").on('click',function(){
-            $("#file-selector").click()
-        })
+        $("#priority_id").select2({
+            data: <?php echo (json_encode($priority_dropdown)); ?>
+        });
+        $("#milestone_id").select2({
+            data: <?php echo (json_encode($milestone_dropdown)); ?>
+        });
+        $("#supplier").select2({
+            data: <?php echo (json_encode($suppliers_dropdown)); ?>
+        });
         setDatePicker("#start_date");
-        setDatePicker("#deadline");
+    setDatePicker("#deadline");
+    $('#description').summernote({
+        height:250
+    });
     });
 
     
-    
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        var $selector = $("#checklist-items");
+        Sortable.create($selector[0], {
+            animation: 150,
+            chosenClass: "sortable-chosen",
+            ghostClass: "sortable-ghost",
+            onUpdate: function (e) {
+                appLoader.show();
+                //prepare checklist items indexes
+                var data = "";
+                $.each($selector.find(".checklist-item-row"), function (index, ele) {
+                    if (data) {
+                        data += ",";
+                    }
+
+                    data += $(ele).attr("data-id") + "-" + parseInt(index + 1);
+                });
+
+                //update sort indexes
+                $.ajax({
+                    url: '<?php echo_uri("todo/save_checklist_items_sort") ?>',
+                    type: "POST",
+                    data: {sort_values: data},
+                    success: function () {
+                        appLoader.hide();
+                    }
+                });
+            }
+        });
+
+        //show the items in checklist
+
+        //show save & cancel button when the checklist-add-item-form is focused
+        $("#checklist-add-item").focus(function () {
+            $(".checklist-options-panel").removeClass("hide");
+            $("#checklist-add-item-error").removeClass("hide");
+        });
+
+        $("#checklist-options-panel-close").click(function () {
+            $(".checklist-options-panel").addClass("hide");
+            $("#checklist-add-item-error").addClass("hide");
+            $("#checklist-add-item").val("");
+
+            $("#checklist-add-item").select2("destroy").val("");
+            $("#checklist-template-toggle-button").html("<?php echo "<i data-feather='hash' class='icon-16'></i> " . app_lang('select_from_template'); ?>");
+            $("#checklist-template-toggle-button").addClass('checklist-template-button');
+            feather.replace();
+
+            $(".checklist_button").removeClass("active");
+            $("#type-new-item-button").addClass("active");
+        });
+
+        //count checklists
+        function count_checklists() {
+            var checklists = $(".checklist-items .checklist-item-row").length;
+            $(".chcklists_count").text(checklists);
+
+            //reload kanban
+            $("#reload-kanban-button:visible").trigger("click");
+        }
+
+        var checklists = $(".checklist-items .checklist-item-row").length;
+        $(".delete-checklist-item").click(function () {
+            checklists--;
+            $(".chcklists_count").text(checklists);
+        });
+
+        count_checklists();
+
+        var checklist_complete = $(".checklist-items .checkbox-checked").length;
+        $(".chcklists_status_count").text(checklist_complete);
+
+        $("#checklist_form").appForm({
+            isModal: false,
+            onSuccess: function (response) {
+                $("#checklist-add-item").val("");
+                $("#checklist-add-item").focus();
+                $("#checklist-items").append(response.data);
+
+                count_checklists();
+            }
+        });
+
+        $('body').on('click', '[data-act=update-checklist-item-status-checkbox]', function () {
+            var status_checkbox = $(this).find("span");
+            status_checkbox.removeClass("checkbox-checked");
+            status_checkbox.addClass("inline-loader");
+
+            if ($(this).attr('data-value') == 0) {
+                checklist_complete--;
+                $(".chcklists_status_count").text(checklist_complete);
+            } else {
+                checklist_complete++;
+                $(".chcklists_status_count").text(checklist_complete);
+            }
+
+            $.ajax({
+                url: '<?php echo_uri("todo/save_checklist_item_status") ?>/' + $(this).attr('data-id'),
+                type: 'POST',
+                dataType: 'json',
+                data: {value: $(this).attr('data-value')},
+                success: function (response) {
+                    if (response.success) {
+                        status_checkbox.closest("div").html(response.data);
+                        //reload kanban
+                        $("#reload-kanban-button:visible").trigger("click");
+                    }
+                }
+            });
+        });
+    });
 </script>

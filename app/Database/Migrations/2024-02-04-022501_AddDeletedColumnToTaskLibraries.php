@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class AddFieldsToTaskLibraries_deleted extends Migration
+class AddDeletedColumnToTaskLibraries extends Migration
 {
     public function up()
     {
@@ -13,7 +13,7 @@ class AddFieldsToTaskLibraries_deleted extends Migration
             'deleted' => [
                 'type' => 'TINYINT',
                 'default'=>0
-            ]
+            ],
         ]);
     }
 
