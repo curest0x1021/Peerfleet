@@ -577,5 +577,125 @@ class Task_libraries extends Security_Controller {
     function get_count($category){
         echo $this->Task_libraries_model->getCount("category",$category);
     }
+    function get_checklist_group_suggestion() {
+        // $task_id = $this->request->getPost("task_id");
+        // $task_info = $this->Tasks_model->get_one($task_id);
+        // if (!$this->can_edit_tasks($task_info)) {
+        //     app_redirect("forbidden");
+        // }
+
+
+        $key = $this->request->getPost("q");
+        $suggestion = array();
+
+        $items = $this->Checklist_groups_model->get_group_suggestion($key);
+
+        foreach ($items as $item) {
+            $suggestion[] = array("id" => $item->id, "text" => $item->title);
+        }
+
+        echo json_encode($suggestion);
+    }
+
+    //prepare suggestion of checklist template
+    function get_checklist_template_suggestion() {
+        // $task_id = $this->request->getPost("task_id");
+        // $task_info = $this->Tasks_model->get_one($task_id);
+        // if (!$this->can_edit_tasks($task_info)) {
+        //     app_redirect("forbidden");
+        // }
+
+        $key = $this->request->getPost("q");
+        $suggestion = array();
+
+        $items = $this->Checklist_template_model->get_template_suggestion($key);
+
+        foreach ($items as $item) {
+            $suggestion[] = array("id" => $item->title, "text" => $item->title);
+        }
+
+        echo json_encode($suggestion);
+    }
+    function save_checklist_item() {
+
+        // $task_id = $this->request->getPost("task_id");
+        $is_checklist_group = $this->request->getPost("is_checklist_group");
+
+        // $this->validate_submitted_data(array(
+        //     "task_id" => "required|numeric"
+        // ));
+
+        // $task_info = $this->Tasks_model->get_one($task_id);
+
+        // if ($task_id) {
+        //     if (!$this->can_edit_tasks($task_info)) {
+        //         app_redirect("forbidden");
+        //     }
+        // }
+
+        $success_data = "";
+        if ($is_checklist_group) {
+            $checklist_group_id = $this->request->getPost("checklist-add-item");
+            $checklists = $this->Checklist_template_model->get_details(array("group_id" => $checklist_group_id))->getResult();
+            foreach ($checklists as $checklist) {
+                $data = array(
+                    "task_id" => $task_id,
+                    "title" => $checklist->title
+                );
+                $save_id = $this->Checklist_items_model->ci_save($data);
+                if ($save_id) {
+                    $item_info = $this->Checklist_items_model->get_details(array("id" => $save_id))->getRow();
+                    $success_data .= $this->_make_checklist_item_row($item_info);
+                }
+            }
+        } else {
+            $data = array(
+                "task_id" => $task_id,
+                "title" => $this->request->getPost("checklist-add-item")
+            );
+            $save_id = $this->Checklist_items_model->ci_save($data);
+            if ($save_id) {
+                $item_info = $this->Checklist_items_model->get_details(array("id" => $save_id))->getRow();
+                $success_data = $this->_make_checklist_item_row($item_info);
+            }
+        }
+
+        if ($success_data) {
+            echo json_encode(array("success" => true, "data" => $success_data, 'id' => $save_id));
+        } else {
+            echo json_encode(array("success" => false));
+        }
+    }
+    private function _make_checklist_item_row($data = array(), $return_type = "row") {
+        $checkbox_class = "checkbox-blank";
+        $title_class = "";
+        $is_checked_value = 1;
+        $title_value = link_it($data->title);
+
+        if ($data->is_checked == 1) {
+            $is_checked_value = 0;
+            $checkbox_class = "checkbox-checked";
+            $title_class = "text-line-through text-off";
+            $title_value = $data->title;
+        }
+
+        $status = js_anchor("<span class='$checkbox_class mr15 float-start'></span>", array('title' => "", "data-id" => $data->id, "data-value" => $is_checked_value, "data-act" => "update-checklist-item-status-checkbox"));
+        if (!$this->can_edit_tasks($data->task_id)) {
+            $status = "";
+        }
+
+        $title = "<span class='font-13 $title_class'>" . $title_value . "</span>";
+
+        $delete = ajax_anchor(get_uri("tasks/delete_checklist_item/$data->id"), "<div class='float-end'><i data-feather='x' class='icon-16'></i></div>", array("class" => "delete-checklist-item", "title" => app_lang("delete_checklist_item"), "data-fade-out-on-success" => "#checklist-item-row-$data->id"));
+        if (!$this->can_edit_tasks($data->task_id)) {
+            $delete = "";
+        }
+
+        if ($return_type == "data") {
+            return $status . $delete . $title;
+        }
+
+        return "<div id='checklist-item-row-$data->id' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='$data->id'>" . $status . $delete . $title . "</div>";
+    }
 
 }
