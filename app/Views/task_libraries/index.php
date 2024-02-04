@@ -100,6 +100,7 @@
                                             "value" => isset($gotTasklibrary)?$gotTasklibrary->dock_list_number:"",
                                             "class" => "form-control",
                                             "maxlength" => 15,
+                                            "readonly"=>true,
                                             "placeholder" => app_lang('dock_list_number'),
                                         ));
                                         ?>
@@ -841,6 +842,20 @@
         $("#category").select2({
             data: <?php echo (json_encode($category_dropdown)); ?>
         });
+        $("#category").on("change",function(e){
+            
+            $.ajax({
+                url: '<?php echo_uri("task_libraries/get_count"); ?>/'+e.target.value,
+                type: 'GET',
+                // dataType: 'json',
+                // data: {value: $(this).attr('data-value')},
+                success: function (response) {
+                    console.log(response)
+                    var prefix=e.target.value[0].toUpperCase();
+                    $("#dock_list_number")[0].value=prefix+(Number(response)+1).toString().padStart(2, '0');
+                }
+            });
+        })
         $("#collaborators").select2({
             data: <?php echo (json_encode($collaborators_dropdown)); ?>
         });

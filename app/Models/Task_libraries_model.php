@@ -12,4 +12,8 @@ class Task_libraries_model extends Crud_model
         $this->table = 'task_libraries';
         parent::__construct($this->table);
     }
+    public function getCount($columnName, $specialValue)
+    {
+        return $this->where($columnName, $specialValue)->countAllResults();
+    }
 }
