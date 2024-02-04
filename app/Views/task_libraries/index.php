@@ -94,10 +94,24 @@
                                     <label for="dock_list_number" class="col-md-4"><?php echo app_lang('dock_list_number'); ?></label>
                                     <div class="col-md-8">
                                         <?php
+                                        $dock_list_number_now="";
+                                        if(isset($gotTasklibrary)){
+                                            $count=1;
+                                            if(!$gotTasklibrary->category){
+                                                $gotTasklibrary["category"]="Others";
+                                            }
+                                            foreach($allTasklibraries as $oneTaskLibrary){
+                                                if($oneTaskLibrary['title']==$gotTasklibrary->title) break;
+                                                if($oneTaskLibrary['category']==$gotTasklibrary->category) $count++;
+                                            }
+                                            $dock_list_number_now=strtoupper($gotTasklibrary->category[0]).sprintf("%02d",$count);
+                                        }
+                                        
                                         echo form_input(array(
                                             "id" => "dock_list_number",
                                             "name" => "dock_list_number",
-                                            "value" => isset($gotTasklibrary)?$gotTasklibrary->dock_list_number:"",
+                                            // "value" => isset($gotTasklibrary)?$gotTasklibrary->dock_list_number:"",
+                                            "value" => $dock_list_number_now,
                                             "class" => "form-control",
                                             "maxlength" => 15,
                                             "readonly"=>true,
@@ -887,7 +901,6 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        
         var $selector = $("#checklist-items");
         Sortable.create($selector[0], {
             animation: 150,
