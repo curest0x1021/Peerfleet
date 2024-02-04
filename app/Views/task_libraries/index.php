@@ -771,13 +771,13 @@
                                     <b>Quotes from yard</b>
                                 </div>
                                 <div class="card-body" style="padding:1px" >
-                                    <table class="table " style="margin:0" >
+                                    <table id="table-quotes-from-yard" class="table " style="margin:0" >
                                         <thead>
                                         <tr>
                                             <td>Cost item name</td>
                                             <td>UNIT PRICE AND QUANTITY</td>
                                             <td>QUOTE</td>
-                                            <td style="float:right" ><button class="btn btn-default btn-sm" ><i data-feather="plus" class ></i></button></td>
+                                            <td style="float:right" ><button type="button" id="btn-add-new-quote" class="btn btn-default btn-sm" ><i data-feather="plus" class ></i></button></td>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -785,11 +785,13 @@
                                             <td>Initial Visit Incl Transport</td>
                                             <td>1.0 visit X USD 0.00 (Per unit)</td>
                                             <td>USD 0.00</td>
+                                            <td></td>
                                         </tr>
                                         <tr>
                                             <td>Subsequent Visits Incl Transport</td>
                                             <td>20.0 visit X USD 0.00 (Per unit)</td>
                                             <td>USD 0.00</td>
+                                            <td></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -809,7 +811,7 @@
                                 <input type="hidden" id="is_checklist_group" name="is_checklist_group" value="" />
 
                                 <div class="checklist-items" id="checklist-items">
-
+                                <div id='checklist-item-row-33' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='33'><a href=\"#\" title=\"\" data-id=\"33\" data-value=\"1\" data-act=\"update-checklist-item-status-checkbox\"><span class='checkbox-blank mr15 float-start'></span></a><a href=\"#\" class=\"delete-checklist-item\" title=\"Delete checklist item\" data-fade-out-on-success=\"#checklist-item-row-33\" data-act=\"ajax-request\" data-action-url=\"http://localhost/peerfleet-git/index.php/tasks/delete_checklist_item/33\"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>qwefqwefqwe</span></div>
                                 </div>
                                     <div class="mb5 mt5 btn-group checklist-options-panel hide" role="group">
                                         <button id="type-new-item-button" type="button" class="btn btn-default checklist_button active"> <?php echo app_lang('type_new_item'); ?></button>
@@ -832,7 +834,7 @@
                                         </div>
                                     </div>
                                     <div class="mb10 p0 checklist-options-panel hide">
-                                        <button type="button" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('add'); ?></button>
+                                        <button id="add-checklist-item" type="button" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('add'); ?></button>
                                         <button id="checklist-options-panel-close" type="button" class="btn btn-default ms-2"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('cancel'); ?></button>
                                     </div>
                             </div>
@@ -982,7 +984,76 @@
                 count_checklists();
             }
         });
+         //change the add checklist input box type
+         $("#select-from-template-button").click(function() {
+            $(".checklist_button").removeClass("active");
+            applySelect2OnChecklistTemplate();
+            $(this).addClass("active");
+            $("#is_checklist_group").val("0");
+        });
 
+        $("#select-from-checklist-group-button").click(function() {
+            $(".checklist_button").removeClass("active");
+            applySelect2OnChecklistGroup();
+            $(this).addClass("active");
+            $("#is_checklist_group").val("1");
+        });
+
+        $("#type-new-item-button").click(function() {
+            $(".checklist_button").removeClass("active");
+            $("#checklist-add-item").select2("destroy").val("").focus();
+            $("#is_checklist_group").val("0");
+            $(this).addClass("active");
+        });
+
+        function applySelect2OnChecklistTemplate() {
+            $("#checklist-add-item").select2({
+                showSearchBox: true,
+                ajax: {
+                    url: "<?php echo get_uri("task_libraries/get_checklist_template_suggestion"); ?>",
+                    type: 'POST',
+                    dataType: 'json',
+                    quietMillis: 250,
+                    data: function(term, page) {
+                        return {
+                            q: term, // search term
+                        };
+                    },
+                    results: function(data, page) {
+                        return {
+                            results: data
+                        };
+                        $("#checklist-add-item").val("");
+                    }
+                }
+            });
+        }
+
+        function applySelect2OnChecklistGroup() {
+            $("#checklist-add-item").select2({
+                showSearchBox: true,
+                ajax: {
+                    url: "<?php echo get_uri("task_libraries/get_checklist_group_suggestion"); ?>",
+                    type: 'POST',
+                    dataType: 'json',
+                    quietMillis: 250,
+                    data: function(term, page) {
+                        return {
+                            q: term, // search term
+                        };
+                    },
+                    results: function(data, page) {
+                        return {
+                            results: data
+                        };
+                        $("#checklist-add-item").val("");
+                    }
+                }
+            });
+        }
+        $("#add-checklist-item").on("click",function(){
+            console.log($("#checklist-add-item")[0].value)
+        })
         $('body').on('click', '[data-act=update-checklist-item-status-checkbox]', function () {
             var status_checkbox = $(this).find("span");
             status_checkbox.removeClass("checkbox-checked");
@@ -1010,5 +1081,39 @@
                 }
             });
         });
+        $("#btn-add-new-quote").on("click",function(){
+            
+            var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow();
+
+            var cell0 = newRow.insertCell(0);
+            var cell1 = newRow.insertCell(1);
+            var cell2 = newRow.insertCell(2);
+            var cell3 = newRow.insertCell(3);
+
+            cell0.innerHTML = `<input class="form-control" id="quote_name" />`;
+            cell1.innerHTML = `<input class="form-control" id="quote_price" />`;
+            cell2.innerHTML = `<input class="form-control" id="quote_quote" />`;
+            cell3.innerHTML = `<button onClick="save_new_quote()" type="button" id="btn-save-new-quote" class="btn btn-default" ><i data-feather="check" ></i></button>`;
+            $("#btn-add-new-quote").prop("disabled", true);
+        })
+
+        
     });
+    function save_new_quote(){
+        var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow();
+
+            var cell0 = newRow.insertCell(0);
+            var cell1 = newRow.insertCell(1);
+            var cell2 = newRow.insertCell(2);
+            var cell3 = newRow.insertCell(3);
+
+            cell0.innerHTML = $("#quote_name")[0].value;
+            cell1.innerHTML = $("#quote_price")[0].value;
+            cell2.innerHTML = $("#quote_quote")[0].value;
+            cell3.innerHTML = "";
+            $("#btn-save-new-quote")[0].closest("tr").remove();
+            $("#btn-add-new-quote").prop("disabled", false);
+        }
 </script>
