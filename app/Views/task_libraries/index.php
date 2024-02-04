@@ -827,7 +827,8 @@
                             ?> 
                         </div>
                     </div>
-                    
+                    <button type="button" id="file-selector-btn" class="btn btn-default" ><i data-feather="file" class=""></i> Upload File</button>
+                    <input type="file" id="file-selector" hidden/> 
                 </div>
                 <?php echo form_close(); ?>
             </div>
@@ -839,6 +840,9 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $("#file-selector-btn").on("click",function(){
+            $("#file-selector")[0].click();
+        })
         $("#category").select2({
             data: <?php echo (json_encode($category_dropdown)); ?>
         });
