@@ -111,14 +111,110 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <div class="row">
+                                    <label for="supplier" class="col-md-3"><?php echo app_lang('supplier'); ?></label>
+                                    <div class="col-md-9">
+                                        <?php
+                                        $suppliers_dropdown=array(
+                                            array(
+                                                "id"=>"Yard",
+                                                "text"=>"Yard"
+                                            ),
+                                            array(
+                                                "id"=>"Specialist",
+                                                "text"=>"Specialist"
+                                            ),
+                                            array(
+                                                "id"=>"Both",
+                                                "text"=>"Both"
+                                            ),
+                                        );
+                                        echo form_input(array(
+                                            "id" => "supplier",
+                                            "name" => "supplier",
+                                            "value" =>isset($gotTasklibrary)&& $gotTasklibrary->supplier?$gotTasklibrary->supplier:$suppliers_dropdown[0]['id'],
+                                            "class" => "form-control",
+                                            "placeholder" => app_lang('supplier'),
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label for="status_id" class="col-md-3"><?php echo app_lang('status'); ?></label>
+                                    <div class="col-md-9">
+                                        <?php
+                                        $status_dropdown=array();
+                                        foreach($allStatus as $oneStatus){
+                                            $status_dropdown[]=array("id"=>$oneStatus['id'],'text'=>$oneStatus['title']);
+                                        }
+                                        echo form_input(array(
+                                            "id" => "status_id",
+                                            "name" => "status_id",
+                                            "value" => isset($gotTasklibrary)&&$gotTasklibrary->status_id?$gotTasklibrary->status_id:$status_dropdown[0]['id'],
+                                            "class" => "form-control"
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label for="priority_id" class="col-md-3"><?php echo app_lang('priority'); ?></label>
+                                    <div class="col-md-9">
+                                        <?php
+                                        $priority_dropdown=array();
+                                        foreach($allPriorities as $onePriority){
+                                            $priority_dropdown[]=array("id"=>$onePriority['id'],'text'=>$onePriority['title']);
+                                        }
+                                        echo form_input(array(
+                                            "id" => "priority_id",
+                                            "name" => "priority_id",
+                                            "value" => isset($gotTasklibrary)&&$gotTasklibrary->priority_id?$gotTasklibrary->priority_id:$priority_dropdown[0]['id'],
+                                            "class" => "form-control",
+                                            "maxlength" => 15,
+                                            "placeholder" => app_lang('priority'),
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            
+                            <div class="form-group">
+                                <div class="row">
+                                    <label for="milestone_id" class="col-md-3"><?php echo app_lang('milestone'); ?></label>
+                                    <div class="col-md-9">
+                                        <?php
+                                        $milestone_dropdown=array();
+                                        foreach ($allMilestones as $oneMilestone) {
+                                            $milestone_dropdown[]=array("id"=>$oneMilestone['id'],"text"=>$oneMilestone['title']);
+                                        }
+                                        echo form_input(array(
+                                            "id" => "milestone_id",
+                                            "name" => "milestone_id",
+                                            "value" => isset($gotTasklibrary)&&$gotTasklibrary->milestone_id?$gotTasklibrary->milestone_id:$milestone_dropdown[0]['id'],
+                                            "class" => "form-control",
+                                            "placeholder" => app_lang('milestone')
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="row">
                                     <label for="assigned_to" class="col-md-3"><?php echo app_lang('assign_to'); ?></label>
                                     <div class="col-md-9">
                                         <?php
                                         echo form_input(array(
                                             "id" => "assigned_to",
                                             "name" => "assigned_to",
-                                            "value" => isset($gotTasklibrary)?$gotTasklibrary->assigned_to:"",
+                                            "value" => isset($gotTasklibrary)&&$gotTasklibrary->assigned_to?$gotTasklibrary->assigned_to:"",
                                             "class" => "form-control",
+                                            // "required"=>true,
                                             "placeholder" => app_lang('assign_to')
                                         ));
                                         ?>
@@ -160,7 +256,7 @@
                                     echo form_input(array(
                                         "id" => "collaborators",
                                         "name" => "collaborators",
-                                        "value" => isset($gotTasklibrary)?$gotTasklibrary->collaborators:"-",
+                                        "value" => isset($gotTasklibrary)&&$gotTasklibrary->collaborators?$gotTasklibrary->collaborators:"-",
                                         "class" => "form-control",
                                         "required"=>true,
                                         "placeholder" => app_lang('collaborators'),
@@ -168,100 +264,6 @@
                                         "data-msg-required" => app_lang("field_required"),
                                     ));
                                     ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <label for="status_id" class="col-md-3"><?php echo app_lang('status'); ?></label>
-                                    <div class="col-md-9">
-                                        <?php
-                                        $status_dropdown=array();
-                                        foreach($allStatus as $oneStatus){
-                                            $status_dropdown[]=array("id"=>$oneStatus['id'],'text'=>$oneStatus['title']);
-                                        }
-                                        echo form_input(array(
-                                            "id" => "status_id",
-                                            "name" => "status_id",
-                                            "value" => isset($gotTasklibrary)?$gotTasklibrary->status_id:"",
-                                            "class" => "form-control"
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <div class="row">
-                                    <label for="priority_id" class="col-md-3"><?php echo app_lang('priority'); ?></label>
-                                    <div class="col-md-9">
-                                        <?php
-                                        $priority_dropdown=array();
-                                        foreach($allPriorities as $onePriority){
-                                            $priority_dropdown[]=array("id"=>$onePriority['id'],'text'=>$onePriority['title']);
-                                        }
-                                        echo form_input(array(
-                                            "id" => "priority_id",
-                                            "name" => "priority_id",
-                                            "value" => isset($gotTasklibrary)?$gotTasklibrary->priority_id:"",
-                                            "class" => "form-control",
-                                            "maxlength" => 15,
-                                            "placeholder" => app_lang('priority'),
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <label for="milestone_id" class="col-md-3"><?php echo app_lang('milestone'); ?></label>
-                                    <div class="col-md-9">
-                                        <?php
-                                        $milestone_dropdown=array();
-                                        foreach ($allMilestones as $oneMilestone) {
-                                            $milestone_dropdown[]=array("id"=>$oneMilestone['id'],"text"=>$oneMilestone['title']);
-                                        }
-                                        echo form_input(array(
-                                            "id" => "milestone_id",
-                                            "name" => "milestone_id",
-                                            "value" => isset($gotTasklibrary)?$gotTasklibrary->milestone_id:"",
-                                            "class" => "form-control",
-                                            "placeholder" => app_lang('milestone')
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <label for="supplier" class="col-md-3"><?php echo app_lang('supplier'); ?></label>
-                                    <div class="col-md-9">
-                                        <?php
-                                        $suppliers_dropdown=array(
-                                            array(
-                                                "id"=>"Yard",
-                                                "text"=>"Yard"
-                                            ),
-                                            array(
-                                                "id"=>"Specialist",
-                                                "text"=>"Specialist"
-                                            ),
-                                            array(
-                                                "id"=>"Both",
-                                                "text"=>"Both"
-                                            ),
-                                        );
-                                        echo form_input(array(
-                                            "id" => "supplier",
-                                            "name" => "supplier",
-                                            "value" => isset($gotTasklibrary)?$gotTasklibrary->supplier:"",
-                                            "class" => "form-control",
-                                            "placeholder" => app_lang('supplier'),
-                                        ));
-                                        ?>
                                     </div>
                                 </div>
                             </div>
@@ -279,7 +281,7 @@
                                     echo form_textarea(array(
                                         "id" => "description",
                                         "name" => "description",
-                                        "value" => isset($gotTasklibrary)?$gotTasklibrary->description:"",
+                                        "value" => isset($gotTasklibrary)&&$gotTasklibrary->description?$gotTasklibrary->description:"",
                                         "class" => "form-control",
                                         "placeholder" => app_lang('description'),
                                         "data-rich-text-editor" => true,
@@ -302,7 +304,7 @@
                                     echo form_textarea(array(
                                         "id" => "location",
                                         "name" => "location",
-                                        "value" => isset($gotTasklibrary)?$gotTasklibrary->location:"",
+                                        "value" => isset($gotTasklibrary)&&$gotTasklibrary->location?$gotTasklibrary->location:"",
                                         "class" => "form-control",
                                         "placeholder" => app_lang('location'),
                                         "maxlength" => 300,
@@ -326,7 +328,7 @@
                                     echo form_textarea(array(
                                         "id" => "specification",
                                         "name" => "specification",
-                                        "value" => isset($gotTasklibrary)?$gotTasklibrary->specification:"",
+                                        "value" => isset($gotTasklibrary)&&$gotTasklibrary->specification?$gotTasklibrary->specification:"",
                                         "class" => "form-control",
                                         "placeholder" => app_lang('specification_placeholder'),
                                         "maxlength" => 300,
