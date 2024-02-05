@@ -921,7 +921,7 @@
 
                 //update sort indexes
                 $.ajax({
-                    url: '<?php echo_uri("todo/save_checklist_items_sort") ?>',
+                    url: '<?php echo_uri("task_librareis/save_checklist_items_sort") ?>',
                     type: "POST",
                     data: {sort_values: data},
                     success: function () {
@@ -1096,7 +1096,7 @@
             var checklist_item_title=$("#checklist-add-item")[0].value;
             console.log(checklist_item_title)
             $('#checklist-items').append(`
-            <div id='checklist-item-row-33' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='33'><a href="#" title="" data-id="33" data-value="1" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-33" data-act="ajax-request" data-action-url="http://localhost/peerfleet-git/index.php/tasks/delete_checklist_item/33"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
+                <div id='checklist-item-row-33' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='33'><a href="#" title="" data-id="33" data-value="1" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-33" data-act="ajax-request" data-action-url="<?php echo get_uri("/task_libraries"."/delete_checklist_item"."/33");?>"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
             `);
             $("#checklist-add-item")[0].value="";
             checklists++;
