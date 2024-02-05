@@ -1,3 +1,4 @@
+<div id="tasks-dropzone" class="post-dropzone">
 <div id="page-content" class="page-wrapper clearfix">
     <div class="row">
         <div class="col-sm-3 col-lg-2">
@@ -811,7 +812,7 @@
                                 <input type="hidden" id="is_checklist_group" name="is_checklist_group" value="" />
 
                                 <div class="checklist-items" id="checklist-items">
-                                <div id='checklist-item-row-33' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='33'><a href=\"#\" title=\"\" data-id=\"33\" data-value=\"1\" data-act=\"update-checklist-item-status-checkbox\"><span class='checkbox-blank mr15 float-start'></span></a><a href=\"#\" class=\"delete-checklist-item\" title=\"Delete checklist item\" data-fade-out-on-success=\"#checklist-item-row-33\" data-act=\"ajax-request\" data-action-url=\"http://localhost/peerfleet-git/index.php/tasks/delete_checklist_item/33\"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>qwefqwefqwe</span></div>
+                                    <!--chekclist-items-lsiting-here-->
                                 </div>
                                     <div class="mb5 mt5 btn-group checklist-options-panel hide" role="group">
                                         <button id="type-new-item-button" type="button" class="btn btn-default checklist_button active"> <?php echo app_lang('type_new_item'); ?></button>
@@ -842,16 +843,21 @@
                             // echo form_close(); 
                             ?> 
                         </div>
+                        
                     </div>
-                    <button type="button" id="file-selector-btn" class="btn btn-default" ><i data-feather="file" class=""></i> Upload File</button>
-                    <input type="file" id="file-selector" hidden/> 
+                    <!-- <button type="button" id="file-selector-btn" class="btn btn-default" ><i data-feather="file" class=""></i> Upload File</button>
+                    <input type="file" id="file-selector" hidden/> -->
+                    <div><?php echo view("includes/dropzone_preview"); ?></div>
+                    <div stlyle="margin-top:10px" >
+                        <button class="btn btn-default upload-file-button float-start me-auto btn-sm round" type="button" style="color:#7988a2"><i data-feather="camera" class="icon-16"></i> <?php echo app_lang("upload_file"); ?></button>
+                    </div>
                 </div>
                 <?php echo form_close(); ?>
             </div>
         </div>
     </div>
 </div>
-
+</div>
 <?php echo view("includes/cropbox"); ?>
 
 <script type="text/javascript">
@@ -892,17 +898,10 @@
             data: <?php echo (json_encode($suppliers_dropdown)); ?>
         });
         setDatePicker("#start_date");
-    setDatePicker("#deadline");
-    $('#description').summernote({
-        height:250
-    });
-    });
-
-    
-</script>
-
-<script type="text/javascript">
-    $(document).ready(function () {
+        setDatePicker("#deadline");
+        $('#description').summernote({
+            height:250
+        });
         var $selector = $("#checklist-items");
         Sortable.create($selector[0], {
             animation: 150,
@@ -1051,9 +1050,7 @@
                 }
             });
         }
-        $("#add-checklist-item").on("click",function(){
-            console.log($("#checklist-add-item")[0].value)
-        })
+        
         $('body').on('click', '[data-act=update-checklist-item-status-checkbox]', function () {
             var status_checkbox = $(this).find("span");
             status_checkbox.removeClass("checkbox-checked");
@@ -1097,23 +1094,35 @@
             cell3.innerHTML = `<button onClick="save_new_quote()" type="button" id="btn-save-new-quote" class="btn btn-default" ><i data-feather="check" ></i></button>`;
             $("#btn-add-new-quote").prop("disabled", true);
         })
-
+        $("#add-checklist-item").on("click",function(){
+            var checklist_item_title=$("#checklist-add-item")[0].value;
+            console.log(checklist_item_title)
+            $('#checklist-items').append(`
+            <div id='checklist-item-row-33' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='33'><a href="#" title="" data-id="33" data-value="1" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-33" data-act="ajax-request" data-action-url="http://localhost/peerfleet-git/index.php/tasks/delete_checklist_item/33"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
+            `);
+            $("#checklist-add-item")[0].value="";
+        })
+        var uploadUrl = "<?php echo get_uri('tasks/upload_file'); ?>";
+        var validationUri = "<?php echo get_uri('tasks/validate_task_file'); ?>";
+        var dropzone = attachDropzoneWithForm("#tasks-dropzone", uploadUrl, validationUri);
         
     });
     function save_new_quote(){
         var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
-            var newRow = table.insertRow();
+        var newRow = table.insertRow();
 
-            var cell0 = newRow.insertCell(0);
-            var cell1 = newRow.insertCell(1);
-            var cell2 = newRow.insertCell(2);
-            var cell3 = newRow.insertCell(3);
+        var cell0 = newRow.insertCell(0);
+        var cell1 = newRow.insertCell(1);
+        var cell2 = newRow.insertCell(2);
+        var cell3 = newRow.insertCell(3);
 
-            cell0.innerHTML = $("#quote_name")[0].value;
-            cell1.innerHTML = $("#quote_price")[0].value;
-            cell2.innerHTML = $("#quote_quote")[0].value;
-            cell3.innerHTML = "";
-            $("#btn-save-new-quote")[0].closest("tr").remove();
-            $("#btn-add-new-quote").prop("disabled", false);
-        }
+        cell0.innerHTML = $("#quote_name")[0].value;
+        cell1.innerHTML = $("#quote_price")[0].value;
+        cell2.innerHTML = $("#quote_quote")[0].value;
+        cell3.innerHTML = "";
+        $("#btn-save-new-quote")[0].closest("tr").remove();
+        $("#btn-add-new-quote").prop("disabled", false);
+    }
+    
+    
 </script>
