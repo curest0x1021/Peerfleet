@@ -769,7 +769,7 @@
                         <div class="col-md-6" >
                             <div class="card" style="border: solid 1px lightgray;">
                                 <div class="card-header d-flex">
-                                    <b>Quotes from yard</b>
+                                    <b>Cost Item List</b>
                                 </div>
                                 <div class="card-body" style="padding:1px" >
                                     <table id="table-quotes-from-yard" class="table " style="margin:0" >
@@ -796,52 +796,77 @@
                                         </tr>
                                         </tbody>
                                     </table>
+                                    <!-- <div id="insert-cost-item-panel" style="margin:5px;" >
+                                        <div class="form-group" >
+                                            <label>Cost item name:</label>
+                                            <input
+                                                id="cost_item_name"
+                                                class="form-control"
+                                                type="text"
+                                            />
+                                        </div>
+                                        <div class="form-group" >
+                                            <label>Description:</label>
+                                            <textarea
+                                                id="cost_item_description"
+                                                class="form-control"
+                                                type="text"
+                                            ></textarea>
+                                        </div>
+                                    </div> -->
                                 </div>
                                 
                             </div>
                         </div>
-                        <div class="col-md-5" style="border:1px solid lightgray;" >
+                        <div class="col-md-5"  >
                             <!--checklist-->
+                            <div class="card" style="border:1px solid lightgray;" >
                             <?php 
                             // echo form_open(get_uri("tasks/save_checklist_item"), array("id" => "checklist_form", "class" => "general-form", "role" => "form")); 
                             ?>
-                            <div class="col-md-12 mb15 b-t">
-                                <div class="pb10 pt10">
-                                    <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count">0</span><span>/</span><span class="chcklists_count"></span>
-                                </div>
-                                <input type="hidden" id="is_checklist_group" name="is_checklist_group" value="" />
+                            <div class="card-header d-flex">
+                                <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count">0</span><span>/</span><span class="chcklists_count"></span>
+                            </div>
+                            <div class="card-body d-flex" >
+                                <div class="col-md-12 mb15 b-t">
+                                    <div class="pb10 pt10">
+                                        <!-- <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count">0</span><span>/</span><span class="chcklists_count"></span> -->
+                                    </div>
+                                    <input type="hidden" id="is_checklist_group" name="is_checklist_group" value="" />
 
-                                <div class="checklist-items" id="checklist-items">
-                                    <!--chekclist-items-lsiting-here-->
-                                </div>
-                                    <div class="mb5 mt5 btn-group checklist-options-panel hide" role="group">
-                                        <button id="type-new-item-button" type="button" class="btn btn-default checklist_button active"> <?php echo app_lang('type_new_item'); ?></button>
-                                        <button id="select-from-template-button" type="button" class="btn btn-default checklist_button"> <?php echo app_lang('select_from_template'); ?></button>
-                                        <button id="select-from-checklist-group-button" type="button" class="btn btn-default checklist_button"> <?php echo app_lang('select_from_checklist_group'); ?></button>
+                                    <div class="checklist-items" id="checklist-items">
+                                        <!--chekclist-items-lsiting-here-->
                                     </div>
-                                    <div class="form-group">
-                                        <div class="mt5 p0">
-                                            <?php
-                                            echo form_input(array(
-                                                "id" => "checklist-add-item",
-                                                "name" => "checklist-add-item",
-                                                "class" => "form-control",
-                                                "placeholder" => app_lang('add_item'),
-                                                "data-rule-required" => true,
-                                                "data-msg-required" => app_lang("field_required"),
-                                                "autocomplete" => "off"
-                                            ));
-                                            ?>
+                                        <div class="mb5 mt5 btn-group checklist-options-panel hide" role="group">
+                                            <button id="type-new-item-button" type="button" class="btn btn-default checklist_button active"> <?php echo app_lang('type_new_item'); ?></button>
+                                            <button id="select-from-template-button" type="button" class="btn btn-default checklist_button"> <?php echo app_lang('select_from_template'); ?></button>
+                                            <button id="select-from-checklist-group-button" type="button" class="btn btn-default checklist_button"> <?php echo app_lang('select_from_checklist_group'); ?></button>
                                         </div>
-                                    </div>
-                                    <div class="mb10 p0 checklist-options-panel hide">
-                                        <button id="add-checklist-item" type="button" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('add'); ?></button>
-                                        <button id="checklist-options-panel-close" type="button" class="btn btn-default ms-2"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('cancel'); ?></button>
-                                    </div>
+                                        <div class="form-group">
+                                            <div class="mt5 p0">
+                                                <?php
+                                                echo form_input(array(
+                                                    "id" => "checklist-add-item",
+                                                    "name" => "checklist-add-item",
+                                                    "class" => "form-control",
+                                                    "placeholder" => app_lang('add_item'),
+                                                    "data-rule-required" => true,
+                                                    "data-msg-required" => app_lang("field_required"),
+                                                    "autocomplete" => "off"
+                                                ));
+                                                ?>
+                                            </div>
+                                        </div>
+                                        <div class="mb10 p0 checklist-options-panel hide">
+                                            <button id="add-checklist-item" type="button" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('add'); ?></button>
+                                            <button id="checklist-options-panel-close" type="button" class="btn btn-default ms-2"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('cancel'); ?></button>
+                                        </div>
+                                </div>
                             </div>
                             <?php 
                             // echo form_close(); 
                             ?> 
+                            </div>
                         </div>
                         
                     </div>
