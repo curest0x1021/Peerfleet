@@ -913,9 +913,14 @@
                                         <!-- <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count">0</span><span>/</span><span class="chcklists_count"></span> -->
                                     </div>
                                     <input type="hidden" id="is_checklist_group" name="is_checklist_group" value="" />
-
                                     <div class="checklist-items" id="checklist-items">
                                         <!--chekclist-items-lsiting-here-->
+                                    <?php
+                                        if(isset($gotChecklistItems))
+                                        foreach($gotChecklistItems as $oneItem){
+                                            echo '<div id="checklist-item-row-33" class="list-group-item mb5 checklist-item-row b-a rounded text-break" data-id="33"><a href="#" title="" data-id="33" data-value="1" data-act="update-checklist-item-status-checkbox"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-33" data-act="ajax-request" data-action-url="'. get_uri("/task_libraries"."/delete_checklist_item"."/".$oneItem->id).'"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">'.$oneItem->title.'</span></div>';
+                                        }
+                                    ?>
                                     </div>
                                         <div class="mb5 mt5 btn-group checklist-options-panel hide" role="group">
                                             <button id="type-new-item-button" type="button" class="btn btn-default checklist_button active"> <?php echo app_lang('type_new_item'); ?></button>
@@ -1216,8 +1221,10 @@
             $("#btn-add-new-quote").prop("disabled", false);
             $("#insert-cost-item-panel").prop("hidden",false);
         });
+        var checklist_items=[];
         $("#add-checklist-item").on("click",function(){
             var checklist_item_title=$("#checklist-add-item")[0].value;
+            checklist_items.push(checklist_item_title);
             console.log(checklist_item_title)
             $('#checklist-items').append(`
                 <div id='checklist-item-row-33' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='33'><a href="#" title="" data-id="33" data-value="1" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-33" data-act="ajax-request" data-action-url="<?php echo get_uri("/task_libraries"."/delete_checklist_item"."/33");?>"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
@@ -1262,6 +1269,7 @@
             var type=$("#type")[0].value;
             var serial_number=$("#serial_number")[0].value;
             var pms_scs_number=$("#pms_scs_number")[0].value;
+            console.log(checklist_items)
             if(!title) return;
             $.ajax({
                 url: '<?php echo get_uri("task_libraries/save_ajax") ?>',
@@ -1299,6 +1307,7 @@
                     ,type
                     ,serial_number
                     ,pms_scs_number
+                    ,checklist_items
                 },
                 success: function (response) {
                     // appLoader.hide();
@@ -1324,6 +1333,9 @@
         $("#btn-save-new-quote")[0].closest("tr").remove();
         $("#btn-add-new-quote").prop("disabled", false);
     }
-    
+    <?php
+        if(isset($gotChecklistItems))
+        echo 'console.log(`'.json_encode($gotChecklistItems).'`)';
+    ?>
     
 </script>
