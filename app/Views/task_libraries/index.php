@@ -766,7 +766,7 @@
                         </div>
                     </div>
                     <div class="row" >
-                        <div class="col-md-6" >
+                        <div class="col-md-8" >
                             <div class="card" style="border: solid 1px lightgray;">
                                 <div class="card-header d-flex">
                                     <b>Cost Item List</b>
@@ -782,7 +782,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
+                                        <!-- <tr>
                                             <td>Initial Visit Incl Transport</td>
                                             <td>1.0 visit X USD 0.00 (Per unit)</td>
                                             <td>USD 0.00</td>
@@ -793,32 +793,110 @@
                                             <td>20.0 visit X USD 0.00 (Per unit)</td>
                                             <td>USD 0.00</td>
                                             <td></td>
-                                        </tr>
+                                        </tr> -->
                                         </tbody>
                                     </table>
-                                    <!-- <div id="insert-cost-item-panel" style="margin:5px;" >
-                                        <div class="form-group" >
-                                            <label>Cost item name:</label>
-                                            <input
-                                                id="cost_item_name"
-                                                class="form-control"
-                                                type="text"
-                                            />
+                                    <div id="insert-cost-item-panel" style="margin:5px;" hidden>
+                                        <div class="row" >
+                                            <div class="form-group" >
+                                                <label>Cost item name:</label>
+                                                <input
+                                                    id="cost_item_name"
+                                                    class="form-control"
+                                                    type="text"
+                                                />
+                                            </div>
                                         </div>
-                                        <div class="form-group" >
-                                            <label>Description:</label>
-                                            <textarea
-                                                id="cost_item_description"
-                                                class="form-control"
-                                                type="text"
-                                            ></textarea>
+                                        <div class="row" >
+                                            <div class="form-group" >
+                                                <label>Description:</label>
+                                                <textarea
+                                                    id="cost_item_description"
+                                                    class="form-control"
+                                                    type="text"
+                                                ></textarea>
+                                            </div>
                                         </div>
-                                    </div> -->
+                                        <div class="row" >
+                                            <div class="col-md-6" >
+                                                <div class="form-group" >
+                                                    <label>Quote type:</label>
+                                                    <select
+                                                        name="quote_type"
+                                                        id="quote_type"
+                                                        class="form-control"
+                                                    >
+                                                        <option>Per unit</option>
+                                                        <option>Lump sum</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3" >
+                                                <div class="form-group" >
+                                                    <label>Quantity:</label>
+                                                    <input
+                                                        id="quantity"
+                                                        class="form-control"
+                                                        type="number"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3" >
+                                                <div class="form-group" >
+                                                    <label>Measurement unit:</label>
+                                                    <input
+                                                        id="measurement_unit"
+                                                        class="form-control"
+                                                        placeholder="pcs"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" >
+                                            <div class="col-md-6" >
+                                                <div class="form-group" >
+                                                    <label>Unit price:</label>
+                                                    <div class="input-group mb-3">
+                                                        <span class="input-group-text">$</span>
+                                                        <input type="text" class="form-control" value="0.00">
+                                                        <select class="form-control" placeholder="Last Name">
+                                                            <option>USD</option>
+                                                            <option>AED</option>
+                                                            <option>AFN</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2" >
+                                                <div class="form-group" >
+                                                    <label>Discount:</label>
+                                                    <div class="input-group mb-3">
+                                                        <input type="text" class="form-control" value="0.0">
+                                                        <input type="text" class="form-control" value="%" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" >
+                                            <div class="form-group" >
+                                                <label>Yard remarks:</label>
+                                                <textarea class="form-control" name="yard_remarks" ></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row" >
+                                            <div class="col-md-1" >
+                                                <button id="insert-add-cost-item" type="button" class="btn btn-primary" >Save</button>
+                                            </div>
+                                            <div class="col-md-1" >
+                                                <button id="cancel-add-cost-item" type="button" class="btn btn-default" >Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 
                             </div>
                         </div>
-                        <div class="col-md-5"  >
+                        <div class="col-md-4"  >
                             <!--checklist-->
                             <div class="card" style="border:1px solid lightgray;" >
                             <?php 
@@ -1102,20 +1180,20 @@
 
         });
         $("#btn-add-new-quote").on("click",function(){
-            
-            var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
-            var newRow = table.insertRow();
+            $("#insert-cost-item-panel").prop("hidden",false);
+            // var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
+            // var newRow = table.insertRow();
 
-            var cell0 = newRow.insertCell(0);
-            var cell1 = newRow.insertCell(1);
-            var cell2 = newRow.insertCell(2);
-            var cell3 = newRow.insertCell(3);
+            // var cell0 = newRow.insertCell(0);
+            // var cell1 = newRow.insertCell(1);
+            // var cell2 = newRow.insertCell(2);
+            // var cell3 = newRow.insertCell(3);
 
-            cell0.innerHTML = `<input placeholder="Name of cost item" class="form-control" id="quote_name" />`;
-            cell1.innerHTML = `<input placeholder="Unit price and quantity" class="form-control" id="quote_price" />`;
-            cell2.innerHTML = `<input placeholder="Quote" class="form-control" id="quote_quote" />`;
-            cell3.innerHTML = `<button onClick="save_new_quote()" type="button" id="btn-save-new-quote" class="btn btn-default" ><i data-feather="check" ></i></button>`;
-            $("#btn-add-new-quote").prop("disabled", true);
+            // cell0.innerHTML = `<input placeholder="Name of cost item" class="form-control" id="quote_name" />`;
+            // cell1.innerHTML = `<input placeholder="Unit price and quantity" class="form-control" id="quote_price" />`;
+            // cell2.innerHTML = `<input placeholder="Quote" class="form-control" id="quote_quote" />`;
+            // cell3.innerHTML = `<button onClick="save_new_quote()" type="button" id="btn-save-new-quote" class="btn btn-default" ><i data-feather="check" ></i></button>`;
+            // $("#btn-add-new-quote").prop("disabled", true);
         })
         $("#add-checklist-item").on("click",function(){
             var checklist_item_title=$("#checklist-add-item")[0].value;
