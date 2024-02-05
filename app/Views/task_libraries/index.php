@@ -797,6 +797,7 @@
                                         </tbody>
                                     </table>
                                     <div id="insert-cost-item-panel" style="margin:5px;" hidden>
+                                        <div style="min-height:5vh" ></div>
                                         <div class="row" >
                                             <div class="form-group" >
                                                 <label>Cost item name:</label>
