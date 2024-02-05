@@ -8,6 +8,7 @@ class Task_libraries extends Security_Controller {
         // $this->access_only_admin_or_settings_admin();
         $this->Task_priority_model = model("App\Models\Task_priority_model");
         $this->Task_libraries_model = model("App\Models\Task_libraries_model");
+        $this->Checklist_items_model= model("App\Models\Checklist_items_model");
     }
 
     function index() {
@@ -696,6 +697,22 @@ class Task_libraries extends Security_Controller {
         }
 
         return "<div id='checklist-item-row-$data->id' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='$data->id'>" . $status . $delete . $title . "</div>";
+    }
+    function delete_checklist_item($id) {
+
+        $task_id = $this->Checklist_items_model->get_one($id)->task_id;
+
+        // if ($id) {
+        //     if (!$this->can_edit_tasks($task_id)) {
+        //         app_redirect("forbidden");
+        //     }
+        // }
+
+        if ($this->Checklist_items_model->delete($id)) {
+            echo json_encode(array("success" => true));
+        } else {
+            echo json_encode(array("success" => false));
+        }
     }
 
 }
