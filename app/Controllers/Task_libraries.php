@@ -65,7 +65,9 @@ class Task_libraries extends Security_Controller {
         $allMilestones=$this->Milestones_model->get_all()->getResultArray();
         $allTasklibraries=$this->Task_libraries_model->get_all()->getResultArray();
         $gotTasklibrary=$this->Task_libraries_model->get_one($id);
-        return $this->template->rander('task_libraries/index',["gotTasklibrary"=>$gotTasklibrary,"allTasklibraries"=>$allTasklibraries,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        $gotChecklistItems=$this->Task_library_checklist_items_model->get_all_where(array("task_library"=>$id,"deleted"=>0))->getResult();
+        // echo json_encode($gotChecklistItems);
+        return $this->template->rander('task_libraries/index',["gotChecklistItems"=>$gotChecklistItems,"gotTasklibrary"=>$gotTasklibrary,"allTasklibraries"=>$allTasklibraries,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     function validate_import_tasks_file() {
         $file_name = $this->request->getPost("file_name");
@@ -701,7 +703,7 @@ class Task_libraries extends Security_Controller {
     }
     function delete_checklist_item($id) {
 
-        $task_id = $this->Checklist_items_model->get_one($id)->task_id;
+        // $task_id = $this->Checklist_items_model->get_one($id)->task_id;
 
         // if ($id) {
         //     if (!$this->can_edit_tasks($task_id)) {
@@ -709,7 +711,7 @@ class Task_libraries extends Security_Controller {
         //     }
         // }
 
-        if ($this->Checklist_items_model->delete($id)) {
+        if ($this->Task_library_checklist_items_model->delete($id)) {
             echo json_encode(array("success" => true));
         } else {
             echo json_encode(array("success" => false));
@@ -752,6 +754,14 @@ class Task_libraries extends Security_Controller {
             "pms_scs_number"=>$this->request->getPost("pms_scs_number"),
         );
         $save_id = $this->Task_libraries_model->ci_save($data, $id);
+        $checklist_items=$this->request->getPost("checklist_items");
+        foreach($checklist_items as $oneItem){
+            $newItem=array(
+                "title"=>$oneItem,
+                "task_library"=>$save_id
+            );
+            $this->Task_library_checklist_items_model->ci_save($newItem);
+        }
         // return redirect()->to("/task_libraries"."/view"."/".$save_id);
         return json_encode(array("success"=>true,'saved_id'=>$save_id));
     }
