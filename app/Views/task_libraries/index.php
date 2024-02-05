@@ -822,8 +822,8 @@
                                                 <div class="form-group" >
                                                     <label>Quote type:</label>
                                                     <select
-                                                        name="quote_type"
-                                                        id="quote_type"
+                                                        name="cost_item_quote_type"
+                                                        id="cost_item_quote_type"
                                                         class="form-control"
                                                     >
                                                         <option>Per unit</option>
@@ -835,7 +835,7 @@
                                                 <div class="form-group" >
                                                     <label>Quantity:</label>
                                                     <input
-                                                        id="quantity"
+                                                        id="cost_item_quantity"
                                                         class="form-control"
                                                         type="number"
                                                     />
@@ -845,7 +845,7 @@
                                                 <div class="form-group" >
                                                     <label>Measurement unit:</label>
                                                     <input
-                                                        id="measurement_unit"
+                                                        id="cost_item_measurement_unit"
                                                         class="form-control"
                                                         placeholder="pcs"
                                                     />
@@ -857,9 +857,9 @@
                                                 <div class="form-group" >
                                                     <label>Unit price:</label>
                                                     <div class="input-group mb-3">
-                                                        <span class="input-group-text">$</span>
-                                                        <input type="text" class="form-control" value="0.00">
-                                                        <select class="form-control" placeholder="Last Name">
+                                                        <input readonly type="text" class="form-control" value="$">
+                                                        <input id="cost_item_unit_price" type="text" class="form-control" value="0.00">
+                                                        <select id="cost_item_currency" class="form-control">
                                                             <option>USD</option>
                                                             <option>AED</option>
                                                             <option>AFN</option>
@@ -871,8 +871,8 @@
                                                 <div class="form-group" >
                                                     <label>Discount:</label>
                                                     <div class="input-group mb-3">
-                                                        <input type="text" class="form-control" value="0.0">
-                                                        <input type="text" class="form-control" value="%" />
+                                                        <input id="cost_item_discount" type="text" class="form-control" value="0.0">
+                                                        <input readonly type="text" class="form-control" value="%" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -880,7 +880,7 @@
                                         <div class="row" >
                                             <div class="form-group" >
                                                 <label>Yard remarks:</label>
-                                                <textarea class="form-control" name="yard_remarks" ></textarea>
+                                                <textarea id="cost_item_yard_remarks" class="form-control" name="yard_remarks" ></textarea>
                                             </div>
                                         </div>
                                         <div class="row" >
@@ -1181,6 +1181,7 @@
         });
         $("#btn-add-new-quote").on("click",function(){
             $("#insert-cost-item-panel").prop("hidden",false);
+            $("#btn-add-new-quote").prop("disabled", true);
             // var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
             // var newRow = table.insertRow();
 
@@ -1189,12 +1190,30 @@
             // var cell2 = newRow.insertCell(2);
             // var cell3 = newRow.insertCell(3);
 
-            // cell0.innerHTML = `<input placeholder="Name of cost item" class="form-control" id="quote_name" />`;
+            
             // cell1.innerHTML = `<input placeholder="Unit price and quantity" class="form-control" id="quote_price" />`;
             // cell2.innerHTML = `<input placeholder="Quote" class="form-control" id="quote_quote" />`;
             // cell3.innerHTML = `<button onClick="save_new_quote()" type="button" id="btn-save-new-quote" class="btn btn-default" ><i data-feather="check" ></i></button>`;
             // $("#btn-add-new-quote").prop("disabled", true);
         })
+        $("#insert-add-cost-item").on("click",function(){
+            var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow();
+
+            var cell0 = newRow.insertCell(0);
+            var cell1 = newRow.insertCell(1);
+            var cell2 = newRow.insertCell(2);
+            var cell3 = newRow.insertCell(3);
+
+            cell0.innerHTML = $("#cost_item_name")[0].value;
+            cell1.innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement_unit")[0].value+" X "+$("#cost_item_currency")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
+            cell2.innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
+            // cell1.innerHTML = `<input placeholder="Unit price and quantity" class="form-control" id="quote_price" />`;
+            // cell2.innerHTML = `<input placeholder="Quote" class="form-control" id="quote_quote" />`;
+            // cell3.innerHTML = `<button onClick="save_new_quote()" type="button" id="btn-save-new-quote" class="btn btn-default" ><i data-feather="check" ></i></button>`;
+            $("#btn-add-new-quote").prop("disabled", false);
+            $("#insert-cost-item-panel").prop("hidden",false);
+        });
         $("#add-checklist-item").on("click",function(){
             var checklist_item_title=$("#checklist-add-item")[0].value;
             console.log(checklist_item_title)
