@@ -799,7 +799,7 @@
                                 
                             </div>
                         </div>
-                        <div class="col-md-5" >
+                        <div class="col-md-5" style="border:1px solid lightgray;" >
                             <!--checklist-->
                             <?php 
                             // echo form_open(get_uri("tasks/save_checklist_item"), array("id" => "checklist_form", "class" => "general-form", "role" => "form")); 
@@ -1091,9 +1091,9 @@
             var cell2 = newRow.insertCell(2);
             var cell3 = newRow.insertCell(3);
 
-            cell0.innerHTML = `<input class="form-control" id="quote_name" />`;
-            cell1.innerHTML = `<input class="form-control" id="quote_price" />`;
-            cell2.innerHTML = `<input class="form-control" id="quote_quote" />`;
+            cell0.innerHTML = `<input placeholder="Name of cost item" class="form-control" id="quote_name" />`;
+            cell1.innerHTML = `<input placeholder="Unit price and quantity" class="form-control" id="quote_price" />`;
+            cell2.innerHTML = `<input placeholder="Quote" class="form-control" id="quote_quote" />`;
             cell3.innerHTML = `<button onClick="save_new_quote()" type="button" id="btn-save-new-quote" class="btn btn-default" ><i data-feather="check" ></i></button>`;
             $("#btn-add-new-quote").prop("disabled", true);
         })
