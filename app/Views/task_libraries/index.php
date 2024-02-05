@@ -31,8 +31,9 @@
                     <h4>Task Library Edit</h4>
                     <div>
                         <!-- <button type="button" class="btn btn-danger" style="margin-right:10" ><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</button> -->
-                        <button type="submit" 
-                        old-id="btn-task-save" 
+                        <button type="button" 
+                        old-id="btn-task-save"
+                        id="btn-save-task-library"
                         class="btn btn-primary" ><i data-feather="check-circle" class="icon-16"></i> Save</button>
                     </div>
                 </div>
@@ -1228,6 +1229,83 @@
         var uploadUrl = "<?php echo get_uri('tasks/upload_file'); ?>";
         var validationUri = "<?php echo get_uri('tasks/validate_task_file'); ?>";
         var dropzone = attachDropzoneWithForm("#tasks-dropzone", uploadUrl, validationUri);
+        $("#btn-save-task-library").on("click",function(){
+            var rise_csrf_token = $('[name="rise_csrf_token"]').val();
+            var id=$('[name="id"]').val();
+            var title=$("#title")[0].value;
+            var category=$("#category")[0].value;
+            var dock_list_number=$("#dock_list_number")[0].value;
+            var supplier=$("#supplier")[0].value;
+            var status_id=$("#status_id")[0].value;
+            var priority_id=$("#priority_id")[0].value;
+            var milestone_id=$("#milestone_id")[0].value;
+            var assigned_to=$("#assigned_to")[0].value;
+            var collaborators=$("#collaborators")[0].value;
+            var description=$("#description")[0].value;
+            var location=$("#location")[0].value;
+            var specification=$("#specification")[0].value;
+            var gas_free_certificate_yes=$("#gas_free_certificate_yes")[0].value;
+            var painting_after_completion_yes=$("#painting_after_completion_yes")[0].value;
+            var light_yes=$("#light_yes")[0].value;
+            var parts_on_board_yes=$("#parts_on_board_yes")[0].value;
+            var ventilation_yes=$("#ventilation_yes")[0].value;
+            var transport_to_yard_workshop_yes=$("#transport_to_yard_workshop_yes")[0].value;
+            var crane_assistance_yes=$("#crane_assistance_yes")[0].value;
+            var transport_outside_yard_yes=$("#transport_outside_yard_yes")[0].value;
+            var cleaning_before_yes=$("#cleaning_before_yes")[0].value;
+            var material_yards_supply_yes=$("#material_yards_supply_yes")[0].value;
+            var cleaning_after_yes=$("#cleaning_after_yes")[0].value;
+            var material_owners_supply_yes=$("#material_owners_supply_yes")[0].value;
+            var work_permit_yes=$("#work_permit_yes")[0].value;
+            var risk_assessment_yes=$("#risk_assessment_yes")[0].value;
+            var maker=$("#maker")[0].value;
+            var type=$("#type")[0].value;
+            var serial_number=$("#serial_number")[0].value;
+            var pms_scs_number=$("#pms_scs_number")[0].value;
+            if(!title) return;
+            $.ajax({
+                url: '<?php echo get_uri("task_libraries/save_ajax") ?>',
+                type: "POST",
+                data: {
+                    rise_csrf_token
+                    ,id
+                    ,title
+                    ,category
+                    ,dock_list_number
+                    ,supplier
+                    ,status_id
+                    ,priority_id
+                    ,milestone_id
+                    ,assigned_to
+                    ,collaborators
+                    ,description
+                    ,location
+                    ,specification
+                    ,gas_free_certificate:gas_free_certificate_yes
+                    ,painting_after_completion:painting_after_completion_yes
+                    ,light:light_yes
+                    ,parts_on_board:parts_on_board_yes
+                    ,ventilation:ventilation_yes
+                    ,transport_to_yard_workshop:transport_to_yard_workshop_yes
+                    ,crane_assistance:crane_assistance_yes
+                    ,transport_outside_yard:transport_outside_yard_yes
+                    ,cleaning_before:cleaning_before_yes
+                    ,material_yards_supply:material_yards_supply_yes
+                    ,cleaning_after:cleaning_after_yes
+                    ,material_owners_supply:material_owners_supply_yes
+                    ,work_permit:work_permit_yes
+                    ,risk_assessment:risk_assessment_yes
+                    ,maker
+                    ,type
+                    ,serial_number
+                    ,pms_scs_number
+                },
+                success: function (response) {
+                    // appLoader.hide();
+                    window.location='<?php echo get_uri('task_libraries/view/'); ?>'+JSON.parse(response).saved_id;
+                }
+            });
+        })
         
     });
     function save_new_quote(){

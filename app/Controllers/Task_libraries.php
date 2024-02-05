@@ -9,6 +9,7 @@ class Task_libraries extends Security_Controller {
         $this->Task_priority_model = model("App\Models\Task_priority_model");
         $this->Task_libraries_model = model("App\Models\Task_libraries_model");
         $this->Checklist_items_model= model("App\Models\Checklist_items_model");
+        $this->Task_library_checklist_items_model= model("App\Models\Task_library_checklist_items_model");
     }
 
     function index() {
@@ -713,6 +714,49 @@ class Task_libraries extends Security_Controller {
         } else {
             echo json_encode(array("success" => false));
         }
+    }
+    function save_ajax(){
+        $id = $this->request->getPost('id');
+        $data = array(
+            "title" => $this->request->getPost('title'),
+            "category" => $this->request->getPost('category'),
+            "dock_list_number" => $this->request->getPost('dock_list_number'),
+            "assigned_to" => $this->request->getPost('assigned_to'),
+            "collaborators" => $this->request->getPost('collaborators'),
+            "status_id" => $this->request->getPost('status_id'),
+            "priority_id" => $this->request->getPost('priority_id'),
+            "milestone_id" => $this->request->getPost('milestone_id'),
+            "supplier" => $this->request->getPost('supplier'),
+            "description" => $this->request->getPost('description'),
+            "location" => $this->request->getPost('location'),
+            "specification" => $this->request->getPost('specification'),
+            "checklists" => $this->request->getPost('checklists')?$this->request->getPost('checklists'):"",
+            "dependencies" => $this->request->getPost('dependencies')?$this->request->getPost('dependencies'):"",
+            "gas_free_certificate"=>$this->request->getPost("gas_free_certificate"),
+            "painting_after_completion"=>$this->request->getPost("painting_after_completion"),
+            "light"=>$this->request->getPost("light"),
+            "parts_on_board"=>$this->request->getPost("parts_on_board"),
+            "ventilation"=>$this->request->getPost("ventilation"),
+            "transport_to_yard_workshop"=>$this->request->getPost("transport_to_yard_workshop"),
+            "crane_assistance"=>$this->request->getPost("crane_assistance"),
+            "transport_outside_yard"=>$this->request->getPost("transport_outside_yard"),
+            "cleaning_before"=>$this->request->getPost("cleaning_before"),
+            "material_yards_supply"=>$this->request->getPost("material_yards_supply"),
+            "cleaning_after"=>$this->request->getPost("cleaning_after"),
+            // "material_owners_supply"=>$this->request->getPost("material_owners_supply"),
+            "work_permit"=>$this->request->getPost("work_permit"),
+            "risk_assessment"=>$this->request->getPost("risk_assessment"),
+            "marker"=>$this->request->getPost("maker"),
+            "type"=>$this->request->getPost("type"),
+            "serial_number"=>$this->request->getPost("serial_number"),
+            "pms_scs_number"=>$this->request->getPost("pms_scs_number"),
+        );
+        $save_id = $this->Task_libraries_model->ci_save($data, $id);
+        // return redirect()->to("/task_libraries"."/view"."/".$save_id);
+        return json_encode(array("success"=>true,'saved_id'=>$save_id));
+    }
+    function checklist_item_save(){
+        $title=$this->request->getPost('title');
     }
 
 }
