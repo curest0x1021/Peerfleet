@@ -965,6 +965,7 @@
         var checklists = $(".checklist-items .checklist-item-row").length;
         $(".delete-checklist-item").click(function () {
             checklists--;
+            console.log("dleted")
             $(".chcklists_count").text(checklists);
         });
 
@@ -1053,30 +1054,27 @@
         
         $('body').on('click', '[data-act=update-checklist-item-status-checkbox]', function () {
             var status_checkbox = $(this).find("span");
-            status_checkbox.removeClass("checkbox-checked");
-            status_checkbox.addClass("inline-loader");
-
-            if ($(this).attr('data-value') == 0) {
+            if(status_checkbox.hasClass('checkbox-checked')){
+                status_checkbox.removeClass("checkbox-checked");
                 checklist_complete--;
-                $(".chcklists_status_count").text(checklist_complete);
-            } else {
+            }else {
+                status_checkbox.addClass("checkbox-checked");
                 checklist_complete++;
-                $(".chcklists_status_count").text(checklist_complete);
             }
+            $(".chcklists_status_count").text(checklist_complete);
+            // status_checkbox.addClass("checkbox-checked");
+            // status_checkbox.removeClass("checkbox-checked");
+            // status_checkbox.addClass("inline-loader");
 
-            $.ajax({
-                url: '<?php echo_uri("todo/save_checklist_item_status") ?>/' + $(this).attr('data-id'),
-                type: 'POST',
-                dataType: 'json',
-                data: {value: $(this).attr('data-value')},
-                success: function (response) {
-                    if (response.success) {
-                        status_checkbox.closest("div").html(response.data);
-                        //reload kanban
-                        $("#reload-kanban-button:visible").trigger("click");
-                    }
-                }
-            });
+            // if ($(this).attr('data-value') == 0) {
+            //     checklist_complete--;
+            //     $(".chcklists_status_count").text(checklist_complete);
+            // } else {
+            //     checklist_complete++;
+            //     $(".chcklists_status_count").text(checklist_complete);
+            //     status_checkbox.addClass("checkbox-checked");
+            // }
+
         });
         $("#btn-add-new-quote").on("click",function(){
             
@@ -1101,6 +1099,8 @@
             <div id='checklist-item-row-33' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='33'><a href="#" title="" data-id="33" data-value="1" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-33" data-act="ajax-request" data-action-url="http://localhost/peerfleet-git/index.php/tasks/delete_checklist_item/33"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
             `);
             $("#checklist-add-item")[0].value="";
+            checklists++;
+            $(".chcklists_count").text(checklists);
         })
         var uploadUrl = "<?php echo get_uri('tasks/upload_file'); ?>";
         var validationUri = "<?php echo get_uri('tasks/validate_task_file'); ?>";
