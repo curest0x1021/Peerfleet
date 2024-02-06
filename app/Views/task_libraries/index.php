@@ -775,7 +775,7 @@
                         </div>
                     </div>
                     <div class="row" >
-                        <div class="col-md-8" >
+                        <div class="col-md-7" >
                             <div class="card" style="border: solid 1px lightgray;min-height:40vh;">
                                 <div class="card-header d-flex">
                                     <b>Cost Item List</b>
@@ -787,10 +787,27 @@
                                             <td>Cost item name</td>
                                             <td>UNIT PRICE AND QUANTITY</td>
                                             <td>QUOTE</td>
-                                            <td style="float:right" ><button type="button" id="btn-add-new-quote" class="btn btn-default btn-sm" ><i data-feather="plus" class ></i></button></td>
+                                            <td ><button type="button" id="btn-add-new-quote" class="btn btn-default btn-sm" ><i data-feather="plus" class ></i></button></td>
                                         </tr>
                                         </thead>
                                         <tbody>
+                                            <?php
+                                            if(isset($gotTasklibrary)&&$gotTasklibrary->reference_drawing){
+                                                $cost_items=json_decode($gotTasklibrary->reference_drawing);
+                                                foreach ($cost_items as $oneItem) {
+                                                    # code...
+                                                    echo "<tr><td>";
+                                                    echo $oneItem->name;
+                                                    echo "</td><td>";
+                                                    echo number_format($oneItem->quantity,1,".","")." ( ".$oneItem->measurement_unit." ) X ".$oneItem->currency." ".number_format($oneItem->unit_price,2,".","");
+                                                    echo "</td><td>";
+                                                    echo $oneItem->currency." ".number_format(floatval($oneItem->quantity)*floatval($oneItem->unit_price), 2, '.', '');
+                                                    echo "</td><td>";
+                                                    echo '<button class="btn btn-sm" ><i data-feather="edit" class="" ></i></button><button class="btn btn-sm" ><i data-feather="x-circle" class="" ></i></button>';
+                                                    echo "</td></tr>";
+                                                }
+                                            }
+                                            ?>
                                         </tbody>
                                     </table>
                                     <div id="insert-cost-item-panel" style="margin:5px;" hidden>
@@ -846,6 +863,7 @@
                                                         id="cost_item_measurement_unit"
                                                         class="form-control"
                                                         placeholder="pcs"
+                                                        value="pcs"
                                                     />
                                                 </div>
                                             </div>
@@ -894,7 +912,7 @@
                                 
                             </div>
                         </div>
-                        <div class="col-md-4"  >
+                        <div class="col-md-5"  >
                             <!--checklist-->
                             <div class="card" style="border:1px solid lightgray;" >
                             <?php 
@@ -1179,13 +1197,11 @@
             $(".chcklists_count").text(checklists);
 
             //reload kanban
-            $("#reload-kanban-button:visible").trigger("click");
         }
 
         var checklists = $(".checklist-items .checklist-item-row").length;
         $(".delete-checklist-item").click(function () {
             checklists--;
-            console.log("dleted")
             $(".chcklists_count").text(checklists);
         });
 
@@ -1302,22 +1318,32 @@
             cell0.innerHTML = $("#cost_item_name")[0].value;
             cell1.innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement_unit")[0].value+" X "+$("#cost_item_currency")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
             cell2.innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
-            // cell1.innerHTML = `<input placeholder="Unit price and quantity" class="form-control" id="quote_price" />`;
-            // cell2.innerHTML = `<input placeholder="Quote" class="form-control" id="quote_quote" />`;
-            // cell3.innerHTML = `<button onClick="save_new_quote()" type="button" id="btn-save-new-quote" class="btn btn-default" ><i data-feather="check" ></i></button>`;
+            cell3.innerHTML=`
+            <button class="btn" ><i data-feather="edit" class="" ></i></button>
+            <button class="btn" ><i data-feather="x-circle" class="" ></i></button>
+            `;
             $("#btn-add-new-quote").prop("disabled", false);
             $("#insert-cost-item-panel").prop("hidden",false);
+            cost_items.push({
+                name:$("#cost_item_name")[0].value,
+                quantity:$("#cost_item_quantity")[0].value,
+                measurement_unit:$("#cost_item_measurement_unit")[0].value,
+                unit_price:$("#cost_item_unit_price")[0].value,
+                quote_type:$("#cost_item_quote_type")[0].value,
+                currency:$("#cost_item_currency")[0].value,
+            });
         });
         $("#cancel-add-cost-item").on("click",function(){
             $("#insert-cost-item-panel").prop("hidden",true);
+            $("#btn-add-new-quote").prop("disabled", false);
         })
-        var checklist_items=[];
+        
         $("#add-checklist-item").on("click",function(){
             var checklist_item_title=$("#checklist-add-item")[0].value;
             checklist_items.push(checklist_item_title);
-            console.log(checklist_item_title)
+            var newTempId=checklist_items.length;
             $('#checklist-items').append(`
-                <div id='checklist-item-row-33' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='33'><a href="#" title="" data-id="33" data-value="1" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-33" data-act="ajax-request" data-action-url="<?php echo get_uri("/task_libraries"."/delete_checklist_item"."/33");?>"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
+                <div id='checklist-item-row-${newTempId}' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='${newTempId}'><a href="#" title="" data-id="${newTempId}" data-value="${newTempId}" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-${newTempId}" data-act="ajax-request" data-action-url="<?php echo get_uri("/task_libraries"."/delete_checklist_item"."/");?>${newTempId}"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
             `);
             $("#checklist-add-item")[0].value="";
             checklists++;
@@ -1398,7 +1424,8 @@
                     ,serial_number
                     ,pms_scs_number
                     ,checklist_items,
-                    dependencies:JSON.stringify(dependencies)
+                    dependencies:JSON.stringify(dependencies),
+                    cost_items:JSON.stringify(cost_items)
                 },
                 success: function (response) {
                     // appLoader.hide();
@@ -1490,6 +1517,8 @@
     });
     var dependencies=[]
     var dependency_status=0;
+    var checklist_items=[];
+    var cost_items=[];
     function save_new_quote(){
         var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
         var newRow = table.insertRow();
@@ -1510,6 +1539,5 @@
         if(isset($gotTasklibrary)&&$gotTasklibrary->dependencies)
         echo 'dependencies=JSON.parse(`'.$gotTasklibrary->dependencies.'`);';
     ?>
-    console.log(dependencies)
     
 </script>
