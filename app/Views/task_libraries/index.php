@@ -874,7 +874,22 @@
                                                 <div class="form-group" >
                                                     <label>Unit price:</label>
                                                     <div class="input-group mb-3">
-                                                        <input readonly type="text" class="form-control" value="$">
+                                                        <!-- <input readonly type="text" id="cost_item_currency_symbol" class="form-control" value="$"> -->
+                                                        <select readonly id="cost_item_currency_symbol" class="form-control">
+                                                            <option>$</option>
+                                                            <option>₺</option>
+                                                            <option>TMT</option>
+                                                            <option>UGX</option>
+                                                            <option>₴</option>
+                                                            <option>$U</option>
+                                                            <option>AED</option>
+                                                            <option>VUV</option>
+                                                            <option>VEB</option>
+                                                            <option>₫</option>
+                                                            <option>YER</option>
+                                                            <option>ZMK</option>
+                                                            <option>Z$</option>
+                                                        </select>
                                                         <input id="cost_item_unit_price" type="text" class="form-control" value="0.00">
                                                         <select id="cost_item_currency" class="form-control">
                                                             <!-- <option>USD</option>
@@ -883,7 +898,6 @@
                                                             <option>USD</option>
                                                             <option>TRY</option>
                                                             <option>TMM</option>
-                                                            
                                                             <option>UGX</option>
                                                             <option>UAH</option>
                                                             <option>UYU</option>
@@ -894,7 +908,6 @@
                                                             <option>YER</option>
                                                             <option>ZMK</option>
                                                             <option>ZWD</option>
-
                                                         </select>
                                                     </div>
                                                 </div>
@@ -1543,6 +1556,9 @@
             // if(!$("#blocked-by-area").hasClass('hide')) $("#blocked-by-area").addClass("hide")
             // if(!$("#dependency-list-title").hasClass('hide')) $("#dependency-list-title").addClass("hide")
             // if(!$("#edit-dependency-panel").prop('hidden')) $("#edit-dependency-panel").prop("hidden",true)
+        })
+        $("#cost_item_currency").on("change",function(){
+            $("#cost_item_currency_symbol")[0].selectedIndex=$("#cost_item_currency")[0].selectedIndex;
         })
     });
     var dependencies=[]
