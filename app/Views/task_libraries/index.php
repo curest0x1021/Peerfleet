@@ -776,7 +776,7 @@
                     </div>
                     <div class="row" >
                         <div class="col-md-7" >
-                            <div class="card" style="border: solid 1px lightgray;min-height:40vh;">
+                            <div class="card" style="border: solid 1px lightgray;min-height:50vh;">
                                 <div class="card-header d-flex">
                                     <b>Cost Item List</b>
                                 </div>
