@@ -30,13 +30,7 @@
                 ?>
                 <div class="card-header d-flex justify-content-between">
                     <h4>Task Library Edit</h4>
-                    <div>
-                        <!-- <button type="button" class="btn btn-danger" style="margin-right:10" ><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</button> -->
-                        <button type="button" 
-                        old-id="btn-task-save"
-                        id="btn-save-task-library"
-                        class="btn btn-primary" ><i data-feather="check-circle" class="icon-16"></i> Save</button>
-                    </div>
+                    
                 </div>
                 <div class="card-body">
                     
@@ -1014,8 +1008,18 @@
                     <!-- <button type="button" id="file-selector-btn" class="btn btn-default" ><i data-feather="file" class=""></i> Upload File</button>
                     <input type="file" id="file-selector" hidden/> -->
                     <div><?php echo view("includes/dropzone_preview"); ?></div>
-                    <div stlyle="margin-top:10px" >
-                        <button class="btn btn-default upload-file-button float-start me-auto btn-sm round" type="button" style="color:#7988a2"><i data-feather="camera" class="icon-16"></i> <?php echo app_lang("upload_file"); ?></button>
+                    <div stlyle="margin-top:10px" class="row" >
+                        <div class="col-md-2" >
+                            <button class="btn btn-default upload-file-button float-start me-auto btn-sm round" type="button" style="color:#7988a2"><i data-feather="camera" class="icon-16"></i> <?php echo app_lang("upload_file"); ?></button>
+                        </div>
+                        <div class="col-md-8" ></div>
+                        <!-- <button type="button" class="btn btn-danger" style="margin-right:10" ><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</button> -->
+                        <div class="col-md-1" >
+                            <button type="button" 
+                            old-id="btn-task-save"
+                            id="btn-save-task-library"
+                            class="btn btn-primary" ><i data-feather="check-circle" class="icon-16"></i> Save</button>
+                        </div>
                     </div>
                 </div>
                 <?php echo form_close(); ?>
@@ -1356,7 +1360,14 @@
         });
         $('#toggle-blocking-panel').on('click',function(){
             if($("#blocking-area").hasClass('hide')) $("#blocking-area").removeClass("hide");
-            if(!$("#blocked-by-area").hasClass('hide')) $("#blocked-by-area").addClass("hide")
+            if(!$("#blocked-by-area").hasClass('hide')) {
+                if($("#blocked-by-area").text=="")
+                    $("#blocked-by-area").addClass("hide")
+                else {
+
+                }
+            }
+            dependency_status=1;
             if($("#dependency-list-title").hasClass('hide')) $("#dependency-list-title").removeClass("hide")
             if($("#edit-dependency-panel").prop('hidden')) $("#edit-dependency-panel").prop("hidden",false)
             // if($("#dependency-area").hasClass('hide')) $("#dependency-area").removeClass("hide")
@@ -1365,7 +1376,14 @@
         });
         });
         $('#toggle-blocked-by-panel').on('click',function(){
-            if(!$("#blocking-area").hasClass('hide')) $("#blocking-area").addClass("hide");
+            if(!$("#blocking-area").hasClass('hide')) {
+                if($("#blocking-area").text=="")
+                    $("#blocking-area").addClass("hide");
+                else{
+                    
+                }
+            }
+            dependency_status=2;
             if($("#blocked-by-area").hasClass('hide')) $("#blocked-by-area").removeClass("hide")
             if($("#dependency-list-title").hasClass('hide')) $("#dependency-list-title").removeClass("hide")
             if($("#edit-dependency-panel").prop('hidden')) $("#edit-dependency-panel").prop("hidden",false)
@@ -1375,6 +1393,7 @@
             });
         });
         $("#btn-cancel-edit-dependency").on('click',function(){
+            dependency_status=0;
             if(!$("#blocking-area").hasClass('hide')) $("#blocking-area").addClass("hide");
             if(!$("#blocked-by-area").hasClass('hide')) $("#blocked-by-area").addClass("hide")
             if(!$("#dependency-list-title").hasClass('hide')) $("#dependency-list-title").addClass("hide")
@@ -1382,8 +1401,32 @@
         })
         $("#btn-insert-edit-dependency").on('click',function(){
             var selectedId=$('#dependency_task').val()
-            var selectedText=$('#dependency_task')
-            console.log(selectedId,selectedText)
+            var selectedText=""
+            // console.log(selectedId,selectedText)
+            for(var oneDependency of dependencies){
+                if(String(oneDependency)==String(selectedId)) {
+                    console.log("existing")
+                    return;
+                }
+            }
+            dependencies.push(selectedId);
+            if(dependency_status==1){
+                selectedText=$('#edit-dependency-panel .select2-chosen').text()
+                $("#blocking-tasks").append(`
+                <div id="dependency-task-row-${selectedId}" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
+                <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-${selectedId}" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
+                <div class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></a><a href="#" data-post-id="${selectedId}" data-modal-lg="1" data-act="ajax-modal" data-title="" data-action-url="">${selectedText}</a></div>
+                `)
+            }
+            
+            else if(dependency_status==2) {
+                selectedText=$('#edit-dependency-panel .select2-chosen').text()
+                $("#blocked-by-tasks").append(`
+                <div id="dependency-task-row-${selectedId}" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
+                <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-${selectedId}" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
+                <div class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></a><a href="#" data-post-id="${selectedId}" data-modal-lg="1" data-act="ajax-modal" data-title="" data-action-url="">${selectedText}</a></div>
+                `);
+            }
             // if(!$("#blocking-area").hasClass('hide')) $("#blocking-area").addClass("hide");
             // if(!$("#blocked-by-area").hasClass('hide')) $("#blocked-by-area").addClass("hide")
             // if(!$("#dependency-list-title").hasClass('hide')) $("#dependency-list-title").addClass("hide")
@@ -1391,6 +1434,7 @@
         })
     });
     var dependencies=[]
+    var dependency_status=0;
     function save_new_quote(){
         var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
         var newRow = table.insertRow();
