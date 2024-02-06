@@ -1539,5 +1539,9 @@
         if(isset($gotTasklibrary)&&$gotTasklibrary->dependencies)
         echo 'dependencies=JSON.parse(`'.$gotTasklibrary->dependencies.'`);';
     ?>
+    <?php
+        if(isset($gotTasklibrary)&&$gotTasklibrary->reference_drawing)
+        echo 'cost_items=JSON.parse(`'.$gotTasklibrary->reference_drawing.'`);';
+    ?>
     
 </script>
