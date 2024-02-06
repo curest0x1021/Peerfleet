@@ -769,7 +769,7 @@
                     </div>
                     <div class="row" >
                         <div class="col-md-8" >
-                            <div class="card" style="border: solid 1px lightgray;">
+                            <div class="card" style="border: solid 1px lightgray;min-height:40vh;">
                                 <div class="card-header d-flex">
                                     <b>Cost Item List</b>
                                 </div>
@@ -784,18 +784,6 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <!-- <tr>
-                                            <td>Initial Visit Incl Transport</td>
-                                            <td>1.0 visit X USD 0.00 (Per unit)</td>
-                                            <td>USD 0.00</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Subsequent Visits Incl Transport</td>
-                                            <td>20.0 visit X USD 0.00 (Per unit)</td>
-                                            <td>USD 0.00</td>
-                                            <td></td>
-                                        </tr> -->
                                         </tbody>
                                     </table>
                                     <div id="insert-cost-item-panel" style="margin:5px;" hidden>
@@ -953,8 +941,75 @@
                             // echo form_close(); 
                             ?> 
                             </div>
+                            <!---->
+                            <div class="card" style="border:solid 1px lightgray" >
+                                <div class="card-body" >
+                                    <!--Task dependency-->
+                                    <div class="col-md-12 mb15">
+                                        <span class="dropdown">
+                                            <button class="btn btn-default dropdown-toggle btn-border" type="button" data-bs-toggle="dropdown" aria-expanded="true">
+                                                <i data-feather="shuffle" class="icon-16"></i> <?php echo app_lang('add_dependency'); ?>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li id="toggle-blocked-by-panel" role="presentation"><?php echo js_anchor(app_lang("this_task_blocked_by"), array("class" => "add-dependency-btn dropdown-item", "data-dependency_type" => "blocked_by")); ?></li>
+                                                <li id="toggle-blocking-panel"><?php echo js_anchor(app_lang("this_task_blocking"), array("class" => "add-dependency-btn dropdown-item", "data-dependency_type" => "blocking")); ?></li>
+                                            </ul>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-12 mb15" id="dependency-area">
+                                        <div class="pb10 pt10 hide" id="dependency-list-title">
+                                            <strong><?php echo app_lang("dependency"); ?></strong>
+                                        </div>
+
+                                        <div class="p10 list-group-item mb15 dependency-section hide" id="blocked-by-area">
+                                            <div class="pb10"><strong><?php echo app_lang("blocked_by"); ?></strong></div>
+                                            <div id="blocked-by-tasks"><?php if(isset($blocked_by)) echo $blocked_by; ?></div>
+                                        </div>
+
+                                        <div class="p10 list-group-item mb15 dependency-section hide" id="blocking-area">
+                                            <div class="pb10"><strong><?php echo app_lang("blocking"); ?></strong></div>
+                                            <div id="blocking-tasks"><?php if(isset($blocking)) echo $blocking; ?></div>
+                                        </div>
+                                        <div id="edit-dependency-panel" hidden  >
+                                        <?php //echo form_open(get_uri("tasks/save_dependency_tasks"), array("id" => "dependency_tasks_form", "class" => "general-form hide", "role" => "form")); ?>
+                                        <input type="hidden" name="task_id" value="<?php //echo $task_id; ?>" />
+
+                                        <div class="form-group mb0">
+                                            <div class="mt5 col-md-12 p0">
+
+                                                <?php
+                                                $dependency_dropdown=array();
+                                                foreach ($allTasklibraries as $oneLibrary) {
+                                                    $dependency_dropdown[]=array(
+                                                        "id"=>$oneLibrary['id'],
+                                                        "text"=>$oneLibrary['title']
+                                                    );
+                                                }
+                                                echo form_input(array(
+                                                    "id" => "dependency_task",
+                                                    "name" => "dependency_task",
+                                                    "class" => "form-control validate-hidden",
+                                                    "placeholder" => app_lang('tasks'),
+                                                    "data-rule-required" => true,
+                                                    "data-msg-required" => app_lang("field_required"),
+                                                ));
+                                                ?>
+                                            </div>
+                                        </div>
+                                        <div class="p0 mt10">
+                                            <button id="btn-insert-edit-dependency" type="button" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('add'); ?></button>
+                                            <button id="btn-cancel-edit-dependency" type="button" class="dependency-tasks-close btn btn-default"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('cancel'); ?></button>
+                                        </div>
+                                        <?php //echo form_close(); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!---->
                         </div>
-                        
+                        <div class="col-md-4" >
+                            
+                        </div>
                     </div>
                     <!-- <button type="button" id="file-selector-btn" class="btn btn-default" ><i data-feather="file" class=""></i> Upload File</button>
                     <input type="file" id="file-selector" hidden/> -->
@@ -1007,6 +1062,9 @@
         });
         $("#supplier").select2({
             data: <?php echo (json_encode($suppliers_dropdown)); ?>
+        });
+        $("#dependency-task").select2({
+            data: <?php echo (json_encode($dependency_dropdown)); ?>
         });
         setDatePicker("#start_date");
         setDatePicker("#deadline");
@@ -1173,36 +1231,13 @@
                 checklist_complete++;
             }
             $(".chcklists_status_count").text(checklist_complete);
-            // status_checkbox.addClass("checkbox-checked");
-            // status_checkbox.removeClass("checkbox-checked");
-            // status_checkbox.addClass("inline-loader");
 
-            // if ($(this).attr('data-value') == 0) {
-            //     checklist_complete--;
-            //     $(".chcklists_status_count").text(checklist_complete);
-            // } else {
-            //     checklist_complete++;
-            //     $(".chcklists_status_count").text(checklist_complete);
-            //     status_checkbox.addClass("checkbox-checked");
-            // }
 
         });
         $("#btn-add-new-quote").on("click",function(){
             $("#insert-cost-item-panel").prop("hidden",false);
             $("#btn-add-new-quote").prop("disabled", true);
-            // var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
-            // var newRow = table.insertRow();
 
-            // var cell0 = newRow.insertCell(0);
-            // var cell1 = newRow.insertCell(1);
-            // var cell2 = newRow.insertCell(2);
-            // var cell3 = newRow.insertCell(3);
-
-            
-            // cell1.innerHTML = `<input placeholder="Unit price and quantity" class="form-control" id="quote_price" />`;
-            // cell2.innerHTML = `<input placeholder="Quote" class="form-control" id="quote_quote" />`;
-            // cell3.innerHTML = `<button onClick="save_new_quote()" type="button" id="btn-save-new-quote" class="btn btn-default" ><i data-feather="check" ></i></button>`;
-            // $("#btn-add-new-quote").prop("disabled", true);
         })
         $("#insert-add-cost-item").on("click",function(){
             var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
@@ -1222,6 +1257,9 @@
             $("#btn-add-new-quote").prop("disabled", false);
             $("#insert-cost-item-panel").prop("hidden",false);
         });
+        $("#cancel-add-cost-item").on("click",function(){
+            $("#insert-cost-item-panel").prop("hidden",true);
+        })
         var checklist_items=[];
         $("#add-checklist-item").on("click",function(){
             var checklist_item_title=$("#checklist-add-item")[0].value;
@@ -1315,9 +1353,44 @@
                     window.location='<?php echo get_uri('task_libraries/view/'); ?>'+JSON.parse(response).saved_id;
                 }
             });
+        });
+        $('#toggle-blocking-panel').on('click',function(){
+            if($("#blocking-area").hasClass('hide')) $("#blocking-area").removeClass("hide");
+            if(!$("#blocked-by-area").hasClass('hide')) $("#blocked-by-area").addClass("hide")
+            if($("#dependency-list-title").hasClass('hide')) $("#dependency-list-title").removeClass("hide")
+            if($("#edit-dependency-panel").prop('hidden')) $("#edit-dependency-panel").prop("hidden",false)
+            // if($("#dependency-area").hasClass('hide')) $("#dependency-area").removeClass("hide")
+            $("#dependency_task").select2({
+            data: <?php echo (json_encode($dependency_dropdown)); ?>
+        });
+        });
+        $('#toggle-blocked-by-panel').on('click',function(){
+            if(!$("#blocking-area").hasClass('hide')) $("#blocking-area").addClass("hide");
+            if($("#blocked-by-area").hasClass('hide')) $("#blocked-by-area").removeClass("hide")
+            if($("#dependency-list-title").hasClass('hide')) $("#dependency-list-title").removeClass("hide")
+            if($("#edit-dependency-panel").prop('hidden')) $("#edit-dependency-panel").prop("hidden",false)
+            // if($("#dependency-area").hasClass('hide')) $("#dependency-area").removeClass("hide")
+            $("#dependency_task").select2({
+                data: <?php echo (json_encode($dependency_dropdown)); ?>
+            });
+        });
+        $("#btn-cancel-edit-dependency").on('click',function(){
+            if(!$("#blocking-area").hasClass('hide')) $("#blocking-area").addClass("hide");
+            if(!$("#blocked-by-area").hasClass('hide')) $("#blocked-by-area").addClass("hide")
+            if(!$("#dependency-list-title").hasClass('hide')) $("#dependency-list-title").addClass("hide")
+            if(!$("#edit-dependency-panel").prop('hidden')) $("#edit-dependency-panel").prop("hidden",true)
         })
-        
+        $("#btn-insert-edit-dependency").on('click',function(){
+            var selectedId=$('#dependency_task').val()
+            var selectedText=$('#dependency_task')
+            console.log(selectedId,selectedText)
+            // if(!$("#blocking-area").hasClass('hide')) $("#blocking-area").addClass("hide");
+            // if(!$("#blocked-by-area").hasClass('hide')) $("#blocked-by-area").addClass("hide")
+            // if(!$("#dependency-list-title").hasClass('hide')) $("#dependency-list-title").addClass("hide")
+            // if(!$("#edit-dependency-panel").prop('hidden')) $("#edit-dependency-panel").prop("hidden",true)
+        })
     });
+    var dependencies=[]
     function save_new_quote(){
         var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
         var newRow = table.insertRow();
