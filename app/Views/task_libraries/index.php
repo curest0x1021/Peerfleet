@@ -1077,10 +1077,11 @@
                         <div class="col-md-2" >
                             <button class="btn btn-default upload-file-button float-start me-auto btn-sm round" type="button" style="color:#7988a2"><i data-feather="camera" class="icon-16"></i> <?php echo app_lang("upload_file"); ?></button>
                         </div>
-                        <div class="col-md-8" ></div>
+                        <div class="col-md-9" ></div>
                         <!-- <button type="button" class="btn btn-danger" style="margin-right:10" ><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</button> -->
-                        <div class="col-md-1" >
-                            <button type="button" 
+                        <div class="col-md-1"  >
+                            <button type="button"
+                            style="float:right"
                             old-id="btn-task-save"
                             id="btn-save-task-library"
                             class="btn btn-primary" ><i data-feather="check-circle" class="icon-16"></i> Save</button>
