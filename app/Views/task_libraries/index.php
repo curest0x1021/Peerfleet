@@ -990,7 +990,7 @@
                                         if(isset($gotTasklibrary)) $gotDependencies=json_decode($gotTasklibrary->dependencies,true);
                                         $blockingDependencies=array();
                                         $blockedDependencies=array();
-                                        foreach($gotDependencies as $oneDependency){
+                                        if(is_array($gotDependencies)) foreach($gotDependencies as $oneDependency){
                                             if($oneDependency['blocking']==1){
                                                 $blockingDependencies[]= '
                                                 <div id="dependency-task-row-'.$oneDependency['id'].'" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
