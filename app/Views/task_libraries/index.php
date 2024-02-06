@@ -877,9 +877,24 @@
                                                         <input readonly type="text" class="form-control" value="$">
                                                         <input id="cost_item_unit_price" type="text" class="form-control" value="0.00">
                                                         <select id="cost_item_currency" class="form-control">
-                                                            <option>USD</option>
+                                                            <!-- <option>USD</option>
                                                             <option>AED</option>
-                                                            <option>AFN</option>
+                                                            <option>AFN</option> -->
+                                                            <option>USD</option>
+                                                            <option>TRY</option>
+                                                            <option>TMM</option>
+                                                            
+                                                            <option>UGX</option>
+                                                            <option>UAH</option>
+                                                            <option>UYU</option>
+                                                            <option>AED</option>
+                                                            <option>VUV</option>
+                                                            <option>VEB</option>
+                                                            <option>VND</option>
+                                                            <option>YER</option>
+                                                            <option>ZMK</option>
+                                                            <option>ZWD</option>
+
                                                         </select>
                                                     </div>
                                                 </div>
