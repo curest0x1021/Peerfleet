@@ -794,7 +794,7 @@
                                             <?php
                                             if(isset($gotTasklibrary)&&$gotTasklibrary->reference_drawing){
                                                 $cost_items=json_decode($gotTasklibrary->reference_drawing);
-                                                foreach ($cost_items as $oneItem) {
+                                                foreach ($cost_items as $key=>$oneItem) {
                                                     # code...
                                                     echo "<tr><td>";
                                                     echo $oneItem->name;
@@ -803,7 +803,7 @@
                                                     echo "</td><td>";
                                                     echo $oneItem->currency." ".number_format(floatval($oneItem->quantity)*floatval($oneItem->unit_price), 2, '.', '');
                                                     echo "</td><td>";
-                                                    echo '<button class="btn btn-sm" ><i data-feather="edit" class="" ></i></button><button class="btn btn-sm" ><i data-feather="x-circle" class="" ></i></button>';
+                                                    echo '<button onClick="start_edit_cost_item('.$key.')" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button><button onClick="delete_item('.$key.')" type="button" class="btn btn-sm" ><i color="gray" data-feather="x-circle" class="" ></i></button>';
                                                     echo "</td></tr>";
                                                 }
                                             }
@@ -812,6 +812,7 @@
                                     </table>
                                     <div id="insert-cost-item-panel" style="margin:5px;" hidden>
                                         <div style="min-height:5vh" ></div>
+                                        <input hidden id="editing_cost_item" value="" />
                                         <div class="row" >
                                             <div class="form-group" >
                                                 <label>Cost item name:</label>
@@ -1320,19 +1321,32 @@
             cell1.innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement_unit")[0].value+" X "+$("#cost_item_currency")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
             cell2.innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
             cell3.innerHTML=`
-            <button class="btn" ><i data-feather="edit" class="" ></i></button>
-            <button class="btn" ><i data-feather="x-circle" class="" ></i></button>
+            <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button>
+            <button type="button" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="" ></i></button>
             `;
             $("#btn-add-new-quote").prop("disabled", false);
             $("#insert-cost-item-panel").prop("hidden",false);
-            cost_items.push({
-                name:$("#cost_item_name")[0].value,
-                quantity:$("#cost_item_quantity")[0].value,
-                measurement_unit:$("#cost_item_measurement_unit")[0].value,
-                unit_price:$("#cost_item_unit_price")[0].value,
-                quote_type:$("#cost_item_quote_type")[0].value,
-                currency:$("#cost_item_currency")[0].value,
-            });
+            if($("#editing_cost_item")[0].value=="")
+                cost_items.push({
+                    name:$("#cost_item_name")[0].value,
+                    quantity:$("#cost_item_quantity")[0].value,
+                    measurement_unit:$("#cost_item_measurement_unit")[0].value,
+                    unit_price:$("#cost_item_unit_price")[0].value,
+                    quote_type:$("#cost_item_quote_type")[0].value,
+                    currency:$("#cost_item_currency")[0].value,
+                });
+            else{
+                $("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
+                cost_items[Number($("#editing_cost_item")[0].value)]={
+                    name:$("#cost_item_name")[0].value,
+                    quantity:$("#cost_item_quantity")[0].value,
+                    measurement_unit:$("#cost_item_measurement_unit")[0].value,
+                    unit_price:$("#cost_item_unit_price")[0].value,
+                    quote_type:$("#cost_item_quote_type")[0].value,
+                    currency:$("#cost_item_currency")[0].value,
+                };
+                $("#editing_cost_item")[0].value=""
+            }
         });
         $("#cancel-add-cost-item").on("click",function(){
             $("#insert-cost-item-panel").prop("hidden",true);
@@ -1535,6 +1549,20 @@
         cell3.innerHTML = "";
         $("#btn-save-new-quote")[0].closest("tr").remove();
         $("#btn-add-new-quote").prop("disabled", false);
+    }
+    function delete_item(index){
+        cost_items.splice(index,1);
+        $("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0].deleteRow(index);
+    }
+    function start_edit_cost_item(index){
+        $("#editing_cost_item")[0].value=index;
+        $("#btn-add-new-quote")[0].click();
+        $("#cost_item_name")[0].value=cost_items[index].name;
+        $("#cost_item_quantity")[0].value=cost_items[index].quantity;
+        $("#cost_item_measurement_unit")[0].value=cost_items[index].measurement_unit;
+        $("#cost_item_unit_price")[0].value=cost_items[index].unit_price;
+        $("#cost_item_quote_type")[0].value=cost_items[index].quote_type;
+        $("#cost_item_currency")[0].value=cost_items[index].currency;
     }
     <?php
         if(isset($gotTasklibrary)&&$gotTasklibrary->dependencies)
