@@ -51,6 +51,7 @@
                                             "required"=>true,
                                             "data-rule-required" => true,
                                             "data-msg-required" => app_lang("field_required"),
+                                            "autocomplete" => "off"
                                         ));
                                         ?>
                                     </div>
@@ -81,6 +82,7 @@
                                         "placeholder" => app_lang('category'),
                                         "data-rule-required" => true,
                                         "data-msg-required" => app_lang("field_required"),
+                                        "autocomplete" => "off"
                                     ));
                                     ?>
                                     </div>
@@ -113,6 +115,7 @@
                                             "maxlength" => 15,
                                             "readonly"=>true,
                                             "placeholder" => app_lang('dock_list_number'),
+                                            "autocomplete" => "off"
                                         ));
                                         ?>
                                     </div>
@@ -146,6 +149,7 @@
                                             "value" =>isset($gotTasklibrary)&& $gotTasklibrary->supplier?$gotTasklibrary->supplier:$suppliers_dropdown[0]['id'],
                                             "class" => "form-control",
                                             "placeholder" => app_lang('supplier'),
+                                            "autocomplete" => "off"
                                         ));
                                         ?>
                                     </div>
@@ -164,7 +168,8 @@
                                             "id" => "status_id",
                                             "name" => "status_id",
                                             "value" => isset($gotTasklibrary)&&$gotTasklibrary->status_id?$gotTasklibrary->status_id:$status_dropdown[0]['id'],
-                                            "class" => "form-control"
+                                            "class" => "form-control",
+                                            "autocomplete" => "off"
                                         ));
                                         ?>
                                     </div>
@@ -186,6 +191,7 @@
                                             "class" => "form-control",
                                             "maxlength" => 15,
                                             "placeholder" => app_lang('priority'),
+                                            "autocomplete" => "off"
                                         ));
                                         ?>
                                     </div>
@@ -209,7 +215,8 @@
                                             "name" => "milestone_id",
                                             "value" => isset($gotTasklibrary)&&$gotTasklibrary->milestone_id?$gotTasklibrary->milestone_id:$milestone_dropdown[0]['id'],
                                             "class" => "form-control",
-                                            "placeholder" => app_lang('milestone')
+                                            "placeholder" => app_lang('milestone'),
+                                            "autocomplete" => "off"
                                         ));
                                         ?>
                                     </div>
@@ -227,7 +234,8 @@
                                             "value" => isset($gotTasklibrary)&&$gotTasklibrary->assigned_to?$gotTasklibrary->assigned_to:"",
                                             "class" => "form-control",
                                             // "required"=>true,
-                                            "placeholder" => app_lang('assign_to')
+                                            "placeholder" => app_lang('assign_to'),
+                                            "autocomplete" => "off"
                                         ));
                                         ?>
                                     </div>
@@ -274,6 +282,7 @@
                                         "placeholder" => app_lang('collaborators'),
                                         "data-rule-required" => true,
                                         "data-msg-required" => app_lang("field_required"),
+                                        "autocomplete" => "off"
                                     ));
                                     ?>
                                     </div>
@@ -703,6 +712,7 @@
                                             "class" => "form-control",
                                             "maxlength" => 30,
                                             "placeholder" => app_lang('maker'),
+                                            "autocomplete" => "off"
                                         ));
                                         ?>
                                     </div>
@@ -720,6 +730,7 @@
                                             "class" => "form-control",
                                             "maxlength" => 30,
                                             "placeholder" => app_lang('type'),
+                                            "autocomplete" => "off"
                                         ));
                                         ?>
                                     </div>
@@ -737,6 +748,7 @@
                                             "class" => "form-control",
                                             "maxlength" => 30,
                                             "placeholder" => app_lang('serial_number'),
+                                            "autocomplete" => "off"
                                         ));
                                         ?>
                                     </div>
@@ -754,6 +766,7 @@
                                             "class" => "form-control",
                                             "maxlength" => 30,
                                             "placeholder" => app_lang('pms_scs_number'),
+                                            "autocomplete" => "off"
                                         ));
                                         ?>
                                     </div>
@@ -920,7 +933,7 @@
                                                     "placeholder" => app_lang('add_item'),
                                                     "data-rule-required" => true,
                                                     "data-msg-required" => app_lang("field_required"),
-                                                    "autocomplete" => "off"
+                                                    "autocomplete" => "off",
                                                 ));
                                                 ?>
                                             </div>
@@ -945,8 +958,8 @@
                                                 <i data-feather="shuffle" class="icon-16"></i> <?php echo app_lang('add_dependency'); ?>
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
-                                                <li id="toggle-blocked-by-panel" role="presentation"><?php echo js_anchor(app_lang("this_task_blocked_by"), array("class" => "add-dependency-btn dropdown-item", "data-dependency_type" => "blocked_by")); ?></li>
                                                 <li id="toggle-blocking-panel"><?php echo js_anchor(app_lang("this_task_blocking"), array("class" => "add-dependency-btn dropdown-item", "data-dependency_type" => "blocking")); ?></li>
+                                                <li id="toggle-blocked-by-panel" role="presentation"><?php echo js_anchor(app_lang("this_task_blocked_by"), array("class" => "add-dependency-btn dropdown-item", "data-dependency_type" => "blocked_by")); ?></li>
                                             </ul>
                                         </span>
                                     </div>
@@ -954,16 +967,49 @@
                                         <div class="pb10 pt10 hide" id="dependency-list-title">
                                             <strong><?php echo app_lang("dependency"); ?></strong>
                                         </div>
-
-                                        <div class="p10 list-group-item mb15 dependency-section hide" id="blocked-by-area">
-                                            <div class="pb10"><strong><?php echo app_lang("blocked_by"); ?></strong></div>
-                                            <div id="blocked-by-tasks"><?php if(isset($blocked_by)) echo $blocked_by; ?></div>
-                                        </div>
-
-                                        <div class="p10 list-group-item mb15 dependency-section hide" id="blocking-area">
+                                        <?php
+                                        $gotDependencies=array();
+                                        if(isset($gotTasklibrary)) $gotDependencies=json_decode($gotTasklibrary->dependencies,true);
+                                        $blockingDependencies=array();
+                                        $blockedDependencies=array();
+                                        foreach($gotDependencies as $oneDependency){
+                                            if($oneDependency['blocking']==1){
+                                                $blockingDependencies[]= '
+                                                <div id="dependency-task-row-'.$oneDependency['id'].'" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
+                                                <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-'.$oneDependency['id'].'" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
+                                                <div class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></a><a href="#" data-post-id="'.$oneDependency['id'].'" data-modal-lg="1" data-act="ajax-modal" data-title="" data-action-url="">'.$oneDependency['title'].'</a></div>
+                                                ';
+                                            }else $blockedDependencies[]='
+                                            <div id="dependency-task-row-'.$oneDependency['id'].'" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
+                                            <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-'.$oneDependency['id'].'" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
+                                            <div class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></a><a href="#" data-post-id="'.$oneDependency['id'].'" data-modal-lg="1" data-act="ajax-modal" data-title="" data-action-url="">'.$oneDependency['title'].'</a></div>
+                                            ';
+                                            
+                                        };
+                                        ?>
+                                        <div class="p10 list-group-item mb15 dependency-section <?php echo (count($blockingDependencies)>0)?"":"hide"; ?>" id="blocking-area">
                                             <div class="pb10"><strong><?php echo app_lang("blocking"); ?></strong></div>
-                                            <div id="blocking-tasks"><?php if(isset($blocking)) echo $blocking; ?></div>
+                                            <div id="blocking-tasks"><?php if(isset($blocking)) echo $blocking; ?>
+                                            <?php
+                                            
+                                            foreach ($blockingDependencies as $oneBlocking) {
+                                                echo $oneBlocking;
+                                            }
+                                            ?>
+                                            </div>
                                         </div>
+                                        <div class="p10 list-group-item mb15 dependency-section <?php echo (count($blockedDependencies)>0)?"":"hide"; ?>" id="blocked-by-area">
+                                            <div class="pb10"><strong><?php echo app_lang("blocked_by"); ?></strong></div>
+                                            <div id="blocked-by-tasks"><?php if(isset($blocked_by)) echo $blocked_by; ?>
+                                            <?php
+                                            foreach ($blockedDependencies as $oneBlocked) {
+                                                echo $oneBlocked;
+                                            }
+                                            ?>
+                                            </div>
+                                        </div>
+
+                                        
                                         <div id="edit-dependency-panel" hidden  >
                                         <?php //echo form_open(get_uri("tasks/save_dependency_tasks"), array("id" => "dependency_tasks_form", "class" => "general-form hide", "role" => "form")); ?>
                                         <input type="hidden" name="task_id" value="<?php //echo $task_id; ?>" />
@@ -986,6 +1032,7 @@
                                                     "placeholder" => app_lang('tasks'),
                                                     "data-rule-required" => true,
                                                     "data-msg-required" => app_lang("field_required"),
+                                                    "autocomplete" => "off"
                                                 ));
                                                 ?>
                                             </div>
@@ -1350,7 +1397,8 @@
                     ,type
                     ,serial_number
                     ,pms_scs_number
-                    ,checklist_items
+                    ,checklist_items,
+                    dependencies:JSON.stringify(dependencies)
                 },
                 success: function (response) {
                     // appLoader.hide();
@@ -1394,9 +1442,14 @@
         });
         $("#btn-cancel-edit-dependency").on('click',function(){
             dependency_status=0;
-            if(!$("#blocking-area").hasClass('hide')) $("#blocking-area").addClass("hide");
-            if(!$("#blocked-by-area").hasClass('hide')) $("#blocked-by-area").addClass("hide")
-            if(!$("#dependency-list-title").hasClass('hide')) $("#dependency-list-title").addClass("hide")
+            if(dependencies.length>0){
+                if(!$("#blocking-area").text()) console.log("empty")
+                if(!$("#blocked-by-area").text()) console.log("empty")
+            }else {
+                if(!$("#dependency-list-title").hasClass('hide')) $("#dependency-list-title").addClass("hide")
+                if(!$("#blocking-area").hasClass('hide')) $("#blocking-area").addClass("hide");
+                if(!$("#blocked-by-area").hasClass('hide')) $("#blocked-by-area").addClass("hide")
+            }
             if(!$("#edit-dependency-panel").prop('hidden')) $("#edit-dependency-panel").prop("hidden",true)
         })
         $("#btn-insert-edit-dependency").on('click',function(){
@@ -1404,14 +1457,15 @@
             var selectedText=""
             // console.log(selectedId,selectedText)
             for(var oneDependency of dependencies){
-                if(String(oneDependency)==String(selectedId)) {
+                if(String(oneDependency.id)==String(selectedId)) {
                     console.log("existing")
                     return;
                 }
             }
-            dependencies.push(selectedId);
+            
             if(dependency_status==1){
-                selectedText=$('#edit-dependency-panel .select2-chosen').text()
+                selectedText=$('#edit-dependency-panel .select2-chosen').text();
+                dependencies.push({id:selectedId,title:selectedText,blocking:dependency_status});
                 $("#blocking-tasks").append(`
                 <div id="dependency-task-row-${selectedId}" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
                 <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-${selectedId}" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
@@ -1420,7 +1474,8 @@
             }
             
             else if(dependency_status==2) {
-                selectedText=$('#edit-dependency-panel .select2-chosen').text()
+                selectedText=$('#edit-dependency-panel .select2-chosen').text();
+                dependencies.push({id:selectedId,title:selectedText,blocking:dependency_status});
                 $("#blocked-by-tasks").append(`
                 <div id="dependency-task-row-${selectedId}" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
                 <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-${selectedId}" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
@@ -1452,8 +1507,9 @@
         $("#btn-add-new-quote").prop("disabled", false);
     }
     <?php
-        if(isset($gotChecklistItems))
-        echo 'console.log(`'.json_encode($gotChecklistItems).'`)';
+        if(isset($gotTasklibrary)&&$gotTasklibrary->dependencies)
+        echo 'dependencies=JSON.parse(`'.$gotTasklibrary->dependencies.'`);';
     ?>
+    console.log(dependencies)
     
 </script>

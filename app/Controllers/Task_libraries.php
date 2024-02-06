@@ -755,7 +755,7 @@ class Task_libraries extends Security_Controller {
         );
         $save_id = $this->Task_libraries_model->ci_save($data, $id);
         $checklist_items=$this->request->getPost("checklist_items");
-        foreach($checklist_items as $oneItem){
+        if($checklist_items)foreach($checklist_items as $oneItem){
             $newItem=array(
                 "title"=>$oneItem,
                 "task_library"=>$save_id
