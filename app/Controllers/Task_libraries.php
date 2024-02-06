@@ -752,6 +752,7 @@ class Task_libraries extends Security_Controller {
             "type"=>$this->request->getPost("type"),
             "serial_number"=>$this->request->getPost("serial_number"),
             "pms_scs_number"=>$this->request->getPost("pms_scs_number"),
+            "reference_drawing"=>$this->request->getPost("cost_items")
         );
         $save_id = $this->Task_libraries_model->ci_save($data, $id);
         $checklist_items=$this->request->getPost("checklist_items");
