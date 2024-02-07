@@ -4258,7 +4258,7 @@ label {
 .general-form .form-control {
   box-sizing: border-box;
   font-size: 14px;
-  border-color: lightgray;
+  border-color: #f6f8f9;
   background-color: #f6f8f9;
   color: #4e5e6a;
   box-shadow: none;

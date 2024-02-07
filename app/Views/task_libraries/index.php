@@ -1,5 +1,5 @@
-<div id="tasks-dropzone" class="post-dropzone">
 <div id="page-content" class="page-wrapper clearfix">
+
     <div class="row">
         <div class="col-sm-3 col-lg-2">
             <?php
@@ -9,7 +9,7 @@
         </div>
 
         <div class="col-sm-9 col-lg-10">
-            <div class="card">
+            <div class="card"  >
                 <div class="card-body">
                     <div class="display-flex" style="align-items:center" >
                         <div style="flex-grow:1" ></div>
@@ -23,7 +23,8 @@
                     </div>
                 </div>
             </div>
-            <div class="card">
+            <div class="card" >
+                <div id="tasks-dropzone" class="post-dropzone">
                 <?php echo form_open(get_uri("task_libraries/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
                 <?php if(isset($gotTasklibrary))
                     echo '<input hidden name="id" value="'.$gotTasklibrary->id.'" />';
@@ -54,7 +55,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="category" class="col-md-4"><?php echo app_lang('category'); ?></label>
-                                    <div class="col-md-8" style="border:1px solid lightgray; border-radius:5px">
+                                    <div class="col-md-8" >
                                     <?php
                                     $category_dropdown = array(
                                         array("id"=>"General & Docking","text"=>"General & Docking"),
@@ -121,7 +122,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="supplier" class="col-md-3"><?php echo app_lang('supplier'); ?></label>
-                                    <div class="col-md-9" style="border:1px solid lightgray; border-radius:5px">
+                                    <div class="col-md-9" >
                                         <?php
                                         $suppliers_dropdown=array(
                                             array(
@@ -152,7 +153,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="status_id" class="col-md-3"><?php echo app_lang('status'); ?></label>
-                                    <div class="col-md-9" style="border:1px solid lightgray; border-radius:5px">
+                                    <div class="col-md-9" >
                                         <?php
                                         $status_dropdown=array();
                                         foreach($allStatus as $oneStatus){
@@ -172,7 +173,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="priority_id" class="col-md-3"><?php echo app_lang('priority'); ?></label>
-                                    <div class="col-md-9" style="border:1px solid lightgray; border-radius:5px">
+                                    <div class="col-md-9" >
                                         <?php
                                         $priority_dropdown=array();
                                         foreach($allPriorities as $onePriority){
@@ -198,7 +199,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="milestone_id" class="col-md-3"><?php echo app_lang('milestone'); ?></label>
-                                    <div class="col-md-9" style="border:1px solid lightgray; border-radius:5px" >
+                                    <div class="col-md-9"  >
                                         <?php
                                         $milestone_dropdown=array();
                                         foreach ($allMilestones as $oneMilestone) {
@@ -238,7 +239,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="collaborators" class="col-md-3"><?php echo app_lang('collaborators'); ?></label>
-                                    <div class="col-md-9" style="border:1px solid lightgray; border-radius:5px">
+                                    <div class="col-md-9" >
                                     <?php
                                     $collaborators_dropdown = array(
                                         array(
@@ -1437,10 +1438,10 @@
                     </div>
                 </div>
                 <?php echo form_close(); ?>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 <?php echo view("includes/cropbox"); ?>
 
