@@ -815,7 +815,7 @@ label{
     .form-control {
         box-sizing: border-box;
         font-size: 14px;
-        border-color: lightgray;
+        border-color: #f6f8f9;
         background-color: #f6f8f9;
         color: $light-link-color;
         box-shadow: none;
@@ -854,9 +854,7 @@ label{
 
         .select2-container .select2-choice {
             background-color: #fff !important;
-            
         }
-        
     }
 }
 
