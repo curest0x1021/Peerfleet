@@ -9,7 +9,7 @@
         </div>
 
         <div class="col-sm-9 col-lg-10">
-            <div class="card"  >
+            <div class="card" style="border:1px solid lightgray" >
                 <div class="card-body">
                     <div class="display-flex" style="align-items:center" >
                         <div style="flex-grow:1" ></div>
@@ -23,14 +23,14 @@
                     </div>
                 </div>
             </div>
-            <div class="card" >
+            <div class="card" style="border:1px solid lightgray" >
                 <div id="tasks-dropzone" class="post-dropzone">
                 <?php echo form_open(get_uri("task_libraries/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
                 <?php if(isset($gotTasklibrary))
                     echo '<input hidden name="id" value="'.$gotTasklibrary->id.'" />';
                 ?>
                 <div class="card-header d-flex justify-content-between">
-                    <h4>Task Library Edit</h4>
+                    <h4><?php echo isset($gotTasklibrary)?"Edit Task Library" :"Add Task Library"; ?></h4>
                     
                 </div>
                 <div class="card-body">
@@ -39,8 +39,8 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="title" class="col-md-4"><?php echo app_lang('title'); ?></label>
-                                    <div class="col-md-8">
+                                    <label for="title" class="col-md-4"><?php echo app_lang('title'); ?>:</label>
+                                    <div class="col-md-8" style="border:1px solid lightgray;border-radius:5px" >
                                         <input
                                         id="title"
                                         name="title"
@@ -54,8 +54,8 @@
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="category" class="col-md-4"><?php echo app_lang('category'); ?></label>
-                                    <div class="col-md-8" >
+                                    <label for="category" class="col-md-4"><?php echo app_lang('category'); ?>:</label>
+                                    <div class="col-md-8" style="border:1px solid lightgray;border-radius:5px" >
                                     <?php
                                     $category_dropdown = array(
                                         array("id"=>"General & Docking","text"=>"General & Docking"),
@@ -85,8 +85,8 @@
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="dock_list_number" class="col-md-4"><?php echo app_lang('dock_list_number'); ?></label>
-                                    <div class="col-md-8" >
+                                    <label for="dock_list_number" class="col-md-4"><?php echo app_lang('dock_list_number'); ?>:</label>
+                                    <div class="col-md-8" style="border:1px solid lightgray;border-radius:5px" >
                                         <?php
                                         $dock_list_number_now="";
                                         if(isset($gotTasklibrary)){
@@ -121,8 +121,8 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="supplier" class="col-md-3"><?php echo app_lang('supplier'); ?></label>
-                                    <div class="col-md-9" >
+                                    <label for="supplier" class="col-md-3"><?php echo app_lang('supplier'); ?>:</label>
+                                    <div class="col-md-9" style="border:1px solid lightgray;border-radius:5px" >
                                         <?php
                                         $suppliers_dropdown=array(
                                             array(
@@ -152,8 +152,8 @@
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="status_id" class="col-md-3"><?php echo app_lang('status'); ?></label>
-                                    <div class="col-md-9" >
+                                    <label for="status_id" class="col-md-3"><?php echo app_lang('status'); ?>:</label>
+                                    <div class="col-md-9" style="border:1px solid lightgray;border-radius:5px" >
                                         <?php
                                         $status_dropdown=array();
                                         foreach($allStatus as $oneStatus){
@@ -172,8 +172,8 @@
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="priority_id" class="col-md-3"><?php echo app_lang('priority'); ?></label>
-                                    <div class="col-md-9" >
+                                    <label for="priority_id" class="col-md-3"><?php echo app_lang('priority'); ?>:</label>
+                                    <div class="col-md-9" style="border:1px solid lightgray;border-radius:5px" >
                                         <?php
                                         $priority_dropdown=array();
                                         foreach($allPriorities as $onePriority){
@@ -198,8 +198,8 @@
                             
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="milestone_id" class="col-md-3"><?php echo app_lang('milestone'); ?></label>
-                                    <div class="col-md-9"  >
+                                    <label for="milestone_id" class="col-md-3"><?php echo app_lang('milestone'); ?>:</label>
+                                    <div class="col-md-9" style="border:1px solid lightgray;border-radius:5px"  >
                                         <?php
                                         $milestone_dropdown=array();
                                         foreach ($allMilestones as $oneMilestone) {
@@ -220,8 +220,8 @@
                             
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="assigned_to" class="col-md-3"><?php echo app_lang('assign_to'); ?></label>
-                                    <div class="col-md-9">
+                                    <label for="assigned_to" class="col-md-3"><?php echo app_lang('assign_to'); ?>:</label>
+                                    <div class="col-md-9" style="border:1px solid lightgray;border-radius:5px" >
                                         <?php
                                         echo form_input(array(
                                             "id" => "assigned_to",
@@ -238,8 +238,8 @@
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="collaborators" class="col-md-3"><?php echo app_lang('collaborators'); ?></label>
-                                    <div class="col-md-9" >
+                                    <label for="collaborators" class="col-md-3"><?php echo app_lang('collaborators'); ?>:</label>
+                                    <div class="col-md-9" style="border:1px solid lightgray;border-radius:5px"  >
                                     <?php
                                     $collaborators_dropdown = array(
                                         array(
@@ -299,6 +299,7 @@
                                         "name" => "description",
                                         "value" => isset($gotTasklibrary)&&$gotTasklibrary->description?$gotTasklibrary->description:"",
                                         "class" => "form-control",
+                                        "style"=>"border:1px solid lightgray;border-radius:5px",
                                         "placeholder" => app_lang('description'),
                                         "data-rich-text-editor" => true,
                                     ));
@@ -315,7 +316,7 @@
                             <div class=" col-md-11">
                                 <div class="row" >
                                     <div style="width:3%" ></div>
-                                    <div style="width:97%" >
+                                    <div style="width:97%" style="border:1px solid lightgray;border-radius:5px" >
                                     <?php
                                     echo form_textarea(array(
                                         "id" => "location",
@@ -812,6 +813,7 @@
                                             <div class="form-group" >
                                                 <label>Cost item name:</label>
                                                 <input
+                                                style="border:1px solid lightgray;border-radius:5px;"
                                                     id="cost_item_name"
                                                     class="form-control"
                                                     type="text"
