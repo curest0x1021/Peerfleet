@@ -40,20 +40,14 @@
                                 <div class="row">
                                     <label for="title" class="col-md-4"><?php echo app_lang('title'); ?></label>
                                     <div class="col-md-8">
-                                        <?php
-                                        echo form_input(array(
-                                            "id" => "title",
-                                            "name" => "title",
-                                            "value" => isset($gotTasklibrary) ?$gotTasklibrary->title:"",
-                                            "class" => "form-control",
-                                            "placeholder" => app_lang('title'),
-                                            "autofocus" => true,
-                                            "required"=>true,
-                                            "data-rule-required" => true,
-                                            "data-msg-required" => app_lang("field_required"),
-                                            "autocomplete" => "off"
-                                        ));
-                                        ?>
+                                        <input
+                                        id="title"
+                                        name="title"
+                                        value="<?php echo isset($gotTasklibrary) ?$gotTasklibrary->title:""; ?>"
+                                        class="form-control"
+                                        placeholder="<?php echo app_lang('title')?>"
+                                        required
+                                        />
                                     </div>
                                 </div>
                             </div>

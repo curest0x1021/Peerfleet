@@ -1,1 +1,7 @@
 /*Write your custom css in this file.*/
+.select2-container {
+    border: 1px solid #ccc; /* Border for the entire Select2 container */
+}
+form-control {
+    border: 1px solid lightgray;
+}
