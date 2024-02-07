@@ -303,7 +303,7 @@
 
                     <div class="form-group">
                         <div class="row">
-                            <label for="description" class=" col-md-1"><?php echo app_lang('description'); ?></label>
+                            <label for="description" class=" col-md-1"><?php echo app_lang('description'); ?>:</label>
                             <div class="col-md-11">
                                 <div class="row" >
                                     <div style="width:3%" ></div>
@@ -1516,6 +1516,9 @@
         setDatePicker("#deadline");
         $('#description').summernote({
             height:250
+        });
+        $('.note-editor').css({
+            'border-radius':'5px'
         });
         var $selector = $("#checklist-items");
         Sortable.create($selector[0], {
