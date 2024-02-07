@@ -54,7 +54,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="category" class="col-md-4"><?php echo app_lang('category'); ?></label>
-                                    <div class="col-md-8">
+                                    <div class="col-md-8" style="border:1px solid lightgray; border-radius:5px">
                                     <?php
                                     $category_dropdown = array(
                                         array("id"=>"General & Docking","text"=>"General & Docking"),
@@ -85,7 +85,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="dock_list_number" class="col-md-4"><?php echo app_lang('dock_list_number'); ?></label>
-                                    <div class="col-md-8">
+                                    <div class="col-md-8" >
                                         <?php
                                         $dock_list_number_now="";
                                         if(isset($gotTasklibrary)){
@@ -121,7 +121,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="supplier" class="col-md-3"><?php echo app_lang('supplier'); ?></label>
-                                    <div class="col-md-9">
+                                    <div class="col-md-9" style="border:1px solid lightgray; border-radius:5px">
                                         <?php
                                         $suppliers_dropdown=array(
                                             array(
@@ -152,7 +152,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="status_id" class="col-md-3"><?php echo app_lang('status'); ?></label>
-                                    <div class="col-md-9">
+                                    <div class="col-md-9" style="border:1px solid lightgray; border-radius:5px">
                                         <?php
                                         $status_dropdown=array();
                                         foreach($allStatus as $oneStatus){
@@ -172,7 +172,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="priority_id" class="col-md-3"><?php echo app_lang('priority'); ?></label>
-                                    <div class="col-md-9">
+                                    <div class="col-md-9" style="border:1px solid lightgray; border-radius:5px">
                                         <?php
                                         $priority_dropdown=array();
                                         foreach($allPriorities as $onePriority){
@@ -198,7 +198,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="milestone_id" class="col-md-3"><?php echo app_lang('milestone'); ?></label>
-                                    <div class="col-md-9">
+                                    <div class="col-md-9" style="border:1px solid lightgray; border-radius:5px" >
                                         <?php
                                         $milestone_dropdown=array();
                                         foreach ($allMilestones as $oneMilestone) {
@@ -238,7 +238,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="collaborators" class="col-md-3"><?php echo app_lang('collaborators'); ?></label>
-                                    <div class="col-md-9">
+                                    <div class="col-md-9" style="border:1px solid lightgray; border-radius:5px">
                                     <?php
                                     $collaborators_dropdown = array(
                                         array(
@@ -1847,7 +1847,6 @@
             // console.log(selectedId,selectedText)
             for(var oneDependency of dependencies){
                 if(String(oneDependency.id)==String(selectedId)) {
-                    console.log("existing")
                     return;
                 }
             }

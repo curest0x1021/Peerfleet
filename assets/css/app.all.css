@@ -4287,9 +4287,6 @@ label {
 .general-form.white .select2-container .select2-choice {
   background-color: #fff !important;
 }
-.select2-container {
-  border: 1px solid lightgray;
-}
 .form-control {
   height: 35px;
 }
