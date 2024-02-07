@@ -15,9 +15,9 @@
                         <div style="flex-grow:1" ></div>
                         <label for="title" style="margin:10px" >Search:</label>
                         <input class="form-control" type="text" style="width:20%"  name="search" />
-                        <a class="btn btn-default" href="<?php echo get_uri("task_libraries");?>" style="margin:5px" ><i data-feather="plus-circle" ></i> Add Library</a>
+                        <a class="btn btn-default" href="<?php echo get_uri("task_libraries");?>" style="margin:5px" ><i data-feather="plus-circle" ></i> Add Task Template</a>
                         <div style="margin:5px" >
-                        <?php echo modal_anchor(get_uri("task_libraries/import_modal"), "<i data-feather='upload' class='icon-16'></i> " . "Import Libraries", array("class" => "btn btn-default import_tasks_btn", "title" => "Import Task Libraries")); ?>
+                        <?php echo modal_anchor(get_uri("task_libraries/import_modal"), "<i data-feather='upload' class='icon-16'></i> " . "Import Library Templates", array("class" => "btn btn-default import_tasks_btn", "title" => "Import Task Libraries")); ?>
                         </div>
                         <?php echo modal_anchor(get_uri("task_libraries/export_modal"), "<i data-feather='external-link' class='icon-16'></i> " . "Export", array("class" => "btn btn-default export-excel-btn", "title" => "Export Task Libraries")); ?>
                     </div>
@@ -40,12 +40,13 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="title" class="col-md-4"><?php echo app_lang('title'); ?>:</label>
-                                    <div class="col-md-8" style="border:1px solid lightgray;border-radius:5px" >
+                                    <div class="col-md-8" >
                                         <input
                                         id="title"
                                         name="title"
                                         value="<?php echo isset($gotTasklibrary) ?$gotTasklibrary->title:""; ?>"
-                                        class="form-control"
+                                        class="form-control",
+                                        style="border:1px solid lightgray;"
                                         placeholder="<?php echo app_lang('title')?>"
                                         required
                                         />
@@ -55,7 +56,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="category" class="col-md-4"><?php echo app_lang('category'); ?>:</label>
-                                    <div class="col-md-8" style="border:1px solid lightgray;border-radius:5px" >
+                                    <div class="col-md-8"  >
                                     <?php
                                     $category_dropdown = array(
                                         array("id"=>"General & Docking","text"=>"General & Docking"),
@@ -76,6 +77,7 @@
                                         "class" => "form-control",
                                         "placeholder" => app_lang('category'),
                                         "data-rule-required" => true,
+                                        "style"=>"border:1px solid lightgray;",
                                         "data-msg-required" => app_lang("field_required"),
                                         "autocomplete" => "off"
                                     ));
@@ -86,7 +88,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="dock_list_number" class="col-md-4"><?php echo app_lang('dock_list_number'); ?>:</label>
-                                    <div class="col-md-8" style="border:1px solid lightgray;border-radius:5px" >
+                                    <div class="col-md-8" >
                                         <?php
                                         $dock_list_number_now="";
                                         if(isset($gotTasklibrary)){
@@ -109,6 +111,7 @@
                                             "class" => "form-control",
                                             "maxlength" => 15,
                                             "readonly"=>true,
+                                            "style"=>"border:1px solid lightgray",
                                             "placeholder" => app_lang('dock_list_number'),
                                             "autocomplete" => "off"
                                         ));
@@ -122,7 +125,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="supplier" class="col-md-3"><?php echo app_lang('supplier'); ?>:</label>
-                                    <div class="col-md-9" style="border:1px solid lightgray;border-radius:5px" >
+                                    <div class="col-md-9"  >
                                         <?php
                                         $suppliers_dropdown=array(
                                             array(
@@ -143,6 +146,7 @@
                                             "name" => "supplier",
                                             "value" =>isset($gotTasklibrary)&& $gotTasklibrary->supplier?$gotTasklibrary->supplier:$suppliers_dropdown[0]['id'],
                                             "class" => "form-control",
+                                            "style"=>"border:1px solid lightgray",
                                             "placeholder" => app_lang('supplier'),
                                             "autocomplete" => "off"
                                         ));
@@ -153,7 +157,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="status_id" class="col-md-3"><?php echo app_lang('status'); ?>:</label>
-                                    <div class="col-md-9" style="border:1px solid lightgray;border-radius:5px" >
+                                    <div class="col-md-9" >
                                         <?php
                                         $status_dropdown=array();
                                         foreach($allStatus as $oneStatus){
@@ -164,6 +168,7 @@
                                             "name" => "status_id",
                                             "value" => isset($gotTasklibrary)&&$gotTasklibrary->status_id?$gotTasklibrary->status_id:$status_dropdown[0]['id'],
                                             "class" => "form-control",
+                                            "style"=>"border:1px solid lightgray",
                                             "autocomplete" => "off"
                                         ));
                                         ?>
@@ -173,7 +178,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="priority_id" class="col-md-3"><?php echo app_lang('priority'); ?>:</label>
-                                    <div class="col-md-9" style="border:1px solid lightgray;border-radius:5px" >
+                                    <div class="col-md-9"  >
                                         <?php
                                         $priority_dropdown=array();
                                         foreach($allPriorities as $onePriority){
@@ -185,6 +190,7 @@
                                             "value" => isset($gotTasklibrary)&&$gotTasklibrary->priority_id?$gotTasklibrary->priority_id:$priority_dropdown[0]['id'],
                                             "class" => "form-control",
                                             "maxlength" => 15,
+                                            "style"=>"border:1px solid lightgray",
                                             "placeholder" => app_lang('priority'),
                                             "autocomplete" => "off"
                                         ));
@@ -199,7 +205,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="milestone_id" class="col-md-3"><?php echo app_lang('milestone'); ?>:</label>
-                                    <div class="col-md-9" style="border:1px solid lightgray;border-radius:5px"  >
+                                    <div class="col-md-9"  >
                                         <?php
                                         $milestone_dropdown=array();
                                         foreach ($allMilestones as $oneMilestone) {
@@ -210,6 +216,7 @@
                                             "name" => "milestone_id",
                                             "value" => isset($gotTasklibrary)&&$gotTasklibrary->milestone_id?$gotTasklibrary->milestone_id:$milestone_dropdown[0]['id'],
                                             "class" => "form-control",
+                                            "style"=>"border:1px solid lightgray",
                                             "placeholder" => app_lang('milestone'),
                                             "autocomplete" => "off"
                                         ));
@@ -221,14 +228,21 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="assigned_to" class="col-md-3"><?php echo app_lang('assign_to'); ?>:</label>
-                                    <div class="col-md-9" style="border:1px solid lightgray;border-radius:5px" >
+                                    <div class="col-md-9" >
                                         <?php
+                                        $assigned_to_dropdown=array(
+                                            array(
+                                                "id"=>"-",
+                                                "text"=>"-"
+                                            )
+                                        );
                                         echo form_input(array(
                                             "id" => "assigned_to",
                                             "name" => "assigned_to",
-                                            "value" => isset($gotTasklibrary)&&$gotTasklibrary->assigned_to?$gotTasklibrary->assigned_to:"",
+                                            "value" => isset($gotTasklibrary)&&$gotTasklibrary->assigned_to?$gotTasklibrary->assigned_to:"-",
                                             "class" => "form-control",
                                             // "required"=>true,
+                                            "style"=>"border:1px solid lightgray",
                                             "placeholder" => app_lang('assign_to'),
                                             "autocomplete" => "off"
                                         ));
@@ -239,7 +253,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="collaborators" class="col-md-3"><?php echo app_lang('collaborators'); ?>:</label>
-                                    <div class="col-md-9" style="border:1px solid lightgray;border-radius:5px"  >
+                                    <div class="col-md-9"  >
                                     <?php
                                     $collaborators_dropdown = array(
                                         array(
@@ -274,6 +288,7 @@
                                         "value" => isset($gotTasklibrary)&&$gotTasklibrary->collaborators?$gotTasklibrary->collaborators:"-",
                                         "class" => "form-control",
                                         "required"=>true,
+                                        "style"=>"border:1px solid lightgray",
                                         "placeholder" => app_lang('collaborators'),
                                         "data-rule-required" => true,
                                         "data-msg-required" => app_lang("field_required"),
@@ -292,14 +307,13 @@
                             <div class="col-md-11">
                                 <div class="row" >
                                     <div style="width:3%" ></div>
-                                    <div style="width:97%;border:1px solid lightgray;border-radius:5px;" >
+                                    <div style="width:97%;" >
                                     <?php
                                     echo form_textarea(array(
                                         "id" => "description",
                                         "name" => "description",
                                         "value" => isset($gotTasklibrary)&&$gotTasklibrary->description?$gotTasklibrary->description:"",
                                         "class" => "form-control",
-                                        "style"=>"border:1px solid lightgray;border-radius:5px",
                                         "placeholder" => app_lang('description'),
                                         "data-rich-text-editor" => true,
                                     ));
@@ -316,7 +330,7 @@
                             <div class=" col-md-11">
                                 <div class="row" >
                                     <div style="width:3%" ></div>
-                                    <div style="width:97%" style="border:1px solid lightgray;border-radius:5px" >
+                                    <div style="width:97%" >
                                     <?php
                                     echo form_textarea(array(
                                         "id" => "location",
@@ -701,7 +715,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="maker" class=" col-md-4"><?php echo app_lang('maker'); ?></label>
-                                    <div class=" col-md-8" style="border:1px solid lightgray;border-radius:5px">
+                                    <div class=" col-md-8">
                                         <?php
                                         echo form_input(array(
                                             "id" => "maker",
@@ -709,6 +723,7 @@
                                             "value" => "",
                                             "class" => "form-control",
                                             "maxlength" => 30,
+                                            "style"=>"border:1px solid lightgray",
                                             "placeholder" => app_lang('maker'),
                                             "autocomplete" => "off"
                                         ));
@@ -719,7 +734,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="type" class=" col-md-4"><?php echo app_lang('type'); ?></label>
-                                    <div class=" col-md-8" style="border:1px solid lightgray;border-radius:5px">
+                                    <div class=" col-md-8" >
                                         <?php
                                         echo form_input(array(
                                             "id" => "type",
@@ -727,6 +742,7 @@
                                             "value" => "",
                                             "class" => "form-control",
                                             "maxlength" => 30,
+                                            "style"=>"border:1px solid lightgray",
                                             "placeholder" => app_lang('type'),
                                             "autocomplete" => "off"
                                         ));
@@ -737,7 +753,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="serial_number" class=" col-md-4"><?php echo app_lang('serial_number'); ?></label>
-                                    <div class=" col-md-8" style="border:1px solid lightgray;border-radius:5px">
+                                    <div class=" col-md-8">
                                         <?php
                                         echo form_input(array(
                                             "id" => "serial_number",
@@ -745,6 +761,7 @@
                                             "value" => "",
                                             "class" => "form-control",
                                             "maxlength" => 30,
+                                            "style"=>"border:1px solid lightgray",
                                             "placeholder" => app_lang('serial_number'),
                                             "autocomplete" => "off"
                                         ));
@@ -755,7 +772,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="pms_scs_number" class=" col-md-4"><?php echo app_lang('pms_scs_number'); ?></label>
-                                    <div class=" col-md-8" style="border:1px solid lightgray;border-radius:5px" >
+                                    <div class=" col-md-8" >
                                         <?php
                                         echo form_input(array(
                                             "id" => "pms_scs_number",
@@ -763,6 +780,7 @@
                                             "value" => "",
                                             "class" => "form-control",
                                             "maxlength" => 30,
+                                            "style"=>"border:1px solid lightgray",
                                             "placeholder" => app_lang('pms_scs_number'),
                                             "autocomplete" => "off"
                                         ));
@@ -1485,6 +1503,9 @@
         $("#milestone_id").select2({
             data: <?php echo (json_encode($milestone_dropdown)); ?>
         });
+        $("#assigned_to").select2({
+            data: <?php echo (json_encode($assigned_to_dropdown)); ?>
+        });
         $("#supplier").select2({
             data: <?php echo (json_encode($suppliers_dropdown)); ?>
         });
@@ -1676,7 +1697,7 @@
             cell2.innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
             cell3.innerHTML=`
             <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button>
-            <button type="button" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="" ></i></button>
+            <button type="button" onClick="delete_item(${cost_items.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="" ></i></button>
             `;
             $("#btn-add-new-quote").prop("disabled", false);
             $("#insert-cost-item-panel").prop("hidden",false);
