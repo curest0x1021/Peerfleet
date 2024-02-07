@@ -324,6 +324,7 @@
                                         "value" => isset($gotTasklibrary)&&$gotTasklibrary->location?$gotTasklibrary->location:"",
                                         "class" => "form-control",
                                         "placeholder" => app_lang('location'),
+                                        "style"=>"border:1px solid lightgray;border-radius:5px",
                                         "maxlength" => 300,
                                         "data-rich-text-editor" => true,
                                     ));
@@ -340,13 +341,14 @@
                             <div class=" col-md-11">
                                 <div class="row" >
                                     <div style="width:3%" ></div>
-                                    <div style="width:97%" >
+                                    <div style="width:97%" style="border:1px solid lightgray;border-radius:5px" >
                                     <?php
                                     echo form_textarea(array(
                                         "id" => "specification",
                                         "name" => "specification",
                                         "value" => isset($gotTasklibrary)&&$gotTasklibrary->specification?$gotTasklibrary->specification:"",
                                         "class" => "form-control",
+                                        "style"=>"border:1px solid lightgray;border-radius:5px",
                                         "placeholder" => app_lang('specification_placeholder'),
                                         "maxlength" => 300,
                                         "data-rich-text-editor" => true,
@@ -699,7 +701,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="maker" class=" col-md-4"><?php echo app_lang('maker'); ?></label>
-                                    <div class=" col-md-8">
+                                    <div class=" col-md-8" style="border:1px solid lightgray;border-radius:5px">
                                         <?php
                                         echo form_input(array(
                                             "id" => "maker",
@@ -717,7 +719,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="type" class=" col-md-4"><?php echo app_lang('type'); ?></label>
-                                    <div class=" col-md-8">
+                                    <div class=" col-md-8" style="border:1px solid lightgray;border-radius:5px">
                                         <?php
                                         echo form_input(array(
                                             "id" => "type",
@@ -735,7 +737,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="serial_number" class=" col-md-4"><?php echo app_lang('serial_number'); ?></label>
-                                    <div class=" col-md-8">
+                                    <div class=" col-md-8" style="border:1px solid lightgray;border-radius:5px">
                                         <?php
                                         echo form_input(array(
                                             "id" => "serial_number",
@@ -753,7 +755,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <label for="pms_scs_number" class=" col-md-4"><?php echo app_lang('pms_scs_number'); ?></label>
-                                    <div class=" col-md-8">
+                                    <div class=" col-md-8" style="border:1px solid lightgray;border-radius:5px" >
                                         <?php
                                         echo form_input(array(
                                             "id" => "pms_scs_number",
@@ -813,10 +815,10 @@
                                             <div class="form-group" >
                                                 <label>Cost item name:</label>
                                                 <input
-                                                style="border:1px solid lightgray;border-radius:5px;"
                                                     id="cost_item_name"
                                                     class="form-control"
                                                     type="text"
+                                                    style="border:1px solid lightgray;border-radius:5px"
                                                 />
                                             </div>
                                         </div>
@@ -827,6 +829,7 @@
                                                     id="cost_item_description"
                                                     class="form-control"
                                                     type="text"
+                                                    style="border:1px solid lightgray;border-radius:5px"
                                                 ></textarea>
                                             </div>
                                         </div>
@@ -838,6 +841,7 @@
                                                         name="cost_item_quote_type"
                                                         id="cost_item_quote_type"
                                                         class="form-control"
+                                                        style="border:1px solid lightgray;border-radius:5px"
                                                     >
                                                         <option>Per unit</option>
                                                         <option>Lump sum</option>
@@ -851,6 +855,7 @@
                                                         id="cost_item_quantity"
                                                         class="form-control"
                                                         type="number"
+                                                        style="border:1px solid lightgray;border-radius:5px"
                                                     />
                                                 </div>
                                             </div>
@@ -862,6 +867,7 @@
                                                         class="form-control"
                                                         placeholder="pcs"
                                                         value="pcs"
+                                                        style="border:1px solid lightgray;border-radius:5px"
                                                     />
                                                 </div>
                                             </div>
@@ -870,7 +876,7 @@
                                             <div class="col-md-6" >
                                                 <div class="form-group" >
                                                     <label>Unit price:</label>
-                                                    <div class="input-group mb-3">
+                                                    <div class="input-group mb-3" style="border:1px solid lightgray;border-radius:5px">
                                                         <!-- <input readonly type="text" id="cost_item_currency_symbol" class="form-control" value="$"> -->
                                                         <select readonly id="cost_item_currency_symbol" class="form-control">
                                                         <option>AUD</option>
@@ -1052,7 +1058,7 @@
                                                             <option>ZWD</option>
                                                         </select>
                                                         <input id="cost_item_unit_price" type="text" class="form-control" value="0.00">
-                                                        <select id="cost_item_currency" class="form-control">
+                                                        <select id="cost_item_currency"  class="form-control">
                                                             <option>AUD</option>
                                                             <option>GBP</option>
                                                             <option>EUR</option>
@@ -1237,7 +1243,7 @@
                                             <div class="col-md-2" >
                                                 <div class="form-group" >
                                                     <label>Discount:</label>
-                                                    <div class="input-group mb-3">
+                                                    <div class="input-group mb-3" style="border:1px solid lightgray;border-radius:5px">
                                                         <input id="cost_item_discount" type="text" class="form-control" value="0.0">
                                                         <input readonly type="text" class="form-control" value="%" />
                                                     </div>
@@ -1247,7 +1253,7 @@
                                         <div class="row" >
                                             <div class="form-group" >
                                                 <label>Yard remarks:</label>
-                                                <textarea id="cost_item_yard_remarks" class="form-control" name="yard_remarks" ></textarea>
+                                                <textarea style="border:1px solid lightgray;border-radius:5px" id="cost_item_yard_remarks" class="form-control" name="yard_remarks" ></textarea>
                                             </div>
                                         </div>
                                         <div class="row" >
@@ -1293,13 +1299,14 @@
                                             <!-- <button id="select-from-checklist-group-button" type="button" class="btn btn-default checklist_button"> <?php echo app_lang('select_from_checklist_group'); ?></button> -->
                                         </div>
                                         <div class="form-group">
-                                            <div class="mt5 p0">
+                                            <div class="mt5 p0" style="border:1px solid lightgray;border:5px;">
                                                 <?php
                                                 echo form_input(array(
                                                     "id" => "checklist-add-item",
                                                     "name" => "checklist-add-item",
                                                     "class" => "form-control",
                                                     "placeholder" => app_lang('add_item'),
+                                                    "style"=>"border:1px solid lightgray;border-radius:5px",
                                                     "data-rule-required" => true,
                                                     "data-msg-required" => app_lang("field_required"),
                                                     "autocomplete" => "off",
@@ -1381,10 +1388,10 @@
                                         
                                         <div id="edit-dependency-panel" hidden  >
                                         <?php //echo form_open(get_uri("tasks/save_dependency_tasks"), array("id" => "dependency_tasks_form", "class" => "general-form hide", "role" => "form")); ?>
-                                        <input type="hidden" name="task_id" value="<?php //echo $task_id; ?>" />
+                                        <input hidden name="task_id" value="<?php //echo $task_id; ?>" />
 
                                         <div class="form-group mb0">
-                                            <div class="mt5 col-md-12 p0">
+                                            <div class="mt5 col-md-12 p0" style="border:1px solid lightgray;border-radius:5px">
 
                                                 <?php
                                                 $dependency_dropdown=array();
@@ -1421,15 +1428,12 @@
                             
                         </div>
                     </div>
-                    <!-- <button type="button" id="file-selector-btn" class="btn btn-default" ><i data-feather="file" class=""></i> Upload File</button>
-                    <input type="file" id="file-selector" hidden/> -->
                     <div><?php echo view("includes/dropzone_preview"); ?></div>
                     <div stlyle="margin-top:10px" class="row" >
                         <div class="col-md-2" >
                             <button class="btn btn-default upload-file-button float-start me-auto btn-sm round" type="button" style="color:#7988a2"><i data-feather="camera" class="icon-16"></i> <?php echo app_lang("upload_file"); ?></button>
                         </div>
                         <div class="col-md-9" ></div>
-                        <!-- <button type="button" class="btn btn-danger" style="margin-right:10" ><i data-feather="refresh-cw" class="icon-16"></i> Restore to default</button> -->
                         <div class="col-md-1"  >
                             <button type="button"
                             style="float:right"
