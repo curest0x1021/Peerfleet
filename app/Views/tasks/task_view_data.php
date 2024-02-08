@@ -1088,6 +1088,47 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                         </div>
                     </div>
                     <!---->
+                    <!--Work Order Quotes-->
+                    <div class="col-md-12" >
+                        <div class="card" style="border: solid 1px lightgray;min-height:50vh;">
+                            <div class="card-header d-flex">
+                                <b>Work Order Quotes</b>
+                            </div>
+                            <div class="card-body" style="padding:1px" >
+                                <table id="table-quotes-from-yard" class="table " style="margin:0" >
+                                    <thead>
+                                    <tr>
+                                        <td>QUOTE</td>
+                                        <td>COST</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Total yard quote from Keppel</td>
+                                            <td>USD 0.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total yard quote from Varaderos y Talleres de Mediterranean</td>
+                                            <td>USD 0.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total yard quote from Nakilat - Keppel Offshore & Maria</td>
+                                            <td>USD 0.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Billed cost</td>
+                                            <td>USD 0.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Final cost</td>
+                                            <td>USD 0.00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!---->
 
                     
                 </div>
