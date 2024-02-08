@@ -1,6 +1,7 @@
 <?php if ($view_type == "details") { ?>
 
-    <div id="page-content" class="page-wrapper pb0 clearfix task-view-modal-body task-preview">
+    <!-- <div id="page-content" class="page-wrapper pb0 clearfix task-view-modal-body task-preview"> -->
+    <div id="page-content" class="page-wrapper pb0 clearfix task-view-modal-body">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -95,6 +96,11 @@ $task_link = anchor(get_uri("tasks/view/$model_info->id"), '<i data-feather="ext
         onTaskDeleteSuccess = function (result, $selector) {
             window.location.href = "<?php echo get_uri("projects/view/$model_info->project_id"); ?>";
         };
+        console.log($("#ajaxModal").children(".modal-dialog"))
+        $("#ajaxModal").children(".modal-dialog").removeClass("modal-lg");
+        $("#ajaxModal").children(".modal-dialog").addClass("modal-xl");
+        $("#ajaxModal").children(".modal-dialog").removeClass("custom-modal-lg");
+        $("#ajaxModal").children(".modal-dialog").addClass("custom-modal-xl");
         //make the checklist items sortable
         var $selector = $("#checklist-items");
         Sortable.create($selector[0], {

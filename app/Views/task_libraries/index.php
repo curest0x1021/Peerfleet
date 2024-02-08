@@ -1471,6 +1471,8 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $("#cost_item_currency_symbol").on('mousedown', false);
+        $("#cost_item_currency_symbol").on('keydown', false);
         $("#file-selector-btn").on("click",function(){
             $("#file-selector")[0].click();
         })
