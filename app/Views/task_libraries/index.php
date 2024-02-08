@@ -30,7 +30,7 @@
                     echo '<input hidden name="id" value="'.$gotTasklibrary->id.'" />';
                 ?>
                 <div class="card-header d-flex justify-content-between">
-                    <h4><?php echo isset($gotTasklibrary)?"Edit Task Library" :"Add Task Library"; ?></h4>
+                    <h4><?php echo isset($gotTasklibrary)?"Edit Task Template" :"Add Task Template"; ?></h4>
                     
                 </div>
                 <div class="card-body">
