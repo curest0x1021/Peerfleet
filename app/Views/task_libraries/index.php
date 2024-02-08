@@ -17,7 +17,7 @@
                         <input class="form-control" type="text" style="width:20%"  name="search" />
                         <a class="btn btn-default" href="<?php echo get_uri("task_libraries");?>" style="margin:5px" ><i data-feather="plus-circle" ></i> Add Task Template</a>
                         <div style="margin:5px" >
-                        <?php echo modal_anchor(get_uri("task_libraries/import_modal"), "<i data-feather='upload' class='icon-16'></i> " . "Import Library Templates", array("class" => "btn btn-default import_tasks_btn", "title" => "Import Task Libraries")); ?>
+                        <?php echo modal_anchor(get_uri("task_libraries/import_modal"), "<i data-feather='upload' class='icon-16'></i> " . "Import Task Templates", array("class" => "btn btn-default import_tasks_btn", "title" => "Import Task Libraries")); ?>
                         </div>
                         <?php echo modal_anchor(get_uri("task_libraries/export_modal"), "<i data-feather='external-link' class='icon-16'></i> " . "Export", array("class" => "btn btn-default export-excel-btn", "title" => "Export Task Libraries")); ?>
                     </div>
