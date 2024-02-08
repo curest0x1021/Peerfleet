@@ -183,6 +183,18 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                             <?php echo view("reminders/reminders_view_data", array("task_id" => $model_info->id, "hide_form" => true, "reminder_view_type" => "task")); ?>
                         </div>
                     <?php } ?>
+                    <!--Task comment section-->
+                    <div class="clearfix">
+                        <div class="mb5">
+                            <strong>Write a comment. </strong>
+                        </div>
+                        <div class="b-t pt10 list-container">
+                            <?php if ($can_comment_on_tasks) { ?>
+                                <?php echo view("projects/comments/comment_form"); ?>
+                            <?php } ?>
+                            <?php echo view("projects/comments/comment_list"); ?>
+                        </div>
+                    </div>
 
                     <?php app_hooks()->do_action('app_hook_task_view_right_panel_extension'); ?>
                 </div>
@@ -578,15 +590,506 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                         <?php echo form_close(); ?>
                     </div>
 
-                    <!--Task comment section-->
-                    <div class="clearfix">
-                        <div class="b-t pt10 list-container">
-                            <?php if ($can_comment_on_tasks) { ?>
-                                <?php echo view("projects/comments/comment_form"); ?>
-                            <?php } ?>
-                            <?php echo view("projects/comments/comment_list"); ?>
+                    <!--Cost Items For Yard-->
+                    <div class="col-md-12" >
+                        <div class="card" style="border: solid 1px lightgray;min-height:50vh;">
+                            <div class="card-header d-flex">
+                                <b>Cost Item List</b>
+                            </div>
+                            <div class="card-body" style="padding:1px" >
+                                <table id="table-quotes-from-yard" class="table " style="margin:0" >
+                                    <thead>
+                                    <tr>
+                                        <td>Cost item name</td>
+                                        <td>UNIT PRICE AND QUANTITY</td>
+                                        <td>QUOTE</td>
+                                        <td ><button type="button" id="btn-add-new-quote" class="btn btn-default btn-sm" ><i data-feather="plus" class ></i></button></td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        if(isset($gotTasklibrary)&&$gotTasklibrary->reference_drawing){
+                                            $cost_items=json_decode($gotTasklibrary->reference_drawing);
+                                            foreach ($cost_items as $key=>$oneItem) {
+                                                # code...
+                                                echo "<tr><td>";
+                                                echo $oneItem->name;
+                                                echo "</td><td>";
+                                                echo number_format($oneItem->quantity,1,".","")." ( ".$oneItem->measurement_unit." ) X ".$oneItem->currency." ".number_format($oneItem->unit_price,2,".","")." ( ".$oneItem->quote_type." )";
+                                                echo "</td><td>";
+                                                echo $oneItem->currency." ".number_format(floatval($oneItem->quantity)*floatval($oneItem->unit_price), 2, '.', '');
+                                                echo "</td><td>";
+                                                echo '<button onClick="start_edit_cost_item('.$key.')" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button><button onClick="delete_item('.$key.')" type="button" class="btn btn-sm" ><i color="gray" data-feather="x-circle" class="" ></i></button>';
+                                                echo "</td></tr>";
+                                            }
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                                <div id="insert-cost-item-panel" style="margin:5px;" hidden>
+                                    <div style="min-height:5vh" ></div>
+                                    <input hidden id="editing_cost_item" value="" />
+                                    <div class="row" >
+                                        <div class="form-group" >
+                                            <label>Cost item name:</label>
+                                            <input
+                                                id="cost_item_name"
+                                                class="form-control"
+                                                type="text"
+                                                style="border:1px solid lightgray;border-radius:5px"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="row" >
+                                        <div class="form-group" >
+                                            <label>Description:</label>
+                                            <textarea
+                                                id="cost_item_description"
+                                                class="form-control"
+                                                type="text"
+                                                style="border:1px solid lightgray;border-radius:5px"
+                                            ></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row" >
+                                        <div class="col-md-6" >
+                                            <div class="form-group" >
+                                                <label>Quote type:</label>
+                                                <select
+                                                    name="cost_item_quote_type"
+                                                    id="cost_item_quote_type"
+                                                    class="form-control"
+                                                    style="border:1px solid lightgray;border-radius:5px"
+                                                >
+                                                    <option>Per unit</option>
+                                                    <option>Lump sum</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" >
+                                            <div class="form-group" >
+                                                <label>Quantity:</label>
+                                                <input
+                                                    id="cost_item_quantity"
+                                                    class="form-control"
+                                                    type="number"
+                                                    style="border:1px solid lightgray;border-radius:5px"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" >
+                                            <div class="form-group" >
+                                                <label>Measurement unit:</label>
+                                                <input
+                                                    id="cost_item_measurement_unit"
+                                                    class="form-control"
+                                                    placeholder="pcs"
+                                                    value="pcs"
+                                                    style="border:1px solid lightgray;border-radius:5px"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" >
+                                        <div class="col-md-6" >
+                                            <div class="form-group" >
+                                                <label>Unit price:</label>
+                                                <div class="input-group mb-3" style="border:1px solid lightgray;border-radius:5px">
+                                                    <!-- <input readonly type="text" id="cost_item_currency_symbol" class="form-control" value="$"> -->
+                                                    <select readonly  id="cost_item_currency_symbol" class="form-control">
+                                                    <option>AUD</option>
+                                                        <option>GBP</option>
+                                                        <option>EUR</option>
+                                                        <option>JPY</option>
+                                                        <option>CHF</option>
+                                                        <option>USD</option>
+                                                        <option>AFN</option>
+                                                        <option>ALL</option>
+                                                        <option>DZD</option>
+                                                        <option>AOA</option>
+                                                        <option>ARS</option>
+                                                        <option>AMD</option>
+                                                        <option>AWG</option>
+                                                        <option>AUD</option>
+                                                        <option>ATS (EURO)</option>
+                                                        <option>BEF (EURO)</option>
+                                                        <option>AZN</option>
+                                                        <option>BSD</option>
+                                                        <option>BHD</option>
+                                                        <option>BDT</option>
+                                                        <option>BBD</option>
+                                                        <option>BYR</option>
+                                                        <option>BZD</option>
+                                                        <option>BMD</option>
+                                                        <option>BTN</option>
+                                                        <option>BOB</option>
+                                                        <option>BAM</option>
+                                                        <option>BWP</option>
+                                                        <option>BRL</option>
+                                                        <option>GBP</option>
+                                                        <option>BND</option>
+                                                        <option>BGN</option>
+                                                        <option>BIF</option>
+                                                        <option>XOF</option>
+                                                        <option>XAF</option>
+                                                        <option>XPF</option>
+                                                        <option>KHR</option>
+                                                        <option>CAD</option>
+                                                        <option>CVE</option>
+                                                        <option>KYD</option>
+                                                        <option>CLP</option>
+                                                        <option>CNY</option>
+                                                        <option>COP</option>
+                                                        <option>KMF</option>
+                                                        <option>CDF</option>
+                                                        <option>CRC</option>
+                                                        <option>HRK</option>
+                                                        <option>CUC</option>
+                                                        <option>CUP</option>
+                                                        <option>CYP (EURO)</option>
+                                                        <option>CZK</option>
+                                                        <option>DKK</option>
+                                                        <option>DJF</option>
+                                                        <option>DOP</option>
+                                                        <option>XCD</option>
+                                                        <option>EGP</option>
+                                                        <option>SVC</option>
+                                                        <option>EEK (EURO)</option>
+                                                        <option>ETB</option>
+                                                        <option>EUR</option>
+                                                        <option>FKP</option>
+                                                        <option>FIM (EURO)</option>
+                                                        <option>FJD</option>
+                                                        <option>GMD</option>
+                                                        <option>GEL</option>
+                                                        <option>DMK (EURO)</option>
+                                                        <option>GHS</option>
+                                                        <option>GIP</option>
+                                                        <option>GRD (EURO)</option>
+                                                        <option>GTQ</option>
+                                                        <option>GNF</option>
+                                                        <option>GYD</option>
+                                                        <option>HTG</option>
+                                                        <option>HNL</option>
+                                                        <option>HKD</option>
+                                                        <option>HUF</option>
+                                                        <option>ISK</option>
+                                                        <option>INR</option>
+                                                        <option>IDR</option>
+                                                        <option>IRR</option>
+                                                        <option>IQD</option>
+                                                        <option>IED (EURO)</option>
+                                                        <option>ILS</option>
+                                                        <option>ITL (EURO)</option>
+                                                        <option>JMD</option>
+                                                        <option>JPY</option>
+                                                        <option>JOD</option>
+                                                        <option>KZT</option>
+                                                        <option>KES</option>
+                                                        <option>KWD</option>
+                                                        <option>KGS</option>
+                                                        <option>LAK</option>
+                                                        <option>LVL (EURO)</option>
+                                                        <option>LBP</option>
+                                                        <option>LSL</option>
+                                                        <option>LRD</option>
+                                                        <option>LYD</option>
+                                                        <option>LTL (EURO)</option>
+                                                        <option>LUF (EURO)</option>
+                                                        <option>MOP</option>
+                                                        <option>MKD</option>
+                                                        <option>MGA</option>
+                                                        <option>MWK</option>
+                                                        <option>MYR</option>
+                                                        <option>MVR</option>
+                                                        <option>MTL (EURO)</option>
+                                                        <option>MRO</option>
+                                                        <option>MUR</option>
+                                                        <option>MXN</option>
+                                                        <option>MDL</option>
+                                                        <option>MNT</option>
+                                                        <option>MAD</option>
+                                                        <option>MZN</option>
+                                                        <option>MMK</option>
+                                                        <option>ANG</option>
+                                                        <option>NAD</option>
+                                                        <option>NPR</option>
+                                                        <option>NLG (EURO)</option>
+                                                        <option>NZD</option>
+                                                        <option>NIO</option>
+                                                        <option>NGN</option>
+                                                        <option>KPW</option>
+                                                        <option>NOK</option>
+                                                        <option>OMR</option>
+                                                        <option>PKR</option>
+                                                        <option>PAB</option>
+                                                        <option>PGK</option>
+                                                        <option>PYG</option>
+                                                        <option>PEN</option>
+                                                        <option>PHP</option>
+                                                        <option>PLN</option>
+                                                        <option>PTE (EURO)</option>
+                                                        <option>QAR</option>
+                                                        <option>RON</option>
+                                                        <option>RUB</option>
+                                                        <option>RWF</option>
+                                                        <option>WST</option>
+                                                        <option>STD</option>
+                                                        <option>SAR</option>
+                                                        <option>RSD</option>
+                                                        <option>SCR</option>
+                                                        <option>SLL</option>
+                                                        <option>SGD</option>
+                                                        <option>SKK (EURO)</option>
+                                                        <option>SIT (EURO)</option>
+                                                        <option>SBD</option>
+                                                        <option>SOS</option>
+                                                        <option>ZAR</option>
+                                                        <option>KRW</option>
+                                                        <option>ESP (EURO)</option>
+                                                        <option>LKR</option>
+                                                        <option>SHP</option>
+                                                        <option>SDG</option>
+                                                        <option>SRD</option>
+                                                        <option>SZL</option>
+                                                        <option>SEK</option>
+                                                        <option>CHF</option>
+                                                        <option>SYP</option>
+                                                        <option>TWD</option>
+                                                        <option>TZS</option>
+                                                        <option>THB</option>
+                                                        <option>TOP</option>
+                                                        <option>TTD</option>
+                                                        <option>TND</option>
+                                                        <option>TRY</option>
+                                                        <option>TMM</option>
+                                                        <option>USD</option>
+                                                        <option>UGX</option>
+                                                        <option>UAH</option>
+                                                        <option>UYU</option>
+                                                        <option>AED</option>
+                                                        <option>VUV</option>
+                                                        <option>VEB</option>
+                                                        <option>VND</option>
+                                                        <option>YER</option>
+                                                        <option>ZMK</option>
+                                                        <option>ZWD</option>
+                                                    </select>
+                                                    <input id="cost_item_unit_price" type="text" class="form-control" value="0.00">
+                                                    <select id="cost_item_currency"  class="form-control">
+                                                        <option>AUD</option>
+                                                        <option>GBP</option>
+                                                        <option>EUR</option>
+                                                        <option>JPY</option>
+                                                        <option>CHF</option>
+                                                        <option>USD</option>
+                                                        <option>AFN</option>
+                                                        <option>ALL</option>
+                                                        <option>DZD</option>
+                                                        <option>AOA</option>
+                                                        <option>ARS</option>
+                                                        <option>AMD</option>
+                                                        <option>AWG</option>
+                                                        <option>AUD</option>
+                                                        <option>ATS (EURO)</option>
+                                                        <option>BEF (EURO)</option>
+                                                        <option>AZN</option>
+                                                        <option>BSD</option>
+                                                        <option>BHD</option>
+                                                        <option>BDT</option>
+                                                        <option>BBD</option>
+                                                        <option>BYR</option>
+                                                        <option>BZD</option>
+                                                        <option>BMD</option>
+                                                        <option>BTN</option>
+                                                        <option>BOB</option>
+                                                        <option>BAM</option>
+                                                        <option>BWP</option>
+                                                        <option>BRL</option>
+                                                        <option>GBP</option>
+                                                        <option>BND</option>
+                                                        <option>BGN</option>
+                                                        <option>BIF</option>
+                                                        <option>XOF</option>
+                                                        <option>XAF</option>
+                                                        <option>XPF</option>
+                                                        <option>KHR</option>
+                                                        <option>CAD</option>
+                                                        <option>CVE</option>
+                                                        <option>KYD</option>
+                                                        <option>CLP</option>
+                                                        <option>CNY</option>
+                                                        <option>COP</option>
+                                                        <option>KMF</option>
+                                                        <option>CDF</option>
+                                                        <option>CRC</option>
+                                                        <option>HRK</option>
+                                                        <option>CUC</option>
+                                                        <option>CUP</option>
+                                                        <option>CYP (EURO)</option>
+                                                        <option>CZK</option>
+                                                        <option>DKK</option>
+                                                        <option>DJF</option>
+                                                        <option>DOP</option>
+                                                        <option>XCD</option>
+                                                        <option>EGP</option>
+                                                        <option>SVC</option>
+                                                        <option>EEK (EURO)</option>
+                                                        <option>ETB</option>
+                                                        <option>EUR</option>
+                                                        <option>FKP</option>
+                                                        <option>FIM (EURO)</option>
+                                                        <option>FJD</option>
+                                                        <option>GMD</option>
+                                                        <option>GEL</option>
+                                                        <option>DMK (EURO)</option>
+                                                        <option>GHS</option>
+                                                        <option>GIP</option>
+                                                        <option>GRD (EURO)</option>
+                                                        <option>GTQ</option>
+                                                        <option>GNF</option>
+                                                        <option>GYD</option>
+                                                        <option>HTG</option>
+                                                        <option>HNL</option>
+                                                        <option>HKD</option>
+                                                        <option>HUF</option>
+                                                        <option>ISK</option>
+                                                        <option>INR</option>
+                                                        <option>IDR</option>
+                                                        <option>IRR</option>
+                                                        <option>IQD</option>
+                                                        <option>IED (EURO)</option>
+                                                        <option>ILS</option>
+                                                        <option>ITL (EURO)</option>
+                                                        <option>JMD</option>
+                                                        <option>JPY</option>
+                                                        <option>JOD</option>
+                                                        <option>KZT</option>
+                                                        <option>KES</option>
+                                                        <option>KWD</option>
+                                                        <option>KGS</option>
+                                                        <option>LAK</option>
+                                                        <option>LVL (EURO)</option>
+                                                        <option>LBP</option>
+                                                        <option>LSL</option>
+                                                        <option>LRD</option>
+                                                        <option>LYD</option>
+                                                        <option>LTL (EURO)</option>
+                                                        <option>LUF (EURO)</option>
+                                                        <option>MOP</option>
+                                                        <option>MKD</option>
+                                                        <option>MGA</option>
+                                                        <option>MWK</option>
+                                                        <option>MYR</option>
+                                                        <option>MVR</option>
+                                                        <option>MTL (EURO)</option>
+                                                        <option>MRO</option>
+                                                        <option>MUR</option>
+                                                        <option>MXN</option>
+                                                        <option>MDL</option>
+                                                        <option>MNT</option>
+                                                        <option>MAD</option>
+                                                        <option>MZN</option>
+                                                        <option>MMK</option>
+                                                        <option>ANG</option>
+                                                        <option>NAD</option>
+                                                        <option>NPR</option>
+                                                        <option>NLG (EURO)</option>
+                                                        <option>NZD</option>
+                                                        <option>NIO</option>
+                                                        <option>NGN</option>
+                                                        <option>KPW</option>
+                                                        <option>NOK</option>
+                                                        <option>OMR</option>
+                                                        <option>PKR</option>
+                                                        <option>PAB</option>
+                                                        <option>PGK</option>
+                                                        <option>PYG</option>
+                                                        <option>PEN</option>
+                                                        <option>PHP</option>
+                                                        <option>PLN</option>
+                                                        <option>PTE (EURO)</option>
+                                                        <option>QAR</option>
+                                                        <option>RON</option>
+                                                        <option>RUB</option>
+                                                        <option>RWF</option>
+                                                        <option>WST</option>
+                                                        <option>STD</option>
+                                                        <option>SAR</option>
+                                                        <option>RSD</option>
+                                                        <option>SCR</option>
+                                                        <option>SLL</option>
+                                                        <option>SGD</option>
+                                                        <option>SKK (EURO)</option>
+                                                        <option>SIT (EURO)</option>
+                                                        <option>SBD</option>
+                                                        <option>SOS</option>
+                                                        <option>ZAR</option>
+                                                        <option>KRW</option>
+                                                        <option>ESP (EURO)</option>
+                                                        <option>LKR</option>
+                                                        <option>SHP</option>
+                                                        <option>SDG</option>
+                                                        <option>SRD</option>
+                                                        <option>SZL</option>
+                                                        <option>SEK</option>
+                                                        <option>CHF</option>
+                                                        <option>SYP</option>
+                                                        <option>TWD</option>
+                                                        <option>TZS</option>
+                                                        <option>THB</option>
+                                                        <option>TOP</option>
+                                                        <option>TTD</option>
+                                                        <option>TND</option>
+                                                        <option>TRY</option>
+                                                        <option>TMM</option>
+                                                        <option>USD</option>
+                                                        <option>UGX</option>
+                                                        <option>UAH</option>
+                                                        <option>UYU</option>
+                                                        <option>AED</option>
+                                                        <option>VUV</option>
+                                                        <option>VEB</option>
+                                                        <option>VND</option>
+                                                        <option>YER</option>
+                                                        <option>ZMK</option>
+                                                        <option>ZWD</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2" >
+                                            <div class="form-group" >
+                                                <label>Discount:</label>
+                                                <div class="input-group mb-3" style="border:1px solid lightgray;border-radius:5px">
+                                                    <input id="cost_item_discount" type="text" class="form-control" value="0.0">
+                                                    <input readonly type="text" class="form-control" value="%" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" >
+                                        <div class="form-group" >
+                                            <label>Yard remarks:</label>
+                                            <textarea style="border:1px solid lightgray;border-radius:5px" id="cost_item_yard_remarks" class="form-control" name="yard_remarks" ></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row" >
+                                        <div class="col-md-1" >
+                                            <button id="insert-add-cost-item" type="button" class="btn btn-primary" >Save</button>
+                                        </div>
+                                        <div class="col-md-1" >
+                                            <button id="cancel-add-cost-item" type="button" class="btn btn-default" >Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
+                    <!---->
+
+                    
                 </div>
             </div>
         </div>
@@ -599,3 +1102,96 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         <?php echo activity_logs_widget(array("limit" => 20, "offset" => 0, "log_type" => "task", "log_type_id" => $model_info->id)); ?>
     </div>
 <?php } ?>
+<script>
+    $(document).ready(function(){
+        $("#cost_item_currency_symbol").on('mousedown', false);
+        $("#cost_item_currency_symbol").on('keydown', false);
+        $("#btn-add-new-quote").on("click",function(){
+            $("#insert-cost-item-panel").prop("hidden",false);
+            $("#btn-add-new-quote").prop("disabled", true);
+
+        })
+        $("#insert-add-cost-item").on("click",function(){
+            var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow();
+
+            var cell0 = newRow.insertCell(0);
+            var cell1 = newRow.insertCell(1);
+            var cell2 = newRow.insertCell(2);
+            var cell3 = newRow.insertCell(3);
+
+            cell0.innerHTML = $("#cost_item_name")[0].value;
+            cell1.innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement_unit")[0].value+" X "+$("#cost_item_currency")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
+            cell2.innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
+            cell3.innerHTML=`
+            <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button>
+            <button type="button" onClick="delete_item(${cost_items.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="" ></i></button>
+            `;
+            $("#btn-add-new-quote").prop("disabled", false);
+            $("#insert-cost-item-panel").prop("hidden",false);
+            if($("#editing_cost_item")[0].value=="")
+                cost_items.push({
+                    name:$("#cost_item_name")[0].value,
+                    quantity:$("#cost_item_quantity")[0].value,
+                    measurement_unit:$("#cost_item_measurement_unit")[0].value,
+                    unit_price:$("#cost_item_unit_price")[0].value,
+                    quote_type:$("#cost_item_quote_type")[0].value,
+                    currency:$("#cost_item_currency")[0].value,
+                });
+            else{
+                $("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
+                cost_items[Number($("#editing_cost_item")[0].value)]={
+                    name:$("#cost_item_name")[0].value,
+                    quantity:$("#cost_item_quantity")[0].value,
+                    measurement_unit:$("#cost_item_measurement_unit")[0].value,
+                    unit_price:$("#cost_item_unit_price")[0].value,
+                    quote_type:$("#cost_item_quote_type")[0].value,
+                    currency:$("#cost_item_currency")[0].value,
+                };
+                $("#editing_cost_item")[0].value=""
+            }
+        });
+        $("#cancel-add-cost-item").on("click",function(){
+            $("#insert-cost-item-panel").prop("hidden",true);
+            $("#btn-add-new-quote").prop("disabled", false);
+        })
+        $("#cost_item_currency").on("change",function(){
+            $("#cost_item_currency_symbol")[0].selectedIndex=$("#cost_item_currency")[0].selectedIndex;
+        })
+    })
+    var cost_items=[];
+    function save_new_quote(){
+        var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
+        var newRow = table.insertRow();
+
+        var cell0 = newRow.insertCell(0);
+        var cell1 = newRow.insertCell(1);
+        var cell2 = newRow.insertCell(2);
+        var cell3 = newRow.insertCell(3);
+
+        cell0.innerHTML = $("#quote_name")[0].value;
+        cell1.innerHTML = $("#quote_price")[0].value;
+        cell2.innerHTML = $("#quote_quote")[0].value;
+        cell3.innerHTML = "";
+        $("#btn-save-new-quote")[0].closest("tr").remove();
+        $("#btn-add-new-quote").prop("disabled", false);
+    }
+    function delete_item(index){
+        cost_items.splice(index,1);
+        $("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0].deleteRow(index);
+    }
+    function start_edit_cost_item(index){
+        $("#editing_cost_item")[0].value=index;
+        $("#btn-add-new-quote")[0].click();
+        $("#cost_item_name")[0].value=cost_items[index].name;
+        $("#cost_item_quantity")[0].value=cost_items[index].quantity;
+        $("#cost_item_measurement_unit")[0].value=cost_items[index].measurement_unit;
+        $("#cost_item_unit_price")[0].value=cost_items[index].unit_price;
+        $("#cost_item_quote_type")[0].value=cost_items[index].quote_type;
+        $("#cost_item_currency")[0].value=cost_items[index].currency;
+    }
+    <?php
+        if(isset($gotTasklibrary)&&$gotTasklibrary->reference_drawing)
+        echo 'cost_items=JSON.parse(`'.$gotTasklibrary->reference_drawing.'`);';
+    ?>
+</script>
