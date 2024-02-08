@@ -210,7 +210,9 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                     <?php if ($can_comment_on_tasks) { ?>
                                         <?php echo view("projects/comments/comment_form"); ?>
                                     <?php } ?>
-                                    <?php echo view("projects/comments/comment_list"); ?>
+                                    <?php 
+                                    // echo view("projects/comments/comment_list"); 
+                                    ?>
                                 </div>
                             </div>
 
@@ -1598,6 +1600,12 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                 <?php echo activity_logs_widget(array("limit" => 20, "offset" => 0, "log_type" => "task", "log_type_id" => $model_info->id)); ?>
             </div>
         <?php } ?>
+    </div>
+    <div id="files" class="container tab-pane fade" >
+        <?php echo view("projects/comments/comment_list"); ?>
+        <?php 
+        // app_hooks()->do_action('app_hook_task_view_right_panel_extension');
+         ?>
     </div>
 </div>
 <script>
