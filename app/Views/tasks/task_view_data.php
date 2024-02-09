@@ -12,13 +12,13 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             <a class="nav-link active" data-bs-toggle="tab" href="#general">General</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#costs">Costs</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#activity">Activity</a>
+            <a class="nav-link" data-bs-toggle="tab" href="#costs">Quotes & Costs</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="#files">Files</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#activity">Comments & Activity</a>
         </li>
     </ul>
 </div>
