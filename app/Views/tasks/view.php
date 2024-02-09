@@ -15,8 +15,8 @@
                                         <i data-feather='settings' class='icon-16'></i> <?php echo app_lang('actions'); ?>
                                     </button>
                                     <ul class="dropdown-menu float-end" role="menu">
-                                        <li role="presentation"><?php echo modal_anchor(get_uri("tasks/modal_form"), "<i data-feather='edit-2' class='icon-16'></i> " . app_lang('edit_task'), array("title" => app_lang('edit_task'), "data-post-id" => $model_info->id, "data-post-view_type" => "details", "id" => "task-details-edit-btn", "class" => "dropdown-item")); ?></li>
-                                        <li role="presentation"><?php echo modal_anchor(get_uri("tasks/modal_form"), "<i data-feather='copy' class='icon-16'></i> " . app_lang('clone_task'), array("title" => app_lang('clone_task'), "data-post-id" => $model_info->id, "data-post-is_clone" => true, "data-post-view_type" => "details", "class" => "dropdown-item")); ?></li>
+                                        <li role="presentation"><?php echo modal_anchor(get_uri("tasks/modal_form_new"), "<i data-feather='edit-2' class='icon-16'></i> " . app_lang('edit_task'), array("title" => app_lang('edit_task'), "data-post-id" => $model_info->id, "data-post-view_type" => "details", "id" => "task-details-edit-btn", "class" => "dropdown-item")); ?></li>
+                                        <li role="presentation"><?php echo modal_anchor(get_uri("tasks/modal_form_new"), "<i data-feather='copy' class='icon-16'></i> " . app_lang('clone_task'), array("title" => app_lang('clone_task'), "data-post-id" => $model_info->id, "data-post-is_clone" => true, "data-post-view_type" => "details", "class" => "dropdown-item")); ?></li>
                                     </ul>
                                 </span>
                             </div>

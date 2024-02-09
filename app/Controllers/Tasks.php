@@ -23,6 +23,9 @@ class Tasks extends Security_Controller {
         $this->Checklist_items_model = model('App\Models\Checklist_items_model');
         $this->Pin_comments_model = model('App\Models\Pin_comments_model');
         $this->Project_settings_model = model('App\Models\Project_settings_model');
+
+        $this->Task_libraries_model = model("App\Models\Task_libraries_model");
+        $this->Task_library_checklist_items_model= model("App\Models\Task_library_checklist_items_model");
     }
 
     private function get_context_id_pairs() {
@@ -629,6 +632,16 @@ class Tasks extends Security_Controller {
 
         return $this->template->view('tasks/modal_form', $view_data);
     }
+    /*----*/
+    //new-modal-form
+    function modal_form_new(){
+        $allStatus=$this->Task_status_model->get_all()->getResultArray();
+        $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
+        $allMilestones=$this->Milestones_model->get_all()->getResultArray();
+        $allTasklibraries=$this->Task_libraries_model->get_all()->getResultArray();
+        return $this->template->view('tasks/modal_form_new',["allTasklibraries"=>$allTasklibraries,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+    }
+    /*----*/
 
     private function get_removed_task_status_ids($project_id = 0) {
         if (!$project_id) {

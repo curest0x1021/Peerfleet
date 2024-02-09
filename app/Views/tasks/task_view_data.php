@@ -621,7 +621,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         <div  >
             <!--Cost Items For Yard-->
             <div class="col-md-12" >
-                <div class="card" style="border: solid 1px lightgray;min-height:50vh;">
+                <div class="card" style="border: solid 1px lightgray;min-height:20vh;">
                     <div class="card-header d-flex">
                         <b>Cost Item List</b>&nbsp;<i data-feather="info" style="color:lightgray" ></i>
                     </div>
@@ -725,185 +725,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                         <label>Unit price:</label>
                                         <div class="input-group mb-3" style="border:1px solid lightgray;border-radius:5px">
                                             <!-- <input readonly type="text" id="cost_item_currency_symbol" class="form-control" value="$"> -->
-                                            <select readonly  id="cost_item_currency_symbol" class="form-control">
-                                            <option>AUD</option>
-                                                <option>GBP</option>
-                                                <option>EUR</option>
-                                                <option>JPY</option>
-                                                <option>CHF</option>
-                                                <option>USD</option>
-                                                <option>AFN</option>
-                                                <option>ALL</option>
-                                                <option>DZD</option>
-                                                <option>AOA</option>
-                                                <option>ARS</option>
-                                                <option>AMD</option>
-                                                <option>AWG</option>
-                                                <option>AUD</option>
-                                                <option>ATS (EURO)</option>
-                                                <option>BEF (EURO)</option>
-                                                <option>AZN</option>
-                                                <option>BSD</option>
-                                                <option>BHD</option>
-                                                <option>BDT</option>
-                                                <option>BBD</option>
-                                                <option>BYR</option>
-                                                <option>BZD</option>
-                                                <option>BMD</option>
-                                                <option>BTN</option>
-                                                <option>BOB</option>
-                                                <option>BAM</option>
-                                                <option>BWP</option>
-                                                <option>BRL</option>
-                                                <option>GBP</option>
-                                                <option>BND</option>
-                                                <option>BGN</option>
-                                                <option>BIF</option>
-                                                <option>XOF</option>
-                                                <option>XAF</option>
-                                                <option>XPF</option>
-                                                <option>KHR</option>
-                                                <option>CAD</option>
-                                                <option>CVE</option>
-                                                <option>KYD</option>
-                                                <option>CLP</option>
-                                                <option>CNY</option>
-                                                <option>COP</option>
-                                                <option>KMF</option>
-                                                <option>CDF</option>
-                                                <option>CRC</option>
-                                                <option>HRK</option>
-                                                <option>CUC</option>
-                                                <option>CUP</option>
-                                                <option>CYP (EURO)</option>
-                                                <option>CZK</option>
-                                                <option>DKK</option>
-                                                <option>DJF</option>
-                                                <option>DOP</option>
-                                                <option>XCD</option>
-                                                <option>EGP</option>
-                                                <option>SVC</option>
-                                                <option>EEK (EURO)</option>
-                                                <option>ETB</option>
-                                                <option>EUR</option>
-                                                <option>FKP</option>
-                                                <option>FIM (EURO)</option>
-                                                <option>FJD</option>
-                                                <option>GMD</option>
-                                                <option>GEL</option>
-                                                <option>DMK (EURO)</option>
-                                                <option>GHS</option>
-                                                <option>GIP</option>
-                                                <option>GRD (EURO)</option>
-                                                <option>GTQ</option>
-                                                <option>GNF</option>
-                                                <option>GYD</option>
-                                                <option>HTG</option>
-                                                <option>HNL</option>
-                                                <option>HKD</option>
-                                                <option>HUF</option>
-                                                <option>ISK</option>
-                                                <option>INR</option>
-                                                <option>IDR</option>
-                                                <option>IRR</option>
-                                                <option>IQD</option>
-                                                <option>IED (EURO)</option>
-                                                <option>ILS</option>
-                                                <option>ITL (EURO)</option>
-                                                <option>JMD</option>
-                                                <option>JPY</option>
-                                                <option>JOD</option>
-                                                <option>KZT</option>
-                                                <option>KES</option>
-                                                <option>KWD</option>
-                                                <option>KGS</option>
-                                                <option>LAK</option>
-                                                <option>LVL (EURO)</option>
-                                                <option>LBP</option>
-                                                <option>LSL</option>
-                                                <option>LRD</option>
-                                                <option>LYD</option>
-                                                <option>LTL (EURO)</option>
-                                                <option>LUF (EURO)</option>
-                                                <option>MOP</option>
-                                                <option>MKD</option>
-                                                <option>MGA</option>
-                                                <option>MWK</option>
-                                                <option>MYR</option>
-                                                <option>MVR</option>
-                                                <option>MTL (EURO)</option>
-                                                <option>MRO</option>
-                                                <option>MUR</option>
-                                                <option>MXN</option>
-                                                <option>MDL</option>
-                                                <option>MNT</option>
-                                                <option>MAD</option>
-                                                <option>MZN</option>
-                                                <option>MMK</option>
-                                                <option>ANG</option>
-                                                <option>NAD</option>
-                                                <option>NPR</option>
-                                                <option>NLG (EURO)</option>
-                                                <option>NZD</option>
-                                                <option>NIO</option>
-                                                <option>NGN</option>
-                                                <option>KPW</option>
-                                                <option>NOK</option>
-                                                <option>OMR</option>
-                                                <option>PKR</option>
-                                                <option>PAB</option>
-                                                <option>PGK</option>
-                                                <option>PYG</option>
-                                                <option>PEN</option>
-                                                <option>PHP</option>
-                                                <option>PLN</option>
-                                                <option>PTE (EURO)</option>
-                                                <option>QAR</option>
-                                                <option>RON</option>
-                                                <option>RUB</option>
-                                                <option>RWF</option>
-                                                <option>WST</option>
-                                                <option>STD</option>
-                                                <option>SAR</option>
-                                                <option>RSD</option>
-                                                <option>SCR</option>
-                                                <option>SLL</option>
-                                                <option>SGD</option>
-                                                <option>SKK (EURO)</option>
-                                                <option>SIT (EURO)</option>
-                                                <option>SBD</option>
-                                                <option>SOS</option>
-                                                <option>ZAR</option>
-                                                <option>KRW</option>
-                                                <option>ESP (EURO)</option>
-                                                <option>LKR</option>
-                                                <option>SHP</option>
-                                                <option>SDG</option>
-                                                <option>SRD</option>
-                                                <option>SZL</option>
-                                                <option>SEK</option>
-                                                <option>CHF</option>
-                                                <option>SYP</option>
-                                                <option>TWD</option>
-                                                <option>TZS</option>
-                                                <option>THB</option>
-                                                <option>TOP</option>
-                                                <option>TTD</option>
-                                                <option>TND</option>
-                                                <option>TRY</option>
-                                                <option>TMM</option>
-                                                <option>USD</option>
-                                                <option>UGX</option>
-                                                <option>UAH</option>
-                                                <option>UYU</option>
-                                                <option>AED</option>
-                                                <option>VUV</option>
-                                                <option>VEB</option>
-                                                <option>VND</option>
-                                                <option>YER</option>
-                                                <option>ZMK</option>
-                                                <option>ZWD</option>
-                                            </select>
+                                            
                                             <input id="cost_item_unit_price" type="text" class="form-control" value="0.00">
                                             <select id="cost_item_currency"  class="form-control">
                                                 <option>AUD</option>
@@ -1119,7 +941,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             <!---->
             <!--Work Order Quotes-->
             <div class="col-md-12" >
-                <div class="card" style="border: solid 1px lightgray;min-height:50vh;">
+                <div class="card" style="border: solid 1px lightgray;min-height:30vh;">
                     <div class="card-header d-flex">
                         <b>Work Order Quotes</b>
                     </div>
@@ -1161,23 +983,21 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
 
             <!--Work Order Quotes-->
             <div class="col-md-12" >
-                <div class="card" style="border: solid 1px lightgray;min-height:50vh;">
+                <div class="card" style="border: solid 1px lightgray;min-height:20vh;">
                     <div class="card-header d-flex">
                         <b>Owner's Supply</b>
                     </div>
                     <div class="card-body" style="padding:10px" >
-                        <table id="table-quotes-from-yard" class="table " style="margin:0" >
+                        <table id="table-owners-supplies" class="table " style="margin:0" >
                             <thead>
                             <tr>
-                                <td>SUPPLY PO NUMBER</td>
-                                <td>SUPPLIER</td>
-                                <td>STATUS</td>
+                                <td>Cost Item Name</td>
                                 <td>COST</td>
-                                <td>SHARED WITH</td>
+                                <td>Order Number</td>
                                 <td><Button id="btn-add-owner-supply" class="btn btn-default btn-sm" ><i data-feather="plus-circle" ></i></Button></td>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="table-owners-supplies-table-body">
                             </tbody>
                         </table>
                         <div id="owner-supply-edit-panel" hidden style="margin-top:5vh" >
@@ -1204,379 +1024,23 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                             <div class="row" >
                                 <div class="col-md-6" >
                                     <div class="form-group" >
-                                        <label>Order Number:</label>
+                                        <label>Unit Price:</label>
                                         <input
-                                        id="owner_supply_description"
-                                        name="owner_supply_description"
+                                        type="number"
+                                        name="owner_supply_price"
+                                        id="owner_supply_price"
                                         class="form-control"
                                         />
                                     </div>
                                 </div>
                                 <div class="col-md-6" >
                                     <div class="form-group" >
-                                        <label>Unit Price:</label>
-                                        <div class="input-group mb-3" style="border:1px solid lightgray;border-radius:5px">
-                                            <!-- <input readonly type="text" id="cost_item_currency_symbol" class="form-control" value="$"> -->
-                                            <select readonly  id="owner_supply_currency_symbol" class="form-control">
-                                            <option>AUD</option>
-                                                <option>GBP</option>
-                                                <option>EUR</option>
-                                                <option>JPY</option>
-                                                <option>CHF</option>
-                                                <option>USD</option>
-                                                <option>AFN</option>
-                                                <option>ALL</option>
-                                                <option>DZD</option>
-                                                <option>AOA</option>
-                                                <option>ARS</option>
-                                                <option>AMD</option>
-                                                <option>AWG</option>
-                                                <option>AUD</option>
-                                                <option>ATS (EURO)</option>
-                                                <option>BEF (EURO)</option>
-                                                <option>AZN</option>
-                                                <option>BSD</option>
-                                                <option>BHD</option>
-                                                <option>BDT</option>
-                                                <option>BBD</option>
-                                                <option>BYR</option>
-                                                <option>BZD</option>
-                                                <option>BMD</option>
-                                                <option>BTN</option>
-                                                <option>BOB</option>
-                                                <option>BAM</option>
-                                                <option>BWP</option>
-                                                <option>BRL</option>
-                                                <option>GBP</option>
-                                                <option>BND</option>
-                                                <option>BGN</option>
-                                                <option>BIF</option>
-                                                <option>XOF</option>
-                                                <option>XAF</option>
-                                                <option>XPF</option>
-                                                <option>KHR</option>
-                                                <option>CAD</option>
-                                                <option>CVE</option>
-                                                <option>KYD</option>
-                                                <option>CLP</option>
-                                                <option>CNY</option>
-                                                <option>COP</option>
-                                                <option>KMF</option>
-                                                <option>CDF</option>
-                                                <option>CRC</option>
-                                                <option>HRK</option>
-                                                <option>CUC</option>
-                                                <option>CUP</option>
-                                                <option>CYP (EURO)</option>
-                                                <option>CZK</option>
-                                                <option>DKK</option>
-                                                <option>DJF</option>
-                                                <option>DOP</option>
-                                                <option>XCD</option>
-                                                <option>EGP</option>
-                                                <option>SVC</option>
-                                                <option>EEK (EURO)</option>
-                                                <option>ETB</option>
-                                                <option>EUR</option>
-                                                <option>FKP</option>
-                                                <option>FIM (EURO)</option>
-                                                <option>FJD</option>
-                                                <option>GMD</option>
-                                                <option>GEL</option>
-                                                <option>DMK (EURO)</option>
-                                                <option>GHS</option>
-                                                <option>GIP</option>
-                                                <option>GRD (EURO)</option>
-                                                <option>GTQ</option>
-                                                <option>GNF</option>
-                                                <option>GYD</option>
-                                                <option>HTG</option>
-                                                <option>HNL</option>
-                                                <option>HKD</option>
-                                                <option>HUF</option>
-                                                <option>ISK</option>
-                                                <option>INR</option>
-                                                <option>IDR</option>
-                                                <option>IRR</option>
-                                                <option>IQD</option>
-                                                <option>IED (EURO)</option>
-                                                <option>ILS</option>
-                                                <option>ITL (EURO)</option>
-                                                <option>JMD</option>
-                                                <option>JPY</option>
-                                                <option>JOD</option>
-                                                <option>KZT</option>
-                                                <option>KES</option>
-                                                <option>KWD</option>
-                                                <option>KGS</option>
-                                                <option>LAK</option>
-                                                <option>LVL (EURO)</option>
-                                                <option>LBP</option>
-                                                <option>LSL</option>
-                                                <option>LRD</option>
-                                                <option>LYD</option>
-                                                <option>LTL (EURO)</option>
-                                                <option>LUF (EURO)</option>
-                                                <option>MOP</option>
-                                                <option>MKD</option>
-                                                <option>MGA</option>
-                                                <option>MWK</option>
-                                                <option>MYR</option>
-                                                <option>MVR</option>
-                                                <option>MTL (EURO)</option>
-                                                <option>MRO</option>
-                                                <option>MUR</option>
-                                                <option>MXN</option>
-                                                <option>MDL</option>
-                                                <option>MNT</option>
-                                                <option>MAD</option>
-                                                <option>MZN</option>
-                                                <option>MMK</option>
-                                                <option>ANG</option>
-                                                <option>NAD</option>
-                                                <option>NPR</option>
-                                                <option>NLG (EURO)</option>
-                                                <option>NZD</option>
-                                                <option>NIO</option>
-                                                <option>NGN</option>
-                                                <option>KPW</option>
-                                                <option>NOK</option>
-                                                <option>OMR</option>
-                                                <option>PKR</option>
-                                                <option>PAB</option>
-                                                <option>PGK</option>
-                                                <option>PYG</option>
-                                                <option>PEN</option>
-                                                <option>PHP</option>
-                                                <option>PLN</option>
-                                                <option>PTE (EURO)</option>
-                                                <option>QAR</option>
-                                                <option>RON</option>
-                                                <option>RUB</option>
-                                                <option>RWF</option>
-                                                <option>WST</option>
-                                                <option>STD</option>
-                                                <option>SAR</option>
-                                                <option>RSD</option>
-                                                <option>SCR</option>
-                                                <option>SLL</option>
-                                                <option>SGD</option>
-                                                <option>SKK (EURO)</option>
-                                                <option>SIT (EURO)</option>
-                                                <option>SBD</option>
-                                                <option>SOS</option>
-                                                <option>ZAR</option>
-                                                <option>KRW</option>
-                                                <option>ESP (EURO)</option>
-                                                <option>LKR</option>
-                                                <option>SHP</option>
-                                                <option>SDG</option>
-                                                <option>SRD</option>
-                                                <option>SZL</option>
-                                                <option>SEK</option>
-                                                <option>CHF</option>
-                                                <option>SYP</option>
-                                                <option>TWD</option>
-                                                <option>TZS</option>
-                                                <option>THB</option>
-                                                <option>TOP</option>
-                                                <option>TTD</option>
-                                                <option>TND</option>
-                                                <option>TRY</option>
-                                                <option>TMM</option>
-                                                <option>USD</option>
-                                                <option>UGX</option>
-                                                <option>UAH</option>
-                                                <option>UYU</option>
-                                                <option>AED</option>
-                                                <option>VUV</option>
-                                                <option>VEB</option>
-                                                <option>VND</option>
-                                                <option>YER</option>
-                                                <option>ZMK</option>
-                                                <option>ZWD</option>
-                                            </select>
-                                            <input id="owner_supply_unit_price" type="text" class="form-control" value="0.00">
-                                            <select id="owner_supply_currency"  class="form-control">
-                                                <option>AUD</option>
-                                                <option>GBP</option>
-                                                <option>EUR</option>
-                                                <option>JPY</option>
-                                                <option>CHF</option>
-                                                <option>USD</option>
-                                                <option>AFN</option>
-                                                <option>ALL</option>
-                                                <option>DZD</option>
-                                                <option>AOA</option>
-                                                <option>ARS</option>
-                                                <option>AMD</option>
-                                                <option>AWG</option>
-                                                <option>AUD</option>
-                                                <option>ATS (EURO)</option>
-                                                <option>BEF (EURO)</option>
-                                                <option>AZN</option>
-                                                <option>BSD</option>
-                                                <option>BHD</option>
-                                                <option>BDT</option>
-                                                <option>BBD</option>
-                                                <option>BYR</option>
-                                                <option>BZD</option>
-                                                <option>BMD</option>
-                                                <option>BTN</option>
-                                                <option>BOB</option>
-                                                <option>BAM</option>
-                                                <option>BWP</option>
-                                                <option>BRL</option>
-                                                <option>GBP</option>
-                                                <option>BND</option>
-                                                <option>BGN</option>
-                                                <option>BIF</option>
-                                                <option>XOF</option>
-                                                <option>XAF</option>
-                                                <option>XPF</option>
-                                                <option>KHR</option>
-                                                <option>CAD</option>
-                                                <option>CVE</option>
-                                                <option>KYD</option>
-                                                <option>CLP</option>
-                                                <option>CNY</option>
-                                                <option>COP</option>
-                                                <option>KMF</option>
-                                                <option>CDF</option>
-                                                <option>CRC</option>
-                                                <option>HRK</option>
-                                                <option>CUC</option>
-                                                <option>CUP</option>
-                                                <option>CYP (EURO)</option>
-                                                <option>CZK</option>
-                                                <option>DKK</option>
-                                                <option>DJF</option>
-                                                <option>DOP</option>
-                                                <option>XCD</option>
-                                                <option>EGP</option>
-                                                <option>SVC</option>
-                                                <option>EEK (EURO)</option>
-                                                <option>ETB</option>
-                                                <option>EUR</option>
-                                                <option>FKP</option>
-                                                <option>FIM (EURO)</option>
-                                                <option>FJD</option>
-                                                <option>GMD</option>
-                                                <option>GEL</option>
-                                                <option>DMK (EURO)</option>
-                                                <option>GHS</option>
-                                                <option>GIP</option>
-                                                <option>GRD (EURO)</option>
-                                                <option>GTQ</option>
-                                                <option>GNF</option>
-                                                <option>GYD</option>
-                                                <option>HTG</option>
-                                                <option>HNL</option>
-                                                <option>HKD</option>
-                                                <option>HUF</option>
-                                                <option>ISK</option>
-                                                <option>INR</option>
-                                                <option>IDR</option>
-                                                <option>IRR</option>
-                                                <option>IQD</option>
-                                                <option>IED (EURO)</option>
-                                                <option>ILS</option>
-                                                <option>ITL (EURO)</option>
-                                                <option>JMD</option>
-                                                <option>JPY</option>
-                                                <option>JOD</option>
-                                                <option>KZT</option>
-                                                <option>KES</option>
-                                                <option>KWD</option>
-                                                <option>KGS</option>
-                                                <option>LAK</option>
-                                                <option>LVL (EURO)</option>
-                                                <option>LBP</option>
-                                                <option>LSL</option>
-                                                <option>LRD</option>
-                                                <option>LYD</option>
-                                                <option>LTL (EURO)</option>
-                                                <option>LUF (EURO)</option>
-                                                <option>MOP</option>
-                                                <option>MKD</option>
-                                                <option>MGA</option>
-                                                <option>MWK</option>
-                                                <option>MYR</option>
-                                                <option>MVR</option>
-                                                <option>MTL (EURO)</option>
-                                                <option>MRO</option>
-                                                <option>MUR</option>
-                                                <option>MXN</option>
-                                                <option>MDL</option>
-                                                <option>MNT</option>
-                                                <option>MAD</option>
-                                                <option>MZN</option>
-                                                <option>MMK</option>
-                                                <option>ANG</option>
-                                                <option>NAD</option>
-                                                <option>NPR</option>
-                                                <option>NLG (EURO)</option>
-                                                <option>NZD</option>
-                                                <option>NIO</option>
-                                                <option>NGN</option>
-                                                <option>KPW</option>
-                                                <option>NOK</option>
-                                                <option>OMR</option>
-                                                <option>PKR</option>
-                                                <option>PAB</option>
-                                                <option>PGK</option>
-                                                <option>PYG</option>
-                                                <option>PEN</option>
-                                                <option>PHP</option>
-                                                <option>PLN</option>
-                                                <option>PTE (EURO)</option>
-                                                <option>QAR</option>
-                                                <option>RON</option>
-                                                <option>RUB</option>
-                                                <option>RWF</option>
-                                                <option>WST</option>
-                                                <option>STD</option>
-                                                <option>SAR</option>
-                                                <option>RSD</option>
-                                                <option>SCR</option>
-                                                <option>SLL</option>
-                                                <option>SGD</option>
-                                                <option>SKK (EURO)</option>
-                                                <option>SIT (EURO)</option>
-                                                <option>SBD</option>
-                                                <option>SOS</option>
-                                                <option>ZAR</option>
-                                                <option>KRW</option>
-                                                <option>ESP (EURO)</option>
-                                                <option>LKR</option>
-                                                <option>SHP</option>
-                                                <option>SDG</option>
-                                                <option>SRD</option>
-                                                <option>SZL</option>
-                                                <option>SEK</option>
-                                                <option>CHF</option>
-                                                <option>SYP</option>
-                                                <option>TWD</option>
-                                                <option>TZS</option>
-                                                <option>THB</option>
-                                                <option>TOP</option>
-                                                <option>TTD</option>
-                                                <option>TND</option>
-                                                <option>TRY</option>
-                                                <option>TMM</option>
-                                                <option>USD</option>
-                                                <option>UGX</option>
-                                                <option>UAH</option>
-                                                <option>UYU</option>
-                                                <option>AED</option>
-                                                <option>VUV</option>
-                                                <option>VEB</option>
-                                                <option>VND</option>
-                                                <option>YER</option>
-                                                <option>ZMK</option>
-                                                <option>ZWD</option>
-                                            </select>
-                                        </div>
+                                        <label>Order Number:</label>
+                                        <input
+                                        id="owner_supply_order_number"
+                                        name="owner_supply_order_number"
+                                        class="form-control"
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -1681,6 +1145,32 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             $("#owner-supply-edit-panel").prop('hidden',true);
             $("#btn-add-owner-supply").prop("disabled",false);
         })
+        $("#btn-save-owner-supply").on("click",function(){
+            var owner_supply_name=$("#owner_supply_name")[0].value;
+            var owner_supply_description=$("#owner_supply_description")[0].value;
+            var owner_supply_price=$("#owner_supply_price")[0].value;
+            var owner_supply_order_number=$("#owner_supply_order_number")[0].value;
+            owner_supplies.push({
+                name:owner_supply_name,
+                description:owner_supply_description,
+                price:owner_supply_price,
+                order_number:owner_supply_order_number
+            })
+            var table=$("#table-owners-supplies")[0].getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow();
+            var cell0 = newRow.insertCell(0);
+            var cell1 = newRow.insertCell(1);
+            var cell2 = newRow.insertCell(2);
+            var cell3 = newRow.insertCell(3);
+            cell0.innerHTML = owner_supply_name;
+            cell1.innerHTML = "USD "+owner_supply_price;
+            cell2.innerHTML = owner_supply_order_number;
+            cell3.innerHTML=`
+            <button onClick="view_owner_supply(${owner_supplies.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="eye" class="" ></i></button>
+            <button onClick="start_edit_owner_supply(${owner_supplies.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button>
+            <button type="button" onClick="delete_owner_supply(${owner_supplies.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="" ></i></button>
+            `;
+        })
     })
     var cost_items=[];
     var owner_supplies=[];
@@ -1713,6 +1203,10 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         $("#cost_item_unit_price")[0].value=cost_items[index].unit_price;
         $("#cost_item_quote_type")[0].value=cost_items[index].quote_type;
         $("#cost_item_currency")[0].value=cost_items[index].currency;
+    }
+    function delete_owner_supply(index){
+        owner_supplies.splice(index,1);
+        $("#table-owners-supplies")[0].getElementsByTagName('tbody')[0].deleteRow(index);
     }
     <?php
         if(isset($gotTasklibrary)&&$gotTasklibrary->reference_drawing)
