@@ -4471,6 +4471,22 @@ class Tasks extends Security_Controller {
         return $this->download_app_files(get_setting("timeline_file_path"), $info->files);
     }
 
+    function download_task_files($id){
+        $comments_with_files=$this->Project_comments_model->get_all_where(array("task_id"=>$id))->getResult();
+        $all_files=array();
+        foreach ($comments_with_files as $oneComment) {
+            # code...
+            if($oneComment->files!="")
+            foreach(unserialize($oneComment->files) as $oneFile){
+                $all_files[]=$oneFile;
+            }
+        }
+        // return json_encode($all_files);
+        
+        // return unserialize(json_encode($all_files));
+        return $this->download_app_files(get_setting("timeline_file_path"), serialize($all_files));
+    }
+
     function get_task_labels_dropdown_for_filter() {
         $labels_dropdown = array(array("id" => "", "text" => "- " . app_lang("label") . " -"));
 

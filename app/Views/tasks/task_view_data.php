@@ -44,6 +44,12 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
     margin-left:5vw;
     flex-grow:1;
 }
+.item-group .col-md-2 .item-title{
+    width:95%;
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide any overflowed text */
+    text-overflow: ellipsis; /* Display an ellipsis (...) to indicate text overflow */
+}
 </style>
 <!---->
 <div>
@@ -130,16 +136,20 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                 <?php } ?>
                             </div>
 
-                            <div class="col-md-12 mb15">
-                                <strong><?php echo app_lang('budget') . ": "; ?></strong> <?php echo $model_info->budget; ?>
-                            </div>
+                            <!-- <div class="col-md-12 mb15">
+                                <strong><?php 
+                                //echo app_lang('budget') . ": "; 
+                                ?></strong> <?php 
+                                //echo $model_info->budget; 
+                                ?>
+                            </div> -->
 
                             <div class="col-md-12 mb15">
                                 <strong><?php echo app_lang('priority') . ": "; ?></strong> <?php echo get_update_task_info_anchor_data($model_info, "priority", $can_edit_tasks); ?>
                             </div>
 
                             <div class="col-md-12 mb15">
-                                <strong><?php echo app_lang('label') . ": " ?></strong><?php echo get_update_task_info_anchor_data($model_info, "labels", $can_edit_tasks, $labels); ?>
+                                <strong><?php echo app_lang('category') . ": " ?></strong><?php echo get_update_task_info_anchor_data($model_info, "labels", $can_edit_tasks, $labels); ?>
                             </div>
 
                             <div class="col-md-12 mb15">
@@ -1113,7 +1123,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         <div class="box-title"><span ><?php echo app_lang("files"); ?></span></div>
         <div class="d-flex justify-content-end"  >
             <div >
-                <button id="btn-download-all" class="btn btn-sm" ><i color="gray" data-feather="download" ></i></button>
+                <a href="<?php echo get_uri('/tasks/download_task_files/'.$task_id);?>" id="btn-download-all" class="btn btn-sm" ><i color="gray" data-feather="download" ></i></a>
                 <button id="btn-grid-group" class="btn btn-sm" ><i color="gray" data-feather="grid" ></i></button>
                 <button id="btn-list-group" class="btn btn-sm" ><i color="gray" data-feather="list" ></i></button>
                 <button id="btn-add-file" class="btn btn-sm" ><i color="gray" data-feather="plus-circle" ></i></button>
@@ -1136,7 +1146,8 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     $url = get_source_url_of_file($oneFile, $timeline_file_path);
                     $thumbnail = get_source_url_of_file($oneFile, $timeline_file_path, "thumbnail");
                     $actual_file_name = remove_file_prefix($oneFile['file_name']);
-                    $url = get_source_url_of_file($oneFile, $timeline_file_path);
+
+                    $lll=is_viewable_image_file($oneFile['file_name'])?$url:get_source_url_of_file(array("file_name" => "store-item-no-image.png"), get_setting("system_file_path"));
                     echo 
                     '<div class="group-item col-md-2" >
                         <img class="item-image" src="'.$url.'" />
