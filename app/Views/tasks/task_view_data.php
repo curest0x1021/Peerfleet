@@ -6,6 +6,46 @@ if ($total_sub_tasks) {
 $yes_icon = '<i data-feather="check-square" class="icon-16"></i>';
 $no_icon = '<i data-feather="square" class="icon-16"></i>';
 ?>
+<!---->
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"> -->
+<style>
+      /* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
+
+.item-group .col-md-2{
+    text-align:center;
+    border:1px solid lightgray;
+    border-radius:10px;
+    margin:10px;
+}
+.item-group .col-md-12{
+    display:flex;
+    border:1px solid lightgray;
+    border-radius:10px;
+    margin:10px;
+    align-items:center;
+}
+.item-image{
+    
+}
+.item-group .col-md-2 .item-image{
+   height:20vh;
+   max-width:80%;
+}
+.item-group .col-md-2 .btn-download-item{
+   float:right;
+}
+.item-group .col-md-12 .item-image{
+    width:5vw;
+    max-height:5vw;
+    min-height:5vw;
+    
+}
+.item-group .col-md-12 .item-title{
+    margin-left:5vw;
+    flex-grow:1;
+}
+</style>
+<!---->
 <div>
     <ul class="nav nav-pills">
         <li class="nav-item">
@@ -23,7 +63,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
     </ul>
 </div>
 <div class="tab-content" >
-    <div class="container tab-pane active" id="general" >
+    <div class="tab-pane active" id="general" >
         <div class="row" >
             <div class="col-lg-4 order-lg-last">
                 <div class="clearfix">
@@ -201,20 +241,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                     <?php echo view("reminders/reminders_view_data", array("task_id" => $model_info->id, "hide_form" => true, "reminder_view_type" => "task")); ?>
                                 </div>
                             <?php } ?>
-                            <!--Task comment section-->
-                            <div class="clearfix">
-                                <div class="mb5">
-                                    <strong>Write a comment. </strong>
-                                </div>
-                                <div class="b-t pt10 list-container">
-                                    <?php if ($can_comment_on_tasks) { ?>
-                                        <?php echo view("projects/comments/comment_form"); ?>
-                                    <?php } ?>
-                                    <?php 
-                                    // echo view("projects/comments/comment_list"); 
-                                    ?>
-                                </div>
-                            </div>
+                            
 
                             <?php app_hooks()->do_action('app_hook_task_view_right_panel_extension'); ?>
                         </div>
@@ -1057,7 +1084,24 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         <!---->
     </div>
 
-    <div id="activity" class="container tab-pane fade" >
+    <div id="activity" class="tab-pane fade" >
+        <div class="box-title"><span ><?php echo app_lang("comments"); ?></span></div>
+        <!--Task comment section-->
+        <div class="clearfix">
+            <div class="mb5">
+                <strong>Write a comment. </strong>
+            </div>
+            <div class="b-t pt10 list-container">
+                <?php 
+                echo view("projects/comments/comment_list_text"); 
+                ?>
+                <?php if ($can_comment_on_tasks) { ?>
+                    <?php echo view("projects/comments/comment_form"); ?>
+                <?php } ?>
+                
+            </div>
+        </div>
+        <!---->
         <?php if ($login_user->user_type === "staff") { ?>
             <div class="box-title"><span ><?php echo app_lang("activity"); ?></span></div>
             <div class="pl15 pr15 mt15 list-container project-activity-logs-container">
@@ -1065,12 +1109,46 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             </div>
         <?php } ?>
     </div>
-    <div id="files" class="container tab-pane fade" >
-        <?php echo view("projects/comments/comment_list"); ?>
+    <div id="files" class="tab-pane fade" >
+        <div class="box-title"><span ><?php echo app_lang("files"); ?></span></div>
+        <div class="d-flex justify-content-end"  >
+            <div >
+                <button id="btn-download-all" class="btn btn-sm" ><i color="gray" data-feather="download" ></i></button>
+                <button id="btn-grid-group" class="btn btn-sm" ><i color="gray" data-feather="grid" ></i></button>
+                <button id="btn-list-group" class="btn btn-sm" ><i color="gray" data-feather="list" ></i></button>
+                <button id="btn-add-file" class="btn btn-sm" ><i color="gray" data-feather="plus-circle" ></i></button>
+            </div>
+        </div>
         <?php 
-        // app_hooks()->do_action('app_hook_task_view_right_panel_extension');
-         ?>
+        // echo view("projects/comments/comment_list"); 
+        ?>
+        <div class="row item-group" >
+            <?php 
+            // app_hooks()->do_action('app_hook_task_view_right_panel_extension');
+            $all_files=array();
+            foreach($comments as $oneComment){
+                $files = unserialize($oneComment->files);
+                $all_files=array_merge($all_files,$files);
+                $total_files = count($files);
+                $timeline_file_path = isset($file_path) ? $file_path : get_setting("timeline_file_path");
+                foreach($files as $oneFile){
+                    // echo $oneFile['file_name'];
+                    $url = get_source_url_of_file($oneFile, $timeline_file_path);
+                    $thumbnail = get_source_url_of_file($oneFile, $timeline_file_path, "thumbnail");
+                    $actual_file_name = remove_file_prefix($oneFile['file_name']);
+                    $url = get_source_url_of_file($oneFile, $timeline_file_path);
+                    echo 
+                    '<div class="group-item col-md-2" >
+                        <img class="item-image" src="'.$url.'" />
+                        <p class="item-title" >'.$actual_file_name.'</p>
+                        <button class="btn-download-item btn btn-sm" ><i data-feather="download-cloud" ></i></button>
+                    </div>';
+                }
+            }
+            ?>
+         </div>
     </div>
+        
 </div>
 <script>
     $(document).ready(function(){
@@ -1170,7 +1248,18 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             <button onClick="start_edit_owner_supply(${owner_supplies.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button>
             <button type="button" onClick="delete_owner_supply(${owner_supplies.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="" ></i></button>
             `;
-        })
+        });
+        $("#btn-grid-group").on("click",function(){
+            $(".group-item").removeClass("col-md-12").addClass("col-md-2");
+            $("#btn-grid-group").prop("disabled",true);
+            $("#btn-list-group").prop("disabled",false);
+        });
+        $("#btn-list-group").on("click",function(){
+            $(".group-item").removeClass("col-md-2").addClass("col-md-12");
+            $("#btn-grid-group").prop("disabled",false);
+            $("#btn-list-group").prop("disabled",true);
+        });
+        $("#btn-grid-group").prop("disabled",true);
     })
     var cost_items=[];
     var owner_supplies=[];
@@ -1211,5 +1300,8 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
     <?php
         if(isset($gotTasklibrary)&&$gotTasklibrary->reference_drawing)
         echo 'cost_items=JSON.parse(`'.$gotTasklibrary->reference_drawing.'`);';
+    ?>
+    <?php if(count($all_files)>0)
+    echo 'var all_files='.json_encode($all_files).';'
     ?>
 </script>
