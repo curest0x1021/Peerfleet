@@ -1132,6 +1132,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         <?php 
         // echo view("projects/comments/comment_list"); 
         ?>
+        <input type="file" hidden id="new-comment-file-selector" />
         <div class="row item-group" >
             <?php 
             // app_hooks()->do_action('app_hook_task_view_right_panel_extension');
@@ -1271,6 +1272,34 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             $("#btn-list-group").prop("disabled",true);
         });
         $("#btn-grid-group").prop("disabled",true);
+        $("#btn-add-file").on("click",function(){
+            $("#new-comment-file-selector").click();
+        });
+        $("#new-comment-file-selector").on("change",function(event){
+            console.log(event.target.files)
+            if(event.target.files.length==0) return;
+            var myForm=new FormData();
+            myForm.append("file_names",[event.target.files[0].name]);
+            myForm.append("file_sizes",[event.target.files[0].size]);
+            myForm.append("file",event.target.files[0]);
+            myForm.append("project_id",'<?php echo $model_info->project_id; ?>');
+            myForm.append("id",'<?php echo $model_info->id; ?>');
+            $.ajax({
+                url: '<?php
+                    echo get_uri('tasks/upload_comment_file'); 
+                ?>',
+                type: "POST",
+                data: myForm,
+                headers: {
+                    'X-CSRF-TOKEN': $('input[name="<?= csrf_token() ?>"]').val()
+                },
+                processData: false, // prevent jQuery from processing the data
+                contentType: false,
+                success: function (response) {
+                    window.location.reload();
+                }
+            });
+        })
     })
     var cost_items=[];
     var owner_supplies=[];

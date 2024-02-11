@@ -4540,4 +4540,90 @@ class Tasks extends Security_Controller {
         echo $this->_get_task_statuses_dropdown($project_id);
     }
 
+    /////////////////////
+    function upload_comment_file(){
+        if (!empty($_FILES)) {
+            $file = get_array_value($_FILES, "file");
+
+            if (!$file) {
+                die("Invalid file");
+            }
+
+            $temp_file = get_array_value($file, "tmp_name");
+            $file_name = get_array_value($file, "name");
+            $file_size = get_array_value($file, "size");
+
+            $project_id = $this->request->getPost('project_id');
+            $id = $this->request->getPost('id');
+            // $add_type = $this->request->getPost('add_type');
+            $now = get_current_utc_time();
+
+            if (!is_valid_file_to_upload($file_name)) {
+                return false;
+            }
+            $temp_file_path = get_setting("temp_file_path");
+            $target_path = getcwd() . '/' . $temp_file_path;
+            if (!is_dir($target_path)) {
+                if (!mkdir($target_path, 0755, true)) {
+                    die('Failed to create file folders.');
+                }
+            }
+            $target_file = $target_path . $file_name;
+            copy($temp_file, $target_file);
+            $new_target_path = getcwd() . '/' .get_setting("timeline_file_path");
+            // $files_data = move_files_from_temp_dir_to_permanent_dir($new_target_path, "project_comment");
+            $files_data = array();
+            $temp_file_new = $temp_file;
+            // $file_name = $files["name"][$key];
+            // $file_size = $files["size"][$key];
+            $file_data = move_temp_file($file_name, $new_target_path, "project_comment", $temp_file_new, "", "", false, $file_size);
+            $files_data[] = array(
+                "file_name" => get_array_value($file_data, "file_name"),
+                "file_size" => $file_size,
+                "file_id" => get_array_value($file_data, "file_id"),
+                "service_type" => get_array_value($file_data, "service_type")
+            );
+            if ($files_data && $files_data != "a:0:{}") {
+                $comment_data = array(
+                    "created_by" => $this->login_user->id,
+                    "created_at" => $now,
+                    "project_id" => $project_id,
+                    "task_id" => $id
+                );
+
+                $comment_data = clean_data($comment_data);
+
+                $comment_data["files"] = serialize($files_data); //don't clean serilized data
+
+                $this->Project_comments_model->save_comment($comment_data);
+                return json_encode(array("success"=>true));
+            }
+            return json_encode(array("success"=>false));
+            // if (defined('PLUGIN_CUSTOM_STORAGE') && !$upload_to_local) {
+            //     try {
+            //         app_hooks()->do_action('app_hook_upload_file_to_temp', array(
+            //             "temp_file" => $temp_file,
+            //             "file_name" => $file_name,
+            //             "file_size" => $file_size
+            //         ));
+            //     } catch (\Exception $ex) {
+            //         log_message('error', '[ERROR] {exception}', ['exception' => $ex]);
+            //     }
+            // } else if (get_setting("enable_google_drive_api_to_upload_file") && get_setting("google_drive_authorized") && !$upload_to_local) {
+            //     $google = new Google();
+            //     $google->upload_file($temp_file, $file_name, "temp", "", $file_size);
+            // } else {
+            //     $temp_file_path = get_setting("temp_file_path");
+            //     $target_path = getcwd() . '/' . $temp_file_path;
+            //     if (!is_dir($target_path)) {
+            //         if (!mkdir($target_path, 0755, true)) {
+            //             die('Failed to create file folders.');
+            //         }
+            //     }
+            //     $target_file = $target_path . $file_name;
+            //     copy($temp_file, $target_file);
+            // }
+        }
+    }
+    /////////////////////
 }
