@@ -4700,4 +4700,15 @@ class Tasks extends Security_Controller {
     function get_count_category($category){
         echo $this->Tasks_model->getCount("category",$category);
     }
+    /*----*/
+    //basic-modal-form
+    function modal_form_basic(){
+        $allStatus=$this->Task_status_model->get_all()->getResultArray();
+        $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
+        $allMilestones=$this->Milestones_model->get_all()->getResultArray();
+        $allProjects=$this->Projects_model->get_all()->getResultArray();
+        // $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_library"=>$id,"deleted"=>0))->getResult();
+        return $this->template->view('tasks/modal_form_basic',["allProjects"=>$allProjects,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+    }
+    /*----*/
 }
