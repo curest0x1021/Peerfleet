@@ -824,7 +824,6 @@
                                     <?php
                                     if(isset($gotTask)&&$gotTask->cost_items){
                                         $cost_items=json_decode($gotTask->cost_items);
-                                        if($cost_items!=""){
                                             foreach ($cost_items as $key=>$oneItem) {
                                                 # code...
                                                 echo "<tr><td>";
@@ -838,7 +837,6 @@
                                                 echo "</td></tr>";
                                             }
                                         }
-                                    }
                                     ?>
                                 </tbody>
                             </table>
