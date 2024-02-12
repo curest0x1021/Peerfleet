@@ -4653,7 +4653,7 @@ class Tasks extends Security_Controller {
             "type"=>$this->request->getPost("type"),
             "serial_number"=>$this->request->getPost("serial_number"),
             "pms_scs_number"=>$this->request->getPost("pms_scs_number"),
-            "reference_drawing"=>$this->request->getPost("cost_items"),
+            "cost_items"=>$this->request->getPost("cost_items"),
             "start_date"=>DateTime::createFromFormat('d.m.Y',$this->request->getPost("start_date"))->format("Y-m-d"),
             "deadline"=>DateTime::createFromFormat('d.m.Y',$this->request->getPost("deadline"))->format("Y-m-d"),
         );
