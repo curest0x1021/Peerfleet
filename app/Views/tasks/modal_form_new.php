@@ -1298,7 +1298,7 @@
             <div><?php echo view("includes/dropzone_preview"); ?></div>
             <div stlyle="margin-top:10px" class="row" >
                 <div class="col-md-2" >
-                    <button class="btn btn-default upload-file-button float-start me-auto btn-sm round" type="button" style="color:#7988a2"><i data-feather="camera" class="icon-16"></i> <?php echo app_lang("upload_file"); ?></button>
+                    <button id="btn-file-upload-task" class="btn btn-default upload-file-button float-start me-auto btn-sm round" type="button" style="color:#7988a2"><i data-feather="camera" class="icon-16"></i> <?php echo app_lang("upload_file"); ?></button>
                 </div>
                 <div class="col-md-9" ></div>
                 <div class="col-md-1"  >
@@ -1637,53 +1637,59 @@
             var start_date=$("#start_date")[0].value;
             var deadline=$("#deadline")[0].value;
             var project_id=`<?php echo $project_id; ?>`
-            console.log(project_id);
+            const myForm=new FormData();
+            myForm.append("rise_csrf_token",rise_csrf_token);
+            myForm.append("id",id);
+            myForm.append("title",title);
+            myForm.append("category",category);
+            myForm.append("dock_list_number",dock_list_number);
+            myForm.append("supplier",supplier);
+            myForm.append("status_id",status_id);
+            myForm.append("priority_id",priority_id);
+            myForm.append("milestone_id",milestone_id);
+            myForm.append("assigned_to",assigned_to);
+            myForm.append("collaborators",collaborators);
+            myForm.append("description",description);
+            myForm.append("location",location);
+            myForm.append("specification",specification);
+            myForm.append("start_date",start_date);
+            myForm.append("deadline",deadline);
+            myForm.append("gas_free_certificate",gas_free_certificate_yes);
+            myForm.append("painting_after_completion",painting_after_completion_yes);
+            myForm.append("light",light_yes);
+            myForm.append("parts_on_board",parts_on_board_yes);
+            myForm.append("ventilation",ventilation_yes);
+            myForm.append("transport_to_yard_workshop",transport_to_yard_workshop_yes);
+            myForm.append("crane_assistance",crane_assistance_yes);
+            myForm.append("transport_outside_yard",transport_outside_yard_yes);
+            myForm.append("cleaning_before",cleaning_before_yes);
+            myForm.append("material_yards_supply",material_yards_supply_yes);
+            myForm.append("cleaning_after",cleaning_after_yes);
+            myForm.append("material_owners_supply",material_owners_supply_yes);
+            myForm.append("work_permit",work_permit_yes);
+            myForm.append("risk_assessment",risk_assessment_yes);
+            myForm.append("maker",maker);
+            myForm.append("type",type);
+            myForm.append("serial_number",serial_number);
+            myForm.append("pms_scs_number",pms_scs_number);
+            myForm.append("checklist_items",checklist_items);
+            myForm.append("dependencies",dependencies);
+            myForm.append("cost_items",cost_items);
+            myForm.append("project_id",project_id);
+            for(var oneFile of dropzone.files){
+                myForm.append(oneFile.name,oneFile);
+            }
+            
+            
             $.ajax({
                 url: '<?php echo get_uri("tasks/save_ajax"); ?>',
                 type: "POST",
-                data: {
-                    rise_csrf_token,
-                    project_id
-                    ,id
-                    ,title
-                    ,category
-                    ,dock_list_number
-                    ,supplier
-                    ,status_id
-                    ,priority_id
-                    ,milestone_id
-                    ,assigned_to
-                    ,collaborators
-                    ,description
-                    ,location
-                    ,specification
-                    ,start_date
-                    ,deadline
-                    ,gas_free_certificate:gas_free_certificate_yes
-                    ,painting_after_completion:painting_after_completion_yes
-                    ,light:light_yes
-                    ,parts_on_board:parts_on_board_yes
-                    ,ventilation:ventilation_yes
-                    ,transport_to_yard_workshop:transport_to_yard_workshop_yes
-                    ,crane_assistance:crane_assistance_yes
-                    ,transport_outside_yard:transport_outside_yard_yes
-                    ,cleaning_before:cleaning_before_yes
-                    ,material_yards_supply:material_yards_supply_yes
-                    ,cleaning_after:cleaning_after_yes
-                    ,material_owners_supply:material_owners_supply_yes
-                    ,work_permit:work_permit_yes
-                    ,risk_assessment:risk_assessment_yes
-                    ,maker
-                    ,type
-                    ,serial_number
-                    ,pms_scs_number
-                    ,checklist_items,
-                    dependencies:JSON.stringify(dependencies),
-                    cost_items:JSON.stringify(cost_items),
-                },
+                data: myForm,
+                processData: false, // Prevent jQuery from automatically processing the data
+                contentType: false, 
                 success: function (response) {
-                    console.log(response)
-                    if(JSON.parse(response).success) window.location.reload();
+                    console.log(myForm,response)
+                    // if(JSON.parse(response).success) window.location.reload();
                     // appLoader.hide();
                     // window.location='<?php 
                     //echo get_uri('task_libraries/view/'); 

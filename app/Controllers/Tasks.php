@@ -4667,7 +4667,50 @@ class Tasks extends Security_Controller {
         //     $this->Task_library_checklist_items_model->ci_save($newItem);
         // }
         // return redirect()->to("/task_libraries"."/view"."/".$save_id);
-        return json_encode(array("success"=>true,'saved_id'=>$save_id));
+        // $filenames=[];
+        // $allFiles=isset($_FILES['files']) ? $_FILES['files'] : array();
+        // foreach($allFiles as $oneFile){
+        //     $filenames[]=$oneFile["name"];
+        // }
+        $files_data=array();
+        $now = get_current_utc_time();
+        if (!empty($_FILES)) {
+            $files = isset($_FILES) ? $_FILES : array();
+            if ($files && count($files) > 0) {
+                foreach ($files as $key => $file) {
+                    $new_target_path = getcwd() . '/' .get_setting("timeline_file_path");
+                    // $files_data = move_files_from_temp_dir_to_permanent_dir($new_target_path, "project_comment");
+                    $temp_file_new = $file['tmp_name'];
+                    $file_name=$key;
+                    // $file_name = $files["name"][$key];
+                    // $file_size = $files["size"][$key];
+                    $file_data = move_temp_file($file_name, $new_target_path, "project_comment", $temp_file_new, "", "", false, $file['size']);
+                    $files_data[] = array(
+                        "file_name" => get_array_value($file_data, "file_name"),
+                        "file_size" => $file['size'],
+                        "file_id" => get_array_value($file_data, "file_id"),
+                        "service_type" => get_array_value($file_data, "service_type")
+                    );
+                }
+                if ($files_data && $files_data != "a:0:{}") {
+                    $comment_data = array(
+                        "created_by" => $this->login_user->id,
+                        "created_at" => $now,
+                        "project_id" => $this->request->getPost('project_id'),
+                        "task_id" => $this->request->getPost('id')
+                    );
+
+                    $comment_data = clean_data($comment_data);
+
+                    $comment_data["files"] = serialize($files_data); //don't clean serilized data
+
+                    $this->Project_comments_model->save_comment($comment_data);
+                }
+            }
+            
+        }
+        
+        return json_encode(array("success"=>true,'saved_id'=>$save_id,"filenames"=>$_FILES));
     }
     function get_count_category($category){
         echo $this->Tasks_model->getCount("category",$category);
