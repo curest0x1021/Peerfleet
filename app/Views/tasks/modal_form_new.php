@@ -48,8 +48,8 @@
                             );
 
                             echo form_input(array(
-                                "id" => "category",
-                                "name" => "category",
+                                "id" => "category_input",
+                                "name" => "category_input",
                                 "value" => isset($gotTasklibrary)?$gotTasklibrary->category:"",
                                 "class" => "form-control",
                                 "placeholder" => app_lang('category'),
@@ -910,10 +910,9 @@
                                         <div class="form-group" >
                                             <label>Unit price:</label>
                                             <div class="input-group mb-3" style="border:1px solid lightgray;border-radius:5px">
-                                                <!-- <input readonly type="text" id="cost_item_currency_symbol" class="form-control" value="$"> -->
-                                                <input id="cost_item_unit_price" type="text" class="form-control" value="0.00">
                                                 <?php
-                                                $cost_item_currency_dropdown=array(array("id"=>"AUD","text"=>"AUD"),
+                                                $cost_item_currency_dropdown=array(
+                                                array("id"=>"AUD","text"=>"AUD"),
                                                 array("id"=>"GBP","text"=>"GBP"),
                                                 array("id"=>"EUR","text"=>"EUR"),
                                                 array("id"=>"JPY","text"=>"JPY"),
@@ -1089,20 +1088,20 @@
                                                 array("id"=>"VND","text"=>"VND"),
                                                 array("id"=>"YER","text"=>"YER"),
                                                 array("id"=>"ZMK","text"=>"ZMK"),
-                                                array("id"=>"ZWD","text"=>"ZWD"),);
+                                                array("id"=>"ZWD","text"=>"ZWD"));
 
                                                 echo form_input(array(
-                                                        "id" => "cost_item_currency",
-                                                        "name" => "cost_item_currency",
-                                                        "value" => "AUD",
-                                                        "class" => "form-control",
-                                                        "placeholder" => app_lang('category'),
-                                                        "data-rule-required" => true,
-                                                        "style"=>"border:1px solid lightgray;",
-                                                        "data-msg-required" => app_lang("field_required"),
-                                                        "autocomplete" => "off"
-                                                    ));
-                                                    ?>
+                                                    "id" => "cost_item_currency_select",
+                                                    "name" => "cost_item_currency_select",
+                                                    "value" => "AUD",
+                                                    "class" => "form-control",
+                                                    "placeholder" => app_lang('category'),
+                                                    "data-rule-required" => true,
+                                                    "style"=>"border:1px solid lightgray;",
+                                                    "data-msg-required" => app_lang("field_required"),
+                                                    "autocomplete" => "off"
+                                                ));
+                                                ?>
                                             </div>
                                         </div>
                                     </div>
@@ -1316,19 +1315,23 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#cost_item_currency_symbol").on('mousedown', false);
-        $("#cost_item_currency_symbol").on('keydown', false);
+        // $("#cost_item_currency_symbol").on('mousedown', false);
+        // $("#cost_item_currency_symbol").on('keydown', false);
         $("#file-selector-btn").on("click",function(){
             $("#file-selector")[0].click();
         })
-        $("#category").select2({
-            data: <?php echo (json_encode($category_dropdown)); ?>
+        $("#category_input").select2({
+            data: <?php 
+                echo (json_encode($category_dropdown)); 
+                ?>
         });
-        $("#cost_item_currency").select2({
-            data: <?php echo (json_encode($cost_item_currency_dropdown)); ?>
+        $("#cost_item_currency_select").select2({
+            data: <?php 
+                echo (json_encode($cost_item_currency_dropdown)); 
+            ?>
         });
 
-        $("#category").on("change",function(e){
+        $("#category_input").on("change",function(e){
             
             $.ajax({
                 url: '<?php echo_uri("tasks/get_count_category"); ?>/'+e.target.value,
@@ -1547,8 +1550,8 @@
             var cell3 = newRow.insertCell(3);
 
             cell0.innerHTML = $("#cost_item_name")[0].value;
-            cell1.innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement_unit")[0].value+" X "+$("#cost_item_currency")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
-            cell2.innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
+            cell1.innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement_unit")[0].value+" X "+$("#cost_item_currency_select")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
+            cell2.innerHTML = $("#cost_item_currency_select")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
             cell3.innerHTML=`
             <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button>
             <button type="button" onClick="delete_item(${cost_items.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="" ></i></button>
@@ -1562,7 +1565,7 @@
                     measurement_unit:$("#cost_item_measurement_unit")[0].value,
                     unit_price:$("#cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
-                    currency:$("#cost_item_currency")[0].value,
+                    currency:$("#cost_item_currency_select")[0].value,
                 });
             else{
                 $("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
@@ -1572,7 +1575,7 @@
                     measurement_unit:$("#cost_item_measurement_unit")[0].value,
                     unit_price:$("#cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
-                    currency:$("#cost_item_currency")[0].value,
+                    currency:$("#cost_item_currency_select")[0].value,
                 };
                 $("#editing_cost_item")[0].value=""
             }
@@ -1600,7 +1603,7 @@
             var rise_csrf_token = $('[name="rise_csrf_token"]').val();
             var id=$('[name="id"]').val();
             var title=$("#title_of_task")[0].value;
-            var category=$("#category")[0].value;
+            var category=$("#category_input")[0].value;
             var dock_list_number=$("#dock_list_number")[0].value;
             var supplier=$("#supplier")[0].value;
             var status_id=$("#status_id")[0].value;
@@ -1700,7 +1703,7 @@
             // if($("#dependency-area").hasClass('hide')) $("#dependency-area").removeClass("hide")
             $("#dependency_task").select2({
             data: <?php echo (json_encode($dependency_dropdown)); ?>
-        });
+            });
         });
         $('#toggle-blocked-by-panel').on('click',function(){
             if(!$("#blocking-area").hasClass('hide')) {
@@ -1765,9 +1768,9 @@
             // if(!$("#dependency-list-title").hasClass('hide')) $("#dependency-list-title").addClass("hide")
             // if(!$("#edit-dependency-panel").prop('hidden')) $("#edit-dependency-panel").prop("hidden",true)
         })
-        $("#cost_item_currency").on("change",function(){
-            $("#cost_item_currency_symbol")[0].selectedIndex=$("#cost_item_currency")[0].selectedIndex;
-        })
+        // $("#cost_item_currency_select").on("change",function(){
+        //     $("#cost_item_currency_symbol")[0].selectedIndex=$("#cost_item_currency_select")[0].selectedIndex;
+        // })
     });
     var dependencies=[]
     var dependency_status=0;
@@ -1801,7 +1804,7 @@
         $("#cost_item_measurement_unit")[0].value=cost_items[index].measurement_unit;
         $("#cost_item_unit_price")[0].value=cost_items[index].unit_price;
         $("#cost_item_quote_type")[0].value=cost_items[index].quote_type;
-        $("#cost_item_currency")[0].value=cost_items[index].currency;
+        $("#cost_item_currency_select")[0].value=cost_items[index].currency;
     }
     <?php
         if(isset($gotTasklibrary)&&$gotTasklibrary->dependencies)
