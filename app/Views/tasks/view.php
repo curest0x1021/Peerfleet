@@ -1,5 +1,5 @@
 <?php if ($view_type == "details") { ?>
-
+<?php if(isset($model_info)) $gotTaskLibrary=$model_info; ?>
     <!-- <div id="page-content" class="page-wrapper pb0 clearfix task-view-modal-body task-preview"> -->
     <div id="page-content" class="page-wrapper pb0 clearfix task-view-modal-body">
         <div class="row">
