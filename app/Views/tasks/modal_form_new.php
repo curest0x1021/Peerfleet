@@ -887,6 +887,7 @@
                                             <input
                                                 id="input_cost_item_quantity"
                                                 class="form-control"
+                                                value="0.0"
                                                 type="number"
                                                 style="border:1px solid lightgray;border-radius:5px"
                                             />
@@ -910,7 +911,7 @@
                                         <div class="form-group" >
                                             <label>Unit price:</label>
                                             <div class="input-group mb-3" style="border:1px solid lightgray;border-radius:5px">
-                                                <input id="input_cost_item_unit_price" type="number" />
+                                                <input value="0.00" class="form-control" id="input_cost_item_unit_price" type="number" />
                                                 <?php
                                                 $cost_item_currency_dropdown=array(
                                                 array("id"=>"AUD","text"=>"AUD"),
