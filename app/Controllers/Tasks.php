@@ -4654,8 +4654,8 @@ class Tasks extends Security_Controller {
             "serial_number"=>$this->request->getPost("serial_number"),
             "pms_scs_number"=>$this->request->getPost("pms_scs_number"),
             "cost_items"=>$this->request->getPost("cost_items"),
-            "start_date"=>DateTime::createFromFormat('d.m.Y',$this->request->getPost("start_date"))->format("Y-m-d"),
-            "deadline"=>DateTime::createFromFormat('d.m.Y',$this->request->getPost("deadline"))->format("Y-m-d"),
+            "start_date"=>date('d.m.Y', strtotime($this->request->getPost("start_date"))),
+            "deadline"=>date('d.m.Y', strtotime($this->request->getPost("deadline"))),
         );
         
         $save_id = $this->Tasks_model->save_gantt_task_date($data, $id);
