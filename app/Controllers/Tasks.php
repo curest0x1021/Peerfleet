@@ -642,6 +642,19 @@ class Tasks extends Security_Controller {
         return $this->template->view('tasks/modal_form_new',["project_id"=>$project_id,"allTasklibraries"=>$allTasklibraries,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     /*----*/
+    /*----*/
+    //new-modal-form
+    function modal_form_edit($task_id){
+        $allStatus=$this->Task_status_model->get_all()->getResultArray();
+        $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
+        $allMilestones=$this->Milestones_model->get_all()->getResultArray();
+        $allTasklibraries=$this->Task_libraries_model->get_all()->getResultArray();
+        $gotTask=$this->Tasks_model->get_one($task_id);
+        $gotProject=$this->Projects_model->get_one($gotTask->project_id);
+        // $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_library"=>$id,"deleted"=>0))->getResult();
+        return $this->template->view('tasks/modal_form_new',["gotTask"=>$gotTask,"gotProject"=>$gotProject,"project_id"=>$gotTask->project_id,"allTasklibraries"=>$allTasklibraries,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+    }
+    /*----*/
 
     private function get_removed_task_status_ids($project_id = 0) {
         if (!$project_id) {
