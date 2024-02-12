@@ -824,17 +824,19 @@
                                     <?php
                                     if(isset($gotTask)&&$gotTask->cost_items){
                                         $cost_items=json_decode($gotTask->cost_items);
-                                        foreach ($cost_items as $key=>$oneItem) {
-                                            # code...
-                                            echo "<tr><td>";
-                                            echo $oneItem->name;
-                                            echo "</td><td>";
-                                            echo number_format($oneItem->quantity,1,".","")." ( ".$oneItem->measurement_unit." ) X ".$oneItem->currency." ".number_format($oneItem->unit_price,2,".","")." ( ".$oneItem->quote_type." )";
-                                            echo "</td><td>";
-                                            echo $oneItem->currency." ".number_format(floatval($oneItem->quantity)*floatval($oneItem->unit_price), 2, '.', '');
-                                            echo "</td><td>";
-                                            echo '<button onClick="start_edit_cost_item('.$key.')" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button><button onClick="delete_item('.$key.')" type="button" class="btn btn-sm" ><i color="gray" data-feather="x-circle" class="" ></i></button>';
-                                            echo "</td></tr>";
+                                        if($cost_items!=""){
+                                            foreach ($cost_items as $key=>$oneItem) {
+                                                # code...
+                                                echo "<tr><td>";
+                                                echo $oneItem->name;
+                                                echo "</td><td>";
+                                                echo number_format($oneItem->quantity,1,".","")." ( ".$oneItem->measurement_unit." ) X ".$oneItem->currency." ".number_format($oneItem->unit_price,2,".","")." ( ".$oneItem->quote_type." )";
+                                                echo "</td><td>";
+                                                echo $oneItem->currency." ".number_format(floatval($oneItem->quantity)*floatval($oneItem->unit_price), 2, '.', '');
+                                                echo "</td><td>";
+                                                echo '<button onClick="start_edit_cost_item('.$key.')" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button><button onClick="delete_item('.$key.')" type="button" class="btn btn-sm" ><i color="gray" data-feather="x-circle" class="" ></i></button>';
+                                                echo "</td></tr>";
+                                            }
                                         }
                                     }
                                     ?>
