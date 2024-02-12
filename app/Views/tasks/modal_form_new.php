@@ -1672,7 +1672,7 @@
             myForm.append("pms_scs_number",pms_scs_number);
             myForm.append("checklist_items",checklist_items);
             myForm.append("dependencies",dependencies);
-            myForm.append("cost_items",cost_items);
+            myForm.append("cost_items",JSON.stringify(cost_items));
             myForm.append("project_id",project_id);
             for(var oneFile of dropzone.files){
                 myForm.append(oneFile.name,oneFile);
