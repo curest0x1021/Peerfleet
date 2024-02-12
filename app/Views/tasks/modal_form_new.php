@@ -19,7 +19,7 @@
                             <label for="title" class="col-md-4"><?php echo app_lang('title'); ?>:</label>
                             <div class="col-md-8" >
                                 <input
-                                id="title"
+                                id="title_of_task"
                                 name="title"
                                 value="<?php echo isset($gotTasklibrary) ?$gotTasklibrary->title:""; ?>"
                                 class="form-control",
@@ -175,6 +175,24 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="start_date" class=" col-md-3"><?php echo app_lang('start_date'); ?>:</label>
+                            <div class=" col-md-9">
+                                <?php
+                                echo form_input(array(
+                                    "id" => "start_date",
+                                    "name" => "start_date",
+                                    "autocomplete" => "off",
+                                    "value" =>  "",
+                                    "class" => "form-control",
+                                    "placeholder" => "YYYY-MM-DD",
+                                    "style"=>"border:1px solid lightgray",
+                                ));
+                                ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-4">
@@ -272,6 +290,26 @@
                                 "autocomplete" => "off"
                             ));
                             ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="deadline" class=" col-md-3"><?php echo app_lang('deadline'); ?></label>
+                            <div class=" col-md-9">
+                                <?php
+                                echo form_input(array(
+                                    "id" => "deadline",
+                                    "name" => "deadline",
+                                    "style"=>"border:1px solid lightgray",
+                                    "autocomplete" => "off",
+                                    "value" => "",
+                                    "class" => "form-control",
+                                    "placeholder" => "YYYY-MM-DD",
+                                    "data-rule-greaterThanOrEqual" => "#start_date",
+                                    "data-msg-greaterThanOrEqual" => app_lang("deadline_must_be_equal_or_greater_than_start_date")
+                                ));
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -1277,7 +1315,7 @@
         $("#category").on("change",function(e){
             
             $.ajax({
-                url: '<?php echo_uri("task_libraries/get_count"); ?>/'+e.target.value,
+                url: '<?php echo_uri("tasks/get_count_category"); ?>/'+e.target.value,
                 type: 'GET',
                 // dataType: 'json',
                 // data: {value: $(this).attr('data-value')},
@@ -1545,7 +1583,7 @@
         $("#btn-save-task-library").on("click",function(){
             var rise_csrf_token = $('[name="rise_csrf_token"]').val();
             var id=$('[name="id"]').val();
-            var title=$("#title")[0].value;
+            var title=$("#title_of_task")[0].value;
             var category=$("#category")[0].value;
             var dock_list_number=$("#dock_list_number")[0].value;
             var supplier=$("#supplier")[0].value;
@@ -1575,13 +1613,16 @@
             var type=$("#type")[0].value;
             var serial_number=$("#serial_number")[0].value;
             var pms_scs_number=$("#pms_scs_number")[0].value;
-            console.log(checklist_items)
-            if(!title) return;
+            var start_date=$("#start_date")[0].value;
+            var deadline=$("#deadline")[0].value;
+            var project_id=`<?php echo $project_id; ?>`
+            console.log(project_id);
             $.ajax({
-                url: '<?php echo get_uri("task_libraries/save_ajax") ?>',
+                url: '<?php echo get_uri("tasks/save_ajax"); ?>',
                 type: "POST",
                 data: {
-                    rise_csrf_token
+                    rise_csrf_token,
+                    project_id
                     ,id
                     ,title
                     ,category
@@ -1595,6 +1636,8 @@
                     ,description
                     ,location
                     ,specification
+                    ,start_date
+                    ,deadline
                     ,gas_free_certificate:gas_free_certificate_yes
                     ,painting_after_completion:painting_after_completion_yes
                     ,light:light_yes
@@ -1615,11 +1658,14 @@
                     ,pms_scs_number
                     ,checklist_items,
                     dependencies:JSON.stringify(dependencies),
-                    cost_items:JSON.stringify(cost_items)
+                    cost_items:JSON.stringify(cost_items),
                 },
                 success: function (response) {
+                    if(JSON.parse(response).success) window.location.reload();
                     // appLoader.hide();
-                    window.location='<?php echo get_uri('task_libraries/view/'); ?>'+JSON.parse(response).saved_id;
+                    // window.location='<?php 
+                    //echo get_uri('task_libraries/view/'); 
+                    ?>'+JSON.parse(response).saved_id;
                 }
             });
         });

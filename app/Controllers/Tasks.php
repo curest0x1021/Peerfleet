@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controllers;
-
+use DateTime;
 class Tasks extends Security_Controller {
 
     protected $Task_priority_model;
@@ -634,12 +634,12 @@ class Tasks extends Security_Controller {
     }
     /*----*/
     //new-modal-form
-    function modal_form_new(){
+    function modal_form_new($project_id){
         $allStatus=$this->Task_status_model->get_all()->getResultArray();
         $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
         $allMilestones=$this->Milestones_model->get_all()->getResultArray();
         $allTasklibraries=$this->Task_libraries_model->get_all()->getResultArray();
-        return $this->template->view('tasks/modal_form_new',["allTasklibraries"=>$allTasklibraries,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        return $this->template->view('tasks/modal_form_new',["project_id"=>$project_id,"allTasklibraries"=>$allTasklibraries,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     /*----*/
 
@@ -1157,7 +1157,6 @@ class Tasks extends Security_Controller {
                 );
                 $this->Tasks_model->save_reminder_date($recurring_task_data, $save_id);
             }
-
             // if created from ticket then save the task id
             if ($ticket_id) {
                 $data = array("task_id" => $save_id);
@@ -4599,31 +4598,66 @@ class Tasks extends Security_Controller {
                 return json_encode(array("success"=>true));
             }
             return json_encode(array("success"=>false));
-            // if (defined('PLUGIN_CUSTOM_STORAGE') && !$upload_to_local) {
-            //     try {
-            //         app_hooks()->do_action('app_hook_upload_file_to_temp', array(
-            //             "temp_file" => $temp_file,
-            //             "file_name" => $file_name,
-            //             "file_size" => $file_size
-            //         ));
-            //     } catch (\Exception $ex) {
-            //         log_message('error', '[ERROR] {exception}', ['exception' => $ex]);
-            //     }
-            // } else if (get_setting("enable_google_drive_api_to_upload_file") && get_setting("google_drive_authorized") && !$upload_to_local) {
-            //     $google = new Google();
-            //     $google->upload_file($temp_file, $file_name, "temp", "", $file_size);
-            // } else {
-            //     $temp_file_path = get_setting("temp_file_path");
-            //     $target_path = getcwd() . '/' . $temp_file_path;
-            //     if (!is_dir($target_path)) {
-            //         if (!mkdir($target_path, 0755, true)) {
-            //             die('Failed to create file folders.');
-            //         }
-            //     }
-            //     $target_file = $target_path . $file_name;
-            //     copy($temp_file, $target_file);
-            // }
+            
         }
     }
     /////////////////////
+    function save_ajax(){
+        $id = $this->request->getPost('id');
+        $project_id=$this->request->getPost("project_id");
+
+        $data = array(
+            "title" => $this->request->getPost('title'),
+            "category" => $this->request->getPost('category'),
+            "dock_list_number" => $this->request->getPost('dock_list_number'),
+            "assigned_to" => $this->request->getPost('assigned_to'),
+            "collaborators" => $this->request->getPost('collaborators'),
+            "status_id" => $this->request->getPost('status_id'),
+            "project_id" => $this->request->getPost('project_id'),
+            "priority_id" => $this->request->getPost('priority_id'),
+            "milestone_id" => $this->request->getPost('milestone_id'),
+            "supplier" => $this->request->getPost('supplier'),
+            "description" => $this->request->getPost('description'),
+            "location" => $this->request->getPost('location'),
+            "specification" => $this->request->getPost('specification'),
+            "checklists" => $this->request->getPost('checklists')?$this->request->getPost('checklists'):"",
+            "dependencies" => $this->request->getPost('dependencies')?$this->request->getPost('dependencies'):"",
+            "gas_free_certificate"=>$this->request->getPost("gas_free_certificate"),
+            "painting_after_completion"=>$this->request->getPost("painting_after_completion"),
+            "light"=>$this->request->getPost("light"),
+            "parts_on_board"=>$this->request->getPost("parts_on_board"),
+            "ventilation"=>$this->request->getPost("ventilation"),
+            "transport_to_yard_workshop"=>$this->request->getPost("transport_to_yard_workshop"),
+            "crane_assistance"=>$this->request->getPost("crane_assistance"),
+            "transport_outside_yard"=>$this->request->getPost("transport_outside_yard"),
+            "cleaning_before"=>$this->request->getPost("cleaning_before"),
+            "material_yards_supply"=>$this->request->getPost("material_yards_supply"),
+            "cleaning_after"=>$this->request->getPost("cleaning_after"),
+            // "material_owners_supply"=>$this->request->getPost("material_owners_supply"),
+            "work_permit"=>$this->request->getPost("work_permit"),
+            "risk_assessment"=>$this->request->getPost("risk_assessment"),
+            // "marker"=>$this->request->getPost("maker"),
+            "type"=>$this->request->getPost("type"),
+            "serial_number"=>$this->request->getPost("serial_number"),
+            "pms_scs_number"=>$this->request->getPost("pms_scs_number"),
+            "reference_drawing"=>$this->request->getPost("cost_items"),
+            "start_date"=>DateTime::createFromFormat('d.m.Y',$this->request->getPost("start_date"))->format("Y-m-d"),
+            "deadline"=>DateTime::createFromFormat('d.m.Y',$this->request->getPost("deadline"))->format("Y-m-d"),
+        );
+        
+        $save_id = $this->Tasks_model->save_gantt_task_date($data, $id);
+        // $checklist_items=$this->request->getPost("checklist_items");
+        // if($checklist_items)foreach($checklist_items as $oneItem){
+        //     $newItem=array(
+        //         "title"=>$oneItem,
+        //         "task_library"=>$save_id
+        //     );
+        //     $this->Task_library_checklist_items_model->ci_save($newItem);
+        // }
+        // return redirect()->to("/task_libraries"."/view"."/".$save_id);
+        return json_encode(array("success"=>true,'saved_id'=>$save_id));
+    }
+    function get_count_category($category){
+        echo $this->Tasks_model->getCount("category",$category);
+    }
 }

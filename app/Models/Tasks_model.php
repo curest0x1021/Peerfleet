@@ -1063,4 +1063,8 @@ class Tasks_model extends Crud_model
             return 1000; //could be any positive value
         }
     }
+    public function getCount($columnName, $specialValue)
+    {
+        return $this->where($columnName, $specialValue)->countAllResults();
+    }
 }
