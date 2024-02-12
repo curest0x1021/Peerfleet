@@ -4646,10 +4646,8 @@ class Tasks extends Security_Controller {
             "cleaning_before"=>$this->request->getPost("cleaning_before"),
             "material_yards_supply"=>$this->request->getPost("material_yards_supply"),
             "cleaning_after"=>$this->request->getPost("cleaning_after"),
-            // "material_owners_supply"=>$this->request->getPost("material_owners_supply"),
             "work_permit"=>$this->request->getPost("work_permit"),
             "risk_assessment"=>$this->request->getPost("risk_assessment"),
-            // "marker"=>$this->request->getPost("maker"),
             "type"=>$this->request->getPost("type"),
             "serial_number"=>$this->request->getPost("serial_number"),
             "pms_scs_number"=>$this->request->getPost("pms_scs_number"),
@@ -4658,20 +4656,7 @@ class Tasks extends Security_Controller {
             "deadline"=>date('d.m.Y', strtotime($this->request->getPost("deadline"))),
         );
         $save_id = $this->Tasks_model->save_gantt_task_date($data, $id);
-        // $checklist_items=$this->request->getPost("checklist_items");
-        // if($checklist_items)foreach($checklist_items as $oneItem){
-        //     $newItem=array(
-        //         "title"=>$oneItem,
-        //         "task_library"=>$save_id
-        //     );
-        //     $this->Task_library_checklist_items_model->ci_save($newItem);
-        // }
-        // return redirect()->to("/task_libraries"."/view"."/".$save_id);
-        // $filenames=[];
-        // $allFiles=isset($_FILES['files']) ? $_FILES['files'] : array();
-        // foreach($allFiles as $oneFile){
-        //     $filenames[]=$oneFile["name"];
-        // }
+        
         $files_data=array();
         $now = get_current_utc_time();
         if (!empty($_FILES)) {
