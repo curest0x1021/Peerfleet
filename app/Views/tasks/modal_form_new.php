@@ -1677,7 +1677,7 @@
             for(var oneFile of dropzone.files){
                 myForm.append(oneFile.name,oneFile);
             }
-            
+            console.log(start_date,deadline)
             
             $.ajax({
                 url: '<?php echo get_uri("tasks/save_ajax"); ?>',
@@ -1686,8 +1686,8 @@
                 processData: false, // Prevent jQuery from automatically processing the data
                 contentType: false, 
                 success: function (response) {
-                    // console.log(myForm,response)
-                    if(JSON.parse(response).success) window.location.reload();
+                    console.log(response)
+                    // if(JSON.parse(response).success) window.location.reload();
                     // appLoader.hide();
                     // window.location='<?php 
                     //echo get_uri('task_libraries/view/'); 
