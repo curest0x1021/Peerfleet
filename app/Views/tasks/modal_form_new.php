@@ -1,8 +1,8 @@
 <div id="tasks-dropzone" class="post-dropzone">
     <div class="modal-body clearfix">
         <?php echo form_open(get_uri("task_libraries/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
-        <?php if(isset($gotTasklibrary))
-            echo '<input hidden name="id" value="'.$gotTasklibrary->id.'" />';
+        <?php if(isset($gotTask))
+            echo '<input hidden name="id" value="'.$gotTask->id.'" />';
         ?>
         <div class="card-header d-flex justify-content-between">
             <h4><?php 
@@ -21,7 +21,7 @@
                                 <input
                                 id="title_of_task"
                                 name="title"
-                                value="<?php echo isset($gotTasklibrary) ?$gotTasklibrary->title:""; ?>"
+                                value="<?php echo isset($gotTask) ?$gotTask->title:""; ?>"
                                 class="form-control",
                                 style="border:1px solid lightgray;"
                                 placeholder="<?php echo app_lang('title')?>"
@@ -50,7 +50,7 @@
                             echo form_input(array(
                                 "id" => "category_input",
                                 "name" => "category_input",
-                                "value" => isset($gotTasklibrary)?$gotTasklibrary->category:"",
+                                "value" => isset($gotTask)?$gotTask->category:"",
                                 "class" => "form-control",
                                 "placeholder" => app_lang('category'),
                                 "data-rule-required" => true,
@@ -67,24 +67,23 @@
                             <label for="dock_list_number" class="col-md-4"><?php echo app_lang('dock_list_number'); ?>:</label>
                             <div class="col-md-8" >
                                 <?php
-                                $dock_list_number_now="";
-                                if(isset($gotTasklibrary)){
-                                    $count=1;
-                                    if(!$gotTasklibrary->category){
-                                        $gotTasklibrary["category"]="Others";
-                                    }
-                                    foreach($allTasklibraries as $oneTaskLibrary){
-                                        if($oneTaskLibrary['title']==$gotTasklibrary->title) break;
-                                        if($oneTaskLibrary['category']==$gotTasklibrary->category) $count++;
-                                    }
-                                    $dock_list_number_now=strtoupper($gotTasklibrary->category[0]).sprintf("%02d",$count);
-                                }
+                                // $dock_list_number_now="";
+                                // if(isset($gotTask)){
+                                //     $count=1;
+                                //     if(!$gotTask->category){
+                                //         $gotTask["category"]="Others";
+                                //     }
+                                //     foreach($allTasklibraries as $oneTask){
+                                //         if($oneTask['title']==$gotTask->title) break;
+                                //         if($oneTask['category']==$gotTask->category) $count++;
+                                //     }
+                                //     $dock_list_number_now=strtoupper($gotTask->category[0]).sprintf("%02d",$count);
+                                // }
                                 
                                 echo form_input(array(
                                     "id" => "dock_list_number",
                                     "name" => "dock_list_number",
-                                    // "value" => isset($gotTasklibrary)?$gotTasklibrary->dock_list_number:"",
-                                    "value" => $dock_list_number_now,
+                                    "value" => isset($gotTask)?$gotTask->dock_list_number:"",
                                     "class" => "form-control",
                                     "maxlength" => 15,
                                     "readonly"=>true,
@@ -121,7 +120,7 @@
                                 echo form_input(array(
                                     "id" => "supplier",
                                     "name" => "supplier",
-                                    "value" =>isset($gotTasklibrary)&& $gotTasklibrary->supplier?$gotTasklibrary->supplier:$suppliers_dropdown[0]['id'],
+                                    "value" =>isset($gotTask)&& $gotTask->supplier?$gotTask->supplier:$suppliers_dropdown[0]['id'],
                                     "class" => "form-control",
                                     "style"=>"border:1px solid lightgray",
                                     "placeholder" => app_lang('supplier'),
@@ -143,7 +142,7 @@
                                 echo form_input(array(
                                     "id" => "status_id",
                                     "name" => "status_id",
-                                    "value" => isset($gotTasklibrary)&&$gotTasklibrary->status_id?$gotTasklibrary->status_id:$status_dropdown[0]['id'],
+                                    "value" => isset($gotTask)&&$gotTask->status_id?$gotTask->status_id:$status_dropdown[0]['id'],
                                     "class" => "form-control",
                                     "style"=>"border:1px solid lightgray",
                                     "autocomplete" => "off"
@@ -164,7 +163,7 @@
                                 echo form_input(array(
                                     "id" => "priority_id",
                                     "name" => "priority_id",
-                                    "value" => isset($gotTasklibrary)&&$gotTasklibrary->priority_id?$gotTasklibrary->priority_id:$priority_dropdown[0]['id'],
+                                    "value" => isset($gotTask)&&$gotTask->priority_id?$gotTask->priority_id:$priority_dropdown[0]['id'],
                                     "class" => "form-control",
                                     "maxlength" => 15,
                                     "style"=>"border:1px solid lightgray",
@@ -184,9 +183,9 @@
                                     "id" => "start_date",
                                     "name" => "start_date",
                                     "autocomplete" => "off",
-                                    "value" =>  "",
+                                    "value" => isset($gotTask)&&$gotTask->start_date?date('d.m.Y', strtotime($gotTask->start_date)):"",
                                     "class" => "form-control",
-                                    "placeholder" => "YYYY-MM-DD",
+                                    "placeholder" => "DD.MM.YYYY",
                                     "style"=>"border:1px solid lightgray",
                                 ));
                                 ?>
@@ -209,7 +208,7 @@
                                 echo form_input(array(
                                     "id" => "milestone_id",
                                     "name" => "milestone_id",
-                                    "value" => isset($gotTasklibrary)&&$gotTasklibrary->milestone_id?$gotTasklibrary->milestone_id:$milestone_dropdown[0]['id'],
+                                    "value" => isset($gotTask)&&$gotTask->milestone_id?$gotTask->milestone_id:$milestone_dropdown[0]['id'],
                                     "class" => "form-control",
                                     "style"=>"border:1px solid lightgray",
                                     "placeholder" => app_lang('milestone'),
@@ -234,7 +233,7 @@
                                 echo form_input(array(
                                     "id" => "assigned_to",
                                     "name" => "assigned_to",
-                                    "value" => isset($gotTasklibrary)&&$gotTasklibrary->assigned_to?$gotTasklibrary->assigned_to:"-",
+                                    "value" => isset($gotTask)&&$gotTask->assigned_to?$gotTask->assigned_to:"-",
                                     "class" => "form-control",
                                     // "required"=>true,
                                     "style"=>"border:1px solid lightgray",
@@ -280,7 +279,7 @@
                             echo form_input(array(
                                 "id" => "collaborators",
                                 "name" => "collaborators",
-                                "value" => isset($gotTasklibrary)&&$gotTasklibrary->collaborators?$gotTasklibrary->collaborators:"-",
+                                "value" => isset($gotTask)&&$gotTask->collaborators?$gotTask->collaborators:"-",
                                 "class" => "form-control",
                                 "required"=>true,
                                 "style"=>"border:1px solid lightgray",
@@ -303,9 +302,9 @@
                                     "name" => "deadline",
                                     "style"=>"border:1px solid lightgray",
                                     "autocomplete" => "off",
-                                    "value" => "",
+                                    "value" => isset($gotTask)&&$gotTask->deadline?date('d.m.Y', strtotime($gotTask->deadline)):"",
                                     "class" => "form-control",
-                                    "placeholder" => "YYYY-MM-DD",
+                                    "placeholder" => "DD.MM.YYYY",
                                     "data-rule-greaterThanOrEqual" => "#start_date",
                                     "data-msg-greaterThanOrEqual" => app_lang("deadline_must_be_equal_or_greater_than_start_date")
                                 ));
@@ -327,7 +326,7 @@
                             echo form_textarea(array(
                                 "id" => "description",
                                 "name" => "description",
-                                "value" => isset($gotTasklibrary)&&$gotTasklibrary->description?$gotTasklibrary->description:"",
+                                "value" => isset($gotTask)&&$gotTask->description?$gotTask->description:"",
                                 "class" => "form-control",
                                 "placeholder" => app_lang('description'),
                                 "data-rich-text-editor" => true,
@@ -350,7 +349,7 @@
                             echo form_textarea(array(
                                 "id" => "location",
                                 "name" => "location",
-                                "value" => isset($gotTasklibrary)&&$gotTasklibrary->location?$gotTasklibrary->location:"",
+                                "value" => isset($gotTask)&&$gotTask->location?$gotTask->location:"",
                                 "class" => "form-control",
                                 "placeholder" => app_lang('location'),
                                 "style"=>"border:1px solid lightgray;border-radius:5px",
@@ -375,7 +374,7 @@
                             echo form_textarea(array(
                                 "id" => "specification",
                                 "name" => "specification",
-                                "value" => isset($gotTasklibrary)&&$gotTasklibrary->specification?$gotTasklibrary->specification:"",
+                                "value" => isset($gotTask)&&$gotTask->specification?$gotTask->specification:"",
                                 "class" => "form-control",
                                 "style"=>"border:1px solid lightgray;border-radius:5px",
                                 "placeholder" => app_lang('specification_placeholder'),
@@ -406,7 +405,7 @@
                                             "id" => "gas_free_certificate_yes",
                                             "name" => "gas_free_certificate",
                                             "class" => "form-check-input",
-                                        ), "1", true);
+                                        ), "1", isset($gotTask)&&isset($gotTask->gas_free_certificate)&&$gotTask->gas_free_certificate==1?true:false);
                                         ?>
                                         <label for="gas_free_certificate_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -414,7 +413,7 @@
                                             "id" => "gas_free_certificate_no",
                                             "name" => "gas_free_certificate",
                                             "class" => "form-check-input",
-                                        ), "0", false);
+                                        ), "0", isset($gotTask)&&isset($gotTask->gas_free_certificate)&&$gotTask->gas_free_certificate==0?true:false);
                                         ?>
                                         <label for="gas_free_certificate_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
@@ -735,7 +734,7 @@
                                 echo form_input(array(
                                     "id" => "maker",
                                     "name" => "maker",
-                                    "value" => "",
+                                    "value" => isset($gotTask)&&$gotTask->maker?$gtTask->maker:"",
                                     "class" => "form-control",
                                     "maxlength" => 30,
                                     "style"=>"border:1px solid lightgray",
@@ -754,7 +753,7 @@
                                 echo form_input(array(
                                     "id" => "type",
                                     "name" => "type",
-                                    "value" => "",
+                                    "value" => isset($gotTask)&&$gotTask->type?$gotTask->type:"",
                                     "class" => "form-control",
                                     "maxlength" => 30,
                                     "style"=>"border:1px solid lightgray",
@@ -773,7 +772,7 @@
                                 echo form_input(array(
                                     "id" => "serial_number",
                                     "name" => "serial_number",
-                                    "value" => "",
+                                    "value" => isset($gotTask)&&$gotTask->serial_number?$gotTask->serial_number:"",
                                     "class" => "form-control",
                                     "maxlength" => 30,
                                     "style"=>"border:1px solid lightgray",
@@ -792,7 +791,7 @@
                                 echo form_input(array(
                                     "id" => "pms_scs_number",
                                     "name" => "pms_scs_number",
-                                    "value" => "",
+                                    "value" => isset($gotTask)&&$gotTask->pms_scs_number?$gotTask->pms_scs_number:"",
                                     "class" => "form-control",
                                     "maxlength" => 30,
                                     "style"=>"border:1px solid lightgray",
@@ -818,13 +817,13 @@
                                     <td>Cost item name</td>
                                     <td>UNIT PRICE AND QUANTITY</td>
                                     <td>QUOTE</td>
-                                    <td ><button type="button" id="btn-add-new-quote" class="btn btn-default btn-sm" ><i data-feather="plus" class ></i></button></td>
+                                    <td ><button type="button" id="btn-add-new-quote-start" class="btn btn-default btn-sm" ><i data-feather="plus" class ></i></button></td>
                                 </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    if(isset($gotTasklibrary)&&$gotTasklibrary->reference_drawing){
-                                        $cost_items=json_decode($gotTasklibrary->reference_drawing);
+                                    if(isset($gotTask)&&$gotTask->reference_drawing){
+                                        $cost_items=json_decode($gotTask->reference_drawing);
                                         foreach ($cost_items as $key=>$oneItem) {
                                             # code...
                                             echo "<tr><td>";
@@ -841,7 +840,7 @@
                                     ?>
                                 </tbody>
                             </table>
-                            <div id="insert-cost-item-panel" style="margin:5px;" hidden>
+                            <div id="insert-cost-item-panel-new" style="margin:5px;" hidden>
                                 <div style="min-height:5vh" ></div>
                                 <input hidden id="editing_cost_item" value="" />
                                 <div class="row" >
@@ -1210,7 +1209,7 @@
                                 </div>
                                 <?php
                                 $gotDependencies=array();
-                                if(isset($gotTasklibrary)) $gotDependencies=json_decode($gotTasklibrary->dependencies,true);
+                                if(isset($gotTask)) $gotDependencies=json_decode($gotTask->dependencies,true);
                                 $blockingDependencies=array();
                                 $blockedDependencies=array();
                                 if(is_array($gotDependencies)) foreach($gotDependencies as $oneDependency){
@@ -1260,12 +1259,12 @@
 
                                         <?php
                                         $dependency_dropdown=array();
-                                        foreach ($allTasklibraries as $oneLibrary) {
-                                            $dependency_dropdown[]=array(
-                                                "id"=>$oneLibrary['id'],
-                                                "text"=>$oneLibrary['title']
-                                            );
-                                        }
+                                        // foreach ($allTasklibraries as $oneLibrary) {
+                                        //     $dependency_dropdown[]=array(
+                                        //         "id"=>$oneLibrary['id'],
+                                        //         "text"=>$oneLibrary['title']
+                                        //     );
+                                        // }
                                         echo form_input(array(
                                             "id" => "dependency_task",
                                             "name" => "dependency_task",
@@ -1535,9 +1534,9 @@
 
 
         });
-        $("#btn-add-new-quote").on("click",function(){
-            $("#insert-cost-item-panel").prop("hidden",false);
-            $("#btn-add-new-quote").prop("disabled", true);
+        $("#btn-add-new-quote-start").on("click",function(){
+            $("#insert-cost-item-panel-new").prop("hidden",false);
+            $("#btn-add-new-quote-start").prop("disabled", true);
 
         })
         $("#insert-add-cost-item").on("click",function(){
@@ -1556,8 +1555,8 @@
             <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button>
             <button type="button" onClick="delete_item(${cost_items.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="" ></i></button>
             `;
-            $("#btn-add-new-quote").prop("disabled", false);
-            $("#insert-cost-item-panel").prop("hidden",false);
+            $("#btn-add-new-quote-start").prop("disabled", false);
+            $("#insert-cost-item-panel-new").prop("hidden",false);
             if($("#editing_cost_item")[0].value=="")
                 cost_items.push({
                     name:$("#cost_item_name")[0].value,
@@ -1581,8 +1580,8 @@
             }
         });
         $("#cancel-add-cost-item").on("click",function(){
-            $("#insert-cost-item-panel").prop("hidden",true);
-            $("#btn-add-new-quote").prop("disabled", false);
+            $("#insert-cost-item-panel-new").prop("hidden",true);
+            $("#btn-add-new-quote-start").prop("disabled", false);
         })
         
         $("#add-checklist-item").on("click",function(){
@@ -1790,7 +1789,7 @@
         cell2.innerHTML = $("#quote_quote")[0].value;
         cell3.innerHTML = "";
         $("#btn-save-new-quote")[0].closest("tr").remove();
-        $("#btn-add-new-quote").prop("disabled", false);
+        $("#btn-add-new-quote-start").prop("disabled", false);
     }
     function delete_item(index){
         cost_items.splice(index,1);
@@ -1798,7 +1797,7 @@
     }
     function start_edit_cost_item(index){
         $("#editing_cost_item")[0].value=index;
-        $("#btn-add-new-quote")[0].click();
+        $("#btn-add-new-quote-start")[0].click();
         $("#cost_item_name")[0].value=cost_items[index].name;
         $("#cost_item_quantity")[0].value=cost_items[index].quantity;
         $("#cost_item_measurement_unit")[0].value=cost_items[index].measurement_unit;
@@ -1807,12 +1806,12 @@
         $("#cost_item_currency_select")[0].value=cost_items[index].currency;
     }
     <?php
-        if(isset($gotTasklibrary)&&$gotTasklibrary->dependencies)
-        echo 'dependencies=JSON.parse(`'.$gotTasklibrary->dependencies.'`);';
+        if(isset($gotTask)&&$gotTask->dependencies)
+        echo 'dependencies=JSON.parse(`'.$gotTask->dependencies.'`);';
     ?>
     <?php
-        if(isset($gotTasklibrary)&&$gotTasklibrary->reference_drawing)
-        echo 'cost_items=JSON.parse(`'.$gotTasklibrary->reference_drawing.'`);';
+        if(isset($gotTask)&&$gotTask->reference_drawing)
+        echo 'cost_items=JSON.parse(`'.$gotTask->reference_drawing.'`);';
     ?>
     
 </script>
