@@ -1,9 +1,7 @@
 <div id="tasks-dropzone" class="post-dropzone">
     <div class="modal-body clearfix">
         <?php echo form_open(get_uri("task_libraries/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
-        <?php if(isset($gotTask))
-            echo '<input hidden name="id" value="'.$gotTask->id.'" />';
-        ?>
+        <input hidden name="id" value="<?php echo isset($gotTask)&&$gotTask->id; ?>" />
         <div class="card-header d-flex justify-content-between">
             <h4><?php 
             // echo isset($gotTasklibrary)?"Edit Task" :"Add Task"; 
