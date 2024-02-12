@@ -4697,7 +4697,7 @@ class Tasks extends Security_Controller {
                         "created_by" => $this->login_user->id,
                         "created_at" => $now,
                         "project_id" => $this->request->getPost('project_id'),
-                        "task_id" => $this->request->getPost('id')
+                        "task_id" => $save_id
                     );
 
                     $comment_data = clean_data($comment_data);
