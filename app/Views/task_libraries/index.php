@@ -897,185 +897,197 @@
                                                     <div class="input-group mb-3" style="border:1px solid lightgray;border-radius:5px">
                                                         <!-- <input readonly type="text" id="cost_item_currency_symbol" class="form-control" value="$"> -->
                                                         <input id="cost_item_unit_price" type="text" class="form-control" value="0.00">
-                                                        <select id="cost_item_currency"  class="form-control">
-                                                            <option>AUD</option>
-                                                            <option>GBP</option>
-                                                            <option>EUR</option>
-                                                            <option>JPY</option>
-                                                            <option>CHF</option>
-                                                            <option>USD</option>
-                                                            <option>AFN</option>
-                                                            <option>ALL</option>
-                                                            <option>DZD</option>
-                                                            <option>AOA</option>
-                                                            <option>ARS</option>
-                                                            <option>AMD</option>
-                                                            <option>AWG</option>
-                                                            <option>AUD</option>
-                                                            <option>ATS (EURO)</option>
-                                                            <option>BEF (EURO)</option>
-                                                            <option>AZN</option>
-                                                            <option>BSD</option>
-                                                            <option>BHD</option>
-                                                            <option>BDT</option>
-                                                            <option>BBD</option>
-                                                            <option>BYR</option>
-                                                            <option>BZD</option>
-                                                            <option>BMD</option>
-                                                            <option>BTN</option>
-                                                            <option>BOB</option>
-                                                            <option>BAM</option>
-                                                            <option>BWP</option>
-                                                            <option>BRL</option>
-                                                            <option>GBP</option>
-                                                            <option>BND</option>
-                                                            <option>BGN</option>
-                                                            <option>BIF</option>
-                                                            <option>XOF</option>
-                                                            <option>XAF</option>
-                                                            <option>XPF</option>
-                                                            <option>KHR</option>
-                                                            <option>CAD</option>
-                                                            <option>CVE</option>
-                                                            <option>KYD</option>
-                                                            <option>CLP</option>
-                                                            <option>CNY</option>
-                                                            <option>COP</option>
-                                                            <option>KMF</option>
-                                                            <option>CDF</option>
-                                                            <option>CRC</option>
-                                                            <option>HRK</option>
-                                                            <option>CUC</option>
-                                                            <option>CUP</option>
-                                                            <option>CYP (EURO)</option>
-                                                            <option>CZK</option>
-                                                            <option>DKK</option>
-                                                            <option>DJF</option>
-                                                            <option>DOP</option>
-                                                            <option>XCD</option>
-                                                            <option>EGP</option>
-                                                            <option>SVC</option>
-                                                            <option>EEK (EURO)</option>
-                                                            <option>ETB</option>
-                                                            <option>EUR</option>
-                                                            <option>FKP</option>
-                                                            <option>FIM (EURO)</option>
-                                                            <option>FJD</option>
-                                                            <option>GMD</option>
-                                                            <option>GEL</option>
-                                                            <option>DMK (EURO)</option>
-                                                            <option>GHS</option>
-                                                            <option>GIP</option>
-                                                            <option>GRD (EURO)</option>
-                                                            <option>GTQ</option>
-                                                            <option>GNF</option>
-                                                            <option>GYD</option>
-                                                            <option>HTG</option>
-                                                            <option>HNL</option>
-                                                            <option>HKD</option>
-                                                            <option>HUF</option>
-                                                            <option>ISK</option>
-                                                            <option>INR</option>
-                                                            <option>IDR</option>
-                                                            <option>IRR</option>
-                                                            <option>IQD</option>
-                                                            <option>IED (EURO)</option>
-                                                            <option>ILS</option>
-                                                            <option>ITL (EURO)</option>
-                                                            <option>JMD</option>
-                                                            <option>JPY</option>
-                                                            <option>JOD</option>
-                                                            <option>KZT</option>
-                                                            <option>KES</option>
-                                                            <option>KWD</option>
-                                                            <option>KGS</option>
-                                                            <option>LAK</option>
-                                                            <option>LVL (EURO)</option>
-                                                            <option>LBP</option>
-                                                            <option>LSL</option>
-                                                            <option>LRD</option>
-                                                            <option>LYD</option>
-                                                            <option>LTL (EURO)</option>
-                                                            <option>LUF (EURO)</option>
-                                                            <option>MOP</option>
-                                                            <option>MKD</option>
-                                                            <option>MGA</option>
-                                                            <option>MWK</option>
-                                                            <option>MYR</option>
-                                                            <option>MVR</option>
-                                                            <option>MTL (EURO)</option>
-                                                            <option>MRO</option>
-                                                            <option>MUR</option>
-                                                            <option>MXN</option>
-                                                            <option>MDL</option>
-                                                            <option>MNT</option>
-                                                            <option>MAD</option>
-                                                            <option>MZN</option>
-                                                            <option>MMK</option>
-                                                            <option>ANG</option>
-                                                            <option>NAD</option>
-                                                            <option>NPR</option>
-                                                            <option>NLG (EURO)</option>
-                                                            <option>NZD</option>
-                                                            <option>NIO</option>
-                                                            <option>NGN</option>
-                                                            <option>KPW</option>
-                                                            <option>NOK</option>
-                                                            <option>OMR</option>
-                                                            <option>PKR</option>
-                                                            <option>PAB</option>
-                                                            <option>PGK</option>
-                                                            <option>PYG</option>
-                                                            <option>PEN</option>
-                                                            <option>PHP</option>
-                                                            <option>PLN</option>
-                                                            <option>PTE (EURO)</option>
-                                                            <option>QAR</option>
-                                                            <option>RON</option>
-                                                            <option>RUB</option>
-                                                            <option>RWF</option>
-                                                            <option>WST</option>
-                                                            <option>STD</option>
-                                                            <option>SAR</option>
-                                                            <option>RSD</option>
-                                                            <option>SCR</option>
-                                                            <option>SLL</option>
-                                                            <option>SGD</option>
-                                                            <option>SKK (EURO)</option>
-                                                            <option>SIT (EURO)</option>
-                                                            <option>SBD</option>
-                                                            <option>SOS</option>
-                                                            <option>ZAR</option>
-                                                            <option>KRW</option>
-                                                            <option>ESP (EURO)</option>
-                                                            <option>LKR</option>
-                                                            <option>SHP</option>
-                                                            <option>SDG</option>
-                                                            <option>SRD</option>
-                                                            <option>SZL</option>
-                                                            <option>SEK</option>
-                                                            <option>CHF</option>
-                                                            <option>SYP</option>
-                                                            <option>TWD</option>
-                                                            <option>TZS</option>
-                                                            <option>THB</option>
-                                                            <option>TOP</option>
-                                                            <option>TTD</option>
-                                                            <option>TND</option>
-                                                            <option>TRY</option>
-                                                            <option>TMM</option>
-                                                            <option>USD</option>
-                                                            <option>UGX</option>
-                                                            <option>UAH</option>
-                                                            <option>UYU</option>
-                                                            <option>AED</option>
-                                                            <option>VUV</option>
-                                                            <option>VEB</option>
-                                                            <option>VND</option>
-                                                            <option>YER</option>
-                                                            <option>ZMK</option>
-                                                            <option>ZWD</option>
-                                                        </select>
+                                                        <?php
+                                                        $cost_item_currency_dropdown=array(array("id"=>"AUD","text"=>"AUD"),
+                                                        array("id"=>"GBP","text"=>"GBP"),
+                                                        array("id"=>"EUR","text"=>"EUR"),
+                                                        array("id"=>"JPY","text"=>"JPY"),
+                                                        array("id"=>"CHF","text"=>"CHF"),
+                                                        array("id"=>"USD","text"=>"USD"),
+                                                        array("id"=>"AFN","text"=>"AFN"),
+                                                        array("id"=>"ALL","text"=>"ALL"),
+                                                        array("id"=>"DZD","text"=>"DZD"),
+                                                        array("id"=>"AOA","text"=>"AOA"),
+                                                        array("id"=>"ARS","text"=>"ARS"),
+                                                        array("id"=>"AMD","text"=>"AMD"),
+                                                        array("id"=>"AWG","text"=>"AWG"),
+                                                        array("id"=>"AUD","text"=>"AUD"),
+                                                        array("id"=>"ATS (EURO)","text"=>"ATS (EURO)"),
+                                                        array("id"=>"BEF (EURO)","text"=>"BEF (EURO)"),
+                                                        array("id"=>"AZN","text"=>"AZN"),
+                                                        array("id"=>"BSD","text"=>"BSD"),
+                                                        array("id"=>"BHD","text"=>"BHD"),
+                                                        array("id"=>"BDT","text"=>"BDT"),
+                                                        array("id"=>"BBD","text"=>"BBD"),
+                                                        array("id"=>"BYR","text"=>"BYR"),
+                                                        array("id"=>"BZD","text"=>"BZD"),
+                                                        array("id"=>"BMD","text"=>"BMD"),
+                                                        array("id"=>"BTN","text"=>"BTN"),
+                                                        array("id"=>"BOB","text"=>"BOB"),
+                                                        array("id"=>"BAM","text"=>"BAM"),
+                                                        array("id"=>"BWP","text"=>"BWP"),
+                                                        array("id"=>"BRL","text"=>"BRL"),
+                                                        array("id"=>"GBP","text"=>"GBP"),
+                                                        array("id"=>"BND","text"=>"BND"),
+                                                        array("id"=>"BGN","text"=>"BGN"),
+                                                        array("id"=>"BIF","text"=>"BIF"),
+                                                        array("id"=>"XOF","text"=>"XOF"),
+                                                        array("id"=>"XAF","text"=>"XAF"),
+                                                        array("id"=>"XPF","text"=>"XPF"),
+                                                        array("id"=>"KHR","text"=>"KHR"),
+                                                        array("id"=>"CAD","text"=>"CAD"),
+                                                        array("id"=>"CVE","text"=>"CVE"),
+                                                        array("id"=>"KYD","text"=>"KYD"),
+                                                        array("id"=>"CLP","text"=>"CLP"),
+                                                        array("id"=>"CNY","text"=>"CNY"),
+                                                        array("id"=>"COP","text"=>"COP"),
+                                                        array("id"=>"KMF","text"=>"KMF"),
+                                                        array("id"=>"CDF","text"=>"CDF"),
+                                                        array("id"=>"CRC","text"=>"CRC"),
+                                                        array("id"=>"HRK","text"=>"HRK"),
+                                                        array("id"=>"CUC","text"=>"CUC"),
+                                                        array("id"=>"CUP","text"=>"CUP"),
+                                                        array("id"=>"CYP (EURO)","text"=>"CYP (EURO)"),
+                                                        array("id"=>"CZK","text"=>"CZK"),
+                                                        array("id"=>"DKK","text"=>"DKK"),
+                                                        array("id"=>"DJF","text"=>"DJF"),
+                                                        array("id"=>"DOP","text"=>"DOP"),
+                                                        array("id"=>"XCD","text"=>"XCD"),
+                                                        array("id"=>"EGP","text"=>"EGP"),
+                                                        array("id"=>"SVC","text"=>"SVC"),
+                                                        array("id"=>"EEK (EURO)","text"=>"EEK (EURO)"),
+                                                        array("id"=>"ETB","text"=>"ETB"),
+                                                        array("id"=>"EUR","text"=>"EUR"),
+                                                        array("id"=>"FKP","text"=>"FKP"),
+                                                        array("id"=>"FIM (EURO)","text"=>"FIM (EURO)"),
+                                                        array("id"=>"FJD","text"=>"FJD"),
+                                                        array("id"=>"GMD","text"=>"GMD"),
+                                                        array("id"=>"GEL","text"=>"GEL"),
+                                                        array("id"=>"DMK (EURO)","text"=>"DMK (EURO)"),
+                                                        array("id"=>"GHS","text"=>"GHS"),
+                                                        array("id"=>"GIP","text"=>"GIP"),
+                                                        array("id"=>"GRD (EURO)","text"=>"GRD (EURO)"),
+                                                        array("id"=>"GTQ","text"=>"GTQ"),
+                                                        array("id"=>"GNF","text"=>"GNF"),
+                                                        array("id"=>"GYD","text"=>"GYD"),
+                                                        array("id"=>"HTG","text"=>"HTG"),
+                                                        array("id"=>"HNL","text"=>"HNL"),
+                                                        array("id"=>"HKD","text"=>"HKD"),
+                                                        array("id"=>"HUF","text"=>"HUF"),
+                                                        array("id"=>"ISK","text"=>"ISK"),
+                                                        array("id"=>"INR","text"=>"INR"),
+                                                        array("id"=>"IDR","text"=>"IDR"),
+                                                        array("id"=>"IRR","text"=>"IRR"),
+                                                        array("id"=>"IQD","text"=>"IQD"),
+                                                        array("id"=>"IED (EURO)","text"=>"IED (EURO)"),
+                                                        array("id"=>"ILS","text"=>"ILS"),
+                                                        array("id"=>"ITL (EURO)","text"=>"ITL (EURO)"),
+                                                        array("id"=>"JMD","text"=>"JMD"),
+                                                        array("id"=>"JPY","text"=>"JPY"),
+                                                        array("id"=>"JOD","text"=>"JOD"),
+                                                        array("id"=>"KZT","text"=>"KZT"),
+                                                        array("id"=>"KES","text"=>"KES"),
+                                                        array("id"=>"KWD","text"=>"KWD"),
+                                                        array("id"=>"KGS","text"=>"KGS"),
+                                                        array("id"=>"LAK","text"=>"LAK"),
+                                                        array("id"=>"LVL (EURO)","text"=>"LVL (EURO)"),
+                                                        array("id"=>"LBP","text"=>"LBP"),
+                                                        array("id"=>"LSL","text"=>"LSL"),
+                                                        array("id"=>"LRD","text"=>"LRD"),
+                                                        array("id"=>"LYD","text"=>"LYD"),
+                                                        array("id"=>"LTL (EURO)","text"=>"LTL (EURO)"),
+                                                        array("id"=>"LUF (EURO)","text"=>"LUF (EURO)"),
+                                                        array("id"=>"MOP","text"=>"MOP"),
+                                                        array("id"=>"MKD","text"=>"MKD"),
+                                                        array("id"=>"MGA","text"=>"MGA"),
+                                                        array("id"=>"MWK","text"=>"MWK"),
+                                                        array("id"=>"MYR","text"=>"MYR"),
+                                                        array("id"=>"MVR","text"=>"MVR"),
+                                                        array("id"=>"MTL (EURO)","text"=>"MTL (EURO)"),
+                                                        array("id"=>"MRO","text"=>"MRO"),
+                                                        array("id"=>"MUR","text"=>"MUR"),
+                                                        array("id"=>"MXN","text"=>"MXN"),
+                                                        array("id"=>"MDL","text"=>"MDL"),
+                                                        array("id"=>"MNT","text"=>"MNT"),
+                                                        array("id"=>"MAD","text"=>"MAD"),
+                                                        array("id"=>"MZN","text"=>"MZN"),
+                                                        array("id"=>"MMK","text"=>"MMK"),
+                                                        array("id"=>"ANG","text"=>"ANG"),
+                                                        array("id"=>"NAD","text"=>"NAD"),
+                                                        array("id"=>"NPR","text"=>"NPR"),
+                                                        array("id"=>"NLG (EURO)","text"=>"NLG (EURO)"),
+                                                        array("id"=>"NZD","text"=>"NZD"),
+                                                        array("id"=>"NIO","text"=>"NIO"),
+                                                        array("id"=>"NGN","text"=>"NGN"),
+                                                        array("id"=>"KPW","text"=>"KPW"),
+                                                        array("id"=>"NOK","text"=>"NOK"),
+                                                        array("id"=>"OMR","text"=>"OMR"),
+                                                        array("id"=>"PKR","text"=>"PKR"),
+                                                        array("id"=>"PAB","text"=>"PAB"),
+                                                        array("id"=>"PGK","text"=>"PGK"),
+                                                        array("id"=>"PYG","text"=>"PYG"),
+                                                        array("id"=>"PEN","text"=>"PEN"),
+                                                        array("id"=>"PHP","text"=>"PHP"),
+                                                        array("id"=>"PLN","text"=>"PLN"),
+                                                        array("id"=>"PTE (EURO)","text"=>"PTE (EURO)"),
+                                                        array("id"=>"QAR","text"=>"QAR"),
+                                                        array("id"=>"RON","text"=>"RON"),
+                                                        array("id"=>"RUB","text"=>"RUB"),
+                                                        array("id"=>"RWF","text"=>"RWF"),
+                                                        array("id"=>"WST","text"=>"WST"),
+                                                        array("id"=>"STD","text"=>"STD"),
+                                                        array("id"=>"SAR","text"=>"SAR"),
+                                                        array("id"=>"RSD","text"=>"RSD"),
+                                                        array("id"=>"SCR","text"=>"SCR"),
+                                                        array("id"=>"SLL","text"=>"SLL"),
+                                                        array("id"=>"SGD","text"=>"SGD"),
+                                                        array("id"=>"SKK (EURO)","text"=>"SKK (EURO)"),
+                                                        array("id"=>"SIT (EURO)","text"=>"SIT (EURO)"),
+                                                        array("id"=>"SBD","text"=>"SBD"),
+                                                        array("id"=>"SOS","text"=>"SOS"),
+                                                        array("id"=>"ZAR","text"=>"ZAR"),
+                                                        array("id"=>"KRW","text"=>"KRW"),
+                                                        array("id"=>"ESP (EURO)","text"=>"ESP (EURO)"),
+                                                        array("id"=>"LKR","text"=>"LKR"),
+                                                        array("id"=>"SHP","text"=>"SHP"),
+                                                        array("id"=>"SDG","text"=>"SDG"),
+                                                        array("id"=>"SRD","text"=>"SRD"),
+                                                        array("id"=>"SZL","text"=>"SZL"),
+                                                        array("id"=>"SEK","text"=>"SEK"),
+                                                        array("id"=>"CHF","text"=>"CHF"),
+                                                        array("id"=>"SYP","text"=>"SYP"),
+                                                        array("id"=>"TWD","text"=>"TWD"),
+                                                        array("id"=>"TZS","text"=>"TZS"),
+                                                        array("id"=>"THB","text"=>"THB"),
+                                                        array("id"=>"TOP","text"=>"TOP"),
+                                                        array("id"=>"TTD","text"=>"TTD"),
+                                                        array("id"=>"TND","text"=>"TND"),
+                                                        array("id"=>"TRY","text"=>"TRY"),
+                                                        array("id"=>"TMM","text"=>"TMM"),
+                                                        array("id"=>"USD","text"=>"USD"),
+                                                        array("id"=>"UGX","text"=>"UGX"),
+                                                        array("id"=>"UAH","text"=>"UAH"),
+                                                        array("id"=>"UYU","text"=>"UYU"),
+                                                        array("id"=>"AED","text"=>"AED"),
+                                                        array("id"=>"VUV","text"=>"VUV"),
+                                                        array("id"=>"VEB","text"=>"VEB"),
+                                                        array("id"=>"VND","text"=>"VND"),
+                                                        array("id"=>"YER","text"=>"YER"),
+                                                        array("id"=>"ZMK","text"=>"ZMK"),
+                                                        array("id"=>"ZWD","text"=>"ZWD"),);
+
+                                                        echo form_input(array(
+                                                                "id" => "cost_item_currency",
+                                                                "name" => "cost_item_currency",
+                                                                "value" => "AUD",
+                                                                "class" => "form-control",
+                                                                "placeholder" => app_lang('category'),
+                                                                "data-rule-required" => true,
+                                                                "style"=>"border:1px solid lightgray;",
+                                                                "data-msg-required" => app_lang("field_required"),
+                                                                "autocomplete" => "off"
+                                                            ));
+                                                            ?>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1322,6 +1334,9 @@
         });
         $("#priority_id").select2({
             data: <?php echo (json_encode($priority_dropdown)); ?>
+        });
+        $("#cost_item_currency").select2({
+            data: <?php echo (json_encode($cost_item_currency_dropdown)); ?>
         });
         $("#milestone_id").select2({
             data: <?php echo (json_encode($milestone_dropdown)); ?>
