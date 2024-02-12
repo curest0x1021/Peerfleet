@@ -652,7 +652,7 @@ class Tasks extends Security_Controller {
         $gotTask=$this->Tasks_model->get_one($task_id);
         $gotProject=$this->Projects_model->get_one($gotTask->project_id);
         // $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_library"=>$id,"deleted"=>0))->getResult();
-        return $this->template->view('tasks/modal_form_new',["gotTask"=>$gotTask,"gotProject"=>$gotProject,"project_id"=>$gotTask->project_id,"allTasklibraries"=>$allTasklibraries,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        return $this->template->view('tasks/modal_form_new',["gotTask"=>$gotTask,"task_id"=>$task_id,"gotProject"=>$gotProject,"project_id"=>$gotTask->project_id,"allTasklibraries"=>$allTasklibraries,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     /*----*/
 

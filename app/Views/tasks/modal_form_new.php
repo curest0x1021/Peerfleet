@@ -1,7 +1,7 @@
 <div id="tasks-dropzone" class="post-dropzone">
     <div class="modal-body clearfix">
         <?php echo form_open(get_uri("task_libraries/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
-        <input hidden name="id" value="<?php echo isset($gotTask)&&$gotTask->id; ?>" />
+        <input hidden name="id" value="<?php if(isset($gotTask)) echo $gotTask->id; ?>" />
         <div class="card-header d-flex justify-content-between">
             <h4><?php 
             // echo isset($gotTasklibrary)?"Edit Task" :"Add Task"; 
@@ -1677,7 +1677,7 @@
             for(var oneFile of dropzone.files){
                 myForm.append(oneFile.name,oneFile);
             }
-            console.log(start_date,deadline)
+            console.log(cost_items)
             
             $.ajax({
                 url: '<?php echo get_uri("tasks/save_ajax"); ?>',
@@ -1686,8 +1686,8 @@
                 processData: false, // Prevent jQuery from automatically processing the data
                 contentType: false, 
                 success: function (response) {
-                    console.log(response)
-                    // if(JSON.parse(response).success) window.location.reload();
+                    // console.log(response)
+                    if(JSON.parse(response).success) window.location.reload();
                     // appLoader.hide();
                     // window.location='<?php 
                     //echo get_uri('task_libraries/view/'); 
