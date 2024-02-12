@@ -15,7 +15,7 @@
                 }
                 if ($can_create_tasks) {
                     // echo modal_anchor(get_uri("projects/task_modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_multiple_tasks'), array("class" => "btn btn-default", "title" => app_lang('add_multiple_tasks'), "data-post-add_type" => "multiple"));
-                    echo modal_anchor(get_uri("tasks/modal_form_new"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_task'), array("class" => "btn btn-default", "title" => app_lang('add_task')));
+                    // echo modal_anchor(get_uri("tasks/modal_form_new"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_task'), array("class" => "btn btn-default", "title" => app_lang('add_task')));
                 }
                 ?>
             </div>
