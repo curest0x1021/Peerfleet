@@ -1821,5 +1821,4 @@
         if(isset($gotTask)&&$gotTask->cost_items)
         echo 'cost_items=JSON.parse(`'.$gotTask->cost_items.'`);';
     ?>
-    console.log(cost_items)
 </script>
