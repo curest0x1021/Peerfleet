@@ -4657,7 +4657,6 @@ class Tasks extends Security_Controller {
             "start_date"=>date('d.m.Y', strtotime($this->request->getPost("start_date"))),
             "deadline"=>date('d.m.Y', strtotime($this->request->getPost("deadline"))),
         );
-        return $data['cost_items'];
         $save_id = $this->Tasks_model->save_gantt_task_date($data, $id);
         // $checklist_items=$this->request->getPost("checklist_items");
         // if($checklist_items)foreach($checklist_items as $oneItem){

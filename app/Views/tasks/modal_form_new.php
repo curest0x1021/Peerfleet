@@ -1679,8 +1679,8 @@
                     cost_items:JSON.stringify(cost_items),
                 },
                 success: function (response) {
-                    // console.log(response)
-                    // if(JSON.parse(response).success) window.location.reload();
+                    console.log(response)
+                    if(JSON.parse(response).success) window.location.reload();
                     // appLoader.hide();
                     // window.location='<?php 
                     //echo get_uri('task_libraries/view/'); 
