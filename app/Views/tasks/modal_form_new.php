@@ -1818,8 +1818,8 @@
         echo 'dependencies=JSON.parse(`'.$gotTask->dependencies.'`);';
     ?>
     <?php
-        if(isset($gotTask)&&$gotTask->reference_drawing)
-        echo 'cost_items=JSON.parse(`'.$gotTask->reference_drawing.'`);';
+        if(isset($gotTask)&&$gotTask->cost_items)
+        echo 'cost_items=JSON.parse(`'.$gotTask->cost_items.'`);';
     ?>
-    
+    console.log(cost_items)
 </script>
