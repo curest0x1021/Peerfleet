@@ -811,7 +811,7 @@
                             <b>Cost Item List</b>
                         </div>
                         <div class="card-body" style="padding:1px" >
-                            <table id="table-quotes-from-yard" class="table " style="margin:0" >
+                            <table id="table-costs-item-list" class="table " style="margin:0" >
                                 <thead>
                                 <tr>
                                     <td>Cost item name</td>
@@ -848,7 +848,7 @@
                                     <div class="form-group" >
                                         <label>Cost item name:</label>
                                         <input
-                                            id="cost_item_name"
+                                            id="input_cost_item_name"
                                             class="form-control"
                                             type="text"
                                             style="border:1px solid lightgray;border-radius:5px"
@@ -885,7 +885,7 @@
                                         <div class="form-group" >
                                             <label>Quantity:</label>
                                             <input
-                                                id="cost_item_quantity"
+                                                id="input_cost_item_quantity"
                                                 class="form-control"
                                                 type="number"
                                                 style="border:1px solid lightgray;border-radius:5px"
@@ -896,7 +896,7 @@
                                         <div class="form-group" >
                                             <label>Measurement unit:</label>
                                             <input
-                                                id="cost_item_measurement_unit"
+                                                id="input_cost_item_measurement_unit"
                                                 class="form-control"
                                                 placeholder="pcs"
                                                 value="pcs"
@@ -910,6 +910,7 @@
                                         <div class="form-group" >
                                             <label>Unit price:</label>
                                             <div class="input-group mb-3" style="border:1px solid lightgray;border-radius:5px">
+                                                <input id="input_cost_item_unit_price" type="number" />
                                                 <?php
                                                 $cost_item_currency_dropdown=array(
                                                 array("id"=>"AUD","text"=>"AUD"),
@@ -1091,8 +1092,8 @@
                                                 array("id"=>"ZWD","text"=>"ZWD"));
 
                                                 echo form_input(array(
-                                                    "id" => "cost_item_currency_select",
-                                                    "name" => "cost_item_currency_select",
+                                                    "id" => "input_cost_item_currency_select",
+                                                    "name" => "input_cost_item_currency_select",
                                                     "value" => "AUD",
                                                     "class" => "form-control",
                                                     "placeholder" => app_lang('category'),
@@ -1123,7 +1124,7 @@
                                 </div>
                                 <div class="row" >
                                     <div class="col-md-1" >
-                                        <button id="insert-add-cost-item" type="button" class="btn btn-primary" >Save</button>
+                                        <button id="btn-insert-add-cost-item" type="button" class="btn btn-primary" >Save</button>
                                     </div>
                                     <div class="col-md-1" >
                                         <button id="cancel-add-cost-item" type="button" class="btn btn-default" >Cancel</button>
@@ -1325,7 +1326,7 @@
                 echo (json_encode($category_dropdown)); 
                 ?>
         });
-        $("#cost_item_currency_select").select2({
+        $("#input_cost_item_currency_select").select2({
             data: <?php 
                 echo (json_encode($cost_item_currency_dropdown)); 
             ?>
@@ -1540,8 +1541,8 @@
             $("#btn-add-new-quote-start").prop("disabled", true);
 
         })
-        $("#insert-add-cost-item").on("click",function(){
-            var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
+        $("#btn-insert-add-cost-item").on("click",function(){
+            var table=$("#table-costs-item-list")[0].getElementsByTagName('tbody')[0];
             var newRow = table.insertRow();
 
             var cell0 = newRow.insertCell(0);
@@ -1549,9 +1550,9 @@
             var cell2 = newRow.insertCell(2);
             var cell3 = newRow.insertCell(3);
 
-            cell0.innerHTML = $("#cost_item_name")[0].value;
-            cell1.innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement_unit")[0].value+" X "+$("#cost_item_currency_select")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
-            cell2.innerHTML = $("#cost_item_currency_select")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
+            cell0.innerHTML = $("#input_cost_item_name")[0].value;
+            cell1.innerHTML = Number($("#input_cost_item_quantity")[0].value).toFixed(1)+' '+$("#input_cost_item_measurement_unit")[0].value+" X "+$("#input_cost_item_currency_select")[0].value+" "+Number($("#input_cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
+            cell2.innerHTML = $("#input_cost_item_currency_select")[0].value+" "+(Number($("#input_cost_item_quantity")[0].value)*Number($("#input_cost_item_unit_price")[0].value)).toFixed(2);
             cell3.innerHTML=`
             <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button>
             <button type="button" onClick="delete_item(${cost_items.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="" ></i></button>
@@ -1560,22 +1561,22 @@
             $("#insert-cost-item-panel-new").prop("hidden",false);
             if($("#editing_cost_item")[0].value=="")
                 cost_items.push({
-                    name:$("#cost_item_name")[0].value,
-                    quantity:$("#cost_item_quantity")[0].value,
-                    measurement_unit:$("#cost_item_measurement_unit")[0].value,
-                    unit_price:$("#cost_item_unit_price")[0].value,
+                    name:$("#input_cost_item_name")[0].value,
+                    quantity:$("#input_cost_item_quantity")[0].value,
+                    measurement_unit:$("#input_cost_item_measurement_unit")[0].value,
+                    unit_price:$("#input_cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
-                    currency:$("#cost_item_currency_select")[0].value,
+                    currency:$("#input_cost_item_currency_select")[0].value,
                 });
             else{
-                $("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
+                $("#table-costs-item-list")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
                 cost_items[Number($("#editing_cost_item")[0].value)]={
-                    name:$("#cost_item_name")[0].value,
-                    quantity:$("#cost_item_quantity")[0].value,
-                    measurement_unit:$("#cost_item_measurement_unit")[0].value,
-                    unit_price:$("#cost_item_unit_price")[0].value,
+                    name:$("#input_cost_item_name")[0].value,
+                    quantity:$("#input_cost_item_quantity")[0].value,
+                    measurement_unit:$("#input_cost_item_measurement_unit")[0].value,
+                    unit_price:$("#input_cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
-                    currency:$("#cost_item_currency_select")[0].value,
+                    currency:$("#input_cost_item_currency_select")[0].value,
                 };
                 $("#editing_cost_item")[0].value=""
             }
@@ -1769,8 +1770,8 @@
             // if(!$("#dependency-list-title").hasClass('hide')) $("#dependency-list-title").addClass("hide")
             // if(!$("#edit-dependency-panel").prop('hidden')) $("#edit-dependency-panel").prop("hidden",true)
         })
-        // $("#cost_item_currency_select").on("change",function(){
-        //     $("#cost_item_currency_symbol")[0].selectedIndex=$("#cost_item_currency_select")[0].selectedIndex;
+        // $("#input_cost_item_currency_select").on("change",function(){
+        //     $("#cost_item_currency_symbol")[0].selectedIndex=$("#input_cost_item_currency_select")[0].selectedIndex;
         // })
     });
     var dependencies=[]
@@ -1778,7 +1779,7 @@
     var checklist_items=[];
     var cost_items=[];
     function save_new_quote(){
-        var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
+        var table=$("#table-costs-item-list")[0].getElementsByTagName('tbody')[0];
         var newRow = table.insertRow();
 
         var cell0 = newRow.insertCell(0);
@@ -1795,17 +1796,17 @@
     }
     function delete_item(index){
         cost_items.splice(index,1);
-        $("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0].deleteRow(index);
+        $("#table-costs-item-list")[0].getElementsByTagName('tbody')[0].deleteRow(index);
     }
     function start_edit_cost_item(index){
         $("#editing_cost_item")[0].value=index;
         $("#btn-add-new-quote-start")[0].click();
-        $("#cost_item_name")[0].value=cost_items[index].name;
-        $("#cost_item_quantity")[0].value=cost_items[index].quantity;
-        $("#cost_item_measurement_unit")[0].value=cost_items[index].measurement_unit;
-        $("#cost_item_unit_price")[0].value=cost_items[index].unit_price;
+        $("#input_cost_item_name")[0].value=cost_items[index].name;
+        $("#input_cost_item_quantity")[0].value=cost_items[index].quantity;
+        $("#input_cost_item_measurement_unit")[0].value=cost_items[index].measurement_unit;
+        $("#input_cost_item_unit_price")[0].value=cost_items[index].unit_price;
         $("#cost_item_quote_type")[0].value=cost_items[index].quote_type;
-        $("#cost_item_currency_select")[0].value=cost_items[index].currency;
+        $("#input_cost_item_currency_select")[0].value=cost_items[index].currency;
     }
     <?php
         if(isset($gotTask)&&$gotTask->dependencies)
