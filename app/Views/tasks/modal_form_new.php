@@ -1614,7 +1614,7 @@
             var checklist_item_title=$("#checklist-add-item-modal")[0].value;
             checklist_items.push({
                 title:checklist_item_title,
-                task_id:<?php echo $task_id; ?>,
+                task_id:<?php echo isset($gotTask->id)?$gotTask->id:0; ?>,
                 is_checked:0
             });
             var newTempId=checklist_items.length;
@@ -1702,6 +1702,7 @@
             myForm.append("checklist_items",JSON.stringify(checklist_items));
             myForm.append("dependencies",dependencies);
             myForm.append("cost_items",JSON.stringify(cost_items));
+            myForm.append("dependencies",JSON.stringify(dependencies));
             myForm.append("project_id",project_id);
             for(var oneFile of dropzone.files){
                 myForm.append(oneFile.name,oneFile);

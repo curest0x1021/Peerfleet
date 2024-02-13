@@ -1305,12 +1305,12 @@
 
                                         <?php
                                         $dependency_dropdown=array();
-                                        // foreach ($allTasklibraries as $oneLibrary) {
-                                        //     $dependency_dropdown[]=array(
-                                        //         "id"=>$oneLibrary['id'],
-                                        //         "text"=>$oneLibrary['title']
-                                        //     );
-                                        // }
+                                        foreach ($allTasks as $oneTask) {
+                                            $dependency_dropdown[]=array(
+                                                "id"=>$oneTask['id'],
+                                                "text"=>$oneTask['title']
+                                            );
+                                        }
                                         echo form_input(array(
                                             "id" => "dependency_task",
                                             "name" => "dependency_task",
@@ -1732,7 +1732,8 @@
             myForm.append("pms_scs_number",pms_scs_number);
             myForm.append("checklist_items",JSON.stringify(checklist_items));
             myForm.append("dependencies",dependencies);
-            myForm.append("cost_items",cost_items);
+            myForm.append("cost_items",JSON.stringify(cost_items));
+            myForm.append("dependencies",JSON.stringify(dependencies));
             myForm.append("project_id",project_id);
             for(var oneFile of dropzone.files){
                 myForm.append(oneFile.name,oneFile);
