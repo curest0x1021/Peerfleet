@@ -1199,7 +1199,7 @@
                             <?php
                                 if(isset($gotChecklistItems))
                                 foreach($gotChecklistItems as $oneItem){
-                                    echo '<div id="checklist-item-row-33" class="list-group-item mb5 checklist-item-row b-a rounded text-break" data-id="33"><a href="#" title="" data-id="33" data-value="1" data-act="update-checklist-item-status-checkbox"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-33" data-act="ajax-request" data-action-url="'. get_uri("/task_libraries"."/delete_checklist_item"."/".$oneItem->id).'"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">'.$oneItem->title.'</span></div>';
+                                    echo '<div id="checklist-item-row-'.$oneItem->id.'" class="list-group-item mb5 checklist-item-row b-a rounded text-break" data-id="'.$oneItem->id.'"><a href="#" title="" data-id="'.$oneItem->id.'" data-value="'.$oneItem->id.'" data-act="update-checklist-item-status-checkbox"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" item-id="'.$oneItem->id.'" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-'.$oneItem->id.'" data-act="ajax-request" data-action-url="'. get_uri("/task_libraries"."/delete_checklist_item"."/".$oneItem->id).'"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">'.$oneItem->title.'</span></div>';
                                 }
                             ?>
                             </div>
@@ -1483,9 +1483,17 @@
 
         var checklists = $(".checklist-items .checklist-item-row").length;
         $(".delete-checklist-item").click(function () {
+            console.log(checklist_items)
+            checklist_items.splice(checklist_items.findIndex(oneItem=>oneItem.id==$(this).attr("item-id")),1);
+            console.log(checklist_items)
             checklists--;
             $(".chcklists_count").text(checklists);
         });
+        $("#checklist-items").on('click','div',function(){
+            var indexToDel = $(this).index();
+            checklist_items.splice(indexToDel,1);
+            console.log(checklist_items)
+        })
 
         count_checklists();
 
@@ -1635,10 +1643,14 @@
         
         $("#add-checklist-item").on("click",function(){
             var checklist_item_title=$("#checklist-add-item")[0].value;
-            checklist_items.push(checklist_item_title);
+            checklist_items.push({
+                title:checklist_item_title,
+                id:checklist_items.length,
+                is_checked:0
+            });
             var newTempId=checklist_items.length;
             $('#checklist-items').append(`
-                <div id='checklist-item-row-${newTempId}' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='${newTempId}'><a href="#" title="" data-id="${newTempId}" data-value="${newTempId}" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-${newTempId}" data-act="ajax-request" data-action-url="<?php echo get_uri("/task_libraries"."/delete_checklist_item"."/");?>${newTempId}"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
+                <div id='checklist-item-row-${newTempId}' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='${newTempId}'><a href="#" title="" data-id="${newTempId}" data-value="${newTempId}" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" item-id="${newTempId}" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-${newTempId}" data-act="ajax-request" data-action-url="<?php echo get_uri("/task_libraries"."/delete_checklist_item_permanently"."/");?>${newTempId}"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
             `);
             $("#checklist-add-item")[0].value="";
             checklists++;
@@ -1718,9 +1730,9 @@
             myForm.append("type",type);
             myForm.append("serial_number",serial_number);
             myForm.append("pms_scs_number",pms_scs_number);
-            myForm.append("checklist_items",checklist_items);
+            myForm.append("checklist_items",JSON.stringify(checklist_items));
             myForm.append("dependencies",dependencies);
-            myForm.append("cost_items",JSON.stringify(cost_items));
+            myForm.append("cost_items",cost_items);
             myForm.append("project_id",project_id);
             for(var oneFile of dropzone.files){
                 myForm.append(oneFile.name,oneFile);
@@ -1735,7 +1747,7 @@
                 contentType: false, 
                 success: function (response) {
                     // console.log(response)
-                    if(JSON.parse(response).success) window.location.reload();
+                    if(JSON.parse(response).success) window.location='<?php echo get_uri('tasks/view/'); ?>'+JSON.parse(response).saved_id;
                     // appLoader.hide();
                     // window.location='<?php 
                     //echo get_uri('task_libraries/view/'); 

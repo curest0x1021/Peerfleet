@@ -638,8 +638,8 @@ class Tasks extends Security_Controller {
         $allStatus=$this->Task_status_model->get_all()->getResultArray();
         $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
         $allMilestones=$this->Milestones_model->get_all()->getResultArray();
-        $allTasklibraries=$this->Task_libraries_model->get_all()->getResultArray();
-        return $this->template->view('tasks/modal_form_new',["project_id"=>$project_id,"allTasklibraries"=>$allTasklibraries,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        $allTasks=$this->Tasks_model->get_all()->getResultArray();
+        return $this->template->view('tasks/modal_form_new',["allTasks"=>$allTasks,"project_id"=>$project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     /*----*/
     /*----*/
@@ -648,11 +648,13 @@ class Tasks extends Security_Controller {
         $allStatus=$this->Task_status_model->get_all()->getResultArray();
         $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
         $allMilestones=$this->Milestones_model->get_all()->getResultArray();
-        $allTasklibraries=$this->Task_libraries_model->get_all()->getResultArray();
+        // $allTasklibraries=$this->Task_libraries_model->get_all()->getResultArray();
         $gotTask=$this->Tasks_model->get_one($task_id);
+        $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_id"=>$task_id,"deleted"=>0))->getResult();
         $gotProject=$this->Projects_model->get_one($gotTask->project_id);
+        $allTasks=$this->Tasks_model->get_all()->getResultArray();
         // $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_library"=>$id,"deleted"=>0))->getResult();
-        return $this->template->view('tasks/modal_form_new',["gotTask"=>$gotTask,"task_id"=>$task_id,"gotProject"=>$gotProject,"project_id"=>$gotTask->project_id,"allTasklibraries"=>$allTasklibraries,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        return $this->template->view('tasks/modal_form_new',["allTasks"=>$allTasks,"gotChecklistItems"=>$gotChecklistItems,"gotTask"=>$gotTask,"task_id"=>$task_id,"gotProject"=>$gotProject,"project_id"=>$gotTask->project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     /*----*/
 
@@ -1998,6 +2000,25 @@ class Tasks extends Security_Controller {
             echo json_encode(array("success" => false));
         }
     }
+
+    /////////
+    function delete_checklist_item_permanently($id) {
+
+        // $task_id = $this->Checklist_items_model->get_one($id)->task_id;
+
+        // if ($id) {
+        //     if (!$this->can_edit_tasks($task_id)) {
+        //         app_redirect("forbidden");
+        //     }
+        // }
+
+        if ($this->Checklist_items_model->delete_permanently($id)) {
+            echo json_encode(array("success" => true));
+        } else {
+            echo json_encode(array("success" => false));
+        }
+    }
+    /////////
 
     //load global gantt view
     function all_gantt() {
@@ -4498,6 +4519,12 @@ class Tasks extends Security_Controller {
         // return unserialize(json_encode($all_files));
         return $this->download_app_files(get_setting("timeline_file_path"), serialize($all_files));
     }
+    //////////
+    ///download_one_file///
+    function download_one_file($file_name){
+        return $this->download_app_files(get_setting("timeline_file_path"), serialize(array(array("file_name"=>$file_name))));
+    }
+    //////////
 
     function get_task_labels_dropdown_for_filter() {
         $labels_dropdown = array(array("id" => "", "text" => "- " . app_lang("label") . " -"));
@@ -4656,7 +4683,16 @@ class Tasks extends Security_Controller {
             "deadline"=>date('Y-m-d', strtotime($this->request->getPost("deadline"))),
         );
         $save_id = $this->Tasks_model->save_gantt_task_date($data, $id);
-        
+        $checklist_items=json_decode($this->request->getPost("checklist_items"));
+        if($id) $this->Checklist_items_model->delete_where(array("task_id"=>$id));
+        foreach ($checklist_items as $oneItem) {
+             $newItem=array(
+                "task_id"=>$save_id,
+                "title"=>$oneItem->title,
+                "deleted"=>0
+             );
+             $this->Checklist_items_model->ci_save($newItem);
+        }
         $files_data=array();
         $now = get_current_utc_time();
         if (!empty($_FILES)) {
@@ -4707,8 +4743,9 @@ class Tasks extends Security_Controller {
         $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
         $allMilestones=$this->Milestones_model->get_all()->getResultArray();
         $allProjects=$this->Projects_model->get_all()->getResultArray();
+        $allTasks=$this->Tasks_model->get_all()->getResultArray();
         // $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_library"=>$id,"deleted"=>0))->getResult();
-        return $this->template->view('tasks/modal_form_basic',["allProjects"=>$allProjects,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        return $this->template->view('tasks/modal_form_basic',["allTasks"=>$allTasks,"allProjects"=>$allProjects,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     /*----*/
 }

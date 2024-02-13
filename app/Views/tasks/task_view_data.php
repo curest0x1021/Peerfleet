@@ -1153,7 +1153,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     '<div class="group-item col-md-2" >
                         <img class="item-image" src="'.$url.'" />
                         <p class="item-title" >'.$actual_file_name.'</p>
-                        <button class="btn-download-item btn btn-sm" ><i data-feather="download-cloud" ></i></button>
+                        <a target="_blank" href="'.get_uri("tasks/download_one_file/".$oneFile['file_name']).'"  class="btn-download-item btn btn-sm" ><i data-feather="download-cloud" ></i></a>
                     </div>';
                 }
             }

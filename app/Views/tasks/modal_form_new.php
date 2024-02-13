@@ -1,6 +1,6 @@
 <div id="tasks-dropzone" class="post-dropzone">
     <div class="modal-body clearfix">
-        <?php echo form_open(get_uri("task_libraries/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
+        <?php echo form_open(get_uri("tasks/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
         <input hidden name="id" value="<?php if(isset($gotTask)) echo $gotTask->id; ?>" />
         <div class="card-header d-flex justify-content-between">
             <h4><?php 
@@ -1165,24 +1165,24 @@
                     // echo form_open(get_uri("tasks/save_checklist_item"), array("id" => "checklist_form", "class" => "general-form", "role" => "form")); 
                     ?>
                     <div class="card-header d-flex">
-                        <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count">0</span><span>/</span><span class="chcklists_count"></span>
+                        <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count_modal">0</span><span>/</span><span class="chcklists_count_modal"></span>
                     </div>
                     <div class="card-body d-flex" >
                         <div class="col-md-12 mb15 b-t">
                             <div class="pb10 pt10">
-                                <!-- <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count">0</span><span>/</span><span class="chcklists_count"></span> -->
+                                <!-- <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count_modal">0</span><span>/</span><span class="chcklists_count_modal"></span> -->
                             </div>
                             <input type="hidden" id="is_checklist_group" name="is_checklist_group" value="" />
-                            <div class="checklist-items" id="checklist-items">
+                            <div class="checklist-items-panel-modal" id="checklist-items-panel-modal">
                                 <!--chekclist-items-lsiting-here-->
                             <?php
                                 if(isset($gotChecklistItems))
                                 foreach($gotChecklistItems as $oneItem){
-                                    echo '<div id="checklist-item-row-33" class="list-group-item mb5 checklist-item-row b-a rounded text-break" data-id="33"><a href="#" title="" data-id="33" data-value="1" data-act="update-checklist-item-status-checkbox"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-33" data-act="ajax-request" data-action-url="'. get_uri("/task_libraries"."/delete_checklist_item"."/".$oneItem->id).'"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">'.$oneItem->title.'</span></div>';
+                                    echo '<div id="checklist-item-row-33" class="list-group-item mb5 checklist-item-row b-a rounded text-break" data-id="33"><a href="#" title="" data-id="33" data-value="1" data-act="update-checklist-item-status-checkbox"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" item-id="'.$oneItem->id.'" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-33" data-act="ajax-request" data-action-url="#"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">'.$oneItem->title.'</span></div>';
                                 }
                             ?>
                             </div>
-                                <div class="mb5 mt5 btn-group checklist-options-panel hide" role="group">
+                                <div class="mb5 mt5 btn-group checklist-options-panel-modal hide" role="group">
                                     <button id="type-new-item-button" type="button" class="btn btn-default checklist_button active"> <?php echo app_lang('type_new_item'); ?></button>
                                     <button id="select-from-template-button" type="button" class="btn btn-default checklist_button"> <?php echo app_lang('select_from_template'); ?></button>
                                     <!-- <button id="select-from-checklist-group-button" type="button" class="btn btn-default checklist_button"> <?php echo app_lang('select_from_checklist_group'); ?></button> -->
@@ -1191,8 +1191,8 @@
                                     <div class="mt5 p0" style="border:1px solid lightgray;border:5px;">
                                         <?php
                                         echo form_input(array(
-                                            "id" => "checklist-add-item",
-                                            "name" => "checklist-add-item",
+                                            "id" => "checklist-add-item-modal",
+                                            "name" => "checklist-add-item-modal",
                                             "class" => "form-control",
                                             "placeholder" => app_lang('add_item'),
                                             "style"=>"border:1px solid lightgray;border-radius:5px",
@@ -1203,9 +1203,9 @@
                                         ?>
                                     </div>
                                 </div>
-                                <div class="mb10 p0 checklist-options-panel hide">
-                                    <button id="add-checklist-item" type="button" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('add'); ?></button>
-                                    <button id="checklist-options-panel-close" type="button" class="btn btn-default ms-2"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('cancel'); ?></button>
+                                <div class="mb10 p0 checklist-options-panel-modal hide">
+                                    <button id="add-checklist-item-modal" type="button" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('add'); ?></button>
+                                    <button id="checklist-options-panel-modal-close" type="button" class="btn btn-default ms-2"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('cancel'); ?></button>
                                 </div>
                         </div>
                     </div>
@@ -1284,12 +1284,12 @@
 
                                         <?php
                                         $dependency_dropdown=array();
-                                        // foreach ($allTasklibraries as $oneLibrary) {
-                                        //     $dependency_dropdown[]=array(
-                                        //         "id"=>$oneLibrary['id'],
-                                        //         "text"=>$oneLibrary['title']
-                                        //     );
-                                        // }
+                                        foreach ($allTasks as $oneTask) {
+                                            $dependency_dropdown[]=array(
+                                                "id"=>$oneTask['id'],
+                                                "text"=>$oneTask['title']
+                                            );
+                                        }
                                         echo form_input(array(
                                             "id" => "dependency_task",
                                             "name" => "dependency_task",
@@ -1430,17 +1430,17 @@
         //show the items in checklist
 
         //show save & cancel button when the checklist-add-item-form is focused
-        $("#checklist-add-item").focus(function () {
-            $(".checklist-options-panel").removeClass("hide");
+        $("#checklist-add-item-modal").focus(function () {
+            $(".checklist-options-panel-modal").removeClass("hide");
             $("#checklist-add-item-error").removeClass("hide");
         });
 
         $("#checklist-options-panel-close").click(function () {
-            $(".checklist-options-panel").addClass("hide");
+            $(".checklist-options-panel-modal").addClass("hide");
             $("#checklist-add-item-error").addClass("hide");
-            $("#checklist-add-item").val("");
+            $("#checklist-add-item-modal").val("");
 
-            $("#checklist-add-item").select2("destroy").val("");
+            $("#checklist-add-item-modal").select2("destroy").val("");
             $("#checklist-template-toggle-button").html("<?php echo "<i data-feather='hash' class='icon-16'></i> " . app_lang('select_from_template'); ?>");
             $("#checklist-template-toggle-button").addClass('checklist-template-button');
             feather.replace();
@@ -1451,28 +1451,29 @@
 
         //count checklists
         function count_checklists() {
-            var checklists = $(".checklist-items .checklist-item-row").length;
-            $(".chcklists_count").text(checklists);
+            var checklists = $(".checklist-items-panel-modal .checklist-item-row").length;
+            $(".chcklists_count_modal").text(checklists);
 
             //reload kanban
         }
 
-        var checklists = $(".checklist-items .checklist-item-row").length;
+        var checklists = $(".checklist-items-panel-modal .checklist-item-row").length;
         $(".delete-checklist-item").click(function () {
+            checklist_items.splice(checklist_items.findIndex(oneItem=>oneItem.id==$(this).attr("item-id")),1)
             checklists--;
-            $(".chcklists_count").text(checklists);
+            $(".chcklists_count_modal").text(checklists);
         });
 
         count_checklists();
 
         var checklist_complete = $(".checklist-items .checkbox-checked").length;
-        $(".chcklists_status_count").text(checklist_complete);
+        $(".chcklists_status_count_modal").text(checklist_complete);
 
         $("#checklist_form").appForm({
             isModal: false,
             onSuccess: function (response) {
-                $("#checklist-add-item").val("");
-                $("#checklist-add-item").focus();
+                $("#checklist-add-item-modal").val("");
+                $("#checklist-add-item-modal").focus();
                 $("#checklist-items").append(response.data);
 
                 count_checklists();
@@ -1495,13 +1496,13 @@
 
         $("#type-new-item-button").click(function() {
             $(".checklist_button").removeClass("active");
-            $("#checklist-add-item").select2("destroy").val("").focus();
+            $("#checklist-add-item-modal").select2("destroy").val("").focus();
             $("#is_checklist_group").val("0");
             $(this).addClass("active");
         });
 
         function applySelect2OnChecklistTemplate() {
-            $("#checklist-add-item").select2({
+            $("#checklist-add-item-modal").select2({
                 showSearchBox: true,
                 ajax: {
                     url: "<?php echo get_uri("task_libraries/get_checklist_template_suggestion"); ?>",
@@ -1517,14 +1518,14 @@
                         return {
                             results: data
                         };
-                        $("#checklist-add-item").val("");
+                        $("#checklist-add-item-modal").val("");
                     }
                 }
             });
         }
 
         function applySelect2OnChecklistGroup() {
-            $("#checklist-add-item").select2({
+            $("#checklist-add-item-modal").select2({
                 showSearchBox: true,
                 ajax: {
                     url: "<?php echo get_uri("task_libraries/get_checklist_group_suggestion"); ?>",
@@ -1540,7 +1541,7 @@
                         return {
                             results: data
                         };
-                        $("#checklist-add-item").val("");
+                        $("#checklist-add-item-modal").val("");
                     }
                 }
             });
@@ -1555,7 +1556,7 @@
                 status_checkbox.addClass("checkbox-checked");
                 checklist_complete++;
             }
-            $(".chcklists_status_count").text(checklist_complete);
+            $(".chcklists_status_count_modal").text(checklist_complete);
 
 
         });
@@ -1609,16 +1610,20 @@
             $("#btn-add-new-quote-start").prop("disabled", false);
         })
         
-        $("#add-checklist-item").on("click",function(){
-            var checklist_item_title=$("#checklist-add-item")[0].value;
-            checklist_items.push(checklist_item_title);
+        $("#add-checklist-item-modal").on("click",function(){
+            var checklist_item_title=$("#checklist-add-item-modal")[0].value;
+            checklist_items.push({
+                title:checklist_item_title,
+                task_id:<?php echo $task_id; ?>,
+                is_checked:0
+            });
             var newTempId=checklist_items.length;
-            $('#checklist-items').append(`
-                <div id='checklist-item-row-${newTempId}' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='${newTempId}'><a href="#" title="" data-id="${newTempId}" data-value="${newTempId}" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-${newTempId}" data-act="ajax-request" data-action-url="<?php echo get_uri("/task_libraries"."/delete_checklist_item"."/");?>${newTempId}"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
+            $('#checklist-items-panel-modal').append(`
+                <div id='checklist-item-row-${newTempId}' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='${newTempId}'><a href="#" title="" data-id="${newTempId}" data-value="${newTempId}" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" item-id="${newTempId}" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-${newTempId}" data-act="ajax-request" data-action-url="#"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
             `);
-            $("#checklist-add-item")[0].value="";
+            $("#checklist-add-item-modal")[0].value="";
             checklists++;
-            $(".chcklists_count").text(checklists);
+            $(".chcklists_count_modal").text(checklists);
         })
         var uploadUrl = "<?php echo get_uri('tasks/upload_file'); ?>";
         var validationUri = "<?php echo get_uri('tasks/validate_task_file'); ?>";
@@ -1694,7 +1699,7 @@
             myForm.append("type",type);
             myForm.append("serial_number",serial_number);
             myForm.append("pms_scs_number",pms_scs_number);
-            myForm.append("checklist_items",checklist_items);
+            myForm.append("checklist_items",JSON.stringify(checklist_items));
             myForm.append("dependencies",dependencies);
             myForm.append("cost_items",JSON.stringify(cost_items));
             myForm.append("project_id",project_id);
@@ -1710,8 +1715,8 @@
                 processData: false, // Prevent jQuery from automatically processing the data
                 contentType: false, 
                 success: function (response) {
-                    // console.log(response)
-                    if(JSON.parse(response).success) window.location.reload();
+                    console.log(response)
+                    // if(JSON.parse(response).success) window.location.reload();
                     // appLoader.hide();
                     // window.location='<?php 
                     //echo get_uri('task_libraries/view/'); 
@@ -1840,6 +1845,18 @@
     <?php
         if(isset($gotTask)&&$gotTask->dependencies)
         echo 'dependencies=JSON.parse(`'.$gotTask->dependencies.'`);';
+    ?>
+    <?php
+        if(isset($gotChecklistItems)){
+            // $titlesOfChecklist=array();
+            // foreach ($gotChecklistItems as $oneItem) {
+            //     # code...
+            //     $titlesOfChecklist[]=$oneItem->title;
+            // }
+            // echo 'checklist_items=JSON.parse(`'.json_encode($titlesOfChecklist).'`);';
+            echo 'checklist_items=JSON.parse(`'.json_encode($gotChecklistItems).'`);';
+        }
+        
     ?>
     <?php
         if(isset($gotTask)&&$gotTask->cost_items)
