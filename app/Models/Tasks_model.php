@@ -1067,4 +1067,5 @@ class Tasks_model extends Crud_model
     {
         return $this->where($columnName, $specialValue)->countAllResults();
     }
+    
 }

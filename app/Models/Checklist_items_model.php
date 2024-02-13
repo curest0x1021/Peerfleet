@@ -46,5 +46,10 @@ class Checklist_items_model extends Crud_model {
         WHERE $checklist_items_table.deleted=0 AND $checklist_items_table.task_id IN(SELECT $tasks_table.id FROM $tasks_table WHERE $tasks_table.deleted=0 AND $tasks_table.project_id=$project_id)";
         return $this->db->query($sql);
     }
+    function delete_where($where = array()) {
+        if (count($where)) {
+            return $this->db_builder->delete($where);
+        }
+    }
 
 }
