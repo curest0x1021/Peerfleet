@@ -77,8 +77,8 @@
         <?php
         if ($can_edit_tasks) {
             echo js_anchor("<i data-feather='x' class='icon-16'></i>" . app_lang('delete'), array('title' => app_lang('delete_task'), "class" => "btn btn-danger delete", "data-id" => $model_info->id, "data-action-url" => get_uri("tasks/delete"), "data-action" => "delete-confirmation", "data-success-callback" => "onTaskDeleteSuccess"));
-            echo modal_anchor(get_uri("tasks/modal_form"), "<i data-feather='copy' class='icon-16'></i> " . app_lang('clone_task'), array("class" => "btn btn-default float-start", "data-post-is_clone" => true, "data-post-id" => $model_info->id, "title" => app_lang('clone_task')));
-            echo modal_anchor(get_uri("tasks/modal_form"), "<i data-feather='edit-2' class='icon-16'></i> " . app_lang('edit_task'), array("class" => "btn btn-default", "data-post-id" => $model_info->id, "title" => app_lang('edit_task')));
+            echo modal_anchor(get_uri("tasks/modal_form_edit/".$model_info->id), "<i data-feather='copy' class='icon-16'></i> " . app_lang('clone_task'), array("class" => "btn btn-default float-start", "data-post-is_clone" => true, "data-post-id" => $model_info->id, "title" => app_lang('clone_task')));
+            echo modal_anchor(get_uri("tasks/modal_form_edit/".$model_info->id), "<i data-feather='edit-2' class='icon-16'></i> " . app_lang('edit_task'), array("class" => "btn btn-default", "data-post-id" => $model_info->id, "title" => app_lang('edit_task')));
         }
         ?>
         <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
