@@ -1715,8 +1715,8 @@
                 processData: false, // Prevent jQuery from automatically processing the data
                 contentType: false, 
                 success: function (response) {
-                    console.log(response)
-                    // if(JSON.parse(response).success) window.location.reload();
+                    // console.log(response)
+                    if(JSON.parse(response).success) window.location.reload();
                     // appLoader.hide();
                     // window.location='<?php 
                     //echo get_uri('task_libraries/view/'); 

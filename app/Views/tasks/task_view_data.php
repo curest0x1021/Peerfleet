@@ -149,13 +149,20 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                             </div>
 
                             <div class="col-md-12 mb15">
-                                <strong><?php echo app_lang('category') . ": " ?></strong><?php echo get_update_task_info_anchor_data($model_info, "labels", $can_edit_tasks, $labels); ?>
+                                <strong><?php echo app_lang('category') . ": " ?></strong>
+                                <?php 
+                                // echo get_update_task_info_anchor_data($model_info, "labels", $can_edit_tasks, $labels);
+                                echo $model_info->category; 
+                                ?>
                             </div>
 
                             <div class="col-md-12 mb15">
                                 <strong><?php echo app_lang('collaborators') . ": "; ?> </strong>
                                 <div class="mt5">
-                                    <?php echo get_update_task_info_anchor_data($model_info, "collaborators", $can_edit_tasks, $collaborators); ?>
+                                    <?php 
+                                    // echo get_update_task_info_anchor_data($model_info, "collaborators", $can_edit_tasks, $collaborators); 
+                                    echo $model_info->collaborators;
+                                    ?>
                                 </div>
                             </div>
 
@@ -674,8 +681,8 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                             </thead>
                             <tbody>
                                 <?php
-                                if(isset($gotTasklibrary)&&$gotTasklibrary->reference_drawing){
-                                    $cost_items=json_decode($gotTasklibrary->reference_drawing);
+                                if(isset($model_info)&&$model_info->cost_items){
+                                    $cost_items=json_decode($model_info->cost_items);
                                     foreach ($cost_items as $key=>$oneItem) {
                                         # code...
                                         echo "<tr><td>";
