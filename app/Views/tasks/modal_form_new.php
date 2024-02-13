@@ -114,6 +114,10 @@
                                         "id"=>"Both",
                                         "text"=>"Both"
                                     ),
+                                    array(
+                                        "id"=>"Vessel(Crew)",
+                                        "text"=>"Vessel(Crew)"
+                                    ),
                                 );
                                 echo form_input(array(
                                     "id" => "supplier",
@@ -226,7 +230,27 @@
                                     array(
                                         "id"=>"-",
                                         "text"=>"-"
-                                    )
+                                    ),
+                                    array(
+                                        "id"=>"Ines Erna",
+                                        "text"=>"Ines Erna"
+                                    ),
+                                    array(
+                                        "id"=>"Reinhold Gereit",
+                                        "text"=>"Reinhold Gereit"
+                                    ),
+                                    array(
+                                        "id"=>"Dominik Darnell",
+                                        "text"=>"Dominik Darnell"
+                                    ),
+                                    array(
+                                        "id"=>"Olav Lakshmi",
+                                        "text"=>"Olav Lakshmi"
+                                    ),
+                                    array(
+                                        "id"=>"Paul Winfred",
+                                        "text"=>"Paul Winfred"
+                                    ),
                                 );
                                 echo form_input(array(
                                     "id" => "assigned_to",
