@@ -1550,6 +1550,10 @@
 
         })
         $("#btn-insert-add-cost-item<?php echo $modalId;?>").on("click",function(){
+            if($("#input_cost_item_name<?php echo $modalId;?>")[0].value==""||
+            $("#input_cost_item_quantity<?php echo $modalId;?>")[0].value==""||
+            $("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value=="")
+            return;
             var table=$("#table-costs-item-list<?php echo $modalId;?>")[0].getElementsByTagName('tbody')[0];
             var newRow = table.insertRow();
 
@@ -1575,6 +1579,8 @@
                     unit_price:$("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value,
                     quote_type:$("#cost_item_quote_type<?php echo $modalId;?>")[0].value,
                     currency:$("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value,
+                    description:$("#cost_item_description<?php echo $modalId;?>")[0].value,
+                    yard_remarks:$("#cost_item_yard_remarks<?php echo $modalId;?>")[0].value
                 });
             else{
                 $("#table-costs-item-list<?php echo $modalId;?>")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
@@ -1585,15 +1591,19 @@
                     unit_price:$("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value,
                     quote_type:$("#cost_item_quote_type<?php echo $modalId;?>")[0].value,
                     currency:$("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value,
+                    description:$("#cost_item_description<?php echo $modalId;?>")[0].value,
+                    yard_remarks:$("#cost_item_yard_remarks<?php echo $modalId;?>")[0].value
                 };
                 $("#editing_cost_item<?php echo $modalId;?>")[0].value=""
             }
-            $("#input_cost_item_name<?php echo $modalId;?>")[0].value("");
+            $("#input_cost_item_name<?php echo $modalId;?>")[0].value="";
             $("#input_cost_item_quantity<?php echo $modalId;?>")[0].value="";
             $("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value="";
             $("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value="";
             $("#cost_item_quote_type<?php echo $modalId;?>")[0].value="";
             $("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value="";
+            $("#cost_item_description<?php echo $modalId;?>")[0].value="";
+            $("#cost_item_yard_remarks<?php echo $modalId;?>")[0].value=""
         });
         $("#cancel-add-cost-item<?php echo $modalId;?>").on("click",function(){
             $("#insert-cost-item-panel-new<?php echo $modalId;?>").prop("hidden",true);
