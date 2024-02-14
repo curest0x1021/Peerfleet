@@ -1167,7 +1167,7 @@
                             <?php
                                 if(isset($gotChecklistItems))
                                 foreach($gotChecklistItems as $key=>$oneItem){
-                                    echo '<div id="checklist-item-row-'.$oneItem->id.'" class="list-group-item mb5 checklist-item-row-'.$modalId.' b-a rounded text-break" data-id="'.$oneItem->id.'"><a href="#" title="" data-id="'.$oneItem->id.'" data-value="'.$oneItem->id.'" data-act="update-checklist-item-status-checkbox"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" item-id="'.$oneItem->id.'" class="delete-checklist-item'.$modalId.'" title="Delete checklist item"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">'.$oneItem->title.'</span></div>';
+                                    echo '<div id="checklist-item-row-'.$oneItem->id.'" class="list-group-item mb5 checklist-item-row-'.$modalId.' b-a rounded text-break" data-id="'.$oneItem->id.'"><a href="#" title="" data-id="'.$oneItem->id.'" data-value="'.$oneItem->id.'" data-act="update-checklist-item-status-checkbox'.$modalId.'"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" item-id="'.$oneItem->id.'" class="delete-checklist-item'.$modalId.'" title="Delete checklist item"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">'.$oneItem->title.'</span></div>';
                                 }
                             ?>
                             </div>
@@ -1429,7 +1429,7 @@
             });
             var newTempId=checklist_items.length;
             $('#checklist-items-panel-modal<?php echo $modalId;?>').append(`
-                <div id="checklist-item-row-${newTempId}" class="list-group-item mb5 checklist-item-row-${newTempId} b-a rounded text-break" data-id="${newTempId}"><a href="#" title="" data-id="${newTempId}" data-value="${newTempId}" data-act="update-checklist-item-status-checkbox"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" onclick="delete_checklist_item(this)" item-id="${newTempId}" class="delete-checklist-item<?php echo $modalId;?>" title="Delete checklist item"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">${checklist_item_title}</span></div>
+                <div id="checklist-item-row-${newTempId}" class="list-group-item mb5 checklist-item-row-${newTempId} b-a rounded text-break" data-id="${newTempId}"><a href="#" title="" data-id="${newTempId}" data-value="${newTempId}" data-act="update-checklist-item-status-checkbox<?php echo $modalId;?>"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" onclick="delete_checklist_item(this)" item-id="${newTempId}" class="delete-checklist-item<?php echo $modalId;?>" title="Delete checklist item"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">${checklist_item_title}</span></div>
             `);
             $("#checklist-add-item-modal<?php echo $modalId;?>")[0].value="";
             checklists++;
@@ -1446,7 +1446,7 @@
 
         count_checklists();
 
-        var checklist_complete = $(".checklist-items-panel-modal<?php echo $modalId;?> .checkbox-checked").length;
+        checklist_complete = $(".checklist-items-panel-modal<?php echo $modalId;?> .checkbox-checked").length;
         $(".chcklists_status_count_modal<?php echo $modalId;?>").text(checklist_complete);
 
         $("#checklist_form<?php echo $modalId;?>").appForm({
@@ -1527,7 +1527,7 @@
             });
         }
         
-        $('body').on('click', '[data-act=update-checklist-item-status-checkbox]', function () {
+        $('body').on('click', '[data-act=update-checklist-item-status-checkbox<?php echo $modalId;?>]', function () {
             var status_checkbox = $(this).find("span");
             if(status_checkbox.hasClass('checkbox-checked')){
                 status_checkbox.removeClass("checkbox-checked");
@@ -1801,6 +1801,7 @@
     var checklist_items=[];
     var cost_items=[];
     var checklists=0;
+    var checklist_complete=0;
     function save_new_quote(){
         var table=$("#table-costs-item-list<?php echo $modalId; ?>")[0].getElementsByTagName('tbody')[0];
         var newRow = table.insertRow();

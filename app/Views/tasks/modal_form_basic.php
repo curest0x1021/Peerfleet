@@ -1497,7 +1497,7 @@
 
         count_checklists();
 
-        var checklist_complete = $(".checklist-items .checkbox-checked").length;
+        checklist_complete = $(".checklist-items .checkbox-checked").length;
         $(".chcklists_status_count").text(checklist_complete);
 
         $("#checklist_form").appForm({
@@ -1637,8 +1637,17 @@
                     quote_type:$("#cost_item_quote_type")[0].value,
                     currency:$("#input_cost_item_currency_select")[0].value,
                 };
-                $("#editing_cost_item")[0].value=""
+                $("#editing_cost_item")[0].value="";
+                
             }
+            $("#input_cost_item_name")[0].value="";
+            $("#input_cost_item_quantity")[0].value="";
+            $("#input_cost_item_measurement_unit")[0].value="";
+            $("#cost_item_quote_type")[0].value="";
+            $("#input_cost_item_unit_price")[0].value="";
+            $("#input_cost_item_currency_select")[0].value=""
+            $("#cost_item_description")[0].value=""
+            $("#cost_item_yard_remarks")[0].value=""
         });
         $("#cancel-add-cost-item").on("click",function(){
             $("#insert-cost-item-panel-new").prop("hidden",true);
@@ -1849,6 +1858,7 @@
     var checklist_items=[];
     var cost_items=[];
     var checklists=0;
+    var checklist_complete=0;
     function save_new_quote(){
         var table=$("#table-costs-item-list")[0].getElementsByTagName('tbody')[0];
         var newRow = table.insertRow();
