@@ -745,7 +745,7 @@
                                 echo form_input(array(
                                     "id" => "maker".$modalId,
                                     "name" => "maker",
-                                    "value" => isset($gotTask)&&$gotTask->maker?$gtTask->maker:"",
+                                    "value" => isset($gotTask)&&$gotTask->maker?$gotTask->maker:"",
                                     "class" => "form-control",
                                     "maxlength" => 30,
                                     "style"=>"border:1px solid lightgray",
