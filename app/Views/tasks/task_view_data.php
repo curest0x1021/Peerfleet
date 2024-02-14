@@ -77,7 +77,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     <div>
                         <div class="row">
                             <div class="col-md-12 mb15 task-title-right d-none">
-                                <strong><?php echo $model_info->title; ?></strong>
+                                <strong ><?php echo $model_info->title; ?></strong>
                             </div>
                             
                             <div class="d-flex m0">
@@ -270,7 +270,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     <!-- <div class="container-fluid"> -->
                     <div>
                         <div class="row">
-                        <div  class="col-md-12 mb15 task-title-left">
+                        <div style="word-wrap:break-word;"  class="col-md-12 mb15 task-title-left">
                                 <strong><?php echo $model_info->title; ?></strong>
                             </div>
 
