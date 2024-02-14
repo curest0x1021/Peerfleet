@@ -1419,7 +1419,7 @@
             //reload kanban
         }
 
-        var checklists = $(".checklist-items-panel-modal<?php echo $modalId;?> .checklist-item-row-<?php echo $modalId;?>").length;
+        checklists = $(".checklist-items-panel-modal<?php echo $modalId;?> .checklist-item-row-<?php echo $modalId;?>").length;
         $("#add-checklist-item-modal<?php echo $modalId;?>").on("click",function(){
             var checklist_item_title=$("#checklist-add-item-modal<?php echo $modalId;?>")[0].value;
             checklist_items.push({
@@ -1429,7 +1429,7 @@
             });
             var newTempId=checklist_items.length;
             $('#checklist-items-panel-modal<?php echo $modalId;?>').append(`
-                <div id="checklist-item-row-${newTempId}" class="list-group-item mb5 checklist-item-row-${newTempId} b-a rounded text-break" data-id="${newTempId}"><a href="#" title="" data-id="${newTempId}" data-value="${newTempId}" data-act="update-checklist-item-status-checkbox"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" item-id="${newTempId}" class="delete-checklist-item<?php echo $modalId;?>" title="Delete checklist item"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">${checklist_item_title}</span></div>
+                <div id="checklist-item-row-${newTempId}" class="list-group-item mb5 checklist-item-row-${newTempId} b-a rounded text-break" data-id="${newTempId}"><a href="#" title="" data-id="${newTempId}" data-value="${newTempId}" data-act="update-checklist-item-status-checkbox"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" onclick="delete_checklist_item(this)" item-id="${newTempId}" class="delete-checklist-item<?php echo $modalId;?>" title="Delete checklist item"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">${checklist_item_title}</span></div>
             `);
             $("#checklist-add-item-modal<?php echo $modalId;?>")[0].value="";
             checklists++;
@@ -1437,10 +1437,13 @@
         })
         $(".delete-checklist-item<?php echo $modalId;?>").on('click',function () {
             checklist_items.splice(checklist_items.findIndex(oneItem=>oneItem.id==$(this).attr("item-id")),1)
+            console.log($(this))
             $(this).parent().remove();
             checklists--;
             $(".chcklists_count_modal<?php echo $modalId;?>").text(checklists);
         });
+
+        
 
         count_checklists();
 
@@ -1798,6 +1801,7 @@
     var dependency_status=0;
     var checklist_items=[];
     var cost_items=[];
+    var checklists=0;
     function save_new_quote(){
         var table=$("#table-costs-item-list<?php echo $modalId; ?>")[0].getElementsByTagName('tbody')[0];
         var newRow = table.insertRow();
@@ -1842,4 +1846,12 @@
         if(isset($gotTask)&&$gotTask->cost_items)
         echo 'cost_items=JSON.parse(`'.$gotTask->cost_items.'`);';
     ?>
+    function delete_checklist_item(element){
+        var deleteId=element.getAttribute("item-id");
+        checklist_items.splice(checklist_items.findIndex(oneItem=>oneItem.id==deleteId),1)
+        checklists--;
+        $(".chcklists_count_modal<?php echo $modalId;?>").text(checklists);
+        var parentElement = element.parentNode;
+        parentElement.parentNode.removeChild(parentElement); 
+    }
 </script>
