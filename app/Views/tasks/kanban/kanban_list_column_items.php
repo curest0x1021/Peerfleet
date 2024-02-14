@@ -155,7 +155,7 @@ foreach ($tasks as $data) {
         $options .= modal_anchor(get_uri("tasks/modal_form_edit/".$data->id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_task'), "data-post-id" => $data->id));
     }
     // if (can_delete_tasks($data)) {
-        $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_task'), "onclick"=>"confirm('hello')","class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("tasks/delete"), "data-action" => "delete-confirmation"));
+        $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_task'), "onclick"=>'delete_task('.$data->id.')',"class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("tasks/delete"), "data-action" => "delete-confirmation"));
     // }
     echo '<tr><td class="">' . 
     $check_status . '</td><td>' . 

@@ -1528,9 +1528,9 @@ class Tasks extends Security_Controller {
         $id = $this->request->getPost('id');
         $info = $this->Tasks_model->get_one($id);
 
-        if (!$this->can_delete_tasks($info)) {
-            app_redirect("forbidden");
-        }
+        // if (!$this->can_delete_tasks($info)) {
+        //     app_redirect("forbidden");
+        // }
 
         if ($this->Tasks_model->delete_task_and_sub_items($id)) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
