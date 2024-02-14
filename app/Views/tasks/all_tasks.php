@@ -42,6 +42,7 @@
         window.scrollToKanbanContent = true;
         $(".modal-dialog").removeClass("modal-lg");
         $(".modal-dialog").addClass("modal-xl");
+        
     });
 </script>
 <?php echo view("tasks/batch_update/batch_update_script"); ?>
