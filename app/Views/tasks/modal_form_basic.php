@@ -1199,7 +1199,7 @@
                             <?php
                                 if(isset($gotChecklistItems))
                                 foreach($gotChecklistItems as $oneItem){
-                                    echo '<div id="checklist-item-row-'.$oneItem->id.'" class="list-group-item mb5 checklist-item-row b-a rounded text-break" data-id="'.$oneItem->id.'"><a href="#" title="" data-id="'.$oneItem->id.'" data-value="'.$oneItem->id.'" data-act="update-checklist-item-status-checkbox"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" item-id="'.$oneItem->id.'" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-'.$oneItem->id.'" data-act="ajax-request" data-action-url="'. get_uri("/task_libraries"."/delete_checklist_item"."/".$oneItem->id).'"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">'.$oneItem->title.'</span></div>';
+                                    echo '<div id="checklist-item-row-'.$oneItem->id.'" class="list-group-item mb5 checklist-item-row b-a rounded text-break" data-id="'.$oneItem->id.'"><a href="#" title="" data-id="'.$oneItem->id.'" data-value="'.$oneItem->id.'" data-act="update-checklist-item-status-checkbox"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" item-id="'.$oneItem->id.'" class="delete-checklist-item" title="Delete checklist item"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">'.$oneItem->title.'</span></div>';
                                 }
                             ?>
                             </div>
@@ -1481,11 +1481,11 @@
             //reload kanban
         }
 
-        var checklists = $(".checklist-items .checklist-item-row").length;
+        checklists = $(".checklist-items .checklist-item-row").length;
         $(".delete-checklist-item").click(function () {
-            console.log(checklist_items)
-            checklist_items.splice(checklist_items.findIndex(oneItem=>oneItem.id==$(this).attr("item-id")),1);
-            console.log(checklist_items)
+
+            checklist_items.splice(checklist_items.findIndex(oneItem=>oneItem.id==$(this).attr("item-id")),1)
+            $(this).parent().remove();
             checklists--;
             $(".chcklists_count").text(checklists);
         });
@@ -1592,8 +1592,12 @@
 
         });
         $("#btn-add-new-quote-start").on("click",function(){
-            $("#insert-cost-item-panel-new").prop("hidden",false);
-            $("#btn-add-new-quote-start").prop("disabled", true);
+            if($("#insert-cost-item-panel-new").prop("hidden")){
+                $("#insert-cost-item-panel-new").prop("hidden",false);
+            }else{
+                $("#insert-cost-item-panel-new").prop("hidden",true);
+            }
+            
 
         })
         $("#btn-insert-add-cost-item").on("click",function(){
@@ -1650,7 +1654,7 @@
             });
             var newTempId=checklist_items.length;
             $('#checklist-items').append(`
-                <div id='checklist-item-row-${newTempId}' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='${newTempId}'><a href="#" title="" data-id="${newTempId}" data-value="${newTempId}" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" item-id="${newTempId}" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-${newTempId}" data-act="ajax-request" data-action-url="<?php echo get_uri("/task_libraries"."/delete_checklist_item_permanently"."/");?>${newTempId}"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
+                <div id='checklist-item-row-${newTempId}' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='${newTempId}'><a href="#" title="" data-id="${newTempId}" data-value="${newTempId}" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" onclick="delete_checklist_item(this)" item-id="${newTempId}" class="delete-checklist-item" title="Delete checklist item" ><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
             `);
             $("#checklist-add-item")[0].value="";
             checklists++;
@@ -1844,6 +1848,7 @@
     var dependency_status=0;
     var checklist_items=[];
     var cost_items=[];
+    var checklists=0;
     function save_new_quote(){
         var table=$("#table-costs-item-list")[0].getElementsByTagName('tbody')[0];
         var newRow = table.insertRow();
@@ -1882,4 +1887,12 @@
         if(isset($gotTask)&&$gotTask->cost_items)
         echo 'cost_items=JSON.parse(`'.$gotTask->cost_items.'`);';
     ?>
+    function delete_checklist_item(element){
+        var deleteId=element.getAttribute("item-id");
+        checklist_items.splice(checklist_items.findIndex(oneItem=>oneItem.id==deleteId),1)
+        checklists--;
+        $(".chcklists_count").text(checklists);
+        var parentElement = element.parentNode;
+        parentElement.parentNode.removeChild(parentElement); 
+    }
 </script>

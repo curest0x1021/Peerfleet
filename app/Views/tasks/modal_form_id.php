@@ -1437,7 +1437,6 @@
         })
         $(".delete-checklist-item<?php echo $modalId;?>").on('click',function () {
             checklist_items.splice(checklist_items.findIndex(oneItem=>oneItem.id==$(this).attr("item-id")),1)
-            console.log($(this))
             $(this).parent().remove();
             checklists--;
             $(".chcklists_count_modal<?php echo $modalId;?>").text(checklists);
