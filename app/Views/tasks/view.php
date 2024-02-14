@@ -161,13 +161,13 @@ $task_link = anchor(get_uri("tasks/view/$model_info->id"), '<i data-feather="ext
 
         //count checklists
         function count_checklists() {
-            var checklists = $(".checklist-items .checklist-item-row").length;
+            checklists = $(".checklist-items .checklist-item-row").length;
             $(".chcklists_count").text(checklists);
         }
 
-        var checklists = $(".checklist-items .checklist-item-row").length;
+         checklists = $(".checklist-items .checklist-item-row").length;
         $(".delete-checklist-item").click(function() {
-            checklists--;
+            // checklists--;
             $(".chcklists_count").text(checklists);
         });
 
@@ -456,6 +456,14 @@ $task_link = anchor(get_uri("tasks/view/$model_info->id"), '<i data-feather="ext
             }
         });
     }
+    var checklists=0;
+    function delete_task(element){
+        checklists--;
+        $(".chcklists_count").text(checklists);
+    }
+    <?php
+    
+    ?>
 </script>
 
 <?php
