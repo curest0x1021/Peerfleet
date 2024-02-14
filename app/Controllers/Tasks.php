@@ -639,7 +639,7 @@ class Tasks extends Security_Controller {
         $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
         $allMilestones=$this->Milestones_model->get_all()->getResultArray();
         $allTasks=$this->Tasks_model->get_all()->getResultArray();
-        return $this->template->view('tasks/modal_form_new',["allTasks"=>$allTasks,"project_id"=>$project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        return $this->template->view('tasks/modal_form_id',["allTasks"=>$allTasks,"project_id"=>$project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     /*----*/
     /*----*/
@@ -654,7 +654,7 @@ class Tasks extends Security_Controller {
         $gotProject=$this->Projects_model->get_one($gotTask->project_id);
         $allTasks=$this->Tasks_model->get_all()->getResultArray();
         // $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_library"=>$id,"deleted"=>0))->getResult();
-        return $this->template->view('tasks/modal_form_new',["allTasks"=>$allTasks,"gotChecklistItems"=>$gotChecklistItems,"gotTask"=>$gotTask,"task_id"=>$task_id,"gotProject"=>$gotProject,"project_id"=>$gotTask->project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        return $this->template->view('tasks/modal_form_id',["allTasks"=>$allTasks,"gotChecklistItems"=>$gotChecklistItems,"gotTask"=>$gotTask,"task_id"=>$task_id,"gotProject"=>$gotProject,"project_id"=>$gotTask->project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     /*----*/
 
