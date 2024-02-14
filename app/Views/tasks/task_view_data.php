@@ -281,7 +281,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                             <?php } ?>
 
                             <?php if ($model_info->description) { ?>
-                                <div class="col-md-12 mb15 text-wrap">
+                                <div style="word-wrap:break-word;" class="col-md-12 mb15 text-wrap">
                                     <?php echo $model_info->description ? nl2br(link_it(process_images_from_content($model_info->description))) : ""; ?>
                                 </div>
                             <?php } ?>
