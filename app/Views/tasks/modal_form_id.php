@@ -1,4 +1,6 @@
+<?php $modalId=rand(); ?>
 <div id="tasks-dropzone" class="post-dropzone">
+    
     <div class="modal-body clearfix">
         <?php echo form_open(get_uri("tasks/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
         <input hidden name="id" value="<?php if(isset($gotTask)) echo $gotTask->id; ?>" />
@@ -17,7 +19,7 @@
                             <label for="title" class="col-md-4"><?php echo app_lang('title'); ?>:</label>
                             <div class="col-md-8" >
                                 <input
-                                id="title_of_task"
+                                id="title_of_task<?php echo $modalId;?>"
                                 name="title"
                                 value="<?php echo isset($gotTask) ?$gotTask->title:""; ?>"
                                 class="form-control",
@@ -46,7 +48,7 @@
                             );
 
                             echo form_input(array(
-                                "id" => "category_input",
+                                "id" => "category_input".$modalId,
                                 "name" => "category_input",
                                 "value" => isset($gotTask)?$gotTask->category:"",
                                 "class" => "form-control",
@@ -66,7 +68,7 @@
                             <div class="col-md-8" >
                                 <?php                                
                                 echo form_input(array(
-                                    "id" => "dock_list_number",
+                                    "id" => "dock_list_number".$modalId,
                                     "name" => "dock_list_number",
                                     "value" => isset($gotTask)?$gotTask->dock_list_number:"",
                                     "class" => "form-control",
@@ -107,7 +109,7 @@
                                     ),
                                 );
                                 echo form_input(array(
-                                    "id" => "supplier",
+                                    "id" => "supplier".$modalId,
                                     "name" => "supplier",
                                     "value" =>isset($gotTask)&& $gotTask->supplier?$gotTask->supplier:$suppliers_dropdown[0]['id'],
                                     "class" => "form-control",
@@ -129,7 +131,7 @@
                                     $status_dropdown[]=array("id"=>$oneStatus['id'],'text'=>$oneStatus['title']);
                                 }
                                 echo form_input(array(
-                                    "id" => "status_id",
+                                    "id" => "status_id".$modalId,
                                     "name" => "status_id",
                                     "value" => isset($gotTask)&&$gotTask->status_id?$gotTask->status_id:$status_dropdown[0]['id'],
                                     "class" => "form-control",
@@ -150,7 +152,7 @@
                                     $priority_dropdown[]=array("id"=>$onePriority['id'],'text'=>$onePriority['title']);
                                 }
                                 echo form_input(array(
-                                    "id" => "priority_id",
+                                    "id" => "priority_id".$modalId,
                                     "name" => "priority_id",
                                     "value" => isset($gotTask)&&$gotTask->priority_id?$gotTask->priority_id:$priority_dropdown[0]['id'],
                                     "class" => "form-control",
@@ -169,7 +171,7 @@
                             <div class=" col-md-9">
                                 <?php
                                 echo form_input(array(
-                                    "id" => "start_date",
+                                    "id" => "start_date".$modalId,
                                     "name" => "start_date",
                                     "autocomplete" => "off",
                                     "value" => isset($gotTask)&&$gotTask->start_date?date('d.m.Y', strtotime($gotTask->start_date)):"",
@@ -195,7 +197,7 @@
                                     $milestone_dropdown[]=array("id"=>$oneMilestone['id'],"text"=>$oneMilestone['title']);
                                 }
                                 echo form_input(array(
-                                    "id" => "milestone_id",
+                                    "id" => "milestone_id".$modalId,
                                     "name" => "milestone_id",
                                     "value" => isset($gotTask)&&$gotTask->milestone_id?$gotTask->milestone_id:$milestone_dropdown[0]['id'],
                                     "class" => "form-control",
@@ -240,7 +242,7 @@
                                     ),
                                 );
                                 echo form_input(array(
-                                    "id" => "assigned_to",
+                                    "id" => "assigned_to".$modalId,
                                     "name" => "assigned_to",
                                     "value" => isset($gotTask)&&$gotTask->assigned_to?$gotTask->assigned_to:"-",
                                     "class" => "form-control",
@@ -286,7 +288,7 @@
                             );
 
                             echo form_input(array(
-                                "id" => "collaborators",
+                                "id" => "collaborators".$modalId,
                                 "name" => "collaborators",
                                 "value" => isset($gotTask)&&$gotTask->collaborators?$gotTask->collaborators:"-",
                                 "class" => "form-control",
@@ -307,7 +309,7 @@
                             <div class=" col-md-9">
                                 <?php
                                 echo form_input(array(
-                                    "id" => "deadline",
+                                    "id" => "deadline".$modalId,
                                     "name" => "deadline",
                                     "style"=>"border:1px solid lightgray",
                                     "autocomplete" => "off",
@@ -333,7 +335,7 @@
                             <div style="width:97%;" >
                             <?php
                             echo form_textarea(array(
-                                "id" => "description",
+                                "id" => "description".$modalId,
                                 "name" => "description",
                                 "value" => isset($gotTask)&&$gotTask->description?$gotTask->description:"",
                                 "class" => "form-control",
@@ -356,7 +358,7 @@
                             <div style="width:97%" >
                             <?php
                             echo form_textarea(array(
-                                "id" => "location",
+                                "id" => "location".$modalId,
                                 "name" => "location",
                                 "value" => isset($gotTask)&&$gotTask->location?$gotTask->location:"",
                                 "class" => "form-control",
@@ -381,7 +383,7 @@
                             <div style="width:97%" style="border:1px solid lightgray;border-radius:5px" >
                             <?php
                             echo form_textarea(array(
-                                "id" => "specification",
+                                "id" => "specification".$modalId,
                                 "name" => "specification",
                                 "value" => isset($gotTask)&&$gotTask->specification?$gotTask->specification:"",
                                 "class" => "form-control",
@@ -411,7 +413,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "gas_free_certificate_yes",
+                                            "id" => "gas_free_certificate_yes".$modalId,
                                             "name" => "gas_free_certificate",
                                             "class" => "form-check-input",
                                         ), "1", isset($gotTask)&&isset($gotTask->gas_free_certificate)&&$gotTask->gas_free_certificate==1?true:false);
@@ -434,7 +436,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "painting_after_completion_yes",
+                                            "id" => "painting_after_completion_yes".$modalId,
                                             "name" => "painting_after_completion",
                                             "class" => "form-check-input",
                                         ), "1", true);
@@ -457,7 +459,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "light_yes",
+                                            "id" => "light_yes".$modalId,
                                             "name" => "light",
                                             "class" => "form-check-input",
                                         ), "1", true);
@@ -480,7 +482,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "parts_on_board_yes",
+                                            "id" => "parts_on_board_yes".$modalId,
                                             "name" => "parts_on_board",
                                             "class" => "form-check-input",
                                         ), "1", true);
@@ -503,7 +505,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "ventilation_yes",
+                                            "id" => "ventilation_yes".$modalId,
                                             "name" => "ventilation",
                                             "class" => "form-check-input",
                                         ), "1", true);
@@ -526,7 +528,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "transport_to_yard_workshop_yes",
+                                            "id" => "transport_to_yard_workshop_yes".$modalId,
                                             "name" => "transport_to_yard_workshop",
                                             "class" => "form-check-input",
                                         ), "1", true);
@@ -549,7 +551,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "crane_assistance_yes",
+                                            "id" => "crane_assistance_yes".$modalId,
                                             "name" => "crane_assistance",
                                             "class" => "form-check-input",
                                         ), "1", true);
@@ -572,7 +574,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "transport_outside_yard_yes",
+                                            "id" => "transport_outside_yard_yes".$modalId,
                                             "name" => "transport_outside_yard",
                                             "class" => "form-check-input",
                                         ), "1", true);
@@ -595,7 +597,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "cleaning_before_yes",
+                                            "id" => "cleaning_before_yes".$modalId,
                                             "name" => "cleaning_before",
                                             "class" => "form-check-input",
                                         ), "1", true);
@@ -603,7 +605,7 @@
                                         <label for="cleaning_before_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "cleaning_before_no",
+                                            "id" => "cleaning_before_no".$modalId,
                                             "name" => "cleaning_before",
                                             "class" => "form-check-input",
                                         ), "0", false);
@@ -618,7 +620,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "material_yards_supply_yes",
+                                            "id" => "material_yards_supply_yes".$modalId,
                                             "name" => "material_yards_supply",
                                             "class" => "form-check-input",
                                         ), "1", true);
@@ -641,7 +643,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "cleaning_after_yes",
+                                            "id" => "cleaning_after_yes".$modalId,
                                             "name" => "cleaning_after",
                                             "class" => "form-check-input",
                                         ), "1", true);
@@ -664,7 +666,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "material_owners_supply_yes",
+                                            "id" => "material_owners_supply_yes".$modalId,
                                             "name" => "material_owners_supply",
                                             "class" => "form-check-input",
                                         ), "1", true);
@@ -687,7 +689,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "work_permit_yes",
+                                            "id" => "work_permit_yes".$modalId,
                                             "name" => "work_permit",
                                             "class" => "form-check-input",
                                         ), "1", true);
@@ -710,7 +712,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "risk_assessment_yes",
+                                            "id" => "risk_assessment_yes".$modalId,
                                             "name" => "risk_assessment",
                                             "class" => "form-check-input",
                                         ), "1", true);
@@ -741,7 +743,7 @@
                             <div class=" col-md-8">
                                 <?php
                                 echo form_input(array(
-                                    "id" => "maker",
+                                    "id" => "maker".$modalId,
                                     "name" => "maker",
                                     "value" => isset($gotTask)&&$gotTask->maker?$gtTask->maker:"",
                                     "class" => "form-control",
@@ -760,7 +762,7 @@
                             <div class=" col-md-8" >
                                 <?php
                                 echo form_input(array(
-                                    "id" => "type",
+                                    "id" => "type".$modalId,
                                     "name" => "type",
                                     "value" => isset($gotTask)&&$gotTask->type?$gotTask->type:"",
                                     "class" => "form-control",
@@ -779,7 +781,7 @@
                             <div class=" col-md-8">
                                 <?php
                                 echo form_input(array(
-                                    "id" => "serial_number",
+                                    "id" => "serial_number".$modalId,
                                     "name" => "serial_number",
                                     "value" => isset($gotTask)&&$gotTask->serial_number?$gotTask->serial_number:"",
                                     "class" => "form-control",
@@ -798,7 +800,7 @@
                             <div class=" col-md-8" >
                                 <?php
                                 echo form_input(array(
-                                    "id" => "pms_scs_number",
+                                    "id" => "pms_scs_number".$modalId,
                                     "name" => "pms_scs_number",
                                     "value" => isset($gotTask)&&$gotTask->pms_scs_number?$gotTask->pms_scs_number:"",
                                     "class" => "form-control",
@@ -820,13 +822,13 @@
                             <b>Cost Item List</b>
                         </div>
                         <div class="card-body" style="padding:1px" >
-                            <table id="table-costs-item-list" class="table " style="margin:0" >
+                            <table id="table-costs-item-list<?php echo $modalId;?>" class="table " style="margin:0" >
                                 <thead>
                                 <tr>
                                     <td>Cost item name</td>
                                     <td>UNIT PRICE AND QUANTITY</td>
                                     <td>QUOTE</td>
-                                    <td ><button type="button" id="btn-add-new-quote-start" class="btn btn-default btn-sm" ><i data-feather="plus" class ></i></button></td>
+                                    <td ><button type="button" id="btn-add-new-quote-start<?php echo $modalId;?>" class="btn btn-default btn-sm" ><i data-feather="plus" class ></i></button></td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -850,14 +852,14 @@
                                     ?>
                                 </tbody>
                             </table>
-                            <div id="insert-cost-item-panel-new" style="margin:5px;" hidden>
+                            <div id="insert-cost-item-panel-new<?php echo $modalId;?>" style="margin:5px;" hidden>
                                 <div style="min-height:5vh" ></div>
-                                <input hidden id="editing_cost_item" value="" />
+                                <input hidden id="editing_cost_item<?php echo $modalId;?>" value="" />
                                 <div class="row" >
                                     <div class="form-group" >
                                         <label>Cost item name:</label>
                                         <input
-                                            id="input_cost_item_name"
+                                            id="input_cost_item_name<?php echo $modalId;?>"
                                             class="form-control"
                                             type="text"
                                             style="border:1px solid lightgray;border-radius:5px"
@@ -868,7 +870,7 @@
                                     <div class="form-group" >
                                         <label>Description:</label>
                                         <textarea
-                                            id="cost_item_description"
+                                            id="cost_item_description<?php echo $modalId;?>"
                                             class="form-control"
                                             type="text"
                                             style="border:1px solid lightgray;border-radius:5px"
@@ -881,7 +883,7 @@
                                             <label>Quote type:</label>
                                             <select
                                                 name="cost_item_quote_type"
-                                                id="cost_item_quote_type"
+                                                id="cost_item_quote_type<?php echo $modalId;?>"
                                                 class="form-control"
                                                 style="border:1px solid lightgray;border-radius:5px"
                                             >
@@ -894,7 +896,7 @@
                                         <div class="form-group" >
                                             <label>Quantity:</label>
                                             <input
-                                                id="input_cost_item_quantity"
+                                                id="input_cost_item_quantity<?php echo $modalId;?>"
                                                 class="form-control"
                                                 value="0.0"
                                                 type="number"
@@ -906,7 +908,7 @@
                                         <div class="form-group" >
                                             <label>Measurement unit:</label>
                                             <input
-                                                id="input_cost_item_measurement_unit"
+                                                id="input_cost_item_measurement_unit<?php echo $modalId;?>"
                                                 class="form-control"
                                                 placeholder="pcs"
                                                 value="pcs"
@@ -920,7 +922,7 @@
                                         <div class="form-group" >
                                             <label>Unit price:</label>
                                             <div class="input-group mb-3" style="border:1px solid lightgray;border-radius:5px">
-                                                <input value="0.00" class="form-control" id="input_cost_item_unit_price" type="number" />
+                                                <input value="0.00" class="form-control" id="input_cost_item_unit_price<?php echo $modalId;?>" type="number" />
                                                 <?php
                                                 $cost_item_currency_dropdown=array(
                                                 array("id"=>"AUD","text"=>"AUD"),
@@ -1102,7 +1104,7 @@
                                                 array("id"=>"ZWD","text"=>"ZWD"));
 
                                                 echo form_input(array(
-                                                    "id" => "input_cost_item_currency_select",
+                                                    "id" => "input_cost_item_currency_select".$modalId,
                                                     "name" => "input_cost_item_currency_select",
                                                     "value" => "AUD",
                                                     "class" => "form-control",
@@ -1120,7 +1122,7 @@
                                         <div class="form-group" >
                                             <label>Discount:</label>
                                             <div class="input-group mb-3" style="border:1px solid lightgray;border-radius:5px">
-                                                <input id="cost_item_discount" type="text" class="form-control" value="0.0">
+                                                <input id="cost_item_discount<?php echo $modalId;?>" type="text" class="form-control" value="0.0">
                                                 <input readonly type="text" class="form-control" value="%" />
                                             </div>
                                         </div>
@@ -1129,15 +1131,15 @@
                                 <div class="row" >
                                     <div class="form-group" >
                                         <label>Yard remarks:</label>
-                                        <textarea style="border:1px solid lightgray;border-radius:5px" id="cost_item_yard_remarks" class="form-control" name="yard_remarks" ></textarea>
+                                        <textarea style="border:1px solid lightgray;border-radius:5px" id="cost_item_yard_remarks<?php echo $modalId;?>" class="form-control" name="yard_remarks" ></textarea>
                                     </div>
                                 </div>
                                 <div class="row" >
                                     <div class="col-md-1" >
-                                        <button id="btn-insert-add-cost-item" type="button" class="btn btn-primary" >Save</button>
+                                        <button id="btn-insert-add-cost-item<?php echo $modalId;?>" type="button" class="btn btn-primary" >Save</button>
                                     </div>
                                     <div class="col-md-1" >
-                                        <button id="cancel-add-cost-item" type="button" class="btn btn-default" >Cancel</button>
+                                        <button id="cancel-add-cost-item<?php echo $modalId;?>" type="button" class="btn btn-default" >Cancel</button>
                                     </div>
                                 </div>
                             </div>
@@ -1152,33 +1154,33 @@
                     // echo form_open(get_uri("tasks/save_checklist_item"), array("id" => "checklist_form", "class" => "general-form", "role" => "form")); 
                     ?>
                     <div class="card-header d-flex">
-                        <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count_modal">0</span><span>/</span><span class="chcklists_count_modal"></span>
+                        <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count_modal<?php echo $modalId;?>">0</span><span>/</span><span class="chcklists_count_modal<?php echo $modalId;?>"></span>
                     </div>
                     <div class="card-body d-flex" >
                         <div class="col-md-12 mb15 b-t">
                             <div class="pb10 pt10">
                                 <!-- <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count_modal">0</span><span>/</span><span class="chcklists_count_modal"></span> -->
                             </div>
-                            <input type="hidden" id="is_checklist_group" name="is_checklist_group" value="" />
-                            <div class="checklist-items-panel-modal" id="checklist-items-panel-modal">
+                            <input type="hidden" id="is_checklist_group<?php echo $modalId;?>" name="is_checklist_group" value="" />
+                            <div class="checklist-items-panel-modal<?php echo $modalId;?>" id="checklist-items-panel-modal<?php echo $modalId;?>">
                                 <!--chekclist-items-lsiting-here-->
                             <?php
                                 if(isset($gotChecklistItems))
-                                foreach($gotChecklistItems as $oneItem){
-                                    echo '<div id="checklist-item-row-33" class="list-group-item mb5 checklist-item-row b-a rounded text-break" data-id="33"><a href="#" title="" data-id="33" data-value="1" data-act="update-checklist-item-status-checkbox"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" item-id="'.$oneItem->id.'" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-33" data-act="ajax-request" data-action-url="#"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">'.$oneItem->title.'</span></div>';
+                                foreach($gotChecklistItems as $key=>$oneItem){
+                                    echo '<div id="checklist-item-row-'.$modalId.'" class="list-group-item mb5 checklist-item-row-'.$modalId.' b-a rounded text-break" data-id="'.$oneItem->id.'"><a href="#" title="" data-id="'.$oneItem->id.'" data-value="'.$oneItem->id.'" data-act="update-checklist-item-status-checkbox"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" item-id="'.$oneItem->id.'" class="delete-checklist-item'.$modalId.'" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-'.$oneItem->id.'" data-act="ajax-request" data-action-url="#"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">'.$oneItem->title.'</span></div>';
                                 }
                             ?>
                             </div>
-                                <div class="mb5 mt5 btn-group checklist-options-panel-modal hide" role="group">
-                                    <button id="type-new-item-button" type="button" class="btn btn-default checklist_button active"> <?php echo app_lang('type_new_item'); ?></button>
-                                    <button id="select-from-template-button" type="button" class="btn btn-default checklist_button"> <?php echo app_lang('select_from_template'); ?></button>
+                                <div class="mb5 mt5 btn-group checklist-options-panel-modal<?php echo $modalId;?> hide" role="group">
+                                    <button id="type-new-item-button<?php echo $modalId;?>" type="button" class="btn btn-default checklist_button<?php echo $modalId;?> active"> <?php echo app_lang('type_new_item'); ?></button>
+                                    <button id="select-from-template-button<?php echo $modalId;?>" type="button" class="btn btn-default checklist_button<?php echo $modalId;?>"> <?php echo app_lang('select_from_template'); ?></button>
                                     <!-- <button id="select-from-checklist-group-button" type="button" class="btn btn-default checklist_button"> <?php echo app_lang('select_from_checklist_group'); ?></button> -->
                                 </div>
                                 <div class="form-group">
                                     <div class="mt5 p0" style="border:1px solid lightgray;border:5px;">
                                         <?php
                                         echo form_input(array(
-                                            "id" => "checklist-add-item-modal",
+                                            "id" => "checklist-add-item-modal".$modalId,
                                             "name" => "checklist-add-item-modal",
                                             "class" => "form-control",
                                             "placeholder" => app_lang('add_item'),
@@ -1190,9 +1192,9 @@
                                         ?>
                                     </div>
                                 </div>
-                                <div class="mb10 p0 checklist-options-panel-modal hide">
-                                    <button id="add-checklist-item-modal" type="button" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('add'); ?></button>
-                                    <button id="checklist-options-panel-modal-close" type="button" class="btn btn-default ms-2"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('cancel'); ?></button>
+                                <div class="mb10 p0 checklist-options-panel-modal<?php echo $modalId; ?> hide">
+                                    <button id="add-checklist-item-modal<?php echo $modalId; ?>" type="button" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('add'); ?></button>
+                                    <button id="checklist-options-panel-modal-close<?php echo $modalId; ?>" type="button" class="btn btn-default ms-2"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('cancel'); ?></button>
                                 </div>
                         </div>
                     </div>
@@ -1210,13 +1212,13 @@
                                         <i data-feather="shuffle" class="icon-16"></i> <?php echo app_lang('add_dependency'); ?>
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li id="toggle-blocking-panel"><?php echo js_anchor(app_lang("this_task_blocking"), array("class" => "add-dependency-btn dropdown-item", "data-dependency_type" => "blocking")); ?></li>
-                                        <li id="toggle-blocked-by-panel" role="presentation"><?php echo js_anchor(app_lang("this_task_blocked_by"), array("class" => "add-dependency-btn dropdown-item", "data-dependency_type" => "blocked_by")); ?></li>
+                                        <li id="toggle-blocking-panel<?php echo $modalId; ?>"><?php echo js_anchor(app_lang("this_task_blocking"), array("class" => "add-dependency-btn dropdown-item", "data-dependency_type" => "blocking")); ?></li>
+                                        <li id="toggle-blocked-by-panel<?php echo $modalId; ?>" role="presentation"><?php echo js_anchor(app_lang("this_task_blocked_by"), array("class" => "add-dependency-btn dropdown-item", "data-dependency_type" => "blocked_by")); ?></li>
                                     </ul>
                                 </span>
                             </div>
-                            <div class="col-md-12 mb15" id="dependency-area">
-                                <div class="pb10 pt10 hide" id="dependency-list-title">
+                            <div class="col-md-12 mb15" id="dependency-area<?php echo $modalId; ?>">
+                                <div class="pb10 pt10 hide" id="dependency-list-title<?php echo $modalId; ?>">
                                     <strong><?php echo app_lang("dependency"); ?></strong>
                                 </div>
                                 <?php
@@ -1227,21 +1229,21 @@
                                 if(is_array($gotDependencies)) foreach($gotDependencies as $oneDependency){
                                     if($oneDependency['blocking']==1){
                                         $blockingDependencies[]= '
-                                        <div id="dependency-task-row-'.$oneDependency['id'].'" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
-                                        <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-'.$oneDependency['id'].'" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
+                                        <div id="dependency-task-row-'.$oneDependency['id'].'-'.$modalId.'" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
+                                        <a href="#" class="delete-dependency-task'.$modalId.'" title="Delete" data-fade-out-on-success="#dependency-task-row-'.$oneDependency['id'].'-'.$modalId.'" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
                                         <div class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></a><a href="#" data-post-id="'.$oneDependency['id'].'" data-modal-lg="1" data-act="ajax-modal" data-title="" data-action-url="#">'.$oneDependency['title'].'</a></div>
                                         ';
                                     }else $blockedDependencies[]='
-                                    <div id="dependency-task-row-'.$oneDependency['id'].'" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
-                                    <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-'.$oneDependency['id'].'" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
+                                    <div id="dependency-task-row-'.$oneDependency['id'].'-'.$modalId.'" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
+                                    <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-'.$oneDependency['id'].'-'.$modalId.'" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
                                     <div class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></a><a href="#" data-post-id="'.$oneDependency['id'].'" data-modal-lg="1" data-act="ajax-modal" data-title="" data-action-url="#">'.$oneDependency['title'].'</a></div>
                                     ';
                                     
                                 };
                                 ?>
-                                <div class="p10 list-group-item mb15 dependency-section <?php echo (count($blockingDependencies)>0)?"":"hide"; ?>" id="blocking-area">
+                                <div class="p10 list-group-item mb15 dependency-section<?php echo $modalId;?> <?php echo (count($blockingDependencies)>0)?"":"hide"; ?>" id="blocking-area<?php echo $modalId; ?>">
                                     <div class="pb10"><strong><?php echo app_lang("blocking"); ?></strong></div>
-                                    <div id="blocking-tasks"><?php if(isset($blocking)) echo $blocking; ?>
+                                    <div id="blocking-tasks<?php echo $modalId; ?>"><?php if(isset($blocking)) echo $blocking; ?>
                                     <?php
                                     
                                     foreach ($blockingDependencies as $oneBlocking) {
@@ -1250,9 +1252,9 @@
                                     ?>
                                     </div>
                                 </div>
-                                <div class="p10 list-group-item mb15 dependency-section <?php echo (count($blockedDependencies)>0)?"":"hide"; ?>" id="blocked-by-area">
+                                <div class="p10 list-group-item mb15 dependency-section<?php echo $modalId; ?> <?php echo (count($blockedDependencies)>0)?"":"hide"; ?>" id="blocked-by-area<?php echo $modalId; ?>">
                                     <div class="pb10"><strong><?php echo app_lang("blocked_by"); ?></strong></div>
-                                    <div id="blocked-by-tasks"><?php if(isset($blocked_by)) echo $blocked_by; ?>
+                                    <div id="blocked-by-tasks<?php echo $modalId; ?>"><?php if(isset($blocked_by)) echo $blocked_by; ?>
                                     <?php
                                     foreach ($blockedDependencies as $oneBlocked) {
                                         echo $oneBlocked;
@@ -1262,9 +1264,9 @@
                                 </div>
 
                                 
-                                <div id="edit-dependency-panel" hidden  >
+                                <div id="edit-dependency-panel<?php echo $modalId; ?>" hidden  >
                                 <?php //echo form_open(get_uri("tasks/save_dependency_tasks"), array("id" => "dependency_tasks_form", "class" => "general-form hide", "role" => "form")); ?>
-                                <input hidden name="task_id" value="<?php //echo $task_id; ?>" />
+                                <input hidden name="task_id<?php echo $modalId; ?>" value="<?php //echo $task_id; ?>" />
 
                                 <div class="form-group mb0">
                                     <div class="mt5 col-md-12 p0" style="border:1px solid lightgray;border-radius:5px">
@@ -1278,7 +1280,7 @@
                                             );
                                         }
                                         echo form_input(array(
-                                            "id" => "dependency_task",
+                                            "id" => "dependency_task".$modalId,
                                             "name" => "dependency_task",
                                             "class" => "form-control validate-hidden",
                                             "placeholder" => app_lang('tasks'),
@@ -1290,8 +1292,8 @@
                                     </div>
                                 </div>
                                 <div class="p0 mt10">
-                                    <button id="btn-insert-edit-dependency" type="button" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('add'); ?></button>
-                                    <button id="btn-cancel-edit-dependency" type="button" class="dependency-tasks-close btn btn-default"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('cancel'); ?></button>
+                                    <button id="btn-insert-edit-dependency<?php echo $modalId;?>" type="button" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('add'); ?></button>
+                                    <button id="btn-cancel-edit-dependency<?php echo $modalId;?>" type="button" class="dependency-tasks-close btn btn-default"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('cancel'); ?></button>
                                 </div>
                                 <?php //echo form_close(); ?>
                                 </div>
@@ -1307,14 +1309,14 @@
             <div><?php echo view("includes/dropzone_preview"); ?></div>
             <div stlyle="margin-top:10px" class="row" >
                 <div class="col-md-2" >
-                    <button id="btn-file-upload-task" class="btn btn-default upload-file-button float-start me-auto btn-sm round" type="button" style="color:#7988a2"><i data-feather="camera" class="icon-16"></i> <?php echo app_lang("upload_file"); ?></button>
+                    <button id="btn-file-upload-task<?php echo $modalId;?>" class="btn btn-default upload-file-button float-start me-auto btn-sm round" type="button" style="color:#7988a2"><i data-feather="camera" class="icon-16"></i> <?php echo app_lang("upload_file"); ?></button>
                 </div>
                 <div class="col-md-9" ></div>
                 <div class="col-md-1"  >
                     <button type="button"
                     style="float:right"
                     old-id="btn-task-save"
-                    id="btn-save-task-library"
+                    id="btn-save-task-library<?php echo $modalId;?>"
                     class="btn btn-primary" ><i data-feather="check-circle" class="icon-16"></i> Save</button>
                 </div>
             </div>
@@ -1328,21 +1330,21 @@
     $(document).ready(function () {
         // $("#cost_item_currency_symbol").on('mousedown', false);
         // $("#cost_item_currency_symbol").on('keydown', false);
-        $("#file-selector-btn").on("click",function(){
-            $("#file-selector")[0].click();
+        $("#file-selector-btn<?php echo $modalId;?>").on("click",function(){
+            $("#file-selector<?php echo $modalId;?>")[0].click();
         })
-        $("#category_input").select2({
+        $("#category_input<?php echo $modalId;?>").select2({
             data: <?php 
                 echo (json_encode($category_dropdown)); 
                 ?>
         });
-        $("#input_cost_item_currency_select").select2({
+        $("#input_cost_item_currency_select<?php echo $modalId;?>").select2({
             data: <?php 
                 echo (json_encode($cost_item_currency_dropdown)); 
             ?>
         });
 
-        $("#category_input").on("change",function(e){
+        $("#category_input<?php echo $modalId;?>").on("change",function(e){
             
             $.ajax({
                 url: '<?php echo_uri("tasks/get_count_category"); ?>/'+e.target.value,
@@ -1356,36 +1358,36 @@
                 }
             });
         })
-        $("#collaborators").select2({
+        $("#collaborators<?php echo $modalId;?>").select2({
             data: <?php echo (json_encode($collaborators_dropdown)); ?>
         });
-        $("#status_id").select2({
+        $("#status_id<?php echo $modalId;?>").select2({
             data: <?php echo (json_encode($status_dropdown)); ?>
         });
-        $("#priority_id").select2({
+        $("#priority_id<?php echo $modalId;?>").select2({
             data: <?php echo (json_encode($priority_dropdown)); ?>
         });
-        $("#milestone_id").select2({
+        $("#milestone_id<?php echo $modalId;?>").select2({
             data: <?php echo (json_encode($milestone_dropdown)); ?>
         });
-        $("#assigned_to").select2({
+        $("#assigned_to<?php echo $modalId;?>").select2({
             data: <?php echo (json_encode($assigned_to_dropdown)); ?>
         });
-        $("#supplier").select2({
+        $("#supplier<?php echo $modalId;?>").select2({
             data: <?php echo (json_encode($suppliers_dropdown)); ?>
         });
-        $("#dependency-task").select2({
+        $("#dependency-task<?php echo $modalId;?>").select2({
             data: <?php echo (json_encode($dependency_dropdown)); ?>
         });
-        setDatePicker("#start_date");
-        setDatePicker("#deadline");
-        $('#description').summernote({
+        setDatePicker("#start_date<?php echo $modalId;?>");
+        setDatePicker("#deadline<?php echo $modalId;?>");
+        $("#description<?php echo $modalId;?>").summernote({
             height:250
         });
         $('.note-editor').css({
             'border-radius':'5px'
         });
-        var $selector = $("#checklist-items-panel-modal");
+        var $selector = $("#checklist-items-panel-modal<?php echo $modalId;?>");
         Sortable.create($selector[0], {
             animation: 150,
             chosenClass: "sortable-chosen",
@@ -1394,7 +1396,7 @@
                 appLoader.show();
                 //prepare checklist items indexes
                 var data = "";
-                $.each($selector.find(".checklist-item-row"), function (index, ele) {
+                $.each($selector.find(".checklist-item-row-<?php echo $modalId;?>"), function (index, ele) {
                     if (data) {
                         data += ",";
                     }
@@ -1404,7 +1406,7 @@
 
                 //update sort indexes
                 $.ajax({
-                    url: '<?php echo_uri("task_librareis/save_checklist_items_sort") ?>',
+                    url: '<?php echo_uri("tasks/save_checklist_items_sort") ?>',
                     type: "POST",
                     data: {sort_values: data},
                     success: function () {
@@ -1417,82 +1419,82 @@
         //show the items in checklist
 
         //show save & cancel button when the checklist-add-item-form is focused
-        $("#checklist-add-item-modal").focus(function () {
-            $(".checklist-options-panel-modal").removeClass("hide");
-            $("#checklist-add-item-error").removeClass("hide");
+        $("#checklist-add-item-modal<?php echo $modalId;?>").focus(function () {
+            $(".checklist-options-panel-modal<?php echo $modalId;?>").removeClass("hide");
+            $("#checklist-add-item-error<?php echo $modalId;?>").removeClass("hide");
         });
 
         $("#checklist-options-panel-close").click(function () {
-            $(".checklist-options-panel-modal").addClass("hide");
-            $("#checklist-add-item-error").addClass("hide");
-            $("#checklist-add-item-modal").val("");
+            $(".checklist-options-panel-modal<?php echo $modalId;?>").addClass("hide");
+            $("#checklist-add-item-error<?php echo $modalId;?>").addClass("hide");
+            $("#checklist-add-item-modal<?php echo $modalId;?>").val("");
 
-            $("#checklist-add-item-modal").select2("destroy").val("");
-            $("#checklist-template-toggle-button").html("<?php echo "<i data-feather='hash' class='icon-16'></i> " . app_lang('select_from_template'); ?>");
-            $("#checklist-template-toggle-button").addClass('checklist-template-button');
+            $("#checklist-add-item-modal<?php echo $modalId;?>").select2("destroy").val("");
+            $("#checklist-template-toggle-button<?php echo $modalId;?>").html("<?php echo "<i data-feather='hash' class='icon-16'></i> " . app_lang('select_from_template'); ?>");
+            $("#checklist-template-toggle-button<?php echo $modalId;?>").addClass('checklist-template-button');
             feather.replace();
 
-            $(".checklist_button").removeClass("active");
-            $("#type-new-item-button").addClass("active");
+            $(".checklist_button<?php echo $modalId;?>").removeClass("active");
+            $("#type-new-item-button<?php echo $modalId;?>").addClass("active");
         });
 
         //count checklists
         function count_checklists() {
-            var checklists = $(".checklist-items-panel-modal .checklist-item-row").length;
-            $(".chcklists_count_modal").text(checklists);
+            var checklists = $(".checklist-items-panel-modal<?php echo $modalId;?> .checklist-item-row-<?php echo $modalId;?>").length;
+            $(".chcklists_count_modal<?php echo $modalId;?>").text(checklists);
 
             //reload kanban
         }
 
-        var checklists = $(".checklist-items-panel-modal .checklist-item-row").length;
-        $(".delete-checklist-item").click(function () {
+        var checklists = $(".checklist-items-panel-modal<?php echo $modalId;?> .checklist-item-row-<?php echo $modalId;?>").length;
+        $(".delete-checklist-item<?php echo $modalId;?>").click(function () {
             checklist_items.splice(checklist_items.findIndex(oneItem=>oneItem.id==$(this).attr("item-id")),1)
             checklists--;
-            $(".chcklists_count_modal").text(checklists);
+            $(".chcklists_count_modal<?php echo $modalId;?>").text(checklists);
         });
 
         count_checklists();
 
-        var checklist_complete = $(".checklist-items .checkbox-checked").length;
-        $(".chcklists_status_count_modal").text(checklist_complete);
+        var checklist_complete = $(".checklist-items-panel-modal<?php echo $modalId;?> .checkbox-checked").length;
+        $(".chcklists_status_count_modal<?php echo $modalId;?>").text(checklist_complete);
 
-        $("#checklist_form").appForm({
+        $("#checklist_form<?php echo $modalId;?>").appForm({
             isModal: false,
             onSuccess: function (response) {
-                $("#checklist-add-item-modal").val("");
-                $("#checklist-add-item-modal").focus();
-                $("#checklist-items").append(response.data);
+                $("#checklist-add-item-modal<?php echo $modalId;?>").val("");
+                $("#checklist-add-item-modal<?php echo $modalId;?>").focus();
+                $("#checklist-items-panel-modal<?php echo $modalId;?>").append(response.data);
 
                 count_checklists();
             }
         });
          //change the add checklist input box type
-         $("#select-from-template-button").click(function() {
-            $(".checklist_button").removeClass("active");
+         $("#select-from-template-button<?php echo $modalId;?>").click(function() {
+            $(".checklist_button<?php echo $modalId;?>").removeClass("active");
             applySelect2OnChecklistTemplate();
             $(this).addClass("active");
-            $("#is_checklist_group").val("0");
+            $("#is_checklist_group<?php echo $modalId;?>").val("0");
         });
 
-        $("#select-from-checklist-group-button").click(function() {
-            $(".checklist_button").removeClass("active");
+        $("#select-from-checklist-group-button<?php echo $modalId;?>").click(function() {
+            $(".checklist_button<?php echo $modalId;?>").removeClass("active");
             applySelect2OnChecklistGroup();
             $(this).addClass("active");
-            $("#is_checklist_group").val("1");
+            $("#is_checklist_group<?php echo $modalId;?>").val("1");
         });
 
-        $("#type-new-item-button").click(function() {
-            $(".checklist_button").removeClass("active");
-            $("#checklist-add-item-modal").select2("destroy").val("").focus();
-            $("#is_checklist_group").val("0");
+        $("#type-new-item-button<?php echo $modalId;?>").click(function() {
+            $(".checklist_button<?php echo $modalId;?>").removeClass("active");
+            $("#checklist-add-item-modal<?php echo $modalId;?>").select2("destroy").val("").focus();
+            $("#is_checklist_group<?php echo $modalId;?>").val("0");
             $(this).addClass("active");
         });
 
         function applySelect2OnChecklistTemplate() {
-            $("#checklist-add-item-modal").select2({
+            $("#checklist-add-item-modal<?php echo $modalId;?>").select2({
                 showSearchBox: true,
                 ajax: {
-                    url: "<?php echo get_uri("task_libraries/get_checklist_template_suggestion"); ?>",
+                    url: "<?php echo get_uri("tasks/get_checklist_template_suggestion"); ?>",
                     type: 'POST',
                     dataType: 'json',
                     quietMillis: 250,
@@ -1505,17 +1507,17 @@
                         return {
                             results: data
                         };
-                        $("#checklist-add-item-modal").val("");
+                        $("#checklist-add-item-modal<?php echo $modalId;?>").val("");
                     }
                 }
             });
         }
 
         function applySelect2OnChecklistGroup() {
-            $("#checklist-add-item-modal").select2({
+            $("#checklist-add-item-modal<?php echo $modalId;?>").select2({
                 showSearchBox: true,
                 ajax: {
-                    url: "<?php echo get_uri("task_libraries/get_checklist_group_suggestion"); ?>",
+                    url: "<?php echo get_uri("tasks/get_checklist_group_suggestion"); ?>",
                     type: 'POST',
                     dataType: 'json',
                     quietMillis: 250,
@@ -1528,7 +1530,7 @@
                         return {
                             results: data
                         };
-                        $("#checklist-add-item-modal").val("");
+                        $("#checklist-add-item-modal<?php echo $modalId;?>").val("");
                     }
                 }
             });
@@ -1543,17 +1545,17 @@
                 status_checkbox.addClass("checkbox-checked");
                 checklist_complete++;
             }
-            $(".chcklists_status_count_modal").text(checklist_complete);
+            $(".chcklists_status_count_modal<?php echo $modalId;?>").text(checklist_complete);
 
 
         });
-        $("#btn-add-new-quote-start").on("click",function(){
-            $("#insert-cost-item-panel-new").prop("hidden",false);
-            $("#btn-add-new-quote-start").prop("disabled", true);
+        $("#btn-add-new-quote-start<?php echo $modalId;?>").on("click",function(){
+            $("#insert-cost-item-panel-new<?php echo $modalId;?>").prop("hidden",false);
+            $("#btn-add-new-quote-start<?php echo $modalId;?>").prop("disabled", true);
 
         })
-        $("#btn-insert-add-cost-item").on("click",function(){
-            var table=$("#table-costs-item-list")[0].getElementsByTagName('tbody')[0];
+        $("#btn-insert-add-cost-item<?php echo $modalId;?>").on("click",function(){
+            var table=$("#table-costs-item-list<?php echo $modalId;?>")[0].getElementsByTagName('tbody')[0];
             var newRow = table.insertRow();
 
             var cell0 = newRow.insertCell(0);
@@ -1561,95 +1563,98 @@
             var cell2 = newRow.insertCell(2);
             var cell3 = newRow.insertCell(3);
 
-            cell0.innerHTML = $("#input_cost_item_name")[0].value;
-            cell1.innerHTML = Number($("#input_cost_item_quantity")[0].value).toFixed(1)+' '+$("#input_cost_item_measurement_unit")[0].value+" X "+$("#input_cost_item_currency_select")[0].value+" "+Number($("#input_cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
-            cell2.innerHTML = $("#input_cost_item_currency_select")[0].value+" "+(Number($("#input_cost_item_quantity")[0].value)*Number($("#input_cost_item_unit_price")[0].value)).toFixed(2);
+            cell0.innerHTML = $("#input_cost_item_name<?php echo $modalId;?>")[0].value;
+            cell1.innerHTML = Number($("#input_cost_item_quantity<?php echo $modalId;?>")[0].value).toFixed(1)+' '+$("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value+" X "+$("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value+" "+Number($("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type<?php echo $modalId;?>")[0].value+" ) ";
+            cell2.innerHTML = $("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value+" "+(Number($("#input_cost_item_quantity<?php echo $modalId;?>")[0].value)*Number($("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value)).toFixed(2);
             cell3.innerHTML=`
             <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button>
             <button type="button" onClick="delete_item(${cost_items.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="" ></i></button>
             `;
-            $("#btn-add-new-quote-start").prop("disabled", false);
-            $("#insert-cost-item-panel-new").prop("hidden",false);
-            if($("#editing_cost_item")[0].value=="")
+            $("#btn-add-new-quote-start<?php echo $modalId;?>").prop("disabled", false);
+            $("#insert-cost-item-panel-new<?php echo $modalId;?>").prop("hidden",false);
+            if($("#editing_cost_item<?php echo $modalId;?>")[0].value=="")
                 cost_items.push({
-                    name:$("#input_cost_item_name")[0].value,
-                    quantity:$("#input_cost_item_quantity")[0].value,
-                    measurement_unit:$("#input_cost_item_measurement_unit")[0].value,
-                    unit_price:$("#input_cost_item_unit_price")[0].value,
-                    quote_type:$("#cost_item_quote_type")[0].value,
-                    currency:$("#input_cost_item_currency_select")[0].value,
+                    name:$("#input_cost_item_name<?php echo $modalId;?>")[0].value,
+                    quantity:$("#input_cost_item_quantity<?php echo $modalId;?>")[0].value,
+                    measurement_unit:$("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value,
+                    unit_price:$("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value,
+                    quote_type:$("#cost_item_quote_type<?php echo $modalId;?>")[0].value,
+                    currency:$("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value,
                 });
             else{
-                $("#table-costs-item-list")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
-                cost_items[Number($("#editing_cost_item")[0].value)]={
-                    name:$("#input_cost_item_name")[0].value,
-                    quantity:$("#input_cost_item_quantity")[0].value,
-                    measurement_unit:$("#input_cost_item_measurement_unit")[0].value,
-                    unit_price:$("#input_cost_item_unit_price")[0].value,
-                    quote_type:$("#cost_item_quote_type")[0].value,
-                    currency:$("#input_cost_item_currency_select")[0].value,
+                $("#table-costs-item-list<?php echo $modalId;?>")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
+                cost_items[Number($("#editing_cost_item<?php echo $modalId;?>")[0].value)]={
+                    name:$("#input_cost_item_name<?php echo $modalId;?>")[0].value,
+                    quantity:$("#input_cost_item_quantity<?php echo $modalId;?>")[0].value,
+                    measurement_unit:$("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value,
+                    unit_price:$("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value,
+                    quote_type:$("#cost_item_quote_type<?php echo $modalId;?>")[0].value,
+                    currency:$("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value,
                 };
-                $("#editing_cost_item")[0].value=""
+                $("#editing_cost_item<?php echo $modalId;?>")[0].value=""
             }
         });
-        $("#cancel-add-cost-item").on("click",function(){
-            $("#insert-cost-item-panel-new").prop("hidden",true);
-            $("#btn-add-new-quote-start").prop("disabled", false);
+        $("#cancel-add-cost-item<?php echo $modalId;?>").on("click",function(){
+            $("#insert-cost-item-panel-new<?php echo $modalId;?>").prop("hidden",true);
+            $("#btn-add-new-quote-start<?php echo $modalId;?>").prop("disabled", false);
         })
         
-        $("#add-checklist-item-modal").on("click",function(){
-            var checklist_item_title=$("#checklist-add-item-modal")[0].value;
+        $("#add-checklist-item-modal<?php echo $modalId;?>").on("click",function(){
+            var checklist_item_title=$("#checklist-add-item-modal<?php echo $modalId;?>")[0].value;
             checklist_items.push({
                 title:checklist_item_title,
                 task_id:<?php echo isset($gotTask->id)?$gotTask->id:0; ?>,
                 is_checked:0
             });
             var newTempId=checklist_items.length;
-            $('#checklist-items-panel-modal').append(`
-                <div id='checklist-item-row-${newTempId}' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='${newTempId}'><a href="#" title="" data-id="${newTempId}" data-value="${newTempId}" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" item-id="${newTempId}" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-${newTempId}" data-act="ajax-request" data-action-url="#"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
+            // $('#checklist-items-panel-modal<?php echo $modalId;?>').append(`
+            //     <div id='checklist-item-row-${newTempId}' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='${newTempId}'><a href="#" title="" data-id="${newTempId}" data-value="${newTempId}" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" item-id="${newTempId}" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-${newTempId}" data-act="ajax-request" data-action-url="#"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
+            // `);
+            $('#checklist-items-panel-modal<?php echo $modalId;?>').append(`
+                <div id='checklist-item-row-<?php echo $modalId;?>' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='${newTempId}'><a href="#" title="" data-id="${newTempId}" data-value="${newTempId}" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" item-id="${newTempId}" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-${newTempId}" data-act="ajax-request" data-action-url="#"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
             `);
-            $("#checklist-add-item-modal")[0].value="";
+            $("#checklist-add-item-modal<?php echo $modalId;?>")[0].value="";
             checklists++;
-            $(".chcklists_count_modal").text(checklists);
+            $(".chcklists_count_modal<?php echo $modalId;?>").text(checklists);
         })
         var uploadUrl = "<?php echo get_uri('tasks/upload_file'); ?>";
         var validationUri = "<?php echo get_uri('tasks/validate_task_file'); ?>";
         var dropzone = attachDropzoneWithForm("#tasks-dropzone", uploadUrl, validationUri);
-        $("#btn-save-task-library").on("click",function(){
+        $("#btn-save-task-library<?php echo $modalId; ?>").on("click",function(){
             var rise_csrf_token = $('[name="rise_csrf_token"]').val();
             var id=$('[name="id"]').val();
-            var title=$("#title_of_task")[0].value;
-            var category=$("#category_input")[0].value;
-            var dock_list_number=$("#dock_list_number")[0].value;
-            var supplier=$("#supplier")[0].value;
-            var status_id=$("#status_id")[0].value;
-            var priority_id=$("#priority_id")[0].value;
-            var milestone_id=$("#milestone_id")[0].value;
-            var assigned_to=$("#assigned_to")[0].value;
-            var collaborators=$("#collaborators")[0].value;
-            var description=$("#description")[0].value;
-            var location=$("#location")[0].value;
-            var specification=$("#specification")[0].value;
-            var gas_free_certificate_yes=$("#gas_free_certificate_yes")[0].value;
-            var painting_after_completion_yes=$("#painting_after_completion_yes")[0].value;
-            var light_yes=$("#light_yes")[0].value;
-            var parts_on_board_yes=$("#parts_on_board_yes")[0].value;
-            var ventilation_yes=$("#ventilation_yes")[0].value;
-            var transport_to_yard_workshop_yes=$("#transport_to_yard_workshop_yes")[0].value;
-            var crane_assistance_yes=$("#crane_assistance_yes")[0].value;
-            var transport_outside_yard_yes=$("#transport_outside_yard_yes")[0].value;
-            var cleaning_before_yes=$("#cleaning_before_yes")[0].value;
-            var material_yards_supply_yes=$("#material_yards_supply_yes")[0].value;
-            var cleaning_after_yes=$("#cleaning_after_yes")[0].value;
-            var material_owners_supply_yes=$("#material_owners_supply_yes")[0].value;
-            var work_permit_yes=$("#work_permit_yes")[0].value;
-            var risk_assessment_yes=$("#risk_assessment_yes")[0].value;
-            var maker=$("#maker")[0].value;
-            var type=$("#type")[0].value;
-            var serial_number=$("#serial_number")[0].value;
-            var pms_scs_number=$("#pms_scs_number")[0].value;
-            var start_date=$("#start_date")[0].value;
-            var deadline=$("#deadline")[0].value;
+            var title=$("#title_of_task<?php echo $modalId; ?>")[0].value;
+            var category=$("#category_input<?php echo $modalId; ?>")[0].value;
+            var dock_list_number=$("#dock_list_number<?php echo $modalId; ?>")[0].value;
+            var supplier=$("#supplier<?php echo $modalId; ?>")[0].value;
+            var status_id=$("#status_id<?php echo $modalId; ?>")[0].value;
+            var priority_id=$("#priority_id<?php echo $modalId; ?>")[0].value;
+            var milestone_id=$("#milestone_id<?php echo $modalId; ?>")[0].value;
+            var assigned_to=$("#assigned_to<?php echo $modalId; ?>")[0].value;
+            var collaborators=$("#collaborators<?php echo $modalId; ?>")[0].value;
+            var description=$("#description<?php echo $modalId; ?>")[0].value;
+            var location=$("#location<?php echo $modalId; ?>")[0].value;
+            var specification=$("#specification<?php echo $modalId; ?>")[0].value;
+            var gas_free_certificate_yes=$("#gas_free_certificate_yes<?php echo $modalId; ?>")[0].value;
+            var painting_after_completion_yes=$("#painting_after_completion_yes<?php echo $modalId; ?>")[0].value;
+            var light_yes=$("#light_yes<?php echo $modalId; ?>")[0].value;
+            var parts_on_board_yes=$("#parts_on_board_yes<?php echo $modalId; ?>")[0].value;
+            var ventilation_yes=$("#ventilation_yes<?php echo $modalId; ?>")[0].value;
+            var transport_to_yard_workshop_yes=$("#transport_to_yard_workshop_yes<?php echo $modalId; ?>")[0].value;
+            var crane_assistance_yes=$("#crane_assistance_yes<?php echo $modalId; ?>")[0].value;
+            var transport_outside_yard_yes=$("#transport_outside_yard_yes<?php echo $modalId; ?>")[0].value;
+            var cleaning_before_yes=$("#cleaning_before_yes<?php echo $modalId; ?>")[0].value;
+            var material_yards_supply_yes=$("#material_yards_supply_yes<?php echo $modalId; ?>")[0].value;
+            var cleaning_after_yes=$("#cleaning_after_yes<?php echo $modalId; ?>")[0].value;
+            var material_owners_supply_yes=$("#material_owners_supply_yes<?php echo $modalId; ?>")[0].value;
+            var work_permit_yes=$("#work_permit_yes<?php echo $modalId; ?>")[0].value;
+            var risk_assessment_yes=$("#risk_assessment_yes<?php echo $modalId; ?>")[0].value;
+            var maker=$("#maker<?php echo $modalId; ?>")[0].value;
+            var type=$("#type<?php echo $modalId; ?>")[0].value;
+            var serial_number=$("#serial_number<?php echo $modalId; ?>")[0].value;
+            var pms_scs_number=$("#pms_scs_number<?php echo $modalId; ?>")[0].value;
+            var start_date=$("#start_date<?php echo $modalId; ?>")[0].value;
+            var deadline=$("#deadline<?php echo $modalId; ?>")[0].value;
             var project_id=`<?php echo $project_id; ?>`
             const myForm=new FormData();
             myForm.append("rise_csrf_token",rise_csrf_token);
@@ -1712,54 +1717,54 @@
                 }
             });
         });
-        $('#toggle-blocking-panel').on('click',function(){
-            if($("#blocking-area").hasClass('hide')) $("#blocking-area").removeClass("hide");
-            if(!$("#blocked-by-area").hasClass('hide')) {
-                if($("#blocked-by-area").text=="")
-                    $("#blocked-by-area").addClass("hide")
+        $('#toggle-blocking-panel<?php echo $modalId; ?>').on('click',function(){
+            if($("#blocking-area<?php echo $modalId; ?>").hasClass('hide')) $("#blocking-area<?php echo $modalId; ?>").removeClass("hide");
+            if(!$("#blocked-by-area<?php echo $modalId; ?>").hasClass('hide')) {
+                if($("#blocked-by-area<?php echo $modalId; ?>").text=="")
+                    $("#blocked-by-area<?php echo $modalId; ?>").addClass("hide")
                 else {
 
                 }
             }
             dependency_status=1;
-            if($("#dependency-list-title").hasClass('hide')) $("#dependency-list-title").removeClass("hide")
-            if($("#edit-dependency-panel").prop('hidden')) $("#edit-dependency-panel").prop("hidden",false)
+            if($("#dependency-list-title<?php echo $modalId; ?>").hasClass('hide')) $("#dependency-list-title<?php echo $modalId; ?>").removeClass("hide")
+            if($("#edit-dependency-panel<?php echo $modalId; ?>").prop('hidden')) $("#edit-dependency-panel<?php echo $modalId; ?>").prop("hidden",false)
             // if($("#dependency-area").hasClass('hide')) $("#dependency-area").removeClass("hide")
-            $("#dependency_task").select2({
+            $("#dependency_task<?php echo $modalId; ?>").select2({
             data: <?php echo (json_encode($dependency_dropdown)); ?>
             });
         });
-        $('#toggle-blocked-by-panel').on('click',function(){
-            if(!$("#blocking-area").hasClass('hide')) {
-                if($("#blocking-area").text=="")
-                    $("#blocking-area").addClass("hide");
+        $('#toggle-blocked-by-panel<?php echo $modalId; ?>').on('click',function(){
+            if(!$("#blocking-area<?php echo $modalId; ?>").hasClass('hide')) {
+                if($("#blocking-area<?php echo $modalId; ?>").text=="")
+                    $("#blocking-area<?php echo $modalId; ?>").addClass("hide");
                 else{
                     
                 }
             }
             dependency_status=2;
-            if($("#blocked-by-area").hasClass('hide')) $("#blocked-by-area").removeClass("hide")
-            if($("#dependency-list-title").hasClass('hide')) $("#dependency-list-title").removeClass("hide")
-            if($("#edit-dependency-panel").prop('hidden')) $("#edit-dependency-panel").prop("hidden",false)
+            if($("#blocked-by-area<?php echo $modalId; ?>").hasClass('hide')) $("#blocked-by-area<?php echo $modalId; ?>").removeClass("hide")
+            if($("#dependency-list-title<?php echo $modalId; ?>").hasClass('hide')) $("#dependency-list-title<?php echo $modalId; ?>").removeClass("hide")
+            if($("#edit-dependency-panel<?php echo $modalId; ?>").prop('hidden')) $("#edit-dependency-panel<?php echo $modalId; ?>").prop("hidden",false)
             // if($("#dependency-area").hasClass('hide')) $("#dependency-area").removeClass("hide")
-            $("#dependency_task").select2({
+            $("#dependency_task<?php echo $modalId; ?>").select2({
                 data: <?php echo (json_encode($dependency_dropdown)); ?>
             });
         });
-        $("#btn-cancel-edit-dependency").on('click',function(){
+        $("#btn-cancel-edit-dependency<?php echo $modalId; ?>").on('click',function(){
             dependency_status=0;
             if(dependencies.length>0){
-                if(!$("#blocking-area").text()) console.log("empty")
-                if(!$("#blocked-by-area").text()) console.log("empty")
+                if(!$("#blocking-area<?php echo $modalId; ?>").text()) console.log("empty")
+                if(!$("#blocked-by-area<?php echo $modalId; ?>").text()) console.log("empty")
             }else {
-                if(!$("#dependency-list-title").hasClass('hide')) $("#dependency-list-title").addClass("hide")
-                if(!$("#blocking-area").hasClass('hide')) $("#blocking-area").addClass("hide");
-                if(!$("#blocked-by-area").hasClass('hide')) $("#blocked-by-area").addClass("hide")
+                if(!$("#dependency-list-title<?php echo $modalId; ?>").hasClass('hide')) $("#dependency-list-title<?php echo $modalId; ?>").addClass("hide")
+                if(!$("#blocking-area<?php echo $modalId; ?>").hasClass('hide')) $("#blocking-area<?php echo $modalId; ?>").addClass("hide");
+                if(!$("#blocked-by-area<?php echo $modalId; ?>").hasClass('hide')) $("#blocked-by-area<?php echo $modalId; ?>").addClass("hide")
             }
-            if(!$("#edit-dependency-panel").prop('hidden')) $("#edit-dependency-panel").prop("hidden",true)
+            if(!$("#edit-dependency-panel<?php echo $modalId; ?>").prop('hidden')) $("#edit-dependency-panel<?php echo $modalId; ?>").prop("hidden",true)
         })
-        $("#btn-insert-edit-dependency").on('click',function(){
-            var selectedId=$('#dependency_task').val()
+        $("#btn-insert-edit-dependency<?php echo $modalId; ?>").on('click',function(){
+            var selectedId=$('#dependency_task<?php echo $modalId; ?>').val()
             var selectedText=""
             // console.log(selectedId,selectedText)
             for(var oneDependency of dependencies){
@@ -1769,9 +1774,9 @@
             }
             
             if(dependency_status==1){
-                selectedText=$('#edit-dependency-panel .select2-chosen').text();
+                selectedText=$('#edit-dependency-panel<?php echo $modalId; ?> .select2-chosen').text();
                 dependencies.push({id:selectedId,title:selectedText,blocking:dependency_status});
-                $("#blocking-tasks").append(`
+                $("#blocking-tasks<?php echo $modalId; ?>").append(`
                 <div id="dependency-task-row-${selectedId}" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
                 <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-${selectedId}" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
                 <div class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></a><a href="#" data-post-id="${selectedId}" data-modal-lg="1" data-act="ajax-modal" data-title="" data-action-url="#">${selectedText}</a></div>
@@ -1779,9 +1784,9 @@
             }
             
             else if(dependency_status==2) {
-                selectedText=$('#edit-dependency-panel .select2-chosen').text();
+                selectedText=$('#edit-dependency-panel<?php echo $modalId; ?> .select2-chosen').text();
                 dependencies.push({id:selectedId,title:selectedText,blocking:dependency_status});
-                $("#blocked-by-tasks").append(`
+                $("#blocked-by-tasks<?php echo $modalId; ?>").append(`
                 <div id="dependency-task-row-${selectedId}" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
                 <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-${selectedId}" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
                 <div class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></a><a href="#" data-post-id="${selectedId}" data-modal-lg="1" data-act="ajax-modal" data-title="" data-action-url="#">${selectedText}</a></div>
@@ -1801,7 +1806,7 @@
     var checklist_items=[];
     var cost_items=[];
     function save_new_quote(){
-        var table=$("#table-costs-item-list")[0].getElementsByTagName('tbody')[0];
+        var table=$("#table-costs-item-list<?php echo $modalId; ?>")[0].getElementsByTagName('tbody')[0];
         var newRow = table.insertRow();
 
         var cell0 = newRow.insertCell(0);
@@ -1809,26 +1814,26 @@
         var cell2 = newRow.insertCell(2);
         var cell3 = newRow.insertCell(3);
 
-        cell0.innerHTML = $("#quote_name")[0].value;
-        cell1.innerHTML = $("#quote_price")[0].value;
-        cell2.innerHTML = $("#quote_quote")[0].value;
+        cell0.innerHTML = $("#quote_name<?php echo $modalId; ?>")[0].value;
+        cell1.innerHTML = $("#quote_price<?php echo $modalId; ?>")[0].value;
+        cell2.innerHTML = $("#quote_quote<?php echo $modalId; ?>")[0].value;
         cell3.innerHTML = "";
-        $("#btn-save-new-quote")[0].closest("tr").remove();
-        $("#btn-add-new-quote-start").prop("disabled", false);
+        $("#btn-save-new-quote<?php echo $modalId; ?>")[0].closest("tr").remove();
+        $("#btn-add-new-quote-start<?php echo $modalId; ?>").prop("disabled", false);
     }
     function delete_item(index){
         cost_items.splice(index,1);
-        $("#table-costs-item-list")[0].getElementsByTagName('tbody')[0].deleteRow(index);
+        $("#table-costs-item-list<?php echo $modalId; ?>")[0].getElementsByTagName('tbody')[0].deleteRow(index);
     }
     function start_edit_cost_item(index){
-        $("#editing_cost_item")[0].value=index;
-        $("#btn-add-new-quote-start")[0].click();
-        $("#input_cost_item_name")[0].value=cost_items[index].name;
-        $("#input_cost_item_quantity")[0].value=cost_items[index].quantity;
-        $("#input_cost_item_measurement_unit")[0].value=cost_items[index].measurement_unit;
-        $("#input_cost_item_unit_price")[0].value=cost_items[index].unit_price;
-        $("#cost_item_quote_type")[0].value=cost_items[index].quote_type;
-        $("#input_cost_item_currency_select")[0].value=cost_items[index].currency;
+        $("#editing_cost_item<?php echo $modalId; ?>")[0].value=index;
+        $("#btn-add-new-quote-start<?php echo $modalId; ?>")[0].click();
+        $("#input_cost_item_name<?php echo $modalId; ?>")[0].value=cost_items[index].name;
+        $("#input_cost_item_quantity<?php echo $modalId; ?>")[0].value=cost_items[index].quantity;
+        $("#input_cost_item_measurement_unit<?php echo $modalId; ?>")[0].value=cost_items[index].measurement_unit;
+        $("#input_cost_item_unit_price<?php echo $modalId; ?>")[0].value=cost_items[index].unit_price;
+        $("#cost_item_quote_type<?php echo $modalId; ?>")[0].value=cost_items[index].quote_type;
+        $("#input_cost_item_currency_select<?php echo $modalId; ?>")[0].value=cost_items[index].currency;
     }
     <?php
         if(isset($gotTask)&&$gotTask->dependencies)
