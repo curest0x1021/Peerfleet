@@ -555,8 +555,9 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                             <?php echo form_close(); ?>
 
                             <!--Sub tasks-->
-                            <?php echo form_open(get_uri("tasks/save_sub_task"), array("id" => "sub_task_form", "class" => "general-form", "role" => "form")); ?>
-                            <div class="col-md-12 mb15 b-t">
+                            <?php 
+                            echo form_open(get_uri("tasks/save_sub_task"), array("id" => "sub_task_form", "class" => "general-form", "role" => "form")); ?>
+                            <div class="col-md-12 mb15 b-t" hidden>
                                 <div class="pb10 pt10">
                                     <strong><?php echo app_lang("sub_tasks"); ?></strong>
                                 </div>
