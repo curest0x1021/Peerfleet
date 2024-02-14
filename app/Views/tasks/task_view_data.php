@@ -515,7 +515,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
 
                             <!--checklist-->
                             <?php echo form_open(get_uri("tasks/save_checklist_item"), array("id" => "checklist_form", "class" => "general-form", "role" => "form")); ?>
-                            <div class="col-md-12 mb15 b-t" hidden>
+                            <div class="col-md-12 mb15 b-t" >
                                 <div class="pb10 pt10">
                                     <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count">0</span><span>/</span><span class="chcklists_count"></span>
                                 </div>
@@ -573,7 +573,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                 <input type="hidden" name="parent_task_id" value="<?php echo $task_id; ?>" />
                                 <input type="hidden" name="milestone_id" value="<?php echo $model_info->milestone_id; ?>" />
 
-                                <div class="checklist-items" id="sub-tasks">
+                                <div class="sub-tasks" id="sub-tasks">
 
                                 </div>
                                 <?php if ($can_create_tasks) { ?>

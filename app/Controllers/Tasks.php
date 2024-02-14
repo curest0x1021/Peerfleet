@@ -1628,7 +1628,7 @@ class Tasks extends Security_Controller {
 
         $title = "<span class='font-13 $title_class'>" . $title_value . "</span>";
 
-        $delete = ajax_anchor(get_uri("tasks/delete_checklist_item/$data->id"), "<div class='float-end'><i data-feather='x' class='icon-16'></i></div>", array("class" => "delete-checklist-item", "title" => app_lang("delete_checklist_item"), "data-fade-out-on-success" => "#checklist-item-row-$data->id"));
+        $delete = ajax_anchor(get_uri("tasks/delete_checklist_item/$data->id"), "<div class='float-end'><i data-feather='x' class='icon-16'></i></div>", array("onclick"=>"delete_task(this)","class" => "delete-checklist-item", "title" => app_lang("delete_checklist_item"), "data-fade-out-on-success" => "#checklist-item-row-$data->id"));
         if (!$this->can_edit_tasks($data->task_id)) {
             $delete = "";
         }
