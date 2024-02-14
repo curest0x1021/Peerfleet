@@ -1988,11 +1988,11 @@ class Tasks extends Security_Controller {
 
         $task_id = $this->Checklist_items_model->get_one($id)->task_id;
 
-        if ($id) {
-            if (!$this->can_edit_tasks($task_id)) {
-                app_redirect("forbidden");
-            }
-        }
+        // if ($id) {
+        //     if (!$this->can_edit_tasks($task_id)) {
+        //         app_redirect("forbidden");
+        //     }
+        // }
 
         if ($this->Checklist_items_model->delete($id)) {
             echo json_encode(array("success" => true));

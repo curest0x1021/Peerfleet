@@ -44,7 +44,6 @@
         $(".modal-dialog").addClass("modal-xl");
     });
 </script>
-
 <?php echo view("tasks/batch_update/batch_update_script"); ?>
 <?php echo view("tasks/kanban/all_tasks_list_helper_js"); ?>
 <?php echo view("tasks/quick_filters_helper_js"); ?>
