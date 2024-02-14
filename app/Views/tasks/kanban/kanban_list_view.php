@@ -260,7 +260,20 @@
     $(window).resize(function () {
         adjustViewHeightWidth();
     });
-
+    function delete_task(task_id){
+        if(confirm("Are you sure to delete this task? This action is not able to undo.")){
+            $.ajax({
+                url: '<?php echo_uri("tasks/delete"); ?>/',
+                type: 'POST',
+                data:{id:task_id},
+                // dataType: 'json',
+                // data: {value: $(this).attr('data-value')},
+                success: function (response) {
+                    window.location.reload();
+                }
+            });
+        }
+    }
 
 
 </script>
