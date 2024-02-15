@@ -1899,6 +1899,10 @@
         // $("#input_cost_item_currency_select").on("change",function(){
         //     $("#cost_item_currency_symbol")[0].selectedIndex=$("#input_cost_item_currency_select")[0].selectedIndex;
         // })
+        $(".delete-dependency-task").on("click",function(){
+            var deletedIndex=$(this).parent().index();
+            dependencies.splice(deletedIndex,1);
+        })
     });
     var dependencies=[]
     var dependency_status=0;

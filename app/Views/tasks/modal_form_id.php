@@ -1235,7 +1235,7 @@
                                         ';
                                     }else $blockedDependencies[]='
                                     <div id="dependency-task-row-'.$oneDependency['id'].'-'.$modalId.'" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
-                                    <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-'.$oneDependency['id'].'-'.$modalId.'" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
+                                    <a href="#" class="delete-dependency-task'.$modalId.'" title="Delete" data-fade-out-on-success="#dependency-task-row-'.$oneDependency['id'].'-'.$modalId.'" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
                                     <div class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></a><a href="#" data-post-id="'.$oneDependency['id'].'" data-modal-lg="1" data-act="ajax-modal" data-title="" data-action-url="#">'.$oneDependency['title'].'</a></div>
                                     ';
                                     
@@ -1595,7 +1595,7 @@
                 cost_items[editing_cost_item]={
                     name:$("#input_cost_item_name<?php echo $modalId;?>")[0].value,
                     quantity:$("#input_cost_item_quantity<?php echo $modalId;?>")[0].value,
-                    // measurement_unit:$("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value,
+                    measurement_unit:$("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value,
                     unit_price:$("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value,
                     quote_type:$("#cost_item_quote_type<?php echo $modalId;?>")[0].value,
                     currency:$("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value,
@@ -1778,7 +1778,7 @@
                 dependencies.push({id:selectedId,title:selectedText,blocking:dependency_status});
                 $("#blocking-tasks<?php echo $modalId; ?>").append(`
                 <div id="dependency-task-row-${selectedId}" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
-                <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-${selectedId}" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
+                <a href="#" class="delete-dependency-task<?php echo $modalId;?>" title="Delete" data-fade-out-on-success="#dependency-task-row-${selectedId}" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
                 <div class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></a><a href="#" data-post-id="${selectedId}" data-modal-lg="1" data-act="ajax-modal" data-title="" data-action-url="#">${selectedText}</a></div>
                 `)
             }
@@ -1788,7 +1788,7 @@
                 dependencies.push({id:selectedId,title:selectedText,blocking:dependency_status});
                 $("#blocked-by-tasks<?php echo $modalId; ?>").append(`
                 <div id="dependency-task-row-${selectedId}" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
-                <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-${selectedId}" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
+                <a href="#" class="delete-dependency-task<?php echo $modalId;?>" title="Delete" data-fade-out-on-success="#dependency-task-row-${selectedId}" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
                 <div class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></a><a href="#" data-post-id="${selectedId}" data-modal-lg="1" data-act="ajax-modal" data-title="" data-action-url="#">${selectedText}</a></div>
                 `);
             }
@@ -1800,6 +1800,10 @@
         // $("#input_cost_item_currency_select").on("change",function(){
         //     $("#cost_item_currency_symbol")[0].selectedIndex=$("#input_cost_item_currency_select")[0].selectedIndex;
         // })
+        $(".delete-dependency-task<?php echo $modalId;?>").on("click",function(){
+            var deletedIndex=$(this).parent().index();
+            dependencies.splice(deletedIndex,1);
+        })
     });
     var dependencies=[]
     var dependency_status=0;
@@ -1831,7 +1835,7 @@
     function start_edit_cost_item(index){
         editing_cost_item=index;
         $("#editing_cost_item<?php echo $modalId; ?>")[0].value=index;
-        if($("#insert-cost-item-panel-new").prop("hidden")) $("#btn-add-new-quote-start<?php echo $modalId; ?>")[0].click();
+        if($("#insert-cost-item-panel-new<?php echo $modalId; ?>").prop("hidden")) $("#btn-add-new-quote-start<?php echo $modalId; ?>")[0].click();
         $("#input_cost_item_name<?php echo $modalId; ?>")[0].value=cost_items[index].name;
         $("#input_cost_item_quantity<?php echo $modalId; ?>")[0].value=cost_items[index].quantity;
         $("#input_cost_item_measurement_unit<?php echo $modalId; ?>")[0].value=cost_items[index].measurement_unit;
