@@ -1600,7 +1600,7 @@
             }
             $("#input_cost_item_name<?php echo $modalId;?>")[0].value="";
             $("#input_cost_item_quantity<?php echo $modalId;?>")[0].value="";
-            $("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value="";
+            // $("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value="";
             $("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value="";
             $("#cost_item_description<?php echo $modalId;?>")[0].value="";
             $("#cost_item_yard_remarks<?php echo $modalId;?>")[0].value=""
