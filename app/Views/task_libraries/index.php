@@ -1578,6 +1578,8 @@
                     unit_price:$("#cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
                     currency:$("#cost_item_currency")[0].value,
+                    description:$("#cost_item_description")[0].value,
+                    yard_remarks:$("#cost_item_yard_remarks")[0].value,
                 });
             else{
                 $("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
@@ -1588,6 +1590,8 @@
                     unit_price:$("#cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
                     currency:$("#cost_item_currency")[0].value,
+                    description:$("#cost_item_description")[0].value,
+                    yard_remarks:$("#cost_item_yard_remarks")[0].value,
                 };
                 $("#editing_cost_item")[0].value=""
             }
@@ -1802,13 +1806,15 @@
     }
     function start_edit_cost_item(index){
         $("#editing_cost_item")[0].value=index;
-        $("#btn-add-new-quote")[0].click();
+        if($("#insert-cost-item-panel").prop("hidden")) $("#btn-add-new-quote")[0].click();
         $("#cost_item_name")[0].value=cost_items[index].name;
+        $("#cost_item_description")[0].value=cost_items[index].description;
         $("#cost_item_quantity")[0].value=cost_items[index].quantity;
         $("#cost_item_measurement_unit")[0].value=cost_items[index].measurement_unit;
         $("#cost_item_unit_price")[0].value=cost_items[index].unit_price;
         $("#cost_item_quote_type")[0].value=cost_items[index].quote_type;
         $("#cost_item_currency")[0].value=cost_items[index].currency;
+        $("#cost_item_yard_remarks")[0].value=cost_items[index].yard_remarks;
     }
     <?php
         if(isset($gotTasklibrary)&&$gotTasklibrary->dependencies)
