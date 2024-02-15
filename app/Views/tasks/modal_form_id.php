@@ -1585,8 +1585,14 @@
                     yard_remarks:$("#cost_item_yard_remarks<?php echo $modalId;?>")[0].value
                 });
             else{
-                $("#table-costs-item-list<?php echo $modalId;?>")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
-                cost_items[Number($("#editing_cost_item<?php echo $modalId;?>")[0].value)]={
+                // $("#table-costs-item-list<?php 
+                    // echo $modalId;
+                    ?>")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item<?php 
+                    // echo $modalId;
+                    ?>")[0].value));
+                $("#table-costs-item-list<?php echo $modalId;?>")[0].getElementsByTagName('tbody')[0].deleteRow(editing_cost_item);
+                // cost_items[Number($("#editing_cost_item<?php echo $modalId;?>")[0].value)]={
+                cost_items[editing_cost_item]={
                     name:$("#input_cost_item_name<?php echo $modalId;?>")[0].value,
                     quantity:$("#input_cost_item_quantity<?php echo $modalId;?>")[0].value,
                     // measurement_unit:$("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value,
@@ -1596,7 +1602,8 @@
                     description:$("#cost_item_description<?php echo $modalId;?>")[0].value,
                     yard_remarks:$("#cost_item_yard_remarks<?php echo $modalId;?>")[0].value
                 };
-                $("#editing_cost_item<?php echo $modalId;?>")[0].value=""
+                // $("#editing_cost_item<?php echo $modalId;?>")[0].value=""
+                editing_cost_item=null;
             }
             $("#input_cost_item_name<?php echo $modalId;?>")[0].value="";
             $("#input_cost_item_quantity<?php echo $modalId;?>")[0].value="";
@@ -1800,6 +1807,7 @@
     var cost_items=[];
     var checklists=0;
     var checklist_complete=0;
+    var editing_cost_item=null;
     function save_new_quote(){
         var table=$("#table-costs-item-list<?php echo $modalId; ?>")[0].getElementsByTagName('tbody')[0];
         var newRow = table.insertRow();
@@ -1821,6 +1829,7 @@
         $("#table-costs-item-list<?php echo $modalId; ?>")[0].getElementsByTagName('tbody')[0].deleteRow(index);
     }
     function start_edit_cost_item(index){
+        editing_cost_item=index;
         $("#editing_cost_item<?php echo $modalId; ?>")[0].value=index;
         if($("#insert-cost-item-panel-new").prop("hidden")) $("#btn-add-new-quote-start<?php echo $modalId; ?>")[0].click();
         $("#input_cost_item_name<?php echo $modalId; ?>")[0].value=cost_items[index].name;
