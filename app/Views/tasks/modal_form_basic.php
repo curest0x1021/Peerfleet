@@ -1420,6 +1420,25 @@
                     });
                 }
             });
+            $.ajax({
+                url: '<?php echo_uri("tasks/get_project_milestones"); ?>/'+e.target.value,
+                type: 'GET',
+                // dataType: 'json',
+                // data: {value: $(this).attr('data-value')},
+                success: function (response) {
+                    project_milestones=JSON.parse(response);
+                    var milestones_lists=[];
+                    for(var oneMilestone of project_milestones){
+                        milestones_lists.push({
+                            id:oneMilestone.id,
+                            text:oneMilestone.title
+                        })
+                    }
+                    $("#milestone_id").select2({
+                        data: milestones_lists
+                    });
+                }
+            });
         });
         $("#priority_id").select2({
             data: <?php echo (json_encode($priority_dropdown)); ?>
@@ -1664,10 +1683,8 @@
             }
             $("#input_cost_item_name")[0].value="";
             $("#input_cost_item_quantity")[0].value="";
-            $("#input_cost_item_measurement_unit")[0].value="";
-            $("#cost_item_quote_type")[0].value="";
+            // $("#input_cost_item_measurement_unit")[0].value="";
             $("#input_cost_item_unit_price")[0].value="";
-            $("#input_cost_item_currency_select")[0].value=""
             $("#cost_item_description")[0].value=""
             $("#cost_item_yard_remarks")[0].value=""
         });
@@ -1903,7 +1920,7 @@
     }
     function start_edit_cost_item(index){
         $("#editing_cost_item")[0].value=index;
-        $("#btn-add-new-quote-start")[0].click();
+        if($("#insert-cost-item-panel-new").prop("hidden")) $("#btn-add-new-quote-start")[0].click();
         $("#input_cost_item_name")[0].value=cost_items[index].name;
         $("#input_cost_item_quantity")[0].value=cost_items[index].quantity;
         $("#input_cost_item_measurement_unit")[0].value=cost_items[index].measurement_unit;

@@ -1589,7 +1589,7 @@
                 cost_items[Number($("#editing_cost_item<?php echo $modalId;?>")[0].value)]={
                     name:$("#input_cost_item_name<?php echo $modalId;?>")[0].value,
                     quantity:$("#input_cost_item_quantity<?php echo $modalId;?>")[0].value,
-                    measurement_unit:$("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value,
+                    // measurement_unit:$("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value,
                     unit_price:$("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value,
                     quote_type:$("#cost_item_quote_type<?php echo $modalId;?>")[0].value,
                     currency:$("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value,
@@ -1602,8 +1602,6 @@
             $("#input_cost_item_quantity<?php echo $modalId;?>")[0].value="";
             $("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value="";
             $("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value="";
-            $("#cost_item_quote_type<?php echo $modalId;?>")[0].value="";
-            $("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value="";
             $("#cost_item_description<?php echo $modalId;?>")[0].value="";
             $("#cost_item_yard_remarks<?php echo $modalId;?>")[0].value=""
         });
@@ -1824,13 +1822,15 @@
     }
     function start_edit_cost_item(index){
         $("#editing_cost_item<?php echo $modalId; ?>")[0].value=index;
-        $("#btn-add-new-quote-start<?php echo $modalId; ?>")[0].click();
+        if($("#insert-cost-item-panel-new").prop("hidden")) $("#btn-add-new-quote-start<?php echo $modalId; ?>")[0].click();
         $("#input_cost_item_name<?php echo $modalId; ?>")[0].value=cost_items[index].name;
         $("#input_cost_item_quantity<?php echo $modalId; ?>")[0].value=cost_items[index].quantity;
         $("#input_cost_item_measurement_unit<?php echo $modalId; ?>")[0].value=cost_items[index].measurement_unit;
         $("#input_cost_item_unit_price<?php echo $modalId; ?>")[0].value=cost_items[index].unit_price;
         $("#cost_item_quote_type<?php echo $modalId; ?>")[0].value=cost_items[index].quote_type;
         $("#input_cost_item_currency_select<?php echo $modalId; ?>")[0].value=cost_items[index].currency;
+        $("#cost_item_description<?php echo $modalId; ?>")[0].value=cost_items[index].description;
+        $("#cost_item_yard_remarks<?php echo $modalId; ?>")[0].value=cost_items[index].yard_remarks;
     }
     <?php
         if(isset($gotTask)&&$gotTask->dependencies)
