@@ -1667,6 +1667,8 @@
                     unit_price:$("#input_cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
                     currency:$("#input_cost_item_currency_select")[0].value,
+                    description:$("#cost_item_description")[0].value,
+                    yard_remarks:$("#cost_item_yard_remarks")[0].value,
                 });
             else{
                 $("#table-costs-item-list")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
@@ -1677,6 +1679,8 @@
                     unit_price:$("#input_cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
                     currency:$("#input_cost_item_currency_select")[0].value,
+                    description:$("#cost_item_description")[0].value,
+                    yard_remarks:$("#cost_item_yard_remarks")[0].value,
                 };
                 $("#editing_cost_item")[0].value="";
                 
@@ -1927,6 +1931,8 @@
         $("#input_cost_item_unit_price")[0].value=cost_items[index].unit_price;
         $("#cost_item_quote_type")[0].value=cost_items[index].quote_type;
         $("#input_cost_item_currency_select")[0].value=cost_items[index].currency;
+        $("#cost_item_description")[0].value=cost_items[index].description;
+        $("#cost_item_yard_remarks")[0].value=cost_items[index].yard_remarks;
     }
     <?php
         if(isset($gotTask)&&$gotTask->dependencies)
