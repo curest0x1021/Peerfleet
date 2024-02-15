@@ -1642,6 +1642,10 @@
 
         })
         $("#btn-insert-add-cost-item").on("click",function(){
+            if($("#input_cost_item_name")[0].value==""||
+            $("#input_cost_item_quantity")[0].value==""||
+            $("#input_cost_item_unit_price")[0].value=="")
+            return;
             var table=$("#table-costs-item-list")[0].getElementsByTagName('tbody')[0];
             var newRow = table.insertRow();
 
