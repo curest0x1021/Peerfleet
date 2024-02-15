@@ -199,7 +199,7 @@
                                 echo form_input(array(
                                     "id" => "milestone_id".$modalId,
                                     "name" => "milestone_id",
-                                    "value" => isset($gotTask)&&$gotTask->milestone_id?$gotTask->milestone_id:$milestone_dropdown[0]['id'],
+                                    "value" => isset($gotTask)&&$gotTask->milestone_id?$gotTask->milestone_id:"",
                                     "class" => "form-control",
                                     "style"=>"border:1px solid lightgray",
                                     "placeholder" => app_lang('milestone'),
