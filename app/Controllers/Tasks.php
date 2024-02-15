@@ -637,7 +637,7 @@ class Tasks extends Security_Controller {
     function modal_form_new($project_id){
         $allStatus=$this->Task_status_model->get_all()->getResultArray();
         $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
-        $allMilestones=$this->Milestones_model->get_all()->getResultArray();
+        $allMilestones=$this->Milestones_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
         return $this->template->view('tasks/modal_form_id',["allTasks"=>$allTasks,"project_id"=>$project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
@@ -647,9 +647,10 @@ class Tasks extends Security_Controller {
     function modal_form_edit($task_id){
         $allStatus=$this->Task_status_model->get_all()->getResultArray();
         $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
-        $allMilestones=$this->Milestones_model->get_all()->getResultArray();
+        
         // $allTasklibraries=$this->Task_libraries_model->get_all()->getResultArray();
         $gotTask=$this->Tasks_model->get_one($task_id);
+        $allMilestones=$this->Milestones_model->get_all_where(array("project_id"=>$gotTask->project_id))->getResult();
         $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_id"=>$task_id,"deleted"=>0))->getResult();
         $gotProject=$this->Projects_model->get_one($gotTask->project_id);
         $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$gotTask->project_id))->getResult();
@@ -4750,6 +4751,10 @@ class Tasks extends Security_Controller {
     function get_project_tasks($project_id){
         $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
         return json_encode($allTasks);
+    }
+    function get_project_milestones($project_id){
+        $allMilestones=$this->Milestones_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        return json_encode($allMilestones);
     }
     /*----*/
 }
