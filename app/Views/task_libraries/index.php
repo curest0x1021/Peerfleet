@@ -1227,12 +1227,12 @@
                                             if($oneDependency['blocking']==1){
                                                 $blockingDependencies[]= '
                                                 <div id="dependency-task-row-'.$oneDependency['id'].'" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
-                                                <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-'.$oneDependency['id'].'" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
+                                                <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-'.$oneDependency['id'].'" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="'.get_uri("task_libraries/delete_dependency").'">
                                                 <div class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></a><a href="#" data-post-id="'.$oneDependency['id'].'" data-modal-lg="1" data-act="ajax-modal" data-title="" data-action-url="">'.$oneDependency['title'].'</a></div>
                                                 ';
                                             }else $blockedDependencies[]='
                                             <div id="dependency-task-row-'.$oneDependency['id'].'" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
-                                            <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-'.$oneDependency['id'].'" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
+                                            <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-'.$oneDependency['id'].'" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="'.get_uri("task_libraries/delete_dependency").'">
                                             <div class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></a><a href="#" data-post-id="'.$oneDependency['id'].'" data-modal-lg="1" data-act="ajax-modal" data-title="" data-action-url="">'.$oneDependency['title'].'</a></div>
                                             ';
                                             
@@ -1762,7 +1762,7 @@
                 dependencies.push({id:selectedId,title:selectedText,blocking:dependency_status});
                 $("#blocking-tasks").append(`
                 <div id="dependency-task-row-${selectedId}" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
-                <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-${selectedId}" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
+                <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-${selectedId}" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="<?php echo get_uri("task_libraries/delete_dependency");?>">
                 <div class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></a><a href="#" data-post-id="${selectedId}" data-modal-lg="1" data-act="ajax-modal" data-title="" data-action-url="">${selectedText}</a></div>
                 `)
             }
@@ -1772,7 +1772,7 @@
                 dependencies.push({id:selectedId,title:selectedText,blocking:dependency_status});
                 $("#blocked-by-tasks").append(`
                 <div id="dependency-task-row-${selectedId}" class="list-group-item mb5 dependency-task-row b-a rounded" style="border-left: 5px solid #F9A52D !important;">
-                <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-${selectedId}" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="#">
+                <a href="#" class="delete-dependency-task" title="Delete" data-fade-out-on-success="#dependency-task-row-${selectedId}" data-dependency-type="blocked_by" data-act="ajax-request" data-action-url="<?php echo get_uri("task_libraries/delete_dependency");?>">
                 <div class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></a><a href="#" data-post-id="${selectedId}" data-modal-lg="1" data-act="ajax-modal" data-title="" data-action-url="">${selectedText}</a></div>
                 `);
             }
@@ -1783,6 +1783,10 @@
         })
         $("#cost_item_currency").on("change",function(){
             $("#cost_item_currency_symbol")[0].selectedIndex=$("#cost_item_currency")[0].selectedIndex;
+        });
+        $(".delete-dependency-task").on("click",function(){
+            var deletedIndex=$(this).parent().index();
+            dependencies.splice(deletedIndex,1);
         })
     });
     var dependencies=[]
