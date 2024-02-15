@@ -769,5 +769,8 @@ class Task_libraries extends Security_Controller {
     function checklist_item_save(){
         $title=$this->request->getPost('title');
     }
+    function delete_dependency(){
+        return json_encode(array("success"=>true));
+    }
 
 }
