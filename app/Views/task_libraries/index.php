@@ -1595,6 +1595,11 @@
                 };
                 $("#editing_cost_item")[0].value=""
             }
+            $("#cost_item_name")[0].value="";
+            $("#cost_item_quantity")[0].value="";
+            $("#cost_item_unit_price")[0].value="";
+            $("#cost_item_description")[0].value="";
+            $("#cost_item_yard_remarks")[0].value="";
         });
         $("#cancel-add-cost-item").on("click",function(){
             $("#insert-cost-item-panel").prop("hidden",true);

@@ -231,7 +231,7 @@
                                 echo form_input(array(
                                     "id" => "milestone_id",
                                     "name" => "milestone_id",
-                                    "value" => isset($gotTask)&&$gotTask->milestone_id?$gotTask->milestone_id:$milestone_dropdown[0]['id'],
+                                    "value" => isset($gotTask)&&$gotTask->milestone_id?$gotTask->milestone_id:"",
                                     "class" => "form-control",
                                     "style"=>"border:1px solid lightgray",
                                     "placeholder" => app_lang('milestone'),
@@ -1673,7 +1673,7 @@
                 cost_items[Number($("#editing_cost_item")[0].value)]={
                     name:$("#input_cost_item_name")[0].value,
                     quantity:$("#input_cost_item_quantity")[0].value,
-                    measurement_unit:$("#input_cost_item_measurement_unit")[0].value,
+                    // measurement_unit:$("#input_cost_item_measurement_unit")[0].value,
                     unit_price:$("#input_cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
                     currency:$("#input_cost_item_currency_select")[0].value,
