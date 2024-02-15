@@ -1275,8 +1275,8 @@
                                         $dependency_dropdown=array();
                                         foreach ($allTasks as $oneTask) {
                                             $dependency_dropdown[]=array(
-                                                "id"=>$oneTask['id'],
-                                                "text"=>$oneTask['title']
+                                                "id"=>$oneTask->id,
+                                                "text"=>$oneTask->title
                                             );
                                         }
                                         echo form_input(array(

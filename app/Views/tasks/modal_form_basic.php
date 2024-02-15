@@ -1399,6 +1399,28 @@
         $("#project_id").select2({
             data: <?php echo (json_encode($projects_dropdown)); ?>
         });
+        $("#project_id").on("change",function(e){
+            $.ajax({
+                url: '<?php echo_uri("tasks/get_project_tasks"); ?>/'+e.target.value,
+                type: 'GET',
+                // dataType: 'json',
+                // data: {value: $(this).attr('data-value')},
+                success: function (response) {
+                    project_tasks=JSON.parse(response);
+                    var tasks_lists=[];
+                    for(var onetask of project_tasks){
+                        tasks_lists.push({
+                            id:onetask.id,
+                            text:onetask.title
+                        })
+                    }
+                    console.log(tasks_lists)
+                    $("#dependency_task").select2({
+                        data: tasks_lists
+                    });
+                }
+            });
+        });
         $("#priority_id").select2({
             data: <?php echo (json_encode($priority_dropdown)); ?>
         });
