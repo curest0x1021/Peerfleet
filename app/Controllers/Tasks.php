@@ -4756,5 +4756,16 @@ class Tasks extends Security_Controller {
         $allMilestones=$this->Milestones_model->get_all_where(array("project_id"=>$project_id))->getResult();
         return json_encode($allMilestones);
     }
+    function delete_task_dependency($task_id,$dependency_id){
+        $gotTask=$this->Tasks_model->get_one($task_id);
+        $gotDependencies=json_decode($gotTask->dependencies);
+        foreach($gotDependencies as $key=>$oneDependency){
+            if($oneDependency->id==$dependency_id){
+                unset($gotDependencies[$key]);
+                break;
+            }
+        }
+        return json_encode(array("success"=>true));
+    }
     /*----*/
 }
