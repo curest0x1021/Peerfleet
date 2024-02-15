@@ -1544,8 +1544,12 @@
 
         });
         $("#btn-add-new-quote").on("click",function(){
-            $("#insert-cost-item-panel").prop("hidden",false);
-            $("#btn-add-new-quote").prop("disabled", true);
+            if($("#insert-cost-item-panel").prop("hidden")){
+                $("#insert-cost-item-panel").prop("hidden",false);
+            }else {
+                $("#insert-cost-item-panel").prop("hidden",true);
+            }
+            
 
         })
         $("#insert-add-cost-item").on("click",function(){
