@@ -194,7 +194,7 @@
                                 <?php
                                 $milestone_dropdown=array();
                                 foreach ($allMilestones as $oneMilestone) {
-                                    $milestone_dropdown[]=array("id"=>$oneMilestone['id'],"text"=>$oneMilestone['title']);
+                                    $milestone_dropdown[]=array("id"=>$oneMilestone->id,"text"=>$oneMilestone->title);
                                 }
                                 echo form_input(array(
                                     "id" => "milestone_id".$modalId,
