@@ -416,7 +416,7 @@
                                             "id" => "gas_free_certificate_yes".$modalId,
                                             "name" => "gas_free_certificate",
                                             "class" => "form-check-input",
-                                        ), "1", isset($gotTask)&&isset($gotTask->gas_free_certificate)&&$gotTask->gas_free_certificate==1?true:false);
+                                        ), "1", false);
                                         ?>
                                         <label for="gas_free_certificate_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -424,7 +424,7 @@
                                             "id" => "gas_free_certificate_no",
                                             "name" => "gas_free_certificate",
                                             "class" => "form-check-input",
-                                        ), "0", isset($gotTask)&&isset($gotTask->gas_free_certificate)&&$gotTask->gas_free_certificate==0?true:false);
+                                        ), "0", true);
                                         ?>
                                         <label for="gas_free_certificate_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
@@ -439,7 +439,7 @@
                                             "id" => "painting_after_completion_yes".$modalId,
                                             "name" => "painting_after_completion",
                                             "class" => "form-check-input",
-                                        ), "1", true);
+                                        ), "1", false);
                                         ?>
                                         <label for="painting_after_completion_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -447,7 +447,7 @@
                                             "id" => "painting_after_completion_no",
                                             "name" => "painting_after_completion",
                                             "class" => "form-check-input",
-                                        ), "0", false);
+                                        ), "0", true);
                                         ?>
                                         <label for="painting_after_completion_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
@@ -462,7 +462,7 @@
                                             "id" => "light_yes".$modalId,
                                             "name" => "light",
                                             "class" => "form-check-input",
-                                        ), "1", true);
+                                        ), "1", false);
                                         ?>
                                         <label for="light_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -470,7 +470,7 @@
                                             "id" => "light_no",
                                             "name" => "light",
                                             "class" => "form-check-input",
-                                        ), "0", false);
+                                        ), "0", true);
                                         ?>
                                         <label for="light_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
@@ -485,7 +485,7 @@
                                             "id" => "parts_on_board_yes".$modalId,
                                             "name" => "parts_on_board",
                                             "class" => "form-check-input",
-                                        ), "1", true);
+                                        ), "1", false);
                                         ?>
                                         <label for="parts_on_board_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -493,7 +493,7 @@
                                             "id" => "parts_on_board_no",
                                             "name" => "parts_on_board",
                                             "class" => "form-check-input",
-                                        ), "0", false);
+                                        ), "0", true);
                                         ?>
                                         <label for="parts_on_board_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
@@ -508,7 +508,7 @@
                                             "id" => "ventilation_yes".$modalId,
                                             "name" => "ventilation",
                                             "class" => "form-check-input",
-                                        ), "1", true);
+                                        ), "1", false);
                                         ?>
                                         <label for="ventilation_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -516,7 +516,7 @@
                                             "id" => "ventilation_no",
                                             "name" => "ventilation",
                                             "class" => "form-check-input",
-                                        ), "0", false);
+                                        ), "0", true);
                                         ?>
                                         <label for="ventilation_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
@@ -531,7 +531,7 @@
                                             "id" => "transport_to_yard_workshop_yes".$modalId,
                                             "name" => "transport_to_yard_workshop",
                                             "class" => "form-check-input",
-                                        ), "1", true);
+                                        ), "1", false);
                                         ?>
                                         <label for="transport_to_yard_workshop_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -539,7 +539,7 @@
                                             "id" => "transport_to_yard_workshop_no",
                                             "name" => "transport_to_yard_workshop",
                                             "class" => "form-check-input",
-                                        ), "0", false);
+                                        ), "0", true);
                                         ?>
                                         <label for="transport_to_yard_workshop_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
@@ -554,7 +554,7 @@
                                             "id" => "crane_assistance_yes".$modalId,
                                             "name" => "crane_assistance",
                                             "class" => "form-check-input",
-                                        ), "1", true);
+                                        ), "1", false);
                                         ?>
                                         <label for="crane_assistance_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -562,7 +562,7 @@
                                             "id" => "crane_assistance_no",
                                             "name" => "crane_assistance",
                                             "class" => "form-check-input",
-                                        ), "0", false);
+                                        ), "0", true);
                                         ?>
                                         <label for="crane_assistance_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
@@ -577,7 +577,7 @@
                                             "id" => "transport_outside_yard_yes".$modalId,
                                             "name" => "transport_outside_yard",
                                             "class" => "form-check-input",
-                                        ), "1", true);
+                                        ), "1", false);
                                         ?>
                                         <label for="transport_outside_yard_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -585,7 +585,7 @@
                                             "id" => "transport_outside_yard_no",
                                             "name" => "transport_outside_yard",
                                             "class" => "form-check-input",
-                                        ), "0", false);
+                                        ), "0", true);
                                         ?>
                                         <label for="transport_outside_yard_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
@@ -600,7 +600,7 @@
                                             "id" => "cleaning_before_yes".$modalId,
                                             "name" => "cleaning_before",
                                             "class" => "form-check-input",
-                                        ), "1", true);
+                                        ), "1", false);
                                         ?>
                                         <label for="cleaning_before_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -608,7 +608,7 @@
                                             "id" => "cleaning_before_no".$modalId,
                                             "name" => "cleaning_before",
                                             "class" => "form-check-input",
-                                        ), "0", false);
+                                        ), "0", true);
                                         ?>
                                         <label for="cleaning_before_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
@@ -623,7 +623,7 @@
                                             "id" => "material_yards_supply_yes".$modalId,
                                             "name" => "material_yards_supply",
                                             "class" => "form-check-input",
-                                        ), "1", true);
+                                        ), "1", false);
                                         ?>
                                         <label for="material_yards_supply_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -631,7 +631,7 @@
                                             "id" => "material_yards_supply_no",
                                             "name" => "material_yards_supply",
                                             "class" => "form-check-input",
-                                        ), "0", false);
+                                        ), "0", true);
                                         ?>
                                         <label for="material_yards_supply_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
@@ -646,7 +646,7 @@
                                             "id" => "cleaning_after_yes".$modalId,
                                             "name" => "cleaning_after",
                                             "class" => "form-check-input",
-                                        ), "1", true);
+                                        ), "1", false);
                                         ?>
                                         <label for="cleaning_after_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -654,7 +654,7 @@
                                             "id" => "cleaning_after_no",
                                             "name" => "cleaning_after",
                                             "class" => "form-check-input",
-                                        ), "0", false);
+                                        ), "0", true);
                                         ?>
                                         <label for="cleaning_after_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
@@ -669,7 +669,7 @@
                                             "id" => "material_owners_supply_yes".$modalId,
                                             "name" => "material_owners_supply",
                                             "class" => "form-check-input",
-                                        ), "1", true);
+                                        ), "1", false);
                                         ?>
                                         <label for="material_owners_supply_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -677,7 +677,7 @@
                                             "id" => "material_owners_supply_no",
                                             "name" => "material_owners_supply",
                                             "class" => "form-check-input",
-                                        ), "0", false);
+                                        ), "0", true);
                                         ?>
                                         <label for="material_owners_supply_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
@@ -692,7 +692,7 @@
                                             "id" => "work_permit_yes".$modalId,
                                             "name" => "work_permit",
                                             "class" => "form-check-input",
-                                        ), "1", true);
+                                        ), "1", false);
                                         ?>
                                         <label for="work_permit_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -700,7 +700,7 @@
                                             "id" => "work_permit_no",
                                             "name" => "work_permit",
                                             "class" => "form-check-input",
-                                        ), "0", false);
+                                        ), "0", true);
                                         ?>
                                         <label for="work_permit_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
@@ -715,7 +715,7 @@
                                             "id" => "risk_assessment_yes".$modalId,
                                             "name" => "risk_assessment",
                                             "class" => "form-check-input",
-                                        ), "1", true);
+                                        ), "1", false);
                                         ?>
                                         <label for="risk_assessment_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -723,7 +723,7 @@
                                             "id" => "risk_assessment_no",
                                             "name" => "risk_assessment",
                                             "class" => "form-check-input",
-                                        ), "0", false);
+                                        ), "0", true);
                                         ?>
                                         <label for="risk_assessment_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
