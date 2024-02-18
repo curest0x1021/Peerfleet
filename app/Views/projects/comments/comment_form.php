@@ -3,7 +3,7 @@ $url = "projects/save_comment";
 $comment_type = "";
 $subfix=rand();
 if (isset($task_id)) {
-    $comment_type = "task";
+    $comment_type = "tasks";
     $url = "tasks/save_comment";
 } else if (isset($file_id)) {
     $comment_type = "file";
