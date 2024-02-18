@@ -1137,7 +1137,6 @@ class Settings extends Security_Controller {
         foreach ($project_tabs as $project_tab) {
             $project_tabs_dropdown[] = array("id" => $project_tab, "text" => app_lang($project_tab));
         }
-
         $view_data['project_tabs_dropdown'] = json_encode($project_tabs_dropdown);
         return $this->template->rander("settings/projects", $view_data);
     }
@@ -1204,7 +1203,6 @@ class Settings extends Security_Controller {
         foreach ($project_tabs as $project_tab) {
             $project_tabs_dropdown[] = array("id" => $project_tab, "text" => app_lang($project_tab));
         }
-
         $view_data['project_tabs_dropdown'] = json_encode($project_tabs_dropdown);
         return $this->template->rander("settings/client_projects", $view_data);
     }
