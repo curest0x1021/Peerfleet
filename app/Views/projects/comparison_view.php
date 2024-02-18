@@ -1,11 +1,13 @@
 <div class="card" >
     <div class="card-body" >
         <div class="row" >
-            <div class="col-md-9" >
+            <div class="col-md-8" >
                 <h2>Comparison View</h2>
             </div>
-            <div class="col-md-3" >
-                <button class="btn btn-default" data-bs-toggle="modal" data-bs-target="#myModal" >Add Yard Candidate</button>
+            <div class="col-md-2" >
+                <button style="float:right" class="btn btn-default" data-bs-toggle="modal" data-bs-target="#myModal" >Add Yard Candidate</button>
+            </div>
+            <div class="col-md-2" >
             </div>
         </div>
         <div class="row d-flex justify-content-center" >
