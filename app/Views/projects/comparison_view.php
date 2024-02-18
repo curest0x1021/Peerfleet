@@ -25,7 +25,7 @@
                                         <i data-feather="more-vertical" ></i>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-header" href="#">Export xlsx</a></li>
+                                        <li><a class="dropdown-item" href="#">Export xlsx</a></li>
                                         <li><a class="dropdown-item" href="#">Import quotation</a></li>
                                         <li><a class="dropdown-item" href="#">Add files</a></li>
                                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#select-candidate-modal">Select candidate</a></li>
@@ -41,7 +41,7 @@
                                         <i data-feather="more-vertical" ></i>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-header" href="#">Export xlsx</a></li>
+                                        <li><a class="dropdown-item" href="#">Export xlsx</a></li>
                                         <li><a class="dropdown-item" href="#">Import quotation</a></li>
                                         <li><a class="dropdown-item" href="#">Add files</a></li>
                                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#select-candidate-modal">Select candidate</a></li>
@@ -57,7 +57,7 @@
                                         <i data-feather="more-vertical" ></i>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-header" href="#">Export xlsx</a></li>
+                                        <li><a class="dropdown-item" href="#">Export xlsx</a></li>
                                         <li><a class="dropdown-item" href="#">Import quotation</a></li>
                                         <li><a class="dropdown-item" href="#">Add files</a></li>
                                         <li><a class="dropdown-item" href="#"  data-bs-toggle="modal" data-bs-target="#select-candidate-modal">Select candidate</a></li>
@@ -433,6 +433,7 @@
       <!-- Modal footer -->
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-info" data-bs-dismiss="modal">Select</button>
       </div>
 
     </div>
