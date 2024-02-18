@@ -5,6 +5,7 @@
 /files/temp/*
 /files/timeline_files/*
 /writable/*/*
+/assets/js/app.all.js
 
 !index.html
 !.htaccess
