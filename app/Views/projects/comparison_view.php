@@ -416,8 +416,13 @@
         </div>
         <div class="card" >
             <p>By selecting this yard, the quoted costs for this project. Data from any other yards will be hidden. This action is not reversible, but you can always edit the costs in execution phase.</p>
-            <div class="card" >
-                <p><i data-feather="warning" ></i></p>
+            <div class="card" style="background-color:yellow;border:1px solid brown;" >
+                <ul>
+                <p>This action will move the project to the pre-Execution phase. This is the phase between yard selection and the actual yard visit(Execution)
+                </p>
+                <p>This action will move the project to the pre-Execution phase. This is the phase between yard selection and the actual yard visit(Execution)
+                </p>
+                </ul>
             </div>
         </div>
       </div>
