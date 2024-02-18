@@ -1,15 +1,15 @@
 <div class="card" >
     <div class="card-body" >
         <div class="row" >
-            <div class="col-md-8" >
+            <div class="col-md-9" >
                 <h2>Comparison View</h2>
             </div>
-            <div class="col-md-4" >
-                <button class="btn btn-default" >Add Yard Candidate</button>
+            <div class="col-md-3" >
+                <button class="btn btn-default" data-bs-toggle="modal" data-bs-target="#myModal" >Add Yard Candidate</button>
             </div>
         </div>
         <div class="row d-flex justify-content-center" >
-            <div class="col-md-6" >
+            <div class="col-md-8" >
             <!--Main Info-->
             <table class="table table-bordered table-hover"  >
                 <thead>
@@ -73,51 +73,51 @@
                 <tbody>
                     <tr>
                         <td>Deviation Cost</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
                     <tr>
                         <td>Loss of Earnings</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
                     <tr>
                         <td>Bunker Cost</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
                     <tr>
                         <td>Other addtional expenditures at yard</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
                     <tr>
                         <td>Total offhire period</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
                     <tr>
                         <td>Total repair period</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
                     <tr>
                         <td>Days in dry dock</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
                     <tr>
                         <td>Days at berth</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
                 </tbody>
             </table>
@@ -171,15 +171,15 @@
                 <tbody>
                     <tr>
                         <td>Penalty per day</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
                     <tr>
                         <td>Penalty limitations</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
                     </tr>
                 </tbody>
             </table>
@@ -187,9 +187,9 @@
                 <thead>
                     <tr>
                         <th>1. Docking & general services</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th>0</th>
+                        <th>0</th>
+                        <th>0</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -324,4 +324,28 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
+<!-- The Modal -->
+<div class="modal" id="myModal">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Modal Heading</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        Modal body..
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
