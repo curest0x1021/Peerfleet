@@ -50,7 +50,7 @@
         "assets/js/atwho/js/jquery.atwho.min.js",
         "assets/js/notification_handler.js",
         "assets/js/general_helper.js",
-        "assets/js/app.js"
+        "assets/js/app.all.js"
     );
 
     //to merge all files into one, we'll use this helper
