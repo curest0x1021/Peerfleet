@@ -668,15 +668,16 @@ attachDropzoneWithForm = function (dropzoneTarget, uploadUrl, validationUrl, opt
             previewsContainer = getRandomAlphabet(15),
             postFileUploadRowId = getRandomAlphabet(15),
             uploadFileButtonId = getRandomAlphabet(15);
+
     //set random id with the previws 
-    // $previews.attr("id", previewsContainer);
+    $previews.attr("id", previewsContainer);
     $postFileUploadRow.attr("id", postFileUploadRowId);
     $uploadFileButton.attr("id", uploadFileButtonId);
 
 
     //get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
     var previewNode = document.querySelector("#" + postFileUploadRowId);
-    previewNode.id = "";
+    // previewNode.id = "";
     var previewTemplate = previewNode.parentNode.innerHTML;
     previewNode.parentNode.removeChild(previewNode);
 
