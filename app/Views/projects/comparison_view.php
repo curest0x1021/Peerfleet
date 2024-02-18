@@ -17,9 +17,54 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th>First Yard<button class="btn btn-sm btn-default" style="float:right" ><i data-feather="more-vertical" ></i></button></th>
-                        <th>Second Yard<button class="btn btn-sm btn-default" style="float:right"  ><i data-feather="more-vertical" ></i></button></th>
-                        <th>Third Yard<button class="btn btn-sm btn-default" style="float:right"  ><i data-feather="more-vertical" ></i></button></th>
+                        <th>
+                            <div class="d-flex" >
+                                <div class="flex-grow-1" >First Yard</div>
+                                <div class="dropdown" >
+                                    <button class="btn btn-sm btn-default dropdown-toggle" data-bs-toggle="dropdown" >
+                                        <i data-feather="more-vertical" ></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-header" href="#">Export xlsx</a></li>
+                                        <li><a class="dropdown-item" href="#">Import quotation</a></li>
+                                        <li><a class="dropdown-item" href="#">Add files</a></li>
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#select-candidate-modal">Select candidate</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="d-flex" >
+                                <div class="flex-grow-1" >Second Yard</div>
+                                <div class="dropdown" >
+                                    <button class="btn btn-sm btn-default dropdown-toggle" data-bs-toggle="dropdown" style="float:right"  >
+                                        <i data-feather="more-vertical" ></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-header" href="#">Export xlsx</a></li>
+                                        <li><a class="dropdown-item" href="#">Import quotation</a></li>
+                                        <li><a class="dropdown-item" href="#">Add files</a></li>
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#select-candidate-modal">Select candidate</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="d-flex" >
+                                <div class="flex-grow-1" >Third Yard</div>
+                                <div class="dropdown" >
+                                    <button class="btn btn-sm btn-default dropdown-toggle" data-bs-toggle="dropdown" style="float:right"  >
+                                        <i data-feather="more-vertical" ></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-header" href="#">Export xlsx</a></li>
+                                        <li><a class="dropdown-item" href="#">Import quotation</a></li>
+                                        <li><a class="dropdown-item" href="#">Add files</a></li>
+                                        <li><a class="dropdown-item" href="#"  data-bs-toggle="modal" data-bs-target="#select-candidate-modal">Select candidate</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -341,6 +386,40 @@
       <!-- Modal body -->
       <div class="modal-body">
         Modal body..
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="select-candidate-modal">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Yard Selection</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="card" >
+            <h5>Selecting yard - Varaderos y Talleres de Mediterranea</h5>
+            <p><i data-feather="info" ></i> Learn more about selecting yards.</p>
+        </div>
+        <div class="card" >
+            <p>By selecting this yard, the quoted costs for this project. Data from any other yards will be hidden. This action is not reversible, but you can always edit the costs in execution phase.</p>
+            <div class="card" >
+                <p><i data-feather="warning" ></i></p>
+            </div>
+        </div>
       </div>
 
       <!-- Modal footer -->
