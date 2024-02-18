@@ -28,6 +28,7 @@ if (!function_exists("make_project_tabs_data")) {
         foreach ($final_projects_tabs as $key => $value) {
             echo "<li class='nav-item' role='presentation'><a class='nav-link' data-bs-toggle='tab' href='" . get_uri($value) . "' data-bs-target='#project-$key-section'>" . app_lang($key) . "</a></li>";
         }
+        echo "<li class='nav-item' role='presentation'><a class='nav-link' data-bs-toggle='tab' href='#' data-bs-target='#project-".("yard-comparison")."-section'>" . ("Yard Comparison") . "</a></li>";
     }
 
 }
@@ -190,6 +191,11 @@ if (!function_exists("make_project_tabs_data")) {
                     <div role="tabpanel" class="tab-pane fade" id="project-contracts-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-tickets-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-checklist-section"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="project-yard-comparison-section">
+                        <div class="card" >
+                            <h1>Hello Comparison Module</h1>
+                        </div>  
+                    </div>
 
                     <?php
                     if ($login_user->user_type === "staff") {
