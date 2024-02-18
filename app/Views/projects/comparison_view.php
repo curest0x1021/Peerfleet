@@ -5,7 +5,7 @@
                 <h2>Comparison View</h2>
             </div>
             <div class="col-md-2" >
-                <button style="float:right" class="btn btn-default" data-bs-toggle="modal" data-bs-target="#myModal" >Add Yard Candidate</button>
+                <button style="float:right" class="btn btn-default" data-bs-toggle="modal" data-bs-target="#select-candidate-modal" >Add Yard Candidate</button>
             </div>
             <div class="col-md-2" >
             </div>
