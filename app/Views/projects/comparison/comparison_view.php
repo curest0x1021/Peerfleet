@@ -225,7 +225,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <th></th>
+                            <th  ></th>
                         <?php
                             # code...
                         }
@@ -238,7 +238,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td>0</td>
+                            <td data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal">0</td>
                         <?php
                             # code...
                         }
@@ -249,7 +249,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td>0</td>
+                            <td data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal">0</td>
                         <?php
                             # code...
                         }
@@ -260,7 +260,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td>0</td>
+                            <td data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal">0</td>
                         <?php
                             # code...
                         }
@@ -271,7 +271,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td>0</td>
+                            <td data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal">0</td>
                         <?php
                             # code...
                         }
@@ -300,7 +300,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td>0</td>
+                            <td data-bs-toggle="modal" data-bs-target="#edit-penalties-modal" >0</td>
                         <?php
                             # code...
                         }
@@ -311,7 +311,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td>-</td>
+                            <td data-bs-toggle="modal" data-bs-target="#edit-penalties-modal" >-</td>
                         <?php
                             # code...
                         }
@@ -598,7 +598,7 @@ $numberYards=count($allYards);
 
 <!-- The Modal -->
 <div class="modal" id="select-candidate-modal">
-  <div class="modal-dialog modal-xl">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content">
 
       <!-- Modal Header -->
@@ -638,6 +638,85 @@ $numberYards=count($allYards);
     </div>
   </div>
 </div>
+
+<!-- The Modal -->
+<div class="modal" id="edit-payment-term-modal">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Payment terms for Varaderos y Talleres de Mediterraneo</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="form-group" >
+            <label>Payment before departure</label>
+            <input class="form-control" />
+        </div>
+        <div class="form-group" >
+            <label>Payment within 30 days</label>
+            <input class="form-control" />
+        </div>
+        <div class="form-group" >
+            <label>Payment within 60 days</label>
+            <input class="form-control" />
+        </div>
+        <div class="form-group" >
+            <label>Payment within 90 days</label>
+            <input class="form-control" />
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-info" data-bs-dismiss="modal">Save</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- The Modal -->
+<div class="modal" id="edit-penalties-modal">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Penalties for Varaderos y Talleres de Mediterraneo</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="form-groud" >
+            <div class="input-group mb-3">
+                <span class="input-group-text">$</span>
+                <input type="number" class="form-control" value="0.00">
+                <input type="text" class="form-control" value="USD" readonly>
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Penalty Limitations</label>
+            <input class="form-control" />
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-info" data-bs-dismiss="modal">Save</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <script>
 $(document).ready(function(){
     var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
