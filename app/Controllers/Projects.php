@@ -3741,7 +3741,7 @@ class Projects extends Security_Controller {
         );
         $save_id=$this->Project_yards_model->ci_save($save_data,$id);
         if($save_id)
-            return json_encode(array("success"=>true));
+            return json_encode(array("success"=>true,"save_id"=>$save_id));
         else return json_encode(array("success"=>false));
 
     }
