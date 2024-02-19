@@ -3719,6 +3719,11 @@ class Projects extends Security_Controller {
 
         return array($member, $link);
     }
+    //////////////////////////
+    //////////////////////////
+    function add_yard($project_id){
+        return $this->template->rander('projects/comparison/add-yard');
+    }
 }
 
 /* End of file projects.php */
