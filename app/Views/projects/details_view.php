@@ -192,7 +192,7 @@ if (!function_exists("make_project_tabs_data")) {
                     <div role="tabpanel" class="tab-pane fade" id="project-tickets-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-checklist-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-yard-comparison-section">
-                        <?php echo view("projects/comparison_view"); ?>
+                        <?php echo view("projects/comparison/comparison_view",["project_info"=>$project_info]); ?>
                     </div>
 
                     <?php

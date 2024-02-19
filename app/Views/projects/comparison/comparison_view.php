@@ -5,7 +5,7 @@
                 <h2>Comparison View</h2>
             </div>
             <div class="col-md-2" >
-                <button style="float:right" class="btn btn-default" data-bs-toggle="modal" data-bs-target="#select-candidate-modal" >Add Yard Candidate</button>
+                <a style="float:right" href="<?php echo get_uri('projects/add_yard/'.$project_info->id,["project_info"=>$project_info]); ?>" class="btn btn-default"  >Add Yard Candidate</a>
             </div>
             <div class="col-md-2" >
             </div>
