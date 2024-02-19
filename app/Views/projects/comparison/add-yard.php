@@ -8,6 +8,15 @@
                 <form action="#" method="POST" >
                     <div class="form-group" >
                         <label>Yard:</label>
+                        <?php
+                        $yards_dropdown=array();
+                        foreach ($allYardTitles as $key=>$oneYardTitle) {
+                            $yards_dropdown[]=array(
+                                "id"=>$allYardIds[$key],
+                                "text"=>$allYardTitles[$key],
+                            );
+                        }
+                        ?>
                         <input
                             name="yard"
                             id="yard"
@@ -36,12 +45,7 @@
 <script>
 $(document).ready(function(){
     $("#yard").select2({
-        data:[
-            {
-                id:"1",
-                text:"Vessel"
-            }
-        ]
+        data:<?php echo json_encode($yards_dropdown);?>
     })
 })
 </script>
