@@ -30,7 +30,7 @@
                         <div class="flex-grow-1" >
                             <button type="button"  class="btn btn-default" style="float:right;margin-right:10px"  >Cancel</button>
                         </div>
-                        <button type="submit" class="btn btn-success"  >Save</button>
+                        <a href="<?php echo get_uri('projects/yard_settings/12');?>" type="submit" class="btn btn-success"  >Save</a>
                     </div>
                 </form>
                 <div class="divider" ></div>

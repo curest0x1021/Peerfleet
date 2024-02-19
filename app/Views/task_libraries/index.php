@@ -218,7 +218,7 @@
                                         echo form_input(array(
                                             "id" => "milestone_id",
                                             "name" => "milestone_id",
-                                            "value" => isset($gotTasklibrary)&&$gotTasklibrary->milestone_id?$gotTasklibrary->milestone_id:$milestone_dropdown[0]['id'],
+                                            "value" => isset($gotTasklibrary)&&$gotTasklibrary->milestone_id?$gotTasklibrary->milestone_id:(count($milestone_dropdown)>0?$milestone_dropdown[0]['id']:""),
                                             "class" => "form-control",
                                             "style"=>"border:1px solid lightgray",
                                             "placeholder" => app_lang('milestone'),
