@@ -27,6 +27,10 @@ class CreateYardsTable extends Migration
             'work_orders'=>[
                 'type'=>'VARCHAR',
                 'constraint'=>500
+            ],
+            'currencies'=>[
+                'type'=>'VARCHAR',
+                'constraint'=>500
             ]
             // Add other fields here...
         ]);
