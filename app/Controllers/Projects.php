@@ -23,6 +23,7 @@ class Projects extends Security_Controller {
         $this->Pin_comments_model = model('App\Models\Pin_comments_model');
         $this->File_category_model = model('App\Models\File_category_model');
         $this->Task_priority_model = model("App\Models\Task_priority_model");
+        $this->Project_yards_model = model("App\Models\Project_yards_model");
     }
 
     private function can_delete_projects($project_id = 0) {
@@ -3724,10 +3725,29 @@ class Projects extends Security_Controller {
     function add_yard($project_id){
         $allYardTitles=$this->Shipyards_model->get_dropdown_list(['name']);
         $allYardIds=$this->Shipyards_model->get_dropdown_list(['id']);
-        return $this->template->rander('projects/comparison/add-yard',['allYardTitles'=>$allYardTitles,'allYardIds'=>$allYardIds]);
+        return $this->template->rander('projects/comparison/add-yard',['project_id'=>$project_id,'allYardTitles'=>$allYardTitles,'allYardIds'=>$allYardIds]);
     }
     function yard_settings($yard_id){
         return $this->template->rander('projects/comparison/settings.php');
+    }
+    function save_yard(){
+        $id=$this->request->getPost('id');
+        $selectedYard=$this->Shipyards_model->get_one($this->request->getPost('shipyard_id'))->id;
+        $save_data=array(
+            "project_id"=>$this->request->getPost('project_id'),
+            'shipyard_id'=>$this->request->getPost('shipyard_id'),
+            'work_orders'=>'',
+            'title'=>$this->request->getPost('title')
+        );
+        $save_id=$this->Project_yards_model->ci_save($save_data,$id);
+        if($save_id)
+            return json_encode(array("success"=>true));
+        else return json_encode(array("success"=>false));
+
+    }
+    function comparison_tab($project_id){
+        $project_info=$this->Projects_model->get_one($project_id);
+        return $this->template->view("projects/comparison/comparison_view",["project_info"=>$project_info]);
     }
 }
 

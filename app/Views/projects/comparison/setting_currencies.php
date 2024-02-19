@@ -24,7 +24,7 @@
             </td>
             <td>United States Dollar (USD)</td>
             <td>1.0</td>
-            <td><a>EDIT</a> | <a>DELETE</a></td>
+            <td><a href="#" >EDIT</a> | <a href="#" >DELETE</a></td>
         </tr>
         <tr>
             <td>
@@ -32,7 +32,7 @@
             </td>
             <td>United States Dollar (USD)</td>
             <td>1.0</td>
-            <td><a>EDIT</a> | <a>DELETE</a></td>
+            <td><a href="#" >EDIT</a> | <a href="#" >DELETE</a></td>
         </tr>
     </tbody>
 </table>
