@@ -3722,7 +3722,12 @@ class Projects extends Security_Controller {
     //////////////////////////
     //////////////////////////
     function add_yard($project_id){
-        return $this->template->rander('projects/comparison/add-yard');
+        $allYardTitles=$this->Shipyards_model->get_dropdown_list(['name']);
+        $allYardIds=$this->Shipyards_model->get_dropdown_list(['id']);
+        return $this->template->rander('projects/comparison/add-yard',['allYardTitles'=>$allYardTitles,'allYardIds'=>$allYardIds]);
+    }
+    function yard_settings($yard_id){
+        return $this->template->rander('projects/comparison/settings.php');
     }
 }
 
