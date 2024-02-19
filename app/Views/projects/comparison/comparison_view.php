@@ -93,9 +93,8 @@ $numberYards=count($allYards);
                         ?>
                     </tr>
                 </tbody>
-            </table>
-            <!--Owner's Supply-->
-            <table class="table table-bordered table-hover"  >
+            <!-- </table>
+            <table class="table table-bordered table-hover"  > -->
                 <thead>
                     <tr>
                         <th>Owner's Supply</th>
@@ -111,9 +110,9 @@ $numberYards=count($allYards);
                 </thead>
                 <tbody>
                 </tbody>
-            </table>
+            <!-- </table> -->
             <!--General-->
-            <table class="table table-bordered table-hover"  >
+            <!-- <table class="table table-bordered table-hover"  > -->
                 <thead>
                     <tr>
                         <th>General</th>
@@ -217,9 +216,9 @@ $numberYards=count($allYards);
                         ?>
                     </tr>
                 </tbody>
-            </table>
+            <!-- </table> -->
             <!--Payment Terms-->
-            <table class="table table-bordered table-hover"  >
+            <!-- <table class="table table-bordered table-hover"  > -->
                 <thead>
                     <tr>
                         <th>Payment Terms</th>
@@ -279,9 +278,9 @@ $numberYards=count($allYards);
                         ?>
                     </tr>
                 </tbody>
-            </table>
+            <!-- </table> -->
 
-            <table class="table table-bordered table-hover"  >
+            <!-- <table class="table table-bordered table-hover"  > -->
                 <thead>
                     <tr>
                         <th>Penalties</th>
@@ -319,8 +318,8 @@ $numberYards=count($allYards);
                         ?>
                     </tr>
                 </tbody>
-            </table>
-            <table class="table table-bordered table-hover"  >
+            <!-- </table> -->
+            <!-- <table class="table table-bordered table-hover"  > -->
                 <thead>
                     <tr>
                         <th>1. Docking & general services</th>
@@ -491,80 +490,45 @@ $numberYards=count($allYards);
                     </tr>
                     <tr>
                         <td>Telephone and Internet</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
                     </tr>
                     <tr>
                         <td>Power supply</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
                     </tr>
                     <tr>
                         <td>Sewage disposal</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
                     </tr>
                     <tr>
                         <td>Ventilation</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
                     </tr>
                     <tr>
                         <td>Scuppers</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
                     </tr>
                     <tr>
                         <td>Cleaning</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
                     </tr>
                     <tr>
                         <td>test</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
                     </tr>
                 </tbody>
             </table>
