@@ -9,7 +9,7 @@ class Project_yards_model extends Crud_model
     protected $table = null;
 
     function __construct() {
-        $this->table = 'Project_yards';
+        $this->table = 'project_yards';
         parent::__construct($this->table);
     }
     public function getCount($columnName, $specialValue)
