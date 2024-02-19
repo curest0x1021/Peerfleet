@@ -1,3 +1,6 @@
+<?php
+$numberYards=count($allYards);
+?>
 <div class="card" >
     <div class="card-body" >
         <div class="row" >
@@ -17,80 +20,77 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th>
-                            <div class="d-flex" >
-                                <div class="flex-grow-1" >First Yard</div>
-                                <div class="dropdown" >
-                                    <button class="btn btn-sm btn-default dropdown-toggle" data-bs-toggle="dropdown" >
-                                        <i data-feather="more-vertical" ></i>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Export xlsx</a></li>
-                                        <li><a class="dropdown-item" href="#">Import quotation</a></li>
-                                        <li><a class="dropdown-item" href="#">Add files</a></li>
-                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#select-candidate-modal">Select candidate</a></li>
-                                    </ul>
+                        <?php
+                        for ($i=0; $i <$numberYards ; $i++) { 
+                            # code...
+                        
+                            # code...
+                        ?>  
+                            <th>
+                                <div class="d-flex" >
+                                    <div class="flex-grow-1" ><?php echo $allYards[$i]->title;?></div>
+                                    <div class="dropdown" >
+                                        <button class="btn btn-sm btn-default dropdown-toggle" data-bs-toggle="dropdown" >
+                                            <i data-feather="more-vertical" ></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Export xlsx</a></li>
+                                            <li><a class="dropdown-item" href="#">Import quotation</a></li>
+                                            <li><a class="dropdown-item" href="#">Add files</a></li>
+                                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#select-candidate-modal">Select candidate</a></li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
-                        </th>
-                        <th>
-                            <div class="d-flex" >
-                                <div class="flex-grow-1" >Second Yard</div>
-                                <div class="dropdown" >
-                                    <button class="btn btn-sm btn-default dropdown-toggle" data-bs-toggle="dropdown" style="float:right"  >
-                                        <i data-feather="more-vertical" ></i>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Export xlsx</a></li>
-                                        <li><a class="dropdown-item" href="#">Import quotation</a></li>
-                                        <li><a class="dropdown-item" href="#">Add files</a></li>
-                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#select-candidate-modal">Select candidate</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </th>
-                        <th>
-                            <div class="d-flex" >
-                                <div class="flex-grow-1" >Third Yard</div>
-                                <div class="dropdown" >
-                                    <button class="btn btn-sm btn-default dropdown-toggle" data-bs-toggle="dropdown" style="float:right"  >
-                                        <i data-feather="more-vertical" ></i>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Export xlsx</a></li>
-                                        <li><a class="dropdown-item" href="#">Import quotation</a></li>
-                                        <li><a class="dropdown-item" href="#">Add files</a></li>
-                                        <li><a class="dropdown-item" href="#"  data-bs-toggle="modal" data-bs-target="#select-candidate-modal">Select candidate</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </th>
+                            </th>
+                        <?php
+                            }
+                        ?>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>SUMMARY</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>TOTAL COST</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td>0</td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Sum of Yard Quotes</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td>0</td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Sum of Estimates</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td>0</td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                 </tbody>
             </table>
@@ -99,9 +99,14 @@
                 <thead>
                     <tr>
                         <th>Owner's Supply</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <th>0</th>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -112,59 +117,104 @@
                 <thead>
                     <tr>
                         <th>General</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <th>0</th>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>Deviation Cost</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Loss of Earnings</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Bunker Cost</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Other addtional expenditures at yard</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Total offhire period</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Total repair period</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Days in dry dock</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Days at berth</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                 </tbody>
             </table>
@@ -173,35 +223,60 @@
                 <thead>
                     <tr>
                         <th>Payment Terms</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <th></th>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>Payment before Departure</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td>0</td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Payment within 30 days</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td>0</td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Payment within 60 days</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td>0</td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Payment within 90 days</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td>0</td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                 </tbody>
             </table>
@@ -210,23 +285,38 @@
                 <thead>
                     <tr>
                         <th>Penalties</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <th>0</th>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>Penalty per day</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td>0</td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Penalty limitations</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td>-</td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                 </tbody>
             </table>
@@ -234,137 +324,247 @@
                 <thead>
                     <tr>
                         <th>1. Docking & general services</th>
-                        <th>0</th>
-                        <th>0</th>
-                        <th>0</th>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <th>0</th>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>Docking and undocking</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Agent</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Wharfage dues</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Towage</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Agent</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Garbage removal</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Gas free certificate</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Cooling water supply</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Fire water supply</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Ballast water supply</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Portable water supply</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Compressed air supply</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Crane service</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Heating lamps</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Telephone and Internet</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Power supply</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Sewage disposal</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Ventilation</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Scuppers</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Cleaning</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>test</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                 </tbody>
             </table>
