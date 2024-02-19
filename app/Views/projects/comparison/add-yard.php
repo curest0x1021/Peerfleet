@@ -59,6 +59,7 @@ $(document).ready(function(){
             },
             success:function(response){
                 console.log(response)
+                 window.location='<?php echo get_uri('projects/view/'.$project_id)?>';
             }
         })
     })
