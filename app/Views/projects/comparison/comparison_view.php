@@ -339,7 +339,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
                         <?php
                             # code...
                         }
@@ -350,7 +350,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
                         <?php
                             # code...
                         }
@@ -361,7 +361,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
                         <?php
                             # code...
                         }
@@ -372,7 +372,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
                         <?php
                             # code...
                         }
@@ -383,7 +383,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
                         <?php
                             # code...
                         }
@@ -394,7 +394,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
                         <?php
                             # code...
                         }
@@ -405,7 +405,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
                         <?php
                             # code...
                         }
@@ -416,7 +416,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
                         <?php
                             # code...
                         }
@@ -427,7 +427,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
                         <?php
                             # code...
                         }
@@ -438,7 +438,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
                         <?php
                             # code...
                         }
@@ -449,7 +449,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
                         <?php
                             # code...
                         }
@@ -460,7 +460,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
                         <?php
                             # code...
                         }
@@ -471,7 +471,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
                         <?php
                             # code...
                         }
@@ -482,7 +482,7 @@ $numberYards=count($allYards);
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
                         <?php
                             # code...
                         }
@@ -490,45 +490,80 @@ $numberYards=count($allYards);
                     </tr>
                     <tr>
                         <td>Telephone and Internet</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Power supply</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Sewage disposal</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Ventilation</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Scuppers</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>Cleaning</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>test</td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
-                        <td><span class="badge rounded-pill bg-secondary">0/0</span></td>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
+                        <?php
+                            # code...
+                        }
+                        ?>
                     </tr>
                 </tbody>
             </table>
@@ -603,3 +638,11 @@ $numberYards=count($allYards);
     </div>
   </div>
 </div>
+<script>
+$(document).ready(function(){
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl)
+    })
+})
+</script>
