@@ -28,7 +28,7 @@ if (!function_exists("make_project_tabs_data")) {
         foreach ($final_projects_tabs as $key => $value) {
             echo "<li class='nav-item' role='presentation'><a class='nav-link' data-bs-toggle='tab' href='" . get_uri($value) . "' data-bs-target='#project-$key-section'>" . app_lang($key) . "</a></li>";
         }
-        echo "<li class='nav-item' role='presentation'><a class='nav-link' data-bs-toggle='tab' href='#' data-bs-target='#project-".("yard-comparison")."-section'>" . ("Yard Comparison") . "</a></li>";
+        // echo "<li class='nav-item' role='presentation'><a class='nav-link' data-bs-toggle='tab' href='".get_uri('projects/comparison_tab')."' data-bs-target='#project-yard-comparison-section'>" . ("Yard Comparison") . "</a></li>";
     }
 
 }
@@ -90,6 +90,7 @@ if (!function_exists("make_project_tabs_data")) {
                             }
 
                             $project_tabs["files"] = "projects/files/" . $project_info->id;
+                            
                             $project_tabs["comments"] = "projects/comments/" . $project_info->id;
 
                             // if ($project_info->project_type === "client_project" && $show_customer_feedback) {
@@ -118,6 +119,9 @@ if (!function_exists("make_project_tabs_data")) {
                             }
 
                             $project_tabs["checklist"] = "projects/checklist/" . $project_info->id;
+                            /////////////////////
+                            $project_tabs["yards_comparison"] = "projects/comparison_tab/" . $project_info->id;
+                            ////////////////////
 
                             $project_tabs_of_hook_of_staff = array();
                             $project_tabs_of_hook_of_staff = app_hooks()->apply_filters('app_filter_team_members_project_details_tab', $project_tabs_of_hook_of_staff, $project_info->id);
@@ -153,6 +157,10 @@ if (!function_exists("make_project_tabs_data")) {
                             if ($show_timesheet_info) {
                                 $project_tabs["timesheets"] = "projects/timesheets/" . $project_info->id;
                             }
+                            
+                            /////////////////////
+                            $project_tabs["yards_comparison"] = "projects/comparison_tab/" . $project_info->id;
+                            ////////////////////
 
                             if (get_setting("module_invoice")) {
                                 //check left menu settings
@@ -191,9 +199,7 @@ if (!function_exists("make_project_tabs_data")) {
                     <div role="tabpanel" class="tab-pane fade" id="project-contracts-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-tickets-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-checklist-section"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="project-yard-comparison-section">
-                        <?php echo view("projects/comparison/comparison_view",["project_info"=>$project_info]); ?>
-                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="project-yards_comparison-section"></div>
 
                     <?php
                     if ($login_user->user_type === "staff") {

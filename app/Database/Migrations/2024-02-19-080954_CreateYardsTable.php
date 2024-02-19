@@ -31,6 +31,10 @@ class CreateYardsTable extends Migration
             'currencies'=>[
                 'type'=>'VARCHAR',
                 'constraint'=>500
+            ],
+            'shipyard_id'=>[
+                'type'=>'INT',
+                'null'=>true
             ]
             // Add other fields here...
         ]);

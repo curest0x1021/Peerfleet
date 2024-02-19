@@ -5,7 +5,7 @@
         <div class="card" >
             <div class="card-body" >
                 <p>Create a yard candidate that will provide you quotes based on the work orders in your project.</p>
-                <form action="#" method="POST" >
+                <!-- <form action="#" method="POST" > -->
                     <div class="form-group" >
                         <label>Yard:</label>
                         <?php
@@ -30,9 +30,9 @@
                         <div class="flex-grow-1" >
                             <button type="button"  class="btn btn-default" style="float:right;margin-right:10px"  >Cancel</button>
                         </div>
-                        <a href="<?php echo get_uri('projects/yard_settings/12');?>" type="submit" class="btn btn-success"  >Save</a>
+                        <button id="btn-save-yard-candidate" href="<?php echo get_uri('projects/yard_settings/12');?>" type="button" class="btn btn-success"  >Save</button>
                     </div>
-                </form>
+                <!-- </form> -->
                 <div class="divider" ></div>
                 <p>
                     <i data-feather="info" ></i>
@@ -46,6 +46,21 @@
 $(document).ready(function(){
     $("#yard").select2({
         data:<?php echo json_encode($yards_dropdown);?>
+    })
+    $("#btn-save-yard-candidate").on("click",function(){
+        if(!$("#yard")[0].value) return;
+        $.ajax({
+            url:'<?php echo get_uri('projects/save_yard');?>',
+            method:"POST",
+            data:{
+                shipyard_id:$("#yard")[0].value,
+                project_id:'<?php echo $project_id; ?>',
+                title:$(".select2-chosen")[0].textContent
+            },
+            success:function(response){
+                console.log(response)
+            }
+        })
     })
 })
 </script>
