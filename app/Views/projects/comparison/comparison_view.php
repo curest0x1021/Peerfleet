@@ -646,7 +646,7 @@ $numberYards=count($allYards);
 
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Payment terms for Varaderos y Talleres de Mediterraneo</h4>
+        <h4 class="modal-title" class="payment-term-title">Edit Payment terms</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
@@ -688,7 +688,7 @@ $numberYards=count($allYards);
 
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Penalties for Varaderos y Talleres de Mediterraneo</h4>
+        <h4 class="modal-title" class="penalties-title" >Edit Penalties</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
