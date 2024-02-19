@@ -5,7 +5,7 @@
                 <h2>Comparison View</h2>
             </div>
             <div class="col-md-2" >
-                <a style="float:right" href="<?php echo get_uri('projects/add_yard/'.$project_info->id,["project_info"=>$project_info]); ?>" class="btn btn-default"  >Add Yard Candidate</a>
+                <a style="float:right" href="<?php echo get_uri('projects/add_yard/'.$project_info->id,["project_info"=>$project_info]); ?>" class="btn btn-primary"  >Add Yard Candidate</a>
             </div>
             <div class="col-md-2" >
             </div>
