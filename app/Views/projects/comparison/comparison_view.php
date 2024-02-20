@@ -338,12 +338,16 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 <?php
                 foreach ($categorizedTasks as $category => $oneList) {
                     $totalTaskCost=0;
+                    $taskCosts=array();
                     foreach($oneList as $oneTask){
                         $costItems=json_decode($oneTask->cost_items);
                         if(!$costItems) $costItems=array();
+                        $oneTaskCost=0;
                         foreach($costItems as $oneItem){
                             $totalTaskCost+=(float)$oneItem->unit_price*(float)$oneItem->quantity;
+                            $oneTaskCost+=(float)$oneItem->unit_price*(float)$oneItem->quantity;
                         }
+                        $taskCosts[]=array('count'=>count($costItems),'cost'=>$oneTaskCost);
                     }
                 ?>
                 <thead>
@@ -366,7 +370,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <td style="max-width:10vh;word-wrap:break-word;" ><?php echo $oneTask->title; ?></td>
                         <?php for ($i=0; $i < $numberYards; $i++) { 
                             ?>
-                            <td>0</td>
+                            <td ><div class="d-flex" style="align-items:center;" ><span class="badge rounded-pill bg-secondary" ><?php echo $taskCosts[$index]['count']; ?></span><div class="flex-grow-1" ></div><?php echo $taskCosts[$index]['cost']; ?></div></td>
                         <?php
                         } ?>
                     </tr>
