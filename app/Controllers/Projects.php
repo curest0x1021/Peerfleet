@@ -3747,8 +3747,9 @@ class Projects extends Security_Controller {
     }
     function comparison_tab($project_id){
         $project_info=$this->Projects_model->get_one($project_id);
+        $allProjectTasks=$this->Tasks_model->get_all_where(array('project_id'=>$project_id))->getResult();
         $allYards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        return $this->template->view("projects/comparison/comparison_view",["project_info"=>$project_info,"allYards"=>$allYards]);
+        return $this->template->view("projects/comparison/comparison_view",["allProjectTasks"=>$allProjectTasks,"project_info"=>$project_info,"allYards"=>$allYards]);
     }
 }
 
