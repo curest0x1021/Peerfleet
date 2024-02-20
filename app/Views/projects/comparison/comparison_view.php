@@ -1,5 +1,19 @@
 <?php
 $numberYards=count($allYards);
+$categorizedTasks=array(
+    "General & Docking"=>array(),
+    "Hull"=>array(),
+    "Equipment for Cargo"=>array(),
+    "Ship Equipment"=>array(),
+    "Safety & Crew Equipment"=>array(),
+    "Machinery Main Components"=>array(),
+    "Systems machinery main components"=>array(),
+    "Common systems"=>array(),
+    "Others"=>array(),
+);
+foreach ($allProjectTasks as $index => $oneTask) {
+    $categorizedTasks[$oneTask->category][]=$oneTask;
+}
 ?>
 <div class="card" >
     <div class="card-body" >
@@ -320,253 +334,43 @@ $numberYards=count($allYards);
                 </tbody>
             <!-- </table> -->
             <!-- <table class="table table-bordered table-hover"  > -->
+                
+                <?php
+                foreach ($categorizedTasks as $category => $oneList) {
+                ?>
                 <thead>
-                    <tr>
-                        <th>1. Docking & general services</th>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
+                    <tr >
+                        <th><?php echo $category;?></th>
+                        <?php for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <th>0</th>
+                        <th>0</th>
                         <?php
-                            # code...
-                        }
+                            }
                         ?>
                     </tr>
                 </thead>
                 <tbody>
+                    <?php
+                        foreach ($oneList as $index => $oneTask) {
+                    ?>
                     <tr>
-                        <td>Docking and undocking</td>
+                        <td><?php echo $oneTask->title; ?></td>
+                        <?php for ($i=0; $i < $numberYards; $i++) { 
+                            ?>
+                            <td>0</td>
                         <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
+                        } ?>
                     </tr>
-                    <tr>
-                        <td>Agent</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
+                    <?php
                         }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Wharfage dues</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Towage</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Agent</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Garbage removal</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Gas free certificate</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Cooling water supply</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Fire water supply</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Ballast water supply</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Portable water supply</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Compressed air supply</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Crane service</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Heating lamps</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Telephone and Internet</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Power supply</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Sewage disposal</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Ventilation</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Scuppers</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>Cleaning</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
-                    <tr>
-                        <td>test</td>
-                        <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
-                        ?>
-                            <td><span class="badge rounded-pill bg-secondary" title="Hint" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="This work order has 0 cost lines.">0/0</span></td>
-                        <?php
-                            # code...
-                        }
-                        ?>
-                    </tr>
+                    ?>
                 </tbody>
+                <?php
+                    # code...
+                }
+                ?>
             </table>
+            
             </div>
         </div>
     </div>
