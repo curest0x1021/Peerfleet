@@ -339,7 +339,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 foreach ($categorizedTasks as $category => $oneList) {
                 ?>
                 <thead>
-                    <tr >
+                    <tr>
                         <th><?php echo $category;?></th>
                         <?php for ($i=0; $i < $numberYards; $i++) { 
                         ?>
@@ -354,7 +354,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         foreach ($oneList as $index => $oneTask) {
                     ?>
                     <tr>
-                        <td><?php echo $oneTask->title; ?></td>
+                        <td style="max-width:10vh;word-wrap:break-word;" ><?php echo $oneTask->title; ?></td>
                         <?php for ($i=0; $i < $numberYards; $i++) { 
                             ?>
                             <td>0</td>
