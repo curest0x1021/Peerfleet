@@ -528,4 +528,6 @@ $(document).ready(function(){
     return new bootstrap.Popover(popoverTriggerEl)
     })
 })
+var allProjectTasks=JSON.parse('<?php echo json_encode($allProjectTasks);?>');
+console.log(allProjectTasks);
 </script>
