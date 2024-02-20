@@ -337,13 +337,22 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 
                 <?php
                 foreach ($categorizedTasks as $category => $oneList) {
+                    $totalTaskCost=0;
+                    foreach($oneList as $oneTask){
+                        $costItems=json_decode($oneTask->cost_items);
+                        if(!$costItems) $costItems=array();
+                        foreach($costItems as $oneItem){
+                            $totalTaskCost+=(float)$oneItem->unit_price*(float)$oneItem->quantity;
+                        }
+                    }
                 ?>
                 <thead>
                     <tr>
                         <th><?php echo $category;?></th>
-                        <?php for ($i=0; $i < $numberYards; $i++) { 
+                        <?php for ($i=0; $i < $numberYards; $i++) {
+
                         ?>
-                        <th>0</th>
+                        <th><?php echo $totalTaskCost;?></th>
                         <?php
                             }
                         ?>
@@ -528,6 +537,5 @@ $(document).ready(function(){
     return new bootstrap.Popover(popoverTriggerEl)
     })
 })
-var allProjectTasks=JSON.parse('<?php echo json_encode($allProjectTasks);?>');
-console.log(allProjectTasks);
+
 </script>
