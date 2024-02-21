@@ -173,6 +173,7 @@ $(document).ready(function(){
         if(!editPanelEl.find("#name")[0].value) return;
         if(!editPanelEl.find("#unit_price")[0].value) return;
         if(!editPanelEl.find("#quantity")[0].value) return;
+        var tbodyEl=$(this).parent().parent().parent().parent().find('table tbody');
         var data={
             shipyard_id:editPanelEl.find("#shipyard_id")[0].value,
             task_id:editPanelEl.find("#task_id")[0].value,
@@ -192,7 +193,15 @@ $(document).ready(function(){
             method:"POST",
             data:data,
             success:function(response){
-                console.log($(this).parent().parent().parent().find('tbody'))
+                
+                console.log(tbodyEl)
+                var newRow = $(`
+                <tr>
+                <td>${editPanelEl.find("#name")[0].value}</td>
+                <td>${editPanelEl.find("#quantity")[0].value} ${editPanelEl.find("#measurement")[0].value} X ${editPanelEl.find("#unit_price")[0].value} (per unit)</td>
+                <td>${parseFloat(editPanelEl.find("#quantity")[0].value)*parseFloat(editPanelEl.find("#unit_price")[0].value)}</td>
+                </tr>`);
+                tbodyEl.append(newRow);
             }
         })
 
