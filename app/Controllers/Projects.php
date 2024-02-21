@@ -3758,6 +3758,21 @@ class Projects extends Security_Controller {
         $allYardCostItems=$this->Shipyard_cost_items_model->get_all_where(array('task_id'=>$task_id))->getResult();
         return $this->template->view("projects/comparison/modal_yard_cost_items",['project_id'=>$project_id,'task_id'=>$task_id,'allProjectYards'=>$allProjectYards,'allYardCostItems'=>$allYardCostItems]);
     }
+    function save_yard_cost_item(){
+        $id=$this->request->getPost('id');
+        $task_id=$this->request->getPost('task_id');
+        $saveData=array(
+            "name"=>$this->request->getPost('name'),
+            "description"=>$this->request->getPost('description'),
+            "quantity"=>$this->request->getPost('quantity'),
+            "measurement_unit"=>$this->request->getPost("measurement_unit"),
+            "unit_price"=>$this->request->getPost('unit_price'),
+            "currency"=>$this->request->getPost('currency'),
+            "discount"=>$this->request->getPost('discount'),
+        );
+        $saved_id=$this->Shipyard_cost_items_model->ci_save($saveData,$id);
+        return json_encode(array("success"=>true,"saved_id"=>$saved_id));
+    }
 }
 
 /* End of file projects.php */

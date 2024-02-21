@@ -7,13 +7,14 @@ foreach ($allProjectYards as $oneYard) {
 }
 
 ?>
-<div class="modal-body clearfix" >
-    <div class="d-flex" style="overflow-x:auto;" >
+<div class="modal-body clearfix"  >
+    <div class="d-flex" style="overflow-x:auto; min-height:40vh;" >
         
             
         <?php
             foreach ($allProjectYards as $oneYard) {
                 $id=$oneYard->id;
+                // $project_id=$oneYard->project_id;
                 $itemList=$categorizedCostItems[$oneYard->title];
         ?>
             <div class="card" style="min-width:30vw;border:1px solid lightgray;margin-right:1vw;" >
@@ -41,6 +42,10 @@ foreach ($allProjectYards as $oneYard) {
                         </tbody>
                     </table>
                     <div hidden class="edit-panel" >
+                        <input hidden name="id" id="id" />
+                        <input hidden value="<?php echo $task_id;?>" name="task_id" id="task_id" />
+                        <input hidden value="<?php echo $project_id;?>" name="project_id" id="project_id" />
+                        <input hidden name="shipyard_id" id="shipyard_id" />
                         <div class="form-group" >
                             <label>Name:</label>
                             <input
@@ -98,7 +103,7 @@ foreach ($allProjectYards as $oneYard) {
                             <div class="col-md-4" >
                                 <div class="form-group" >
                                     <label>Quote Type:</label>
-                                    <select class="form-control" >
+                                    <select id="quote_type" name="quote_type" class="form-control" >
                                         <option>Per unit</option>
                                         <option>Lump sum</option>
                                     </select>
@@ -129,7 +134,7 @@ foreach ($allProjectYards as $oneYard) {
                         </div>
                         <div class="row" >
                             <div class="col-md-2" >
-                                <button class="btn btn-primary" >Save</button>
+                                <button class="btn-save-yard-cost-item btn btn-primary" >Save</button>
                             </div>
                             <div class="col-md-2" >
                                 <button class="btn btn-default" >Cancel</button>
@@ -156,6 +161,31 @@ $(document).ready(function(){
             $(this).parent().parent().parent().parent().parent().find(".edit-panel").prop('hidden',false);
         else
             $(this).parent().parent().parent().parent().parent().find(".edit-panel").prop('hidden',true);
+    });
+    $(".btn-save-yard-cost-item").on("click",function(){
+        var editPanelEl=$(this).parent().parent().parent();
+        if(!editPanelEl.find("#name")[0].value) return;
+        if(!editPanelEl.find("#unit_price")[0].value) return;
+        if(!editPanelEl.find("#quantity")[0].value) return;
+        var data={
+            name:editPanelEl.find("#name")[0].value,
+            description:editPanelEl.find("#description")[0].value,
+            quantity:editPanelEl.find("#quantity")[0].value,
+            unit_price:editPanelEl.find("#unit_price")[0].value,
+            // currency:editPanelEl.find("#currency")[0].value,
+            measurement_unit:editPanelEl.find("#measurement")[0].value,
+            quote_type:editPanelEl.find("#quote_type")[0].value,
+            discount:editPanelEl.find("#discount")[0].value,
+        };
+        $.ajax({
+            url:'<?php echo get_uri('projects/save_yard_cost_item'); ?>',
+            method:"POST",
+            data:data,
+            success:function(response){
+                console.log($(this).parent().parent().parent().find('tbody'))
+            }
+        })
+
     })
 })
 </script>
