@@ -20,5 +20,6 @@ class AddCostItemsFieldToTasksTable extends Migration
     public function down()
     {
         //
+        $this->forge->dropColumn('tasks', 'cost_items');
     }
 }

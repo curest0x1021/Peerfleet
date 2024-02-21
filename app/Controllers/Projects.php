@@ -24,6 +24,7 @@ class Projects extends Security_Controller {
         $this->File_category_model = model('App\Models\File_category_model');
         $this->Task_priority_model = model("App\Models\Task_priority_model");
         $this->Project_yards_model = model("App\Models\Project_yards_model");
+        $this->Shipyard_cost_items_model = model("App\Models\Shipyard_cost_items_model");
     }
 
     private function can_delete_projects($project_id = 0) {
@@ -3750,6 +3751,12 @@ class Projects extends Security_Controller {
         $allProjectTasks=$this->Tasks_model->get_all_where(array('project_id'=>$project_id))->getResult();
         $allYards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id))->getResult();
         return $this->template->view("projects/comparison/comparison_view",["allProjectTasks"=>$allProjectTasks,"project_info"=>$project_info,"allYards"=>$allYards]);
+    }
+    function modal_yard_cost_items($task_id){
+        $project_id=$this->Tasks_model->get_one($task_id)->project_id;
+        $allProjectYards=$this->Project_yards_model->get_all_where(array('project_id'=>$project_id))->getResult();
+        $allYardCostItems=$this->Shipyard_cost_items_model->get_all_where(array('task_id'=>$task_id))->getResult();
+        return $this->template->view("projects/comparison/modal_yard_cost_items",['project_id'=>$project_id,'task_id'=>$task_id,'allProjectYards'=>$allProjectYards,'allYardCostItems'=>$allYardCostItems]);
     }
 }
 

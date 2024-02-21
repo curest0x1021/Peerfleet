@@ -370,7 +370,11 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <td style="max-width:10vh;word-wrap:break-word;" ><?php echo $oneTask->title; ?></td>
                         <?php for ($i=0; $i < $numberYards; $i++) { 
                             ?>
-                            <td ><div class="d-flex" style="align-items:center;" ><span class="badge rounded-pill bg-secondary" ><?php echo $taskCosts[$index]['count']; ?></span><div class="flex-grow-1" ></div><?php echo $taskCosts[$index]['cost']; ?></div></td>
+                            <td ><div class="d-flex" style="align-items:center;" >
+                            <?php
+                                echo modal_anchor(get_uri('projects/modal_yard_cost_items/'.$oneTask->id),'<span class="badge rounded-pill bg-secondary" >'.$taskCosts[$index]['count'].'</span>',array());
+                            ?>
+                            <div class="flex-grow-1" ></div><?php echo $taskCosts[$index]['cost']; ?></div></td>
                         <?php
                         } ?>
                     </tr>
