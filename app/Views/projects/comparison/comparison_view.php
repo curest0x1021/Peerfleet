@@ -48,9 +48,9 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                             <i data-feather="more-vertical" ></i>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#">Export xlsx</a></li>
-                                            <li><a class="dropdown-item" href="#">Import quotation</a></li>
-                                            <li><a class="dropdown-item" href="#">Add files</a></li>
+                                            <li><a class="dropdown-item" href="<?php echo get_uri('projects/download_yard_xlsx/'.$allYards[$i]->id);?>" target="_blank">Export xlsx</a></li>
+                                            <li><a class="dropdown-item" href="#" target="_blank">Import quotation</a></li>
+                                            <li><a class="dropdown-item" href="#" target="_blank">Add files</a></li>
                                             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#select-candidate-modal">Select candidate</a></li>
                                         </ul>
                                     </div>
