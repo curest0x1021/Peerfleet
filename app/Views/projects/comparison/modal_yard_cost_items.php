@@ -1,11 +1,15 @@
 <?php
 $categorizedCostItems=array();
 foreach ($allProjectYards as $oneYard) {
-    $categorizedCostItems[$oneYard->title]=array_filter($allYardCostItems,function($element) use($oneYard){
-        return $element->shipyard_id == $oneYard->id;
-    });
+    $categorizedCostItems[$oneYard->id]=array();
+    foreach(array_filter($allYardCostItems,function($element) use($oneYard){
+        return (string)$element->shipyard_id == (string)$oneYard->id;
+    }) as $oneItem){
+        $categorizedCostItems[$oneYard->id][]=$oneItem;
+    }
+    
+    
 }
-
 ?>
 <div class="modal-body clearfix"  >
     <div class="d-flex" style="overflow-x:auto; min-height:40vh;" >
@@ -14,8 +18,7 @@ foreach ($allProjectYards as $oneYard) {
         <?php
             foreach ($allProjectYards as $oneYard) {
                 $id=$oneYard->id;
-                // $project_id=$oneYard->project_id;
-                $itemList=$categorizedCostItems[$oneYard->title];
+                $itemList=$categorizedCostItems[$oneYard->id];
         ?>
             <div class="card" style="min-width:30vw;border:1px solid lightgray;margin-right:1vw;" >
                 <div class="card-header" ><?php echo $oneYard->title;?></div>
@@ -35,8 +38,8 @@ foreach ($allProjectYards as $oneYard) {
                             ?>
                             <tr>
                                 <td><?php echo $oneItem->name;?></td>
-                                <td></td>
-                                <td></td>
+                                <td><?php echo $oneItem->quantity;?> <?php echo $oneItem->measurement;?> X <?php echo $oneItem->unit_price;?> (Per unit) </td>
+                                <td><?php echo (double)$oneItem->quantity*(double)$oneItem->unit_price;?> </td>
                             </tr>
                             <?php
                             }
@@ -85,6 +88,7 @@ foreach ($allProjectYards as $oneYard) {
                                     id="measurement"
                                     name="measurement"
                                     class="form-control"
+                                    value="pcs"
                                     />
                                 </div>
                             </div>
