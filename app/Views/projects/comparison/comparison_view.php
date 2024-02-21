@@ -349,6 +349,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         }
                         $taskCosts[]=array('count'=>count($costItems),'cost'=>$oneTaskCost);
                     }
+
                 ?>
                 <thead>
                     <tr>
@@ -365,16 +366,25 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 <tbody>
                     <?php
                         foreach ($oneList as $index => $oneTask) {
+
                     ?>
                     <tr>
                         <td style="max-width:10vh;word-wrap:break-word;" ><?php echo $oneTask->title; ?></td>
-                        <?php for ($i=0; $i < $numberYards; $i++) { 
-                            ?>
+                        <?php for ($i=0; $i < $numberYards; $i++) {
+                            $oneYard=$allYards[$i];
+                            $oneYardCost=0;
+                            $oneYardItems=array_filter($allYardCostItems,function($oneItem)use($oneYard){
+                                return $oneYard->id==$oneItem->shipyard_id;
+                            });
+                            foreach($oneYardItems as $oneItem){
+                                $oneYardCost+= (float)$oneItem->quantity*(float)$oneItem->unit_price;
+                            }
+                        ?>
                             <td ><div class="d-flex" style="align-items:center;" >
                             <?php
-                                echo modal_anchor(get_uri('projects/modal_yard_cost_items/'.$oneTask->id),'<span class="badge rounded-pill bg-secondary" >'.$taskCosts[$index]['count'].'</span>',array());
+                                echo modal_anchor(get_uri('projects/modal_yard_cost_items/'.$oneTask->id),'<span class="badge rounded-pill bg-secondary" >'.count($oneYardItems).'</span>',array());
                             ?>
-                            <div class="flex-grow-1" ></div><?php echo $taskCosts[$index]['cost']; ?></div></td>
+                            <div class="flex-grow-1" ></div><?php echo $oneYardCost; ?></div></td>
                         <?php
                         } ?>
                     </tr>
@@ -405,7 +415,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
 
       <!-- Modal body -->
       <div class="modal-body">
-        Modal body..
+        Modal body...
       </div>
 
       <!-- Modal footer -->
