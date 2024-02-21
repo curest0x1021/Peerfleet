@@ -3783,6 +3783,8 @@ class Projects extends Security_Controller {
         require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $project_yard=$this->Project_yards_model->get_one($shipyard_id);
+        $project_info=$this->Projects_model->get_one($project_yard->project_id);
+
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
         $sheet1->setTitle('Read me');
@@ -3814,7 +3816,7 @@ class Projects extends Security_Controller {
 
 // Set response headers for file download
         $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $response->setHeader('Content-Disposition', 'attachment;filename="example_with_multiple_sheets.xlsx"');
+        $response->setHeader('Content-Disposition', 'attachment;filename="'.$project_info->title.'_cost_sheet_for_'.$project_yard->title.'.xlsx"');
         $response->setHeader('Cache-Control', 'max-age=0');
 
         // Write the Excel file content to the response body
