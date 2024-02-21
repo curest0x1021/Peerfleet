@@ -3784,7 +3784,7 @@ class Projects extends Security_Controller {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $project_yard=$this->Project_yards_model->get_one($shipyard_id);
         $project_info=$this->Projects_model->get_one($project_yard->project_id);
-        $allYardCostItems=$this->Shipyard_cost_items_model->get_all_where(array("project_id"=>$project_info->id))->getResult();
+        $allYardCostItems=$this->Shipyard_cost_items_model->get_all_where(array("shipyard_id"=>$shipyard_id))->getResult();
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
