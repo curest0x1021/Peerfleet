@@ -3762,13 +3762,17 @@ class Projects extends Security_Controller {
         $id=$this->request->getPost('id');
         $task_id=$this->request->getPost('task_id');
         $saveData=array(
+            "task_id"=>$this->request->getPost('task_id'),
+            "shipyard_id"=>$this->request->getPost('shipyard_id'),
+            "project_id"=>$this->request->getPost('project_id'),
             "name"=>$this->request->getPost('name'),
             "description"=>$this->request->getPost('description'),
             "quantity"=>$this->request->getPost('quantity'),
-            "measurement_unit"=>$this->request->getPost("measurement_unit"),
+            "measurement"=>$this->request->getPost("measurement"),
             "unit_price"=>$this->request->getPost('unit_price'),
             "currency"=>$this->request->getPost('currency'),
             "discount"=>$this->request->getPost('discount'),
+            "yard_remarks"=>$this->request->getPost('yard_remarks'),
         );
         $saved_id=$this->Shipyard_cost_items_model->ci_save($saveData,$id);
         return json_encode(array("success"=>true,"saved_id"=>$saved_id));
