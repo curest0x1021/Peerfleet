@@ -40,26 +40,33 @@ class CreateYardsTable extends Migration
                 'type' => 'DOUBLE',
                 'null' => true,
             ],
-            'measurement_unit' => [
+            'measurement' => [
                 'type' => 'VARCHAR',
                 'constraint' => 200,
+                'null'=>true
             ],
             'unit_price' => [
                 'type' => 'DOUBLE',
                 'null' => true,
             ],
+            'quote_type' => [
+                'type' => 'VARCHAR',
+                'null' => true,
+            ],
             'currency' => [
                 'type' => 'VARCHAR',
                 'constraint' => 50,
+                'null'=>true
             ],
             'discount' => [
                 'type' => 'DOUBLE',
                 'null' => true,
             ],
-            'currency' => [
-                'type' => 'VARCHAR',
-                'constraint' => 200,
-            ],
+            'yard_remarks'=>[
+                'type'=>'VARCHAR',
+                'constraint'=>500,
+                'null'=>true
+            ]
             
             // Add other fields here...
         ]);
