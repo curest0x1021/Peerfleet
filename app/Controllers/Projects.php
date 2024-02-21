@@ -3784,6 +3784,7 @@ class Projects extends Security_Controller {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $project_yard=$this->Project_yards_model->get_one($shipyard_id);
         $project_info=$this->Projects_model->get_one($project_yard->project_id);
+        $allYardCostItems=$this->Shipyard_cost_items->get_all_where(array("project_id"=>$project_id));
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
@@ -3805,13 +3806,27 @@ class Projects extends Security_Controller {
         // Add data to the second worksheet
         $sheet2 = $spreadsheet->createSheet();
         $sheet2->setTitle('Cost items');
-        $sheet2->setCellValue('A1', 'Foo');
-        $sheet2->setCellValue('B1', 'Bar');
+        $sheet2->setCellValue('A1', 'SFI Code');
+        $sheet2->setCellValue('B1', 'WO name');
+        $sheet2->setCellValue('C1', 'Group');
+        $sheet2->setCellValue('D1', 'Cost item');
+        $sheet2->setCellValue('E1', 'Description');
+        $sheet2->setCellValue('F1', 'Cost type');
+        $sheet2->setCellValue('G1', 'Est. quantity');
+        $sheet2->setCellValue('H1', 'Measurement unit');
+        $sheet2->setCellValue('I1', 'Unit price');
+        $sheet2->setCellValue('J1', 'Unit price currency');
+        $sheet2->setCellValue('K1', 'Quote');
+        $sheet2->setCellValue('L1', 'Discount (0-100%)');
+        $sheet2->setCellValue('M1', 'Discounted quote');
+        $sheet2->setCellValue('N1', 'Yard remarks');
+        $sheet2->setCellValue('O1', 'Cost ID');
+        $sheet2->setCellValue('P1', 'WO ID');
+
 
         // Create a writer object
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 
-        
         $response = service('response');
 
 // Set response headers for file download
