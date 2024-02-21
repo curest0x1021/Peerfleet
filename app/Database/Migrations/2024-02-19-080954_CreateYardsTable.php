@@ -51,6 +51,7 @@ class CreateYardsTable extends Migration
             ],
             'quote_type' => [
                 'type' => 'VARCHAR',
+                'constraint' => 200,
                 'null' => true,
             ],
             'currency' => [
@@ -59,7 +60,7 @@ class CreateYardsTable extends Migration
                 'null'=>true
             ],
             'discount' => [
-                'type' => 'DOUBLE',
+                'type' => 'FLOAT',
                 'null' => true,
             ],
             'yard_remarks'=>[
