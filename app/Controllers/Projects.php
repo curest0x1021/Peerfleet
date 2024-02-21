@@ -3784,7 +3784,7 @@ class Projects extends Security_Controller {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $project_yard=$this->Project_yards_model->get_one($shipyard_id);
         $project_info=$this->Projects_model->get_one($project_yard->project_id);
-        $allYardCostItems=$this->Shipyard_cost_items->get_all_where(array("project_id"=>$project_id));
+        $allYardCostItems=$this->Shipyard_cost_items_model->get_all_where(array("project_id"=>$project_info->id))->getResult();
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
@@ -3822,7 +3822,27 @@ class Projects extends Security_Controller {
         $sheet2->setCellValue('N1', 'Yard remarks');
         $sheet2->setCellValue('O1', 'Cost ID');
         $sheet2->setCellValue('P1', 'WO ID');
-
+        $rowNumber=2;
+        foreach ($allYardCostItems as $oneItem) {
+            $task_info=$this->Tasks_model->get_one($oneItem->task_id);
+            $sheet2->setCellValue('A'.$rowNumber, '');
+            $sheet2->setCellValue('B'.$rowNumber, $task_info->title);
+            $sheet2->setCellValue('C'.$rowNumber, $task_info->category);
+            $sheet2->setCellValue('D'.$rowNumber, $oneItem->name);
+            $sheet2->setCellValue('E'.$rowNumber, $oneItem->description);
+            $sheet2->setCellValue('F'.$rowNumber, $oneItem->quote_type);
+            $sheet2->setCellValue('G'.$rowNumber, $oneItem->quantity);
+            $sheet2->setCellValue('H'.$rowNumber, $oneItem->measurement);
+            $sheet2->setCellValue('I'.$rowNumber, $oneItem->unit_price);
+            $sheet2->setCellValue('J'.$rowNumber, $oneItem->currency);
+            $sheet2->setCellValue('K'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity);
+            $sheet2->setCellValue('L'.$rowNumber, $oneItem->discount);
+            $sheet2->setCellValue('M'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity*(float)$oneItem->discount/100);
+            $sheet2->setCellValue('N'.$rowNumber, $oneItem->yard_remarks);
+            $sheet2->setCellValue('O'.$rowNumber, '');
+            $sheet2->setCellValue('P'.$rowNumber, '');
+            $rowNumber++;
+        }
 
         // Create a writer object
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
