@@ -1,8 +1,8 @@
 <?php
 $categorizedCostItems=array();
 foreach ($allProjectYards as $oneYard) {
-    $categorizedCostItems[$oneYard->title]=array_filter($allYardCostItems,function($element){
-        return $element->shipyard_id== $oneYard->id;
+    $categorizedCostItems[$oneYard->title]=array_filter($allYardCostItems,function($element) use($oneYard){
+        return $element->shipyard_id == $oneYard->id;
     });
 }
 
@@ -34,7 +34,9 @@ foreach ($allProjectYards as $oneYard) {
                             foreach ($itemList as $oneItem) {
                             ?>
                             <tr>
-
+                                <td><?php echo $oneItem->name;?></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <?php
                             }
@@ -45,7 +47,7 @@ foreach ($allProjectYards as $oneYard) {
                         <input hidden name="id" id="id" />
                         <input hidden value="<?php echo $task_id;?>" name="task_id" id="task_id" />
                         <input hidden value="<?php echo $project_id;?>" name="project_id" id="project_id" />
-                        <input hidden name="shipyard_id" id="shipyard_id" />
+                        <input hidden value=<?php echo $oneYard->id;?> name="shipyard_id" id="shipyard_id" />
                         <div class="form-group" >
                             <label>Name:</label>
                             <input
@@ -168,14 +170,18 @@ $(document).ready(function(){
         if(!editPanelEl.find("#unit_price")[0].value) return;
         if(!editPanelEl.find("#quantity")[0].value) return;
         var data={
+            shipyard_id:editPanelEl.find("#shipyard_id")[0].value,
+            task_id:editPanelEl.find("#task_id")[0].value,
+            project_id:editPanelEl.find("#project_id")[0].value,
             name:editPanelEl.find("#name")[0].value,
             description:editPanelEl.find("#description")[0].value,
             quantity:editPanelEl.find("#quantity")[0].value,
             unit_price:editPanelEl.find("#unit_price")[0].value,
             // currency:editPanelEl.find("#currency")[0].value,
-            measurement_unit:editPanelEl.find("#measurement")[0].value,
+            measurement:editPanelEl.find("#measurement")[0].value,
             quote_type:editPanelEl.find("#quote_type")[0].value,
             discount:editPanelEl.find("#discount")[0].value,
+            yard_remarks:editPanelEl.find("#yard_remarks")[0].value,
         };
         $.ajax({
             url:'<?php echo get_uri('projects/save_yard_cost_item'); ?>',
