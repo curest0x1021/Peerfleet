@@ -999,18 +999,29 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                             </tr>
                             </thead>
                             <tbody>
+                                <?php
+                                foreach ($allYards as $oneYard) {
+                                ?>
                                 <tr>
-                                    <td>Total yard quote from Keppel</td>
-                                    <td>USD 0.00</td>
+                                    <td>
+                                        Total yard quote from <?php echo $oneYard->title;?>
+                                    </td>
+                                    <td>
+                                        USD <?php
+                                        $totalYardCost=0;
+                                        foreach (array_filter($allYardCostItems,function($oneItem)use($oneYard){
+                                            return (string)$oneItem->shipyard_id==(string)$oneYard->id;
+                                        }) as $oneItem) {
+                                            $totalYardCost+=(float)$oneItem->quantity*(float)$oneItem->unit_price;
+                                        };
+                                        echo $totalYardCost;
+                                        ?>
+                                    </td>
                                 </tr>
-                                <tr>
-                                    <td>Total yard quote from Varaderos y Talleres de Mediterranean</td>
-                                    <td>USD 0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Total yard quote from Nakilat - Keppel Offshore & Maria</td>
-                                    <td>USD 0.00</td>
-                                </tr>
+                                <?php
+                                }
+                                ?>
+                                
                                 <tr>
                                     <td>Billed cost</td>
                                     <td>USD 0.00</td>

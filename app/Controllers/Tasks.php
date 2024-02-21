@@ -26,6 +26,8 @@ class Tasks extends Security_Controller {
 
         $this->Task_libraries_model = model("App\Models\Task_libraries_model");
         $this->Task_library_checklist_items_model= model("App\Models\Task_library_checklist_items_model");
+        $this->Shipyard_cost_items_model= model("App\Models\Shipyard_cost_items_model");
+        $this->Project_yards_model=model("App\Models\Project_yards_model");
     }
 
     private function get_context_id_pairs() {
@@ -1787,7 +1789,8 @@ class Tasks extends Security_Controller {
         $view_data["show_time_with_task"] = (get_setting("show_time_with_task_start_date_and_deadline")) ? true : false;
 
         $view_data['contexts'] = $this->_get_accessible_contexts();
-
+        $view_data['allYardCostItems']=$this->Shipyard_cost_items_model->get_all_where(array("task_id"=>$task_id))->getResult();
+        $view_data['allYards']=$this->Project_yards_model->get_all_where(array("project_id"=>$model_info->project_id))->getResult();
         if ($view_type == "details") {
             return $this->template->rander('tasks/view', $view_data);
         } else {
