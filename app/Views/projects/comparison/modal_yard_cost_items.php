@@ -110,8 +110,8 @@ foreach ($allProjectYards as $oneYard) {
                                 <div class="form-group" >
                                     <label>Quote Type:</label>
                                     <select id="quote_type" name="quote_type" class="form-control" >
-                                        <option>Per unit</option>
-                                        <option>Lump sum</option>
+                                        <option value="Per unit">Per unit</option>
+                                        <option value="Lump sum" >Lump sum</option>
                                     </select>
                                 </div>
                             </div>

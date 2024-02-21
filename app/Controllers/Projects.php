@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+
 class Projects extends Security_Controller {
 
     protected $Project_settings_model;
@@ -3777,6 +3778,50 @@ class Projects extends Security_Controller {
         );
         $saved_id=$this->Shipyard_cost_items_model->ci_save($saveData,$id);
         return json_encode(array("success"=>true,"saved_id"=>$saved_id));
+    }
+    function download_yard_xlsx($shipyard_id){
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $project_yard=$this->Project_yards_model->get_one($shipyard_id);
+        // Add data to the first worksheet
+        $sheet1 = $spreadsheet->getActiveSheet();
+        $sheet1->setTitle('Read me');
+        $sheet1->setCellValue('A1', 'About the quotation form');
+        $sheet1->setCellValue('A3', 'General');
+        $sheet1->setCellValue('A4', 'This quotation form is generated via Maindeck (www.maindeck.io).');
+        $sheet1->setCellValue('A5', 'It contains all the necessary functionality required by the shipyard providing a quotation.');
+        $sheet1->setCellValue('A7', 'The shipyard understands that this quotation form must be read and understood in connection with the project specification PDF sent along with it.');
+        $sheet1->setCellValue('A8', 'The project specification PDF contains all the detailed specifications about the work scope.');
+        $sheet1->setCellValue('A10', 'The shipyard also accepts that, if selected, billed and/or final costs should be provided to the owner in this same format.');
+        $sheet1->setCellValue('A13', 'How to use');
+        $sheet1->setCellValue('A14', 'For a quick and easy intro, please view this video.(ctrl + click to view)');
+        $sheet1->setCellValue('A16', 'For additional information, please see this article.(ctrl + click to view)');
+        $sheet1->setCellValue('A19', 'Support');
+        $sheet1->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
+        $sheet1->setCellValue('A21', '+47 91999771');
+
+        // Add data to the second worksheet
+        $sheet2 = $spreadsheet->createSheet();
+        $sheet2->setTitle('Cost items');
+        $sheet2->setCellValue('A1', 'Foo');
+        $sheet2->setCellValue('B1', 'Bar');
+
+        // Create a writer object
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+        
+        $response = service('response');
+
+// Set response headers for file download
+        $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->setHeader('Content-Disposition', 'attachment;filename="example_with_multiple_sheets.xlsx"');
+        $response->setHeader('Cache-Control', 'max-age=0');
+
+        // Write the Excel file content to the response body
+        $writer->save('php://output');
+
+        // Return the response object
+        return $response;
     }
 }
 
