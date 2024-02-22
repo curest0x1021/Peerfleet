@@ -374,8 +374,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php for ($i=0; $i < $numberYards; $i++) {
                             $oneYard=$allYards[$i];
                             $oneYardCost=0;
-                            $oneYardItems=array_filter($allYardCostItems,function($oneItem)use($oneYard){
-                                return $oneYard->id==$oneItem->shipyard_id;
+                            $oneYardItems=array_filter($allYardCostItems,function($oneItem)use($oneTask,$oneYard){
+                                return $oneTask->id==$oneItem->task_id&&$oneYard->id==$oneItem->shipyard_id;
                             });
                             foreach($oneYardItems as $oneItem){
                                 $oneYardCost+= (float)$oneItem->quantity*(float)$oneItem->unit_price;
