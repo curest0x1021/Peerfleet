@@ -3860,6 +3860,23 @@ class Projects extends Security_Controller {
         // Return the response object
         return $response;
     }
+    function modal_import_yard_xlsx(){
+        return $this->template->view('projects/comparison/modal_import_yard_xlsx');
+    }
+    function import_yard_xlsx(){
+        upload_file_to_temp(true);
+        $file = get_array_value($_FILES, "file");
+
+        if (!$file) {
+            die("Invalid file");
+        }
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $temp_file = get_array_value($file, "tmp_name");
+        $file_name = get_array_value($file, "name");
+        $file_size = get_array_value($file, "size");
+        $temp_file_path = get_setting("temp_file_path");
+        $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
+    }
 }
 
 /* End of file projects.php */

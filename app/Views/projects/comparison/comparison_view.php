@@ -49,7 +49,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                         </button>
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" href="<?php echo get_uri('projects/download_yard_xlsx/'.$allYards[$i]->id);?>" target="_blank">Export xlsx</a></li>
-                                            <li><a class="dropdown-item" href="#" target="_blank">Import quotation</a></li>
+                                            <!-- <li><a class="dropdown-item" href="#" target="_blank">Import quotation</a></li> -->
+                                            <li><?php echo modal_anchor(get_uri('projects/modal_import_yard_xlsx'),'<li class="dropdown-item" >Import quotation</l1>',array());?></li>
                                             <li><a class="dropdown-item" href="#" target="_blank">Add files</a></li>
                                             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#select-candidate-modal">Select candidate</a></li>
                                         </ul>
