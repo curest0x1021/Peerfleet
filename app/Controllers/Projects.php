@@ -3860,8 +3860,8 @@ class Projects extends Security_Controller {
         // Return the response object
         return $response;
     }
-    function modal_import_yard_xlsx(){
-        return $this->template->view('projects/comparison/modal_import_yard_xlsx');
+    function modal_import_yard_xlsx($shipyard_id){
+        return $this->template->view('projects/comparison/modal_import_yard_xlsx',['shipyard_id'=>$shipyard_id]);
     }
     function import_yard_xlsx(){
         upload_file_to_temp(true);
