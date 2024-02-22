@@ -3931,6 +3931,8 @@ class Projects extends Security_Controller {
         $shipyard_info->selected=1;
         $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
         $this->Project_yards_model->delete_where(array("project_id"=>$shipyard_info->project_id,"selected"=>0));
+        $shipyard_info->selected=0;
+        $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
         return json_encode(array("success"=>true));
     }
 }
