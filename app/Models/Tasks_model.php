@@ -1065,7 +1065,7 @@ class Tasks_model extends Crud_model
     }
     public function getCount($columnName, $specialValue)
     {
-        return $this->where($columnName, $specialValue)->countAllResults();
+        return $this->where($columnName, $specialValue)->where('deleted',0)->countAllResults();
     }
     
 }
