@@ -24,7 +24,7 @@
                             style="border:1px solid lightgray;"
                             required
                         />
-                        <p>If you can’t find the yard in the list, please send an email to support@maindeck.io and we will add it to the list.</p>
+                        <p>If you can’t find the yard in the list, please send an email to support@peerfleet.io and we will add it to the list.</p>
                     </div>
                     <div class="form-group d-flex" >
                         <div class="flex-grow-1" >
