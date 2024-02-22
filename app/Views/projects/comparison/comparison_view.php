@@ -49,10 +49,9 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                         </button>
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" href="<?php echo get_uri('projects/download_yard_xlsx/'.$allYards[$i]->id);?>" target="_blank">Export xlsx</a></li>
-                                            <!-- <li><a class="dropdown-item" href="#" target="_blank">Import quotation</a></li> -->
                                             <li><?php echo modal_anchor(get_uri('projects/modal_import_yard_xlsx/'.$allYards[$i]->id),'<li class="dropdown-item" >Import quotation</l1>',array());?></li>
                                             <li><a class="dropdown-item" href="#" target="_blank">Add files</a></li>
-                                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#select-candidate-modal">Select candidate</a></li>
+                                            <li><?php echo modal_anchor(get_uri('projects/modal_select_yard/'.$allYards[$i]->id),'<li class="dropdown-item" >Select candidate</l1>',array());?></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -428,48 +427,6 @@ foreach ($allProjectTasks as $index => $oneTask) {
   </div>
 </div>
 
-<!-- The Modal -->
-<div class="modal" id="select-candidate-modal">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Yard Selection</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <!-- Modal body -->
-      <div class="modal-body">
-        <div class="card" >
-            <h5>Selecting yard - Varaderos y Talleres de Mediterranea</h5>
-            <p><i data-feather="info" ></i> Learn more about selecting yards.</p>
-        </div>
-        <div class="card" >
-            <p>By selecting this yard, the quoted costs for this project. Data from any other yards will be hidden. This action is not reversible, but you can always edit the costs in execution phase.</p>
-            <div class="card" style="background-color:lightyellow;border:1px solid brown;" >
-                <ul>
-                <p>
-                    This action will move the project to the pre-Execution phase. This is the phase between yard selection and the actual yard visit(Execution)
-                </p>
-                <p>
-                    Please note that the Deviation cost loss of earnings, Bunker cost and other additional expenditures at yard are not transfered to the cost.
-                    In order to include these in the project's total cost, you should add these on the Owner's supply page.
-                </p>
-                </ul>
-            </div>
-        </div>
-      </div>
-
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-info" data-bs-dismiss="modal">Select</button>
-      </div>
-
-    </div>
-  </div>
-</div>
 
 <!-- The Modal -->
 <div class="modal" id="edit-payment-term-modal">

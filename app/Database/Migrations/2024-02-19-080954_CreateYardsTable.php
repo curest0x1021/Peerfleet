@@ -79,5 +79,6 @@ class CreateYardsTable extends Migration
     public function down()
     {
         //
+        $this->forge->drop('shipyard_cost_items');
     }
 }

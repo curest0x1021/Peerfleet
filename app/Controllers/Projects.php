@@ -3917,6 +3917,14 @@ class Projects extends Security_Controller {
         }
         echo json_encode(array("success"=>true));
     }
+    function modal_select_yard($shipyard_id){
+        $project_yard_info=$this->Project_yards_model->get_one($shipyard_id);
+        $shipyard_info=$this->Shipyards_model->get_one($project_yard_info->shipyard_id);
+        return $this->template->view("projects/comparison/modal_select_yard",["shipyard_info"=>$shipyard_info,"project_yard_info"=>$project_yard_info]);
+    }
+    function select_yard($shipyard_id){
+        
+    }
 }
 
 /* End of file projects.php */
