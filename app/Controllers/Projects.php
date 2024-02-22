@@ -3867,15 +3867,55 @@ class Projects extends Security_Controller {
         upload_file_to_temp(true);
         $file = get_array_value($_FILES, "file");
 
-        if (!$file) {
-            die("Invalid file");
-        }
+        // if (!$file) {
+        //     die("Invalid file");
+        // }
         require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $temp_file = get_array_value($file, "tmp_name");
         $file_name = get_array_value($file, "name");
         $file_size = get_array_value($file, "size");
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
+        $excel_file->setActiveSheetIndex(1);
+        $worksheet=$excel_file->getActiveSheet();
+        $highestRow = $worksheet->getHighestRow(); // e.g., 10
+        $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
+
+        // Convert the highest column letter to a numeric index (e.g., 'F' => 6)
+        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+
+        // Initialize an empty array to store the data
+        $data = [];
+
+        // Loop through each row and column to read the data
+        for ($row = 1; $row <= $highestRow; ++$row) {
+            $rowData = [];
+            for ($col = 1; $col <= $highestColumnIndex; ++$col) {
+                $cellValue = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+                $rowData[] = $cellValue;
+            }
+            $data[] = $rowData;
+        }
+        $shipyard_id=$this->request->getPost('shipyard_id');
+        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
+        for($count=1;$count<count($data);$count++){
+            $task_info=$this->Tasks_model->get_all_where(array("title"=>$data[$count][1]))->getResult()[0];
+            $saveData=array(
+                "shipyard_id"=>$shipyard_id,
+                "task_id"=>$task_info->id,
+                "project_id"=>$shipyard_info->project_id,
+                "name"=>$data[$count][3],
+                "description"=>$data[$count][4],
+                "quantity"=>$data[$count][6],
+                "measurement"=>$data[$count][7],
+                "unit_price"=>$data[$count][8],
+                "currency"=>$data[$count][9],
+                "discount"=>$data[$count][11],
+                "yard_remarks"=>$data[$count][13],
+            );
+            $this->Shipyard_cost_items_model->ci_save($saveData,null);
+        }
+        echo json_encode(array("success"=>true));
     }
 }
 

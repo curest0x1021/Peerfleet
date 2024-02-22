@@ -4,14 +4,16 @@
     <?php echo form_open(get_uri("projects/import_yard_xlsx"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
     <?php echo form_close(); ?>
     <div class="card" style="border:1px dashed gray; min-height:30vh;" >
-        <div class="d-flex align-items-center" >
-            <div class="row" >
-                <div class="col-md-4" >
-                        <button class="btn btn-lg btn-success btn-select-yard-xlsx" >Upload data from file</button>
-                        <p>.csv, .tsv, .xls, .xlsx, .xml, .txt spreadsheets accepted.</p>
-                </div>
-                <div class="col-md-8" >
-                    <p>You can upload any .csv, .tsv, .xls, .xlsx, .xml, .txt file with any set of columns as long as it has 1 record per row. The next step will allow you to match your spreadsheet columns to the right data points. You'll be able to clean up or remove any corrupted data before finalizing your report.</p>
+        <div class="card-body" >
+            <div class="d-flex align-items-center" >
+                <div class="row" >
+                    <div class="col-md-4" >
+                            <button class="btn btn-lg btn-success btn-select-yard-xlsx" >Upload data from file</button>
+                            <p>.csv, .tsv, .xls, .xlsx, .xml, .txt spreadsheets accepted.</p>
+                    </div>
+                    <div class="col-md-8" >
+                        <p>You can upload any .csv, .tsv, .xls, .xlsx, .xml, .txt file with any set of columns as long as it has 1 record per row. The next step will allow you to match your spreadsheet columns to the right data points. You'll be able to clean up or remove any corrupted data before finalizing your report.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -42,6 +44,7 @@ $(document).ready(function(){
                 processData: false,
                 success:function(response){
                     console.log(response)
+                    window.location.reload();
                 }
             })
         }
