@@ -27,7 +27,7 @@ foreach ($tasks as $data) {
         $toggle_sub_task_icon = "<span class='filter-sub-task-button clickable ml5' title='" . app_lang("show_sub_tasks") . "' main-task-id= '$main_task_id'><i data-feather='filter' class='icon-16'></i></span>";
     }
 
-    $title .= modal_anchor(get_uri("tasks/view"), $data->title . $icon, array("title" => app_lang('task_info') . " #$data->id", "data-post-id" => $data->id, "data-search" => $sub_task_search_column, "class" => $unread_comments_class, "data-modal-lg" => "1"));
+    $title .=("<div style='flex-grow:1;max-width:10vw;word-wrap:break-word;' >". modal_anchor(get_uri("tasks/view"), $data->title . $icon, array("title" => app_lang('task_info') . " #$data->id", "data-post-id" => $data->id, "data-search" => $sub_task_search_column, "class" => $unread_comments_class, "data-modal-lg" => "1"))."</div>");
 
     // $task_point = "";
     // if ($data->points > 1) {
@@ -160,9 +160,9 @@ foreach ($tasks as $data) {
     echo '<tr><td class="">' . 
     $check_status . '</td><td>' . 
     $data->dock_list_number . 
-    "</td><td>" . 
+    "</td><td  ><div class='d-flex align-items-center' >" . 
     $title . 
-    "</td><td>" . 
+    "</div></td><td>" . 
     $data->reference_drawing . 
     "</td><td>" .  
     '<span class="">' . $start_date . '</span>' . 

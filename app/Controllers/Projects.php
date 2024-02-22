@@ -3749,7 +3749,7 @@ class Projects extends Security_Controller {
     }
     function comparison_tab($project_id){
         $project_info=$this->Projects_model->get_one($project_id);
-        $allProjectTasks=$this->Tasks_model->get_all_where(array('project_id'=>$project_id))->getResult();
+        $allProjectTasks=$this->Tasks_model->get_all_where(array('project_id'=>$project_id,"deleted"=>0))->getResult();
         $allYards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id))->getResult();
         // $selectedYards=array_filter($allYards,function($oneYard){
         //     return $oneYard->selected==1;
