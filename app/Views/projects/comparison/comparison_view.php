@@ -369,7 +369,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
 
                     ?>
                     <tr>
-                        <td style="max-width:10vh;word-wrap:break-word;" ><?php echo $oneTask->title; ?></td>
+                        <td ><div style="max-width:10vw;word-wrap:break-word;" ><?php echo $oneTask->title; ?></div></td>
                         <?php for ($i=0; $i < $numberYards; $i++) {
                             $oneYard=$allYards[$i];
                             $oneYardCost=0;
