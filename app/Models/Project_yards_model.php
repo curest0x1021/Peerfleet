@@ -16,4 +16,9 @@ class Project_yards_model extends Crud_model
     {
         return $this->where($columnName, $specialValue)->countAllResults();
     }
+    function delete_where($where = array()) {
+        if (count($where)) {
+            return $this->db_builder->delete($where);
+        }
+    }
 }
