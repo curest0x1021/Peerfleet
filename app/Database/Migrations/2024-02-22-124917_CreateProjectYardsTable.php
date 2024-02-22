@@ -39,6 +39,11 @@ class CreateProjectYardsTable extends Migration
                 'null'=>true,
                 'constraint'=>500
             ],
+            'selected'=>[
+                'type'=>'TINYINT',
+                'null'=>true,
+                'default'=>0
+            ]
             // Add other fields here...
         ]);
     

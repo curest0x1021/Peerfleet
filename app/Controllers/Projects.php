@@ -3751,6 +3751,10 @@ class Projects extends Security_Controller {
         $project_info=$this->Projects_model->get_one($project_id);
         $allProjectTasks=$this->Tasks_model->get_all_where(array('project_id'=>$project_id))->getResult();
         $allYards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        // $selectedYards=array_filter($allYards,function($oneYard){
+        //     return $oneYard->selected==1;
+        // });
+        // if(count($selectedYards)>0) $allYards=$selectedYards;
         $allYardCostItems=$this->Shipyard_cost_items_model->get_all_where(array("project_id"=>$project_id))->getResult();
         return $this->template->view("projects/comparison/comparison_view",["allYardCostItems"=>$allYardCostItems,"allProjectTasks"=>$allProjectTasks,"project_info"=>$project_info,"allYards"=>$allYards]);
     }
@@ -3923,7 +3927,11 @@ class Projects extends Security_Controller {
         return $this->template->view("projects/comparison/modal_select_yard",["shipyard_info"=>$shipyard_info,"project_yard_info"=>$project_yard_info]);
     }
     function select_yard($shipyard_id){
-        
+        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
+        $shipyard_info->selected=1;
+        $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
+        $this->Project_yards_model->delete_where(array("project_id"=>$shipyard_info->project_id,"selected"=>0));
+        return json_encode(array("success"=>true));
     }
 }
 
