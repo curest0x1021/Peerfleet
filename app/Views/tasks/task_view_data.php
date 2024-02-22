@@ -988,7 +988,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             <div class="col-md-12" >
                 <div class="card" style="border: solid 1px lightgray;min-height:30vh;">
                     <div class="card-header d-flex">
-                        <b>Work Order Quotes</b>
+                        <b>Task Quotes</b>
                     </div>
                     <div class="card-body" style="padding:10px" >
                         <table id="table-quotes-from-yard" class="table " style="margin:0" >
