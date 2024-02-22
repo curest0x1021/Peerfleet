@@ -14,15 +14,18 @@ foreach ($allProjectYards as $oneYard) {
 <div class="modal-body clearfix"  >
     <div class="d-flex" style="overflow-x:auto; min-height:40vh;" >
         
-            
+    
         <?php
             foreach ($allProjectYards as $oneYard) {
                 $id=$oneYard->id;
                 $itemList=$categorizedCostItems[$oneYard->id];
         ?>
+                
             <div class="card" style="min-width:30vw;border:1px solid lightgray;margin-right:1vw;" >
                 <div class="card-header" ><?php echo $oneYard->title;?></div>
                 <div class="card-body" id="yard-cost-items-panel-<?php echo $id;?>" >
+                
+                
                     <table class="table table-hover table-bordered" >
                         <thead>
                             <tr>
