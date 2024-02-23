@@ -46,6 +46,10 @@ foreach ($allProjectTasks as $index => $oneTask) {
         max-width:15vw;
         width:15vw;
     }
+    .collapse {
+      transition: height 1s ease;
+      overflow: hidden;
+    }
     
 </style>
 <div class="card" >
@@ -398,7 +402,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
 
                 ?>
                 <thead>
-                    <tr>
+                    <tr  data-bs-toggle="collapse" data-bs-target="#<?php echo explode(" ",$category)[0]."-tasks-panel";?>">
                         <th><?php echo $category;?></th>
                         <?php for ($i=0; $i < $numberYards; $i++) {
 
@@ -409,7 +413,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="<?php echo explode(" ",$category)[0]."-tasks-panel";?>" class="collapse" >
                     <?php
                         foreach ($oneList as $index => $oneTask) {
 
