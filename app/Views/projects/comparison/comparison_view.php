@@ -18,7 +18,6 @@ foreach ($allProjectTasks as $index => $oneTask) {
 <style>
     
     table{
-        min-width:100%;
         border:1px solid lightgray;
         border-collapse: collapse;
         
@@ -39,7 +38,6 @@ foreach ($allProjectTasks as $index => $oneTask) {
         padding:5px;
     }
     .row-header{
-        flex-grow:1;
         max-width:80vw;
     }
     
