@@ -17,6 +17,33 @@ foreach ($allProjectTasks as $index => $oneTask) {
 ?>
 <style>
     
+    table{
+        min-width:100%;
+        border:1px solid lightgray;
+        border-collapse: collapse;
+        
+    }
+    tr{
+        border:1px solid lightgray;
+    }
+    th{
+        border:1px solid lightgray;
+        min-width:15vw;
+        max-width:15vw;
+        padding:5px;
+    }
+    .row-body{
+        border:1px solid lightgray;
+        min-width:15vw;
+        max-width:15vw;
+        padding:5px;
+    }
+    .row-header{
+        flex-grow:1;
+        max-width:80vw;
+    }
+    
+    
 </style>
 <div class="card" >
     <div class="card-body" >
@@ -31,18 +58,20 @@ foreach ($allProjectTasks as $index => $oneTask) {
             </div>
             
         </div>
-        <div class="row d-flex justify-content-center" >
-            <div class="col-md-12" >
+        
+        <div class="d-flex" style="overflow-x:auto;padding:10px;" >
             <!--Main Info-->
-            <table class="table table-bordered table-hover"  >
+            
+            
+            <table class=""  >
                 <thead>
                     <tr>
-                        <th></th>
+                        <th class="row-header" ></th>
                         <?php
                         for ($i=0; $i <$numberYards ; $i++) { 
                             
                         ?>
-                        <th >
+                        <th class="row-body">
                             <?php echo modal_anchor(get_uri('projects/modal_select_yard/'.$allYards[$i]->id),'<button class="btn btn-primary btn-select-yard-candidate" >Select candidate</button>',array());?>
                         </th>
                         <?php
@@ -57,7 +86,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         
                             # code...
                         ?>  
-                            <th>
+                            <th class="row-body" >
                                 <div class="d-flex" >
                                     <div class="flex-grow-1" ><?php echo $allYards[$i]->title;?></div>
                                     <div class="dropdown" >
@@ -84,7 +113,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td></td>
+                            <td class="row-body"></td>
                         <?php
                             # code...
                         }
@@ -95,7 +124,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td>0</td>
+                            <td class="row-body">0</td>
                         <?php
                             # code...
                         }
@@ -106,7 +135,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td>0</td>
+                            <td class="row-body">0</td>
                         <?php
                             # code...
                         }
@@ -117,7 +146,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td>0</td>
+                            <td class="row-body">0</td>
                         <?php
                             # code...
                         }
@@ -132,7 +161,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <th>0</th>
+                            <th class="row-body">0</th>
                         <?php
                             # code...
                         }
@@ -150,7 +179,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <th>0</th>
+                            <th class="row-body">0</th>
                         <?php
                             # code...
                         }
@@ -163,7 +192,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td></td>
+                            <td class="row-body"></td>
                         <?php
                             # code...
                         }
@@ -174,9 +203,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td></td>
+                            <td class="row-body"></td>
                         <?php
-                            # code...
                         }
                         ?>
                     </tr>
@@ -185,9 +213,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td></td>
+                            <td class="row-body"></td>
                         <?php
-                            # code...
                         }
                         ?>
                     </tr>
@@ -196,9 +223,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td></td>
+                            <td class="row-body"></td>
                         <?php
-                            # code...
                         }
                         ?>
                     </tr>
@@ -207,7 +233,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td></td>
+                            <td class="row-body"></td>
                         <?php
                             # code...
                         }
@@ -415,7 +441,6 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 ?>
             </table>
             
-            </div>
         </div>
     </div>
 </div>
