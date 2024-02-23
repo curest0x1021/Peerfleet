@@ -60,6 +60,9 @@ foreach ($allProjectTasks as $index => $oneTask) {
     .collapse-active.collapse-arrow {
       transform: rotate(180deg);
     }
+    table tr th td{
+        border:1px solid lightgray;
+    }
     
 </style>
 <div class="card" >

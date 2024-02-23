@@ -1230,7 +1230,19 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     currency:$("#cost_item_currency")[0].value,
                 };
                 $("#editing_cost_item")[0].value=""
+                
             }
+            $.ajax({
+                url:'<?php echo get_uri('tasks/save_task_cost_items');?>',
+                method:"POST",
+                data:{
+                    task_id:<?php echo $model_info->id;?>,
+                    cost_items:JSON.stringify(cost_items)
+                },
+                success:function(response){
+                    console.log(response)
+                }
+            })
         });
         $("#cancel-add-cost-item").on("click",function(){
             $("#insert-cost-item-panel").prop("hidden",true);
@@ -1357,9 +1369,10 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         $("#table-owners-supplies")[0].getElementsByTagName('tbody')[0].deleteRow(index);
     }
     <?php
-        if(isset($gotTasklibrary)&&$gotTasklibrary->reference_drawing)
-        echo 'cost_items=JSON.parse(`'.$gotTasklibrary->reference_drawing.'`);';
+        if(isset($gotTasklibrary)&&$gotTasklibrary->cost_items)
+        echo 'cost_items=JSON.parse(`'.json_encode($gotTasklibrary->cost_items).'`);';
     ?>
+    
     <?php if(count($all_files)>0)
     echo 'var all_files='.json_encode($all_files).';'
     ?>

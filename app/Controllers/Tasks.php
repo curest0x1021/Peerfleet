@@ -4770,5 +4770,13 @@ class Tasks extends Security_Controller {
         }
         return json_encode(array("success"=>true));
     }
+    function save_task_cost_items(){
+        $task_id=$this->request->getPost("task_id");
+        $task_info=$this->Tasks_model->get_one($task_id);
+        $task_info->cost_items=$this->request->getPost('cost_items');
+        $save_id=$this->Tasks_model->ci_save($task_info,$task_info->id);
+        return json_encode(array("success"=>true));
+
+    }
     /*----*/
 }
