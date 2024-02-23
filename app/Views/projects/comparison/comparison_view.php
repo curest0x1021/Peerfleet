@@ -63,7 +63,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
       margin-left: 5px;
       transition: transform 0.3s ease;
     }
-    .collapse.show + .collapse-arrow::after {
+    .collapse-active.collapse-arrow::after {
       transform: rotate(180deg);
     }
     
@@ -418,7 +418,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
 
                 ?>
                 <thead>
-                    <tr  data-bs-toggle="collapse" data-bs-target="#<?php echo explode(" ",$category)[0]."-tasks-panel";?>">
+                    <tr  data-bs-toggle="collapse" data-bs-target="#<?php echo explode(" ",$category)[0]."-tasks-panel";?>" aria-expanded="false" aria-controls="<?php echo explode(" ",$category)[0]."-tasks-panel";?>">
                         <th><span class="collapse-arrow"></span><?php echo $category;?></th>
                         <?php for ($i=0; $i < $numberYards; $i++) {
 
@@ -435,7 +435,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
 
                     ?>
                     <tr>
-                        <td ><div style="max-width:10vw;word-wrap:break-word;" ><?php echo $oneTask->title; ?></div></td>
+                        <td > <div style="max-width:10vw;word-wrap:break-word;" ><?php echo $oneTask->title; ?></div></td>
                         <?php for ($i=0; $i < $numberYards; $i++) {
                             $oneYard=$allYards[$i];
                             $oneYardCost=0;
@@ -581,6 +581,10 @@ $(document).ready(function(){
         $(this).removeClass('btn-primary').addClass('btn-success');
     },function(){
         $(this).removeClass('btn-success').addClass('btn-primary');
+    })
+    $("[data-bs-toggle=collapse]").on("click",function(){
+        if(!$(this).find(".collapse-arrow").hasClass('collapse-active')) $(this).find(".collapse-arrow").addClass('collapse-active');
+        else $(this).find(".collapse-arrow").removeClass('collapse-active')
     })
 })
 
