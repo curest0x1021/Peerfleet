@@ -3944,7 +3944,7 @@ class Projects extends Security_Controller {
         return $this->template->view('projects/comparison/modal_edit_yards_general',["shipyard_info"=>$shipyard_info]);
     }
     function save_edit_yards_general(){
-
+        return json_encode(array("success"=>true));
     }
 }
 

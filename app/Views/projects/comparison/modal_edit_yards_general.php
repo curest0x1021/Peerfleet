@@ -39,7 +39,79 @@
         class="form-control"
         />
     </div>
+    <div class="form-group" >
+        <label>Total offhire period:</label>
+        <input
+        id="total_offhire_period"
+        name="total_offhire_period"
+        type="number"
+        class="form-control"
+        />
+    </div>
+    <div class="form-group" >
+        <label>Total repair period:</label>
+        <input
+        id="total_repair_period"
+        name="total_repair_period"
+        type="number"
+        class="form-control"
+        />
+    </div>
+    <div class="form-group" >
+        <label>Days in dry dock:</label>
+        <input
+        id="days_in_dry_dock"
+        name="days_in_dry_dock"
+        type="number"
+        class="form-control"
+        />
+    </div>
+    <div class="form-group" >
+        <label>Days at berth:</label>
+        <input
+        id="days_at_berth"
+        name="days_at_berth"
+        type="number"
+        class="form-control"
+        />
+    </div>
 </div>
 <div class="modal-footer" >
-    <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>    
+    <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
+    <button type="button" class="btn btn-primary btn-save-yards-general" data-bs-dismiss="modal"><span data-feather="check" class="icon-16"></span> <?php echo app_lang('save'); ?></button> 
 </div>
+<script>
+$(document).ready(function(){
+    $(".btn-save-yards-general").on("click",function(){
+        var rise_csrf_token = $('[name="rise_csrf_token"]').val();
+        var shipyard_id=<?php echo $shipyard_info->id; ?>;
+        var deviation_cost=$(this).parent().parent().find("#deviation_cost")[0].value;
+        var loss_of_earnings=$(this).parent().parent().find("#loss_of_earnings")[0].value;
+        var bunker_cost=$(this).parent().parent().find("#bunker_cost")[0].value;
+        var other_additional_expenditures=$(this).parent().parent().find("#other_additional_expenditures")[0].value;
+        var total_offhire_period=$(this).parent().parent().find("#total_offhire_period")[0].value;
+        var total_repair_period=$(this).parent().parent().find("#total_repair_period")[0].value;
+        var days_in_dry_dock=$(this).parent().parent().find("#days_in_dry_dock")[0].value;
+        var days_at_berth=$(this).parent().parent().find("#days_at_berth")[0].value;
+        $.ajax({
+            url:'<?php echo get_uri('projects/save_edit_yards_general');?>',
+            method:'POST',
+            data:{
+                rise_csrf_token:rise_csrf_token,
+                shipyard_id:shipyard_id,
+                deviation_cost:deviation_cost,
+                loss_of_earnings:loss_of_earnings,
+                bunker_cost:bunker_cost,
+                other_additional_expenditures:other_additional_expenditures,
+                total_offhire_period:total_offhire_period,
+                total_repair_period:total_repair_period,
+                days_in_dry_dock:days_in_dry_dock,
+                days_at_berth:days_at_berth
+            },
+            success:function(response){
+                if(response.success) window.location.reload();
+            }
+        })
+    })
+})
+</script>
