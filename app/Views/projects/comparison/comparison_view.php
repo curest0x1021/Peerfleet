@@ -393,7 +393,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal">0</td>
+                            <td data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal"></td>
                         <?php
                             # code...
                         }
@@ -404,7 +404,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal">0</td>
+                            <td data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal"></td>
                         <?php
                             # code...
                         }
@@ -415,7 +415,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal">0</td>
+                            <td data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal"></td>
                         <?php
                             # code...
                         }
@@ -426,7 +426,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal">0</td>
+                            <td data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal"></td>
                         <?php
                             # code...
                         }
