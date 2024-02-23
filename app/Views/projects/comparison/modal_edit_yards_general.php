@@ -109,7 +109,7 @@ $(document).ready(function(){
                 days_at_berth:days_at_berth
             },
             success:function(response){
-                if(response.success) window.location.reload();
+                if(JSON.parse(response).success) window.location.reload();
             }
         })
     })
