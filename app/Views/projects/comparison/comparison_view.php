@@ -17,9 +17,10 @@ foreach ($allProjectTasks as $index => $oneTask) {
 ?>
 <style>
     
-    table{
+    /* table{
         border:1px solid lightgray;
         border-collapse: collapse;
+        min-width:100%;
         
     }
     tr{
@@ -39,8 +40,10 @@ foreach ($allProjectTasks as $index => $oneTask) {
     }
     .row-header{
         max-width:80vw;
+    } */
+    .fixed-column{
+        width:15vw;
     }
-    
     
 </style>
 <div class="card" >
@@ -61,15 +64,15 @@ foreach ($allProjectTasks as $index => $oneTask) {
             <!--Main Info-->
             
             
-            <table class=""  >
+            <table class="table table-bordered table-hover"  >
                 <thead>
                     <tr>
-                        <th class="row-header" ></th>
+                        <th class="row-header col" style="width:auto;min-width:30vw;"></th>
                         <?php
                         for ($i=0; $i <$numberYards ; $i++) { 
                             
                         ?>
-                        <th class="row-body">
+                        <th class="row-body col fixed-column">
                             <?php echo modal_anchor(get_uri('projects/modal_select_yard/'.$allYards[$i]->id),'<button class="btn btn-primary btn-select-yard-candidate" >Select candidate</button>',array());?>
                         </th>
                         <?php
