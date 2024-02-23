@@ -48,7 +48,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
         max-width:15vw;
         width:15vw;
     }
-    .collapse {
+    tbody .collapse {
       transition: height 1s ease;
       overflow: hidden;
     }
@@ -191,8 +191,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
             <!--General-->
             <!-- <table class="table table-bordered table-hover"  > -->
                 <thead>
-                    <tr>
-                        <th>General</th>
+                    <tr data-bs-toggle="collapse" data-bs-target="#general-panel" >
+                        <th><i data-feather="chevron-down" class="collapse-arrow"></i>General</th>
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
@@ -203,7 +203,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="general-panel" class="collapse" >
                     <tr>
                         <td>Deviation Cost</td>
                         <?php
@@ -398,26 +398,42 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 <?php
                 foreach ($categorizedTasks as $category => $oneList) {
                     $totalTaskCost=0;
-                    $taskCosts=array();
-                    foreach($oneList as $oneTask){
-                        $costItems=json_decode($oneTask->cost_items);
-                        if(!$costItems) $costItems=array();
-                        $oneTaskCost=0;
-                        foreach($costItems as $oneItem){
-                            $totalTaskCost+=(float)$oneItem->unit_price*(float)$oneItem->quantity;
-                            $oneTaskCost+=(float)$oneItem->unit_price*(float)$oneItem->quantity;
-                        }
-                        $taskCosts[]=array('count'=>count($costItems),'cost'=>$oneTaskCost);
-                    }
+                    // $taskCosts=array();
+                    // foreach($oneList as $oneTask){
+                    //     $costItems=json_decode($oneTask->cost_items);
+                    //     if(!$costItems) $costItems=array();
+                    //     $oneTaskCost=0;
+                    //     foreach($costItems as $oneItem){
+                    //         $totalTaskCost+=(float)$oneItem->unit_price*(float)$oneItem->quantity;
+                    //         $oneTaskCost+=(float)$oneItem->unit_price*(float)$oneItem->quantity;
+                    //     }
+                    //     $taskCosts[]=array('count'=>count($costItems),'cost'=>$oneTaskCost);
+                    // }
+                    
 
                 ?>
                 <thead>
                     <tr  data-bs-toggle="collapse" data-bs-target="#<?php echo explode(" ",$category)[0]."-tasks-panel";?>" aria-expanded="false" aria-controls="<?php echo explode(" ",$category)[0]."-tasks-panel";?>">
                         <th><i data-feather="chevron-down" class="collapse-arrow"></i><?php echo $category;?></th>
-                        <?php for ($i=0; $i < $numberYards; $i++) {
-
+                        <?php
+                        $yardListedItems=array();
+                        for ($i=0; $i < $numberYards; $i++) {
+                            $oneYard=$allYards[$i];
+                            $yardListedItems[]=array_filter($allYardCostItems,function($oneItem)use($oneYard,$oneList){
+                                return $oneItem->shipyard_id==$oneYard->id&&count(array_filter($oneList,function($oneTask)use($oneItem){
+                                    return $oneTask->id==$oneItem->task_id;
+                                }))>0;
+                            });
+                            $totalTaskYardCost=0;
+                            foreach ($yardListedItems[$i] as $oneItem) {                                
+                                $totalTaskYardCost+=(float)$oneItem->quantity*(float)$oneItem->unit_price;
+                            }
                         ?>
-                        <th><?php echo $totalTaskCost;?></th>
+                        <th><?php
+                        
+                        echo $totalTaskYardCost
+                        // echo $totalTaskCost;
+                        ?></th>
                         <?php
                             }
                         ?>
@@ -433,7 +449,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php for ($i=0; $i < $numberYards; $i++) {
                             $oneYard=$allYards[$i];
                             $oneYardCost=0;
-                            $oneYardItems=array_filter($allYardCostItems,function($oneItem)use($oneTask,$oneYard){
+                            $oneYardItems=array_filter($yardListedItems[$i],function($oneItem)use($oneTask,$oneYard){
                                 return $oneTask->id==$oneItem->task_id&&$oneYard->id==$oneItem->shipyard_id;
                             });
                             foreach($oneYardItems as $oneItem){
