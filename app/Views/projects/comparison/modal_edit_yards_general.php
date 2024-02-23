@@ -93,20 +93,23 @@ $(document).ready(function(){
         var total_repair_period=$(this).parent().parent().find("#total_repair_period")[0].value;
         var days_in_dry_dock=$(this).parent().parent().find("#days_in_dry_dock")[0].value;
         var days_at_berth=$(this).parent().parent().find("#days_at_berth")[0].value;
+        var sendData={
+            deviation_cost:deviation_cost,
+            loss_of_earnings:loss_of_earnings,
+            bunker_cost:bunker_cost,
+            other_additional_expenditures:other_additional_expenditures,
+            total_offhire_period:total_offhire_period,
+            total_repair_period:total_repair_period,
+            days_in_dry_dock:days_in_dry_dock,
+            days_at_berth:days_at_berth
+        };
         $.ajax({
             url:'<?php echo get_uri('projects/save_edit_yards_general');?>',
             method:'POST',
             data:{
                 rise_csrf_token:rise_csrf_token,
                 shipyard_id:shipyard_id,
-                deviation_cost:deviation_cost,
-                loss_of_earnings:loss_of_earnings,
-                bunker_cost:bunker_cost,
-                other_additional_expenditures:other_additional_expenditures,
-                total_offhire_period:total_offhire_period,
-                total_repair_period:total_repair_period,
-                days_in_dry_dock:days_in_dry_dock,
-                days_at_berth:days_at_berth
+                data:sendData
             },
             success:function(response){
                 if(JSON.parse(response).success) window.location.reload();

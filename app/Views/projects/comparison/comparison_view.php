@@ -196,7 +196,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <th class="">0</th>
+                            <th class=""></th>
                         <?php
                             # code...
                         }
@@ -213,6 +213,11 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 <div class="d-flex" >
                                     <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit-2" ></i></button>',array());?>
                                     <div class="flex-grow-1" ></div>
+                                    <div>
+                                    <?php
+                                        if(isset($allYards[$i]->general)&&json_decode($allYards[$i]->general)) echo json_decode($allYards[$i]->general)->deviation_cost;
+                                    ?>
+                                    </div>
                                 </div>
                                 
                             </td>
@@ -230,6 +235,11 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 <div class="d-flex" >
                                     <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit-2" ></i></button>',array());?>
                                     <div class="flex-grow-1" ></div>
+                                    <div>
+                                    <?php
+                                        if(isset($allYards[$i]->general)&&json_decode($allYards[$i]->general)) echo json_decode($allYards[$i]->general)->loss_of_earnings;
+                                    ?>
+                                    </div>
                                 </div>
                             </td>
                         <?php
@@ -245,6 +255,11 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 <div class="d-flex" >
                                     <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit-2" ></i></button>',array());?>
                                     <div class="flex-grow-1" ></div>
+                                    <div>
+                                    <?php
+                                        if(isset($allYards[$i]->general)&&json_decode($allYards[$i]->general)) echo json_decode($allYards[$i]->general)->bunker_cost;
+                                    ?>
+                                    </div>
                                 </div>
                             </td>
                         <?php
@@ -260,6 +275,11 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 <div class="d-flex" >
                                     <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit-2" ></i></button>',array());?>
                                     <div class="flex-grow-1" ></div>
+                                    <div>
+                                    <?php
+                                        if(isset($allYards[$i]->general)&&json_decode($allYards[$i]->general)) echo json_decode($allYards[$i]->general)->other_additional_expenditures;
+                                    ?>
+                                    </div>
                                 </div>
                             </td>
                         <?php
@@ -275,6 +295,11 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 <div class="d-flex" >
                                     <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit-2" ></i></button>',array());?>
                                     <div class="flex-grow-1" ></div>
+                                    <div>
+                                    <?php
+                                        if(isset($allYards[$i]->general)&&json_decode($allYards[$i]->general)) echo json_decode($allYards[$i]->general)->total_offhire_period;
+                                    ?>
+                                    </div>
                                 </div>
                             </td>
                         <?php
@@ -291,6 +316,11 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 <div class="d-flex" >
                                     <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit-2" ></i></button>',array());?>
                                     <div class="flex-grow-1" ></div>
+                                    <div>
+                                    <?php
+                                        if(isset($allYards[$i]->general)&&json_decode($allYards[$i]->general)) echo json_decode($allYards[$i]->general)->total_repair_period;
+                                    ?>
+                                    </div>
                                 </div>
                             </td>
                         <?php
@@ -307,6 +337,11 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 <div class="d-flex" >
                                     <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit-2" ></i></button>',array());?>
                                     <div class="flex-grow-1" ></div>
+                                    <div>
+                                    <?php
+                                        if(isset($allYards[$i]->general)&&json_decode($allYards[$i]->general)) echo json_decode($allYards[$i]->general)->days_in_dry_dock;
+                                    ?>
+                                    </div>
                                 </div>
                             </td>
                         <?php
@@ -323,6 +358,11 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 <div class="d-flex" >
                                     <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit-2" ></i></button>',array());?>
                                     <div class="flex-grow-1" ></div>
+                                    <div>
+                                    <?php
+                                        if(isset($allYards[$i]->general)&&json_decode($allYards[$i]->general)) echo json_decode($allYards[$i]->general)->days_at_berth;
+                                    ?>
+                                    </div>
                                 </div>
                             </td>
                         <?php
