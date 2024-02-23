@@ -1210,6 +1210,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             `;
             $("#btn-add-new-quote").prop("disabled", false);
             $("#insert-cost-item-panel").prop("hidden",false);
+            
             if($("#editing_cost_item")[0].value=="")
                 cost_items.push({
                     name:$("#cost_item_name")[0].value,
@@ -1229,9 +1230,14 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     quote_type:$("#cost_item_quote_type")[0].value,
                     currency:$("#cost_item_currency")[0].value,
                 };
-                $("#editing_cost_item")[0].value=""
+                
                 
             }
+            $("#editing_cost_item")[0].value="";
+            $("#cost_item_name")[0].value="";
+            $("#cost_item_description")[0].value="";
+            $("#cost_item_quantity")[0].value="";
+            $("#cost_item_unit_price")[0].value="";
             $.ajax({
                 url:'<?php echo get_uri('tasks/save_task_cost_items');?>',
                 method:"POST",
@@ -1243,6 +1249,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     console.log(response)
                 }
             })
+            
         });
         $("#cancel-add-cost-item").on("click",function(){
             $("#insert-cost-item-panel").prop("hidden",true);
@@ -1369,11 +1376,12 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         $("#table-owners-supplies")[0].getElementsByTagName('tbody')[0].deleteRow(index);
     }
     <?php
-        if(isset($gotTasklibrary)&&$gotTasklibrary->cost_items)
-        echo 'cost_items=JSON.parse(`'.json_encode($gotTasklibrary->cost_items).'`);';
+        if(isset($model_info)&&$model_info->cost_items)
+        echo 'cost_items=JSON.parse(`'.$model_info->cost_items.'`);';
     ?>
     
     <?php if(count($all_files)>0)
     echo 'var all_files='.json_encode($all_files).';'
     ?>
+    console.log(cost_items)
 </script>
