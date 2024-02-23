@@ -173,8 +173,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
             <!-- </table>
             <table class="table table-bordered table-hover"  > -->
                 <thead>
-                    <tr>
-                        <th>Owner's Supply</th>
+                    <tr data-bs-toggle="collapse" data-bs-target="#owner-supply-panel" >
+                        <th><i data-feather="chevron-down" class="collapse-arrow"></i>Owner's supply</th>
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
@@ -185,7 +185,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="collapse" id="owner-supply-panel" >
                 </tbody>
             <!-- </table> -->
             <!--General-->
@@ -209,7 +209,13 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td class=""></td>
+                            <td class="">
+                                <div class="d-flex" >
+                                    <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit-2" ></i></button>',array());?>
+                                    <div class="flex-grow-1" ></div>
+                                </div>
+                                
+                            </td>
                         <?php
                             # code...
                         }
@@ -220,7 +226,12 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td class=""></td>
+                            <td class="">
+                                <div class="d-flex" >
+                                    <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit-2" ></i></button>',array());?>
+                                    <div class="flex-grow-1" ></div>
+                                </div>
+                            </td>
                         <?php
                         }
                         ?>
@@ -230,7 +241,12 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td class=""></td>
+                            <td class="">
+                                <div class="d-flex" >
+                                    <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit-2" ></i></button>',array());?>
+                                    <div class="flex-grow-1" ></div>
+                                </div>
+                            </td>
                         <?php
                         }
                         ?>
@@ -240,7 +256,12 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td class=""></td>
+                            <td class="">
+                                <div class="d-flex" >
+                                    <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit-2" ></i></button>',array());?>
+                                    <div class="flex-grow-1" ></div>
+                                </div>
+                            </td>
                         <?php
                         }
                         ?>
@@ -250,7 +271,12 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td class=""></td>
+                            <td class="">
+                                <div class="d-flex" >
+                                    <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit-2" ></i></button>',array());?>
+                                    <div class="flex-grow-1" ></div>
+                                </div>
+                            </td>
                         <?php
                             # code...
                         }
@@ -261,7 +287,12 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td></td>
+                            <td class="">
+                                <div class="d-flex" >
+                                    <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit-2" ></i></button>',array());?>
+                                    <div class="flex-grow-1" ></div>
+                                </div>
+                            </td>
                         <?php
                             # code...
                         }
@@ -272,7 +303,12 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td></td>
+                            <td class="">
+                                <div class="d-flex" >
+                                    <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit-2" ></i></button>',array());?>
+                                    <div class="flex-grow-1" ></div>
+                                </div>
+                            </td>
                         <?php
                             # code...
                         }
@@ -283,7 +319,12 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td></td>
+                            <td class="">
+                                <div class="d-flex" >
+                                    <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit-2" ></i></button>',array());?>
+                                    <div class="flex-grow-1" ></div>
+                                </div>
+                            </td>
                         <?php
                             # code...
                         }
@@ -294,8 +335,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
             <!--Payment Terms-->
             <!-- <table class="table table-bordered table-hover"  > -->
                 <thead>
-                    <tr>
-                        <th>Payment Terms</th>
+                    <tr data-bs-toggle="collapse" data-bs-target="#payment-terms-panel" >
+                        <th><i data-feather="chevron-down" class="collapse-arrow"></i>Payment terms</th>
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
@@ -306,7 +347,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="payment-terms-panel" class="collapse" >
                     <tr>
                         <td>Payment before Departure</td>
                         <?php
@@ -356,8 +397,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
 
             <!-- <table class="table table-bordered table-hover"  > -->
                 <thead>
-                    <tr>
-                        <th>Penalties</th>
+                    <tr data-bs-toggle="collapse" data-bs-target="#penalties-panel" >
+                        <th><i data-feather="chevron-down" class="collapse-arrow"></i>Penalties</th>
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
@@ -368,7 +409,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="penalties-panel" class="collapse" >
                     <tr>
                         <td>Penalty per day</td>
                         <?php

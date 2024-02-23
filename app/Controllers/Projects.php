@@ -3939,6 +3939,13 @@ class Projects extends Security_Controller {
         $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
         return $this->template->view("projects/comparison/modal_yard_add_files",["shipyard_info"=>$shipyard_info]);
     }
+    function modal_edit_yards_general($shipyard_id){
+        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
+        return $this->template->view('projects/comparison/modal_edit_yards_general',["shipyard_info"=>$shipyard_info]);
+    }
+    function save_edit_yards_general(){
+
+    }
 }
 
 /* End of file projects.php */
