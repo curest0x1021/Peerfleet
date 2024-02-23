@@ -15,6 +15,9 @@ foreach ($allProjectTasks as $index => $oneTask) {
     $categorizedTasks[$oneTask->category][]=$oneTask;
 }
 ?>
+<style>
+    
+</style>
 <div class="card" >
     <div class="card-body" >
         <div class="row" >
@@ -22,16 +25,30 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 <h2>Comparison View</h2>
             </div>
             <div class="col-md-2" >
-                <a style="float:right" href="<?php echo get_uri('projects/add_yard/'.$project_info->id,["project_info"=>$project_info]); ?>" class="btn btn-primary"  >Add Yard Candidate</a>
             </div>
             <div class="col-md-2" >
+                <a style="float:right" href="<?php echo get_uri('projects/add_yard/'.$project_info->id,["project_info"=>$project_info]); ?>" class="btn btn-primary"  >Add Yard Candidate</a>
             </div>
+            
         </div>
         <div class="row d-flex justify-content-center" >
-            <div class="col-md-8" >
+            <div class="col-md-12" >
             <!--Main Info-->
             <table class="table table-bordered table-hover"  >
                 <thead>
+                    <tr>
+                        <th></th>
+                        <?php
+                        for ($i=0; $i <$numberYards ; $i++) { 
+                            
+                        ?>
+                        <th >
+                            <button class="btn btn-primary btn-select-yard-candidate" >Select candidate</button>
+                        </th>
+                        <?php
+                        }
+                        ?>
+                    </tr>
                     <tr>
                         <th></th>
                         <?php
@@ -50,7 +67,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" href="<?php echo get_uri('projects/download_yard_xlsx/'.$allYards[$i]->id);?>" target="_blank">Export xlsx</a></li>
                                             <li><?php echo modal_anchor(get_uri('projects/modal_import_yard_xlsx/'.$allYards[$i]->id),'<li class="dropdown-item" >Import quotation</l1>',array());?></li>
-                                            <li><a class="dropdown-item" href="#" target="_blank">Add files</a></li>
+                                            <li><?php echo modal_anchor(get_uri('projects/modal_yard_add_files/'.$allYards[$i]->id),'<li class="dropdown-item" >Add files</l1>',array());?></li>
                                             <li><?php echo modal_anchor(get_uri('projects/modal_select_yard/'.$allYards[$i]->id),'<li class="dropdown-item" >Select candidate</l1>',array());?></li>
                                         </ul>
                                     </div>
@@ -511,6 +528,11 @@ $(document).ready(function(){
     var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
     var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
     return new bootstrap.Popover(popoverTriggerEl)
+    })
+    $(".btn-select-yard-candidate").hover(function(){
+        $(this).removeClass('btn-primary').addClass('btn-success');
+    },function(){
+        $(this).removeClass('btn-success').addClass('btn-primary');
     })
 })
 
