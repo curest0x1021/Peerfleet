@@ -12,7 +12,9 @@ $categorizedTasks=array(
     "Others"=>array(),
 );
 foreach ($allProjectTasks as $index => $oneTask) {
-    $categorizedTasks[$oneTask->category][]=$oneTask;
+    if(isset($categorizedTasks[$oneTask->category]))
+        $categorizedTasks[$oneTask->category][]=$oneTask;
+    else $categorizedTasks["Others"][]=$oneTask;
 }
 ?>
 <style>
@@ -49,6 +51,20 @@ foreach ($allProjectTasks as $index => $oneTask) {
     .collapse {
       transition: height 1s ease;
       overflow: hidden;
+    }
+    .collapse-arrow::after {
+      display: inline-block;
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid;
+      margin-left: 5px;
+      transition: transform 0.3s ease;
+    }
+    .collapse.show + .collapse-arrow::after {
+      transform: rotate(180deg);
     }
     
 </style>
@@ -403,7 +419,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 ?>
                 <thead>
                     <tr  data-bs-toggle="collapse" data-bs-target="#<?php echo explode(" ",$category)[0]."-tasks-panel";?>">
-                        <th><?php echo $category;?></th>
+                        <th><span class="collapse-arrow"></span><?php echo $category;?></th>
                         <?php for ($i=0; $i < $numberYards; $i++) {
 
                         ?>
