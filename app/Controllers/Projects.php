@@ -3935,6 +3935,10 @@ class Projects extends Security_Controller {
         $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
         return json_encode(array("success"=>true));
     }
+    function modal_yard_add_files($shipyard_id){
+        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
+        return $this->template->view("projects/comparison/modal_yard_add_files",["shipyard_info"=>$shipyard_info]);
+    }
 }
 
 /* End of file projects.php */
