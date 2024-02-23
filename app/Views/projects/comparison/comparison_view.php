@@ -43,7 +43,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             
                         ?>
                         <th >
-                            <button class="btn btn-primary btn-select-yard-candidate" >Select candidate</button>
+                            <?php echo modal_anchor(get_uri('projects/modal_select_yard/'.$allYards[$i]->id),'<button class="btn btn-primary btn-select-yard-candidate" >Select candidate</button>',array());?>
                         </th>
                         <?php
                         }
