@@ -3949,6 +3949,90 @@ class Projects extends Security_Controller {
         $save_id=$this->Project_yards_model->ci_save($shipyard_info,$shipyard_info->id);
         return json_encode(array("success"=>true,"save_id"=>$save_id));
     }
+    function modal_import_task_cost_items($shipyard_id){
+        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
+        return $this->template->view("projects/comparison/modal_import_task_cost_items",["shipyard_id"=>$shipyard_id,"shipyard_info"=>$shipyard_info]);
+
+    }
+    function import_task_cost_items(){
+        upload_file_to_temp(true);
+        $file = get_array_value($_FILES, "file");
+
+        // if (!$file) {
+        //     die("Invalid file");
+        // }
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $temp_file = get_array_value($file, "tmp_name");
+        $file_name = get_array_value($file, "name");
+        $file_size = get_array_value($file, "size");
+        $temp_file_path = get_setting("temp_file_path");
+        $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
+
+        $shipyard_id=$this->request->getPost('shipyard_id');
+        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
+
+        $excel_file->setActiveSheetIndex(0);
+        $worksheet=$excel_file->getActiveSheet();
+        $highestRow = $worksheet->getHighestRow(); // e.g., 10
+        $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
+        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+        $info_data = [];
+
+        // Loop through each row and column to read the data
+        for ($row = 1; $row <= $highestRow; ++$row) {
+            $rowData = [];
+            for ($col = 1; $col <= $highestColumnIndex; ++$col) {
+                $cellValue = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+                $rowData[] = $cellValue;
+            }
+            $info_data[] = $rowData;
+        }
+        // return json_encode($info_data);
+        $task_id=$info_data[1][1];
+        
+        $project_id=$info_data[3][1];
+        if((string)$shipyard_info->project_id!=(string)$project_id) return json_encode(array("success"=>false));
+
+        $excel_file->setActiveSheetIndex(1);
+        $worksheet=$excel_file->getActiveSheet();
+        $highestRow = $worksheet->getHighestRow(); // e.g., 10
+        $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
+
+        // Convert the highest column letter to a numeric index (e.g., 'F' => 6)
+        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+
+        // Initialize an empty array to store the data
+        $data = [];
+
+        // Loop through each row and column to read the data
+        for ($row = 1; $row <= $highestRow; ++$row) {
+            $rowData = [];
+            for ($col = 1; $col <= $highestColumnIndex; ++$col) {
+                $cellValue = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+                $rowData[] = $cellValue;
+            }
+            $data[] = $rowData;
+        }
+        // return json_encode($data);
+        for($count=1;$count<count($data);$count++){
+            // $task_info=$this->Tasks_model->get_one($task_id);
+            $saveData=array(
+                "shipyard_id"=>$shipyard_id,
+                "task_id"=>$task_id,
+                "project_id"=>$project_id,
+                "name"=>$data[$count][0],
+                "description"=>$data[$count][1],
+                "quantity"=>$data[$count][3],
+                "measurement"=>$data[$count][4],
+                "unit_price"=>$data[$count][5],
+                "currency"=>$data[$count][6],
+                "discount"=>$data[$count][7],
+                "yard_remarks"=>$data[$count][8],
+            );
+            $this->Shipyard_cost_items_model->ci_save($saveData,null);
+        }
+        echo json_encode(array("success"=>true));
+    }
 }
 
 /* End of file projects.php */
