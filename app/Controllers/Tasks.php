@@ -4780,5 +4780,64 @@ class Tasks extends Security_Controller {
         return json_encode(array("success"=>true));
 
     }
+    function download_task_cost_items($task_id){
+        $task_info=$this->Tasks_model->get_one($task_id);
+        $project_info=$this->Projects_model->get_one($task_info->project_id);
+        $allCostItems=json_decode($task_info->cost_items);
+        if(!$allCostItems) return json_encode(array("success"=>false));
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet1 = $spreadsheet->getActiveSheet();
+        $sheet1->setTitle('task info');
+        $sheet1->setCellValue('A1', 'Task title:');
+        $sheet1->setCellValue('B1', $task_info->title);
+        $sheet1->setCellValue('A2', 'Task id:');
+        $sheet1->setCellValue('B2', $task_info->id);
+        $sheet1->setCellValue('A3', 'Project title:');
+        $sheet1->setCellValue('B3', $project_info->title);
+        $sheet1->setCellValue('A4', 'Project id:');
+        $sheet1->setCellValue('B4', $project_info->id);
+        $sheet2 = $spreadsheet->createSheet();
+        $sheet2->setTitle('Cost items');
+        $sheet2->setCellValue('A1', 'Item name');
+        $sheet2->setCellValue('B1', 'Description');
+        $sheet2->setCellValue('C1', 'Quote type');
+        $sheet2->setCellValue('D1', 'Quantity');
+        $sheet2->setCellValue('E1', 'Measurement Unit');
+        $sheet2->setCellValue('F1', 'Unit price');
+        $sheet2->setCellValue('G1', 'Currency');
+        $sheet2->setCellValue('H1', 'Discount');
+        $sheet2->setCellValue('I1', 'Yard remarks');
+        $sheet2->setCellValue('J1', 'Cost');
+        $row_number=2;
+        foreach ($allCostItems as $oneItem) {
+            $sheet2->setCellValue('A'.$row_number, $oneItem->name);
+            if(isset($oneItem->description)) $sheet2->setCellValue('B'.$row_number, $oneItem->description);
+            $sheet2->setCellValue('C'.$row_number, $oneItem->quote_type);
+            $sheet2->setCellValue('D'.$row_number, $oneItem->quantity);
+            $sheet2->setCellValue('E'.$row_number, $oneItem->measurement_unit);
+            $sheet2->setCellValue('F'.$row_number, $oneItem->unit_price);
+            $sheet2->setCellValue('G'.$row_number, $oneItem->currency);
+            if(isset($oneItem->discount)) $sheet2->setCellValue('H'.$row_number, $oneItem->discount);
+            if(isset($oneItem->yard_remarks)) $sheet2->setCellValue('I'.$row_number, $oneItem->yard_remarks);
+            $sheet2->setCellValue('J'.$row_number, (float)$oneItem->unit_price*(float)$oneItem->quantity);
+            $row_number++;
+        }
+        // Create a writer object
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+        $response = service('response');
+
+        // Set response headers for file download
+        $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->setHeader('Content-Disposition', 'attachment;filename="'.$task_info->title.'_cost_items.xlsx"');
+        $response->setHeader('Cache-Control', 'max-age=0');
+
+        // Write the Excel file content to the response body
+        $writer->save('php://output');
+
+        // Return the response object
+        return $response;
+    }
     /*----*/
 }

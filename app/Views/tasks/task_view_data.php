@@ -666,11 +666,16 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         <div  >
             <!--Cost Items For Yard-->
             <div class="col-md-12" >
+                <a class="btn btn-primary" style="margin:10px;" target="_blank" href="<?php echo get_uri("tasks/download_task_cost_items/".$task_id);?>" >
+                    <i data-feather="download" ></i>
+                    Download cost items as a excel file
+                </a>
                 <div class="card" style="border: solid 1px lightgray;min-height:20vh;">
                     <div class="card-header d-flex">
                         <b>Cost Item List</b>&nbsp;<i data-feather="info" style="color:lightgray" ></i>
                     </div>
                     <div class="card-body" style="padding:10px" >
+                        
                         <table id="table-quotes-from-yard" class="table " >
                             <thead>
                             <tr>
@@ -1229,9 +1234,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     unit_price:$("#cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
                     currency:$("#cost_item_currency")[0].value,
-                };
-                
-                
+                };  
             }
             $("#editing_cost_item")[0].value="";
             $("#cost_item_name")[0].value="";
