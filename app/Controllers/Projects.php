@@ -4057,6 +4057,10 @@ class Projects extends Security_Controller {
         }
         echo json_encode(array("success"=>true));
     }
+    function delete_yard_cost_item($item_id){
+        $this->Shipyard_cost_items_model->delete_permanently($item_id);
+        return json_encode(array("success"=>true));
+    }
 }
 
 /* End of file projects.php */

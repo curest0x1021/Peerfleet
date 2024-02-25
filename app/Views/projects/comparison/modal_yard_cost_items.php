@@ -24,7 +24,7 @@ foreach ($allProjectYards as $oneYard) {
             <div class="card" style="min-width:30vw;border:1px solid lightgray;margin-right:1vw;" >
                 <div class="card-header" ><?php echo $oneYard->title;?></div>
                 <div class="card-body" id="yard-cost-items-panel-<?php echo $id;?>" >
-                
+
                 
                     <table class="table table-hover table-bordered" >
                         <thead>
@@ -43,7 +43,7 @@ foreach ($allProjectYards as $oneYard) {
                                 <td><?php echo $oneItem->name;?></td>
                                 <td><?php echo $oneItem->quantity;?> <?php echo $oneItem->measurement;?> X <?php echo $oneItem->unit_price;?> (Per unit) </td>
                                 <td><?php echo (double)$oneItem->quantity*(double)$oneItem->unit_price;?> </td>
-                                <td><button class="btn btn-sm" ><i data-feather="edit-2" class="icon-16"></i></button><button class="btn btn-sm" ><i data-feather="trash" class="icon-16" ></i></button></td>
+                                <td><input hidden value='<?php echo $oneItem->id;?>' /><button class="btn btn-sm start-edit-cost-item" ><i data-feather="edit-2" class="icon-16"></i></button><button class="btn btn-sm delete-cost-item"><i data-feather="trash" class="icon-16" ></i></button></td>
                             </tr>
                             <?php
                             }
@@ -55,6 +55,7 @@ foreach ($allProjectYards as $oneYard) {
                         <input hidden value="<?php echo $task_id;?>" name="task_id" id="task_id" />
                         <input hidden value="<?php echo $project_id;?>" name="project_id" id="project_id" />
                         <input hidden value=<?php echo $oneYard->id;?> name="shipyard_id" id="shipyard_id" />
+                        <input hidden name="item_id" id="item_id" value="" />
                         <div class="form-group" >
                             <label>Name:</label>
                             <input
@@ -172,6 +173,23 @@ $(document).ready(function(){
         else
             $(this).parent().parent().parent().parent().parent().find(".edit-panel").prop('hidden',true);
     });
+    $(".start-edit-cost-item").on('click',function(){
+        $(this).parent().parent().parent().parent().parent().find(".edit-panel").prop('hidden',false);
+
+    });
+    $(".delete-cost-item").on("click",function(){
+        
+        console.log($(this).parent().find('input')[0].value);
+        var trEl=$(this);
+        $.ajax({
+            url:'<?php echo get_uri('projects/delete_yard_cost_item');?>/'+trEl.parent().find('input')[0].value,
+            method:"GET",
+            success:function(response){
+                if(JSON.parse(response).success) trEl.closest('tr').remove();
+            }
+        })
+        
+    });
     $(".btn-save-yard-cost-item").on("click",function(){
         var editPanelEl=$(this).parent().parent().parent();
         if(!editPanelEl.find("#name")[0].value) return;
@@ -204,7 +222,7 @@ $(document).ready(function(){
                 <td>${editPanelEl.find("#name")[0].value}</td>
                 <td>${editPanelEl.find("#quantity")[0].value} ${editPanelEl.find("#measurement")[0].value} X ${editPanelEl.find("#unit_price")[0].value} (per unit)</td>
                 <td>${parseFloat(editPanelEl.find("#quantity")[0].value)*parseFloat(editPanelEl.find("#unit_price")[0].value)}</td>
-                <td><button class="btn btn-sm" ><i data-feather="edit-2" class="icon-16" ></i></button><button class="btn btn-sm" ><i data-feather="trash" class="icon-16"></i></button></td>
+                <td><input hidden value="" /><button onclick="start_edit_cost_item(event)" class="btn btn-sm start-edit-cost-item"  ><i data-feather="edit-2" class="icon-16" ></i></button><button onclick="delete_cost_item(event)" class="btn btn-sm delete-cost-item" ><i data-feather="trash" class="icon-16"></i></button></td>
                 </tr>`);
                 tbodyEl.append(newRow);
                 editPanelEl.find("#name")[0].value="";
@@ -219,4 +237,14 @@ $(document).ready(function(){
 
     })
 })
+function start_edit_cost_item(e){
+    e.target.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('.edit-panel').hidden=false;
+}
+function delete_cost_item(e){
+    var tr=e.target.parentNode.parentNode;
+    e.target.parentNode.parentNode.parentNode.removeChild(tr);
+}
+var all_cost_items=[];
+<?php if(isset($allYardCostItems)) echo 'all_cost_items='.json_encode($allYardCostItems).';'; ?>
+console.log(all_cost_items)
 </script>
