@@ -1531,7 +1531,8 @@ class Tasks extends Security_Controller {
 
         $id = $this->request->getPost('id');
         $info = $this->Tasks_model->get_one($id);
-
+        $this->Task_cost_items_model->delete_where(array("task_id"=>$id));
+        $this->Shipyard_cost_items_model->delete_where(array("task_id"=>$id));
         // if (!$this->can_delete_tasks($info)) {
         //     app_redirect("forbidden");
         // }
@@ -4686,7 +4687,7 @@ class Tasks extends Security_Controller {
             "type"=>$this->request->getPost("type"),
             "serial_number"=>$this->request->getPost("serial_number"),
             "pms_scs_number"=>$this->request->getPost("pms_scs_number"),
-            "cost_items"=>$this->request->getPost("cost_items"),
+            // "cost_items"=>$this->request->getPost("cost_items"),
             "start_date"=>date('Y-m-d', strtotime($this->request->getPost("start_date"))),
             "deadline"=>date('Y-m-d', strtotime($this->request->getPost("deadline"))),
         );
@@ -4797,11 +4798,11 @@ class Tasks extends Security_Controller {
         $task_id=$this->request->getPost("task_id");
         $task_info=$this->Tasks_model->get_one($task_id);
        
-        $newSaveData=(array)$task_info;
-        $newSaveData['cost_items']=$this->request->getPost('cost_items');
-        $save_id=$this->Tasks_model->ci_save($newSaveData,$task_info->id);
+        // $newSaveData=(array)$task_info;
+        // $newSaveData['cost_items']=$this->request->getPost('cost_items');
+        // $save_id=$this->Tasks_model->ci_save($newSaveData,$task_info->id);
 
-        $this->Task_cost_items_model->delete_where(array("task_id"=>$save_id));
+        $this->Task_cost_items_model->delete_where(array("task_id"=>$task_id));
         $cost_items=json_decode($this->request->getPost('cost_items'));
         foreach ($cost_items as  $oneItem) {
             $newItem=array(
@@ -4883,4 +4884,8 @@ class Tasks extends Security_Controller {
         return $response;
     }
     /*----*/
+    function delete_task_cost_item($item_id){
+        $this->Task_cost_items_model->delete_permanently($item_id);
+        return json_encode(array("success"=>true));
+    }
 }

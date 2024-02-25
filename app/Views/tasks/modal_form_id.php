@@ -828,7 +828,7 @@
                                     <td>Cost item name</td>
                                     <td>UNIT PRICE AND QUANTITY</td>
                                     <td>QUOTE</td>
-                                    <td ><button type="button" id="btn-add-new-quote-start<?php echo $modalId;?>" class="btn btn-default btn-sm" ><i data-feather="plus" class ></i></button></td>
+                                    <td ><button type="button" id="btn-add-new-quote-start<?php echo $modalId;?>" class="btn btn-default btn-sm" ><i data-feather="plus" class="icon-16" ></i></button></td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -845,7 +845,7 @@
                                                 echo "</td><td>";
                                                 echo $oneItem->currency." ".number_format(floatval($oneItem->quantity)*floatval($oneItem->unit_price), 2, '.', '');
                                                 echo "</td><td>";
-                                                echo '<button onClick="start_edit_cost_item('.$key.')" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button><button onClick="delete_item('.$key.')" type="button" class="btn btn-sm" ><i color="gray" data-feather="x-circle" class="" ></i></button>';
+                                                echo '<button onClick="start_edit_cost_item('.$key.')" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button><button onClick="delete_item('.$key.')" type="button" class="btn btn-sm" ><i color="gray" data-feather="x-circle" class="icon-16" ></i></button>';
                                                 echo "</td></tr>";
                                             }
                                         }
@@ -1568,8 +1568,8 @@
             cell1.innerHTML = Number($("#input_cost_item_quantity<?php echo $modalId;?>")[0].value).toFixed(1)+' '+$("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value+" X "+$("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value+" "+Number($("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type<?php echo $modalId;?>")[0].value+" ) ";
             cell2.innerHTML = $("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value+" "+(Number($("#input_cost_item_quantity<?php echo $modalId;?>")[0].value)*Number($("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value)).toFixed(2);
             cell3.innerHTML=`
-            <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button>
-            <button type="button" onClick="delete_item(${cost_items.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="" ></i></button>
+            <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button>
+            <button type="button" onClick="delete_item(${cost_items.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="icon-16" ></i></button>
             `;
             $("#btn-add-new-quote-start<?php echo $modalId;?>").prop("disabled", false);
             $("#insert-cost-item-panel-new<?php echo $modalId;?>").prop("hidden",false);

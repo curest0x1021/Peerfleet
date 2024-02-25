@@ -15,7 +15,7 @@
                         <div style="flex-grow:1" ></div>
                         <label for="title" style="margin:10px" >Search:</label>
                         <input class="form-control" type="text" style="width:20%"  name="search" />
-                        <a class="btn btn-default" href="<?php echo get_uri("task_libraries");?>" style="margin:5px" ><i data-feather="plus-circle" ></i> Add Task Template</a>
+                        <a class="btn btn-default" href="<?php echo get_uri("task_libraries");?>" style="margin:5px" ><i data-feather="plus-circle" class="icon-16" ></i> Add Task Template</a>
                         <div style="margin:5px" >
                         <?php echo modal_anchor(get_uri("task_libraries/import_modal"), "<i data-feather='upload' class='icon-16'></i> " . "Import Task Templates", array("class" => "btn btn-default import_tasks_btn", "title" => "Import Task Libraries")); ?>
                         </div>
@@ -827,7 +827,7 @@
                                             <td>Cost item name</td>
                                             <td>UNIT PRICE AND QUANTITY</td>
                                             <td>QUOTE</td>
-                                            <td ><button type="button" id="btn-add-new-quote" class="btn btn-default btn-sm" ><i data-feather="plus" class ></i></button></td>
+                                            <td ><button type="button" id="btn-add-new-quote" class="btn btn-default btn-sm" ><i data-feather="plus" class="icon-16" ></i></button></td>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -843,7 +843,7 @@
                                                     echo "</td><td>";
                                                     echo $oneItem->currency." ".number_format(floatval($oneItem->quantity)*floatval($oneItem->unit_price), 2, '.', '');
                                                     echo "</td><td>";
-                                                    echo '<button onClick="start_edit_cost_item('.$key.')" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button><button onClick="delete_item('.$key.')" type="button" class="btn btn-sm" ><i color="gray" data-feather="x-circle" class="" ></i></button>';
+                                                    echo '<button onClick="start_edit_cost_item('.$key.')" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button><button onClick="delete_item('.$key.')" type="button" class="btn btn-sm" ><i color="gray" data-feather="x-circle" class="icon-16" ></i></button>';
                                                     echo "</td></tr>";
                                                 }
                                             }
@@ -1565,8 +1565,8 @@
             cell1.innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement_unit")[0].value+" X "+$("#cost_item_currency")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
             cell2.innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
             cell3.innerHTML=`
-            <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button>
-            <button type="button" onClick="delete_item(${cost_items.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="" ></i></button>
+            <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button>
+            <button type="button" onClick="delete_item(${cost_items.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="icon-16" ></i></button>
             `;
             $("#btn-add-new-quote").prop("disabled", false);
             $("#insert-cost-item-panel").prop("hidden",false);
