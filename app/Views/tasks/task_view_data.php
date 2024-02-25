@@ -672,7 +672,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                 </a>
                 <div class="card" style="border: solid 1px lightgray;min-height:20vh;">
                     <div class="card-header d-flex">
-                        <b>Cost Item List</b>&nbsp;<i data-feather="info" style="color:lightgray" ></i>
+                        <b>Cost Item List</b>&nbsp;<i data-feather="info" class="icon-16" style="color:lightgray" ></i>
                     </div>
                     <div class="card-body" style="padding:10px" >
                         
@@ -682,7 +682,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                 <td>Cost item name</td>
                                 <td>UNIT PRICE AND QUANTITY</td>
                                 <td>QUOTE</td>
-                                <td ><button type="button" id="btn-add-new-quote" class="btn btn-default btn-sm" ><i data-feather="plus-circle" class ></i></button></td>
+                                <td ><button type="button" id="btn-add-new-quote" class="btn btn-default btn-sm" ><i data-feather="plus-circle" class="icon-16" ></i></button></td>
                             </tr>
                             </thead>
                             <tbody>
@@ -698,7 +698,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                         echo "</td><td>";
                                         echo $oneItem->currency." ".number_format(floatval($oneItem->quantity)*floatval($oneItem->unit_price), 2, '.', '');
                                         echo "</td><td>";
-                                        echo '<button onClick="start_edit_cost_item('.$key.')" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button><button onClick="delete_item('.$key.')" type="button" class="btn btn-sm" ><i color="gray" data-feather="x-circle" class="" ></i></button>';
+                                        echo '<button onClick="start_edit_cost_item('.$key.')" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button><button onClick="delete_item('.$key.')" type="button" class="btn btn-sm" ><i color="gray" data-feather="x-circle" class="icon-16" ></i></button>';
                                         echo "</td></tr>";
                                     }
                                 }
@@ -1055,7 +1055,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                 <td>Cost Item Name</td>
                                 <td>COST</td>
                                 <td>Order Number</td>
-                                <td><Button id="btn-add-owner-supply" class="btn btn-default btn-sm" ><i data-feather="plus-circle" ></i></Button></td>
+                                <td><Button id="btn-add-owner-supply" class="btn btn-default btn-sm" ><i data-feather="plus-circle" class="icon-16" ></i></Button></td>
                             </tr>
                             </thead>
                             <tbody id="table-owners-supplies-table-body">
@@ -1147,10 +1147,10 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         <div class="box-title"><span ><?php echo app_lang("files"); ?></span></div>
         <div class="d-flex justify-content-end"  >
             <div >
-                <a href="<?php echo get_uri('/tasks/download_task_files/'.$task_id);?>" id="btn-download-all" class="btn btn-sm" ><i color="gray" data-feather="download" ></i></a>
-                <button id="btn-grid-group" class="btn btn-sm" ><i color="gray" data-feather="grid" ></i></button>
-                <button id="btn-list-group" class="btn btn-sm" ><i color="gray" data-feather="list" ></i></button>
-                <button id="btn-add-file" class="btn btn-sm" ><i color="gray" data-feather="plus-circle" ></i></button>
+                <a href="<?php echo get_uri('/tasks/download_task_files/'.$task_id);?>" id="btn-download-all" class="btn btn-sm" ><i color="gray" data-feather="download" class="icon-16" ></i></a>
+                <button id="btn-grid-group" class="btn btn-sm" ><i color="gray" data-feather="grid" class="icon-16" ></i></button>
+                <button id="btn-list-group" class="btn btn-sm" ><i color="gray" data-feather="list" class="icon-16" ></i></button>
+                <button id="btn-add-file" class="btn btn-sm" ><i color="gray" data-feather="plus-circle" class="icon-16" ></i></button>
             </div>
         </div>
         <?php 
@@ -1177,7 +1177,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     '<div class="group-item col-md-2" >
                         <img class="item-image" src="'.$url.'" />
                         <p class="item-title" >'.$actual_file_name.'</p>
-                        <a target="_blank" href="'.get_uri("tasks/download_one_file/".$oneFile['file_name']).'"  class="btn-download-item btn btn-sm" ><i data-feather="download-cloud" ></i></a>
+                        <a target="_blank" href="'.get_uri("tasks/download_one_file/".$oneFile['file_name']).'"  class="btn-download-item btn btn-sm" ><i data-feather="download-cloud" class="icon-16" ></i></a>
                     </div>';
                 }
             }
@@ -1210,8 +1210,8 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             cell1.innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement_unit")[0].value+" X "+$("#cost_item_currency")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
             cell2.innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
             cell3.innerHTML=`
-            <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button>
-            <button type="button" onClick="delete_item(${cost_items.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="" ></i></button>
+            <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button>
+            <button type="button" onClick="delete_item(${cost_items.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="icon-16" ></i></button>
             `;
             $("#btn-add-new-quote").prop("disabled", false);
             $("#insert-cost-item-panel").prop("hidden",false);
@@ -1370,6 +1370,17 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
     function delete_item(index){
         cost_items.splice(index,1);
         $("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0].deleteRow(index);
+        $.ajax({
+            url:'<?php echo get_uri('tasks/save_task_cost_items');?>',
+            method:"POST",
+            data:{
+                task_id:<?php echo $model_info->id;?>,
+                cost_items:JSON.stringify(cost_items)
+            },
+            success:function(response){
+                console.log(response)
+            }
+        })
     }
     function start_edit_cost_item(index){
         $("#editing_cost_item")[0].value=index;

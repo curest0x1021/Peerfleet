@@ -3,7 +3,7 @@
 <div class="modal-body">
 <div class="card" >
     <h5>Selecting yard - <?php echo $shipyard_info->name;?></h5>
-    <p><i data-feather="info" ></i> Learn more about selecting yards.</p>
+    <p><i data-feather="info" class="icon-16"></i> Learn more about selecting yards.</p>
 </div>
 <div class="card" >
     <p>By selecting this yard, the quoted costs for this project. Data from any other yards will be hidden. This action is not reversible, but you can always edit the costs in execution phase.</p>
