@@ -694,7 +694,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                         echo "<tr><td>";
                                         echo $oneItem->name;
                                         echo "</td><td>";
-                                        echo number_format($oneItem->quantity,1,".","")." ( ".$oneItem->measurement_unit." ) X ".$oneItem->currency." ".number_format($oneItem->unit_price,2,".","")." ( ".$oneItem->quote_type." )";
+                                        echo number_format($oneItem->quantity,1,".","")." ( ".$oneItem->measurement." ) X ".$oneItem->currency." ".number_format($oneItem->unit_price,2,".","")." ( ".$oneItem->quote_type." )";
                                         echo "</td><td>";
                                         echo $oneItem->currency." ".number_format(floatval($oneItem->quantity)*floatval($oneItem->unit_price), 2, '.', '');
                                         echo "</td><td>";
@@ -1224,16 +1224,22 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     unit_price:$("#cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
                     currency:$("#cost_item_currency")[0].value,
+                    description:$("#cost_item_description")[0].value,
+                    discount:$("#cost_item_discount")[0].value,
+                    yard_remarks:$("#cost_item_yard_remarks")[0].value,
                 });
             else{
                 $("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
                 cost_items[Number($("#editing_cost_item")[0].value)]={
                     name:$("#cost_item_name")[0].value,
+                    description:$("#cost_item_description")[0].value,
+                    discount:$("#cost_item_discount")[0].value,
                     quantity:$("#cost_item_quantity")[0].value,
                     measurement_unit:$("#cost_item_measurement_unit")[0].value,
                     unit_price:$("#cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
                     currency:$("#cost_item_currency")[0].value,
+                    yard_remarks:$("#cost_item_yard_remarks")[0].value,
                 };  
             }
             $("#editing_cost_item")[0].value="";
@@ -1241,6 +1247,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             $("#cost_item_description")[0].value="";
             $("#cost_item_quantity")[0].value="";
             $("#cost_item_unit_price")[0].value="";
+            $("#cost_item_yard_remarks")[0].value="";
             $.ajax({
                 url:'<?php echo get_uri('tasks/save_task_cost_items');?>',
                 method:"POST",

@@ -21,11 +21,13 @@ class Projects extends Security_Controller {
         $this->Project_settings_model = model('App\Models\Project_settings_model');
         $this->Checklist_items_model = model('App\Models\Checklist_items_model');
         $this->Likes_model = model('App\Models\Likes_model');
+        $this->Tasks_model = model('App\Models\Tasks_model');
         $this->Pin_comments_model = model('App\Models\Pin_comments_model');
         $this->File_category_model = model('App\Models\File_category_model');
         $this->Task_priority_model = model("App\Models\Task_priority_model");
         $this->Project_yards_model = model("App\Models\Project_yards_model");
         $this->Shipyard_cost_items_model = model("App\Models\Shipyard_cost_items_model");
+        $this->Task_cost_items_model = model("App\Models\Task_cost_items_model");
     }
 
     private function can_delete_projects($project_id = 0) {
@@ -3933,7 +3935,26 @@ class Projects extends Security_Controller {
         $this->Project_yards_model->delete_where(array("project_id"=>$shipyard_info->project_id,"selected"=>0));
         $shipyard_info->selected=0;
         $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
-        return json_encode(array("success"=>true));
+        $allShipyardCostItems=$this->Shipyard_cost_items_model->get_all_where(array("shipyard_id"=>$shipyard_id))->getResult();
+        foreach ($allShipyardCostItems as $key => $oneItem) {
+            # code...
+            $newTaskItem=array(
+                "task_id"=>$oneItem->task_id,
+                "project_id"=>$oneItem->project_id,
+                "name"=>$oneItem->name,
+                "description"=>$oneItem->description,
+                "quantity"=>$oneItem->quantity,
+                "measurement"=>$oneItem->measurement,
+                "quote_type"=>$oneItem->quote_type,
+                "unit_price"=>$oneItem->unit_price,
+                "currency"=>$oneItem->currency,
+                "discount"=>$oneItem->discount,
+                "yard_remarks"=>$oneItem->yard_remarks,
+            );
+            $this->Task_cost_items_model->ci_save($newTaskItem,null);
+        }
+        
+        return array("success"=>true);
     }
     function modal_yard_add_files($shipyard_id){
         $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);

@@ -1673,25 +1673,27 @@
                     currency:$("#input_cost_item_currency_select")[0].value,
                     description:$("#cost_item_description")[0].value,
                     yard_remarks:$("#cost_item_yard_remarks")[0].value,
+                    discount:$("#cost_item_discount")[0].value,
                 });
             else{
                 $("#table-costs-item-list")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
                 cost_items[Number($("#editing_cost_item")[0].value)]={
                     name:$("#input_cost_item_name")[0].value,
                     quantity:$("#input_cost_item_quantity")[0].value,
-                    // measurement_unit:$("#input_cost_item_measurement_unit")[0].value,
+                    measurement_unit:$("#input_cost_item_measurement_unit")[0].value,
                     unit_price:$("#input_cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
                     currency:$("#input_cost_item_currency_select")[0].value,
                     description:$("#cost_item_description")[0].value,
                     yard_remarks:$("#cost_item_yard_remarks")[0].value,
+                    discount:$("#cost_item_discount")[0].value,
                 };
                 $("#editing_cost_item")[0].value="";
                 
             }
             $("#input_cost_item_name")[0].value="";
             $("#input_cost_item_quantity")[0].value="";
-            // $("#input_cost_item_measurement_unit")[0].value="";
+            $("#input_cost_item_measurement_unit")[0].value="";
             $("#input_cost_item_unit_price")[0].value="";
             $("#cost_item_description")[0].value=""
             $("#cost_item_yard_remarks")[0].value=""

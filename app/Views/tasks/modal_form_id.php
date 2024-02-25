@@ -1582,7 +1582,8 @@
                     quote_type:$("#cost_item_quote_type<?php echo $modalId;?>")[0].value,
                     currency:$("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value,
                     description:$("#cost_item_description<?php echo $modalId;?>")[0].value,
-                    yard_remarks:$("#cost_item_yard_remarks<?php echo $modalId;?>")[0].value
+                    yard_remarks:$("#cost_item_yard_remarks<?php echo $modalId;?>")[0].value,
+                    discount:$("#cost_item_discount<?php echo $modalId;?>")[0].value
                 });
             else{
                 // $("#table-costs-item-list<?php 
@@ -1600,7 +1601,8 @@
                     quote_type:$("#cost_item_quote_type<?php echo $modalId;?>")[0].value,
                     currency:$("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value,
                     description:$("#cost_item_description<?php echo $modalId;?>")[0].value,
-                    yard_remarks:$("#cost_item_yard_remarks<?php echo $modalId;?>")[0].value
+                    yard_remarks:$("#cost_item_yard_remarks<?php echo $modalId;?>")[0].value,
+                    discount:$("#cost_item_discount<?php echo $modalId;?>")[0].value
                 };
                 // $("#editing_cost_item<?php echo $modalId;?>")[0].value=""
                 editing_cost_item=null;
@@ -1610,7 +1612,8 @@
             // $("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value="";
             $("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value="";
             $("#cost_item_description<?php echo $modalId;?>")[0].value="";
-            $("#cost_item_yard_remarks<?php echo $modalId;?>")[0].value=""
+            $("#cost_item_yard_remarks<?php echo $modalId;?>")[0].value="";
+            $("#cost_item_discount<?php echo $modalId;?>")[0].value=""
         });
         $("#cancel-add-cost-item<?php echo $modalId;?>").on("click",function(){
             $("#insert-cost-item-panel-new<?php echo $modalId;?>").prop("hidden",true);
