@@ -44,9 +44,9 @@ foreach ($allProjectTasks as $index => $oneTask) {
         max-width:80vw;
     } */
     .table-fixed-column{
-        min-width:15vw;
-        max-width:15vw;
-        width:15vw;
+        min-width:12vw;
+        max-width:12vw;
+        width:12vw;
     }
     tbody .collapse {
       transition: height 1s ease;
@@ -60,10 +60,16 @@ foreach ($allProjectTasks as $index => $oneTask) {
     .collapse-active.collapse-arrow {
       transform: rotate(180deg);
     }
-    table tr th td{
+    /* table tr th td{
         border:1px solid lightgray;
+    } */
+    .bg-success{
+        background-color:green !important;
+
     }
-    
+    .category-title{
+        color:#eef1f9;
+    }
 </style>
 <div class="card" >
     <div class="card-body" >
@@ -86,7 +92,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
             <table class="table table-bordered table-hover"  >
                 <thead>
                     <tr>
-                        <th class="col" style="width:auto;min-width:20vw;"></th>
+                        <th class="col" style="min-width:20vw;"></th>
                         <?php
                         for ($i=0; $i <$numberYards ; $i++) { 
                             
@@ -130,7 +136,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 </thead>
                 <tbody>
                     <tr>
-                        <td>SUMMARY</td>
+                        <td><b>SUMMARY</b></td>
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
@@ -141,7 +147,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                     </tr>
                     <tr>
-                        <td>TOTAL COST</td>
+                        <td><b>TOTAL COST</b></td>
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
@@ -152,7 +158,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                     </tr>
                     <tr>
-                        <td>Sum of Yard Quotes</td>
+                        <td><b>Sum of Yard Quotes</b></td>
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
@@ -162,21 +168,21 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         }
                         ?>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <td>Sum of Estimates</td>
                         <?php
-                        for ($i=0; $i < $numberYards; $i++) { 
+                        // for ($i=0; $i < $numberYards; $i++) { 
                         ?>
                             <td class="">0</td>
                         <?php
                             # code...
-                        }
+                        // }
                         ?>
-                    </tr>
+                    </tr> -->
                 </tbody>
-            <!-- </table>
+            <!-- </table> 
             <table class="table table-bordered table-hover"  > -->
-                <thead>
+                <tbody>
                     <tr data-bs-toggle="collapse" data-bs-target="#owner-supply-panel" >
                         <th><i data-feather="chevron-down" class="collapse-arrow"></i>Owner's supply</th>
                         <?php
@@ -188,13 +194,13 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         }
                         ?>
                     </tr>
-                </thead>
+                </tbody>
                 <tbody class="collapse" id="owner-supply-panel" >
                 </tbody>
             <!-- </table> -->
             <!--General-->
             <!-- <table class="table table-bordered table-hover"  > -->
-                <thead>
+                <tbody>
                     <tr data-bs-toggle="collapse" data-bs-target="#general-panel" >
                         <th><i data-feather="chevron-down" class="collapse-arrow"></i>General</th>
                         <?php
@@ -206,7 +212,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         }
                         ?>
                     </tr>
-                </thead>
+                </tbody>
                 <tbody id="general-panel" class="collapse" >
                     <tr>
                         <td>Deviation Cost</td>
@@ -377,8 +383,9 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 </tbody>
             <!-- </table> -->
             <!--Payment Terms-->
+
             <!-- <table class="table table-bordered table-hover"  > -->
-                <thead>
+                <tbody>
                     <tr data-bs-toggle="collapse" data-bs-target="#payment-terms-panel" >
                         <th><i data-feather="chevron-down" class="collapse-arrow"></i>Payment terms</th>
                         <?php
@@ -390,7 +397,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         }
                         ?>
                     </tr>
-                </thead>
+                </tbody>
                 <tbody id="payment-terms-panel" class="collapse" >
                     <tr>
                         <td>Payment before Departure</td>
@@ -438,9 +445,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                     </tr>
                 </tbody>
             <!-- </table> -->
-
             <!-- <table class="table table-bordered table-hover"  > -->
-                <thead>
+                <tbody>
                     <tr data-bs-toggle="collapse" data-bs-target="#penalties-panel" >
                         <th><i data-feather="chevron-down" class="collapse-arrow"></i>Penalties</th>
                         <?php
@@ -452,7 +458,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         }
                         ?>
                     </tr>
-                </thead>
+                </tbody>
                 <tbody id="penalties-panel" class="collapse" >
                     <tr>
                         <td>Penalty per day</td>
@@ -479,7 +485,11 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 </tbody>
             <!-- </table> -->
             <!-- <table class="table table-bordered table-hover"  > -->
-                
+                <thead>
+                    <tr>
+                        <td></td>
+                    </tr>
+                </thead>
                 <?php
                 foreach ($categorizedTasks as $category => $oneList) {
                     $totalTaskCost=0;
@@ -497,9 +507,9 @@ foreach ($allProjectTasks as $index => $oneTask) {
                     
 
                 ?>
-                <thead>
+                <tbody>
                     <tr  data-bs-toggle="collapse" data-bs-target="#<?php echo explode(" ",$category)[0]."-tasks-panel";?>" aria-expanded="false" aria-controls="<?php echo explode(" ",$category)[0]."-tasks-panel";?>">
-                        <th><i data-feather="chevron-down" class="collapse-arrow"></i><?php echo $category;?></th>
+                        <td><i data-feather="chevron-down" class="collapse-arrow"></i><b class="" ><?php echo $category;?></b></th>
                         <?php
                         $yardListedItems=array();
                         for ($i=0; $i < $numberYards; $i++) {
@@ -514,7 +524,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 $totalTaskYardCost+=(float)$oneItem->quantity*(float)$oneItem->unit_price;
                             }
                         ?>
-                        <th><?php
+                        <td><?php
                         
                         echo $totalTaskYardCost
                         // echo $totalTaskCost;
@@ -523,7 +533,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             }
                         ?>
                     </tr>
-                </thead>
+                </tbody>
                 <tbody id="<?php echo explode(" ",$category)[0]."-tasks-panel";?>" class="collapse" >
                     <?php
                         foreach ($oneList as $index => $oneTask) {
@@ -543,7 +553,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                             <td ><div class="d-flex" style="align-items:center;" >
                             <?php
-                                echo modal_anchor(get_uri('projects/modal_yard_cost_items/'.$oneTask->id),'<span class="badge rounded-pill bg-secondary" >'.count($oneYardItems).'</span>',array());
+                                echo modal_anchor(get_uri('projects/modal_yard_cost_items/'.$oneTask->id),'<span class="badge task-info-box pill bg-secondary" >'.count($oneYardItems).'</span>',array());
                             ?>
                             <div class="flex-grow-1" ></div><?php echo $oneYardCost; ?></div></td>
                         <?php
@@ -553,6 +563,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         }
                     ?>
                 </tbody>
+                
                 <?php
                     # code...
                 }
@@ -681,6 +692,21 @@ $(document).ready(function(){
         if(!$(this).find(".collapse-arrow").hasClass('collapse-active')) $(this).find(".collapse-arrow").addClass('collapse-active');
         else $(this).find(".collapse-arrow").removeClass('collapse-active')
     })
+    $(".task-info-box").hover(
+        function(){
+            $(this).removeClass('bg-secondary').addClass("bg-success");
+        },function(){
+            $(this).removeClass('bg-success').addClass("bg-secondary");
+    });
+    // $("[data-bs-toggle=collapse]").hover(function(){
+    //     $(this).css({
+    //         'background-color':"#eef1f9"
+    //     })
+    // },function(){
+    //     $(this).css({
+    //         'background-color':"#ffffff"
+    //     })
+    // })
 })
 
 </script>
