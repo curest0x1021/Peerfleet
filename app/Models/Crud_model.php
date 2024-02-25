@@ -526,4 +526,9 @@ class Crud_model extends Model {
         $info->discount_type = $invoice_info->discount_type;
         return $info;
     }
+    function delete_where($where = array()) {
+        if (count($where)) {
+            return $this->db_builder->delete($where);
+        }
+    }
 }

@@ -33,7 +33,9 @@ $(document).ready(function(){
             url:'<?php echo get_uri('projects/select_yard/'.$project_yard_info->id);?>',
             method:"GET",
             success:function(response){
-                window.location.reload();
+                console.log(response)
+                if(response.success)
+                    window.location.reload();
             }
         });
     });

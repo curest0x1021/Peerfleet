@@ -28,6 +28,7 @@ class Tasks extends Security_Controller {
         $this->Task_library_checklist_items_model= model("App\Models\Task_library_checklist_items_model");
         $this->Shipyard_cost_items_model= model("App\Models\Shipyard_cost_items_model");
         $this->Project_yards_model=model("App\Models\Project_yards_model");
+        $this->Task_cost_items_model=model("App\Models\Task_cost_items_model");
     }
 
     private function get_context_id_pairs() {
@@ -1791,6 +1792,9 @@ class Tasks extends Security_Controller {
         $view_data['contexts'] = $this->_get_accessible_contexts();
         $view_data['allYardCostItems']=$this->Shipyard_cost_items_model->get_all_where(array("task_id"=>$task_id))->getResult();
         $view_data['allYards']=$this->Project_yards_model->get_all_where(array("project_id"=>$model_info->project_id))->getResult();
+        $allCostItems=$this->Task_cost_items_model->get_all_where(array("task_id"=>$task_id))->getResult();
+        $view_data['model_info']->cost_items=json_encode($allCostItems);
+        
         if ($view_type == "details") {
             return $this->template->rander('tasks/view', $view_data);
         } else {
@@ -4697,6 +4701,7 @@ class Tasks extends Security_Controller {
              );
              $this->Checklist_items_model->ci_save($newItem);
         }
+        
         $files_data=array();
         $now = get_current_utc_time();
         if (!empty($_FILES)) {
@@ -4733,6 +4738,24 @@ class Tasks extends Security_Controller {
                 }
             }
             
+        }
+        $this->Task_cost_items_model->delete_where(array("task_id"=>$save_id));
+        $cost_items=json_decode($this->request->getPost('cost_items'));
+        foreach ($cost_items as  $oneItem) {
+            $newItem=array(
+                "task_id"=>$save_id,
+                "project_id"=>$this->request->getPost('project_id'),
+                "name"=>$oneItem->name?$oneItem->name:"",
+                "description"=>$oneItem->description?$oneItem->description:"",
+                "quantity"=>$oneItem->quantity?$oneItem->quantity:"",
+                "quote_type"=>$oneItem->quote_type?$oneItem->quote_type:"",
+                "measurement"=>$oneItem->measurement_unit?$oneItem->measurement_unit:"",
+                "unit_price"=>$oneItem->unit_price?$oneItem->unit_price:"",
+                "currency"=>$oneItem->currency?$oneItem->currency:"",
+                "discount"=>$oneItem->discount?$oneItem->discount:"",
+                "yard_remarks"=>$oneItem->yard_remarks?$oneItem->yard_remarks:"",
+             );
+             $this->Task_cost_items_model->ci_save($newItem,null);
         }
         
         return json_encode(array("success"=>true,'saved_id'=>$save_id,"filenames"=>$_FILES));
@@ -4775,15 +4798,35 @@ class Tasks extends Security_Controller {
         $task_info=$this->Tasks_model->get_one($task_id);
        
         $newSaveData=(array)$task_info;
-         $newSaveData['cost_items']=$this->request->getPost('cost_items');
+        $newSaveData['cost_items']=$this->request->getPost('cost_items');
         $save_id=$this->Tasks_model->ci_save($newSaveData,$task_info->id);
+
+        $this->Task_cost_items_model->delete_where(array("task_id"=>$save_id));
+        $cost_items=json_decode($this->request->getPost('cost_items'));
+        foreach ($cost_items as  $oneItem) {
+            $newItem=array(
+                "task_id"=>$task_id,
+                "project_id"=>$task_info->project_id,
+                "name"=>$oneItem->name?$oneItem->name:"",
+                "description"=>$oneItem->description?$oneItem->description:"",
+                "quantity"=>$oneItem->quantity?$oneItem->quantity:"",
+                "quote_type"=>$oneItem->quote_type?$oneItem->quote_type:"",
+                "measurement"=>$oneItem->measurement_unit?$oneItem->measurement_unit:"",
+                "unit_price"=>$oneItem->unit_price?$oneItem->unit_price:"",
+                "currency"=>$oneItem->currency?$oneItem->currency:"",
+                "discount"=>$oneItem->discount?$oneItem->discount:"",
+                "yard_remarks"=>$oneItem->yard_remarks?$oneItem->yard_remarks:"",
+             );
+             $this->Task_cost_items_model->ci_save($newItem,null);
+        }
         return json_encode(array("success"=>true));
 
     }
     function download_task_cost_items($task_id){
         $task_info=$this->Tasks_model->get_one($task_id);
         $project_info=$this->Projects_model->get_one($task_info->project_id);
-        $allCostItems=json_decode($task_info->cost_items);
+        // $allCostItems=json_decode($task_info->cost_items);
+        $allCostItems=$this->Task_cost_items_model->get_all_where(array("task_id"=>$task_id))->getResult();
         if(!$allCostItems) return json_encode(array("success"=>false));
         require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
@@ -4815,7 +4858,7 @@ class Tasks extends Security_Controller {
             if(isset($oneItem->description)) $sheet2->setCellValue('B'.$row_number, $oneItem->description);
             $sheet2->setCellValue('C'.$row_number, $oneItem->quote_type);
             $sheet2->setCellValue('D'.$row_number, $oneItem->quantity);
-            $sheet2->setCellValue('E'.$row_number, $oneItem->measurement_unit);
+            $sheet2->setCellValue('E'.$row_number, $oneItem->measurement);
             $sheet2->setCellValue('F'.$row_number, $oneItem->unit_price);
             $sheet2->setCellValue('G'.$row_number, $oneItem->currency);
             if(isset($oneItem->discount)) $sheet2->setCellValue('H'.$row_number, $oneItem->discount);
