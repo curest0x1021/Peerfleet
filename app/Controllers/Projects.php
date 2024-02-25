@@ -3935,26 +3935,29 @@ class Projects extends Security_Controller {
         $this->Project_yards_model->delete_where(array("project_id"=>$shipyard_info->project_id,"selected"=>0));
         $shipyard_info->selected=0;
         $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
+        
         $allShipyardCostItems=$this->Shipyard_cost_items_model->get_all_where(array("shipyard_id"=>$shipyard_id))->getResult();
-        foreach ($allShipyardCostItems as $key => $oneItem) {
+        $this->Task_cost_items_model->delete_where(array("project_id"=>$shipyard_info->project_id));
+        foreach ($allShipyardCostItems as $oneItem) {
             # code...
+            
             $newTaskItem=array(
                 "task_id"=>$oneItem->task_id,
                 "project_id"=>$oneItem->project_id,
                 "name"=>$oneItem->name,
-                "description"=>$oneItem->description,
+                "description"=>$oneItem->description?$oneItem->description:"",
                 "quantity"=>$oneItem->quantity,
                 "measurement"=>$oneItem->measurement,
-                "quote_type"=>$oneItem->quote_type,
+                "quote_type"=>$oneItem->quote_type?$oneItem->quote_type:"",
                 "unit_price"=>$oneItem->unit_price,
                 "currency"=>$oneItem->currency,
-                "discount"=>$oneItem->discount,
-                "yard_remarks"=>$oneItem->yard_remarks,
+                "discount"=>$oneItem->discount?$oneItem->discount:"",
+                "yard_remarks"=>$oneItem->yard_remarks?$oneItem->yard_remarks:"",
             );
             $this->Task_cost_items_model->ci_save($newTaskItem,null);
         }
         
-        return array("success"=>true);
+        echo json_encode(array("success"=>true));
     }
     function modal_yard_add_files($shipyard_id){
         $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
