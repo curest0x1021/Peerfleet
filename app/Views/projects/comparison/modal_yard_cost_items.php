@@ -43,7 +43,7 @@ foreach ($allProjectYards as $oneYard) {
                                 <td><?php echo $oneItem->name;?></td>
                                 <td><?php echo $oneItem->quantity;?> <?php echo $oneItem->measurement;?> X <?php echo $oneItem->unit_price;?> (Per unit) </td>
                                 <td><?php echo (double)$oneItem->quantity*(double)$oneItem->unit_price;?> </td>
-                                <td><input hidden value='<?php echo $oneItem->id;?>' /><button class="btn btn-sm start-edit-cost-item" ><i data-feather="edit-2" class="icon-16"></i></button><button class="btn btn-sm delete-cost-item"><i data-feather="trash" class="icon-16" ></i></button></td>
+                                <td><input hidden value='<?php echo $oneItem->id;?>' /><button class="btn btn-sm delete-cost-item"><i data-feather="trash" class="icon-16" ></i></button></td>
                             </tr>
                             <?php
                             }
@@ -222,7 +222,7 @@ $(document).ready(function(){
                 <td>${editPanelEl.find("#name")[0].value}</td>
                 <td>${editPanelEl.find("#quantity")[0].value} ${editPanelEl.find("#measurement")[0].value} X ${editPanelEl.find("#unit_price")[0].value} (per unit)</td>
                 <td>${parseFloat(editPanelEl.find("#quantity")[0].value)*parseFloat(editPanelEl.find("#unit_price")[0].value)}</td>
-                <td><input hidden value="" /><button onclick="start_edit_cost_item(event)" class="btn btn-sm start-edit-cost-item"  ><i data-feather="edit-2" class="icon-16" ></i></button><button onclick="delete_cost_item(event)" class="btn btn-sm delete-cost-item" ><i data-feather="trash" class="icon-16"></i></button></td>
+                <td><input hidden value="" /><button onclick="delete_cost_item(event)" class="btn btn-sm delete-cost-item" ><i data-feather="trash" class="icon-16"></i></button></td>
                 </tr>`);
                 tbodyEl.append(newRow);
                 editPanelEl.find("#name")[0].value="";
