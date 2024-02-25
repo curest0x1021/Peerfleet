@@ -44,9 +44,9 @@ foreach ($allProjectTasks as $index => $oneTask) {
         max-width:80vw;
     } */
     .table-fixed-column{
-        min-width:12vw;
-        max-width:12vw;
-        width:12vw;
+        min-width:15vw;
+        max-width:15vw;
+        width:15vw;
     }
     tbody .collapse {
       transition: height 1s ease;
@@ -89,15 +89,15 @@ foreach ($allProjectTasks as $index => $oneTask) {
             <!--Main Info-->
             
             
-            <table class="table table-bordered table-hover"  >
+            <table class="table table-bordered table-hover" style="width:auto"  >
                 <thead>
                     <tr>
-                        <th class="col" style="min-width:20vw;"></th>
+                        <th class="col table-fixed-column" ></th>
                         <?php
                         for ($i=0; $i <$numberYards ; $i++) { 
                             
                         ?>
-                        <th class="col table-fixed-column">
+                        <th class="col" style="min-width:12vw;max-width:12vw;">
                             <?php echo modal_anchor(get_uri('projects/modal_select_yard/'.$allYards[$i]->id),'<button class="btn btn-primary btn-select-yard-candidate" >Select candidate</button>',array());?>
                         </th>
                         <?php
