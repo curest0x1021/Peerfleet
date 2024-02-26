@@ -42,6 +42,11 @@ class CreateTaskVariationOrderTable extends Migration
                 "constraint"=>1000,
                 'null'=>true
             ],
+            "deleted"=>[
+                'type'=>"TINYINT",
+                'null'=>true,
+                "default"=>0
+            ],
             // Add other fields here...
         ]);
     

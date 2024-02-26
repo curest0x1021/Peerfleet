@@ -6,7 +6,7 @@
         Please note: With this process, you change the total cost of this task and a subtask will be created with its own start date and deadline. Within this process, you have to explain the reasons for the variation order. Please provide a clear explanation of the variation order and the reason for it.
         </p>
         <div class="form-group" >
-            <label>New, additional name:</label>
+            <label>Variation order name:</label>
             <input
             name="order_name"
             id="order_name"
