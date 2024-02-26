@@ -1127,6 +1127,20 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-3" >
+                                        <div class="form-group" >
+                                            <label>Budget group:</label>
+                                            <div class="input-group mb-3" style="border:1px solid lightgray;border-radius:5px">
+                                            <?php
+                                            $budget_group_dropdown=array();
+                                            foreach ($allVariationOrders as $oneOrder) {
+                                                $budget_group_dropdown[]=array("id"=>$oneOrder->id,"text"=>$oneOrder->name);
+                                            }
+                                            ?>    
+                                            <input id="cost_item_budget_group<?php echo $modalId;?>" type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row" >
                                     <div class="form-group" >
@@ -1377,6 +1391,9 @@
         });
         $("#dependency-task<?php echo $modalId;?>").select2({
             data: <?php echo (json_encode($dependency_dropdown)); ?>
+        });
+        $("#cost_item_budget_group<?php echo $modalId;?>").select2({
+            data: <?php echo (json_encode($budget_group_dropdown)); ?>
         });
         setDatePicker("#start_date<?php echo $modalId;?>");
         setDatePicker("#deadline<?php echo $modalId;?>");

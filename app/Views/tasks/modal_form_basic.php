@@ -1159,6 +1159,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-2" >
+                                        <div class="form-group" >
+                                            <label>Budget group:</label>
+                                            <div class="input-group mb-3" style="border:1px solid lightgray;border-radius:5px">
+                                                <input id="cost_item_budget_group<?php echo $modalId;?>" type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row" >
                                     <div class="form-group" >
