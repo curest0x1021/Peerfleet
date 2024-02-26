@@ -1114,6 +1114,43 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                 </div>
             </div>
             <!---->
+            <!--Variation Orders-->
+            <div class="col-md-12" >
+                <div class="card" style="border: solid 1px lightgray;min-height:30vh;">
+                    <div class="card-header d-flex">
+                        <b>Variation Orders</b>
+                    </div>
+                    <div class="card-body" style="padding:10px" >
+                        <table id="table-quotes-from-yard" class="table table-variation-orders" style="margin:0" >
+                            <thead>
+                            <tr>
+                                <td>Order name</td>
+                                <td>Additional cost</td>
+                                <td>Start date</td>
+                                <td>Finish date</td>
+                                <td><?php echo modal_anchor(get_uri('tasks/modal_add_order/'.$task_id),'<button class="btn btn-sm btn-default" ><i class="icon-16" data-feather="plus-circle" ></i></button>',array("title"=>"Creation Variation Order"));?></td>
+                            </tr>
+                            </thead>
+                            <tbody >
+                                <?php
+                                foreach ($variation_orders as $oneOrder) {
+                                ?>
+                                <tr>
+                                    <td><?php echo $oneOrder->name; ?></td>
+                                    <td><?php echo $oneOrder->cost; ?></td>
+                                    <td><?php echo date("d.m.Y", strtotime($oneOrder->start_date)); ?></td>
+                                    <td><?php echo date("d.m.Y", strtotime($oneOrder->finish_date)); ?></td>
+                                    <td><input hidden value='<?php echo $oneOrder->id;?>' /><button class="btn btn-sm btn-default delete-variation-order-item" ><i class="icon-16" data-feather="x" ></i></button></td>
+                                </tr>
+                                <?php
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!----->
         </div>
         <!---->
     </div>
@@ -1347,6 +1384,20 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     window.location.reload();
                 }
             });
+        });
+        $(".delete-variation-order-item").on("click",function(){
+            var order_id=$(this).parent().find('input')[0].value;
+            console.log(order_id)
+            var delTr=$(this).closest('tr');
+            $.ajax({
+                url:'<?php echo get_uri('tasks/delete_variation_order');?>/'+order_id,
+                method:"GET",
+                success:function(response){
+                    console.log(response);
+                    if(JSON.parse(response).success)
+                        delTr.remove();
+                }
+            })
         })
     })
     var cost_items=[];
@@ -1381,6 +1432,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                 console.log(response)
             }
         })
+        
     }
     function start_edit_cost_item(index){
         $("#editing_cost_item")[0].value=index;
@@ -1395,6 +1447,18 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
     function delete_owner_supply(index){
         owner_supplies.splice(index,1);
         $("#table-owners-supplies")[0].getElementsByTagName('tbody')[0].deleteRow(index);
+    }
+    function delete_variation_order(e){  
+        var order_id=e.target.parentNode.querySelector('input').value;
+        $.ajax({
+            url:'<?php echo get_uri('tasks/delete_variation_order');?>/'+order_id,
+            method:"GET",
+            success:function(response){
+                console.log(response);
+                if(JSON.parse(response).success)
+                e.target.parentNode.parentNode.parentNode.removeChild(e.target.closest('tr'));
+            }
+        })
     }
     <?php
         if(isset($model_info)&&$model_info->cost_items)

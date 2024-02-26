@@ -29,6 +29,7 @@ class Tasks extends Security_Controller {
         $this->Shipyard_cost_items_model= model("App\Models\Shipyard_cost_items_model");
         $this->Project_yards_model=model("App\Models\Project_yards_model");
         $this->Task_cost_items_model=model("App\Models\Task_cost_items_model");
+        $this->Task_variation_orders_model=model("App\Models\Task_variation_orders_model");
     }
 
     private function get_context_id_pairs() {
@@ -1795,7 +1796,8 @@ class Tasks extends Security_Controller {
         $view_data['allYards']=$this->Project_yards_model->get_all_where(array("project_id"=>$model_info->project_id))->getResult();
         $allCostItems=$this->Task_cost_items_model->get_all_where(array("task_id"=>$task_id))->getResult();
         $view_data['model_info']->cost_items=json_encode($allCostItems);
-        
+        $allVariationOrders=$this->Task_variation_orders_model->get_all_where(array("task_id"=>$task_id))->getResult();
+        $view_data['variation_orders']=$allVariationOrders;
         if ($view_type == "details") {
             return $this->template->rander('tasks/view', $view_data);
         } else {
@@ -4886,6 +4888,26 @@ class Tasks extends Security_Controller {
     /*----*/
     function delete_task_cost_item($item_id){
         $this->Task_cost_items_model->delete_permanently($item_id);
+        return json_encode(array("success"=>true));
+    }
+    function modal_add_order($task_id){
+        return $this->template->view("tasks/variation_orders/modal_add_order",["task_id"=>$task_id]);
+    }
+    function save_variation_order(){
+        $newSaveData=array(
+            "task_id"=>$this->request->getPost('task_id'),
+            "name"=>$this->request->getPost('name'),
+            "cost"=>$this->request->getPost('cost'),
+            "start_date"=>date('Y-m-d', strtotime($this->request->getPost("start_date"))),
+            "finish_date"=>date('Y-m-d', strtotime($this->request->getPost("finish_date"))),
+            "notes"=>$this->request->getPost('notes'),
+        );
+        $save_id=$this->Task_variation_orders_model->ci_save($newSaveData);
+        return json_encode(array("success"=>true,"save_id"=>$save_id));
+    }
+    function delete_variation_order($order_id){
+        
+        $save_id=$this->Task_variation_orders_model->delete_permanently($order_id);
         return json_encode(array("success"=>true));
     }
 }
