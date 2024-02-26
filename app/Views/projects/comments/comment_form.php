@@ -70,6 +70,7 @@ if (isset($model_info->context) && $model_info->context != "project") {
 <?php if ($comment_type != "file") { ?>
             var uploadUrl = "<?php echo get_uri("projects/upload_file"); ?>";
             var validationUrl = "<?php echo get_uri("projects/validate_project_file"); ?>";
+            console.log($("#task-dropzone"))
             dropzone = attachDropzoneWithForm("#<?php echo $comment_type . "-dropzone"; ?>", uploadUrl, validationUrl);
 <?php } ?>
 
