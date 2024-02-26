@@ -341,5 +341,6 @@ $lang["wire_inspection_required"] = "Wires visual inspection required";
 $lang["notification_wire_loadtest_required"] = "Wires load test required";
 $lang["notification_wire_inspection_required"] = "Wires visual inspection required";
 $lang["yards_comparison"]="Yards Comparison";
+$lang["cost_overview"]="Cost overview";
 
 return $lang;
