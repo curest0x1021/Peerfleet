@@ -1600,7 +1600,8 @@
                     currency:$("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value,
                     description:$("#cost_item_description<?php echo $modalId;?>")[0].value,
                     yard_remarks:$("#cost_item_yard_remarks<?php echo $modalId;?>")[0].value,
-                    discount:$("#cost_item_discount<?php echo $modalId;?>")[0].value
+                    discount:$("#cost_item_discount<?php echo $modalId;?>")[0].value,
+                    budget_group:$("#cost_item_budget_group<?php echo $modalId;?>")[0].value,
                 });
             else{
                 // $("#table-costs-item-list<?php 
@@ -1619,7 +1620,8 @@
                     currency:$("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value,
                     description:$("#cost_item_description<?php echo $modalId;?>")[0].value,
                     yard_remarks:$("#cost_item_yard_remarks<?php echo $modalId;?>")[0].value,
-                    discount:$("#cost_item_discount<?php echo $modalId;?>")[0].value
+                    discount:$("#cost_item_discount<?php echo $modalId;?>")[0].value,
+                    budget_group:$("#cost_item_budget_group<?php echo $modalId;?>")[0].value,
                 };
                 // $("#editing_cost_item<?php echo $modalId;?>")[0].value=""
                 editing_cost_item=null;
@@ -1863,6 +1865,7 @@
         $("#cost_item_quote_type<?php echo $modalId; ?>")[0].value=cost_items[index].quote_type;
         $("#input_cost_item_currency_select<?php echo $modalId; ?>")[0].value=cost_items[index].currency;
         $("#cost_item_description<?php echo $modalId; ?>")[0].value=cost_items[index].description;
+        $("#cost_item_budget_group<?php echo $modalId; ?>")[0].value=cost_items[index].budget_group;
         $("#cost_item_yard_remarks<?php echo $modalId; ?>")[0].value=cost_items[index].yard_remarks;
     }
     <?php

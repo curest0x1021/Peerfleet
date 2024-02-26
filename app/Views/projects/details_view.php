@@ -84,6 +84,15 @@ if (!function_exists("make_project_tabs_data")) {
                             if ($show_gantt_info) {
                                 $project_tabs["gantt"] = "tasks/gantt/" . $project_info->id;
                             }
+                            /////////////////////
+                            $project_tabs["yards_comparison"] = "projects/comparison_tab/" . $project_info->id;
+
+                            $project_tabs["cost_overview"] = "projects/cost_overview/" . $project_info->id;
+                            ////////////////////
+
+
+                            $project_tabs["checklist"] = "projects/checklist/" . $project_info->id;
+                            
 
                             if ($show_note_info) {
                                 $project_tabs["notes"] = "projects/notes/" . $project_info->id;
@@ -118,10 +127,7 @@ if (!function_exists("make_project_tabs_data")) {
                                 $project_tabs["tickets"] = "projects/tickets/" . $project_info->id;
                             }
 
-                            $project_tabs["checklist"] = "projects/checklist/" . $project_info->id;
-                            /////////////////////
-                            $project_tabs["yards_comparison"] = "projects/comparison_tab/" . $project_info->id;
-                            ////////////////////
+                            
 
                             $project_tabs_of_hook_of_staff = array();
                             $project_tabs_of_hook_of_staff = app_hooks()->apply_filters('app_filter_team_members_project_details_tab', $project_tabs_of_hook_of_staff, $project_info->id);
@@ -140,12 +146,6 @@ if (!function_exists("make_project_tabs_data")) {
                                 $project_tabs["tasks_kanban"] = "tasks/project_tasks_kanban_kanban/" . $project_info->id;
                             }
 
-                            if ($show_files) {
-                                $project_tabs["files"] = "projects/files/" . $project_info->id;
-                            }
-
-                            $project_tabs["comments"] = "projects/customer_feedback/" . $project_info->id;
-
                             if ($show_milestone_info) {
                                 $project_tabs["milestones"] = "projects/milestones/" . $project_info->id;
                             }
@@ -154,13 +154,25 @@ if (!function_exists("make_project_tabs_data")) {
                                 $project_tabs["gantt"] = "tasks/gantt/" . $project_info->id;
                             }
 
+                            /////////////////////
+                            $project_tabs["yards_comparison"] = "projects/comparison_tab/" . $project_info->id;
+                            ////////////////////
+
+                            if ($show_files) {
+                                $project_tabs["files"] = "projects/files/" . $project_info->id;
+                            }
+
+                            $project_tabs["comments"] = "projects/customer_feedback/" . $project_info->id;
+
+                            
+
+                            
+
                             if ($show_timesheet_info) {
                                 $project_tabs["timesheets"] = "projects/timesheets/" . $project_info->id;
                             }
                             
-                            /////////////////////
-                            $project_tabs["yards_comparison"] = "projects/comparison_tab/" . $project_info->id;
-                            ////////////////////
+                            
 
                             if (get_setting("module_invoice")) {
                                 //check left menu settings
