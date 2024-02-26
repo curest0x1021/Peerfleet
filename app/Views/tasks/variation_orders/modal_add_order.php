@@ -3,9 +3,7 @@
 <?php echo form_close()?>
     <div>
         <p>
-            Are you sure you want to create a variation order for this work order?
-            You can change the cost and start/completion date and you must add notes explaining the work order.
-            Try to explain what the change is about and what the change is. For the record, all previous data is stored on Peerfleet.
+        Please note: With this process, you change the total cost of this task and a subtask will be created with its own start date and deadline. Within this process, you have to explain the reasons for the variation order. Please provide a clear explanation of the variation order and the reason for it.
         </p>
         <div class="form-group" >
             <label>New, additional name:</label>

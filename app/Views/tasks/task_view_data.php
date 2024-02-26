@@ -1293,7 +1293,6 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     cost_items:JSON.stringify(cost_items)
                 },
                 success:function(response){
-                    console.log(response)
                 }
             })
             
@@ -1361,7 +1360,6 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             $("#new-comment-file-selector").click();
         });
         $("#new-comment-file-selector").on("change",function(event){
-            console.log(event.target.files)
             if(event.target.files.length==0) return;
             var myForm=new FormData();
             myForm.append("file_names",[event.target.files[0].name]);
@@ -1387,13 +1385,11 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         });
         $(".delete-variation-order-item").on("click",function(){
             var order_id=$(this).parent().find('input')[0].value;
-            console.log(order_id)
             var delTr=$(this).closest('tr');
             $.ajax({
                 url:'<?php echo get_uri('tasks/delete_variation_order');?>/'+order_id,
                 method:"GET",
                 success:function(response){
-                    console.log(response);
                     if(JSON.parse(response).success)
                         delTr.remove();
                 }
@@ -1429,7 +1425,6 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                 cost_items:JSON.stringify(cost_items)
             },
             success:function(response){
-                console.log(response)
             }
         })
         
@@ -1454,7 +1449,6 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             url:'<?php echo get_uri('tasks/delete_variation_order');?>/'+order_id,
             method:"GET",
             success:function(response){
-                console.log(response);
                 if(JSON.parse(response).success)
                 e.target.parentNode.parentNode.parentNode.removeChild(e.target.closest('tr'));
             }
@@ -1468,5 +1462,4 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
     <?php if(count($all_files)>0)
     echo 'var all_files='.json_encode($all_files).';'
     ?>
-    console.log(cost_items)
 </script>

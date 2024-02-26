@@ -14,7 +14,7 @@ foreach ($project_statuses as $status) {
         $is_selected = true;
     }
 
-    $statuses[] = array("text" => ($status->title_language_key ? app_lang($status->title_language_key) : $status->title), "value" => $status->id, "isChecked" => $is_selected);
+    $statuses[] = array("text" => ($status->title_language_key ? app_lang($status->title_language_key) : $status->title), "value" => $status->id, "isChecked" => true);
 }
 
 echo json_encode($statuses);
