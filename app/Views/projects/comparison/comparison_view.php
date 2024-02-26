@@ -123,8 +123,12 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                             <li><a class="dropdown-item" href="<?php echo get_uri('projects/download_yard_xlsx/'.$allYards[$i]->id);?>" target="_blank">Export xlsx</a></li>
                                             <li><?php echo modal_anchor(get_uri('projects/modal_import_yard_xlsx/'.$allYards[$i]->id),'<li class="dropdown-item" >Import quotation</l1>',array());?></li>
                                             <li><?php echo modal_anchor(get_uri('projects/modal_import_task_cost_items/'.$allYards[$i]->id),'<li class="dropdown-item" >Import cost items of task</l1>',array());?></li>
-                                            <li><?php echo modal_anchor(get_uri('projects/modal_yard_add_files/'.$allYards[$i]->id),'<li class="dropdown-item" >Add files</l1>',array());?></li>
-                                            <li><?php echo modal_anchor(get_uri('projects/modal_select_yard/'.$allYards[$i]->id),'<li class="dropdown-item" >Select candidate</l1>',array());?></li>
+                                            <!-- <li><?php 
+                                            // echo modal_anchor(get_uri('projects/modal_yard_add_files/'.$allYards[$i]->id),'<li class="dropdown-item" >Add files</l1>',array());
+                                            ?></li> -->
+                                            <!-- <li><?php 
+                                            // echo modal_anchor(get_uri('projects/modal_select_yard/'.$allYards[$i]->id),'<li class="dropdown-item" >Select candidate</l1>',array());
+                                            ?></li> -->
                                         </ul>
                                     </div>
                                 </div>
@@ -509,7 +513,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 ?>
                 <tbody>
                     <tr  data-bs-toggle="collapse" data-bs-target="#<?php echo explode(" ",$category)[0]."-tasks-panel";?>" aria-expanded="false" aria-controls="<?php echo explode(" ",$category)[0]."-tasks-panel";?>">
-                        <td><i data-feather="chevron-down" class="collapse-arrow icon-16"></i><b class="" ><?php echo $category;?></b></th>
+                        <td><i data-feather="chevron-down" class="collapse-arrow icon-16"></i><b class="" ><?php echo $category;?></b></td>
                         <?php
                         $yardListedItems=array();
                         for ($i=0; $i < $numberYards; $i++) {
