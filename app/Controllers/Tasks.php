@@ -4896,8 +4896,10 @@ class Tasks extends Security_Controller {
         return $this->template->view("tasks/variation_orders/modal_add_order",["task_id"=>$task_id]);
     }
     function save_variation_order(){
+        $task_info=$this->Tasks_model->get_one($this->request->getPost('task_id'));
         $newSaveData=array(
             "task_id"=>$this->request->getPost('task_id'),
+            "project_id"=>$task_info->project_id,
             "name"=>$this->request->getPost('name'),
             "cost"=>$this->request->getPost('cost'),
             "start_date"=>date('Y-m-d', strtotime($this->request->getPost("start_date"))),

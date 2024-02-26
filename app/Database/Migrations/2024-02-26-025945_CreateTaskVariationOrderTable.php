@@ -20,6 +20,10 @@ class CreateTaskVariationOrderTable extends Migration
                 'type'=>"INT",
                 'null'=>true
             ],
+            "project_id"=>[
+                'type'=>"INT",
+                'null'=>true
+            ],
             "name"=>[
                 'type'=>"VARCHAR",
                 'constraint' =>200,

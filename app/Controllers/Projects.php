@@ -4061,6 +4061,10 @@ class Projects extends Security_Controller {
         $this->Shipyard_cost_items_model->delete_permanently($item_id);
         return json_encode(array("success"=>true));
     }
+    function cost_overview($project_id){
+        $allCostItems=$this->Task_cost_items_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        return $this->template->view('projects/cost_overview/index',['allCostItems'=>$allCostItems]);
+    }
 }
 
 /* End of file projects.php */
