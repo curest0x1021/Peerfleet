@@ -10,11 +10,93 @@ $categorizedTasks=array(
     "Common systems"=>array(),
     "Others"=>array(),
 );
+$categorizedOwnerSupplies=array(
+    "General & Docking"=>array(),
+    "Hull"=>array(),
+    "Equipment for Cargo"=>array(),
+    "Ship Equipment"=>array(),
+    "Safety & Crew Equipment"=>array(),
+    "Machinery Main Components"=>array(),
+    "Systems machinery main components"=>array(),
+    "Common systems"=>array(),
+    "Others"=>array(),
+);
+$categorizedCostItems=array(
+    "General & Docking"=>array(),
+    "Hull"=>array(),
+    "Equipment for Cargo"=>array(),
+    "Ship Equipment"=>array(),
+    "Safety & Crew Equipment"=>array(),
+    "Machinery Main Components"=>array(),
+    "Systems machinery main components"=>array(),
+    "Common systems"=>array(),
+    "Others"=>array(),
+);
+$categorizedShipyardCostItems=array(
+    "General & Docking"=>array(),
+    "Hull"=>array(),
+    "Equipment for Cargo"=>array(),
+    "Ship Equipment"=>array(),
+    "Safety & Crew Equipment"=>array(),
+    "Machinery Main Components"=>array(),
+    "Systems machinery main components"=>array(),
+    "Common systems"=>array(),
+    "Others"=>array(),
+);
+$categorizedVariationOrders=array(
+    "General & Docking"=>array(),
+    "Hull"=>array(),
+    "Equipment for Cargo"=>array(),
+    "Ship Equipment"=>array(),
+    "Safety & Crew Equipment"=>array(),
+    "Machinery Main Components"=>array(),
+    "Systems machinery main components"=>array(),
+    "Common systems"=>array(),
+    "Others"=>array(),
+);
+
 foreach ($allTasks as $index => $oneTask) {
     if(isset($categorizedTasks[$oneTask->category]))
         $categorizedTasks[$oneTask->category][]=$oneTask;
     else $categorizedTasks["Others"][]=$oneTask;
+
+    if(isset($categorizedOwnerSupplies[$oneTask->category]))
+        $categorizedOwnerSupplies[$oneTask->category]+=array_filter($allOwnerSupplies,function($oneSupply)use($oneTask){
+            return $oneTask->id==$oneSupply->task_id;
+        });
+    else $categorizedOwnerSupplies["Others"]+=array_filter($allOwnerSupplies,function($oneSupply)use($oneTask){
+        return $oneTask->id==$oneSupply->task_id;
+    });
+
+    if(isset($categorizedCostItems[$oneTask->category]))
+        $categorizedCostItems[$oneTask->category]+=array_filter($allCostItems,function($oneItem)use($oneTask){
+            return $oneTask->id==$oneItem->task_id;
+        });
+    else $categorizedCostItems["Others"]+=array_filter($allCostItems,function($oneItem)use($oneTask){
+        return $oneTask->id==$oneItem->task_id;
+    });
+
+    if(isset($categorizedShipyardCostItems[$oneTask->category]))
+        $categorizedShipyardCostItems[$oneTask->category]+=array_filter($allShipyardCostItems,function($oneItem)use($oneTask){
+            return $oneTask->id==$oneItem->task_id;
+        });
+    else $categorizedShipyardCostItems["Others"]+=array_filter($allShipyardCostItems,function($oneItem)use($oneTask){
+        return $oneTask->id==$oneItem->task_id;
+    });
+
+    if(isset($categorizedVariationOrders[$oneTask->category]))
+        $categorizedVariationOrders[$oneTask->category]+=array_filter($allVariationOrders,function($oneOrder)use($oneTask){
+            return $oneTask->id==$oneOrder->task_id;
+        });
+    else $categorizedVariationOrders["Others"]+=array_filter($allVariationOrders,function($oneOrder)use($oneTask){
+        return $oneTask->id==$oneOrder->task_id;
+    });
 }
+
+$totalOwnerSupplies=0;
+$totalVariationOrders=0;
+$totalCostItems=0;
+$totalShipyardCostItems=0;
 ?>
 <style>
     .collapse-arrow {
@@ -68,29 +150,61 @@ foreach ($allTasks as $index => $oneTask) {
             <tbody>
                 <tr  data-bs-toggle="collapse" data-bs-target="#<?php echo explode(" ",$category)[0]."-tasks-panel";?>" aria-expanded="false" aria-controls="<?php echo explode(" ",$category)[0]."-tasks-panel";?>">
                     <td><i data-feather="chevron-down" style="word-wrap:break-word;" class="collapse-arrow icon-16"></i><b class="" ><?php echo $category;?></b></td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
             </tbody>
             <tbody  id="<?php echo explode(" ",$category)[0]."-tasks-panel";?>" class="collapse">
                     <?php foreach ($oneList as $key => $oneTask) {
+                        $oneTaskSupplies=array_filter($categorizedOwnerSupplies[$category],function($oneSupply)use($oneTask){
+                            return $oneSupply->task_id==$oneTask->id;
+                        });
+                        $oneTaskCostItems=array_filter($categorizedCostItems[$category],function($oneItem)use($oneTask){
+                            return $oneItem->task_id==$oneTask->id;
+                        });
+                        $oneTaskShipyardCostItems=array_filter($categorizedShipyardCostItems[$category],function($oneItem)use($oneTask){
+                            return $oneItem->task_id==$oneTask->id;
+                        });
+                        $oneTaskVariationOrders=array_filter($categorizedVariationOrders[$category],function($oneOrder)use($oneTask){
+                            return $oneOrder->task_id==$oneTask->id;
+                        });
+                        $oneTaskTotalSupplies=0;
+                        foreach ($oneTaskSupplies as $oneSupply) {
+                            $oneTaskTotalSupplies+=$oneSupply->cost;
+                        }
+                        $oneTaskTotalCostItems=0;
+                        foreach ($oneTaskCostItems as $oneItem) {
+                            $oneTaskTotalCostItems+=$oneItem->total_cost;
+                        }
+                        $oneTaskTotalShipyardCostItems=0;
+                        foreach ($oneTaskShipyardCostItems as $oneItem) {
+                            $oneTaskTotalShipyardCostItems+=$oneItem->total_cost;
+                        }
+                        $oneTaskTotalVariationOrders=0;
+                        foreach ($oneTaskVariationOrders as $oneOrder) {
+                            $oneTaskTotalVariationOrders+=$oneOrder->cost;
+                        }
+                        $totalOwnerSupplies+=$oneTaskTotalSupplies;
+                        $totalCostItems+=$oneTaskTotalCostItems;
+                        $totalShipyardCostItems+=$oneTaskTotalShipyardCostItems;
+                        $totalVariationOrders+=$oneTaskTotalVariationOrders;
 
                     ?>
                     <tr>
                         <td style="word-wrap:break-word;max-width:12vw;" >
                             <?php echo $oneTask->title;?>
                         </td>
+                        <td><?php echo $oneTaskTotalSupplies;?></td>
+                        <td><?php echo $oneTaskTotalCostItems?></td>
+                        <td><?php echo $oneTaskTotalVariationOrders;?></td>
                         <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <td><?php echo $oneTaskTotalShipyardCostItems;?></td>
                         <td>0</td>
                         <td>0</td>
                         <td>0</td>
@@ -117,9 +231,5 @@ foreach ($allTasks as $index => $oneTask) {
         var allCostItems;
         var allVariationOrders;
         var allTasks;
-        <?php
-        if(isset($allCostItems)) echo "allCostItems=JSON.parse('".json_encode($allCostItems)."');";
-        if(isset($allVariationOrders)) echo "allVariationOrders=JSON.parse('".json_encode($allVariationOrders)."');";
-        ?>
     });
 </script>
