@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateTaskVariationOrderTable extends Migration
+class CreateOwnerSupplyTable extends Migration
 {
     public function up()
     {
@@ -29,27 +29,20 @@ class CreateTaskVariationOrderTable extends Migration
                 'constraint' =>200,
                 'null'=>true
             ],
+            "description"=>[
+                'type'=>"VARCHAR",
+                'constraint' =>2000,
+                'null'=>true
+            ],
             "cost"=>[
-                'type'=>"DOUBLE",
-                'null'=>true
+                'type'=>"INT",
+                'null'=>true,
+                'default'=>0
             ],
-            "currency"=>[
-                'type'=>"VARCHAR",
-                'constraint' =>100,
-                'null'=>true
-            ],
-            "start_date"=>[
-                'type'=>"DATE",
-                'null'=>true
-            ],
-            "finish_date"=>[
-                'type'=>"DATE",
-                'null'=>true
-            ],
-            "notes"=>[
-                'type'=>"VARCHAR",
-                "constraint"=>1000,
-                'null'=>true
+            "order_number"=>[
+                'type'=>"INT",
+                'null'=>true,
+                'constraint'=>5
             ],
             "deleted"=>[
                 'type'=>"TINYINT",
@@ -60,12 +53,12 @@ class CreateTaskVariationOrderTable extends Migration
         ]);
     
         $this->forge->addKey('id', true);
-        $this->forge->createTable('task_variation_orders');
+        $this->forge->createTable('task_owner_supplies');
     }
 
     public function down()
     {
         //
-        $this->forge->drop('task_variation_orders');
+        $this->forge->drop('task_owner_supplies');
     }
 }

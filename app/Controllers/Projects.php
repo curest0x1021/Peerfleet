@@ -28,6 +28,7 @@ class Projects extends Security_Controller {
         $this->Project_yards_model = model("App\Models\Project_yards_model");
         $this->Shipyard_cost_items_model = model("App\Models\Shipyard_cost_items_model");
         $this->Task_cost_items_model = model("App\Models\Task_cost_items_model");
+        $this->Task_variation_orders_model = model("App\Models\Task_variation_orders_model");
     }
 
     private function can_delete_projects($project_id = 0) {
@@ -4063,7 +4064,9 @@ class Projects extends Security_Controller {
     }
     function cost_overview($project_id){
         $allCostItems=$this->Task_cost_items_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        return $this->template->view('projects/cost_overview/index',['allCostItems'=>$allCostItems]);
+        $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        $allVariationOrders=$this->Task_variation_orders_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        return $this->template->view('projects/cost_overview/index',["allVariationOrders"=>$allVariationOrders,"allTasks"=>$allTasks,'allCostItems'=>$allCostItems]);
     }
 }
 
