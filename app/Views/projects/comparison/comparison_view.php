@@ -547,7 +547,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 });
                                 $totalTaskYardCost=0;
                                 foreach ($yardListedItems[$i] as $oneItem) {                                
-                                    $totalTaskYardCost+=(float)$oneItem->quantity*(float)$oneItem->unit_price;
+                                    // $totalTaskYardCost+=(float)$oneItem->quantity*(float)$oneItem->unit_price;
+                                    $totalTaskYardCost+=(float)$oneItem->total_cost;
                                 }
                                 $totalCosts[$i]+=$totalTaskYardCost;
                                 $totalYardCosts[]=$totalTaskYardCost;
@@ -592,7 +593,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 return $oneTask->id==$oneItem->task_id&&$oneYard->id==$oneItem->shipyard_id;
                             });
                             foreach($oneYardItems as $oneItem){
-                                $oneYardCost+= (float)$oneItem->quantity*(float)$oneItem->unit_price;
+                                $oneYardCost+= (float)$oneItem->total_cost;
                                 
                             }
                             $oneTaskAllCosts[]=$oneYardCost;
