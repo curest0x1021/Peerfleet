@@ -287,6 +287,7 @@
             var order_notes=$(this).parent().parent().find("#order_notes")[0].value;
             var order_start_date=$(this).parent().parent().find("#order_start_date")[0].value;
             var order_finish_date=$(this).parent().parent().find("#order_finish_date")[0].value;
+            var order_currency=$(this).parent().parent().find("#order_currency")[0].value;
             var myForm=new FormData();
             myForm.append("rise_csrf_token",$("[name=rise_csrf_token]")[0].value);
             myForm.append("task_id",'<?php echo $task_id;?>');
@@ -295,6 +296,7 @@
             myForm.append("notes",order_notes);
             myForm.append("start_date",order_start_date);
             myForm.append("finish_date",order_finish_date);
+            myForm.append("currency",order_currency);
             $.ajax({
                 url:'<?php echo get_uri('tasks/save_variation_order');?>',
                 method:"POST",
@@ -306,7 +308,7 @@
                         var new_row=`
                             <tr>
                             <td>${order_name}</td>
-                            <td>${order_cost}</td>
+                            <td>${order_currency} ${order_cost}</td>
                             <td>${order_start_date}</td>
                             <td>${order_finish_date}</td>
                             <td><input hidden value="${JSON.parse(response).save_id}"/><button onclick="delete_variation_order(event)" class="btn btn-sm btn-default delete-variation-order" ><i class="icon-16" data-feather="x" ></i></button></td>

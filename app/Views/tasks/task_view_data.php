@@ -1149,7 +1149,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                 ?>
                                 <tr>
                                     <td><?php echo $oneOrder->name; ?></td>
-                                    <td><?php echo $oneOrder->cost; ?></td>
+                                    <td><?php echo $oneOrder->currency; ?> <?php echo $oneOrder->cost; ?></td>
                                     <td><?php echo date("d.m.Y", strtotime($oneOrder->start_date)); ?></td>
                                     <td><?php echo date("d.m.Y", strtotime($oneOrder->finish_date)); ?></td>
                                     <td><input hidden value='<?php echo $oneOrder->id;?>' /><button class="btn btn-sm btn-default delete-variation-order-item" ><i class="icon-16" data-feather="x" ></i></button></td>
