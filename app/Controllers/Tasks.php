@@ -30,6 +30,7 @@ class Tasks extends Security_Controller {
         $this->Project_yards_model=model("App\Models\Project_yards_model");
         $this->Task_cost_items_model=model("App\Models\Task_cost_items_model");
         $this->Task_variation_orders_model=model("App\Models\Task_variation_orders_model");
+        $this->Task_owner_supplies_model=model("App\Models\Task_owner_supplies_model");
     }
 
     private function get_context_id_pairs() {
@@ -643,8 +644,8 @@ class Tasks extends Security_Controller {
         $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
         $allMilestones=$this->Milestones_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allVariationOrders=$this->Task_variation_orders_model->get_all()->getResult();
-        return $this->template->view('tasks/modal_form_id',["allVariationOrders"=>$allVariationOrders,"allTasks"=>$allTasks,"project_id"=>$project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        // $allVariationOrders=$this->Task_variation_orders_model->get_all()->getResult();
+        return $this->template->view('tasks/modal_form_id',["allTasks"=>$allTasks,"project_id"=>$project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     /*----*/
     /*----*/
@@ -660,8 +661,9 @@ class Tasks extends Security_Controller {
         $gotProject=$this->Projects_model->get_one($gotTask->project_id);
         $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$gotTask->project_id))->getResult();
         $allVariationOrders=$this->Task_variation_orders_model->get_all()->getResultArray();
-        // $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_library"=>$id,"deleted"=>0))->getResult();
-        return $this->template->view('tasks/modal_form_id',["allVariationOrders"=>$allVariationOrders,"allTasks"=>$allTasks,"gotChecklistItems"=>$gotChecklistItems,"gotTask"=>$gotTask,"task_id"=>$task_id,"gotProject"=>$gotProject,"project_id"=>$gotTask->project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_library"=>$id,"deleted"=>0))->getResult();
+        $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("task_id"=>$task_id))->getResult();
+        return $this->template->view('tasks/modal_form_id',["allOwnerSupplies"=>$allOwnerSupplies,"allTasks"=>$allTasks,"gotChecklistItems"=>$gotChecklistItems,"gotTask"=>$gotTask,"task_id"=>$task_id,"gotProject"=>$gotProject,"project_id"=>$gotTask->project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     /*----*/
 
@@ -1800,6 +1802,8 @@ class Tasks extends Security_Controller {
         $view_data['model_info']->cost_items=json_encode($allCostItems);
         $allVariationOrders=$this->Task_variation_orders_model->get_all_where(array("task_id"=>$task_id))->getResult();
         $view_data['variation_orders']=$allVariationOrders;
+        $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("task_id"=>$task_id))->getResult();
+        $view_data['owner_supplies']=$allOwnerSupplies;
         if ($view_type == "details") {
             return $this->template->rander('tasks/view', $view_data);
         } else {
@@ -4913,5 +4917,23 @@ class Tasks extends Security_Controller {
         
         $save_id=$this->Task_variation_orders_model->delete_permanently($order_id);
         return json_encode(array("success"=>true));
+    }
+
+    function save_owner_supply(){
+        $task_info=$this->Tasks_model->get_one($this->request->getPost('task_id'));
+        $newSaveData=array(
+            "task_id"=>$this->request->getPost('task_id'),
+            "project_id"=>$task_info->project_id,
+            "name"=>$this->request->getPost('name'),
+            "description"=>$this->request->getPost('description'),
+            "cost"=>$this->request->getPost('cost'),
+            'order_number'=>$this->request->getPost('order_number')
+        );
+        $save_id=$this->Task_owner_supplies_model->ci_save($newSaveData);
+        return json_encode(array("success"=>true,"save_id"=>$save_id));
+    }
+    function delete_owner_supply($id){
+        $this->Task_owner_supplies_model->delete_permanently($id);
+        return json_encode(array("succees"=>true));
     }
 }

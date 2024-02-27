@@ -1059,6 +1059,18 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                             </tr>
                             </thead>
                             <tbody id="table-owners-supplies-table-body">
+                                <?php
+                                foreach ($owner_supplies as $oneItem) {
+                                ?>
+                                <tr>
+                                    <td><?php echo $oneItem->name;?></td>
+                                    <td><?php echo $oneItem->cost;?></td>
+                                    <td><?php echo $oneItem->order_number;?></td>
+                                    <td><button  class="btn btn-sm btn-default" ><i data-feather="x" class="icon-16" ></i></button></td>
+                                </tr>
+                                <?php
+                                }
+                                ?>
                             </tbody>
                         </table>
                         <div id="owner-supply-edit-panel" hidden style="margin-top:5vh" >
@@ -1314,6 +1326,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         $("#btn-save-owner-supply").on("click",function(){
             // $("#owner-supply-edit-panel").prop('hidden',false);
             // $("#btn-add-owner-supply").prop("disabled",true);
+            
         })
         $("#btn-cancel-owner-supply").on("click",function(){
             $("#owner-supply-edit-panel").prop('hidden',true);
@@ -1330,6 +1343,21 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                 price:owner_supply_price,
                 order_number:owner_supply_order_number
             })
+            $.ajax({
+                url:'<?php echo get_uri('tasks/save_owner_supply');?>',
+                method:"POST",
+                data:{
+                    task_id:'<?php echo $task_id;?>',
+                    name:$("#owner_supply_name")[0].value,
+                    description:$("#owner_supply_description")[0].value,
+                    cost:$("#owner_supply_price")[0].value,
+                    order_number:$("#owner_supply_order_number")[0].value
+
+                },
+                success:function(response){
+                    console.log(response)
+                }
+            })
             var table=$("#table-owners-supplies")[0].getElementsByTagName('tbody')[0];
             var newRow = table.insertRow();
             var cell0 = newRow.insertCell(0);
@@ -1340,9 +1368,9 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             cell1.innerHTML = "USD "+owner_supply_price;
             cell2.innerHTML = owner_supply_order_number;
             cell3.innerHTML=`
-            <button onClick="view_owner_supply(${owner_supplies.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="eye" class="" ></i></button>
-            <button onClick="start_edit_owner_supply(${owner_supplies.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="" ></i></button>
-            <button type="button" onClick="delete_owner_supply(${owner_supplies.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="" ></i></button>
+            <button onClick="view_owner_supply(${owner_supplies.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="eye" class="icon-16" ></i></button>
+            <button onClick="start_edit_owner_supply(${owner_supplies.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button>
+            <button type="button" onClick="delete_owner_supply(${owner_supplies.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="icon-16" ></i></button>
             `;
         });
         $("#btn-grid-group").on("click",function(){
