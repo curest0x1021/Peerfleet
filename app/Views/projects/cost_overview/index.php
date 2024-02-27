@@ -116,6 +116,13 @@ $totalShipyardCostItems=0;
         <h3>Expenses</h3>
     </div>
     <div class="card-body" >
+        <div class="d-flex" style="margin-bottom:10px;" >
+            <button class="btn btn-sm btn-default" ><i class="icon-16"  data-feather="plus" ></i>Add filter</button>
+            <div class="flex-grow-1" ></div>
+            <?php echo modal_anchor(get_uri('projects/modal_import_cost_overview'),'<button class="btn btn-sm btn-default" ><i class="icon-16"  data-feather="upload" ></i>Import</button>',array());?>
+            <?php echo modal_anchor(get_uri('projects/modal_export_cost_overview'),'<button class="btn btn-sm btn-default" ><i class="icon-16"  data-feather="download" ></i>Export</button>',array());?>
+            <div></div>
+        </div>
         <table class="table table-hover table-bordered" >
             <thead>
                 <tr>

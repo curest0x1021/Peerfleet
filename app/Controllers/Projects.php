@@ -4073,6 +4073,13 @@ class Projects extends Security_Controller {
         $allComments=$this->Project_comments_model->get_all_where(array("project_id"=>$project_id))->getResult();
         return $this->template->view('projects/cost_overview/index',["allComments"=>$allComments,"allShipyardCostItems"=>$allShipyardCostItems,"allOwnerSupplies"=>$allOwnerSupplies,"allVariationOrders"=>$allVariationOrders,"allTasks"=>$allTasks,'allCostItems'=>$allCostItems]);
     }
+
+    function modal_import_cost_overview(){
+        return $this->template->view("projects/cost_overview/modal_import_items");
+    }
+    function modal_export_cost_overview(){
+        return $this->template->view("projects/cost_overview/modal_export_items");
+    }
 }
 
 /* End of file projects.php */
