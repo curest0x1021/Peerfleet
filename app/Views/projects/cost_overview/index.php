@@ -207,7 +207,7 @@ $totalShipyardCostItems=0;
                         <td><?php echo $oneTaskTotalShipyardCostItems;?></td>
                         <td>0</td>
                         <td>0</td>
-                        <td>0</td>
+                        <td><span class="badge pill bg-secondary" >0</span></td>
                     </tr>
                     <?php
                         }
