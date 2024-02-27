@@ -156,7 +156,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td class="">0</td>
+                            <td class="td-total-cost">0</td>
                         <?php
                             # code...
                             $totalCosts[$i]=0;
@@ -737,6 +737,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
 
 <script>
 $(document).ready(function(){
+    <?php if(isset($totalCosts)) echo 'totalCosts='.json_encode($totalCosts).';'; ?>
     var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
     var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
     return new bootstrap.Popover(popoverTriggerEl)
@@ -765,7 +766,17 @@ $(document).ready(function(){
     //         'background-color':"#ffffff"
     //     })
     // })
+    var totalCostEls=$(".td-total-cost");
+    for(var index in totalCosts){
+        totalCostEls[index].innerHTML=(totalCosts[index]);
+        var background="white";
+        if(totalCosts[index]==0) background="lightyellow";
+        else if(totalCosts[index]==Math.min(...totalCosts)) background="lightblue";
+        else if(totalCosts[index]==Math.max(...totalCosts)) background="pink";
+        else background="white";
+        totalCostEls[index].style['background-color']=background
+    }
 })
 var totalCosts;
-<?php if(isset($totalCosts)) echo 'totalCosts='.json_encode($totalCosts).';'; ?>
+
 </script>
