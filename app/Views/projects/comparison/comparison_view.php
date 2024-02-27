@@ -94,8 +94,9 @@ foreach ($allProjectTasks as $index => $oneTask) {
                     <tr>
                         <th class="col table-fixed-column" ></th>
                         <?php
+                        $totalCosts=array();
                         for ($i=0; $i <$numberYards ; $i++) { 
-                            
+                            $totalCosts[]=0;
                         ?>
                         <th class="col" style="min-width:12vw;width:12vw;max-width:12vw;">
                             <?php echo modal_anchor(get_uri('projects/modal_select_yard/'.$allYards[$i]->id),'<button class="btn btn-primary btn-select-yard-candidate" >Select candidate</button>',array());?>
@@ -158,6 +159,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             <td class="">0</td>
                         <?php
                             # code...
+                            $totalCosts[$i]=0;
                         }
                         ?>
                     </tr>
@@ -169,6 +171,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             <td class="">0</td>
                         <?php
                             # code...
+                            $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -195,6 +198,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             <th class="">0</th>
                         <?php
                             # code...
+                            $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -213,6 +217,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             <th class=""></th>
                         <?php
                             # code...
+                            $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -237,6 +242,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             </td>
                         <?php
                             # code...
+                            $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -257,6 +263,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 </div>
                             </td>
                         <?php
+                        $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -277,6 +284,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 </div>
                             </td>
                         <?php
+                        $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -297,6 +305,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 </div>
                             </td>
                         <?php
+                        $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -318,6 +327,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             </td>
                         <?php
                             # code...
+                            $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -339,6 +349,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             </td>
                         <?php
                             # code...
+                            $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -360,6 +371,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             </td>
                         <?php
                             # code...
+                            $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -381,6 +393,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             </td>
                         <?php
                             # code...
+                            $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -398,6 +411,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             <th  ></th>
                         <?php
                             # code...
+                            $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -411,6 +425,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             <td data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal"></td>
                         <?php
                             # code...
+                            $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -422,6 +437,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             <td data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal"></td>
                         <?php
                             # code...
+                            $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -433,6 +449,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             <td data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal"></td>
                         <?php
                             # code...
+                            $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -444,6 +461,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             <td data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal"></td>
                         <?php
                             # code...
+                            $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -459,6 +477,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             <th>0</th>
                         <?php
                             # code...
+                            $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -472,6 +491,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             <td data-bs-toggle="modal" data-bs-target="#edit-penalties-modal" >0</td>
                         <?php
                             # code...
+                            $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -483,6 +503,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             <td data-bs-toggle="modal" data-bs-target="#edit-penalties-modal" >-</td>
                         <?php
                             # code...
+                            $totalCosts[$i]+=0;
                         }
                         ?>
                     </tr>
@@ -515,24 +536,40 @@ foreach ($allProjectTasks as $index => $oneTask) {
                     <tr  data-bs-toggle="collapse" data-bs-target="#<?php echo explode(" ",$category)[0]."-tasks-panel";?>" aria-expanded="false" aria-controls="<?php echo explode(" ",$category)[0]."-tasks-panel";?>">
                         <td><i data-feather="chevron-down" class="collapse-arrow icon-16"></i><b class="" ><?php echo $category;?></b></td>
                         <?php
-                        $yardListedItems=array();
-                        for ($i=0; $i < $numberYards; $i++) {
-                            $oneYard=$allYards[$i];
-                            $yardListedItems[]=array_filter($allYardCostItems,function($oneItem)use($oneYard,$oneList){
-                                return $oneItem->shipyard_id==$oneYard->id&&count(array_filter($oneList,function($oneTask)use($oneItem){
-                                    return $oneTask->id==$oneItem->task_id;
-                                }))>0;
-                            });
-                            $totalTaskYardCost=0;
-                            foreach ($yardListedItems[$i] as $oneItem) {                                
-                                $totalTaskYardCost+=(float)$oneItem->quantity*(float)$oneItem->unit_price;
+                            $yardListedItems=array();
+                            $totalYardCosts=[];
+                            for ($i=0; $i < $numberYards; $i++) {
+                                $oneYard=$allYards[$i];
+                                $yardListedItems[]=array_filter($allYardCostItems,function($oneItem)use($oneYard,$oneList){
+                                    return $oneItem->shipyard_id==$oneYard->id&&count(array_filter($oneList,function($oneTask)use($oneItem){
+                                        return $oneTask->id==$oneItem->task_id;
+                                    }))>0;
+                                });
+                                $totalTaskYardCost=0;
+                                foreach ($yardListedItems[$i] as $oneItem) {                                
+                                    $totalTaskYardCost+=(float)$oneItem->quantity*(float)$oneItem->unit_price;
+                                }
+                                $totalCosts[$i]+=$totalTaskYardCost;
+                                $totalYardCosts[]=$totalTaskYardCost;
+                                // echo $totalTaskYardCost
                             }
                         ?>
-                        <td><?php
-                        
-                        echo $totalTaskYardCost
-                        // echo $totalTaskCost;
-                        ?></th>
+                        <?php
+                        for ($i=0; $i < $numberYards; $i++) {
+                        ?>
+                        <td
+                            style="background-color:<?php
+                            if($totalYardCosts[$i]==0) echo "lightyellow";
+                            else if(max($totalYardCosts)==$totalYardCosts[$i]) echo "pink";
+                            else if(min($totalYardCosts)==$totalYardCosts[$i]) echo "lightblue";
+                            else echo "white";
+                            ?>"
+                        >
+                            <?php
+                            
+                                echo $totalYardCosts[$i];
+                            ?>
+                        </th>
                         <?php
                             }
                         ?>
@@ -545,7 +582,10 @@ foreach ($allProjectTasks as $index => $oneTask) {
                     ?>
                     <tr>
                         <td > <div style="max-width:10vw;word-wrap:break-word;" ><?php echo $oneTask->title; ?></div></td>
-                        <?php for ($i=0; $i < $numberYards; $i++) {
+                        <?php
+                        $oneTaskAllCosts=array();
+                        $oneTaskItemCounts=array();
+                        for ($i=0; $i < $numberYards; $i++) {
                             $oneYard=$allYards[$i];
                             $oneYardCost=0;
                             $oneYardItems=array_filter($yardListedItems[$i],function($oneItem)use($oneTask,$oneYard){
@@ -553,13 +593,27 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             });
                             foreach($oneYardItems as $oneItem){
                                 $oneYardCost+= (float)$oneItem->quantity*(float)$oneItem->unit_price;
+                                
                             }
+                            $oneTaskAllCosts[]=$oneYardCost;
+                            $oneTaskItemCounts[]=count($oneYardItems);
+                        }   
                         ?>
-                            <td ><div class="d-flex" style="align-items:center;" >
-                            <?php
-                                echo modal_anchor(get_uri('projects/modal_yard_cost_items/'.$oneTask->id),'<span class="badge task-info-box pill bg-secondary" >'.count($oneYardItems).'</span>',array());
-                            ?>
-                            <div class="flex-grow-1" ></div><?php echo $oneYardCost; ?></div></td>
+                        <?php for ($i=0; $i < $numberYards; $i++) { ?>
+                            <td style="background-color:<?php  
+                                if($oneTaskAllCosts[$i]==0) echo "lightyellow";
+                                else if(max($oneTaskAllCosts)==$oneTaskAllCosts[$i]) echo "pink";
+                                else if(min($oneTaskAllCosts)==$oneTaskAllCosts[$i]) echo "lightblue";
+                                else echo "white";
+                                ?>;" >
+                                <div class="d-flex" style="align-items:center;" >
+                                    <?php
+                                        echo modal_anchor(get_uri('projects/modal_yard_cost_items/'.$oneTask->id),'<span class="badge task-info-box pill bg-secondary" >'.$oneTaskItemCounts[$i].'</span>',array());
+                                    ?>
+                                    <div class="flex-grow-1" ></div>
+                                    <?php echo $oneTaskAllCosts[$i]; ?>
+                                </div>
+                            </td>
                         <?php
                         } ?>
                     </tr>
@@ -712,5 +766,6 @@ $(document).ready(function(){
     //     })
     // })
 })
-
+var totalCosts;
+<?php if(isset($totalCosts)) echo 'totalCosts='.json_encode($totalCosts).';'; ?>
 </script>
