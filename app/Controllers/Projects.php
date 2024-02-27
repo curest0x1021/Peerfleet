@@ -4071,7 +4071,7 @@ class Projects extends Security_Controller {
         $allVariationOrders=$this->Task_variation_orders_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allComments=$this->Project_comments_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        return $this->template->view('projects/cost_overview/index',["allComments"=>$allComments,"allShipyardCostItems"=>$allShipyardCostItems,"allOwnerSupplies"=>$allOwnerSupplies,"allVariationOrders"=>$allVariationOrders,"allTasks"=>$allTasks,'allCostItems'=>$allCostItems]);
+        return $this->template->view('projects/cost_overview/index',["project_id"=>$project_id,"allComments"=>$allComments,"allShipyardCostItems"=>$allShipyardCostItems,"allOwnerSupplies"=>$allOwnerSupplies,"allVariationOrders"=>$allVariationOrders,"allTasks"=>$allTasks,'allCostItems'=>$allCostItems]);
     }
 
     function modal_import_cost_overview(){
@@ -4079,6 +4079,19 @@ class Projects extends Security_Controller {
     }
     function modal_export_cost_overview(){
         return $this->template->view("projects/cost_overview/modal_export_items");
+    }
+    function modal_comments($project_id){
+        $options = array("project_id" => $project_id, "login_user_id" => $this->login_user->id);
+        $comments=$this->Project_comments_model->get_details($options)->getResult();
+        // return json_encode($comments);
+        return $this->template->view("projects/cost_overview/modal_comments",["project_id"=>$project_id,"comments"=>$comments,"can_comment_on_tasks"=>true]);
+    }
+    function modal_task_comments($task_id){
+        $task_info=$this->Tasks_model->get_one($task_id);
+        $options = array("task_id" => $task_id, "login_user_id" => $this->login_user->id);
+        $comments=$this->Project_comments_model->get_details($options)->getResult();
+        // return json_encode($comments);
+        return $this->template->view("projects/cost_overview/modal_comments",["project_id"=>$task_info->project_id,"task_id"=>$task_id,"comments"=>$comments,"can_comment_on_tasks"=>true]);
     }
 }
 
