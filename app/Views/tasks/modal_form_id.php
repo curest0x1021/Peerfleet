@@ -841,7 +841,7 @@
                                                 echo "<tr><td>";
                                                 echo $oneItem->name;
                                                 echo "</td><td>";
-                                                echo number_format($oneItem->quantity,1,".","")." ( ".$oneItem->measurement_unit." ) X ".$oneItem->currency." ".number_format($oneItem->unit_price,2,".","")." ( ".$oneItem->quote_type." )";
+                                                echo number_format($oneItem->quantity,1,".","")." ( ".$oneItem->measurement." ) X ".$oneItem->currency." ".number_format($oneItem->unit_price,2,".","")." ( ".$oneItem->quote_type." )";
                                                 echo "</td><td>";
                                                 echo $oneItem->currency." ".number_format(floatval($oneItem->quantity)*floatval($oneItem->unit_price), 2, '.', '');
                                                 echo "</td><td>";
@@ -908,7 +908,7 @@
                                         <div class="form-group" >
                                             <label>Measurement unit:</label>
                                             <input
-                                                id="input_cost_item_measurement_unit<?php echo $modalId;?>"
+                                                id="input_cost_item_measurement<?php echo $modalId;?>"
                                                 class="form-control"
                                                 placeholder="pcs"
                                                 value="pcs"
@@ -1588,7 +1588,7 @@
             var cell3 = newRow.insertCell(3);
 
             cell0.innerHTML = $("#input_cost_item_name<?php echo $modalId;?>")[0].value;
-            cell1.innerHTML = Number($("#input_cost_item_quantity<?php echo $modalId;?>")[0].value).toFixed(1)+' '+$("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value+" X "+$("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value+" "+Number($("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type<?php echo $modalId;?>")[0].value+" ) ";
+            cell1.innerHTML = Number($("#input_cost_item_quantity<?php echo $modalId;?>")[0].value).toFixed(1)+' '+$("#input_cost_item_measurement<?php echo $modalId;?>")[0].value+" X "+$("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value+" "+Number($("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type<?php echo $modalId;?>")[0].value+" ) ";
             cell2.innerHTML = $("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value+" "+(Number($("#input_cost_item_quantity<?php echo $modalId;?>")[0].value)*Number($("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value)).toFixed(2);
             cell3.innerHTML=`
             <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button>
@@ -1600,7 +1600,7 @@
                 cost_items.push({
                     name:$("#input_cost_item_name<?php echo $modalId;?>")[0].value,
                     quantity:$("#input_cost_item_quantity<?php echo $modalId;?>")[0].value,
-                    measurement_unit:$("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value,
+                    measurement:$("#input_cost_item_measurement<?php echo $modalId;?>")[0].value,
                     unit_price:$("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value,
                     quote_type:$("#cost_item_quote_type<?php echo $modalId;?>")[0].value,
                     currency:$("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value,
@@ -1620,7 +1620,7 @@
                 cost_items[editing_cost_item]={
                     name:$("#input_cost_item_name<?php echo $modalId;?>")[0].value,
                     quantity:$("#input_cost_item_quantity<?php echo $modalId;?>")[0].value,
-                    measurement_unit:$("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value,
+                    measurement:$("#input_cost_item_measurement<?php echo $modalId;?>")[0].value,
                     unit_price:$("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value,
                     quote_type:$("#cost_item_quote_type<?php echo $modalId;?>")[0].value,
                     currency:$("#input_cost_item_currency_select<?php echo $modalId;?>")[0].value,
@@ -1634,7 +1634,7 @@
             }
             $("#input_cost_item_name<?php echo $modalId;?>")[0].value="";
             $("#input_cost_item_quantity<?php echo $modalId;?>")[0].value="";
-            // $("#input_cost_item_measurement_unit<?php echo $modalId;?>")[0].value="";
+            // $("#input_cost_item_measurement<?php echo $modalId;?>")[0].value="";
             $("#input_cost_item_unit_price<?php echo $modalId;?>")[0].value="";
             $("#cost_item_description<?php echo $modalId;?>")[0].value="";
             $("#cost_item_yard_remarks<?php echo $modalId;?>")[0].value="";
@@ -1866,7 +1866,7 @@
         if($("#insert-cost-item-panel-new<?php echo $modalId; ?>").prop("hidden")) $("#btn-add-new-quote-start<?php echo $modalId; ?>")[0].click();
         $("#input_cost_item_name<?php echo $modalId; ?>")[0].value=cost_items[index].name;
         $("#input_cost_item_quantity<?php echo $modalId; ?>")[0].value=cost_items[index].quantity;
-        $("#input_cost_item_measurement_unit<?php echo $modalId; ?>")[0].value=cost_items[index].measurement_unit;
+        $("#input_cost_item_measurement<?php echo $modalId; ?>")[0].value=cost_items[index].measurement;
         $("#input_cost_item_unit_price<?php echo $modalId; ?>")[0].value=cost_items[index].unit_price;
         $("#cost_item_quote_type<?php echo $modalId; ?>")[0].value=cost_items[index].quote_type;
         $("#input_cost_item_currency_select<?php echo $modalId; ?>")[0].value=cost_items[index].currency;

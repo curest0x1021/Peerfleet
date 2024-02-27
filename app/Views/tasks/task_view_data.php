@@ -760,7 +760,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                     <div class="form-group" >
                                         <label>Measurement unit:</label>
                                         <input
-                                            id="cost_item_measurement_unit"
+                                            id="cost_item_measurement"
                                             class="form-control"
                                             placeholder="pcs"
                                             value="pcs"
@@ -1256,7 +1256,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             var cell3 = newRow.insertCell(3);
 
             cell0.innerHTML = $("#cost_item_name")[0].value;
-            cell1.innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement_unit")[0].value+" X "+$("#cost_item_currency")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
+            cell1.innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement")[0].value+" X "+$("#cost_item_currency")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
             cell2.innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
             cell3.innerHTML=`
             <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button>
@@ -1269,7 +1269,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                 cost_items.push({
                     name:$("#cost_item_name")[0].value,
                     quantity:$("#cost_item_quantity")[0].value,
-                    measurement_unit:$("#cost_item_measurement_unit")[0].value,
+                    measurement:$("#cost_item_measurement")[0].value,
                     unit_price:$("#cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
                     currency:$("#cost_item_currency")[0].value,
@@ -1284,7 +1284,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     description:$("#cost_item_description")[0].value,
                     discount:$("#cost_item_discount")[0].value,
                     quantity:$("#cost_item_quantity")[0].value,
-                    measurement_unit:$("#cost_item_measurement_unit")[0].value,
+                    measurement:$("#cost_item_measurement")[0].value,
                     unit_price:$("#cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
                     currency:$("#cost_item_currency")[0].value,
@@ -1462,7 +1462,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         $("#btn-add-new-quote")[0].click();
         $("#cost_item_name")[0].value=cost_items[index].name;
         $("#cost_item_quantity")[0].value=cost_items[index].quantity;
-        $("#cost_item_measurement_unit")[0].value=cost_items[index].measurement_unit;
+        $("#cost_item_measurement")[0].value=cost_items[index].measurement;
         $("#cost_item_unit_price")[0].value=cost_items[index].unit_price;
         $("#cost_item_quote_type")[0].value=cost_items[index].quote_type;
         $("#cost_item_currency")[0].value=cost_items[index].currency;
