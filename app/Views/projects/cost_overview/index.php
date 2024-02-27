@@ -120,24 +120,24 @@ $totalShipyardCostItems=0;
             <thead>
                 <tr>
                     <th class="col" style="min-width:15vw;max-width:15vw;width:15vw;" >Name</th>
-                    <th class="col" >Owner's supply</th>
-                    <th class="col" >Quoted</th>
+                    <th class="col"  >Owner's supply</th>
+                    <th class="col"   >Quoted</th>
                     <th class="col" >Variation orders</th>
                     <th class="col" >Total</th>
-                    <th class="col" >Total yard</th>
-                    <th class="col" >Billed yard</th>
-                    <th class="col" >Final yard</th>
-                    <th class="col" >Comment</th>
+                    <th class="col"  >Total yard</th>
+                    <th class="col" class=""  >Billed yard</th>
+                    <th class="col" class=""  >Final yard</th>
+                    <th class="col" class=""  >Comment</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <th>Total cost:</th>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
+                    <td class="total-owner-supplies">0</td>
+                    <td class="total-cost-items">0</td>
+                    <td class="total-variation-orders" >0</td>
+                    <td class="total-cost">0</td>
+                    <td class="total-shipyard-cost-items">0</td>
                     <td>0</td>
                     <td>0</td>
                     <td>0</td>
@@ -224,12 +224,23 @@ $totalShipyardCostItems=0;
 </div>
 <script>
     $(document).ready(function(){
+        <?php if(isset($totalOwnerSupplies)) echo 'totalOwnerSupplies='.$totalOwnerSupplies.';'; ?>
+        <?php if(isset($totalVariationOrders)) echo 'totalVariationOrders='.$totalVariationOrders.';'; ?>
+        <?php if(isset($totalCostItems)) echo 'totalCostItems='.$totalOwnerSupplies.';'; ?>
+        <?php if(isset($totalShipyardCostItems)) echo 'totalShipyardCostItems='.$totalShipyardCostItems.';'; ?>
         $("[data-bs-toggle=collapse]").on("click",function(){
             if(!$(this).find(".collapse-arrow").hasClass('collapse-active')) $(this).find(".collapse-arrow").addClass('collapse-active');
             else $(this).find(".collapse-arrow").removeClass('collapse-active')
         });
-        var allCostItems;
-        var allVariationOrders;
-        var allTasks;
+        console.log($(".total-owner-supplies"))
+        $(".total-owner-supplies")[0].innerHTML=totalOwnerSupplies;
+        $(".total-cost-items")[0].innerHTML=totalCostItems;
+        $(".total-shipyard-cost-items")[0].innerHTML=totalShipyardCostItems;
+        $(".total-variation-orders")[0].innerHTML=totalVariationOrders;
+        
     });
+    var totalCostItems;
+    var totalVariationOrders;
+    var totalShipyardCostItems;
+    var totalOwnerSupplies;
 </script>
