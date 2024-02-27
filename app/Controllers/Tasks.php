@@ -4750,6 +4750,7 @@ class Tasks extends Security_Controller {
         }
         $this->Task_cost_items_model->delete_where(array("task_id"=>$save_id));
         $cost_items=json_decode($this->request->getPost('cost_items'));
+        $allShipyards=$this->Project_yards_model->get_all_where(array("project_id"=>$this->request->getPost('project_id')))->getResult();
         foreach ($cost_items as  $oneItem) {
             $newItem=array(
                 "task_id"=>$save_id,
@@ -4765,6 +4766,23 @@ class Tasks extends Security_Controller {
                 "yard_remarks"=>$oneItem->yard_remarks?$oneItem->yard_remarks:"",
              );
              $this->Task_cost_items_model->ci_save($newItem,null);
+             foreach ($allShipyards as $oneYard) {
+                $newYardCostItem=array(
+                    'task_id'=>$save_id,
+                    "project_id"=>$this->request->getPost('project_id'),
+                    "shipyard_id"=>$oneYard->id,
+                    "name"=>$oneItem->name?$oneItem->name:"",
+                    "description"=>$oneItem->description?$oneItem->description:"",
+                    "quantity"=>$oneItem->quantity?$oneItem->quantity:"",
+                    "quote_type"=>$oneItem->quote_type?$oneItem->quote_type:"",
+                    "measurement"=>$oneItem->measurement?$oneItem->measurement:"",
+                    "unit_price"=>$oneItem->unit_price?$oneItem->unit_price:"",
+                    "currency"=>$oneItem->currency?$oneItem->currency:"",
+                    "discount"=>$oneItem->discount?$oneItem->discount:"",
+                    "yard_remarks"=>$oneItem->yard_remarks?$oneItem->yard_remarks:"",
+                );
+                $this->Shipyard_cost_items_model->ci_save($newYardCostItem);
+             }
         }
         
         return json_encode(array("success"=>true,'saved_id'=>$save_id,"filenames"=>$_FILES));
@@ -4812,6 +4830,7 @@ class Tasks extends Security_Controller {
 
         $this->Task_cost_items_model->delete_where(array("task_id"=>$task_id));
         $cost_items=json_decode($this->request->getPost('cost_items'));
+        $allShipyards=$this->Project_yards_model->get_all_where(array("project_id"=>$task_info->project_id))->getResult();
         foreach ($cost_items as  $oneItem) {
             $newItem=array(
                 "task_id"=>$task_id,
@@ -4827,7 +4846,26 @@ class Tasks extends Security_Controller {
                 "yard_remarks"=>$oneItem->yard_remarks?$oneItem->yard_remarks:"",
              );
              $this->Task_cost_items_model->ci_save($newItem,null);
+             foreach ($allShipyards as $oneYard) {
+                $newYardData=array(
+                    "task_id"=>$task_id,
+                    "project_id"=>$task_info->project_id,
+                    "shipyard_id"=>$oneYard->id,
+                    "name"=>$oneItem->name?$oneItem->name:"",
+                    "description"=>$oneItem->description?$oneItem->description:"",
+                    "quantity"=>$oneItem->quantity?$oneItem->quantity:"",
+                    "quote_type"=>$oneItem->quote_type?$oneItem->quote_type:"",
+                    "measurement"=>$oneItem->measurement?$oneItem->measurement:"",
+                    "unit_price"=>$oneItem->unit_price?$oneItem->unit_price:"",
+                    "currency"=>$oneItem->currency?$oneItem->currency:"",
+                    "discount"=>$oneItem->discount?$oneItem->discount:"",
+                    "yard_remarks"=>$oneItem->yard_remarks?$oneItem->yard_remarks:"",
+                );
+                $this->Shipyard_cost_items_model->ci_save($newYardData);
+             }
         }
+        
+
         return json_encode(array("success"=>true));
 
     }
