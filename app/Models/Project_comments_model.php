@@ -85,7 +85,8 @@ class Project_comments_model extends Crud_model {
 
         $project_id = $this->_get_clean_value($options, "project_id");
         if ($project_id) {
-            $where .= " AND $project_comments_table.project_id=$project_id AND $project_comments_table.task_id=0 AND $project_comments_table.file_id=0 and $project_comments_table.customer_feedback_id=0";
+            // $where .= " AND $project_comments_table.project_id=$project_id AND $project_comments_table.task_id=0 AND $project_comments_table.file_id=0 and $project_comments_table.customer_feedback_id=0";
+            $where .= " AND $project_comments_table.project_id=$project_id ";
         }
 
         $task_id = $this->_get_clean_value($options, "task_id");

@@ -55,6 +55,29 @@ $categorizedVariationOrders=array(
     "Others"=>array(),
 );
 
+$categorizedComments=array(
+    "General & Docking"=>array(),
+    "Hull"=>array(),
+    "Equipment for Cargo"=>array(),
+    "Ship Equipment"=>array(),
+    "Safety & Crew Equipment"=>array(),
+    "Machinery Main Components"=>array(),
+    "Systems machinery main components"=>array(),
+    "Common systems"=>array(),
+    "Others"=>array(),
+);
+$categorizedStats=array(
+    "General & Docking"=>array(),
+    "Hull"=>array(),
+    "Equipment for Cargo"=>array(),
+    "Ship Equipment"=>array(),
+    "Safety & Crew Equipment"=>array(),
+    "Machinery Main Components"=>array(),
+    "Systems machinery main components"=>array(),
+    "Common systems"=>array(),
+    "Others"=>array(),
+);
+
 foreach ($allTasks as $index => $oneTask) {
     if(isset($categorizedTasks[$oneTask->category]))
         $categorizedTasks[$oneTask->category][]=$oneTask;
@@ -91,12 +114,21 @@ foreach ($allTasks as $index => $oneTask) {
     else $categorizedVariationOrders["Others"]+=array_filter($allVariationOrders,function($oneOrder)use($oneTask){
         return $oneTask->id==$oneOrder->task_id;
     });
+
+    if(isset($categorizedComments[$oneTask->category]))
+        $categorizedComments[$oneTask->category]+=array_filter($allComments,function($oneComment)use($oneTask){
+            return $oneTask->id==$oneComment->task_id;
+        });
+    else $categorizedComments["Others"]+=array_filter($allComments,function($oneComment)use($oneTask){
+        return $oneTask->id==$oneComment->task_id;
+    });
 }
 
 $totalOwnerSupplies=0;
 $totalVariationOrders=0;
 $totalCostItems=0;
 $totalShipyardCostItems=0;
+$totalComments=0;
 ?>
 <style>
     .collapse-arrow {
@@ -147,24 +179,31 @@ $totalShipyardCostItems=0;
                     <td class="total-shipyard-cost-items">0</td>
                     <td>0</td>
                     <td>0</td>
-                    <td>0</td>
+                    <td class="">
+                        <?php echo modal_anchor(get_uri("projects/modal_comments/".$project_id),'<span class="badge pill bg-secondary total-comments" >0</span>',array());?>
+                    </td>
                 </tr>
                 <tr></tr>
             </tbody>
             <?php
                 foreach ($categorizedTasks as $category=>$oneList) {
+                    $categoryOwnerSupply=0;
+                    $categoryCostItems=0;
+                    $categoryShipyardCostItems=0;
+                    $categoryVariationOrder=0;
+                    $categoryComments=0;
             ?>
             <tbody>
                 <tr  data-bs-toggle="collapse" data-bs-target="#<?php echo explode(" ",$category)[0]."-tasks-panel";?>" aria-expanded="false" aria-controls="<?php echo explode(" ",$category)[0]."-tasks-panel";?>">
                     <td><i data-feather="chevron-down" style="word-wrap:break-word;" class="collapse-arrow icon-16"></i><b class="" ><?php echo $category;?></b></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td class="<?php echo explode(" ",$category)[0];?>-owner-supplies" ></td>
+                    <td class="<?php echo explode(" ",$category)[0];?>-cost-items" ></td>
+                    <td class="<?php echo explode(" ",$category)[0];?>-variation-orders" ></td>
+                    <td class="<?php echo explode(" ",$category)[0];?>-total-costs" ></td>
+                    <td class="<?php echo explode(" ",$category)[0];?>-shipyard-cost-items" ></td>
+                    <td class="<?php echo explode(" ",$category)[0];?>-billed-yard" ></td>
+                    <td class="<?php echo explode(" ",$category)[0];?>-final-yard" ></td>
+                    <td class="<?php echo explode(" ",$category)[0];?>-comments" ></td>
                 </tr>
             </tbody>
             <tbody  id="<?php echo explode(" ",$category)[0]."-tasks-panel";?>" class="collapse">
@@ -181,26 +220,42 @@ $totalShipyardCostItems=0;
                         $oneTaskVariationOrders=array_filter($categorizedVariationOrders[$category],function($oneOrder)use($oneTask){
                             return $oneOrder->task_id==$oneTask->id;
                         });
+                        $oneTaskComments=array_filter($categorizedComments[$category],function($oneComment)use($oneTask){
+                            return $oneComment->task_id==$oneTask->id;
+                        });
                         $oneTaskTotalSupplies=0;
                         foreach ($oneTaskSupplies as $oneSupply) {
                             $oneTaskTotalSupplies+=$oneSupply->cost;
                         }
+                        $categoryOwnerSupply+=$oneTaskTotalSupplies;
+
                         $oneTaskTotalCostItems=0;
                         foreach ($oneTaskCostItems as $oneItem) {
                             $oneTaskTotalCostItems+=$oneItem->total_cost;
                         }
+                        $categoryCostItems+=$oneTaskTotalCostItems;
+
                         $oneTaskTotalShipyardCostItems=0;
                         foreach ($oneTaskShipyardCostItems as $oneItem) {
                             $oneTaskTotalShipyardCostItems+=$oneItem->total_cost;
                         }
+                        $categoryShipyardCostItems+=$oneTaskTotalShipyardCostItems;
+
                         $oneTaskTotalVariationOrders=0;
                         foreach ($oneTaskVariationOrders as $oneOrder) {
                             $oneTaskTotalVariationOrders+=$oneOrder->cost;
                         }
+                        $categoryVariationOrder+=$oneTaskTotalVariationOrders;
+
+                        $oneTaskTotalComments=count($oneTaskComments);
+                        $categoryComments+=$oneTaskTotalComments;
+
+                        
                         $totalOwnerSupplies+=$oneTaskTotalSupplies;
                         $totalCostItems+=$oneTaskTotalCostItems;
                         $totalShipyardCostItems+=$oneTaskTotalShipyardCostItems;
                         $totalVariationOrders+=$oneTaskTotalVariationOrders;
+                        $totalComments+=$oneTaskTotalComments;
 
                     ?>
                     <tr>
@@ -214,10 +269,18 @@ $totalShipyardCostItems=0;
                         <td><?php echo $oneTaskTotalShipyardCostItems;?></td>
                         <td>0</td>
                         <td>0</td>
-                        <td><span class="badge pill bg-secondary" >0</span></td>
+                        <td>
+                            
+                            <?php echo modal_anchor(get_uri("projects/modal_task_comments/".$oneTask->id),'<span class="badge pill bg-secondary" >'. $oneTaskTotalComments.'</span>',array());?>
+                        </td>
                     </tr>
                     <?php
                         }
+                        $categorizedStats[$category]["owner_supplies"]=$categoryOwnerSupply;
+                        $categorizedStats[$category]["cost_items"]=$categoryCostItems;
+                        $categorizedStats[$category]["variation_orders"]=$categoryVariationOrder;
+                        $categorizedStats[$category]["shipyard_cost_items"]=$categoryShipyardCostItems;
+                        $categorizedStats[$category]["comments"]=$categoryComments;
                     ?>
             </tbody>
 
@@ -235,6 +298,8 @@ $totalShipyardCostItems=0;
         <?php if(isset($totalVariationOrders)) echo 'totalVariationOrders='.$totalVariationOrders.';'; ?>
         <?php if(isset($totalCostItems)) echo 'totalCostItems='.$totalOwnerSupplies.';'; ?>
         <?php if(isset($totalShipyardCostItems)) echo 'totalShipyardCostItems='.$totalShipyardCostItems.';'; ?>
+        <?php if(isset($totalComments)) echo 'totalComments='.$totalComments.';'; ?>
+        <?php if(isset($categorizedStats)) echo 'categorizedStats='.json_encode($categorizedStats).';'; ?>
         $("[data-bs-toggle=collapse]").on("click",function(){
             if(!$(this).find(".collapse-arrow").hasClass('collapse-active')) $(this).find(".collapse-arrow").addClass('collapse-active');
             else $(this).find(".collapse-arrow").removeClass('collapse-active')
@@ -244,10 +309,30 @@ $totalShipyardCostItems=0;
         $(".total-cost-items")[0].innerHTML=totalCostItems;
         $(".total-shipyard-cost-items")[0].innerHTML=totalShipyardCostItems;
         $(".total-variation-orders")[0].innerHTML=totalVariationOrders;
+        $(".total-comments")[0].innerHTML=totalComments;
+        for(var category of [
+            "General & Docking",
+            "Hull",
+            "Equipment for Cargo",
+            "Ship Equipment",
+            "Safety & Crew Equipment",
+            "Machinery Main Components",
+            "Systems machinery main components",
+            "Common systems",
+            "Others",
+        ]){
+            $("."+category.split(" ")[0]+"-owner-supplies")[0].innerHTML=categorizedStats[category]['owner_supplies'];
+            $("."+category.split(" ")[0]+"-variation-orders")[0].innerHTML=categorizedStats[category]['variation_orders'];
+            $("."+category.split(" ")[0]+"-cost-items")[0].innerHTML=categorizedStats[category]['cost_items'];
+            $("."+category.split(" ")[0]+"-shipyard-cost-items")[0].innerHTML=categorizedStats[category]['shipyard_cost_items'];
+            $("."+category.split(" ")[0]+"-comments")[0].innerHTML=`<span class="badge pill bg-secondary" >${categorizedStats[category]['comments']}</span>`;
+        }
         
     });
     var totalCostItems;
     var totalVariationOrders;
     var totalShipyardCostItems;
     var totalOwnerSupplies;
+    var totalComments;
+    var categorizedStats;
 </script>
