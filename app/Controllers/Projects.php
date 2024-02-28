@@ -326,7 +326,8 @@ class Projects extends Security_Controller {
             "status_id" => $status_id ? $status_id : 1,
             "estimate_id" => $estimate_id,
             "order_id" => $order_id,
-            "category"=>$this->request->getPost('category')
+            "category"=>$this->request->getPost('category'),
+            "currency"=>$this->request->getPost('currency'),
         );
 
         if (!$id) {

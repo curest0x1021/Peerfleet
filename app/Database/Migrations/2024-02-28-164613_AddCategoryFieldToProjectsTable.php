@@ -15,6 +15,11 @@ class AddCategoryFieldToProjectsTable extends Migration
                 "null"=>true,
                 "constraint"=>200
             ],
+            'currency' => [
+                'type' => 'VARCHAR',
+                "null"=>true,
+                "constraint"=>200
+            ],
         ]);
     }
 
