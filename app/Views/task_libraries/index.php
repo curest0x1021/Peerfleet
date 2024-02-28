@@ -206,28 +206,28 @@
 
                         <div class="col-md-4">
                             
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <div class="row">
-                                    <label for="milestone_id" class="col-md-3"><?php echo app_lang('milestone'); ?>:</label>
+                                    <label for="milestone_id" class="col-md-3"><?php //echo app_lang('milestone'); ?>:</label>
                                     <div class="col-md-9"  >
                                         <?php
-                                        $milestone_dropdown=array();
-                                        foreach ($allMilestones as $oneMilestone) {
-                                            $milestone_dropdown[]=array("id"=>$oneMilestone['id'],"text"=>$oneMilestone['title']);
-                                        }
-                                        echo form_input(array(
-                                            "id" => "milestone_id",
-                                            "name" => "milestone_id",
-                                            "value" => isset($gotTasklibrary)&&$gotTasklibrary->milestone_id?$gotTasklibrary->milestone_id:(count($milestone_dropdown)>0?$milestone_dropdown[0]['id']:""),
-                                            "class" => "form-control",
-                                            "style"=>"border:1px solid lightgray",
-                                            "placeholder" => app_lang('milestone'),
-                                            "autocomplete" => "off"
-                                        ));
+                                        // $milestone_dropdown=array();
+                                        // foreach ($allMilestones as $oneMilestone) {
+                                        //     $milestone_dropdown[]=array("id"=>$oneMilestone['id'],"text"=>$oneMilestone['title']);
+                                        // }
+                                        // echo form_input(array(
+                                        //     "id" => "milestone_id",
+                                        //     "name" => "milestone_id",
+                                        //     "value" => isset($gotTasklibrary)&&$gotTasklibrary->milestone_id?$gotTasklibrary->milestone_id:(count($milestone_dropdown)>0?$milestone_dropdown[0]['id']:""),
+                                        //     "class" => "form-control",
+                                        //     "style"=>"border:1px solid lightgray",
+                                        //     "placeholder" => app_lang('milestone'),
+                                        //     "autocomplete" => "off"
+                                        // ));
                                         ?>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             
                             <div class="form-group">
                                 <div class="row">
@@ -816,12 +816,12 @@
                     </div>
                     <div class="row" >
                         <div class="col-md-7" >
-                            <div class="card" style="border: solid 1px lightgray;min-height:50vh;">
+                            <div class="card" style="min-height:50vh;">
                                 <div class="card-header d-flex">
                                     <b>Cost Item List</b>
                                 </div>
                                 <div class="card-body" style="padding:1px" >
-                                    <table id="table-quotes-from-yard" class="table " style="margin:0" >
+                                    <table id="table-quotes-from-yard" class="table table-hover table-bordered" style="margin:0" >
                                         <thead>
                                         <tr>
                                             <td>Cost item name</td>
@@ -1146,7 +1146,7 @@
                         </div>
                         <div class="col-md-5"  >
                             <!--checklist-->
-                            <div class="card" style="border:1px solid lightgray;" >
+                            <div class="card" >
                             <?php 
                             // echo form_open(get_uri("tasks/save_checklist_item"), array("id" => "checklist_form", "class" => "general-form", "role" => "form")); 
                             ?>
@@ -1200,7 +1200,7 @@
                             ?> 
                             </div>
                             <!---->
-                            <div class="card" style="border:solid 1px lightgray" >
+                            <div class="card" >
                                 <div class="card-body" >
                                     <!--Task dependency-->
                                     <div class="col-md-12 mb15">
@@ -1362,9 +1362,9 @@
         $("#cost_item_currency").select2({
             data: <?php echo (json_encode($cost_item_currency_dropdown)); ?>
         });
-        $("#milestone_id").select2({
-            data: <?php echo (json_encode($milestone_dropdown)); ?>
-        });
+        // $("#milestone_id").select2({
+        //     data: <?php //echo (json_encode($milestone_dropdown)); ?>
+        // });
         $("#assigned_to").select2({
             data: <?php echo (json_encode($assigned_to_dropdown)); ?>
         });
@@ -1631,7 +1631,7 @@
             var supplier=$("#supplier")[0].value;
             var status_id=$("#status_id")[0].value;
             var priority_id=$("#priority_id")[0].value;
-            var milestone_id=$("#milestone_id")[0].value;
+            // var milestone_id=$("#milestone_id")[0].value;
             var assigned_to=$("#assigned_to")[0].value;
             var collaborators=$("#collaborators")[0].value;
             var description=$("#description")[0].value;
@@ -1669,7 +1669,7 @@
                     ,supplier
                     ,status_id
                     ,priority_id
-                    ,milestone_id
+                    // ,milestone_id
                     ,assigned_to
                     ,collaborators
                     ,description
