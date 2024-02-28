@@ -5,12 +5,13 @@
         <div class="tab-title clearfix no-border">
             <div class="title-button-group">
             <?php
-            echo modal_anchor(get_uri("tasks/modal_import_task_library/".$project_id), "<i data-feather='upload' class='icon-16'></i> " . "Import from libraries", array("class" => "btn btn-default import_libraries_btn", "title" => "Import from libraries"));
+            
             if ($login_user->user_type == "staff" && $can_edit_tasks) {
                 echo modal_anchor("", "<i data-feather='edit' class='icon-16'></i> " . app_lang('batch_update'), array("class" => "btn btn-info text-white hide batch-update-btn", "title" => app_lang('batch_update'), "data-post-project_id" => $project_id));
                 echo js_anchor("<i data-feather='check-square' class='icon-16'></i> " . app_lang("cancel_selection"), array("class" => "hide btn btn-default batch-cancel-btn"));
             }
             if ($can_create_tasks) {
+                echo modal_anchor(get_uri("tasks/modal_import_task_library/".$project_id), "<i data-feather='upload' class='icon-16'></i> " . "Import from libraries", array("class" => "btn btn-default import_libraries_btn", "title" => "Import from libraries"));
                 echo modal_anchor(get_uri("tasks/modal_form_new/".$project_id), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_multiple_tasks'), array("class" => "btn btn-default", "title" => app_lang('add_multiple_tasks'), "data-post-project_id" => $project_id, "data-post-add_type" => "multiple"));
                 echo modal_anchor(get_uri("tasks/modal_form_new/".$project_id), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_task'), array("class" => "btn btn-default", "title" => app_lang('add_task'), "data-post-project_id" => $project_id));
             }

@@ -29,7 +29,6 @@
                                 echo form_input(array(
                                     "id" => "task_library".$modalId,
                                     "name" => "task_library",
-                                    "value" => count($task_libraries_dropdown)>0?$task_libraries_dropdown[0]['id']:"",
                                     "class" => "form-control",
                                     "maxlength" => 15,
                                     "style"=>"border:1px solid lightgray",
