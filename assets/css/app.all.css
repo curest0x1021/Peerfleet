@@ -5439,7 +5439,6 @@ svg:not(.gantt) {
   padding: 0px;
   padding-top: 15px;
   padding-bottom: 15px;
-  background: #fff;
 }
 .kanban-list-container .kanban-list-col .kanban-list-col-title {
   display: flex;
