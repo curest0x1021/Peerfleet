@@ -5352,7 +5352,7 @@ svg:not(.gantt) {
 .kanban-col {
   list-style-type: none;
   float: left;
-  margin: 0 15px;
+  margin: 0 9px;
   width: 305px;
 }
 .kanban-list-col {
