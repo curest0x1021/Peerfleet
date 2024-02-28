@@ -6,11 +6,14 @@
                     <tr role="row">
                         <th width="50px" style="min-width: 35px;" class="sorting"  aria-controls="task-table"  aria-sort="descending" aria-label=""></th>
                         <th width="10%" class="sorting"  aria-controls="task-table"  aria-label="">Dock list number</th>
-                        <th width="40%" class="sorting"  aria-controls="task-table"  aria-label="">Title</th>
-                        <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Reference drawing</th>
+                        <th width="30%" class="sorting"  aria-controls="task-table"  aria-label="">Title</th>
+                        <!-- <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Reference drawing</th> -->
                         <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Start date</th>
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Deadline</th>
+                        <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Milestone</th>
+                        <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Supplier</th>
                         <th width="12%" class="min-w150 sorting"  aria-controls="task-table"  aria-label="">Assigned to</th>
+                        <th width="8%" class="min-w150 sorting"  aria-controls="task-table"  aria-label="">Collaborators</th>
                         <th width="8%" class="sorting_disabled"  aria-label="">Status</th>
                         <th width="8%" class="sorting"  aria-controls="task-table"  aria-label=""></th>
                     </tr>
@@ -47,11 +50,14 @@
                     <tr role="row">
                         <th width="50px" class="sorting"  aria-controls="task-table"  aria-sort="descending" aria-label=""></th>
                         <th width="10%" class="sorting"  aria-controls="task-table"  aria-label="">Dock list number</th>
-                        <th width="40%" class="sorting"  aria-controls="task-table"  aria-label="">Title</th>
-                        <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Reference drawing</th>
+                        <th width="30%" class="sorting"  aria-controls="task-table"  aria-label="">Title</th>
+                        <!-- <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Reference drawing</th> -->
                         <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Start date</th>
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Deadline</th>
+                        <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Milestones</th>
+                        <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Suppliers</th>
                         <th width="12%" class="min-w150 sorting"  aria-controls="task-table"  aria-label="">Assigned to</th>
+                        <th width="8%" class="min-w150 sorting"  aria-controls="task-table"  aria-label="">Collaborators</th>
                         <th width="8%" class="sorting_disabled"  aria-label="">Status</th>
                         <th width="8%" class="sorting"  aria-controls="task-table"  aria-label=""></th>
                     </tr>

@@ -162,24 +162,53 @@ foreach ($tasks as $data) {
     // if (can_delete_tasks($data)) {
         $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_task'), "onclick"=>'delete_task('.$data->id.')',"class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("tasks/delete"), "data-action" => "delete-confirmation"));
     // }
-    echo '<tr style="border-style:none none none none solid;" ><td class="" style="border-left:5px solid '.$status_colors[$data->status_title].';" >' . 
-    $check_status . '</td><td>' . 
-    $data->dock_list_number . 
-    "</td><td  ><div class='d-flex align-items-center' >" . 
-    $title . 
-    "</div></td><td>" . 
-    $data->reference_drawing . 
-    "</td><td>" .  
-    '<span class="">' . $start_date . '</span>' . 
-    "</td><td>" . 
-    '<span class="text-danger">' . $deadline_text . '</span>' . 
-    "</td><td>" . 
-    $assigned_to . 
-    "</td><td>" . 
-    $status . 
-    "</td><td class='text-center option '>" . 
-    $options . 
-    "</td></tr>";
+    // echo '<tr style="border-style:none none none none solid;" ><td class="" style="border-left:5px solid '.$status_colors[$data->status_title].';" >' . 
+    // $check_status . '</td><td>' . 
+    // $data->dock_list_number . 
+    // "</td><td  ><div class='d-flex align-items-center' >" . 
+    // $title . 
+    // "</div></td><td>" . 
+    // $data->reference_drawing . 
+    // "</td><td>" .  
+    // '<span class="">' . $start_date . '</span>' . 
+    // "</td><td>" . 
+    // '<span class="text-danger">' . $deadline_text . '</span>' . 
+    // "</td><td>" . 
+    // $assigned_to . 
+    // "</td><td>" . 
+    // $status . 
+    // "</td><td class='text-center option '>" . 
+    // $options . 
+    // "</td></tr>";
+
+
+///////////////////////
+echo '<tr style="border-style:none none none none solid;" ><td class="" style="border-left:5px solid '.$status_colors[$data->status_title].';" >' . 
+$check_status . '</td><td>' . 
+$data->dock_list_number . 
+"</td><td  ><div class='d-flex align-items-center' >" . 
+$title . 
+"</div></td><td>" .  
+'<span class="">' . $start_date . '</span>' . 
+"</td><td>" . 
+'<span class="text-danger">' . $deadline_text . '</span>' . 
+"</td><td>".
+$milestone_title.
+"</td><td>
+Yard
+</td><td>" . 
+$assigned_to . 
+"</td><td>".
+$data->collaborators.
+"</td><td>" . 
+$status . 
+"</td><td class='text-center option '>" . 
+$options . 
+"</td></tr>";
+
+////////////////////////
+
+
     // echo modal_anchor(get_uri("tasks/view"), "<div class='d-flex'>
     //             <span class='avatar'><img style='width: 30px; height: 30px;' src='" . get_avatar($task->assigned_to_avatar) . "'></span>
     //             <div class='w400'>" . $sub_task_icon . $task_id . $task->title . $toggle_sub_task_icon . $batch_operation_checkbox . "</div>
