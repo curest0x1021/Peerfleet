@@ -3684,6 +3684,8 @@ class Tasks extends Security_Controller {
         $view_data['tasks_list'] = $tasks_list;
         $view_data['columns'] = $columns;
         $view_data["tasks_edit_permissions_list"] = $tasks_edit_permissions_list;
+        $allStatus=$this->Task_status_model->get_all()->getResult();
+        $view_data["allStatus"] = $allStatus;
 
         return $this->template->view('tasks/kanban/kanban_list_view', $view_data);
 

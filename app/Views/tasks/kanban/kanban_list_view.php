@@ -60,6 +60,7 @@
                     <?php
                     echo view("tasks/kanban/kanban_list_column_items", array(
                         "tasks" => $tasks,
+                        "allStatus"=>$allStatus,
                         "can_edit_project_tasks" > $can_edit_project_tasks,
                         "project_id" > $project_id,
                         "tasks_edit_permissions"=> get_array_value($tasks_edit_permissions_list, $column->id)

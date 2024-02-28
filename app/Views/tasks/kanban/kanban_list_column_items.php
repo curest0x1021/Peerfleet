@@ -2,6 +2,11 @@
 
 $show_in_kanban = get_setting("show_in_kanban");
 $show_in_kanban_items = explode(',', $show_in_kanban);
+$status_colors=array();
+foreach ($allStatus as $oneStatus) {
+    # code...
+    $status_colors[$oneStatus->title]=$oneStatus->color;
+}
 
 foreach ($tasks as $data) {
     $unread_comments_class = "";
@@ -157,7 +162,7 @@ foreach ($tasks as $data) {
     // if (can_delete_tasks($data)) {
         $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_task'), "onclick"=>'delete_task('.$data->id.')',"class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("tasks/delete"), "data-action" => "delete-confirmation"));
     // }
-    echo '<tr><td class="">' . 
+    echo '<tr style="border-style:none none none none solid;" ><td class="" style="border-left:5px solid '.$status_colors[$data->status_title].';" >' . 
     $check_status . '</td><td>' . 
     $data->dock_list_number . 
     "</td><td  ><div class='d-flex align-items-center' >" . 

@@ -48,7 +48,7 @@ class Task_libraries extends Security_Controller {
             "collaborators" => $this->request->getPost('collaborators'),
             "status_id" => $this->request->getPost('status_id'),
             "priority_id" => $this->request->getPost('priority_id'),
-            "milestone_id" => $this->request->getPost('milestone_id'),
+            // "milestone_id" => $this->request->getPost('milestone_id'),
             "supplier" => $this->request->getPost('supplier'),
             "description" => $this->request->getPost('description'),
             "location" => $this->request->getPost('location'),
