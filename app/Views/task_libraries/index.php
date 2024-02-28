@@ -9,7 +9,7 @@
         </div>
 
         <div class="col-sm-9 col-lg-10">
-            <div class="card" style="border:1px solid lightgray" >
+            <div class="card"  >
                 <div class="card-body">
                     <div class="display-flex" style="align-items:center" >
                         <div style="flex-grow:1" ></div>
@@ -23,7 +23,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card" style="border:1px solid lightgray" >
+            <div class="card" >
                 <div id="tasks-dropzone" class="post-dropzone">
                 <?php echo form_open(get_uri("task_libraries/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
                 <?php if(isset($gotTasklibrary))
