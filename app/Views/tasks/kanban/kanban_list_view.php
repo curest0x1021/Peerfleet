@@ -12,8 +12,8 @@
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Deadline</th>
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Milestone</th>
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Supplier</th>
-                        <th width="12%" class="min-w150 sorting"  aria-controls="task-table"  aria-label="">Assigned to</th>
-                        <th width="8%" class="min-w150 sorting"  aria-controls="task-table"  aria-label="">Collaborators</th>
+                        <th width="12%" class="sorting"  aria-controls="task-table"  aria-label="">Assigned to</th>
+                        <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Collaborators</th>
                         <th width="8%" class="sorting_disabled"  aria-label="">Status</th>
                         <th width="8%" class="sorting"  aria-controls="task-table"  aria-label=""></th>
                     </tr>
@@ -56,8 +56,8 @@
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Deadline</th>
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Milestones</th>
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Suppliers</th>
-                        <th width="12%" class="min-w150 sorting"  aria-controls="task-table"  aria-label="">Assigned to</th>
-                        <th width="8%" class="min-w150 sorting"  aria-controls="task-table"  aria-label="">Collaborators</th>
+                        <th width="12%" class="sorting"  aria-controls="task-table"  aria-label="">Assigned to</th>
+                        <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Collaborators</th>
                         <th width="8%" class="sorting_disabled"  aria-label="">Status</th>
                         <th width="8%" class="sorting"  aria-controls="task-table"  aria-label=""></th>
                     </tr>
