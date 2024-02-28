@@ -1196,7 +1196,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         <div class="box-title"><span ><?php echo app_lang("files"); ?></span></div>
         <div class="d-flex justify-content-end"  >
             <div >
-                <a href="<?php echo get_uri('/tasks/download_task_files/'.$task_id);?>" id="btn-download-all" class="btn btn-sm" ><i color="gray" data-feather="download" class="icon-16" ></i></a>
+                <button href="<?php echo get_uri('/tasks/download_task_files/'.$task_id);?>" id="btn-download-all" class="btn btn-sm" ><i color="gray" data-feather="download" class="icon-16" ></i></button>
                 <button id="btn-grid-group" class="btn btn-sm" ><i color="gray" data-feather="grid" class="icon-16" ></i></button>
                 <button id="btn-list-group" class="btn btn-sm" ><i color="gray" data-feather="list" class="icon-16" ></i></button>
                 <button id="btn-add-file" class="btn btn-sm" ><i color="gray" data-feather="plus-circle" class="icon-16" ></i></button>
@@ -1422,6 +1422,9 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                         delTr.remove();
                 }
             })
+        })
+        $("#btn-download-all").on('click',function(){
+            window.open($(this).attr('href'),"_blank")
         })
     })
     var cost_items=[];
