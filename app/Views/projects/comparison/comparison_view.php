@@ -72,12 +72,16 @@ foreach ($allProjectTasks as $index => $oneTask) {
     }
 </style>
 <div class="card" >
+    <div class="card-header" >
+    <h2>Comparison View</h2>
+    </div>
     <div class="card-body" >
         <div class="row" >
-            <div class="col-md-8" >
-                <h2>Comparison View</h2>
-            </div>
             <div class="col-md-2" >
+                <?php echo modal_anchor(get_uri('projects/modal_currency_rates/'.$project_info->id),'<button class="btn btn-default" ><i class="icon-16" data-feather="plus" ></i>Add Rates</button>',array()); ?>
+            </div>
+            <div class="col-md-8" >
+                
             </div>
             <div class="col-md-2" >
                 <a style="float:right" href="<?php echo get_uri('projects/add_yard/'.$project_info->id,["project_info"=>$project_info]); ?>" class="btn btn-primary"  >Add Yard Candidate</a>

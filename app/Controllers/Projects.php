@@ -30,6 +30,7 @@ class Projects extends Security_Controller {
         $this->Task_cost_items_model = model("App\Models\Task_cost_items_model");
         $this->Task_variation_orders_model = model("App\Models\Task_variation_orders_model");
         $this->Task_owner_supplies_model = model("App\Models\Task_owner_supplies_model");
+        $this->Project_currency_rates_model = model("App\Models\Project_currency_rates_model");
     }
 
     private function can_delete_projects($project_id = 0) {
@@ -4092,6 +4093,19 @@ class Projects extends Security_Controller {
         $comments=$this->Project_comments_model->get_details($options)->getResult();
         // return json_encode($comments);
         return $this->template->view("projects/cost_overview/modal_comments",["project_id"=>$task_info->project_id,"task_id"=>$task_id,"comments"=>$comments,"can_comment_on_tasks"=>true]);
+    }
+    function save_currency_rate(){
+        $newRateData=array(
+            "project_id"=>$this->request->getPost("project_id"),
+            "name"=>$this->request->getPost("name"),
+            "rate"=>$this->request->getPost("rate"),
+        );
+        $save_id=$this->Project_currency_rates_model->ci_save($newRateData);
+        return json_encode(array("success"=>true,"save_id"=>$save_id));
+    }
+    function modal_currency_rates($project_id){
+        $allRates=$this->Project_currency_rates_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        return $this->template->view('projects/comparison/modal_currency_rates',["project_id"=>$project_id,"allRates"=>$allRates]);
     }
 }
 

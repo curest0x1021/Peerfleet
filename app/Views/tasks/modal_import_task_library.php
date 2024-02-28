@@ -32,7 +32,7 @@
                                     "class" => "form-control",
                                     "maxlength" => 15,
                                     "style"=>"border:1px solid lightgray",
-                                    "placeholder" => app_lang('priority'),
+                                    "placeholder" => 'Select Task library',
                                     "autocomplete" => "off"
                                 ));
                                 ?>
