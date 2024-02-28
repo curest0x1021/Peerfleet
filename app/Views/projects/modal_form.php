@@ -29,6 +29,37 @@
         <?php } else { ?>
             <div class="form-group">
                 <div class="row">
+                    <label for="project_type" class=" col-md-3">Project category</label>
+                    <div class=" col-md-9">
+                        <?php
+                        $category_dropdown = array(
+                            array("id"=>"General & Docking","text"=>"General & Docking"),
+                            array("id"=>"Hull","text"=>"Hull"),
+                            array("id"=>"Equipment for Cargo","text"=>"Equipment for Cargo"),
+                            array("id"=>"Ship Equipment","text"=>"Ship Equipment"),
+                            array("id"=>"Safety & Crew Equipment","text"=>"Safety & Crew Equipment"),
+                            array("id"=>"Machinery Main Components","text"=>"Machinery Main Components"),
+                            array("id"=>"Systems machinery main components","text"=>"Systems machinery main components"),
+                            array("id"=>"Common systems","text"=>"Common systems"),
+                            array("id"=>"Others","text"=>"Others"),
+                        );
+                        echo form_input(array(
+                            "id" => "category_input",
+                            "name" => "category",
+                            "value" => "",
+                            "class" => "form-control",
+                            "placeholder" => app_lang('category'),
+                            "data-rule-required" => true,
+                            "style"=>"border:1px solid lightgray;",
+                            "data-msg-required" => app_lang("field_required"),
+                            "autocomplete" => "off"
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
                     <label for="project_type" class=" col-md-3"><?php echo app_lang('project_type'); ?></label>
                     <div class=" col-md-9">
                         <?php
@@ -185,6 +216,9 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $("#category_input").select2({
+            data:<?php echo json_encode($category_dropdown); ?>
+        })
         window.projectForm = $("#project-form").appForm({
             closeModalOnSuccess: false,
             onSuccess: function (result) {
