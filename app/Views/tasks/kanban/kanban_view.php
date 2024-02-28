@@ -1,5 +1,5 @@
 <div id="kanban-wrapper">
-    <ul id="kanban-container" class="kanban-container clearfix">
+    <ul id="kanban-container" style="width:100%;" class="kanban-container clearfix">
 
         <?php foreach ($columns as $column) { ?>
             <li class="kanban-col kanban-<?php
@@ -59,11 +59,12 @@
         var totalColumns = "<?php echo $total_columns ?>";
         var columnWidth = (335 * totalColumns) + 5;
 
-        if (columnWidth > kanbanContainerWidth) {
-            $("#kanban-container").css({width: columnWidth + "px"});
-        } else {
-            $("#kanban-container").css({width: "100%"});
-        }
+        // if (columnWidth > kanbanContainerWidth) {
+        //     $("#kanban-container").css({width: columnWidth + "px"});
+        // } else {
+        //     $("#kanban-container").css({width: "100%"});
+        // }
+        $("#kanban-container").css({width: "100%"});
 
 
         //set wrapper scroll
