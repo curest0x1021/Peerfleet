@@ -39,11 +39,14 @@ foreach ($tasks as $data) {
     //     $task_point .= "<span class='badge badge-light clickable mt0' title='" . app_lang('points') . "'>" . $data->points . "</span> ";
     // }
     // $title .= "<span class='float-end ml5'>" . $task_point . "</span>";
-
+$priorityMark="";
     if ($data->priority_id) {
-        $title .= "<span class='float-end' title='" . app_lang('priority') . ": " . $data->priority_title . "'>
-                        <span class='sub-task-icon priority-badge' style='background: $data->priority_color'><i data-feather='$data->priority_icon' class='icon-14'></i></span> $toggle_sub_task_icon
-                    </span>";
+        // $title .= "<span class='float-end' title='" . app_lang('priority') . ": " . $data->priority_title . "'>
+        //                 <span class='sub-task-icon priority-badge' style='background: $data->priority_color'><i data-feather='$data->priority_icon' class='icon-14'></i></span> $toggle_sub_task_icon
+        //             </span>";
+        $priorityMark="<span class='float-end' title='" . app_lang('priority') . ": " . $data->priority_title . "'>
+            <span class='sub-task-icon priority-badge' style='background: $data->priority_color'><i data-feather='$data->priority_icon' class='icon-14'></i></span> $toggle_sub_task_icon
+        </span>";
     }
 
     $task_labels = make_labels_view_data($data->labels_list, true);
@@ -201,7 +204,7 @@ $assigned_to .
 "</td><td>".
 $data->collaborators.
 "</td><td>" . 
-$status . 
+$status . $priorityMark.
 "</td><td class='text-center option '>" . 
 $options . 
 "</td></tr>";
