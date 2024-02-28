@@ -661,9 +661,10 @@ class Tasks extends Security_Controller {
         $gotProject=$this->Projects_model->get_one($gotTask->project_id);
         $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$gotTask->project_id))->getResult();
         $allVariationOrders=$this->Task_variation_orders_model->get_all()->getResultArray();
-        $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_library"=>$id,"deleted"=>0))->getResult();
+        $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_id"=>$task_id,"deleted"=>0))->getResult();
         $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("task_id"=>$task_id))->getResult();
-        return $this->template->view('tasks/modal_form_id',["allOwnerSupplies"=>$allOwnerSupplies,"allTasks"=>$allTasks,"gotChecklistItems"=>$gotChecklistItems,"gotTask"=>$gotTask,"task_id"=>$task_id,"gotProject"=>$gotProject,"project_id"=>$gotTask->project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        $allCostItems=$this->Task_cost_items_model->get_all_where(array("task_id"=>$task_id))->getResult();
+        return $this->template->view('tasks/modal_form_id',["allCostItems"=>$allCostItems,"allOwnerSupplies"=>$allOwnerSupplies,"allTasks"=>$allTasks,"gotChecklistItems"=>$gotChecklistItems,"gotTask"=>$gotTask,"task_id"=>$task_id,"gotProject"=>$gotProject,"project_id"=>$gotTask->project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     /*----*/
 

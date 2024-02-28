@@ -833,10 +833,10 @@
                                 </thead>
                                 <tbody>
                                     <?php
-                                    if(isset($gotTask)&&$gotTask->cost_items){
-                                        $cost_items=json_decode($gotTask->cost_items);
-                                        if(is_array($cost_items))
-                                            foreach ($cost_items as $key=>$oneItem) {
+                                    // if(isset($gotTask)&&$gotTask->cost_items){
+                                    //     $cost_items=json_decode($gotTask->cost_items);
+                                    //     if(is_array($cost_items))
+                                            foreach ($allCostItems as $key=>$oneItem) {
                                                 # code...
                                                 echo "<tr><td>";
                                                 echo $oneItem->name;
@@ -848,7 +848,7 @@
                                                 echo '<button onClick="start_edit_cost_item('.$key.')" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button><button onClick="delete_item('.$key.')" type="button" class="btn btn-sm" ><i color="gray" data-feather="x-circle" class="icon-16" ></i></button>';
                                                 echo "</td></tr>";
                                             }
-                                        }
+                                        // }
                                     ?>
                                 </tbody>
                             </table>
