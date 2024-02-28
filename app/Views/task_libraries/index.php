@@ -839,7 +839,7 @@
                                                     echo "<tr><td>";
                                                     echo $oneItem->name;
                                                     echo "</td><td>";
-                                                    echo number_format($oneItem->quantity,1,".","")." ( ".$oneItem->measurement_unit." ) X ".$oneItem->currency." ".number_format($oneItem->unit_price,2,".","")." ( ".$oneItem->quote_type." )";
+                                                    echo number_format($oneItem->quantity,1,".","")." ( ".$oneItem->measurement." ) X ".$oneItem->currency." ".number_format($oneItem->unit_price,2,".","")." ( ".$oneItem->quote_type." )";
                                                     echo "</td><td>";
                                                     echo $oneItem->currency." ".number_format(floatval($oneItem->quantity)*floatval($oneItem->unit_price), 2, '.', '');
                                                     echo "</td><td>";
@@ -905,7 +905,7 @@
                                                 <div class="form-group" >
                                                     <label>Measurement unit:</label>
                                                     <input
-                                                        id="cost_item_measurement_unit"
+                                                        id="cost_item_measurement"
                                                         class="form-control"
                                                         placeholder="pcs"
                                                         value="pcs"
@@ -1562,7 +1562,7 @@
             var cell3 = newRow.insertCell(3);
 
             cell0.innerHTML = $("#cost_item_name")[0].value;
-            cell1.innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement_unit")[0].value+" X "+$("#cost_item_currency")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
+            cell1.innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement")[0].value+" X "+$("#cost_item_currency")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
             cell2.innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
             cell3.innerHTML=`
             <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button>
@@ -1574,24 +1574,26 @@
                 cost_items.push({
                     name:$("#cost_item_name")[0].value,
                     quantity:$("#cost_item_quantity")[0].value,
-                    measurement_unit:$("#cost_item_measurement_unit")[0].value,
+                    measurement:$("#cost_item_measurement")[0].value,
                     unit_price:$("#cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
                     currency:$("#cost_item_currency")[0].value,
                     description:$("#cost_item_description")[0].value,
                     yard_remarks:$("#cost_item_yard_remarks")[0].value,
+                    discount:$("#cost_item_discount")[0].value,
                 });
             else{
                 $("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
                 cost_items[Number($("#editing_cost_item")[0].value)]={
                     name:$("#cost_item_name")[0].value,
                     quantity:$("#cost_item_quantity")[0].value,
-                    measurement_unit:$("#cost_item_measurement_unit")[0].value,
+                    measurement:$("#cost_item_measurement")[0].value,
                     unit_price:$("#cost_item_unit_price")[0].value,
                     quote_type:$("#cost_item_quote_type")[0].value,
                     currency:$("#cost_item_currency")[0].value,
                     description:$("#cost_item_description")[0].value,
                     yard_remarks:$("#cost_item_yard_remarks")[0].value,
+                    discount:$("#cost_item_discount")[0].value,
                 };
                 $("#editing_cost_item")[0].value=""
             }
@@ -1819,11 +1821,12 @@
         $("#cost_item_name")[0].value=cost_items[index].name;
         $("#cost_item_description")[0].value=cost_items[index].description;
         $("#cost_item_quantity")[0].value=cost_items[index].quantity;
-        $("#cost_item_measurement_unit")[0].value=cost_items[index].measurement_unit;
+        $("#cost_item_measurement")[0].value=cost_items[index].measurement;
         $("#cost_item_unit_price")[0].value=cost_items[index].unit_price;
         $("#cost_item_quote_type")[0].value=cost_items[index].quote_type;
         $("#cost_item_currency")[0].value=cost_items[index].currency;
         $("#cost_item_yard_remarks")[0].value=cost_items[index].yard_remarks;
+        $("#cost_item_discount")[0].value=cost_items[index].yard_remarks;
     }
     <?php
         if(isset($gotTasklibrary)&&$gotTasklibrary->dependencies)

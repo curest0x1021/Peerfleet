@@ -4974,4 +4974,18 @@ class Tasks extends Security_Controller {
         $this->Task_owner_supplies_model->delete_permanently($id);
         return json_encode(array("succees"=>true));
     }
+    function modal_import_task_library($project_id){
+        $allTaskLibraries=$this->Task_libraries_model->get_all()->getResult();
+        $allStatus=$this->Task_status_model->get_all()->getResultArray();
+        $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
+        $allMilestones=$this->Milestones_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        // $allVariationOrders=$this->Task_variation_orders_model->get_all()->getResult();
+        return $this->template->view('tasks/modal_import_task_library',["allTaskLibraries"=>$allTaskLibraries,"allTasks"=>$allTasks,"project_id"=>$project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+    }
+    function get_task_library($id){
+        $library_info=$this->Task_libraries_model->get_one($id);
+        return json_encode($library_info);
+    }
+    
 }
