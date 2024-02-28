@@ -676,7 +676,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     </div>
                     <div class="card-body" style="padding:10px" >
                         
-                        <table id="table-quotes-from-yard" class="table " >
+                        <table id="table-quotes-from-yard" class="table table-hover table-bordered" >
                             <thead>
                             <tr>
                                 <td>Cost item name</td>
@@ -996,7 +996,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                         <b>Task Quotes</b>
                     </div>
                     <div class="card-body" style="padding:10px" >
-                        <table id="table-quotes-from-yard" class="table " style="margin:0" >
+                        <table id="table-quotes-from-yard" class="table table-hover table-bordered" style="margin:0" >
                             <thead>
                             <tr>
                                 <td>QUOTE</td>
@@ -1049,7 +1049,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                         <b>Owner's Supply</b>
                     </div>
                     <div class="card-body" style="padding:10px" >
-                        <table id="table-owners-supplies" class="table " style="margin:0" >
+                        <table id="table-owners-supplies" class="table table-hover table-bordered" style="margin:0" >
                             <thead>
                             <tr>
                                 <td>Cost Item Name</td>
@@ -1133,7 +1133,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                         <b>Variation Orders</b>
                     </div>
                     <div class="card-body" style="padding:10px" >
-                        <table id="table-quotes-from-yard" class="table table-variation-orders" style="margin:0" >
+                        <table id="table-quotes-from-yard" class="table table-variation-orders table-hover table-bordered" style="margin:0" >
                             <thead>
                             <tr>
                                 <td>Order name</td>

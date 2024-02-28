@@ -85,7 +85,7 @@ if (!function_exists("make_project_tabs_data")) {
                                 $project_tabs["gantt"] = "tasks/gantt/" . $project_info->id;
                             }
                             /////////////////////
-                            $project_tabs["yards_comparison"] = "projects/comparison_tab/" . $project_info->id;
+                            $project_tabs["quote_overview"] = "projects/comparison_tab/" . $project_info->id;
 
                             $project_tabs["cost_overview"] = "projects/cost_overview/" . $project_info->id;
                             ////////////////////
@@ -155,7 +155,7 @@ if (!function_exists("make_project_tabs_data")) {
                             }
 
                             /////////////////////
-                            $project_tabs["yards_comparison"] = "projects/comparison_tab/" . $project_info->id;
+                            $project_tabs["quote_overview"] = "projects/comparison_tab/" . $project_info->id;
                             ////////////////////
 
                             if ($show_files) {
@@ -211,7 +211,7 @@ if (!function_exists("make_project_tabs_data")) {
                     <div role="tabpanel" class="tab-pane fade" id="project-contracts-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-tickets-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-checklist-section"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="project-yards_comparison-section"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="project-quote_overview-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-cost_overview-section"></div>
 
                     <?php

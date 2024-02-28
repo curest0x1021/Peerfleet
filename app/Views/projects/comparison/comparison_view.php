@@ -73,7 +73,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
 </style>
 <div class="card" >
     <div class="card-header" >
-    <h2>Comparison View</h2>
+    <h4>Comparison View</h4>
     </div>
     <div class="card-body" >
         <div class="row" >
