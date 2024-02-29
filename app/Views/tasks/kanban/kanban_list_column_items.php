@@ -200,10 +200,10 @@ $milestone_title.
 "</td><td>
 Yard
 </td><td>" . 
-$assigned_to . 
-"</td><td>".
+"<div class='d-flex align-items-center' ><span class='avatar-xs avatar me-1' ><img alt='...' src='".base_url("assets/images/avatar.jpg")."' /></span>$assigned_to</div>" . 
+"</td><td><div class='d-flex align-items-center'><span class='avatar-xs avatar me-1' ><img alt='...' src='".base_url("assets/images/avatar.jpg")."' /></span>".
 $data->collaborators.
-"</td><td>" . 
+"</div></td><td>" . 
 $status . $priorityMark.
 "</td><td class='text-center option '>" . 
 $options . 
