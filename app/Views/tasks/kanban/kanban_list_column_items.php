@@ -200,7 +200,7 @@ $milestone_title.
 "</td><td>
 Yard
 </td><td>" . 
-"<div class='d-flex align-items-center' ><span class='avatar-xs avatar me-1' ><img alt='...' src='".base_url("assets/images/avatar.jpg")."' /></span>$assigned_to</div>" . 
+"$assigned_to" . 
 "</td><td><div class='d-flex align-items-center'><span class='avatar-xs avatar me-1' ><img alt='...' src='".base_url("assets/images/avatar.jpg")."' /></span>".
 $data->collaborators.
 "</div></td><td>" . 
