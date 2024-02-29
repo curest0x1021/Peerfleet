@@ -4109,6 +4109,32 @@ class Projects extends Security_Controller {
         $allRates=$this->Project_currency_rates_model->get_all_where(array("project_id"=>$project_id))->getResult();
         return $this->template->view('projects/comparison/modal_currency_rates',["project_id"=>$project_id,"allRates"=>$allRates]);
     }
+
+    function task_files_list_data($task_id = 0) {
+        validate_numeric_value($task_id);
+        // $this->init_project_permission_checker($project_id);
+
+        // if (!$this->can_view_files()) {
+        //     app_redirect("forbidden");
+        // }
+
+        $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("task_files", $this->login_user->is_admin, $this->login_user->user_type);
+
+        $options = array(
+            "task_id" => $task_id,
+            "description"=>""
+            // "category_id" => $this->request->getPost("category_id"),
+            // "custom_fields" => $custom_fields,
+            // "custom_field_filter" => $this->prepare_custom_field_filter_values("task_files", $this->login_user->is_admin, $this->login_user->user_type)
+        );
+
+        $list_data = $this->Project_comments_model->get_details($options)->getResult();
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_make_file_row($data, $custom_fields);
+        }
+        echo json_encode(array("data" => $result));
+    }
 }
 
 /* End of file projects.php */

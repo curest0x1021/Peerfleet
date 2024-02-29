@@ -66,7 +66,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             <a class="nav-link" data-bs-toggle="tab" href="#files">Files</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#activity">Comments & Activity</a>
+            <a class="nav-link" data-bs-toggle="tab" href="#activity">Comments</a>
         </li>
     </ul>
 </div>
@@ -700,7 +700,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                         echo "</td><td>";
                                         echo $oneItem->currency." ".number_format(floatval($oneItem->quantity)*floatval($oneItem->unit_price), 2, '.', '');
                                         echo "</td><td>";
-                                        echo '<button onClick="start_edit_cost_item('.$key.')" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button><button onClick="delete_item('.$key.')" type="button" class="btn btn-sm" ><i color="gray" data-feather="x-circle" class="icon-16" ></i></button>';
+                                        echo '<input class="edit-cost-item-id" value='.$oneItem->id.' hidden /><button onClick="start_edit_cost_item(event)" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button><button onClick="delete_item(event)" type="button" class="btn btn-sm" ><i color="gray" data-feather="x-circle" class="icon-16" ></i></button>';
                                         echo "</td></tr>";
                                     }
                                 }
@@ -1187,54 +1187,18 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             </div>
         </div>
         <!---->
-        <?php if ($login_user->user_type === "staff") { ?>
+        <!-- <?php //if ($login_user->user_type === "staff") { ?>
             <div class="box-title"><span ><?php echo app_lang("activity"); ?></span></div>
             <div class="pl15 pr15 mt15 list-container project-activity-logs-container">
-                <?php echo activity_logs_widget(array("limit" => 20, "offset" => 0, "log_type" => "task", "log_type_id" => $model_info->id)); ?>
+                <?php //echo activity_logs_widget(array("limit" => 20, "offset" => 0, "log_type" => "task", "log_type_id" => $model_info->id)); ?>
             </div>
-        <?php } ?>
+        <?php //} ?> -->
     </div>
     <div id="files" class="tab-pane fade" >
-        <div class="box-title"><span ><?php echo app_lang("files"); ?></span></div>
-            <div class="d-flex justify-content-end"  >
-                <div >
-                    <a href="<?php echo get_uri('/tasks/download_task_files/'.$task_id);?>" id="btn-download-all" class="btn btn-sm" ><i color="gray" data-feather="download" class="icon-16" ></i></a>
-                    <a id="btn-grid-group" class="btn btn-sm" ><i color="gray" data-feather="grid" class="icon-16" ></i></a>
-                    <a id="btn-list-group" class="btn btn-sm" ><i color="gray" data-feather="list" class="icon-16" ></i></a>
-                    <a id="btn-add-file" class="btn btn-sm" ><i color="gray" data-feather="plus-circle" class="icon-16" ></i></a>
-                </div>
-            </div>
-            <?php 
-            // echo view("projects/comments/comment_list"); 
-            ?>
-            <input type="file" hidden id="new-comment-file-selector" accept="images/*" />
-            <div class="row item-group" style="width:98%;min-width:98%;max-width:98%;" >
-                <?php 
-                // app_hooks()->do_action('app_hook_task_view_right_panel_extension');
-                $all_files=array();
-                foreach($comments as $oneComment){
-                    $files = unserialize($oneComment->files);
-                    $all_files=array_merge($all_files,$files);
-                    $total_files = count($files);
-                    $timeline_file_path = isset($file_path) ? $file_path : get_setting("timeline_file_path");
-                    foreach($files as $oneFile){
-                        // echo $oneFile['file_name'];
-                        $url = get_source_url_of_file($oneFile, $timeline_file_path);
-                        $thumbnail = get_source_url_of_file($oneFile, $timeline_file_path, "thumbnail");
-                        $actual_file_name = remove_file_prefix($oneFile['file_name']);
-
-                        $lll=is_viewable_image_file($oneFile['file_name'])?$url:get_source_url_of_file(array("file_name" => "store-item-no-image.png"), get_setting("system_file_path"));
-                        echo 
-                        '<div class="group-item col-md-2" >
-                            <img class="item-image" src="'.$url.'" />
-                            <p class="item-title" >'.$actual_file_name.'</p>
-                            <a target="_blank" href="'.get_uri("tasks/download_one_file/".$oneFile['file_name']).'"  class="btn-download-item btn btn-sm" ><i data-feather="download-cloud" class="icon-16" ></i></a>
-                        </div>';
-                    }
-                }
-                ?>
-            </div>
-        </div>
+        <!------->
+        <?php echo view("tasks/view/tab_files"); ?>
+        <!------->
+        
     </div>
         
 </div>
@@ -1250,66 +1214,112 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
 
         })
         $("#insert-add-cost-item").on("click",function(){
-            var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
-            var newRow = table.insertRow();
-
-            var cell0 = newRow.insertCell(0);
-            var cell1 = newRow.insertCell(1);
-            var cell2 = newRow.insertCell(2);
-            var cell3 = newRow.insertCell(3);
-
-            cell0.innerHTML = $("#cost_item_name")[0].value;
-            cell1.innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement")[0].value+" X "+$("#cost_item_currency")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
-            cell2.innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
-            cell3.innerHTML=`
-            <button onClick="start_edit_cost_item(${cost_items.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button>
-            <button type="button" onClick="delete_item(${cost_items.length})" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="icon-16" ></i></button>
-            `;
-            $("#btn-add-new-quote").prop("disabled", false);
-            $("#insert-cost-item-panel").prop("hidden",false);
-            
-            if($("#editing_cost_item")[0].value=="")
-                cost_items.push({
-                    name:$("#cost_item_name")[0].value,
-                    quantity:$("#cost_item_quantity")[0].value,
-                    measurement:$("#cost_item_measurement")[0].value,
-                    unit_price:$("#cost_item_unit_price")[0].value,
-                    quote_type:$("#cost_item_quote_type")[0].value,
-                    currency:$("#cost_item_currency")[0].value,
-                    description:$("#cost_item_description")[0].value,
-                    discount:$("#cost_item_discount")[0].value,
-                    yard_remarks:$("#cost_item_yard_remarks")[0].value,
-                });
-            else{
-                $("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
-                cost_items[Number($("#editing_cost_item")[0].value)]={
-                    name:$("#cost_item_name")[0].value,
-                    description:$("#cost_item_description")[0].value,
-                    discount:$("#cost_item_discount")[0].value,
-                    quantity:$("#cost_item_quantity")[0].value,
-                    measurement:$("#cost_item_measurement")[0].value,
-                    unit_price:$("#cost_item_unit_price")[0].value,
-                    quote_type:$("#cost_item_quote_type")[0].value,
-                    currency:$("#cost_item_currency")[0].value,
-                    yard_remarks:$("#cost_item_yard_remarks")[0].value,
-                };  
-            }
-            $("#editing_cost_item")[0].value="";
-            $("#cost_item_name")[0].value="";
-            $("#cost_item_description")[0].value="";
-            $("#cost_item_quantity")[0].value="";
-            $("#cost_item_unit_price")[0].value="";
-            $("#cost_item_yard_remarks")[0].value="";
+            if(!$("#cost_item_name")[0].value) return;
+            var item_id=$("#editing_cost_item")[0].value;
+            // var btnEl=$(this);
             $.ajax({
-                url:'<?php echo get_uri('tasks/save_task_cost_items');?>',
+                url:'<?php echo get_uri('tasks/save_task_one_cost_item');?>',
                 method:"POST",
                 data:{
+                    id:item_id,
                     task_id:<?php echo $model_info->id;?>,
-                    cost_items:JSON.stringify(cost_items)
+                    name:$("#cost_item_name")[0].value,
+                    quantity:$("#cost_item_quantity")[0].value,
+                    measurement:$("#cost_item_measurement")[0].value,
+                    unit_price:$("#cost_item_unit_price")[0].value,
+                    quote_type:$("#cost_item_quote_type")[0].value,
+                    currency:$("#cost_item_currency")[0].value,
+                    description:$("#cost_item_description")[0].value,
+                    discount:$("#cost_item_discount")[0].value,
+                    yard_remarks:$("#cost_item_yard_remarks")[0].value,
                 },
                 success:function(response){
+                    console.log(response);
+                    var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
+                    if(!item_id){
+                        
+                        var newRow = table.insertRow();
+
+                        var cell0 = newRow.insertCell(0);
+                        var cell1 = newRow.insertCell(1);
+                        var cell2 = newRow.insertCell(2);
+                        var cell3 = newRow.insertCell(3);
+
+                        cell0.innerHTML = $("#cost_item_name")[0].value;
+                        cell1.innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement")[0].value+" X "+$("#cost_item_currency")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
+                        cell2.innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
+                        cell3.innerHTML=`
+                        <input class="edit-cost-item-id" value="${JSON.parse(response).save_id}" hidden />
+                        <button onClick="start_edit_cost_item(event)" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button>
+                        <button type="button" onClick="delete_item(event)" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="icon-16" ></i></button>
+                        `;
+                    }else{
+                        var rows=table.rows;
+                        for(var oneRow of rows){
+                            if(oneRow.cells[oneRow.cells.length-1].querySelector(".edit-cost-item-id").value==item_id){
+                                oneRow.cells[0].innerHTML = $("#cost_item_name")[0].value;
+                                oneRow.cells[1].innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement")[0].value+" X "+$("#cost_item_currency")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
+                                oneRow.cells[2].innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
+                                oneRow.cells[3].innerHTML=`
+                                <input class="edit-cost-item-id" value="${JSON.parse(response).save_id}" hidden />
+                                <button onClick="start_edit_cost_item(event)" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button>
+                                <button type="button" onClick="delete_item(event)" class="btn btn-sm" ><i style="color:gray" data-feather="x-circle" class="icon-16" ></i></button>
+                                `;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    $("#btn-add-new-quote").prop("disabled", false);
+                    $("#insert-cost-item-panel").prop("hidden",false);
+                    $("#editing_cost_item")[0].value="";
+                    $("#cost_item_name")[0].value="";
+                    $("#cost_item_description")[0].value="";
+                    $("#cost_item_quantity")[0].value="";
+                    $("#cost_item_unit_price")[0].value="";
+                    $("#cost_item_yard_remarks")[0].value="";
                 }
             })
+            
+            
+            // if($("#editing_cost_item")[0].value=="")
+            //     cost_items.push({
+            //         name:$("#cost_item_name")[0].value,
+            //         quantity:$("#cost_item_quantity")[0].value,
+            //         measurement:$("#cost_item_measurement")[0].value,
+            //         unit_price:$("#cost_item_unit_price")[0].value,
+            //         quote_type:$("#cost_item_quote_type")[0].value,
+            //         currency:$("#cost_item_currency")[0].value,
+            //         description:$("#cost_item_description")[0].value,
+            //         discount:$("#cost_item_discount")[0].value,
+            //         yard_remarks:$("#cost_item_yard_remarks")[0].value,
+            //     });
+            // else{
+            //     $("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
+            //     cost_items[Number($("#editing_cost_item")[0].value)]={
+            //         name:$("#cost_item_name")[0].value,
+            //         description:$("#cost_item_description")[0].value,
+            //         discount:$("#cost_item_discount")[0].value,
+            //         quantity:$("#cost_item_quantity")[0].value,
+            //         measurement:$("#cost_item_measurement")[0].value,
+            //         unit_price:$("#cost_item_unit_price")[0].value,
+            //         quote_type:$("#cost_item_quote_type")[0].value,
+            //         currency:$("#cost_item_currency")[0].value,
+            //         yard_remarks:$("#cost_item_yard_remarks")[0].value,
+            //     };  
+            // }
+            
+            // $.ajax({
+            //     url:'<?php// echo get_uri('tasks/save_task_cost_items');?>',
+            //     method:"POST",
+            //     data:{
+            //         task_id:<?php //echo $model_info->id;?>,
+            //         cost_items:JSON.stringify(cost_items)
+            //     },
+            //     success:function(response){
+            //     console.log(response)
+            //     }
+            // })
             
         });
         $("#cancel-add-cost-item").on("click",function(){
@@ -1448,30 +1458,49 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         $("#btn-save-new-quote")[0].closest("tr").remove();
         $("#btn-add-new-quote").prop("disabled", false);
     }
-    function delete_item(index){
-        cost_items.splice(index,1);
-        $("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0].deleteRow(index);
+    function delete_item(e){
+        var item_id=e.target.parentNode.querySelector(".edit-cost-item-id").value;
         $.ajax({
-            url:'<?php echo get_uri('tasks/save_task_cost_items');?>',
-            method:"POST",
-            data:{
-                task_id:<?php echo $model_info->id;?>,
-                cost_items:JSON.stringify(cost_items)
-            },
+            url:'<?php echo get_uri('tasks/delete_task_cost_item');?>/'+item_id,
+            method:"GET",
             success:function(response){
+                if(JSON.parse(response).success){
+                    var trEl=e.target.closest('tr');
+                    e.target.parentNode.parentNode.parentNode.removeChild(trEl);
+                }
             }
         })
         
     }
-    function start_edit_cost_item(index){
-        $("#editing_cost_item")[0].value=index;
-        $("#btn-add-new-quote")[0].click();
-        $("#cost_item_name")[0].value=cost_items[index].name;
-        $("#cost_item_quantity")[0].value=cost_items[index].quantity;
-        $("#cost_item_measurement")[0].value=cost_items[index].measurement;
-        $("#cost_item_unit_price")[0].value=cost_items[index].unit_price;
-        $("#cost_item_quote_type")[0].value=cost_items[index].quote_type;
-        $("#cost_item_currency")[0].value=cost_items[index].currency;
+    function start_edit_cost_item(e){
+        var item_id=e.target.parentNode.parentNode.querySelector(".edit-cost-item-id").value;
+        console.log(item_id)
+        $.ajax({
+            url:'<?php echo get_uri('tasks/get_task_cost_item');?>/'+item_id,
+            method:"GET",
+            success:function(response){
+                if(JSON.parse(response).success){
+                    $("#editing_cost_item")[0].value=JSON.parse(response).item_info.id;
+                    $("#btn-add-new-quote")[0].click();
+                    $("#cost_item_name")[0].value=JSON.parse(response).item_info.name;
+                    $("#cost_item_description")[0].value=JSON.parse(response).item_info.description;
+                    $("#cost_item_discount")[0].value=JSON.parse(response).item_info.discount;
+                    $("#cost_item_quantity")[0].value=JSON.parse(response).item_info.quantity;
+                    $("#cost_item_measurement")[0].value=JSON.parse(response).item_info.measurement;
+                    $("#cost_item_unit_price")[0].value=JSON.parse(response).item_info.unit_price;
+                    $("#cost_item_quote_type")[0].value=JSON.parse(response).item_info.quote_type;
+                    $("#cost_item_currency")[0].value=JSON.parse(response).item_info.currency;
+                }
+            }
+        })
+        // $("#editing_cost_item")[0].value=index;
+        // $("#btn-add-new-quote")[0].click();
+        // $("#cost_item_name")[0].value=cost_items[index].name;
+        // $("#cost_item_quantity")[0].value=cost_items[index].quantity;
+        // $("#cost_item_measurement")[0].value=cost_items[index].measurement;
+        // $("#cost_item_unit_price")[0].value=cost_items[index].unit_price;
+        // $("#cost_item_quote_type")[0].value=cost_items[index].quote_type;
+        // $("#cost_item_currency")[0].value=cost_items[index].currency;
     }
     function delete_owner_supply(index){
         owner_supplies.splice(index,1);
@@ -1493,7 +1522,8 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         echo 'cost_items=JSON.parse(`'.$model_info->cost_items.'`);';
     ?>
     
-    <?php if(count($all_files)>0)
-    echo 'var all_files='.json_encode($all_files).';'
+    <?php 
+    // if(count($all_files)>0)
+    // echo 'var all_files='.json_encode($all_files).';'
     ?>
 </script>
