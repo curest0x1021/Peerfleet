@@ -1423,10 +1423,11 @@ class Tasks extends Security_Controller {
 
 
         $checkbox_class = "checkbox-blank";
+        $newGotStatus=$this->Task_status_model->get_one($data->status_id);
         if ($data->status_key_name === "done") {
             $checkbox_class = "checkbox-checked";
         }
-
+        if($newGotStatus->key_name=="done") $checkbox_class = "checkbox-checked";
         if (get_array_value($tasks_status_edit_permissions, $data->id)) {
             //show changeable status checkbox and link to team members
             $check_status = js_anchor("<span class='$checkbox_class mr15 float-start'></span>", array('title' => "", "class" => "js-task", "data-id" => $data->id, "data-value" => $data->status_key_name === "done" ? "1" : "3", "data-act" => "update-task-status-checkbox")) . $data->id;
@@ -1515,7 +1516,7 @@ class Tasks extends Security_Controller {
         }
 
         $row_data[] = $options;
-
+        $row_data[]= $newGotStatus->key_name;
         return $row_data;
     }
 
@@ -4989,6 +4990,9 @@ class Tasks extends Security_Controller {
     function get_task_library($id){
         $library_info=$this->Task_libraries_model->get_one($id);
         return json_encode($library_info);
+    }
+    function currency_rates($project_id){
+
     }
     
 }

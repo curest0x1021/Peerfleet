@@ -24,13 +24,19 @@ if (!isset($project_id)) {
             success: function (result) {
                 if (result) {
                     $('body').on('click', '[data-act=update-task-status]', function () {
+                        var selectEl=$(this);
                         $(this).appModifier({
                             value: $(this).attr('data-value'),
                             actionUrl: '<?php echo_uri("tasks/save_task_status") ?>/' + $(this).attr('data-id'),
                             select2Option: {data: result},
                             onSuccess: function (response, newValue) {
                                 if (response.success) {
-                                    $("#task-table").appTable({newData: response.data, dataId: response.id});
+                                    // console.log(selectEl.parent().parent().find("[data-act=update-task-status-checkbox] span"))
+                                    if(response.data[response.data.length-1]=="done")
+                                        selectEl.parent().parent().find("[data-act=update-task-status-checkbox] span").removeClass('checkbox-blank').addClass('checkbox-checked');
+                                    else selectEl.parent().parent().find("[data-act=update-task-status-checkbox] span").removeClass('checkbox-checked').addClass('checkbox-blank');
+                                    // $("#task-table").appTable({newData: response.data, dataId: response.id});
+
                                 }
                             }
                         });
