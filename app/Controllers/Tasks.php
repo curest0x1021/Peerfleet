@@ -31,6 +31,7 @@ class Tasks extends Security_Controller {
         $this->Task_cost_items_model=model("App\Models\Task_cost_items_model");
         $this->Task_variation_orders_model=model("App\Models\Task_variation_orders_model");
         $this->Task_owner_supplies_model=model("App\Models\Task_owner_supplies_model");
+        $this->File_category_model=model("App\Models\File_category_model");
     }
 
     private function get_context_id_pairs() {
@@ -1798,6 +1799,7 @@ class Tasks extends Security_Controller {
         $view_data["show_time_with_task"] = (get_setting("show_time_with_task_start_date_and_deadline")) ? true : false;
 
         $view_data['contexts'] = $this->_get_accessible_contexts();
+        ////////////////////////////
         $view_data['allYardCostItems']=$this->Shipyard_cost_items_model->get_all_where(array("task_id"=>$task_id))->getResult();
         $view_data['allYards']=$this->Project_yards_model->get_all_where(array("project_id"=>$model_info->project_id))->getResult();
         $allCostItems=$this->Task_cost_items_model->get_all_where(array("task_id"=>$task_id))->getResult();
@@ -1806,6 +1808,19 @@ class Tasks extends Security_Controller {
         $view_data['variation_orders']=$allVariationOrders;
         $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("task_id"=>$task_id))->getResult();
         $view_data['owner_supplies']=$allOwnerSupplies;
+        $file_categories = $this->File_category_model->get_details()->getResult();
+        $file_categories_dropdown = array("" => "-");
+
+        if ($file_categories) {
+            foreach ($file_categories as $file_category) {
+                $file_categories_dropdown[$file_category->id] = $file_category->name;
+            }
+        }
+        $view_data["file_categories_dropdown"] = json_encode($file_categories_dropdown);
+
+        $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("task_files", $this->login_user->is_admin, $this->login_user->user_type);
+        $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("task_files", $this->login_user->is_admin, $this->login_user->user_type);
+
         if ($view_type == "details") {
             return $this->template->rander('tasks/view', $view_data);
         } else {
@@ -4993,6 +5008,64 @@ class Tasks extends Security_Controller {
     }
     function currency_rates($project_id){
 
+    }
+
+    function upload_task_file(){
+        upload_file_to_temp(true);
+        $task_id=$this->request->getPost('task_id');
+        $task_info=$this->Tasks_model->get_one('task_id');
+        if (!empty($_FILES)) {
+            $files = isset($_FILES) ? $_FILES : array();
+            if ($files && count($files) > 0) {
+                foreach ($files as $key => $file) {
+                    $new_target_path = getcwd() . '/' .get_setting("timeline_file_path");
+                    // $files_data = move_files_from_temp_dir_to_permanent_dir($new_target_path, "project_comment");
+                    $temp_file_new = $file['tmp_name'];
+                    $file_name=$key;
+                    // $file_name = $files["name"][$key];
+                    // $file_size = $files["size"][$key];
+                    $file_data = move_temp_file($file_name, $new_target_path, "task_file", $temp_file_new, "", "", false, $file['size']);
+                    $task_file_data = array(
+                        "task_id"=>$task_id,
+                        "project_id"=>$task_info->project_id,
+                        "file_name" => get_array_value($file_data, "file_name"),
+                        "file_size" => $file['size'],
+                        "file_id" => get_array_value($file_data, "file_id"),
+                        "service_type" => get_array_value($file_data, "service_type"),
+                        "uploaded_by"=>$this->login_user->id,
+                        
+                    );
+                    $this->Task_files_model->ci_save($task_file_data);
+                }
+                
+            }
+            
+        }
+        return json_encode(array("success"=>true));
+    }
+    function save_task_one_cost_item(){
+        $id=$this->request->getPost("id");
+        $task_id=$this->request->getPost("task_id");
+        $task_info=$this->Task_cost_items_model->get_one($task_id);
+        $newData=array(
+            "task_id"=>$this->request->getPost("task_id"),
+            "project_id"=>$task_info->project_id,
+            "name"=>$this->request->getPost("name"),
+            "description"=>$this->request->getPost("description"),
+            "quantity"=>$this->request->getPost("quantity"),
+            "measurement"=>$this->request->getPost("measurement"),
+            "unit_price"=>$this->request->getPost("unit_price"),
+            "currency"=>$this->request->getPost("currency"),
+            "discount"=>$this->request->getPost("discount"),
+            "quote_type"=>$this->request->getPost("quote_type"),
+            "yard_remarks"=>$this->request->getPost("yard_remarks"),
+        );
+        $save_id=$this->Task_cost_items_model->ci_save($newData,$id);
+        return json_encode(array("success"=>true,"save_id"=>$save_id));
+    }
+    function get_task_cost_item($item_id){
+        $item_info=$this->Task_cost_items_model->get_one($item_id);
+        return json_encode(array("success"=>true,"item_info"=>$item_info));
     }
     
 }
