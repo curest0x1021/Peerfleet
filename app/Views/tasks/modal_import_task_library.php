@@ -852,7 +852,7 @@
                             <b>Cost Item List</b>
                         </div>
                         <div class="card-body" style="padding:1px" >
-                            <table id="table-costs-item-list<?php echo $modalId;?>" class="table " style="margin:0" >
+                            <table id="table-costs-item-list<?php echo $modalId;?>" class="table table-hover table-bordered" style="margin:0" >
                                 <thead>
                                 <tr>
                                     <td>Cost item name</td>
