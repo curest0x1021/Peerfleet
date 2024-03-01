@@ -331,6 +331,9 @@ class Projects extends Security_Controller {
             "category"=>$this->request->getPost('category'),
             "currency"=>$this->request->getPost('currency'),
         );
+        $now = get_my_local_time("Y-m-d");
+        if(strtotime($now)<strtotime($data['deadline'])) $data['status_id']=1;
+        
 
         if (!$id) {
             $data["created_date"] = get_current_utc_time();
