@@ -20,19 +20,22 @@
                 </thead>
             </table>
         </li>
-        <?php $index = 0; foreach ($columns as $column) { ?>
+        <?php $index = 0;
+        
+        foreach ($columns as $column) { ?>
             <div class="kanban-list-col kanban-<?php
-            echo $column->id;
-            $tasks = get_array_value($tasks_list, $column->id);
-            $tasks_count = count($tasks);
-            $index++;
+            echo $column['id'];
+            $tasks = get_array_value($tasks_list, $column['id']);
             if (!$tasks) {
                 $tasks = array();
             }
+            $tasks_count = count($tasks);
+            $index++;
+            
             ?>" >
-                <input checked type="checkbox" id="list-item-<?php echo $column->id;?>">
-                <label for="list-item-<?php echo $column->id;?>" class="kanban-list-col-title  mt20 mb10" style="background-color: <?php echo $column->color ? $column->color : "#2e4053"; ?>;"> <?php echo $column->title; ?> <span class="kanban-item-count <?php echo $column->id; ?>-task-count float-end ml10"><?php echo $tasks_count; ?> </span></label>
-
+                <input checked type="checkbox" id="list-item-<?php echo $column['id'];?>">
+                <!-- <label for="list-item-<?php //echo $column['id'];?>" class="kanban-list-col-title  mt20 mb10" style="background-color: <?php //echo $column->color ? $column->color : "#2e4053"; ?>;"> <?php //echo $column->title; ?> <span class="kanban-item-count <?php //echo $column['id']; ?>-task-count float-end ml10"><?php //echo $tasks_count; ?> </span></label> -->
+                <label for="list-item-<?php echo $column['id'];?>" class="kanban-list-col-title  mt20 mb10" style="background-color: <?php echo  "#2e4053"; ?>;"> <?php echo $column['text']; ?> <span class="kanban-item-count <?php echo $column['id']; ?>-task-count float-end ml10"><?php echo $tasks_count; ?> </span></label>
                 <div class="kanban-input general-form hide">
                     <?php
                     echo form_input(array(
@@ -45,7 +48,7 @@
                     ?>
                 </div>
 
-                <table class="w-100 display dataTable no-footer" id="kanban-item-list-<?php echo $column->id; ?>" class="kanban-list-items" data-status_id="<?php echo $column->id; ?>">
+                <table class="w-100 display dataTable no-footer" id="kanban-item-list-<?php echo $column['id']; ?>" class="kanban-list-items" data-status_id="<?php echo $column['id']; ?>">
                 <thead style="visibility:collapse;">
                     <tr role="row">
                         <th width="50px" class="sorting"  aria-controls="task-table"  aria-sort="descending" aria-label=""></th>
@@ -69,7 +72,7 @@
                         "allStatus"=>$allStatus,
                         "can_edit_project_tasks" > $can_edit_project_tasks,
                         "project_id" > $project_id,
-                        "tasks_edit_permissions"=> get_array_value($tasks_edit_permissions_list, $column->id)
+                        "tasks_edit_permissions"=> get_array_value($tasks_edit_permissions_list, $column['id'])
                     ));
                     ?>
                 </tbody>

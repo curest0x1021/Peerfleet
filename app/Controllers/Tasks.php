@@ -3402,6 +3402,9 @@ class Tasks extends Security_Controller {
                     $tasks_edit_permissions_list[$status_id] = $this->_get_tasks_status_edit_permissions($tasks);
                 }
             }
+
+
+
             $view_data["tasks_edit_permissions_list"] = $tasks_edit_permissions_list;
             $view_data["columns"] = $columns;
             $view_data['column_tasks_count'] = $column_tasks_count;
@@ -3452,8 +3455,18 @@ class Tasks extends Security_Controller {
         $temp->title = "Others";
 
         $columns[] = $temp;
+        ////////////////////
+        // $tasks_list=array();
+        ////////////////////
         foreach ($tasks as $task) {
+            
             if ($sort_by == 'category') {
+                ////////////////
+                // if(!is_array($tasks_list[explode(" ",$task->category)[0]])){
+                //     $tasks_list[explode(" ",$task->category)[0]]=array();
+                // }
+                // $tasks_list[explode(" ",$task->category)[0]][]=$task;
+                /////////////
                 $ids = $task->labels;
                 if ($ids) {
                     $id_array = explode(',', $ids);
@@ -3500,9 +3513,25 @@ class Tasks extends Security_Controller {
 
         $first_item = array_shift($columns);
         $columns[] = $first_item;
+        // $columns=array(
+        //     array("id"=>"General","text"=>"General & Docking"),
+        //     array("id"=>"Hull","text"=>"Hull"),
+        //     array("id"=>"Equipment","text"=>"Equipment for Cargo"),
+        //     array("id"=>"Ship","text"=>"Ship Equipment"),
+        //     array("id"=>"Safety","text"=>"Safety & Crew Equipment"),
+        //     array("id"=>"Machinery","text"=>"Machinery Main Components"),
+        //     array("id"=>"Systems","text"=>"Systems machinery main components"),
+        //     array("id"=>"Common","text"=>"Common systems"),
+        //     array("id"=>"Others","text"=>"Others"),
+        // );
         $view_data['tasks_list'] = $tasks_list;
+        // $view_data['all_tasks'] = $tasks;
         $view_data['columns'] = $columns;
         $view_data["tasks_edit_permissions_list"] = $tasks_edit_permissions_list;
+        //////////////////////////
+        $allStatus=$this->Task_status_model->get_all()->getResult();
+        $view_data["allStatus"] = $allStatus;
+        /////////////////////////////
 
         return $this->template->view('tasks/kanban/kanban_list_view', $view_data);
 
@@ -3605,6 +3634,10 @@ class Tasks extends Security_Controller {
             $view_data["columns"] = $columns;
             $view_data['column_tasks_count'] = $column_tasks_count;
             $view_data['tasks_list'] = $tasks_list;
+            //////////////////////////
+            $allStatus=$this->Task_status_model->get_all()->getResult();
+            $view_data["allStatus"] = $allStatus;
+            /////////////////////////////
             return $this->template->view('tasks/kanban/kanban_view', $view_data);
         }
     }
@@ -3652,30 +3685,56 @@ class Tasks extends Security_Controller {
         $temp->title = "Others";
 
         $columns[] = $temp;
+        //////////////////
+        $categories=array(
+            array("id"=>"General","text"=>"General & Docking"),
+            array("id"=>"Hull","text"=>"Hull"),
+            array("id"=>"Equipment","text"=>"Equipment for Cargo"),
+            array("id"=>"Ship","text"=>"Ship Equipment"),
+            array("id"=>"Safety","text"=>"Safety & Crew Equipment"),
+            array("id"=>"Machinery","text"=>"Machinery Main Components"),
+            array("id"=>"Systems","text"=>"Systems machinery main components"),
+            array("id"=>"Common","text"=>"Common systems"),
+            array("id"=>"Others","text"=>"Others"),
+        );
+        $tasks_list=array();
+        foreach ($categories as $key => $category) {
+            # code...
+            $tasks_list[$category['id']]=[];
+        }
+        //////////////
         foreach ($tasks as $task) {
+            $tasks_edit_permissions_list[$task->id] = true;
             if ($sort_by == 'category') {
-                $ids = $task->labels;
-                if ($ids) {
-                    $id_array = explode(',', $ids);
-                    $id = array_shift($id_array);
-                    if (!get_array_value($tasks_list, $id)) {
-                        $tasks_list[$id] = array();
-                        $label = $this->Labels_model->get_one(intval($id));
+                // if(!array_key_exists($tasks_list[explode(" ",$task->category)[0]])){
+                //     $tasks_list[explode(" ",$task->category)[0]]=array();
+                // }
+                
+                if(array_key_exists(explode(" ",$task->category)[0],$tasks_list))
+                    $tasks_list[explode(" ",$task->category)[0]][]=$task;
+                else $tasks_list["Others"][]=$task;
+                // $ids = $task->labels;
+                // if ($ids) {
+                //     $id_array = explode(',', $ids);
+                //     $id = array_shift($id_array);
+                //     if (!get_array_value($tasks_list, $id)) {
+                //         $tasks_list[$id] = array();
+                //         $label = $this->Labels_model->get_one(intval($id));
         
-                        $temp = new \stdClass();
-                        $temp->id = $id;
-                        $temp->color = $label->color;
-                        $temp->title = $label->title;
+                //         $temp = new \stdClass();
+                //         $temp->id = $id;
+                //         $temp->color = $label->color;
+                //         $temp->title = $label->title;
         
-                        $columns[] = $temp;
-                    }
-                    $tasks_list[$id][] = $task;
-                    $tasks_edit_permissions_list[$id] = $this->_get_tasks_status_edit_permissions($tasks);
+                //         $columns[] = $temp;
+                //     }
+                //     $tasks_list[$id][] = $task;
+                //     $tasks_edit_permissions_list[$id] = $this->_get_tasks_status_edit_permissions($tasks);
     
-                } else {
-                    $tasks_list['-1'][] = $task;
-                    $tasks_edit_permissions_list['-1'] = $this->_get_tasks_status_edit_permissions($tasks);
-                }
+                // } else {
+                //     $tasks_list['-1'][] = $task;
+                //     $tasks_edit_permissions_list['-1'] = $this->_get_tasks_status_edit_permissions($tasks);
+                // }
     
             } else {
                 if ($task->dock_list_number) {
@@ -3703,8 +3762,11 @@ class Tasks extends Security_Controller {
         $view_data['tasks_list'] = $tasks_list;
         $view_data['columns'] = $columns;
         $view_data["tasks_edit_permissions_list"] = $tasks_edit_permissions_list;
+        //////////////////////////
         $allStatus=$this->Task_status_model->get_all()->getResult();
         $view_data["allStatus"] = $allStatus;
+        $view_data['columns'] = $categories;
+        /////////////////////////////
 
         return $this->template->view('tasks/kanban/kanban_list_view', $view_data);
 
@@ -4117,6 +4179,7 @@ class Tasks extends Security_Controller {
         }
 
         $result["data"] = $result_data;
+        
 
         echo json_encode($result);
     }
