@@ -1805,6 +1805,7 @@ class Tasks extends Security_Controller {
         $view_data['allYardCostItems']=$this->Shipyard_cost_items_model->get_all_where(array("task_id"=>$task_id))->getResult();
         $view_data['allYards']=$this->Project_yards_model->get_all_where(array("project_id"=>$model_info->project_id))->getResult();
         $allCostItems=$this->Task_cost_items_model->get_all_where(array("task_id"=>$task_id))->getResult();
+        $view_data['allCostItems']=$allCostItems;
         $view_data['model_info']->cost_items=json_encode($allCostItems);
         $allVariationOrders=$this->Task_variation_orders_model->get_all_where(array("task_id"=>$task_id))->getResult();
         $view_data['variation_orders']=$allVariationOrders;
@@ -3730,9 +3731,14 @@ class Tasks extends Security_Controller {
                 //     $tasks_list[explode(" ",$task->category)[0]]=array();
                 // }
                 
-                if(array_key_exists(explode(" ",$task->category)[0],$tasks_list))
+                if(array_key_exists(explode(" ",$task->category)[0],$tasks_list)){
                     $tasks_list[explode(" ",$task->category)[0]][]=$task;
-                else $tasks_list["Others"][]=$task;
+                }
+                    
+                else{
+                    $tasks_list["Others"][]=$task;
+                }
+                
                 //////////////////////////
                 // $ids = $task->labels;
                 // if ($ids) {
