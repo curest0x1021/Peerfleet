@@ -10,6 +10,7 @@ class Dashboard extends Security_Controller {
     function __construct() {
         parent::__construct();
         $this->Custom_widgets_model = model('App\Models\Custom_widgets_model');
+        $this->Projects_model= model('App\Models\Projects_model');
     }
 
     public function index() {
@@ -21,6 +22,10 @@ class Dashboard extends Security_Controller {
         if ($dashboards) {
             $view_data["dashboards"] = $dashboards->getResult();
         }
+        //////////////////////
+        $view_data['holding_projects']=$this->Projects_model->where("status_id",6)->where("deleted",0)->countAllResults();
+        $view_data['completed_projects']=$this->Projects_model->where("status_id",2)->where("deleted",0)->countAllResults();
+        //////////////////////
 
         $view_data["dashboard_type"] = "default";
 

@@ -1405,16 +1405,12 @@
             beforeShowDay:function(date){
                 var startDate = new Date('<?php echo date('Y-m-d', strtotime($gotProject->start_date));?>');
                 var endDate = new Date('<?php echo date('Y-m-d', strtotime($gotProject->deadline));?>');
-                console.log(date, startDate,endDate)
-                // Convert the date parameter to a comparable format
                 var formattedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-                // Check if the date falls within the specified range
                 if (formattedDate >= startDate && formattedDate <= endDate) {
-                // Highlight the date if it falls within the range
-                return [true, 'highlighted'];
+                    console.log(date)
+                    return [true, 'highlighted'];
                 } else {
-                // Otherwise, do not highlight the date
-                return [true, ''];
+                    return [true, 'disabled'];
                 }
             }
         });
