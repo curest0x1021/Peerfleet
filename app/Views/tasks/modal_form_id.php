@@ -174,7 +174,7 @@
                                     "id" => "start_date".$modalId,
                                     "name" => "start_date",
                                     "autocomplete" => "off",
-                                    "value" => isset($gotTask)&&$gotTask->start_date?date('d.m.Y', strtotime($gotTask->start_date)):"",
+                                    "value" => isset($gotTask)?(date('d.m.Y', strtotime($gotTask->start_date))):($gotProject->start_date?date('d.m.Y', strtotime($gotProject->start_date)):""),
                                     "class" => "form-control",
                                     "placeholder" => "DD.MM.YYYY",
                                     "style"=>"border:1px solid lightgray",
