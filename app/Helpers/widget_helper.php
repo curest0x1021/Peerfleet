@@ -1478,6 +1478,13 @@ if (!function_exists('projects_overview_widget')) {
 
         $view_data["projects_info"] = $ci->Projects_model->count_task_points($options);
 
+        ///////////
+        $view_data['execution_projects']=$ci->Projects_model->where("status_id",4)->where("deleted",0)->countAllResults();
+        $view_data['tender_projects']=$ci->Projects_model->where("status_id",3)->where("deleted",0)->countAllResults();
+        $view_data['closing_projects']=$ci->Projects_model->where("status_id",5)->where("deleted",0)->countAllResults();
+        //$view_data['completed_projects']=$ci->Projects_model->where("status_id",2)->where("deleted",0)->countAllResults();
+        ///////////
+
         $template = new Template();
         return $template->view("projects/widgets/projects_overview_widget", $view_data);
     }
