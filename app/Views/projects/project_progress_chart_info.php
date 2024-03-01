@@ -10,6 +10,9 @@
 
     <ul class="list-group list-group-flush">
         <li class="list-group-item border-top">
+            <?php echo "Status"; ?>: <?php echo $status_info->title; ?>
+        </li>
+        <li class="list-group-item border-top">
             <?php echo app_lang("start_date"); ?>: <?php echo is_date_exists($project_info->start_date) ? format_to_date($project_info->start_date, false) : "-"; ?>
         </li>
         <li class="list-group-item border-top">

@@ -1074,6 +1074,9 @@ class Projects extends Security_Controller {
         $view_data["task_statuses"] = $this->Tasks_model->get_task_statistics(array("project_id" => $project_id))->task_statuses;
 
         $view_data['project_id'] = $project_id;
+        ///////
+        $view_data['status_info']=$this->Project_status_model->get_one($view_data['project_info']->status_id);
+        /////
         $offset = 0;
         $view_data['offset'] = $offset;
         $view_data['activity_logs_params'] = array("log_for" => "project", "log_for_id" => $project_id, "limit" => 20, "offset" => $offset);
