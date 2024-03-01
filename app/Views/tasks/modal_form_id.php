@@ -1,7 +1,7 @@
 <?php $modalId=rand(); ?>
-<div id="tasks-dropzone" class="post-dropzone">
-    
-    <div class="modal-body clearfix">
+<div id="ajaxModalContent" >
+<div class="modal-body clearfix"  id="edit-task-panel<?php echo $modalId;?>">
+    <div id="tasks-dropzone" class="post-dropzone">
         <?php echo form_open(get_uri("tasks/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
         <input hidden name="id" value="<?php if(isset($gotTask)) echo $gotTask->id; ?>" />
         <div class="card-header d-flex justify-content-between">
@@ -1340,7 +1340,8 @@
         <?php echo form_close(); ?>
     </div>
 </div>
-    <?php echo view("includes/cropbox"); ?>
+</div>
+<?php echo view("includes/cropbox"); ?>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -1749,13 +1750,31 @@
                 contentType: false, 
                 success: function (response) {
                     // console.log(response)
-                    if(JSON.parse(response).success) window.location.reload();
+                    if(JSON.parse(response).success) {
+                        // window.edit_task_panel.closeModal();
+                        $maskTarget=$("#ajaxModalContent").find(".modal-body");
+                        var padding = $maskTarget.height() - 80;
+                        if (padding > 0) {
+                            padding = Math.floor(padding / 2);
+                        }
+                        $maskTarget.after("<div class='modal-mask'><div class='circle-loader'></div></div>");
+                        //check scrollbar
+                        var height = $maskTarget.outerHeight();
+                        $('.modal-mask').css({"width": $maskTarget.width() + 22 + "px", "height": height + "px", "padding-top": padding + "px"});
+                        $maskTarget.closest('.modal-dialog').find('[type="submit"]').attr('disabled', 'disabled');
+                        $maskTarget.addClass("hide");
+                        window.edit_task_panel.closeModal()
+                        //window.location.reload();
+                    }
                     // appLoader.hide();
                     // window.location='<?php 
                     //echo get_uri('task_libraries/view/'); 
                     ?>'+JSON.parse(response).saved_id;
                 }
             });
+        });
+        window.edit_task_panel=$("#edit-task-panel<?php echo $modalId;?>").appForm({
+            closeModalOnSuccess: false,
         });
         $('#toggle-blocking-panel<?php echo $modalId; ?>').on('click',function(){
             if($("#blocking-area<?php echo $modalId; ?>").hasClass('hide')) $("#blocking-area<?php echo $modalId; ?>").removeClass("hide");
@@ -1899,8 +1918,8 @@
         
     ?>
     <?php
-        if(isset($gotTask)&&$gotTask->cost_items)
-        echo 'cost_items=JSON.parse(`'.$gotTask->cost_items.'`);';
+        if(isset($allCostItems))
+        echo 'cost_items=JSON.parse(`'.json_encode($allCostItems).'`);';
     ?>
     function delete_checklist_item(element){
         var deleteId=element.getAttribute("item-id");
