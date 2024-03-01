@@ -1106,7 +1106,7 @@
                                                 echo form_input(array(
                                                     "id" => "input_cost_item_currency_select".$modalId,
                                                     "name" => "input_cost_item_currency_select",
-                                                    "value" => "AUD",
+                                                    "value" => $gotProject->currency?$gotProject->currency:"USD",
                                                     "class" => "form-control",
                                                     "placeholder" => app_lang('category'),
                                                     "data-rule-required" => true,

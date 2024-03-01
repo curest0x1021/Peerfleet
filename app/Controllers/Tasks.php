@@ -646,8 +646,9 @@ class Tasks extends Security_Controller {
         $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
         $allMilestones=$this->Milestones_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        $gotProject=$this->Projects_model->get_one($project_id);
         // $allVariationOrders=$this->Task_variation_orders_model->get_all()->getResult();
-        return $this->template->view('tasks/modal_form_id',["allTasks"=>$allTasks,"project_id"=>$project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        return $this->template->view('tasks/modal_form_id',["gotProject"=>$gotProject,"allTasks"=>$allTasks,"project_id"=>$project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     /*----*/
     /*----*/
