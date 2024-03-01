@@ -1282,45 +1282,6 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             })
             
             
-            // if($("#editing_cost_item")[0].value=="")
-            //     cost_items.push({
-            //         name:$("#cost_item_name")[0].value,
-            //         quantity:$("#cost_item_quantity")[0].value,
-            //         measurement:$("#cost_item_measurement")[0].value,
-            //         unit_price:$("#cost_item_unit_price")[0].value,
-            //         quote_type:$("#cost_item_quote_type")[0].value,
-            //         currency:$("#cost_item_currency")[0].value,
-            //         description:$("#cost_item_description")[0].value,
-            //         discount:$("#cost_item_discount")[0].value,
-            //         yard_remarks:$("#cost_item_yard_remarks")[0].value,
-            //     });
-            // else{
-            //     $("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0].deleteRow(Number($("#editing_cost_item")[0].value));
-            //     cost_items[Number($("#editing_cost_item")[0].value)]={
-            //         name:$("#cost_item_name")[0].value,
-            //         description:$("#cost_item_description")[0].value,
-            //         discount:$("#cost_item_discount")[0].value,
-            //         quantity:$("#cost_item_quantity")[0].value,
-            //         measurement:$("#cost_item_measurement")[0].value,
-            //         unit_price:$("#cost_item_unit_price")[0].value,
-            //         quote_type:$("#cost_item_quote_type")[0].value,
-            //         currency:$("#cost_item_currency")[0].value,
-            //         yard_remarks:$("#cost_item_yard_remarks")[0].value,
-            //     };  
-            // }
-            
-            // $.ajax({
-            //     url:'<?php// echo get_uri('tasks/save_task_cost_items');?>',
-            //     method:"POST",
-            //     data:{
-            //         task_id:<?php //echo $model_info->id;?>,
-            //         cost_items:JSON.stringify(cost_items)
-            //     },
-            //     success:function(response){
-            //     console.log(response)
-            //     }
-            // })
-            
         });
         $("#cancel-add-cost-item").on("click",function(){
             $("#insert-cost-item-panel").prop("hidden",true);
