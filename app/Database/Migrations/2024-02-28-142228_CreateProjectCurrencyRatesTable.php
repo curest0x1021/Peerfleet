@@ -32,7 +32,7 @@ class CreateProjectCurrencyRatesTable extends Migration
                 'constraint'=>'100',
                 'default'=>"USD"
             ],
-            "To"=>[
+            "to"=>[
                 'type'=>"VARCHAR",
                 'null'=>true,
                 'constraint'=>'100',

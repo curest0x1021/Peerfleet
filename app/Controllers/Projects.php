@@ -4112,19 +4112,6 @@ class Projects extends Security_Controller {
         // return json_encode($comments);
         return $this->template->view("projects/cost_overview/modal_comments",["project_id"=>$task_info->project_id,"task_id"=>$task_id,"comments"=>$comments,"can_comment_on_tasks"=>true]);
     }
-    function save_currency_rate(){
-        $newRateData=array(
-            "project_id"=>$this->request->getPost("project_id"),
-            "name"=>$this->request->getPost("name"),
-            "rate"=>$this->request->getPost("rate"),
-        );
-        $save_id=$this->Project_currency_rates_model->ci_save($newRateData);
-        return json_encode(array("success"=>true,"save_id"=>$save_id));
-    }
-    function modal_currency_rates($project_id){
-        $allRates=$this->Project_currency_rates_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        return $this->template->view('projects/comparison/modal_currency_rates',["project_id"=>$project_id,"allRates"=>$allRates]);
-    }
 
     function task_files_list_data($task_id = 0) {
         validate_numeric_value($task_id);
@@ -4152,10 +4139,26 @@ class Projects extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
     function currency_rates($project_id){
-        return $this->template->rander("projects/comparison/currency_rates",["project_id"=>$project_id]);
+        $allCurrencyRates=$this->Project_currency_rates_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        return $this->template->rander("projects/comparison/currency_rates",["project_id"=>$project_id,"allCurrencyRates"=>$allCurrencyRates]);
     }
     function modal_add_currency_rate($project_id){
-        return $this->template->view("projects/comparison/modal_add_currency_rate",["project_id"=>$project_id]);
+        $project_info=$this->Projects_model->get_one($project_id);
+        return $this->template->view("projects/comparison/modal_add_currency_rate",["project_id"=>$project_id,"project_info"=>$project_info]);
+    }
+    function save_currency_rate(){
+        $newRateData=array(
+            "project_id"=>$this->request->getPost("project_id"),
+            "from"=>$this->request->getPost("from"),
+            "to"=>$this->request->getPost("to"),
+            "rate"=>$this->request->getPost("rate"),
+        );
+        $save_id=$this->Project_currency_rates_model->ci_save($newRateData);
+        return json_encode(array("success"=>true,"save_id"=>$save_id));
+    }
+    function modal_currency_rates($project_id){
+        $allRates=$this->Project_currency_rates_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        return $this->template->view('projects/comparison/modal_currency_rates',["project_id"=>$project_id,"allRates"=>$allRates]);
     }
 }
 
