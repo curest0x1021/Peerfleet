@@ -15,7 +15,7 @@ class Projects_model extends Crud_model {
         $projects_table = $this->db->prefixTable('projects');
         $now = get_my_local_time("Y-m-d");
         $sql = "UPDATE $projects_table SET $projects_table.status_id = 5
-        WHERE $projects_table.deadline < $now";
+        WHERE $projects_table.deadline < '$now'";
         return $this->db->query($sql);
     }
 
