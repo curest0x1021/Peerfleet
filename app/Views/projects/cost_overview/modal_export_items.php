@@ -34,7 +34,6 @@
                 
             </div>
         </div>
-        <div class=" col-md-3"></div>
         <div class=" col-md-6">
             <div class=" card border p-2">
                 <div class="card-title  d-flex flex-column align-items-center">
@@ -46,6 +45,21 @@
                 <hr/>
                 <div class="card-body d-flex flex-column align-items-center">
                     <img width="100px" src="<?php echo get_file_uri("assets/images/zip.png") ?>" alt="style_1" style="margin-bottom: 30px"/>
+                </div>
+                
+            </div>
+        </div>
+        <div class=" col-md-6">
+            <div class=" card border p-2">
+                <div class="card-title  d-flex flex-column align-items-center">
+                    <h5>Cost overview</h5>
+                    <div>The Excel sheet contains project-related information about cost overview .
+                    </div>
+                </div>
+                <hr/>
+                <div class="card-body d-flex flex-column align-items-center">
+                    <img width="100px" src="<?php echo get_file_uri("assets/images/excel.png") ?>" alt="style_1" />
+                    <button type="button" class="btn btn-primary export_quotation_btn"><span data-feather="download" class="icon-16"></span> Export Cost overview XLSX</button>
                 </div>
                 
             </div>
