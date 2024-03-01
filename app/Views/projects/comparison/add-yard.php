@@ -1,10 +1,10 @@
 <div class="page-content project-details-view clearfix">
     <div class="container">
-        <h2>New Yard Candidate</h2>
+        <h2>Add Yard Candidate</h2>
         <div class="divider" ></div>
         <div class="card" >
             <div class="card-body" >
-                <p>Create a yard candidate that will provide you quotes based on the work orders in your project.</p>
+                <p>Add a yard candidate that will provide you quotes based on the work orders in your project.</p>
                 <!-- <form action="#" method="POST" > -->
                     <div class="form-group" >
                         <label>Yard:</label>
@@ -34,10 +34,10 @@
                     </div>
                 <!-- </form> -->
                 <div class="divider" ></div>
-                <p>
+                <!-- <p>
                     <i data-feather="info" ></i>
                     If you can’t find the yard in the list, please send an email to support@maindeck.io and we will add it to the list.
-                </p>
+                </p> -->
             </div>
         </div>
     </div>
