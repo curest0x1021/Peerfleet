@@ -47,7 +47,7 @@
         <div class="col-md-6">
             <!--checklist-->
             <?php echo form_open(get_uri("tasks/save_checklist_item"), array("id" => "checklist_form", "class" => "general-form", "role" => "form")); ?>
-            <div class="col-md-12 mb15 b-t p10 card">
+            <div class="col-md-12 mb15 b-t p10 card" style="min-height:20vh;">
                 <div class="pb10 pt10">
                     <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count">0</span><span>/</span><span class="chcklists_count"></span>
                 </div>
@@ -58,7 +58,7 @@
                 </div>
             </div>
             <?php echo form_close(); ?>
-            <div class="card project-activity-section mt10">
+            <div class="card project-activity-section mt10" style="min-height:20vh;">
                 <div class="card-header">
                     <h4><?php echo app_lang('activity'); ?></h4>
                 </div>
