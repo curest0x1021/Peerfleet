@@ -4151,6 +4151,12 @@ class Projects extends Security_Controller {
         }
         echo json_encode(array("data" => $result));
     }
+    function currency_rates($project_id){
+        return $this->template->rander("projects/comparison/currency_rates",["project_id"=>$project_id]);
+    }
+    function modal_add_currency_rate($project_id){
+        return $this->template->view("projects/comparison/modal_add_currency_rate",["project_id"=>$project_id]);
+    }
 }
 
 /* End of file projects.php */

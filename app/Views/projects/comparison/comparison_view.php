@@ -78,7 +78,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
     <div class="card-body" >
         <div class="row" >
             <div class="col-md-2" >
-                <?php echo modal_anchor(get_uri('projects/modal_currency_rates/'.$project_info->id),'<button class="btn btn-default" ><i class="icon-16" data-feather="plus" ></i>Add Rates</button>',array()); ?>
+                <?php //echo modal_anchor(get_uri('projects/modal_currency_rates/'.$project_info->id),'<button class="btn btn-default" ><i class="icon-16" data-feather="plus" ></i>Add Rates</button>',array()); ?>
+                <a style="float:right" href="<?php echo get_uri('projects/currency_rates/').$project_info->id; ?>" class="btn btn-primary"  >Exchange rates</a>
             </div>
             <div class="col-md-8" >
                 

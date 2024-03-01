@@ -26,9 +26,22 @@ class CreateProjectCurrencyRatesTable extends Migration
                 'null'=>true,
                 'constraint'=>'100'
             ],
+            "from"=>[
+                'type'=>"VARCHAR",
+                'null'=>true,
+                'constraint'=>'100',
+                'default'=>"USD"
+            ],
+            "To"=>[
+                'type'=>"VARCHAR",
+                'null'=>true,
+                'constraint'=>'100',
+                'default'=>"USD"
+            ],
             'rate'=>[
                 'type'=>"DOUBLE",
-                'null'=>true
+                'null'=>true,
+                'default'=>1
             ],
             "deleted"=>[
                 'type'=>"TINYINT",
