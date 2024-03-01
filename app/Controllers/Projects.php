@@ -31,6 +31,8 @@ class Projects extends Security_Controller {
         $this->Task_variation_orders_model = model("App\Models\Task_variation_orders_model");
         $this->Task_owner_supplies_model = model("App\Models\Task_owner_supplies_model");
         $this->Project_currency_rates_model = model("App\Models\Project_currency_rates_model");
+        $this->Projects_model->auto_update();
+
     }
 
     private function can_delete_projects($project_id = 0) {
@@ -3742,6 +3744,12 @@ class Projects extends Security_Controller {
     function save_yard(){
         $id=$this->request->getPost('id');
         $selectedYard=$this->Shipyards_model->get_one($this->request->getPost('shipyard_id'))->id;
+        $yardcounts=$this->Project_yards_model->getCount("project_id",$this->request->getPost('project_id'));
+        $project_info=$this->Projects_model->get_one($this->request->getPost('project_id'));
+        if($yardcounts==0){
+            $project_info->status_id=3;
+            $this->Projects_model->ci_save($project_info,$project_info->id);
+        }
         $save_data=array(
             "project_id"=>$this->request->getPost('project_id'),
             'shipyard_id'=>$this->request->getPost('shipyard_id'),
@@ -3940,7 +3948,9 @@ class Projects extends Security_Controller {
         $this->Project_yards_model->delete_where(array("project_id"=>$shipyard_info->project_id,"selected"=>0));
         $shipyard_info->selected=0;
         $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
-        
+        $project_info=$this->Projects_model->get_one($shipyard_info->project_id);
+        $project_info->status_id=4;
+        $this->Projects_model->ci_save($project_info,$project_info->id);
         $allShipyardCostItems=$this->Shipyard_cost_items_model->get_all_where(array("shipyard_id"=>$shipyard_id))->getResult();
         $this->Task_cost_items_model->delete_where(array("project_id"=>$shipyard_info->project_id));
         foreach ($allShipyardCostItems as $oneItem) {

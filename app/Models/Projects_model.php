@@ -11,6 +11,14 @@ class Projects_model extends Crud_model {
         parent::__construct($this->table);
     }
 
+    function auto_update(){
+        $projects_table = $this->db->prefixTable('projects');
+        $now = get_my_local_time("Y-m-d");
+        $sql = "UPDATE $projects_table SET $projects_table.status_id = 5
+        WHERE $projects_table.deadline < $now";
+        return $this->db->query($sql);
+    }
+
     function get_details($options = array()) {
         $projects_table = $this->db->prefixTable('projects');
         $project_members_table = $this->db->prefixTable('project_members');
