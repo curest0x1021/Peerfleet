@@ -383,7 +383,7 @@
                     echo form_input(array(
                         "id" => "project_currency",
                         "name" => "currency",
-                        "value" => $model_info->labels,
+                        "value" => $model_info->currency?$model_info->currency:"",
                         "class" => "form-control",
                         "placeholder" => "Project currency"
                     ));
