@@ -1751,7 +1751,6 @@
                 success: function (response) {
                     // console.log(response)
                     if(JSON.parse(response).success) {
-                        // window.edit_task_panel.closeModal();
                         $maskTarget=$("#ajaxModalContent").find(".modal-body");
                         var padding = $maskTarget.height() - 80;
                         if (padding > 0) {
