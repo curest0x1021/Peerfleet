@@ -27,9 +27,9 @@
             <div id="kanban-list-filters" class="col-md-12 col-xs-12"></div>
         </div>
         <div class="row">
-            <div class="col-md-12 col-xs-12">
+            <!-- <div class="col-md-12 col-xs-12">
                 <button class="btn btn-default" id="reload-kanban-button"><i data-feather="refresh-cw" class="icon-16"></i></button>
-            </div>
+            </div> -->
             
         </div>
         
