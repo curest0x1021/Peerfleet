@@ -149,10 +149,10 @@ $totalComments=0;
     </div>
     <div class="card-body" >
         <div class="d-flex" style="margin-bottom:10px;" >
-            <button class="btn btn-sm btn-default" ><i class="icon-16"  data-feather="plus" ></i>Add filter</button>
+            <button class="btn btn-default" ><i class="icon-16"  data-feather="plus" ></i>Add filter</button>
             <div class="flex-grow-1" ></div>
-            <?php echo modal_anchor(get_uri('projects/modal_import_cost_overview'),'<button class="btn btn-sm btn-default" ><i class="icon-16"  data-feather="upload" ></i>Import</button>',array());?>
-            <?php echo modal_anchor(get_uri('projects/modal_export_cost_overview'),'<button class="btn btn-sm btn-default" ><i class="icon-16"  data-feather="download" ></i>Export</button>',array());?>
+            <?php echo modal_anchor(get_uri('projects/modal_import_cost_overview'),'<button style="margin-right:10px;" class="btn btn-default" ><i class="icon-16"  data-feather="upload" ></i>Import</button>',array());?>
+            <?php echo modal_anchor(get_uri('projects/modal_export_cost_overview'),'<button class="btn btn-default" ><i class="icon-16"  data-feather="download" ></i>Export</button>',array());?>
             <div></div>
         </div>
         <table class="table table-hover table-bordered" >
