@@ -35,6 +35,20 @@
                 <td>1.0</td>
                 <td><a href="#" >EDIT</a> | <a href="#" >DELETE</a></td>
             </tr>
+            <?php
+            foreach ($allCurrencyRates as $oneRate) {
+            ?>
+            <tr>
+                <td>
+                    <p><i data-feather="alert-triangle" ></i> <?php echo $oneRate->from;?></p>
+                </td>
+                <td><?php echo $oneRate->to;?></td>
+                <td><?php echo $oneRate->rate;?></td>
+                <td><a href="#" >EDIT</a> | <a href="#" >DELETE</a></td>
+            </tr>
+            <?php
+            }
+            ?>
         </tbody>
     </table>
     <div class="row" >
