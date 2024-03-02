@@ -9,7 +9,7 @@
             <p>It is crucial to specify the accurate exchange rates that will be utilized to convert the cost provided from the specific yard.</p>
         </div>
     </div>
-    <table class="table table-hover tabel-bordered">
+    <table class="table table-bordered">
         <thead>
             <tr>
             <th>From</th>
