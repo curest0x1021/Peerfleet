@@ -11,6 +11,10 @@ $categorizedTasks=array(
     "Common systems"=>array(),
     "Others"=>array(),
 );
+$exchange_rates=array();
+foreach ($allCurrencyRates as $oneRate) {
+    $exchange_rates[$oneRate->from]=$oneRate->rate;
+}
 foreach ($allProjectTasks as $index => $oneTask) {
     if(isset($categorizedTasks[$oneTask->category]))
         $categorizedTasks[$oneTask->category][]=$oneTask;
@@ -70,6 +74,9 @@ foreach ($allProjectTasks as $index => $oneTask) {
     .category-title{
         color:#eef1f9;
     }
+    tr:hover{
+        background-color:rgba(0, 0, 0, 0.075);
+    }
 </style>
 <div class="card" >
     <div class="card-header" >
@@ -85,7 +92,9 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 
             </div>
             <div class="col-md-2" >
-                <a style="float:right" href="<?php echo get_uri('projects/add_yard/'.$project_info->id,["project_info"=>$project_info]); ?>" class="btn btn-primary"  >Add Yard Candidate</a>
+                <?php if($project_info->status_id!=4) { ?>
+                    <a style="float:right" href="<?php echo get_uri('projects/add_yard/'.$project_info->id,["project_info"=>$project_info]); ?>" class="btn btn-primary"  >Add Yard Candidate</a>
+                <?php } ?>
             </div>
             
         </div>
@@ -94,7 +103,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
             <!--Main Info-->
             
             
-            <table class="table table-bordered table-hover" style="width:auto"  >
+            <table class="table table-bordered" style="width:auto"  >
                 <thead>
                     <tr>
                         <th class="col table-fixed-column" ></th>
@@ -553,7 +562,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 $totalTaskYardCost=0;
                                 foreach ($yardListedItems[$i] as $oneItem) {                                
                                     // $totalTaskYardCost+=(float)$oneItem->quantity*(float)$oneItem->unit_price;
-                                    $totalTaskYardCost+=(float)$oneItem->total_cost;
+                                    $totalTaskYardCost+=(float)($oneItem->total_cost*(array_key_exists($oneItem->currency,$exchange_rates)?$exchange_rates[$oneItem->currency]:1));
                                 }
                                 $totalCosts[$i]+=$totalTaskYardCost;
                                 $totalYardCosts[]=$totalTaskYardCost;
@@ -565,15 +574,15 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                         <td
                             style="background-color:<?php
-                            if($totalYardCosts[$i]==0) echo "lightyellow";
-                            else if(max($totalYardCosts)==$totalYardCosts[$i]) echo "pink";
-                            else if(min($totalYardCosts)==$totalYardCosts[$i]) echo "lightblue";
-                            else echo "white";
+                            if($totalYardCosts[$i]==0) echo "#F9A52D";
+                            else if(max($totalYardCosts)==$totalYardCosts[$i]) echo "#e74c3c";
+                            else if(min($totalYardCosts)==$totalYardCosts[$i]) echo "#2d9cdb";
+                            else echo "rgba(0,0,0,0);";
                             ?>"
                         >
                             <?php
-                            
-                                echo $totalYardCosts[$i];
+
+                                echo ($totalYardCosts[$i])." ".$project_info->currency;
                             ?>
                         </th>
                         <?php
@@ -598,7 +607,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 return $oneTask->id==$oneItem->task_id&&$oneYard->id==$oneItem->shipyard_id;
                             });
                             foreach($oneYardItems as $oneItem){
-                                $oneYardCost+= (float)$oneItem->total_cost;
+                                $oneYardCost+= (float)($oneItem->total_cost*(array_key_exists($oneItem->currency,$exchange_rates)?$exchange_rates[$oneItem->currency]:1));
                                 
                             }
                             $oneTaskAllCosts[]=$oneYardCost;
@@ -607,17 +616,17 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                         <?php for ($i=0; $i < $numberYards; $i++) { ?>
                             <td style="background-color:<?php  
-                                if($oneTaskAllCosts[$i]==0) echo "lightyellow";
-                                else if(max($oneTaskAllCosts)==$oneTaskAllCosts[$i]) echo "pink";
-                                else if(min($oneTaskAllCosts)==$oneTaskAllCosts[$i]) echo "lightblue";
-                                else echo "white";
+                                if($oneTaskAllCosts[$i]==0) echo "#F9A52D";
+                                else if(max($oneTaskAllCosts)==$oneTaskAllCosts[$i]) echo "#e74c3c;color:blue;";
+                                else if(min($oneTaskAllCosts)==$oneTaskAllCosts[$i]) echo "#2d9cdb;color:red";
+                                else echo "rgba(0,0,0,0)";
                                 ?>;" >
                                 <div class="d-flex" style="align-items:center;" >
                                     <?php
                                         echo modal_anchor(get_uri('projects/modal_yard_cost_items/'.$oneTask->id),'<span class="badge task-info-box pill bg-secondary" >'.$oneTaskItemCounts[$i].'</span>',array());
                                     ?>
                                     <div class="flex-grow-1" ></div>
-                                    <?php echo $oneTaskAllCosts[$i]; ?>
+                                    <?php echo ($oneTaskAllCosts[$i])." ".$project_info->currency; ?>
                                 </div>
                             </td>
                         <?php
@@ -774,12 +783,12 @@ $(document).ready(function(){
     // })
     var totalCostEls=$(".td-total-cost");
     for(var index in totalCosts){
-        totalCostEls[index].innerHTML=(totalCosts[index]);
-        var background="white";
-        if(totalCosts[index]==0) background="lightyellow";
-        else if(totalCosts[index]==Math.min(...totalCosts)) background="lightblue";
-        else if(totalCosts[index]==Math.max(...totalCosts)) background="pink";
-        else background="white";
+        totalCostEls[index].innerHTML=(totalCosts[index]+" "+"<?php echo $project_info->currency;?>");
+        var background="rgba(0,0,0,0)";
+        if(totalCosts[index]==0) background="#F9A52D";
+        else if(totalCosts[index]==Math.min(...totalCosts)) {background="#2d9cdb";};
+        else if(totalCosts[index]==Math.max(...totalCosts)) background="#e74c3c";
+        // else background="white";
         totalCostEls[index].style['background-color']=background
     }
 })

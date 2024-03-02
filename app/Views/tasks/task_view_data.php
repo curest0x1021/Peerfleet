@@ -672,13 +672,13 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     <i data-feather="download" ></i>
                     Download cost items as a excel file
                 </a>
-                <div class="card" style="border: solid 1px lightgray;min-height:20vh;">
+                <div class="card" style="min-height:20vh;">
                     <div class="card-header d-flex">
                         <b>Cost Item List</b>&nbsp;<i data-feather="info" class="icon-16" style="color:lightgray" ></i>
                     </div>
                     <div class="card-body" style="padding:10px" >
                         
-                        <table id="table-quotes-from-yard" class="table table-hover table-bordered" >
+                        <table id="table-quotes-from-yard" class="table table-bordered" >
                             <thead>
                             <tr>
                                 <td>Cost item name</td>
@@ -993,12 +993,12 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             <!---->
             <!--Work Order Quotes-->
             <div class="col-md-12" >
-                <div class="card" style="border: solid 1px lightgray;min-height:30vh;">
+                <div class="card" style="min-height:30vh;">
                     <div class="card-header d-flex">
                         <b>Task Quotes</b>
                     </div>
                     <div class="card-body" style="padding:10px" >
-                        <table id="table-quotes-from-yard" class="table table-hover table-bordered" style="margin:0" >
+                        <table id="table-quotes-from-yard" class="table table-bordered" style="margin:0" >
                             <thead>
                             <tr>
                                 <td>QUOTE</td>
@@ -1046,12 +1046,12 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
 
             <!--Work Order Quotes-->
             <div class="col-md-12" >
-                <div class="card" style="border: solid 1px lightgray;min-height:20vh;">
+                <div class="card" style="min-height:20vh;">
                     <div class="card-header d-flex">
                         <b>Owner's Supply</b>
                     </div>
                     <div class="card-body" style="padding:10px" >
-                        <table id="table-owners-supplies" class="table table-hover table-bordered" style="margin:0" >
+                        <table id="table-owners-supplies" class="table table-bordered" style="margin:0" >
                             <thead>
                             <tr>
                                 <td>Cost Item Name</td>
@@ -1130,12 +1130,12 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             <!---->
             <!--Variation Orders-->
             <div class="col-md-12" >
-                <div class="card" style="border: solid 1px lightgray;min-height:30vh;">
+                <div class="card" style="min-height:30vh;">
                     <div class="card-header d-flex">
                         <b>Variation Orders</b>
                     </div>
                     <div class="card-body" style="padding:10px" >
-                        <table id="table-quotes-from-yard" class="table table-variation-orders table-hover table-bordered" style="margin:0" >
+                        <table id="table-quotes-from-yard" class="table table-variation-orders table-bordered" style="margin:0" >
                             <thead>
                             <tr>
                                 <td>Order name</td>

@@ -19,22 +19,6 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>
-                    <p><i data-feather="alert-triangle" ></i> United Arab Emirates Dirham (AED)</p>
-                </td>
-                <td>United States Dollar (USD)</td>
-                <td>1.0</td>
-                <td><a href="#" >EDIT</a> | <a href="#" >DELETE</a></td>
-            </tr>
-            <tr>
-                <td>
-                    <p><i data-feather="alert-triangle" ></i> Afghan Afghani (AFN)</p>
-                </td>
-                <td>United States Dollar (USD)</td>
-                <td>1.0</td>
-                <td><a href="#" >EDIT</a> | <a href="#" >DELETE</a></td>
-            </tr>
             <?php
             foreach ($allCurrencyRates as $oneRate) {
             ?>
@@ -44,7 +28,10 @@
                 </td>
                 <td><?php echo $oneRate->to;?></td>
                 <td><?php echo $oneRate->rate;?></td>
-                <td><a href="#" >EDIT</a> | <a href="#" >DELETE</a></td>
+                <td>
+                    <?php echo modal_anchor(get_uri("projects/modal_edit_currency_rate/".$oneRate->id),'EDIT',array()); ?>
+                     | <a href="#" >DELETE</a>
+                </td>
             </tr>
             <?php
             }
