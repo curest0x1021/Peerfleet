@@ -29,7 +29,7 @@
         <?php } else { ?>
             <div class="form-group">
                 <div class="row">
-                    <label for="project_type" class=" col-md-3">Project category</label>
+                    <label for="project_type" class=" col-md-3">Project category (Labels)</label>
                     <div class=" col-md-9">
                         <?php
                         $category_dropdown = array(
@@ -48,7 +48,7 @@
                             "name" => "category",
                             "value" => "",
                             "class" => "form-control",
-                            "placeholder" => app_lang('category'),
+                            "placeholder" => app_lang('labels'),
                             "data-rule-required" => true,
                             "style"=>"border:1px solid lightgray;",
                             "data-msg-required" => app_lang("field_required"),
@@ -145,39 +145,39 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <!-- <div class="form-group">
             <div class="row">
-                <label for="price" class=" col-md-3"><?php echo app_lang('price'); ?></label>
+                <label for="price" class=" col-md-3"><?php //echo app_lang('price'); ?></label>
                 <div class=" col-md-9">
                     <?php
-                    echo form_input(array(
-                        "id" => "price",
-                        "name" => "price",
-                        "value" => $model_info->price ? to_decimal_format($model_info->price) : "",
-                        "class" => "form-control",
-                        "placeholder" => app_lang('price')
-                    ));
+                    // echo form_input(array(
+                    //     "id" => "price",
+                    //     "name" => "price",
+                    //     "value" => $model_info->price ? to_decimal_format($model_info->price) : "",
+                    //     "class" => "form-control",
+                    //     "placeholder" => app_lang('price')
+                    // ));
                     ?>
                 </div>
             </div>
-        </div>
+        </div> -->
 
-        <div class="form-group">
+        <!-- <div class="form-group">
             <div class="row">
-                <label for="project_labels" class=" col-md-3"><?php echo app_lang('labels'); ?></label>
+                <label for="project_labels" class=" col-md-3"><?php //echo app_lang('labels'); ?></label>
                 <div class=" col-md-9">
                     <?php
-                    echo form_input(array(
-                        "id" => "project_labels",
-                        "name" => "labels",
-                        "value" => $model_info->labels,
-                        "class" => "form-control",
-                        "placeholder" => app_lang('labels')
-                    ));
+                    // echo form_input(array(
+                    //     "id" => "project_labels",
+                    //     "name" => "labels",
+                    //     "value" => $model_info->labels,
+                    //     "class" => "form-control",
+                    //     "placeholder" => app_lang('labels')
+                    // ));
                     ?>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <?php if ($model_info->id) { ?>
             <div class="form-group">
@@ -410,6 +410,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $("#category_input").select2({
+            multiple:true,
             data:<?php echo json_encode($category_dropdown); ?>
         })
         $("#project_currency").select2({
