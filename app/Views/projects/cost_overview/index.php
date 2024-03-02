@@ -155,7 +155,7 @@ $totalComments=0;
             <?php echo modal_anchor(get_uri('projects/modal_export_cost_overview'),'<button class="btn btn-default" ><i class="icon-16"  data-feather="download" ></i>Export</button>',array());?>
             <div></div>
         </div>
-        <table class="table table-hover table-bordered" >
+        <table class="table table-bordered" >
             <thead>
                 <tr>
                     <th class="col" style="min-width:15vw;max-width:15vw;width:15vw;" >Name</th>

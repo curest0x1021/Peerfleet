@@ -4022,7 +4022,7 @@ i.online {
   border: none;
   margin-bottom: 20px;
   transition: all 1s;
-  box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.1), 0 6px 6px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 3px 5px rgba(0, 0, 0, 0.2), 0 6px 6px 0 rgba(0, 0, 0, 0.2);
 }
 .card .card-header {
   background-color: #fff;
@@ -6960,4 +6960,7 @@ table.dataTable tbody td.reminder-option-section {
 }
 .w55px {
   width: 55px;
+}
+tr:hover {
+  background-color: rgba(0, 0, 0, 0.075) !important;
 }

@@ -3776,8 +3776,9 @@ class Projects extends Security_Controller {
         //     return $oneYard->selected==1;
         // });
         // if(count($selectedYards)>0) $allYards=$selectedYards;
+        $allCurrencyRates=$this->Project_currency_rates_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allYardCostItems=$this->Shipyard_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
-        return $this->template->view("projects/comparison/comparison_view",["allYardCostItems"=>$allYardCostItems,"allProjectTasks"=>$allProjectTasks,"project_info"=>$project_info,"allYards"=>$allYards]);
+        return $this->template->view("projects/comparison/comparison_view",["allCurrencyRates"=>$allCurrencyRates,"allYardCostItems"=>$allYardCostItems,"allProjectTasks"=>$allProjectTasks,"project_info"=>$project_info,"allYards"=>$allYards]);
     }
     function modal_yard_cost_items($task_id){
         $project_id=$this->Tasks_model->get_one($task_id)->project_id;
@@ -4146,6 +4147,10 @@ class Projects extends Security_Controller {
         $project_info=$this->Projects_model->get_one($project_id);
         return $this->template->view("projects/comparison/modal_add_currency_rate",["project_id"=>$project_id,"project_info"=>$project_info]);
     }
+    function modal_edit_currency_rate($rate_id){
+        $rate_info=$this->Project_currency_rates_model->get_one($rate_id);
+        return $this->template->view("projects/comparison/modal_edit_currency_rate",["rate_info"=>$rate_info]);
+    }
     function save_currency_rate(){
         $newRateData=array(
             "project_id"=>$this->request->getPost("project_id"),
@@ -4154,6 +4159,12 @@ class Projects extends Security_Controller {
             "rate"=>$this->request->getPost("rate"),
         );
         $save_id=$this->Project_currency_rates_model->ci_save($newRateData);
+        return json_encode(array("success"=>true,"save_id"=>$save_id));
+    }
+    function edit_currency_rate(){
+        $rate_info=$this->Project_currency_rates_model->get_one($this->request->getPost("id"));
+        $rate_info->rate=$this->request->getPost("rate");
+        $save_id=$this->Project_currency_rates_model->ci_save($rate_info,$this->request->getPost("id"));
         return json_encode(array("success"=>true,"save_id"=>$save_id));
     }
     function modal_currency_rates($project_id){

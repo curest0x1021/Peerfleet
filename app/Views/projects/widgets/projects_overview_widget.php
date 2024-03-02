@@ -14,7 +14,7 @@ $progress = $total_points ? round(($completed_points / $total_points) * 100) : 0
                 <a href="<?php echo get_uri('projects/all_projects/1'); ?>" class="text-default">
                     <div class="pt-3 pb10 text-center">
                         <div class="b-r">
-                            <h4 class="strong mb-1 mt-0" style="color: #01B393;"><?php echo $count_project_status->open; ?></h4>
+                            <h4 class="strong mb-1 mt-0" style="color: blue;"><?php echo $count_project_status->open; ?></h4>
                             <span><?php echo "Planning phase"; ?></span>
                         </div>
                     </div>
@@ -44,7 +44,7 @@ $progress = $total_points ? round(($completed_points / $total_points) * 100) : 0
                 <a href="<?php echo get_uri('projects/all_projects/3'); ?>" class="text-default">
                     <div class="pt-3 pb10 text-center">
                         <div>
-                            <h4 class="strong mb-1 mt-0 text-warning"><?php echo $closing_projects; ?></h4>
+                            <h4 class="strong mb-1 mt-0 text-success"><?php echo $closing_projects; ?></h4>
                             <span><?php echo "Closing phase"; ?></span>
                         </div>
                     </div>

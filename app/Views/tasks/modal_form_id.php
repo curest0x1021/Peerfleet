@@ -215,36 +215,19 @@
                             <label for="assigned_to" class="col-md-3"><?php echo app_lang('assign_to'); ?>:</label>
                             <div class="col-md-9" >
                                 <?php
-                                $assigned_to_dropdown=array(
-                                    array(
-                                        "id"=>"-",
-                                        "text"=>"-"
-                                    ),
-                                    array(
-                                        "id"=>"Ines Erna",
-                                        "text"=>"Ines Erna"
-                                    ),
-                                    array(
-                                        "id"=>"Reinhold Gereit",
-                                        "text"=>"Reinhold Gereit"
-                                    ),
-                                    array(
-                                        "id"=>"Dominik Darnell",
-                                        "text"=>"Dominik Darnell"
-                                    ),
-                                    array(
-                                        "id"=>"Olav Lakshmi",
-                                        "text"=>"Olav Lakshmi"
-                                    ),
-                                    array(
-                                        "id"=>"Paul Winfred",
-                                        "text"=>"Paul Winfred"
-                                    ),
-                                );
+                                $members_dropdown=array();
+                                foreach ($allMembers as $oneMember) {
+                                    # code...
+                                    // echo json_encode($oneMember);
+                                    $members_dropdown[]=array(
+                                        "id"=>$oneMember->id,
+                                        "text"=>$oneMember->member_name
+                                    );
+                                }
                                 echo form_input(array(
                                     "id" => "assigned_to".$modalId,
                                     "name" => "assigned_to",
-                                    "value" => isset($gotTask)&&$gotTask->assigned_to?$gotTask->assigned_to:"-",
+                                    "value" => isset($gotTask)&&$gotTask->assigned_to?$gotTask->assigned_to:$members_dropdown[0]['id'],
                                     "class" => "form-control",
                                     // "required"=>true,
                                     "style"=>"border:1px solid lightgray",
@@ -260,37 +243,11 @@
                             <label for="collaborators" class="col-md-3"><?php echo app_lang('collaborators'); ?>:</label>
                             <div class="col-md-9"  >
                             <?php
-                            $collaborators_dropdown = array(
-                                array(
-                                    "id"=>"-",
-                                    "text"=>"-"
-                                ),
-                                array(
-                                    "id"=>"Ines Erna",
-                                    "text"=>"Ines Erna"
-                                ),
-                                array(
-                                    "id"=>"Reinhold Gereit",
-                                    "text"=>"Reinhold Gereit"
-                                ),
-                                array(
-                                    "id"=>"Dominik Darnell",
-                                    "text"=>"Dominik Darnell"
-                                ),
-                                array(
-                                    "id"=>"Olav Lakshmi",
-                                    "text"=>"Olav Lakshmi"
-                                ),
-                                array(
-                                    "id"=>"Paul Winfred",
-                                    "text"=>"Paul Winfred"
-                                ),
-                            );
-
+                            
                             echo form_input(array(
                                 "id" => "collaborators".$modalId,
                                 "name" => "collaborators",
-                                "value" => isset($gotTask)&&$gotTask->collaborators?$gotTask->collaborators:"-",
+                                "value" => isset($gotTask)&&$gotTask->collaborators?$gotTask->collaborators:$members_dropdown[0]['id'],
                                 "class" => "form-control",
                                 "required"=>true,
                                 "style"=>"border:1px solid lightgray",
@@ -822,7 +779,7 @@
                             <b>Cost Item List</b>
                         </div>
                         <div class="card-body" style="padding:1px" >
-                            <table id="table-costs-item-list<?php echo $modalId;?>" class="table table-bordered table-hover" style="margin:0" >
+                            <table id="table-costs-item-list<?php echo $modalId;?>" class="table table-bordered " style="margin:0" >
                                 <thead>
                                 <tr>
                                     <td>Cost item name</td>
@@ -1375,7 +1332,7 @@
             });
         })
         $("#collaborators<?php echo $modalId;?>").select2({
-            data: <?php echo (json_encode($collaborators_dropdown)); ?>
+            data: <?php echo (json_encode($members_dropdown)); ?>
         });
         $("#status_id<?php echo $modalId;?>").select2({
             data: <?php echo (json_encode($status_dropdown)); ?>
@@ -1387,7 +1344,7 @@
             data: <?php echo (json_encode($milestone_dropdown)); ?>
         });
         $("#assigned_to<?php echo $modalId;?>").select2({
-            data: <?php echo (json_encode($assigned_to_dropdown)); ?>
+            data: <?php echo (json_encode($members_dropdown)); ?>
         });
         $("#supplier<?php echo $modalId;?>").select2({
             data: <?php echo (json_encode($suppliers_dropdown)); ?>

@@ -264,7 +264,8 @@ $currency_dropdown=array(
                         $('.modal-mask').css({"width": $maskTarget.width() + 22 + "px", "height": height + "px", "padding-top": padding + "px"});
                         $maskTarget.closest('.modal-dialog').find('[type="submit"]').attr('disabled', 'disabled');
                         $maskTarget.addClass("hide");
-                        window.add_currency_rate_panel.closeModal()
+                        window.add_currency_rate_panel.closeModal();
+                        window.location.reload();
                     }
                     
                 }
