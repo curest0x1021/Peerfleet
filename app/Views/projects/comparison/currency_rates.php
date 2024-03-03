@@ -1,6 +1,6 @@
 <div class="container" >
     <h1>Currencies</h1>
-    <div class="card bg-warning" >
+    <!-- <div class="card bg-warning" >
         <div class="card-body" >
             <div class="d-flex align-items-center" >
                 <i data-feather="alert-triangle" ></i>
@@ -8,7 +8,7 @@
             </div>
             <p>It is crucial to specify the accurate exchange rates that will be utilized to convert the cost provided from the specific yard.</p>
         </div>
-    </div>
+    </div> -->
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -24,7 +24,7 @@
             ?>
             <tr>
                 <td>
-                    <p><i data-feather="alert-triangle" ></i> <?php echo $oneRate->from;?></p>
+                    <p> <?php echo $oneRate->from;?></p>
                 </td>
                 <td><?php echo $oneRate->to;?></td>
                 <td><?php echo $oneRate->rate;?></td>

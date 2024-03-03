@@ -94,6 +94,7 @@ class Project_comments_model extends Crud_model {
             $where .= " AND $project_comments_table.task_id=$task_id";
         }
 
+
         $file_id = $this->_get_clean_value($options, "file_id");
         if ($file_id) {
             $where .= " AND $project_comments_table.file_id=$file_id";

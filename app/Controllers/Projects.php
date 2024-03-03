@@ -2311,7 +2311,7 @@ class Projects extends Security_Controller {
         validate_numeric_value($project_id);
         $this->access_only_team_members();
 
-        $options = array("project_id" => $project_id, "login_user_id" => $this->login_user->id);
+        $options = array("project_id" => $project_id, "task_id" => 0 , "login_user_id" => $this->login_user->id);
         $view_data['comments'] = $this->Project_comments_model->get_details($options)->getResult();
         $view_data['project_id'] = $project_id;
         return $this->template->view("projects/comments/index", $view_data);
