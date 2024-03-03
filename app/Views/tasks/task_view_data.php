@@ -1584,6 +1584,25 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         $(".btn-start-upload").on("click",function(){
             $(".input-upload-file").click();
         })
+        $(".input-upload-file").on("change",function(){
+            console.log($(this)[0].files)
+            var myForm=new FormData();
+            var rise_csrf_token = $('[name="rise_csrf_token"]').val();
+            myForm.append("rise_csrf_token",rise_csrf_token);
+            myForm.append("file",$(this)[0].files[0]);
+            myForm.append("id",<?php echo $task_id;?>);
+            myForm.append("project_id",<?php echo $model_info->project_id;?>);
+            $.ajax({
+                url:"<?php echo get_uri("tasks/upload_comment_file");?>",
+                method:"POST",
+                data:myForm,
+                processData: false, // Prevent jQuery from automatically processing the data
+                contentType: false, 
+                success:function(response){
+                    $("#project-file-table").appTable({newData: JSON.parse(response).newRow, dataId: JSON.parse(response).rowId});
+                }
+            })
+        })
         /////////////////////////////
     })
     var cost_items=[];

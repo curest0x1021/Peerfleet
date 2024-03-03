@@ -4767,8 +4767,16 @@ class Tasks extends Security_Controller {
 
                 $comment_data["files"] = serialize($files_data); //don't clean serilized data
 
-                $this->Project_comments_model->save_comment($comment_data);
-                return json_encode(array("success"=>true));
+                $save_id=$this->Project_comments_model->save_comment($comment_data);
+                $oneFile=array();
+                $oneFile['file_name']=get_array_value($file_data, "file_name");
+                $oneFile['file_size']=$file_size;
+                $oneFile['uploaded_by_user_name']=$this->login_user->first_name.$this->login_user->last_name;
+                $oneFile['created_at']=$now;
+                // $view_data['files'][]=$oneFile;
+                // echo json_encode($oneFile);
+                $result[]=$this->_make_file_row($oneFile,array());
+                return json_encode(array("success"=>true,"newRow"=>$result[0],"rowId"=>$save_id));
             }
             return json_encode(array("success"=>false));
             
