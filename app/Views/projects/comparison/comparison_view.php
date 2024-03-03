@@ -575,8 +575,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <td
                             style="background-color:<?php
                             if($totalYardCosts[$i]==0) echo "#F9A52D";
-                            else if(max($totalYardCosts)==$totalYardCosts[$i]) echo "#e74c3c";
-                            else if(min($totalYardCosts)==$totalYardCosts[$i]) echo "#2d9cdb";
+                            else if(max($totalYardCosts)==$totalYardCosts[$i]) echo "#e74c3c;";
+                            else if(min($totalYardCosts)==$totalYardCosts[$i]) echo "#2d9cdb;";
                             else echo "rgba(0,0,0,0);";
                             ?>"
                         >
@@ -617,8 +617,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php for ($i=0; $i < $numberYards; $i++) { ?>
                             <td style="background-color:<?php  
                                 if($oneTaskAllCosts[$i]==0) echo "#F9A52D";
-                                else if(max($oneTaskAllCosts)==$oneTaskAllCosts[$i]) echo "#e74c3c;color:blue;";
-                                else if(min($oneTaskAllCosts)==$oneTaskAllCosts[$i]) echo "#2d9cdb;color:red";
+                                else if(max($oneTaskAllCosts)==$oneTaskAllCosts[$i]) echo "#e74c3c;";
+                                else if(min($oneTaskAllCosts)==$oneTaskAllCosts[$i]) echo "#2d9cdb;";
                                 else echo "rgba(0,0,0,0)";
                                 ?>;" >
                                 <div class="d-flex" style="align-items:center;" >
@@ -786,8 +786,14 @@ $(document).ready(function(){
         totalCostEls[index].innerHTML=(totalCosts[index]+" "+"<?php echo $project_info->currency;?>");
         var background="rgba(0,0,0,0)";
         if(totalCosts[index]==0) background="#F9A52D";
-        else if(totalCosts[index]==Math.min(...totalCosts)) {background="#2d9cdb";};
-        else if(totalCosts[index]==Math.max(...totalCosts)) background="#e74c3c";
+        else if(totalCosts[index]==Math.min(...totalCosts)) {
+            background="#2d9cdb";
+            // totalCostEls[index].style['color']="green";
+        }
+        else if(totalCosts[index]==Math.max(...totalCosts)) {
+            background="#e74c3c";
+            // totalCostEls[index].style['color']="green";
+        }
         // else background="white";
         totalCostEls[index].style['background-color']=background
     }
