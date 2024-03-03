@@ -1,13 +1,12 @@
 <div id="kanban-wrapper">
     <ul id="kanban-list-container" class="kanban-list-container clearfix">
         <li class="kanban-list-col kanban--1" >
-            <table class="w-100 display dataTable no-footer" id="kanban-item-list--1" class="kanban-list-items" data-status_id="-1">
-                <thead>
+            <table table-id="headers-table" class="w-100 display dataTable no-footer" id="kanban-item-list--1" class="kanban-list-items" data-status_id="-1">
+                <!-- <thead>
                     <tr role="row">
                         <th width="50px" style="min-width: 35px;" class="sorting"  aria-controls="task-table"  aria-sort="descending" aria-label=""></th>
                         <th width="10%" class="sorting"  aria-controls="task-table"  aria-label="">Dock list number</th>
                         <th width="30%" class="sorting"  aria-controls="task-table"  aria-label="">Title</th>
-                        <!-- <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Reference drawing</th> -->
                         <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Start date</th>
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Deadline</th>
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Milestone</th>
@@ -17,7 +16,7 @@
                         <th width="8%" class="sorting_disabled"  aria-label="">Status</th>
                         <th width="8%" class="sorting"  aria-controls="task-table"  aria-label=""></th>
                     </tr>
-                </thead>
+                </thead> -->
             </table>
         </li>
         <?php $index = 0;
@@ -284,7 +283,26 @@
             });
         }
     }
-
+    $(document).ready(function(){
+        $("[table-id=headers-table]").appTable({
+            order: [[0, "desc"]],
+            source:'<?php echo get_uri('projects/task_list_headers');?>',
+            columns: [
+                {title: 'Dock list number',style:"width:50px;"},
+                {title: 'Title',style:"width:10%;"},
+                {title: 'Start date',style:"width:30%;"},
+                {title: 'Deadline',style:"width:8%;"},
+                {title: 'Milestone',style:"width:6%;"},
+                {title: 'Supplier',style:"width:6%;"},
+                {title: 'Assigned to',style:"width:6%;"},
+                {title: 'Collaborators',style:"width:12%;"},
+                {title: 'Status',style:"width:8%;"},
+                {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w150"}
+            ],
+            printColumns: combineCustomFieldsColumns([0, 1, 2, 3, 4, 5], '<?php //echo $custom_field_headers; ?>'),
+            xlsColumns: combineCustomFieldsColumns([0, 1, 2, 3, 4, 5], '<?php //echo $custom_field_headers; ?>')
+        });
+    });
 
 </script>
 

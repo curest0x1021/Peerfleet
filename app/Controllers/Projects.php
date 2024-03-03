@@ -4171,6 +4171,16 @@ class Projects extends Security_Controller {
         $allRates=$this->Project_currency_rates_model->get_all_where(array("project_id"=>$project_id))->getResult();
         return $this->template->view('projects/comparison/modal_currency_rates',["project_id"=>$project_id,"allRates"=>$allRates]);
     }
+    function task_list_headers(){
+        $headers=array(
+            "data"=>array(
+                array(
+                    "","","","","","","","","",""
+                )
+            )
+        );
+        return json_encode($headers);
+    }
 }
 
 /* End of file projects.php */
