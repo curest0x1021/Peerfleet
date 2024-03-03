@@ -233,7 +233,7 @@ $currency_dropdown=array(
 </div>
 <script>
     $(document).ready(function(){
-        $(".modal-dialog").addClass('modal-xl').addClass('modal-dialog-centered');
+        // $(".modal-dialog").addClass('modal-xl').addClass('modal-dialog-centered');
         $(".currency_dropdown").select2({
             data:<?php echo json_encode($currency_dropdown);?>
         });
