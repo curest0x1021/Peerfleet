@@ -1544,7 +1544,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         }
 
         $("#project-file-table").appTable({
-            source: '<?php echo_uri("tasks/task_list_headers/" . $task_id) ?>',
+            source: '<?php echo_uri("tasks/files_list_data").$task_id; ?>',
             order: [[0, "desc"]],
             
             columns: [

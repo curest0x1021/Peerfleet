@@ -90,7 +90,7 @@ class Project_comments_model extends Crud_model {
         }
 
         $task_id = $this->_get_clean_value($options, "task_id");
-        if ($task_id) {
+        if (isset($task_id)) {
             $where .= " AND $project_comments_table.task_id=$task_id";
         }
 

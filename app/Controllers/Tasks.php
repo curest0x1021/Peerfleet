@@ -5331,4 +5331,14 @@ class Tasks extends Security_Controller {
 
         return $row_data;
     }
+    function task_list_headers($task_id){
+        $headers=array(
+            "data"=>array(
+                array(
+                    "","","","","","","","","",""
+                )
+            )
+        );
+        return json_encode($headers);
+    }
 }
