@@ -11,7 +11,7 @@
                 echo js_anchor("<i data-feather='check-square' class='icon-16'></i> " . app_lang("cancel_selection"), array("class" => "hide btn btn-default batch-cancel-btn"));
             }
             if ($can_create_tasks) {
-                echo modal_anchor(get_uri("tasks/modal_import_task_library/".$project_id), "<i data-feather='upload' class='icon-16'></i> " . "Import from libraries", array("class" => "btn btn-default import_libraries_btn", "title" => "Import from libraries"));
+                echo modal_anchor(get_uri("tasks/modal_import_task_library/".$project_id), "<i data-feather='upload' class='icon-16'></i> " . "Import task templates", array("class" => "btn btn-default import_libraries_btn", "title" => "Import from libraries"));
                 echo modal_anchor(get_uri("tasks/modal_form_new/".$project_id), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_multiple_tasks'), array("class" => "btn btn-default", "title" => app_lang('add_multiple_tasks'), "data-post-project_id" => $project_id, "data-post-add_type" => "multiple"));
                 echo modal_anchor(get_uri("tasks/modal_form_new/".$project_id), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_task'), array("class" => "btn btn-default", "title" => app_lang('add_task'), "data-post-project_id" => $project_id));
             }
