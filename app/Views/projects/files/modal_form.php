@@ -2,7 +2,7 @@
 <div class="modal-body clearfix">
     <div class="container-fluid">
         <input type="hidden" name="project_id" value="<?php echo $project_id; ?>" />
-
+        <input type="hidden" name="task_id" value="<?php echo $task_id; ?>" />
         <div class="form-group">
             <div class="row">
                 <label for="category_id" class=" col-md-3"><?php echo app_lang('category'); ?></label>
