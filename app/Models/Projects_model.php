@@ -38,7 +38,7 @@ class Projects_model extends Crud_model {
         }
 
         $status_id = $this->_get_clean_value($options, "status_id");
-        if ($status_id) {
+        if ($status_id){
             $where .= " AND $projects_table.status_id='$status_id'";
         }
 
