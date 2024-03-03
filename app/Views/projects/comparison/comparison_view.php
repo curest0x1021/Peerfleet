@@ -83,19 +83,19 @@ foreach ($allProjectTasks as $index => $oneTask) {
     <h4>Comparison View</h4>
     </div>
     <div class="card-body" >
-        <div class="row" >
-            <div class="col-md-2" >
+        <div class="d-flex align-items-center" >
+            <!-- <div class="col-md-2" > -->
                 <?php //echo modal_anchor(get_uri('projects/modal_currency_rates/'.$project_info->id),'<button class="btn btn-default" ><i class="icon-16" data-feather="plus" ></i>Add Rates</button>',array()); ?>
-                <a style="float:right" href="<?php echo get_uri('projects/currency_rates/').$project_info->id; ?>" class="btn btn-primary"  >Exchange rates</a>
-            </div>
-            <div class="col-md-8" >
+                <a style="" href="<?php echo get_uri('projects/currency_rates/').$project_info->id; ?>" class="btn btn-primary"  >Exchange rates</a>
+            <!-- </div> -->
+            <div class="flex-grow-1" >
                 
             </div>
-            <div class="col-md-2" >
-                <?php if($project_info->status_id!=4) { ?>
+            <!-- <div class="col-md-2" > -->
+                <?php //if($project_info->status_id!=4) { ?>
                     <a style="float:right" href="<?php echo get_uri('projects/add_yard/'.$project_info->id,["project_info"=>$project_info]); ?>" class="btn btn-primary"  >Add Yard Candidate</a>
-                <?php } ?>
-            </div>
+                <?php //} ?>
+            <!-- </div> -->
             
         </div>
         
@@ -113,7 +113,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             $totalCosts[]=0;
                         ?>
                         <th class="col" style="min-width:12vw;width:12vw;max-width:12vw;">
-                            <?php echo modal_anchor(get_uri('projects/modal_select_yard/'.$allYards[$i]->id),'<button class="btn btn-primary btn-select-yard-candidate" >Select candidate</button>',array());?>
+                            <?php if($project_info->status_id!=4) echo modal_anchor(get_uri('projects/modal_select_yard/'.$allYards[$i]->id),'<button class="btn btn-primary btn-select-yard-candidate" >Select candidate</button>',array());?>
                         </th>
                         <?php
                         }
