@@ -31,7 +31,7 @@
     <?php if ($view_type == "from_project_modal") { ?>
         <!-- <button type="button" id="next-button" class="btn btn-info text-white"><span data-feather="arrow-right-circle" class="icon-16"></span> <?php //echo app_lang('next'); ?></button> -->
         <button type="button" id="save-and-continue-button" class="btn btn-info text-white"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('save_and_continue'); ?></button>
-        <button type="button" id="next-button" class="btn btn-primary text-white"><span data-feather="save" class="icon-16"></span> <?php echo app_lang('save'); ?></button>
+        <button type="button" id="next-button" class="btn btn-primary text-white"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('save'); ?></button>
         
     <?php } else { ?>
         <button type="submit" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('save'); ?></button>
