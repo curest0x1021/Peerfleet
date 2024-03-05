@@ -37,7 +37,7 @@
             <div class=" card border p-2">
                 <div class="card-title  d-flex flex-column align-items-center">
                     <h5>Cost Form</h5>
-                    <div>The Excel sheet contains task-related cost information as well as columns in which the various billing-related information (for import purposes) can be entered .
+                    <div>The Excel sheet contains task-related cost information as well as columns in which the various billing-related information (for import purposes) can be entered.
                     </div>
                 </div>
                 <hr/>
