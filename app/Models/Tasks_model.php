@@ -1067,5 +1067,12 @@ class Tasks_model extends Crud_model
     {
         return $this->where($columnName, $specialValue)->where('deleted',0)->countAllResults();
     }
+    public function get_unfinished($filter,$value){
+        $tasks_table = $this->db->prefixTable('tasks');
+
+        $sql="SELECT * FROM $tasks_table WHERE $tasks_table.$filter = $value AND $tasks_table.status_id != 3 AND $tasks_table.deleted = 0";
+        $result = $this->db->query($sql);
+        return $result;
+    }
     
 }
