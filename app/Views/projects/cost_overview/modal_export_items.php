@@ -45,6 +45,7 @@
                 <hr/>
                 <div class="card-body d-flex flex-column align-items-center">
                     <img width="100px" src="<?php echo get_file_uri("assets/images/zip.png") ?>" alt="style_1" style="margin-bottom: 30px"/>
+                    <a type="button" target="_blank" href="<?php echo get_uri("projects/download_all_zip/").$project_id;?>" class="btn btn-primary export_quotation_btn"><span data-feather="download" class="icon-16"></span> Download zip file</a>
                 </div>
                 
             </div>
