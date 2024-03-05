@@ -33,20 +33,27 @@
                     <div class=" col-md-9">
                         <?php
                         $category_dropdown = array(
-                            array("id"=>"General & Docking","text"=>"General & Docking"),
-                            array("id"=>"Hull","text"=>"Hull"),
-                            array("id"=>"Equipment for Cargo","text"=>"Equipment for Cargo"),
-                            array("id"=>"Ship Equipment","text"=>"Ship Equipment"),
-                            array("id"=>"Safety & Crew Equipment","text"=>"Safety & Crew Equipment"),
-                            array("id"=>"Machinery Main Components","text"=>"Machinery Main Components"),
-                            array("id"=>"Systems machinery main components","text"=>"Systems machinery main components"),
-                            array("id"=>"Common systems","text"=>"Common systems"),
-                            array("id"=>"Others","text"=>"Others"),
+                            // array("id"=>"General & Docking","text"=>"General & Docking"),
+                            // array("id"=>"Hull","text"=>"Hull"),
+                            // array("id"=>"Equipment for Cargo","text"=>"Equipment for Cargo"),
+                            // array("id"=>"Ship Equipment","text"=>"Ship Equipment"),
+                            // array("id"=>"Safety & Crew Equipment","text"=>"Safety & Crew Equipment"),
+                            // array("id"=>"Machinery Main Components","text"=>"Machinery Main Components"),
+                            // array("id"=>"Systems machinery main components","text"=>"Systems machinery main components"),
+                            // array("id"=>"Common systems","text"=>"Common systems"),
+                            // array("id"=>"Others","text"=>"Others"),
                         );
+                        foreach ($categories as $oneCategory) {
+                            # code...
+                            $category_dropdown[]=array(
+                                "id"=>$oneCategory->id,
+                                "text"=>$oneCategory->title
+                            );
+                        }
                         echo form_input(array(
                             "id" => "category_input",
                             "name" => "category",
-                            "value" => "",
+                            "value" => $model_info->category,
                             "class" => "form-control",
                             "placeholder" => app_lang('labels'),
                             "data-rule-required" => true,
