@@ -9,12 +9,12 @@
         <div  class="card bg-warning"  >
             <div class="card-body" >
                 <h5><i data-feather="alert-triangle" class="icon-16" ></i>Warning</h5>
-            <p>
+            <!-- <p>
                 This action will move the project to the only Execution Phase. The status of your project will automatically change to the Execution phase.
-            </p>
+            </p> -->
             <p>
-                Please note that the Deviation cost, Loss of earnings, Bunker cost and other additional expenditures at yard are not transfered to the cost overview.
-                In order to include these in the project's total cost overview, you should add these as Owner's supply to a designated task.
+                This action moves your project to the execution phase and will change the status of your project.<br/>
+                Please note that the deviation cost, loss of earnings, bunker cost and other additional expenses in the yard are not transferred to the cost overview. In order to include these in the project's total cost overview, you should add these as Owner's supply to a designated task.
             </p>
             </div>
         </div>
