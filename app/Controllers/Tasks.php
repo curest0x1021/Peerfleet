@@ -3919,12 +3919,12 @@ class Tasks extends Security_Controller {
         //     //////////////////////
         //     echo "kkkkk";
         //     if($status_id==3){
-                $allTasks=$this->Tasks_model->get_unfinished("project_id",$task_info->project_id)->getResult();
-                $project_info=$this->Projects_model->get_one($task_info->project_id);
-                if(count($allTasks)==0) {
-                    $project_info->status_id=5;
-                    $this->Projects_model->ci_save($project_info,$project_info->id);
-                } 
+                // $allTasks=$this->Tasks_model->get_unfinished("project_id",$task_info->project_id)->getResult();
+                // $project_info=$this->Projects_model->get_one($task_info->project_id);
+                // if(count($allTasks)==0) {
+                //     $project_info->status_id=5;
+                //     $this->Projects_model->ci_save($project_info,$project_info->id);
+                // } 
             // }
             //////////////////////
             $task_info = $this->Tasks_model->get_details(array("id" => $id))->getRow();
