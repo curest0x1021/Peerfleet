@@ -5365,6 +5365,8 @@ class Tasks extends Security_Controller {
                 "description"=>$oneLibrary->description,
                 "category"=>$oneLibrary->category,
                 "supplier"=>$oneLibrary->supplier,
+                "location"=>$oneLibrary->location,
+                "specification"=>$oneLibrary->specification,
             );
             $saved_id=$this->Tasks_model->save_gantt_task_date($newTaskData,null);
         }

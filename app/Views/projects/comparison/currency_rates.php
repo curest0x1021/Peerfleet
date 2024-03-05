@@ -9,6 +9,11 @@
             <p>It is crucial to specify the accurate exchange rates that will be utilized to convert the cost provided from the specific yard.</p>
         </div>
     </div> -->
+    <?php
+    foreach ($allCostItemCurrencies as $oneCurrency) {
+       echo "<p>$oneCurrency->id</p>"
+    }
+    ?>
     <table class="table table-bordered">
         <thead>
             <tr>
