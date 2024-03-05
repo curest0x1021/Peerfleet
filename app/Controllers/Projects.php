@@ -272,6 +272,9 @@ class Projects extends Security_Controller {
         $view_data['label_suggestions'] = $this->make_labels_dropdown("project", $view_data['model_info']->labels);
         $view_data['statuses'] = $this->Project_status_model->get_details()->getResult();
         $view_data["can_edit_projects"] = $this->can_edit_projects();
+        /////////////////////////////
+        $view_data['categories']=$this->Labels_model->get_details(array("context"=>"project"))->getResult();
+        /////////////////////////////
 
         return $this->template->view('projects/modal_form', $view_data);
     }

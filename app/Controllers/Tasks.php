@@ -5349,4 +5349,25 @@ class Tasks extends Security_Controller {
         );
         return json_encode($headers);
     }
+    function modal_apply($project_id){
+        $allTaskLibraries=$this->Task_libraries_model->get_all_where(array("deleted"=>0))->getResult();
+        return $this->template->view("tasks/libraries/modal_apply",['project_id'=>$project_id,'allTaskLibraries'=>$allTaskLibraries]);
+    }
+    function apply_libraries(){
+        $selected_libraries=$this->request->getPost("selected_libraries");
+        foreach($selected_libraries as $oneId){
+            $oneLibrary=$this->Task_libraries_model->get_one($oneId);
+            $newTaskData=array(
+                "title"=>$oneLibrary->title,
+                "status_id"=>1,
+                "milestone_id"=>0,
+                "project_id"=>$this->request->getPost("project_id"),
+                "description"=>$oneLibrary->description,
+                "category"=>$oneLibrary->category,
+                "supplier"=>$oneLibrary->supplier,
+            );
+            $saved_id=$this->Tasks_model->save_gantt_task_date($newTaskData,null);
+        }
+        return json_encode(array("success"=>true,"save_id"=>$saved_id));
+    }
 }
