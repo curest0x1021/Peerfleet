@@ -37,7 +37,7 @@
         <div class=" col-md-6">
             <div class=" card border p-2" style="height:35vh;">
                 <div class="card-title  d-flex flex-column align-items-center" style="height:10vh;">
-                    <h5>Cost overview</h5>
+                    <h5>COST FORM</h5>
                     <div>The Excel sheet contains task-related cost information as well as columns in which the various billing-related information (for import purposes) can be entered.
                     </div>
                 </div>
