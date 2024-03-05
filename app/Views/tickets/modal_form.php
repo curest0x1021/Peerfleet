@@ -62,6 +62,22 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="requested_data" class=" col-md-3">More about requester</label>
+                            <div class="col-md-9" id="requested-by-dropdown-section">
+                                
+                                    <textarea
+                                        id="request_data"
+                                        name="request_data"
+                                        value= "<?php echo isset($model_info->request_data)&&$model_info->request_data;?>"
+                                        class="form-control"
+                                        placeholer= "Some more detail about Requester."
+                                    >
+                                    </textarea>
+                            </div>
+                        </div>
+                    </div>
                 <?php } else if ($login_user->user_type == "client") { ?>
                     <input type="hidden" name="requested_by_id" value="<?php echo $login_user->id; ?>" />
                 <?php } ?>
