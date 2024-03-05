@@ -13,7 +13,7 @@
                 <hr/>
                 <div class="card-body d-flex flex-column align-items-center">
                     <img width="100px" src="<?php echo get_file_uri("assets/images/excel.png") ?>" alt="style_1" />
-                    <button type="button" class="btn btn-primary export_project_btn"><span data-feather="download" class="icon-16"></span> <?php echo app_lang('export_project_form'); ?></button>
+                    <a href="<?php echo get_uri('projects/download_project_form_xlsx/').$project_id;?>" class="btn btn-primary export_project_btn"><span data-feather="download" class="icon-16"></span> <?php echo app_lang('export_project_form'); ?></a>
                 </div>
                 
             </div>
@@ -29,7 +29,7 @@
                 <hr/>
                 <div class="card-body d-flex flex-column align-items-center">
                     <img width="100px" src="<?php echo get_file_uri("assets/images/excel.png") ?>" alt="style_1" />
-                    <button type="button" class="btn btn-primary export_quotation_btn"><span data-feather="download" class="icon-16"></span> <?php echo app_lang('export_quotation_form'); ?></button>
+                    <a type="button" target="_blank" href="<?php echo get_uri("projects/download_quotation_form_xlsx/").$project_id;?>" class="btn btn-primary export_quotation_btn"><span data-feather="download" class="icon-16"></span> <?php echo app_lang('export_quotation_form'); ?></a>
                 </div>
                 
             </div>
@@ -59,7 +59,7 @@
                 <hr/>
                 <div class="card-body d-flex flex-column align-items-center">
                     <img width="100px" src="<?php echo get_file_uri("assets/images/excel.png") ?>" alt="style_1" />
-                    <button type="button" class="btn btn-primary export_quotation_btn"><span data-feather="download" class="icon-16"></span> Export Cost overview XLSX</button>
+                    <a href="<?php echo get_uri("projects/download_cost_overview_xlsx/").$project_id;?>" target="_blank"  class="btn btn-primary btn_export_cost_overview1"><span data-feather="download" class="icon-16"></span> Export Cost overview XLSX</a>
                 </div>
                 
             </div>
@@ -75,4 +75,48 @@
     <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
 </div>
 <?php echo form_close(); ?>
+<script>
+    $(document).ready(function(){
+        $(".btn_export_cost_overview").on("click",function(){
+            $.ajax({
+                url: '<?php echo get_uri("projects/download_cost_overview_xlsx/").$project_id; ?>',
+                type: 'POST',
+                data:{
+                    project_id:<?php echo $project_id;?>,
+                    data:$("#table-panel-for-xlsx")[0].innerHTML
+                },
+                success: function(response,textStatus, jqXHR) {
+                    console.log(response)
+                    // Create a blob from the response
+                    // var blob = new Blob([response], { type: 'application/octet-stream' });
+
+                    // // Create a temporary URL for the blob
+                    // var url = window.URL.createObjectURL(blob);
+
+                    // // Create a link element
+                    // var link = document.createElement('a');
+                    // link.href = url;
+
+                    // var headers = jqXHR.getAllResponseHeaders();
+                    // link.download = '<?php echo $project_info->title."_cost_overview.xlsx";?>'; // Specify the filename
+
+                    // // Append the link to the document body
+                    // document.body.appendChild(link);
+
+                    // // Trigger a click event on the link to start the download
+                    // link.click();
+
+                    // // Remove the link from the document body
+                    // document.body.removeChild(link);
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors
+                }
+            });
+
+        })
+    })
+    
+
+</script>
 

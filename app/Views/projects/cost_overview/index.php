@@ -152,9 +152,10 @@ $totalComments=0;
             <button class="btn btn-default" ><i class="icon-16"  data-feather="plus" ></i>Add filter</button>
             <div class="flex-grow-1" ></div>
             <?php echo modal_anchor(get_uri('projects/modal_import_cost_overview'),'<button style="margin-right:10px;" class="btn btn-default" ><i class="icon-16"  data-feather="upload" ></i>Import</button>',array());?>
-            <?php echo modal_anchor(get_uri('projects/modal_export_cost_overview'),'<button class="btn btn-default" ><i class="icon-16"  data-feather="download" ></i>Export</button>',array());?>
+            <?php echo modal_anchor(get_uri('projects/modal_export_cost_overview/').$project_id,'<button class="btn btn-default" ><i class="icon-16"  data-feather="download" ></i>Export</button>',array());?>
             <div></div>
         </div>
+        <div id="table-panel-for-xlsx" >
         <table class="table table-bordered" >
             <thead>
                 <tr>
@@ -290,6 +291,7 @@ $totalComments=0;
                 
             
         </table>
+        </div>
     </div>
 </div>
 <script>
