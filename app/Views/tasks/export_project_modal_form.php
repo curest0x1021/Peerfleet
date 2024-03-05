@@ -84,7 +84,7 @@
         $('body').on('click', '.export_project_btn_2', function (e) {
 
             $.ajax({
-                url: "<?php echo get_uri('tasks/export_project_tasks_data') ?>",
+                url: "<?php echo get_uri('tasks/export_project_tasks_data'); ?>",
                 type: 'POST',
                 dataType: 'json',
                 data: {project_id:<?php echo $project_id; ?> },
