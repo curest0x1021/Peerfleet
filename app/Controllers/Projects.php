@@ -3766,6 +3766,18 @@ class Projects extends Security_Controller {
             'title'=>$this->request->getPost('title')
         );
         $save_id=$this->Project_yards_model->ci_save($save_data,$id);
+        $allCostItemCurrencies=$this->Task_cost_items_model->get_dropdown_list(array("currency"), "currency", array("project_id"=>$this->request->getPost('project_id')));
+        if(!isset($project_info->currency)) $project_info->currency="USD";
+        foreach($allCostItemCurrencies as $oneCurrency){
+            if($oneCurrency==$project_info->currency) continue;
+            $newRateData=array(
+                "from"=>$oneCurrency,
+                "to"=>$project_info->currency,
+                "rate"=>1,
+                "project_id"=>$project_info->id
+            );
+            $this->Project_currency_rates_model->ci_save($newRateData);
+        }
         if($save_id)
             return json_encode(array("success"=>true,"save_id"=>$save_id));
         else return json_encode(array("success"=>false));
