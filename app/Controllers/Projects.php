@@ -2755,8 +2755,8 @@ class Projects extends Security_Controller {
     
             return $this->download_app_files(get_setting("project_file_path"), $serialized_file_data);
         }
-        
-        app_redirect("projects/view/" . $project_id);
+        return '<script>window.close();</script>';
+        // app_redirect("projects/view/" . $project_id);
     }
     /* download a file */
 
@@ -4415,16 +4415,16 @@ class Projects extends Security_Controller {
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
-        $sheet1->setTitle('About project');
-        $sheet1->setCellValue('A1', $project_info->id);
-        $sheet1->setCellValue('A3', $project_info->title);
-        $sheet1->setCellValue('A14', $project_info->start_date);
-        $sheet1->setCellValue('B14', "~");
-        $sheet1->setCellValue('C14', $project_info->deadline);
-        $sheet1->setCellValue('A19', 'Support');
-        $sheet1->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
-        $sheet1->setCellValue('A21', '+47 91999771');
-        $sheet1 = $spreadsheet->createSheet();
+        // $sheet1->setTitle('About project');
+        // $sheet1->setCellValue('A1', $project_info->id);
+        // $sheet1->setCellValue('A3', $project_info->title);
+        // $sheet1->setCellValue('A14', $project_info->start_date);
+        // $sheet1->setCellValue('B14', "~");
+        // $sheet1->setCellValue('C14', $project_info->deadline);
+        // $sheet1->setCellValue('A19', 'Support');
+        // $sheet1->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
+        // $sheet1->setCellValue('A21', '+47 91999771');
+        // $sheet1 = $spreadsheet->createSheet();
         $sheet1->setTitle('Cost overview');
 
         $categorizedTasks=array(

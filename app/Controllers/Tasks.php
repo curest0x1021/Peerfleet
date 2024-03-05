@@ -3080,7 +3080,7 @@ class Tasks extends Security_Controller {
         $link_to_task = get_uri("task_view/index/" . $data->id);
 
         $row_data = array(
-            "Category" => $task_labels,
+            "Category" => $data->category,
             "Dock list number" => $data->dock_list_number,
             "Title" => $data->title,
             "Desciption" => $data->description,

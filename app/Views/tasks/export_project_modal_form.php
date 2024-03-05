@@ -28,7 +28,8 @@
                 <hr/>
                 <div class="card-body d-flex flex-column align-items-center">
                     <img width="100px" src="<?php echo get_file_uri("assets/images/excel.png") ?>" alt="style_1" />
-                    <button type="button" class="btn btn-primary export_quotation_btn"><span data-feather="download" class="icon-16"></span> <?php echo app_lang('export_quotation_form'); ?></button>
+                    <!-- <button type="button" class="btn btn-primary export_quotation_btn"><span data-feather="download" class="icon-16"></span> <?php echo app_lang('export_quotation_form'); ?></button> -->
+                    <a href="<?php echo get_uri("projects/download_quotation_form_xlsx/").$project_id;?>" target="_blank" class="btn btn-primary"><span data-feather="download" class="icon-16"></span> <?php echo app_lang('export_quotation_form'); ?></a>
                 </div>
                 
             </div>
@@ -59,7 +60,8 @@
                 <hr/>
                 <div class="card-body d-flex flex-column align-items-center">
                     <img width="100px" src="<?php echo get_file_uri("assets/images/zip.png") ?>" alt="style_1" style="margin-bottom: 30px"/>
-                    <?php echo anchor(get_uri("projects/download_project_file/") . $project_id, "<i data-feather='download' class='icon-16'></i> " . app_lang("export_project_zip"), array("title" => app_lang("export_project_zip"), "id" => "export_project_zip", "class" => "btn btn-primary")); ?>
+                    <a type="button" target="_blank" href="<?php echo get_uri("projects/download_project_file/").$project_id;?>" class="btn btn-primary"><span data-feather="download" class="icon-16"></span> <?php echo app_lang("export_project_zip");?></a>
+                    <?php //echo anchor(get_uri("projects/download_project_file/") . $project_id, "<i data-feather='download' class='icon-16'></i> " . app_lang("export_project_zip"), array("title" => app_lang("export_project_zip"), "id" => "export_project_zip", "class" => "btn btn-primary")); ?>
                 </div>
                 
             </div>
