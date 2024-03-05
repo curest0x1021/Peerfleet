@@ -20,6 +20,10 @@
                                     <strong><?php echo app_lang("requested_by") . ": "; ?></strong>
                                     <?php echo anchor(get_uri("clients/contact_profile/" . $ticket_info->requested_by), $ticket_info->requested_by_name ? $ticket_info->requested_by_name : ""); ?>
                                 </div>
+                                <div class="col-md-12 mb15">
+                                    <strong>More about requester:</strong>
+                                    <?php   if(isset($ticket_info->request_data)) echo $ticket_info->request_data; ?>
+                                </div>
                             <?php } ?>
 
                         <?php } ?>
