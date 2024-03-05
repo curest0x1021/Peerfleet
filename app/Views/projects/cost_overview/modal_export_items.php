@@ -38,7 +38,7 @@
             <div class=" card border p-2">
                 <div class="card-title  d-flex flex-column align-items-center">
                     <h5><?php echo app_lang('zip'); ?></h5>
-                    <div>The Excel sheet contains task-related cost information as well as columns in which the various billing-related information (for import purposes) can be entered .
+                    <div>The Excel sheet contains task-related cost information as well as columns in which the various billing-related information (for import purposes) can be entered.
 
                     </div>
                 </div>
@@ -55,7 +55,7 @@
             <div class=" card border p-2">
                 <div class="card-title  d-flex flex-column align-items-center">
                     <h5>Cost overview</h5>
-                    <div>The Excel sheet contains project-related information about cost overview .
+                    <div>The Excel sheet contains project-related information about cost overview.
                     </div>
                 </div>
                 <hr/>
