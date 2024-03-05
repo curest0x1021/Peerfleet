@@ -1,8 +1,52 @@
 <div id="kanban-wrapper"  >
     <ul id="kanban-list-container" class="card kanban-list-container clearfix">
         <li class="kanban-list-col kanban--1" >
-            <table table-id="headers-table" class="w-100 display dataTable no-footer" id="kanban-item-list--1" class="kanban-list-items" data-status_id="-1">
-            </table>
+            <div id="kanban-item-list--1_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                <div class="filter-section-container">
+                    <div class="filter-section-flex-row">
+                        <div class="filter-section-left">
+                            <div class="filter-item-box">
+                                <button class="btn btn-default column-show-hide-popover" data-container="body" data-bs-toggle="popover" data-placement="bottom">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-columns icon-16"><path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="filter-section-right">
+                            <div class="datatable-export filter-item-box">
+                                <div class="dt-buttons btn-group flex-wrap"> 
+                                    <button class="btn btn-default buttons-excel buttons-html5" tabindex="0" aria-controls="kanban-item-list--1" type="button"><span>Excel</span>
+                                    </button> 
+                                    <button class="btn btn-default buttons-print" tabindex="0" aria-controls="kanban-item-list--1" type="button">
+                                        <span>Print</span>
+                                    </button> 
+                                </div>
+                            </div>
+                            <div class="filter-item-box">
+                                <div id="kanban-item-list--1_filter" class="dataTables_filter">
+                                    <label><input type="search" class="form-control form-control-sm" placeholder="Search" aria-controls="kanban-item-list--1"></label>
+                                </div>
+                            </div></div>
+                        </div>
+                        <div id="kanban-item-list--1_processing" class="dataTables_processing card" style="display: none;"><div class="table-loader"><span class="loading"></span>
+                        </div>
+                    </div>
+                </div>
+                <table table-id="headers-table" class="w-100 display dataTable no-footer" id="kanban-item-list--1" data-status_id="-1" role="grid" aria-describedby="kanban-item-list--1_info">
+                    <thead>
+                        <tr role="row">
+                            <th style="width:50px;" class="sorting" tabindex="0" aria-controls="kanban-item-list--1" rowspan="1" colspan="1" aria-label="select: activate to sort column ascending">
+                                <input class="form-check-input input-check-library" type="checkbox"/>
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:10%;" rowspan="1" colspan="1" aria-label="Dock list number: activate to sort column ascending">Dock list number</th>
+                            <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:27%;" rowspan="1" colspan="1" aria-label="Title: activate to sort column ascending">Title</th>
+                            <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:8%;" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending">Start date</th>
+                            <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:6%;" rowspan="1" colspan="1" aria-label="Deadline: activate to sort column ascending">Deadline</th>
+                            <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:6%;"  rowspan="1" colspan="1" aria-label="Milestone: activate to sort column ascending">Milestone</th>
+                            <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1"   rowspan="1" colspan="1" aria-label="Supplier: activate to sort column ascending">Supplier</th>
+                            <th class="sorting_desc" tabindex="0" aria-controls="kanban-item-list--1" rowspan="1" colspan="1" aria-label="Assigned to: activate to sort column ascending" aria-sort="descending">Assigned to</th><th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" rowspan="1" colspan="1" aria-label="Collaborators: activate to sort column ascending">Collaborators</th><th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">Status</th><th class="text-center option w150 sorting" tabindex="0" aria-controls="kanban-item-list--1" rowspan="1" colspan="1" aria-label=": activate to sort column ascending"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu icon-16"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></th>
+                        </tr>
+                    </thead>
+                </table>
         </li>
         <?php $index = 0;
         
@@ -43,7 +87,7 @@
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Deadline</th>
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Milestones</th>
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Suppliers</th>
-                        <th width="12%" class="sorting"  aria-controls="task-table"  aria-label="">Assigned to</th>
+                        <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Assigned to</th>
                         <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Collaborators</th>
                         <th width="8%" class="sorting_disabled"  aria-label="">Status</th>
                         <th width="8%" class="sorting"  aria-controls="task-table"  aria-label=""></th>
@@ -268,26 +312,26 @@
             });
         }
     }
-    $(document).ready(function(){
-        $("[table-id=headers-table]").appTable({
-            order: [[0, "desc"]],
-            source:'<?php echo get_uri('projects/task_list_headers');?>',
-            columns: [
-                {title: 'Dock list number',style:"width:50px;"},
-                {title: 'Title',style:"width:10%;"},
-                {title: 'Start date',style:"width:30%;"},
-                {title: 'Deadline',style:"width:8%;"},
-                {title: 'Milestone',style:"width:6%;"},
-                {title: 'Supplier',style:"width:6%;"},
-                {title: 'Assigned to',style:"width:6%;"},
-                {title: 'Collaborators',style:"width:12%;"},
-                {title: 'Status',style:"width:8%;"},
-                {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w150"}
-            ],
-            printColumns: combineCustomFieldsColumns([0, 1, 2, 3, 4, 5], '<?php //echo $custom_field_headers; ?>'),
-            xlsColumns: combineCustomFieldsColumns([0, 1, 2, 3, 4, 5], '<?php //echo $custom_field_headers; ?>')
-        });
-    });
+    // $(document).ready(function(){
+    //     $("[table-id=headers-table]").appTable({
+    //         order: [[0, "desc"]],
+    //         source:'<?php //echo get_uri('projects/task_list_headers');?>',
+    //         columns: [
+    //             {title: 'Dock list number',style:"width:50px;"},
+    //             {title: 'Title',style:"width:10%;"},
+    //             {title: 'Start date',style:"width:30%;"},
+    //             {title: 'Deadline',style:"width:8%;"},
+    //             {title: 'Milestone',style:"width:6%;"},
+    //             {title: 'Supplier',style:"width:6%;"},
+    //             {title: 'Assigned to',style:"width:6%;"},
+    //             {title: 'Collaborators',style:"width:12%;"},
+    //             {title: 'Status',style:"width:8%;"},
+    //             {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w150"}
+    //         ],
+    //         printColumns: combineCustomFieldsColumns([0, 1, 2, 3, 4, 5], '<?php //echo $custom_field_headers; ?>'),
+    //         xlsColumns: combineCustomFieldsColumns([0, 1, 2, 3, 4, 5], '<?php //echo $custom_field_headers; ?>')
+    //     });
+    // });
 
 </script>
 
