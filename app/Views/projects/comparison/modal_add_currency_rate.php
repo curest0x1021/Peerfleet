@@ -189,7 +189,7 @@ $currency_dropdown=array(
         <!-- </div> -->
         <!-- <div class="card-body" > -->
             <div class="row" >
-                <div class="col-md-4" >
+                <div class="col-md-6" >
                     <div class="form-group" >
                         <label>From:</label>
                         <input
@@ -223,7 +223,7 @@ $currency_dropdown=array(
         <!-- </div> -->
         <!-- <div class="card-footer" > -->
             <div class="d-flex align-items-center" >
-                <button class="btn btn-default" >Cancel</button>
+                <button class="btn btn-default"  data-dismiss="modal" >Cancel</button>
                 <div class="flex-grow-1" ></div>
                 <button id="btn-save-currency-rate" class="btn btn-primary " >Save</button>
             </div>
@@ -233,7 +233,7 @@ $currency_dropdown=array(
 </div>
 <script>
     $(document).ready(function(){
-        // $(".modal-dialog").addClass('modal-xl').addClass('modal-dialog-centered');
+        $(".modal-dialog").removeClass('modal-xl').addClass('modal-dialog-centered');
         $(".currency_dropdown").select2({
             data:<?php echo json_encode($currency_dropdown);?>
         });
