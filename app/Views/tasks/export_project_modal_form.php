@@ -6,8 +6,7 @@
             <div class=" card border p-2">
                 <div class="card-title  d-flex flex-column align-items-center">
                     <h5><?php echo app_lang('project_form'); ?></h5>
-                    <div>The Excel sheet contains task-related information as well as 
-                columns where to input the various price related information (for import purposes).
+                    <div>The Excel sheet contains task-related information.
                     </div>
                 </div>
                 <hr/>
@@ -22,14 +21,29 @@
             <div class=" card border p-2">
                 <div class="card-title  d-flex flex-column align-items-center">
                     <h5><?php echo app_lang('quotation_form'); ?></h5>
-                    <div>The Excel sheet contains task-related information as well as 
-                columns where to input the various price related information (for import purposes).
+                    <div>The Excel sheet contains task-related cost items as well as 
+                columns in which the specific prices of these items can be entered in order to obtain quotation information for import purposes.
                     </div>
                 </div>
                 <hr/>
                 <div class="card-body d-flex flex-column align-items-center">
                     <img width="100px" src="<?php echo get_file_uri("assets/images/excel.png") ?>" alt="style_1" />
                     <button type="button" class="btn btn-primary export_quotation_btn"><span data-feather="download" class="icon-16"></span> <?php echo app_lang('export_quotation_form'); ?></button>
+                </div>
+                
+            </div>
+        </div>
+        <div class=" col-md-6">
+            <div class=" card border p-2">
+                <div class="card-title  d-flex flex-column align-items-center">
+                    <h5>Cost Form</h5>
+                    <div>The Excel sheet contains task-related cost information as well as columns in which the various billing-related information (for import purposes) can be entered .
+                    </div>
+                </div>
+                <hr/>
+                <div class="card-body d-flex flex-column align-items-center">
+                    <img width="100px" src="<?php echo get_file_uri("assets/images/excel.png") ?>" alt="style_1" />
+                    <a href="<?php echo get_uri("projects/download_cost_overview_xlsx/").$project_id;?>" target="_blank"  class="btn btn-primary btn_export_cost_overview1"><span data-feather="download" class="icon-16"></span> Export Cost overview XLSX</a>
                 </div>
                 
             </div>
@@ -50,21 +64,7 @@
                 
             </div>
         </div>
-        <div class=" col-md-6">
-            <div class=" card border p-2">
-                <div class="card-title  d-flex flex-column align-items-center">
-                    <h5>Cost overview</h5>
-                    <div>The Excel sheet contains project-related information about cost overview .
-                    </div>
-                </div>
-                <hr/>
-                <div class="card-body d-flex flex-column align-items-center">
-                    <img width="100px" src="<?php echo get_file_uri("assets/images/excel.png") ?>" alt="style_1" />
-                    <a href="<?php echo get_uri("projects/download_cost_overview_xlsx/").$project_id;?>" target="_blank"  class="btn btn-primary btn_export_cost_overview1"><span data-feather="download" class="icon-16"></span> Export Cost overview XLSX</a>
-                </div>
-                
-            </div>
-        </div>
+        
         <input type="hidden" name="file_name" id="import_file_name" value="" />
         <input type="hidden" name="project_id" value="<?php echo $project_id; ?>" />
         <div id="preview-area"></div>

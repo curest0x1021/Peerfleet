@@ -6,8 +6,7 @@
             <div class=" card border p-2">
                 <div class="card-title  d-flex flex-column align-items-center">
                     <h5><?php echo app_lang('project_form'); ?></h5>
-                    <div>The Excel sheet contains task-related information as well as 
-                columns where to input the various price related information (for import purposes).
+                    <div>The Excel sheet contains task-related information.
                     </div>
                 </div>
                 <hr/>
@@ -22,8 +21,8 @@
             <div class=" card border p-2">
                 <div class="card-title  d-flex flex-column align-items-center">
                     <h5><?php echo app_lang('quotation_form'); ?></h5>
-                    <div>The Excel sheet contains task-related information as well as 
-                columns where to input the various price related information (for import purposes).
+                    <div>The Excel sheet contains task-related cost items as well as 
+                columns in which the specific prices of these items can be entered in order to obtain quotation information for import purposes.
                     </div>
                 </div>
                 <hr/>
@@ -39,7 +38,7 @@
             <div class=" card border p-2">
                 <div class="card-title  d-flex flex-column align-items-center">
                     <h5><?php echo app_lang('zip'); ?></h5>
-                    <div>All files that are attached to the Task Libraries will be contained in this zip file.
+                    <div>The Excel sheet contains task-related cost information as well as columns in which the various billing-related information (for import purposes) can be entered .
 
                     </div>
                 </div>
