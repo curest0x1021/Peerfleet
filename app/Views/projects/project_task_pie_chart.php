@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" style="height:350px;" >
     <div class="card-body">
         <canvas id="task-status-chart" width="512"></canvas>
     </div>

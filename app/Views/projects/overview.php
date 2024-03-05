@@ -3,10 +3,10 @@
     <div class="row">
         <div class="col-md-6">
             <div class="row">
-                <div class="col-md-6 col-sm-12">
+                <div class="col-md-6 col-sm-12 ">
                     <?php echo view("projects/project_progress_chart_info"); ?>
                 </div>
-                <div class="col-md-6 col-sm-12">
+                <div class="col-md-6 col-sm-12" >
                     <?php echo view("projects/project_task_pie_chart"); ?>
                 </div>
 
