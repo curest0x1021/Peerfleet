@@ -3010,7 +3010,7 @@ class Tasks extends Security_Controller {
             "Link to task" => $link_to_task,
             "Cost type" => $data->cost_type,
             "Est. quantity" => $data->est_quantity,
-            "Measurement unit" => $data->measurement,
+            // "Measurement unit" => $data->measurement,
             "Unit price" => $data->unit_price,
             "Unit price currency" => $data->unit_price_currency,
             "Quote" => $data->quote,

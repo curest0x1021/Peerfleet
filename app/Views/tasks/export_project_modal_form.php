@@ -34,7 +34,6 @@
                 
             </div>
         </div>
-        <div class=" col-md-3"></div>
         <div class=" col-md-6">
             <div class=" card border p-2">
                 <div class="card-title  d-flex flex-column align-items-center">
@@ -51,7 +50,21 @@
                 
             </div>
         </div>
-        <div class=" col-md-3"></div>
+        <div class=" col-md-6">
+            <div class=" card border p-2">
+                <div class="card-title  d-flex flex-column align-items-center">
+                    <h5>Cost overview</h5>
+                    <div>The Excel sheet contains project-related information about cost overview .
+                    </div>
+                </div>
+                <hr/>
+                <div class="card-body d-flex flex-column align-items-center">
+                    <img width="100px" src="<?php echo get_file_uri("assets/images/excel.png") ?>" alt="style_1" />
+                    <a href="<?php echo get_uri("projects/download_cost_overview_xlsx/").$project_id;?>" target="_blank"  class="btn btn-primary btn_export_cost_overview1"><span data-feather="download" class="icon-16"></span> Export Cost overview XLSX</a>
+                </div>
+                
+            </div>
+        </div>
         <input type="hidden" name="file_name" id="import_file_name" value="" />
         <input type="hidden" name="project_id" value="<?php echo $project_id; ?>" />
         <div id="preview-area"></div>
