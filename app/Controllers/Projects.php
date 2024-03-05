@@ -4144,7 +4144,7 @@ class Projects extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
     function currency_rates($project_id){
-        $project_info=$this->Projects_model->get_one($project_info);
+        $project_info=$this->Projects_model->get_one($project_id);
         $allCurrencyRates=$this->Project_currency_rates_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allCostItemCurrencies=$this->Task_cost_items_model->get_dropdown_list(array("currency"), "currency", array("project_id"=>$project_id));
         return $this->template->rander("projects/comparison/currency_rates",["project_info"=>$project_info,"allCostItemCurrencies"=>$allCostItemCurrencies,"project_id"=>$project_id,"allCurrencyRates"=>$allCurrencyRates]);

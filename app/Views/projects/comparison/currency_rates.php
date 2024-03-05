@@ -15,7 +15,7 @@
             <p>It is crucial to specify the accurate exchange rates that will be utilized to convert the cost provided from the specific yard.</p>
         </div>
     </div> -->
-    
+    <div style="min-height:30vh;" >
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -45,6 +45,7 @@
             ?>
         </tbody>
     </table>
+    </div>
     <div class="row" >
         <div class="col-md-3" >
             <!-- <button class="btn btn-primary" >Add exchange rate</button> -->

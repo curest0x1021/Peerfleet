@@ -80,23 +80,23 @@ foreach ($allProjectTasks as $index => $oneTask) {
 </style>
 <div class="card" >
     <div class="card-header" >
-    <h4>Comparison View</h4>
+        <div class="d-flex align-items-center" >
+            <h4>Comparison View</h4>
+            <div class="flex-grow-1" ></div>
+            <?php if($project_info->status_id!=4) { ?>
+                <a  href="<?php echo get_uri('projects/add_yard/'.$project_info->id,["project_info"=>$project_info]); ?>" class="btn btn-default"  ><i data-feather="plus-circle" class="icon-16" ></i>Add Yard Candidate</a>
+            <?php } ?>
+            <a  href="<?php echo get_uri('projects/currency_rates/').$project_info->id; ?>" class="btn btn-default" style="margin-left:10px;"  ><i data-feather="dollar-sign" class="icon-16" ></i>Exchange rates</a>
+            <a  href="<?php echo get_uri('projects/currency_rates/').$project_info->id; ?>" class="btn btn-default" style="margin-left:10px;"  ><i data-feather="upload" class="icon-16" ></i>Import quotation</a>
+            <a  href="<?php echo get_uri('projects/currency_rates/').$project_info->id; ?>" class="btn btn-default" style="margin-left:10px;"  ><i data-feather="download" class="icon-16" ></i>Export quotation</a>
+        </div>
     </div>
     <div class="card-body" >
-        <div class="d-flex align-items-center" >
-            <!-- <div class="col-md-2" > -->
-                <?php //echo modal_anchor(get_uri('projects/modal_currency_rates/'.$project_info->id),'<button class="btn btn-default" ><i class="icon-16" data-feather="plus" ></i>Add Rates</button>',array()); ?>
-                <a style="" href="<?php echo get_uri('projects/currency_rates/').$project_info->id; ?>" class="btn btn-primary"  >Exchange rates</a>
-            <!-- </div> -->
-            <div class="flex-grow-1" >
-                
-            </div>
-            <!-- <div class="col-md-2" > -->
-                <?php if($project_info->status_id!=4) { ?>
-                    <a style="float:right" href="<?php echo get_uri('projects/add_yard/'.$project_info->id,["project_info"=>$project_info]); ?>" class="btn btn-primary"  >Add Yard Candidate</a>
-                <?php } ?>
-            <!-- </div> -->
+        <div class="d-flex" style="margin-bottom:10px;" >
+            <button class="btn btn-default" ><i class="icon-16"  data-feather="plus" ></i>Add filter</button>
+            <div class="flex-grow-1" ></div>
             
+            <div><label><input type="text" id="search-messages" class="datatable-search" placeholder="Search"></label></div>
         </div>
         
         <div class="d-flex" style="overflow-x:auto;padding:10px;" >
