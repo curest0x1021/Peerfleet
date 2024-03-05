@@ -13,7 +13,9 @@
                 This action will move the project to the only Execution Phase. The status of your project will automatically change to the Execution phase.
             </p> -->
             <p>
-                This action moves your project to the execution phase and will change the status of your project.<br/>
+                This action moves your project to the execution phase and will change the status of your project.
+                <br/>
+                <br/>
                 Please note that the deviation cost, loss of earnings, bunker cost and other additional expenses in the yard are not transferred to the cost overview. In order to include these in the project's total cost overview, you should add these as Owner's supply to a designated task.
             </p>
             </div>
@@ -30,6 +32,7 @@
 </div>
 <script>
 $(document).ready(function(){
+    $(".modal-dialog").removeClass('modal-xl');
     $(".btn-confirm-select-yard").on('click',function(){
         $.ajax({
             url:'<?php echo get_uri('projects/select_yard/'.$project_yard_info->id);?>',
