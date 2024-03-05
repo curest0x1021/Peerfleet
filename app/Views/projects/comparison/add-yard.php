@@ -27,10 +27,9 @@
                         <br/>
                         <p><i data-feather="alert-circle" class="icon-16" ></i>If you can’t find the yard in the list, please send an email to support@peerfleet.io and we will add it to the list.</p>
                     </div>
-                    <div class="form-group d-flex" >
-                        <div class="flex-grow-1" >
-                            <button type="button"  class="btn btn-default" style="float:right;margin-right:10px"  >Cancel</button>
-                        </div>
+                    <div class="form-group d-flex align-items-center" >
+                        <a href="<?php echo get_uri("projects/view/").$project_id;?>"  class="btn btn-default" style="float:right;margin-right:10px"  >Cancel</a>
+                        <div class="flex-grow-1" ></div>
                         <button id="btn-save-yard-candidate" href="<?php echo get_uri('projects/yard_settings/12');?>" type="button" class="btn btn-success"  >Save</button>
                     </div>
                 <!-- </form> -->
