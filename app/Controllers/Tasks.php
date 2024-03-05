@@ -3914,9 +3914,21 @@ class Tasks extends Security_Controller {
 
         $save_id = $this->Tasks_model->ci_save($data, $id);
 
+
         if ($save_id) {
+        //     //////////////////////
+        //     echo "kkkkk";
+        //     if($status_id==3){
+                $allTasks=$this->Tasks_model->get_unfinished("project_id",$task_info->project_id)->getResult();
+                $project_info=$this->Projects_model->get_one($task_info->project_id);
+                if(count($allTasks)==0) {
+                    $project_info->status_id=5;
+                    $this->Projects_model->ci_save($project_info,$project_info->id);
+                } 
+            // }
+            //////////////////////
             $task_info = $this->Tasks_model->get_details(array("id" => $id))->getRow();
-            echo json_encode(array("success" => true, "data" => (($this->request->getPost("type") == "sub_task") ? $this->_make_sub_task_row($task_info, "data") : $this->_row_data($save_id)), 'id' => $save_id, "message" => app_lang('record_saved')));
+            echo json_encode(array("success" => true, "allTasks"=>$allTasks,"data" => (($this->request->getPost("type") == "sub_task") ? $this->_make_sub_task_row($task_info, "data") : $this->_row_data($save_id)), 'id' => $save_id, "message" => app_lang('record_saved')));
 
             if ($task_info->context === "project") {
                 log_notification("project_task_updated", array("project_id" => $task_info->project_id, "task_id" => $save_id, "activity_log_id" => get_array_value($data, "activity_log_id")));
