@@ -4144,7 +4144,8 @@ class Projects extends Security_Controller {
     }
     function currency_rates($project_id){
         $allCurrencyRates=$this->Project_currency_rates_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        return $this->template->rander("projects/comparison/currency_rates",["project_id"=>$project_id,"allCurrencyRates"=>$allCurrencyRates]);
+        $allCostItemCurrencies=$this->Task_cost_items_model->get_dropdown_list(array("currency"), "id", array("project_id"=>$project_id));
+        return $this->template->rander("projects/comparison/currency_rates",["allCostItemCurrencies"=>$allCostItemCurrencies,"project_id"=>$project_id,"allCurrencyRates"=>$allCurrencyRates]);
     }
     function modal_add_currency_rate($project_id){
         $project_info=$this->Projects_model->get_one($project_id);

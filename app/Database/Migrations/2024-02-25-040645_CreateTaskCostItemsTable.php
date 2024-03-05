@@ -63,6 +63,11 @@ class CreateTaskCostItemsTable extends Migration
                 'type'=>'VARCHAR',
                 'constraint'=>500,
                 'null'=>true
+            ],
+            "deleted"=>[
+                'type'=>'TINYINT',
+                "null"=>true,
+                "default"=>0
             ]
             // Add other fields here...
         ]);
