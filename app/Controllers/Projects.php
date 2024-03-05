@@ -4716,6 +4716,407 @@ class Projects extends Security_Controller {
         // Return the response object
         return $response;
     }
+    function download_all_zip($project_id){
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $project_info=$this->Projects_model->get_one($project_id);
+        $allProjectCostItems=$this->Task_cost_items_model->get_all_where(array("project_id"=>$project_id))->getResult();
+
+        // Add data to the first worksheet
+        $sheet1 = $spreadsheet->getActiveSheet();
+        $sheet1->setTitle('Cost items');
+        $sheet1->setCellValue('A1', 'project_id');
+        $sheet1->setCellValue('B1', 'project_title');
+        $sheet1->setCellValue('C1', 'task_id');
+        $sheet1->setCellValue('D1', 'task_title');
+        $sheet1->setCellValue('E1', 'Group');
+        $sheet1->setCellValue('F1', 'Cost item');
+        $sheet1->setCellValue('G1', 'Description');
+        $sheet1->setCellValue('H1', 'Cost type');
+        $sheet1->setCellValue('I1', 'Est. quantity');
+        $sheet1->setCellValue('J1', 'Measurement unit');
+        $sheet1->setCellValue('K1', 'Unit price');
+        $sheet1->setCellValue('L1', 'Unit price currency');
+        $sheet1->setCellValue('M1', 'Quote');
+        $sheet1->setCellValue('N1', 'Discount (0-100%)');
+        $sheet1->setCellValue('O1', 'Discounted quote');
+        $sheet1->setCellValue('P1', 'Yard remarks');
+        $rowNumber=2;
+        foreach ($allProjectCostItems as $oneItem) {
+            $task_info=$this->Tasks_model->get_one($oneItem->task_id);
+            $sheet1->setCellValue('A'.$rowNumber, $project_id);
+            $sheet1->setCellValue('B'.$rowNumber, $project_info->title);
+            $sheet1->setCellValue('C'.$rowNumber, $task_info->id);
+            $sheet1->setCellValue('D'.$rowNumber, $task_info->title);
+            $sheet1->setCellValue('F'.$rowNumber, $task_info->category);
+            $sheet1->setCellValue('F'.$rowNumber, $oneItem->name);
+            $sheet1->setCellValue('G'.$rowNumber, $oneItem->description);
+            $sheet1->setCellValue('I'.$rowNumber, $oneItem->quantity);
+            $sheet1->setCellValue('J'.$rowNumber, $oneItem->measurement);
+            $sheet1->setCellValue('K'.$rowNumber, $oneItem->unit_price);
+            $sheet1->setCellValue('L'.$rowNumber, $oneItem->currency);
+            $sheet1->setCellValue('M'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity);
+            $sheet1->setCellValue('N'.$rowNumber, $oneItem->discount);
+            $sheet1->setCellValue('O'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity*(float)$oneItem->discount/100);
+            $sheet1->setCellValue('P'.$rowNumber, $oneItem->yard_remarks);
+            $rowNumber++;
+        }
+
+        // Create a writer object
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+        // Write the Excel file content to the response body
+        $first_temp_file_path = getcwd() . '/' . get_setting("temp_file_path").'/'.$project_id."-quotation-form.xlsx";
+        $writer->save($first_temp_file_path);
+        $allProjectCostItems=$this->Task_cost_items_model->get_all_where(array("project_id"=>$project_id))->getResult();
+
+        // Add data to the first worksheet
+        $sheet1 = $spreadsheet->getActiveSheet();
+        $sheet1->setTitle('About project');
+        $sheet1->setCellValue('A1', $project_info->id);
+        $sheet1->setCellValue('A3', $project_info->title);
+        $sheet1->setCellValue('A14', $project_info->start_date);
+        $sheet1->setCellValue('B14', "~");
+        $sheet1->setCellValue('C14', $project_info->deadline);
+        $sheet1->setCellValue('A19', 'Support');
+        $sheet1->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
+        $sheet1->setCellValue('A21', '+47 91999771');
+        $sheet1 = $spreadsheet->createSheet();
+        $sheet1->setTitle('Cost items');
+        $sheet1->setCellValue('A1', 'project_id');
+        $sheet1->setCellValue('B1', 'project_title');
+        $sheet1->setCellValue('C1', 'task_id');
+        $sheet1->setCellValue('D1', 'task_title');
+        $sheet1->setCellValue('E1', 'Group');
+        $sheet1->setCellValue('F1', 'Cost item');
+        $sheet1->setCellValue('G1', 'Description');
+        $sheet1->setCellValue('H1', 'Cost type');
+        $sheet1->setCellValue('I1', 'Est. quantity');
+        $sheet1->setCellValue('J1', 'Measurement unit');
+        $sheet1->setCellValue('K1', 'Unit price');
+        $sheet1->setCellValue('L1', 'Unit price currency');
+        $sheet1->setCellValue('M1', 'Quote');
+        $sheet1->setCellValue('N1', 'Discount (0-100%)');
+        $sheet1->setCellValue('O1', 'Discounted quote');
+        $sheet1->setCellValue('P1', 'Yard remarks');
+        $rowNumber=2;
+        foreach ($allProjectCostItems as $oneItem) {
+            $task_info=$this->Tasks_model->get_one($oneItem->task_id);
+            $sheet1->setCellValue('A'.$rowNumber, $project_id);
+            $sheet1->setCellValue('B'.$rowNumber, $project_info->title);
+            $sheet1->setCellValue('C'.$rowNumber, $task_info->id);
+            $sheet1->setCellValue('D'.$rowNumber, $task_info->title);
+            $sheet1->setCellValue('F'.$rowNumber, $task_info->category);
+            $sheet1->setCellValue('F'.$rowNumber, $oneItem->name);
+            $sheet1->setCellValue('G'.$rowNumber, $oneItem->description);
+            $sheet1->setCellValue('I'.$rowNumber, $oneItem->quantity);
+            $sheet1->setCellValue('J'.$rowNumber, $oneItem->measurement);
+            $sheet1->setCellValue('K'.$rowNumber, $oneItem->unit_price);
+            $sheet1->setCellValue('L'.$rowNumber, $oneItem->currency);
+            $sheet1->setCellValue('M'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity);
+            $sheet1->setCellValue('N'.$rowNumber, $oneItem->discount);
+            $sheet1->setCellValue('O'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity*(float)$oneItem->discount/100);
+            $sheet1->setCellValue('P'.$rowNumber, $oneItem->yard_remarks);
+            $rowNumber++;
+        }
+
+        // Create a writer object
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+
+        $second_temp_file_path = getcwd() . '/' . get_setting("temp_file_path").'/'.$project_id."-project-form.xlsx";
+        $writer->save($second_temp_file_path);
+
+        // Write the Excel file content to the response body
+
+        // Return the response object
+        $allCostItems=$this->Task_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
+        $allShipyardCostItems=$this->Shipyard_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
+        $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        $allVariationOrders=$this->Task_variation_orders_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        $allComments=$this->Project_comments_model->get_all_where(array("project_id"=>$project_id))->getResult();
+
+        // Add data to the first worksheet
+        $sheet1 = $spreadsheet->getActiveSheet();
+        $sheet1->setTitle('About project');
+        $sheet1->setCellValue('A1', $project_info->id);
+        $sheet1->setCellValue('A3', $project_info->title);
+        $sheet1->setCellValue('A14', $project_info->start_date);
+        $sheet1->setCellValue('B14', "~");
+        $sheet1->setCellValue('C14', $project_info->deadline);
+        $sheet1->setCellValue('A19', 'Support');
+        $sheet1->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
+        $sheet1->setCellValue('A21', '+47 91999771');
+        $sheet1 = $spreadsheet->createSheet();
+        $sheet1->setTitle('Cost overview');
+
+        $categorizedTasks=array(
+            "General & Docking"=>array(),
+            "Hull"=>array(),
+            "Equipment for Cargo"=>array(),
+            "Ship Equipment"=>array(),
+            "Safety & Crew Equipment"=>array(),
+            "Machinery Main Components"=>array(),
+            "Systems machinery main components"=>array(),
+            "Common systems"=>array(),
+            "Others"=>array(),
+        );
+        $categorizedOwnerSupplies=array(
+            "General & Docking"=>array(),
+            "Hull"=>array(),
+            "Equipment for Cargo"=>array(),
+            "Ship Equipment"=>array(),
+            "Safety & Crew Equipment"=>array(),
+            "Machinery Main Components"=>array(),
+            "Systems machinery main components"=>array(),
+            "Common systems"=>array(),
+            "Others"=>array(),
+        );
+        $categorizedCostItems=array(
+            "General & Docking"=>array(),
+            "Hull"=>array(),
+            "Equipment for Cargo"=>array(),
+            "Ship Equipment"=>array(),
+            "Safety & Crew Equipment"=>array(),
+            "Machinery Main Components"=>array(),
+            "Systems machinery main components"=>array(),
+            "Common systems"=>array(),
+            "Others"=>array(),
+        );
+        $categorizedShipyardCostItems=array(
+            "General & Docking"=>array(),
+            "Hull"=>array(),
+            "Equipment for Cargo"=>array(),
+            "Ship Equipment"=>array(),
+            "Safety & Crew Equipment"=>array(),
+            "Machinery Main Components"=>array(),
+            "Systems machinery main components"=>array(),
+            "Common systems"=>array(),
+            "Others"=>array(),
+        );
+        $categorizedVariationOrders=array(
+            "General & Docking"=>array(),
+            "Hull"=>array(),
+            "Equipment for Cargo"=>array(),
+            "Ship Equipment"=>array(),
+            "Safety & Crew Equipment"=>array(),
+            "Machinery Main Components"=>array(),
+            "Systems machinery main components"=>array(),
+            "Common systems"=>array(),
+            "Others"=>array(),
+        );
+        
+        $categorizedComments=array(
+            "General & Docking"=>array(),
+            "Hull"=>array(),
+            "Equipment for Cargo"=>array(),
+            "Ship Equipment"=>array(),
+            "Safety & Crew Equipment"=>array(),
+            "Machinery Main Components"=>array(),
+            "Systems machinery main components"=>array(),
+            "Common systems"=>array(),
+            "Others"=>array(),
+        );
+        $categorizedStats=array(
+            "General & Docking"=>array(),
+            "Hull"=>array(),
+            "Equipment for Cargo"=>array(),
+            "Ship Equipment"=>array(),
+            "Safety & Crew Equipment"=>array(),
+            "Machinery Main Components"=>array(),
+            "Systems machinery main components"=>array(),
+            "Common systems"=>array(),
+            "Others"=>array(),
+        );
+        
+        foreach ($allTasks as $index => $oneTask) {
+            if(isset($categorizedTasks[$oneTask->category]))
+                $categorizedTasks[$oneTask->category][]=$oneTask;
+            else $categorizedTasks["Others"][]=$oneTask;
+        
+            if(isset($categorizedOwnerSupplies[$oneTask->category]))
+                $categorizedOwnerSupplies[$oneTask->category]+=array_filter($allOwnerSupplies,function($oneSupply)use($oneTask){
+                    return $oneTask->id==$oneSupply->task_id;
+                });
+            else $categorizedOwnerSupplies["Others"]+=array_filter($allOwnerSupplies,function($oneSupply)use($oneTask){
+                return $oneTask->id==$oneSupply->task_id;
+            });
+        
+            if(isset($categorizedCostItems[$oneTask->category]))
+                $categorizedCostItems[$oneTask->category]+=array_filter($allCostItems,function($oneItem)use($oneTask){
+                    return $oneTask->id==$oneItem->task_id;
+                });
+            else $categorizedCostItems["Others"]+=array_filter($allCostItems,function($oneItem)use($oneTask){
+                return $oneTask->id==$oneItem->task_id;
+            });
+        
+            if(isset($categorizedShipyardCostItems[$oneTask->category]))
+                $categorizedShipyardCostItems[$oneTask->category]+=array_filter($allShipyardCostItems,function($oneItem)use($oneTask){
+                    return $oneTask->id==$oneItem->task_id;
+                });
+            else $categorizedShipyardCostItems["Others"]+=array_filter($allShipyardCostItems,function($oneItem)use($oneTask){
+                return $oneTask->id==$oneItem->task_id;
+            });
+        
+            if(isset($categorizedVariationOrders[$oneTask->category]))
+                $categorizedVariationOrders[$oneTask->category]+=array_filter($allVariationOrders,function($oneOrder)use($oneTask){
+                    return $oneTask->id==$oneOrder->task_id;
+                });
+            else $categorizedVariationOrders["Others"]+=array_filter($allVariationOrders,function($oneOrder)use($oneTask){
+                return $oneTask->id==$oneOrder->task_id;
+            });
+        
+            if(isset($categorizedComments[$oneTask->category]))
+                $categorizedComments[$oneTask->category]+=array_filter($allComments,function($oneComment)use($oneTask){
+                    return $oneTask->id==$oneComment->task_id;
+                });
+            else $categorizedComments["Others"]+=array_filter($allComments,function($oneComment)use($oneTask){
+                return $oneTask->id==$oneComment->task_id;
+            });
+        }
+        
+        $totalOwnerSupplies=0;
+        $totalVariationOrders=0;
+        $totalCostItems=0;
+        $totalShipyardCostItems=0;
+        $totalComments=0;
+
+        $sheet1->setCellValue('B1', "Name");
+        $sheet1->setCellValue('C1', "Owner's supply");
+        $sheet1->setCellValue('D1', "Quoted");
+        $sheet1->setCellValue('E1', "Variation orders");
+        $sheet1->setCellValue('F1', "Total");
+        $sheet1->setCellValue('G1', 'Total yard');
+        $sheet1->setCellValue('H1', "Billed yard");
+        $sheet1->setCellValue('I1', 'Comment');
+
+        $sheet1->setCellValue('B2', "Total:");
+        $sheet1->setCellValue('C2', 0);
+        $sheet1->setCellValue('D2', 0);
+        $sheet1->setCellValue('E2', 0);
+        $sheet1->setCellValue('F2', 0);
+        $sheet1->setCellValue('G2', 0);
+        $sheet1->setCellValue('H2', 0);
+        $sheet1->setCellValue('I2', 0);
+
+        $rowIndex=3;
+        foreach ($categorizedTasks as $category=>$oneList) {
+            $categoryOwnerSupply=0;
+            $categoryCostItems=0;
+            $categoryShipyardCostItems=0;
+            $categoryVariationOrder=0;
+            $categoryComments=0;
+            $sheet1->setCellValue('A'.$rowIndex, $category);
+            $sheet1->setCellValue('B'.$rowIndex, 0);
+            $sheet1->setCellValue('C'.$rowIndex, 0);
+            $sheet1->setCellValue('D'.$rowIndex, 0);
+            $sheet1->setCellValue('E'.$rowIndex, 0);
+            $sheet1->setCellValue('F'.$rowIndex, 0);
+            $sheet1->setCellValue('G'.$rowIndex, 0);
+            $sheet1->setCellValue('H'.$rowIndex, 0);
+            $sheet1->setCellValue('I'.$rowIndex, 0);
+            $category_row=$rowIndex;
+            $rowIndex++;
+            foreach ($oneList as $key => $oneTask) {
+                
+                $oneTaskSupplies=array_filter($categorizedOwnerSupplies[$category],function($oneSupply)use($oneTask){
+                    return $oneSupply->task_id==$oneTask->id;
+                });
+                $oneTaskCostItems=array_filter($categorizedCostItems[$category],function($oneItem)use($oneTask){
+                    return $oneItem->task_id==$oneTask->id;
+                });
+                $oneTaskShipyardCostItems=array_filter($categorizedShipyardCostItems[$category],function($oneItem)use($oneTask){
+                    return $oneItem->task_id==$oneTask->id;
+                });
+                $oneTaskVariationOrders=array_filter($categorizedVariationOrders[$category],function($oneOrder)use($oneTask){
+                    return $oneOrder->task_id==$oneTask->id;
+                });
+                $oneTaskComments=array_filter($categorizedComments[$category],function($oneComment)use($oneTask){
+                    return $oneComment->task_id==$oneTask->id;
+                });
+                $oneTaskTotalSupplies=0;
+                foreach ($oneTaskSupplies as $oneSupply) {
+                    $oneTaskTotalSupplies+=$oneSupply->cost;
+                }
+                $categoryOwnerSupply+=$oneTaskTotalSupplies;
+
+                $oneTaskTotalCostItems=0;
+                foreach ($oneTaskCostItems as $oneItem) {
+                    $oneTaskTotalCostItems+=$oneItem->total_cost;
+                }
+                $categoryCostItems+=$oneTaskTotalCostItems;
+
+                $oneTaskTotalShipyardCostItems=0;
+                foreach ($oneTaskShipyardCostItems as $oneItem) {
+                    $oneTaskTotalShipyardCostItems+=$oneItem->total_cost;
+                }
+                $categoryShipyardCostItems+=$oneTaskTotalShipyardCostItems;
+
+                $oneTaskTotalVariationOrders=0;
+                foreach ($oneTaskVariationOrders as $oneOrder) {
+                    $oneTaskTotalVariationOrders+=$oneOrder->cost;
+                }
+                $categoryVariationOrder+=$oneTaskTotalVariationOrders;
+
+                $oneTaskTotalComments=count($oneTaskComments);
+                $categoryComments+=$oneTaskTotalComments;
+
+                
+                $totalOwnerSupplies+=$oneTaskTotalSupplies;
+                $totalCostItems+=$oneTaskTotalCostItems;
+                $totalShipyardCostItems+=$oneTaskTotalShipyardCostItems;
+                $totalVariationOrders+=$oneTaskTotalVariationOrders;
+                $totalComments+=$oneTaskTotalComments;
+
+                $sheet1->setCellValue('B'.$rowIndex, $oneTask->title);
+                $sheet1->setCellValue('C'.$rowIndex, $oneTaskTotalSupplies);
+                $sheet1->setCellValue('D'.$rowIndex, $oneTaskTotalCostItems);
+                $sheet1->setCellValue('E'.$rowIndex, $oneTaskTotalVariationOrders);
+                $sheet1->setCellValue('F'.$rowIndex, 0);
+                $sheet1->setCellValue('G'.$rowIndex, $oneTaskTotalShipyardCostItems);
+                $sheet1->setCellValue('H'.$rowIndex, 0);
+                $sheet1->setCellValue('I'.$rowIndex, 0);
+                $rowIndex++;
+            }
+            $categorizedStats[$category]["owner_supplies"]=$categoryOwnerSupply;
+            $categorizedStats[$category]["cost_items"]=$categoryCostItems;
+            $categorizedStats[$category]["variation_orders"]=$categoryVariationOrder;
+            $categorizedStats[$category]["shipyard_cost_items"]=$categoryShipyardCostItems;
+            $categorizedStats[$category]["comments"]=$categoryComments;
+            $sheet1->setCellValue('B'.$category_row, "");
+            $sheet1->setCellValue('C'.$category_row, $categoryOwnerSupply);
+            $sheet1->setCellValue('D'.$category_row, $categoryCostItems);
+            $sheet1->setCellValue('E'.$category_row, $categoryVariationOrder);
+            $sheet1->setCellValue('F'.$category_row, 0);
+            $sheet1->setCellValue('G'.$category_row, $categoryShipyardCostItems);
+            $sheet1->setCellValue('H'.$category_row, 0);
+            $sheet1->setCellValue('I'.$category_row, 0);
+        }
+        $sheet1->setCellValue('C2', $totalOwnerSupplies);
+        $sheet1->setCellValue('D2', $totalCostItems);
+        $sheet1->setCellValue('E2', $totalVariationOrders);
+        $sheet1->setCellValue('F2', 0);
+        $sheet1->setCellValue('G2', $totalShipyardCostItems);
+        $sheet1->setCellValue('H2', 0);
+        $sheet1->setCellValue('I2', 0);
+        
+        
+
+        // Create a writer object
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $third_temp_file_path = getcwd() . '/' . get_setting("temp_file_path").'/'.$project_id."-cost-overview.xlsx";
+        $writer->save($third_temp_file_path);
+        // Write the Excel file content to the response body
+        // return json_encode(array("success"=>true));
+        $file_path_array=array();
+        $file_path_array[]=array("file_name" => $project_id."-quotation-form.xlsx");
+        $file_path_array[]=array("file_name" => $project_id."-project-form.xlsx");
+        $file_path_array[]=array("file_name" => $project_id."-cost-overview.xlsx");
+        $serialized_file_data = serialize($file_path_array);
+
+        return $this->download_app_files(get_setting("temp_file_path"), $serialized_file_data);
+    }
 }
 
 /* End of file projects.php */
