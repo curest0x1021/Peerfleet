@@ -1,22 +1,7 @@
-<div id="kanban-wrapper">
-    <ul id="kanban-list-container" class="kanban-list-container clearfix">
+<div id="kanban-wrapper"  >
+    <ul id="kanban-list-container" class="card kanban-list-container clearfix">
         <li class="kanban-list-col kanban--1" >
             <table table-id="headers-table" class="w-100 display dataTable no-footer" id="kanban-item-list--1" class="kanban-list-items" data-status_id="-1">
-                <!-- <thead>
-                    <tr role="row">
-                        <th width="50px" style="min-width: 35px;" class="sorting"  aria-controls="task-table"  aria-sort="descending" aria-label=""></th>
-                        <th width="10%" class="sorting"  aria-controls="task-table"  aria-label="">Dock list number</th>
-                        <th width="30%" class="sorting"  aria-controls="task-table"  aria-label="">Title</th>
-                        <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Start date</th>
-                        <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Deadline</th>
-                        <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Milestone</th>
-                        <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Supplier</th>
-                        <th width="12%" class="sorting"  aria-controls="task-table"  aria-label="">Assigned to</th>
-                        <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Collaborators</th>
-                        <th width="8%" class="sorting_disabled"  aria-label="">Status</th>
-                        <th width="8%" class="sorting"  aria-controls="task-table"  aria-label=""></th>
-                    </tr>
-                </thead> -->
             </table>
         </li>
         <?php $index = 0;

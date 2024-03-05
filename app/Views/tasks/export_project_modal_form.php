@@ -3,8 +3,8 @@
     <div class="container-fluid">
     <div class="row">
         <div class=" col-md-6">
-            <div class=" card border p-2">
-                <div class="card-title  d-flex flex-column align-items-center">
+            <div class=" card border p-2" style="height:35vh;">
+                <div class="card-title  d-flex flex-column align-items-center"  style="height:10vh;">
                     <h5><?php echo app_lang('project_form'); ?></h5>
                     <div>The Excel sheet contains task-related information.
                     </div>
@@ -18,8 +18,8 @@
             </div>
         </div>
         <div class=" col-md-6">
-            <div class=" card border p-2">
-                <div class="card-title  d-flex flex-column align-items-center">
+            <div class=" card border p-2"  style="height:35vh;">
+                <div class="card-title  d-flex flex-column align-items-center"  style="height:10vh;">
                     <h5><?php echo app_lang('quotation_form'); ?></h5>
                     <div>The Excel sheet contains task-related cost items as well as 
                 columns in which the specific prices of these items can be entered in order to obtain quotation information for import purposes.
@@ -34,8 +34,8 @@
             </div>
         </div>
         <div class=" col-md-6">
-            <div class=" card border p-2">
-                <div class="card-title  d-flex flex-column align-items-center">
+            <div class=" card border p-2" style="height:35vh;">
+                <div class="card-title  d-flex flex-column align-items-center" style="height:10vh;">
                     <h5>Cost Form</h5>
                     <div>The Excel sheet contains task-related cost information as well as columns in which the various billing-related information (for import purposes) can be entered.
                     </div>
@@ -49,8 +49,8 @@
             </div>
         </div>
         <div class=" col-md-6">
-            <div class=" card border p-2">
-                <div class="card-title  d-flex flex-column align-items-center">
+            <div class=" card border p-2" style="height:35vh;">
+                <div class="card-title  d-flex flex-column align-items-center" style="height:10vh;">
                     <h5><?php echo app_lang('zip'); ?></h5>
                     <div>All files that are attached to the project will be contained in this zip file.
 
