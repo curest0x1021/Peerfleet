@@ -270,7 +270,7 @@
                                     "name" => "deadline",
                                     "style"=>"border:1px solid lightgray",
                                     "autocomplete" => "off",
-                                    "value" => isset($gotTask)&&$gotTask->deadline?date('d.m.Y', strtotime($gotTask->deadline)):"",
+                                    "value" => isset($gotTask)?(date('d.m.Y', strtotime($gotTask->deadline))):($gotProject->deadline?date('d.m.Y', strtotime($gotProject->deadline)):""),
                                     "class" => "form-control",
                                     "placeholder" => "DD.MM.YYYY",
                                     "data-rule-greaterThanOrEqual" => "#start_date",
@@ -1366,13 +1366,25 @@
                 var formattedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
                 if (formattedDate >= startDate && formattedDate <= endDate) {
                     console.log(date)
-                    return [true, 'highlighted'];
+                    return {classes:"highlighted"};
                 } else {
-                    return [true, 'disabled'];
+                    return {classes:"disabled"};
                 }
             }
         });
-        setDatePicker("#deadline<?php echo $modalId;?>");
+        setDatePicker("#deadline<?php echo $modalId;?>",{
+            beforeShowDay:function(date){
+                var startDate = new Date('<?php echo date('Y-m-d', strtotime($gotProject->start_date));?>');
+                var endDate = new Date('<?php echo date('Y-m-d', strtotime($gotProject->deadline));?>');
+                var formattedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                if (formattedDate >= startDate && formattedDate <= endDate) {
+                    console.log(date)
+                    return {classes:"highlighted"};
+                } else {
+                    return {classes:"disabled"};
+                }
+            }
+        });
         $("#description<?php echo $modalId;?>").summernote({
             height:250
         });
@@ -1720,6 +1732,7 @@
                         $maskTarget.closest('.modal-dialog').find('[type="submit"]').attr('disabled', 'disabled');
                         $maskTarget.addClass("hide");
                         window.edit_task_panel.closeModal()
+                        window.location.reload();
                         //window.location.reload();
                     }
                     // appLoader.hide();

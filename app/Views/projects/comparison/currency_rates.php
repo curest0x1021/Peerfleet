@@ -1,5 +1,11 @@
 <div class="container" >
     <h1>Currencies</h1>
+    <?php
+    $currencies=array();
+    foreach ($allCostItemCurrencies as $oneCurrency) {
+        $currencies[$oneCurrency]=$oneCurrency;
+    }
+    ?>
     <!-- <div class="card bg-warning" >
         <div class="card-body" >
             <div class="d-flex align-items-center" >
@@ -9,11 +15,7 @@
             <p>It is crucial to specify the accurate exchange rates that will be utilized to convert the cost provided from the specific yard.</p>
         </div>
     </div> -->
-    <?php
-    foreach ($allCostItemCurrencies as $oneCurrency) {
-       echo "<p>$oneCurrency->id</p>"
-    }
-    ?>
+    
     <table class="table table-bordered">
         <thead>
             <tr>
