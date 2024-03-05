@@ -24,7 +24,8 @@
                             style="border:1px solid lightgray;"
                             required
                         />
-                        <p>If you can’t find the yard in the list, please send an email to support@peerfleet.io and we will add it to the list.</p>
+                        <br/>
+                        <p><i data-feather="alert-circle" class="icon-16" ></i>If you can’t find the yard in the list, please send an email to support@peerfleet.io and we will add it to the list.</p>
                     </div>
                     <div class="form-group d-flex" >
                         <div class="flex-grow-1" >
