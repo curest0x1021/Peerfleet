@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" style="height:350px;" >
     <div class="bg-primary p30 rounded-top">
         <br />
     </div>
