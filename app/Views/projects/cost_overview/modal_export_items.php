@@ -3,8 +3,8 @@
     <div class="container-fluid">
     <div class="row">
         <div class=" col-md-6">
-            <div class=" card border p-2">
-                <div class="card-title  d-flex flex-column align-items-center">
+            <div class=" card border p-2" style="height:35vh;">
+                <div class="card-title  d-flex flex-column align-items-center" style="height:10vh;">
                     <h5><?php echo app_lang('project_form'); ?></h5>
                     <div>The Excel sheet contains task-related information.
                     </div>
@@ -18,8 +18,8 @@
             </div>
         </div>
         <div class=" col-md-6">
-            <div class=" card border p-2">
-                <div class="card-title  d-flex flex-column align-items-center">
+            <div class=" card border p-2" style="height:35vh;">
+                <div class="card-title  d-flex flex-column align-items-center" style="height:10vh;">
                     <h5><?php echo app_lang('quotation_form'); ?></h5>
                     <div>The Excel sheet contains task-related cost items as well as 
                 columns in which the specific prices of these items can be entered in order to obtain quotation information for import purposes.
@@ -35,8 +35,8 @@
             </div>
         </div>
         <div class=" col-md-6">
-            <div class=" card border p-2">
-                <div class="card-title  d-flex flex-column align-items-center">
+            <div class=" card border p-2" style="height:35vh;">
+                <div class="card-title  d-flex flex-column align-items-center" style="height:10vh;">
                     <h5><?php echo app_lang('zip'); ?></h5>
                     <div>The Excel sheet contains task-related cost information as well as columns in which the various billing-related information (for import purposes) can be entered.
 
@@ -51,9 +51,9 @@
                 
             </div>
         </div>
-        <div class=" col-md-6">
-            <div class=" card border p-2">
-                <div class="card-title  d-flex flex-column align-items-center">
+        <div class=" col-md-6" >
+            <div class=" card border p-2" style="height:35vh;">
+                <div class="card-title  d-flex flex-column align-items-center" style="height:10vh;">
                     <h5>Cost overview</h5>
                     <div>The Excel sheet contains project-related information about cost overview.
                     </div>
@@ -78,6 +78,7 @@
 <?php echo form_close(); ?>
 <script>
     $(document).ready(function(){
+        $(".modal-dialog").addClass('modal-xl');
         // $(".btn_export_cost_overview").on("click",function(){
         //     $.ajax({
         //         url: '<?php //echo get_uri("projects/download_cost_overview_xlsx/").$project_id; ?>',
