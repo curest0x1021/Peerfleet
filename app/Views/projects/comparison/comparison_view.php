@@ -92,9 +92,9 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 
             </div>
             <!-- <div class="col-md-2" > -->
-                <?php //if($project_info->status_id!=4) { ?>
+                <?php if($project_info->status_id!=4) { ?>
                     <a style="float:right" href="<?php echo get_uri('projects/add_yard/'.$project_info->id,["project_info"=>$project_info]); ?>" class="btn btn-primary"  >Add Yard Candidate</a>
-                <?php //} ?>
+                <?php } ?>
             <!-- </div> -->
             
         </div>
