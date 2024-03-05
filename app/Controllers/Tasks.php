@@ -3928,7 +3928,7 @@ class Tasks extends Security_Controller {
             // }
             //////////////////////
             $task_info = $this->Tasks_model->get_details(array("id" => $id))->getRow();
-            echo json_encode(array("success" => true, "allTasks"=>$allTasks,"data" => (($this->request->getPost("type") == "sub_task") ? $this->_make_sub_task_row($task_info, "data") : $this->_row_data($save_id)), 'id' => $save_id, "message" => app_lang('record_saved')));
+            echo json_encode(array("success" => true, "data" => (($this->request->getPost("type") == "sub_task") ? $this->_make_sub_task_row($task_info, "data") : $this->_row_data($save_id)), 'id' => $save_id, "message" => app_lang('record_saved')));
 
             if ($task_info->context === "project") {
                 log_notification("project_task_updated", array("project_id" => $task_info->project_id, "task_id" => $save_id, "activity_log_id" => get_array_value($data, "activity_log_id")));
