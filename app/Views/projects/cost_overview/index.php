@@ -157,7 +157,7 @@ $totalComments=0;
             <button class="btn btn-default" ><i class="icon-16"  data-feather="plus" ></i>Add filter</button>
             <div class="flex-grow-1" ></div>
             
-            <div></div>
+            <div><label><input type="search" class="form-control form-control-sm" placeholder="Search" aria-controls="milestone-table"></label></div>
         </div>
         <div id="table-panel-for-xlsx" >
         <table class="table table-bordered" >
