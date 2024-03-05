@@ -13,7 +13,7 @@
                 <hr/>
                 <div class="card-body d-flex flex-column align-items-center">
                     <img width="100px" src="<?php echo get_file_uri("assets/images/excel.png") ?>" alt="style_1" />
-                    <a href="<?php echo get_uri('projects/download_project_form_xlsx/').$project_id;?>" class="btn btn-primary export_project_btn"><span data-feather="download" class="icon-16"></span> <?php echo app_lang('export_project_form'); ?></a>
+                    <button type="button"  class="btn btn-primary export_project_btn"><span data-feather="download" class="icon-16"></span> <?php echo app_lang('export_project_form'); ?></button>
                 </div>
                 
             </div>
@@ -29,7 +29,8 @@
                 <hr/>
                 <div class="card-body d-flex flex-column align-items-center">
                     <img width="100px" src="<?php echo get_file_uri("assets/images/excel.png") ?>" alt="style_1" />
-                    <a type="button" target="_blank" href="<?php echo get_uri("projects/download_quotation_form_xlsx/").$project_id;?>" class="btn btn-primary export_quotation_btn"><span data-feather="download" class="icon-16"></span> <?php echo app_lang('export_quotation_form'); ?></a>
+                    <!-- <a type="button" target="_blank" href="<?php //echo get_uri("projects/download_quotation_form_xlsx/").$project_id;?>" class="btn btn-primary export_quotation_btn"><span data-feather="download" class="icon-16"></span> <?php //echo app_lang('export_quotation_form'); ?></a> -->
+                    <button type="button" class="btn btn-primary export_quotation_btn"><span data-feather="download" class="icon-16"></span> <?php echo app_lang('export_quotation_form'); ?></button>
                 </div>
                 
             </div>
@@ -45,7 +46,8 @@
                 <hr/>
                 <div class="card-body d-flex flex-column align-items-center">
                     <img width="100px" src="<?php echo get_file_uri("assets/images/zip.png") ?>" alt="style_1" style="margin-bottom: 30px"/>
-                    <a type="button" target="_blank" href="<?php echo get_uri("projects/download_all_zip/").$project_id;?>" class="btn btn-primary export_quotation_btn"><span data-feather="download" class="icon-16"></span> Download zip file</a>
+                    <!-- <a type="button" target="_blank" href="<?php //echo get_uri("projects/download_all_zip/").$project_id;?>" class="btn btn-primary export_quotation_btn"><span data-feather="download" class="icon-16"></span> Download zip file</a> -->
+                    <?php echo anchor(get_uri("projects/download_project_file/") . $project_id, "<i data-feather='download' class='icon-16'></i> " . app_lang("export_project_zip"), array("title" => app_lang("export_project_zip"), "id" => "export_project_zip", "class" => "btn btn-primary")); ?>
                 </div>
                 
             </div>
@@ -65,7 +67,6 @@
                 
             </div>
         </div>
-        <div class=" col-md-3"></div>
         <input type="hidden" name="file_name" id="import_file_name" value="" />
         <div id="preview-area"></div>
     </div>
@@ -78,42 +79,128 @@
 <?php echo form_close(); ?>
 <script>
     $(document).ready(function(){
-        $(".btn_export_cost_overview").on("click",function(){
-            $.ajax({
-                url: '<?php echo get_uri("projects/download_cost_overview_xlsx/").$project_id; ?>',
-                type: 'POST',
-                data:{
-                    project_id:<?php echo $project_id;?>,
-                    data:$("#table-panel-for-xlsx")[0].innerHTML
-                },
-                success: function(response,textStatus, jqXHR) {
-                    console.log(response)
-                    // Create a blob from the response
-                    // var blob = new Blob([response], { type: 'application/octet-stream' });
+        // $(".btn_export_cost_overview").on("click",function(){
+        //     $.ajax({
+        //         url: '<?php //echo get_uri("projects/download_cost_overview_xlsx/").$project_id; ?>',
+        //         type: 'POST',
+        //         data:{
+        //             project_id:<?php //echo $project_id;?>,
+        //             data:$("#table-panel-for-xlsx")[0].innerHTML
+        //         },
+        //         success: function(response,textStatus, jqXHR) {
+        //             console.log(response)
+        //             // Create a blob from the response
+        //             // var blob = new Blob([response], { type: 'application/octet-stream' });
 
-                    // // Create a temporary URL for the blob
-                    // var url = window.URL.createObjectURL(blob);
+        //             // // Create a temporary URL for the blob
+        //             // var url = window.URL.createObjectURL(blob);
 
-                    // // Create a link element
-                    // var link = document.createElement('a');
-                    // link.href = url;
+        //             // // Create a link element
+        //             // var link = document.createElement('a');
+        //             // link.href = url;
 
-                    // var headers = jqXHR.getAllResponseHeaders();
-                    // link.download = '<?php echo $project_info->title."_cost_overview.xlsx";?>'; // Specify the filename
+        //             // var headers = jqXHR.getAllResponseHeaders();
+        //             // link.download = '<?php echo $project_info->title."_cost_overview.xlsx";?>'; // Specify the filename
 
-                    // // Append the link to the document body
-                    // document.body.appendChild(link);
+        //             // // Append the link to the document body
+        //             // document.body.appendChild(link);
 
-                    // // Trigger a click event on the link to start the download
-                    // link.click();
+        //             // // Trigger a click event on the link to start the download
+        //             // link.click();
 
-                    // // Remove the link from the document body
-                    // document.body.removeChild(link);
-                },
-                error: function(xhr, status, error) {
-                    // Handle errors
-                }
-            });
+        //             // // Remove the link from the document body
+        //             // document.body.removeChild(link);
+        //         },
+        //         error: function(xhr, status, error) {
+        //             // Handle errors
+        //         }
+        //     });
+
+        // })
+        $('body').on('click', '.export_project_btn', function (e) {
+
+        $.ajax({
+            url: "<?php echo get_uri('tasks/export_project_tasks_data') ?>",
+            type: 'POST',
+            dataType: 'json',
+            data: {project_id:<?php echo $project_id; ?> },
+            success: async function (result) {
+
+                /* dynamically import the scripts in the event listener */
+                const XLSX = await import("https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs");
+                const cptable = await import("https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/cpexcel.full.mjs");
+                XLSX.set_cptable(cptable);
+
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.json_to_sheet(result);
+                XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                XLSX.writeFile(wb, "project_name.xlsx");
+            }
+        });
+
+        })
+
+        $('body').on('click', '.export_quotation_btn', function (e) {
+
+        $.ajax({
+            url: "<?php echo get_uri('tasks/export_quotation_project_data') ?>",
+            type: 'POST',
+            dataType: 'json',
+            data: {project_id:<?php echo $project_id; ?> },
+            success: async function (result) {
+
+                /* dynamically import the scripts in the event listener */
+                const XLSX = await import("https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs");
+                const cptable = await import("https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/cpexcel.full.mjs");
+                XLSX.set_cptable(cptable);
+
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.json_to_sheet(result);
+                XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                XLSX.writeFile(wb, "Quotation_project_name.xlsx");
+            }
+        });
+
+        })
+
+        $('body').on('click', '.export_project_all', async function (e) {
+
+        /* dynamically import the scripts in the event listener */
+        const XLSX = await import("https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs");
+        const cptable = await import("https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/cpexcel.full.mjs");
+        XLSX.set_cptable(cptable);
+
+        var result = $.ajax({
+            url: "<?php echo get_uri('tasks/export_project_tasks_data') ?>",
+            type: 'POST',
+            dataType: 'json',
+            data: {project_id:<?php echo $project_id; ?> },
+            async: false,
+        });
+        if (result) {
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(result.responseJSON);
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            XLSX.writeFile(wb, "project_name.xlsx");
+        }
+
+        result = $.ajax({
+            url: "<?php echo get_uri('tasks/export_quotation_project_data') ?>",
+            type: 'POST',
+            dataType: 'json',
+            data: {project_id:<?php echo $project_id; ?> },
+            async: false,
+        });
+
+        if (result) {
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(result.responseJSON);
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            XLSX.writeFile(wb, "Quotation_project_name.xlsx");
+        }
+
+        location.href = "/index.php/projects/download_project_file/" + <?php echo $project_id; ?>;
 
         })
     })
