@@ -6,8 +6,9 @@
 <div class="card" >
     <div class="card-body" >
         <p>By selecting this yard, the quoted costs for this project. Data from any other yards will be deleted. This action is not reversible, but you can always edit the costs in execution phase.</p>
-        <div style="border-radius:10px;background-color:lightyellow;border:1px solid brown;" >
-            <ul>
+        <div  class="card bg-warning"  >
+            <div class="card-body" >
+                <h5><i data-feather="alert-triangle" class="icon-16" ></i>Warning</h5>
             <p>
                 This action will move the project to the only Execution Phase. The status of your project will automatically change to the Execution phase.
             </p>
@@ -15,7 +16,7 @@
                 Please note that the Deviation cost, Loss of earnings, Bunker cost and other additional expenditures at yard are not transfered to the cost overview.
                 In order to include these in the project's total cost overview, you should add these as Owner's supply to a designated task.
             </p>
-            </ul>
+            </div>
         </div>
     </div>
     
