@@ -12,7 +12,7 @@
                 <hr/>
                 <div class="card-body d-flex flex-column align-items-center">
                     <img width="100px" src="<?php echo get_file_uri("assets/images/excel.png") ?>" alt="style_1" />
-                    <button type="button" class="btn btn-primary export_project_btn"><span data-feather="download" class="icon-16"></span> <?php echo app_lang('export_project_form'); ?></button>
+                    <button type="button" class="btn btn-primary export_project_btn_2"><span data-feather="download" class="icon-16"></span> <?php echo app_lang('export_project_form'); ?></button>
                 </div>
                 
             </div>
@@ -37,7 +37,7 @@
         <div class=" col-md-6">
             <div class=" card border p-2" style="height:35vh;">
                 <div class="card-title  d-flex flex-column align-items-center" style="height:10vh;">
-                    <h5>Cost Form</h5>
+                    <h5>Cost overview</h5>
                     <div>The Excel sheet contains task-related cost information as well as columns in which the various billing-related information (for import purposes) can be entered.
                     </div>
                 </div>
@@ -81,7 +81,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('body').on('click', '.export_project_btn', function (e) {
+        $('body').on('click', '.export_project_btn_2', function (e) {
 
             $.ajax({
                 url: "<?php echo get_uri('tasks/export_project_tasks_data') ?>",
