@@ -7,7 +7,7 @@
                 <input  class="form-check-input  input-check-all-libraries" type="checkbox" />
             </div>
         </div>
-        <div class="col-md-5" >
+        <div class="col-md-8" >
             <h4>Work order</h4>
         </div>
         <div class="col-md-3" >
@@ -24,7 +24,7 @@
                     <input data-library-id="<?php echo $oneLibrary->id;?>" class="form-check-input input-check-library" type="checkbox" />
                 </div>
             </div>
-            <div class="col-md-5" >
+            <div class="col-md-8" >
                 <div data-bs-toggle="collapse" data-bs-target="#library-<?php echo $oneLibrary->id;?>" >
                     <div class="d-flex align-items-center" >
                         <i data-feather="chevron-down" class="collapse-arrow icon-16 "></i>
@@ -117,6 +117,7 @@
 <script>
     var selected_libraries=[];
     $(document).ready(function(){
+        $(".modal-dialog").removeClass('modal-xl');
         $(".input-check-all-libraries").change(function(){
             if($(this).is(":checked")){
                 console.log($(".input-check-library"))
