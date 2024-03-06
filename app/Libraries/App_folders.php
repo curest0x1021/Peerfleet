@@ -118,7 +118,7 @@ trait App_folders
 
     function explore($folder_id = "", $tab_view = false, $view_from = "", $client_id = 0)
     {
-        $this->check_module_availability("module_file_manager");
+        //$this->check_module_availability("module_file_manager");
         $data = $this->_get_folder_window_data($folder_id, 0, $client_id);
 
         $data["view_type"] = $tab_view;
