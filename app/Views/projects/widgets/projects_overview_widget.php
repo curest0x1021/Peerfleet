@@ -4,7 +4,7 @@ $completed_points = $projects_info->completed_points;
 
 $progress = $total_points ? round(($completed_points / $total_points) * 100) : 0;
 ?>
-<div class="card bg-white">
+<div class="card bg-white" style="height:35vh;">
     <div class="card-header">
         <i data-feather="grid" class="icon-16"></i> &nbsp;<?php echo app_lang("projects_overview"); ?>
     </div>

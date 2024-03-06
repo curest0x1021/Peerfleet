@@ -1,4 +1,4 @@
-<div class="card bg-white">
+<div class="card bg-white" style="height:12vh;">
     <div class="row">
         <div class="col-md-5 col-5">
             <div class="pl30 pt30">
