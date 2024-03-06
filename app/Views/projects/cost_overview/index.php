@@ -148,7 +148,7 @@ $totalComments=0;
         <div class="d-flex align-items-center" >
             <h4>Cost overview</h4>
             <div class="flex-grow-1" ></div>
-            <?php echo modal_anchor(get_uri('projects/modal_import_cost_overview'),'<button style="margin-right:10px;" class="btn btn-default" ><i class="icon-16"  data-feather="upload" ></i>Import</button>',array());?>
+            <?php echo modal_anchor(get_uri('projects/modal_import_cost_overview/').$project_id,'<button style="margin-right:10px;" class="btn btn-default" ><i class="icon-16"  data-feather="upload" ></i>Import</button>',array());?>
             <?php echo modal_anchor(get_uri('projects/modal_export_cost_overview/').$project_id,'<button class="btn btn-default" ><i class="icon-16"  data-feather="download" ></i>Export</button>',array());?>
         </div>
     </div>

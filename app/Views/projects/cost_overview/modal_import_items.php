@@ -1,122 +1,78 @@
-<?php echo form_open(get_uri("task_libraries/save_task_from_excel_file"), array("id" => "import-task-form", "class" => "general-form", "role" => "form")); ?>
-<div class="modal-body clearfix import-task-modal-body">
+<div id="ajaxModalContent" >
+<div class="modal-body clearfix" id="panel-import-yard-xlsx">
     <div class="container-fluid">
+        <?php echo form_open(get_uri("projects/import_yard_xlsx"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
+        <?php echo form_close();?>
         <div id="upload-area">
-            <?php
-            echo view("includes/multi_file_uploader", array(
-                "upload_url" => get_uri("task_libraries/upload_excel_file"),
-                "validation_url" => get_uri("task_libraries/validate_import_tasks_file"),
-                "max_files" => 1,
-                "hide_description" => true,
-                "disable_button_type" => true
-            ));
-            ?>
+            
+            <div class="d-flex justify-content-center align-items-center panel-drop-zone" style="height:20vh;border:1px dashed lightgray;" >
+                <div class="text-center" >    
+                    <p>Drag-and-drop documents here</p>
+                    <p>(or click to browse...)</p>
+                </div>
+            </div>
         </div>
         <input type="hidden" name="file_name" id="import_file_name" value="" />
+        <input type="file" hidden class="input-file-yard-items" />
         <div id="preview-area"></div>
     </div>
 </div>
 
 <div class="modal-footer">
-    <?php echo anchor("task_libraries/download_sample_excel_file", "<i data-feather='download' class='icon-16'></i> " . app_lang("download_sample_file"), array("title" => app_lang("download_sample_file"), "class" => "btn btn-default float-start")); ?>
     <button type="button" class="btn btn-default cancel-upload" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
-    <button id="form-previous" type="button" class="btn btn-default hide"><span data-feather="arrow-left-circle" class="icon-16"></span> <?php echo app_lang('back'); ?></button>
-    <button id="form-next" type="button" disabled="true" class="btn btn-info text-white"><span data-feather="arrow-right-circle" class="icon-16"></span> <?php echo app_lang('next'); ?></button>
-    <button id="form-submit" type="button" disabled="true" class="btn btn-primary start-upload hide"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('upload'); ?></button>
 </div>
-<?php echo form_close(); ?>
-
+</div>
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#import-task-form").appForm({
-            onSuccess: function () {
-                location.reload();
-            }
-        });
-
-        var $uploadArea = $("#upload-area"),
-                $previewArea = $("#preview-area"),
-                $previousButton = $("#form-previous"),
-                $nextButton = $("#form-next"),
-                $modalBody = $(".import-task-modal-body"),
-                $submitButton = $("#form-submit"),
-                $ajaxModal = $("#ajaxModal");
-
-        removeLargeModal(); //remove app-modal credentials on loading modal
-
-        function addLargeModal() {
-            $ajaxModal.addClass("import-task-app-modal");
-            $ajaxModal.addClass("app-modal");
-            $ajaxModal.find("div.modal-dialog").addClass("app-modal-body mw100p");
-            $ajaxModal.find("div.modal-content").addClass("h100p");
-        }
-
-        function removeLargeModal() {
-            $ajaxModal.find("div.modal-dialog").removeClass("app-modal-body mw100p");
-            $ajaxModal.find("div.modal-content").removeClass("h100p");
-            $ajaxModal.removeClass("app-modal");
-        }
-
-        $submitButton.click(function () {
-            $("#import-task-form").trigger("submit");
-        });
-
-        //validate the uploaded excel file by clicking next
-        $nextButton.click(function () {
-            var fileName = $("#uploaded-file-previews").find("input[type=hidden]:eq(1)").val();
-            if (!fileName) {
-                appAlert.error("<?php echo app_lang('something_went_wrong'); ?>");
-                return false;
-            }
-            appLoader.show({container: ".import-task-modal-body", css: "left:0;"});
-            var $button = $(this);
-            $button.attr("disabled", true);
-
-            $("#import_file_name").val(fileName);
-
-
-            $.ajax({
-                url: "<?php echo get_uri('task_libraries/validate_import_tasks_file_data') ?>",
-                type: 'POST',
-                dataType: 'json',
-                data: {file_name: fileName},
-                success: function (result) {
-                    appLoader.hide();
-                    $button.removeAttr('disabled');
-
-                    if (result.success) {
-                        $uploadArea.addClass("hide");
-                        $nextButton.addClass("hide");
-                        $previousButton.removeClass("hide");
-                        $submitButton.removeClass("hide");
-                        $previewArea.removeClass("hide");
-
-                        $previewArea.html(result.table_data);
-                        $modalBody.height($(window).height() - 165);
-                        $modalBody.addClass("overflow-y-scroll");
-                        addLargeModal();
-
-                        if (result.got_error) {
-                            $submitButton.prop("disabled", false);
-                        } else {
-                            $submitButton.prop("disabled", false);
-                        }
+       $(".panel-drop-zone").on("click",function(){
+        $(".input-file-yard-items").click();
+       });
+       $("#upload-area").on("drag",function(e){
+        e.preventDefault();
+       });
+       $("#upload-area").on("drop",function(e){
+        e.preventDefault();
+        console.log(e)
+       });
+       $(".input-file-yard-items").on('change',function(){
+        var myForm=new FormData();
+        myForm.append("project_id",<?php echo $project_id?>);
+        myForm.append("file",$(this)[0].files[0]);
+        var rise_csrf_token = $('[name="rise_csrf_token"]').val();
+        myForm.append("rise_csrf_token",rise_csrf_token);
+        $.ajax({
+            url:"<?php echo get_uri('projects/import_quotation_file');?>",
+            method:"POST",
+            data:myForm,
+            contentType: false, // Set contentType to false, as FormData will automatically set the correct type
+            processData: false,
+            success:function(response){
+                if(JSON.parse(response).success) {
+                    $maskTarget=$("#ajaxModalContent").find(".modal-body");
+                    var padding = $maskTarget.height() - 80;
+                    if (padding > 0) {
+                        padding = Math.floor(padding / 2);
                     }
+                    $maskTarget.after("<div class='modal-mask'><div class='circle-loader'></div></div>");
+                    //check scrollbar
+                    var height = $maskTarget.outerHeight();
+                    $('.modal-mask').css({"width": $maskTarget.width() + 22 + "px", "height": height + "px", "padding-top": padding + "px"});
+                    $maskTarget.closest('.modal-dialog').find('[type="submit"]').attr('disabled', 'disabled');
+                    $maskTarget.addClass("hide");
+                    window.panel_import_yard_xlsx.closeModal()
+                    window.location.reload();
+                }else{
+                    
                 }
-            });
-
-
-        });
-
-        $previousButton.click(function () {
-            $(this).addClass("hide");
-            $submitButton.addClass("hide");
-            $uploadArea.removeClass("hide");
-            $previewArea.addClass("hide");
-            $nextButton.removeClass("hide");
-
-            $modalBody.height($(window).height() - 230);
-            removeLargeModal();
-        });
+            
+            },
+            error:function(data){
+                console.log(data)
+            }
+        })
+       })
+       window.panel_import_yard_xlsx=$("#panel-import-yard-xlsx").appForm({
+        closeModalOnSuccess: false,
+       })
     });
 </script>    
