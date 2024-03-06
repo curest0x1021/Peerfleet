@@ -21,12 +21,12 @@ foreach ($allProjectYards as $oneYard) {
                 $itemList=$categorizedCostItems[$oneYard->id];
         ?>
                 
-            <div class="card" style="min-width:30vw;border:1px solid lightgray;margin-right:1vw;" >
+            <div class="card" style="min-width:30vw;" >
                 <div class="card-header" ><?php echo $oneYard->title;?></div>
                 <div class="card-body" id="yard-cost-items-panel-<?php echo $id;?>" >
 
                 
-                    <table class="table table-hover table-bordered" >
+                    <table class="table table-bordered" >
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -41,8 +41,8 @@ foreach ($allProjectYards as $oneYard) {
                             ?>
                             <tr>
                                 <td><?php echo $oneItem->name;?></td>
-                                <td><?php echo $oneItem->quantity;?> <?php echo $oneItem->measurement;?> X <?php echo $oneItem->unit_price;?> (Per unit) </td>
-                                <td><?php echo (double)$oneItem->quantity*(double)$oneItem->unit_price;?> </td>
+                                <td><?php echo $project_info->currency." ".$oneItem->quantity;?> <?php echo $oneItem->measurement;?> X <?php echo $oneItem->unit_price;?> (Per unit) </td>
+                                <td><?php echo $project_info->currency." ".(double)$oneItem->quantity*(double)$oneItem->unit_price;?> </td>
                                 <td><input hidden value='<?php echo $oneItem->id;?>' /><button class="btn btn-sm delete-cost-item"><i data-feather="trash" class="icon-16" ></i></button></td>
                             </tr>
                             <?php
@@ -220,8 +220,8 @@ $(document).ready(function(){
                 var newRow = $(`
                 <tr>
                 <td>${editPanelEl.find("#name")[0].value}</td>
-                <td>${editPanelEl.find("#quantity")[0].value} ${editPanelEl.find("#measurement")[0].value} X ${editPanelEl.find("#unit_price")[0].value} (per unit)</td>
-                <td>${parseFloat(editPanelEl.find("#quantity")[0].value)*parseFloat(editPanelEl.find("#unit_price")[0].value)}</td>
+                <td>${editPanelEl.find("#quantity")[0].value} ${editPanelEl.find("#measurement")[0].value} X<?php echo " ".$project_info->currency." ";?> ${editPanelEl.find("#unit_price")[0].value} (per unit)</td>
+                <td><?php echo " ".$project_info->currency." ";?>${parseFloat(editPanelEl.find("#quantity")[0].value)*parseFloat(editPanelEl.find("#unit_price")[0].value)}</td>
                 <td><input hidden value="" /><button onclick="delete_cost_item(event)" class="btn btn-sm delete-cost-item" ><i data-feather="trash" class="icon-16"></i></button></td>
                 </tr>`);
                 tbodyEl.append(newRow);
