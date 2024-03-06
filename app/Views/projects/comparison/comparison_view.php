@@ -87,8 +87,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 <a  href="<?php echo get_uri('projects/add_yard/'.$project_info->id,["project_info"=>$project_info]); ?>" class="btn btn-default"  ><i data-feather="plus-circle" class="icon-16" ></i>Add Yard Candidate</a>
             <?php } ?>
             <a  href="<?php echo get_uri('projects/currency_rates/').$project_info->id; ?>" class="btn btn-default" style="margin-left:10px;"  ><i data-feather="dollar-sign" class="icon-16" ></i>Exchange rates</a>
-            <a  href="<?php echo get_uri('projects/currency_rates/').$project_info->id; ?>" class="btn btn-default" style="margin-left:10px;"  ><i data-feather="upload" class="icon-16" ></i>Import quotation</a>
-            <a  href="<?php echo get_uri('projects/currency_rates/').$project_info->id; ?>" class="btn btn-default" style="margin-left:10px;"  ><i data-feather="download" class="icon-16" ></i>Export quotation</a>
+            <?php echo modal_anchor(get_uri('projects/modal_import_yard_xlsx/'.$project_info->id),'<button style="margin-left:10px" class="btn btn-default" ><i data-feather="upload" class="icon-16" ></i> Import quotation</button>',array());?>
+            <a style="margin-left:10px;" target="_blank" href="<?php echo get_uri("projects/download_quotation_form_xlsx/").$project_info->id;?>" class="btn btn-default"><span data-feather="download" class="icon-16"></span> Export quotation</a>
         </div>
     </div>
     <div class="card-body" >
@@ -136,8 +136,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                         </button>
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" href="<?php echo get_uri('projects/download_yard_xlsx/'.$allYards[$i]->id);?>" target="_blank"><i data-feather="download" class="icon-16" ></i> Export xlsx</a></li>
-                                            <li><?php echo modal_anchor(get_uri('projects/modal_import_yard_xlsx/'.$allYards[$i]->id),'<li class="dropdown-item" ><i data-feather="upload" class="icon-16" ></i> Import quotation</l1>',array());?></li>
-                                            <li><?php echo modal_anchor(get_uri('projects/modal_import_task_cost_items/'.$allYards[$i]->id),'<li class="dropdown-item" ><i data-feather="upload-cloud" class="icon-16" ></i> Import cost items of task</l1>',array());?></li>
+                                            <li><?php echo modal_anchor(get_uri('projects/modal_import_yard_xlsx/'.$allYards[$i]->id),'<li class="dropdown-item" ><i data-feather="upload" class="icon-16" ></i> Import quotation</li>',array());?></li>
+                                            <li><?php echo modal_anchor(get_uri('projects/modal_import_task_cost_items/'.$allYards[$i]->id),'<li class="dropdown-item" ><i data-feather="upload-cloud" class="icon-16" ></i> Import cost items of task</li>',array());?></li>
                                             <!-- <li><?php 
                                             // echo modal_anchor(get_uri('projects/modal_yard_add_files/'.$allYards[$i]->id),'<li class="dropdown-item" >Add files</l1>',array());
                                             ?></li> -->
@@ -573,7 +573,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         for ($i=0; $i < $numberYards; $i++) {
                         ?>
                         <td
-                            style="background-color:<?php
+                            style="color:<?php
                             if($totalYardCosts[$i]==0) echo "#F9A52D";
                             else if(max($totalYardCosts)==$totalYardCosts[$i]) echo "#e74c3c;";
                             else if(min($totalYardCosts)==$totalYardCosts[$i]) echo "#2d9cdb;";
@@ -615,7 +615,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         }   
                         ?>
                         <?php for ($i=0; $i < $numberYards; $i++) { ?>
-                            <td style="background-color:<?php  
+                            <td style="color:<?php  
                                 if($oneTaskAllCosts[$i]==0) echo "#F9A52D";
                                 else if(max($oneTaskAllCosts)==$oneTaskAllCosts[$i]) echo "#e74c3c;";
                                 else if(min($oneTaskAllCosts)==$oneTaskAllCosts[$i]) echo "#2d9cdb;";
@@ -795,7 +795,7 @@ $(document).ready(function(){
             // totalCostEls[index].style['color']="green";
         }
         // else background="white";
-        totalCostEls[index].style['background-color']=background
+        totalCostEls[index].style['color']=background
     }
 })
 var totalCosts;

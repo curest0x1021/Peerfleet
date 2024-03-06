@@ -3797,13 +3797,15 @@ class Projects extends Security_Controller {
     }
     function modal_yard_cost_items($task_id){
         $project_id=$this->Tasks_model->get_one($task_id)->project_id;
+        $project_info=$this->Projects_model->get_one($project_id);
         $allProjectYards=$this->Project_yards_model->get_all_where(array('project_id'=>$project_id))->getResult();
         $allYardCostItems=$this->Shipyard_cost_items_model->get_all_where(array('task_id'=>$task_id))->getResult();
-        return $this->template->view("projects/comparison/modal_yard_cost_items",['project_id'=>$project_id,'task_id'=>$task_id,'allProjectYards'=>$allProjectYards,'allYardCostItems'=>$allYardCostItems]);
+        return $this->template->view("projects/comparison/modal_yard_cost_items",["project_info"=>$project_info,'project_id'=>$project_id,'task_id'=>$task_id,'allProjectYards'=>$allProjectYards,'allYardCostItems'=>$allYardCostItems]);
     }
     function save_yard_cost_item(){
         $id=$this->request->getPost('id');
         $task_id=$this->request->getPost('task_id');
+        $project_info=$this->Projects_model->get_one($this->request->getPost('project_id'));
         $saveData=array(
             "task_id"=>$this->request->getPost('task_id'),
             "shipyard_id"=>$this->request->getPost('shipyard_id'),
@@ -3813,7 +3815,7 @@ class Projects extends Security_Controller {
             "quantity"=>$this->request->getPost('quantity'),
             "measurement"=>$this->request->getPost("measurement"),
             "unit_price"=>$this->request->getPost('unit_price'),
-            "currency"=>$this->request->getPost('currency'),
+            "currency"=>$project_info->currency,
             "discount"=>$this->request->getPost('discount'),
             "yard_remarks"=>$this->request->getPost('yard_remarks'),
         );
