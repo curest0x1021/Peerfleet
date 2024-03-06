@@ -9,9 +9,7 @@
             <?php 
             echo view("tasks/comments/comment_list_text"); 
             ?>
-            <?php //if ($can_comment_on_tasks) { ?>
                 <?php echo view("tasks/comments/comment_form"); ?>
-            <?php// } ?>
             
         </div>
     </div>
