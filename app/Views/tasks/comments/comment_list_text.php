@@ -33,8 +33,8 @@ foreach ($comments as $comment) {
         <div id="prject-comment-container-<?php echo $type . "-" . $comment->id; ?>"  class="comment-container text-break b-b <?php echo "comment-" . $type; ?>">
             <div class="d-flex">
                 <div class="flex-shrink-0 comment-avatar">
-                    <span class="avatar <?php //echo ($type === "project") ? " avatar-sm" : " avatar-xs"; ?> ">
-                        <img src="<?php //echo get_avatar($comment->created_by_avatar); ?>" alt="..." />
+                    <span class="avatar <?php echo ($type === "project") ? " avatar-sm" : " avatar-xs"; ?> ">
+                        <img src="<?php echo get_avatar($comment->created_by_avatar); ?>" alt="..." />
                     </span>
                 </div>
                 <div class="w-100 ps-2">
@@ -104,11 +104,11 @@ foreach ($comments as $comment) {
                             ?>
                             <?php
                             $reply_caption = "";
-                            // if ($comment->total_replies == 1) {
-                            //     $reply_caption = app_lang("reply");
-                            // } else if (($comment->total_replies > 1)) {
-                            //     $reply_caption = app_lang("replies");
-                            // }
+                            if ($comment->total_replies == 1) {
+                                $reply_caption = app_lang("reply");
+                            } else if (($comment->total_replies > 1)) {
+                                $reply_caption = app_lang("replies");
+                            }
 
                             if ($reply_caption) {
                                 echo ajax_anchor(get_uri("projects/view_comment_replies/" . $comment->id), "<i data-feather='message-circle' class='icon-16'></i> " . app_lang("view") . " " . $comment->total_replies . " " . $reply_caption, array("class" => "btn btn-default btn-xs view-replies", "id" => "show-replies-" . $comment->id, "data-remove-on-success" => "#show-replies-" . $comment->id, "data-real-target" => "#reply-list-" . $comment->id));
