@@ -9,7 +9,7 @@
             <?php 
             echo view("tasks/comments/comment_list_text"); 
             ?>
-                <?php echo view("tasks/comments/comment_form"); ?>
+            <?php echo view("tasks/comments/comment_form"); ?>
             
         </div>
     </div>
