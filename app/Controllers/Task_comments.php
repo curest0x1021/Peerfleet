@@ -56,7 +56,7 @@ class Task_comments extends Security_Controller
 
             if ($this->request->getPost("reload_list")) {
                 $view_data['comments'] = $this->Task_comments_model->get_details($options)->getResult();
-                $response_data = $this->template->view("Tasks/comments/comment_list_text", $view_data);
+                $response_data = $this->template->view("tasks/comments/comment_list_text", $view_data);
             }
             echo json_encode(array("success" => true, "data" => $response_data, 'message' => app_lang('comment_submited')));
 
