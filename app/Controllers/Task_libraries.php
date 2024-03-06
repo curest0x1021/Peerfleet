@@ -937,5 +937,9 @@ class Task_libraries extends Security_Controller {
         // Return the response object
         return $response;
     }
+    function delete($id){
+        $this->Task_libraries_model->delete_permanently($id);
+        return json_encode(array("success"=>true));
+    }
 
 }

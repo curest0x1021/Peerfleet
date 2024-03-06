@@ -19,7 +19,7 @@
                         <div style="margin:5px" >
                         <?php echo modal_anchor(get_uri("task_libraries/import_modal"), "<i data-feather='upload' class='icon-16'></i> " . "Import Task Templates", array("class" => "btn btn-default import_tasks_btn", "title" => "Import Task Libraries")); ?>
                         </div>
-                        <?php if(isset($gotTasklibrary)) echo modal_anchor(get_uri("task_libraries/export_modal/").$gotTasklibrary->id, "<i data-feather='external-link' class='icon-16'></i> " . "Export", array("class" => "btn btn-default export-excel-btn", "title" => "Export Task Libraries")); ?>
+                        <?php //if(isset($gotTasklibrary)) echo modal_anchor(get_uri("task_libraries/export_modal/").$gotTasklibrary->id, "<i data-feather='external-link' class='icon-16'></i> " . "Export", array("class" => "btn btn-default export-excel-btn", "title" => "Export Task Libraries")); ?>
                     </div>
                 </div>
             </div>
@@ -1305,14 +1305,19 @@
                         </div>
                     </div>
                     <div><?php echo view("includes/dropzone_preview"); ?></div>
-                    <div stlyle="margin-top:10px" class="row" >
-                        <div class="col-md-2" >
+                    <div stlyle="margin-top:10px" class="d-flex align-items-center" >
+                        <div  >
                             <button class="btn btn-default upload-file-button float-start me-auto btn-sm round" type="button" style="color:#7988a2"><i data-feather="camera" class="icon-16"></i> <?php echo app_lang("upload_file"); ?></button>
                         </div>
-                        <div class="col-md-9" ></div>
-                        <div class="col-md-1"  >
+                        <div class="flex-grow-1" ></div>
+                        <div  >
+                            <?php
+                            if(isset($gotTasklibrary)){
+                                echo js_anchor("<i data-feather='x' class='icon-16'></i>Delete", array('title' => app_lang('delete_project'), "class" => "btn btn-danger delete-library", "data-id" => $gotTasklibrary->id, "data-action-url" => get_uri("task_libraries/delete/").$gotTasklibrary->id, "data-action" => "delete-confirmation"));
+                            }
+                            ?>
+                            
                             <button type="button"
-                            style="float:right"
                             old-id="btn-task-save"
                             id="btn-save-task-library"
                             class="btn btn-primary" ><i data-feather="check-circle" class="icon-16"></i> Save</button>
@@ -1329,6 +1334,9 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $("#confirmDeleteButton").on("mouseup",function(){
+            window.location.href='<?php echo get_uri("task_libraries")?>';
+        })
         $("#cost_item_currency_symbol").on('mousedown', false);
         $("#cost_item_currency_symbol").on('keydown', false);
         $("#file-selector-btn").on("click",function(){
