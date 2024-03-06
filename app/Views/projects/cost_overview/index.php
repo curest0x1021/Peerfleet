@@ -185,7 +185,7 @@ $totalComments=0;
                     <td>0</td>
                     <td>0</td>
                     <td class="">
-                        <?php echo modal_anchor(get_uri("projects/modal_comments/".$project_id),'<span class="badge pill bg-secondary total-comments" >0</span>',array());?>
+                        <?php echo modal_anchor(get_uri("task_comments/modal_project_comments/".$project_id),'<span class="badge pill bg-secondary total-comments" >0</span>',array());?>
                     </td>
                 </tr>
                 <tr></tr>

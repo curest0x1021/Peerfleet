@@ -55,7 +55,7 @@ class Task_comments extends Security_Controller
             $options = array("id" => $save_id, "created_by" => $this->login_user->id);
 
             if ($this->request->getPost("reload_list")) {
-                $view_data['comments'] = $this->Task_comments_model->get_all_where($options)->getResult();
+                $view_data['comments'] = $this->Task_comments_model->get_details($options)->getResult();
                 $response_data = $this->template->view("Tasks/comments/comment_list_text", $view_data);
             }
             echo json_encode(array("success" => true, "data" => $response_data, 'message' => app_lang('comment_submited')));
@@ -87,12 +87,17 @@ class Task_comments extends Security_Controller
     function modal_category_comments(){
     }
     function modal_project_comments($project_id){
-        $allComments=$this->Task_comments_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        return $this->template->view("tasks/comments/modal_comments",["comments"=>$allComments,"project_id"=>$project_id]);
+        $options = array("project_id" => $project_id);
+        $allComments=$this->Task_comments_model->get_details($options)->getResult();
+        // $task_info=$this->Tasks_model->get_one($task_id);
+        // $allComments=$this->Task_comments_model->get_all_where(array("task_id"=>$task_id))->getResult();
+        return $this->template->view("tasks/comments/modal_project_comments",["comments"=>$allComments,"project_id"=>$project_id]);
     }
     function modal_task_comments($task_id){
+        $options = array("task_id" => $task_id);
+        $allComments=$this->Task_comments_model->get_details($options)->getResult();
         $task_info=$this->Tasks_model->get_one($task_id);
-        $allComments=$this->Task_comments_model->get_all_where(array("task_id"=>$task_id))->getResult();
+        // $allComments=$this->Task_comments_model->get_all_where(array("task_id"=>$task_id))->getResult();
         return $this->template->view("tasks/comments/modal_comments",["task_info"=>$task_info,"comments"=>$allComments,"task_id"=>$task_id,"project_id"=>$task_info->project_id]);
     }
     function upload_file(){
