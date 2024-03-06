@@ -31,6 +31,7 @@ class Projects extends Security_Controller {
         $this->Task_variation_orders_model = model("App\Models\Task_variation_orders_model");
         $this->Task_owner_supplies_model = model("App\Models\Task_owner_supplies_model");
         $this->Project_currency_rates_model = model("App\Models\Project_currency_rates_model");
+        $this->Task_comments_model = model("App\Models\Task_comments_model");
         $this->Projects_model->auto_update();
 
     }
@@ -4107,7 +4108,7 @@ class Projects extends Security_Controller {
         $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allVariationOrders=$this->Task_variation_orders_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allComments=$this->Project_comments_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        $allComments=$this->Task_comments_model->get_all_where(array("project_id"=>$project_id))->getResult();
         return $this->template->view('projects/cost_overview/index',["project_id"=>$project_id,"allComments"=>$allComments,"allShipyardCostItems"=>$allShipyardCostItems,"allOwnerSupplies"=>$allOwnerSupplies,"allVariationOrders"=>$allVariationOrders,"allTasks"=>$allTasks,'allCostItems'=>$allCostItems]);
     }
 
