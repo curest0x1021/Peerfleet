@@ -799,9 +799,9 @@ class Task_libraries extends Security_Controller {
         $sheet1->setCellValue('X1', 'Material owners supply');
         $sheet1->setCellValue('Y1', 'Risk assessment');
         $sheet1->setCellValue('Z1', 'Maker');
-        $sheet1->setCellValue('AA', 'Type');
-        $sheet1->setCellValue('AB', 'Serial number');
-        $sheet1->setCellValue('AB', 'PMS SCS number');
+        $sheet1->setCellValue('AA1', 'Type');
+        $sheet1->setCellValue('AB1', 'Serial number');
+        $sheet1->setCellValue('AC1', 'PMS SCS number');
         $rowNumber=2;
         $sheet1->setCellValue('A2', $library_info->title);
         $sheet1->setCellValue('B2', $library_info->category);
