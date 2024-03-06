@@ -1334,9 +1334,9 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#confirmDeleteButton").on("mouseup",function(){
-            window.location.href='<?php echo get_uri("task_libraries")?>';
-        })
+        // $("#confirmDeleteButton").on("mouseup",function(){
+        //     window.location.href='<?php //echo get_uri("task_libraries")?>';
+        // })
         $("#cost_item_currency_symbol").on('mousedown', false);
         $("#cost_item_currency_symbol").on('keydown', false);
         $("#file-selector-btn").on("click",function(){

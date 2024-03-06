@@ -4111,8 +4111,9 @@ class Projects extends Security_Controller {
         return $this->template->view('projects/cost_overview/index',["project_id"=>$project_id,"allComments"=>$allComments,"allShipyardCostItems"=>$allShipyardCostItems,"allOwnerSupplies"=>$allOwnerSupplies,"allVariationOrders"=>$allVariationOrders,"allTasks"=>$allTasks,'allCostItems'=>$allCostItems]);
     }
 
-    function modal_import_cost_overview(){
-        return $this->template->view("projects/cost_overview/modal_import_items");
+    function modal_import_cost_overview($project_id){
+        $project_info=$this->Projects_model->get_one($project_id);
+        return $this->template->view("projects/comparison/modal_import_items",array("project_info"=>$project_info,"project_id"=>$project_id));
     }
     function modal_export_cost_overview($project_id){
         $project_info=$this->Projects_model->get_one($project_id);
