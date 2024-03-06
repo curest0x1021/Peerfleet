@@ -1,13 +1,18 @@
-<div class="card bg-white" style="height:49vh">
+<div class="card bg-white" style="height:49vh;">
     <div class="card-header clearfix">
         <i data-feather="list" class="icon-16"></i> &nbsp;<?php echo app_lang($type); ?>
     </div>
     <div class="card-body rounded-bottom" id="<?php echo $type; ?>-widget">
-        <div class="row d-flex justify-content-center align-items-center">
-            <div class="col-md-6 d-flex justify-content-center">
-                <canvas id="all-tasks-overview-chart-<?php echo $type; ?>" style=" height: 25vh;max-width:80%"></canvas>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="d-flex align-items-center justify-content-center" style="width:100%;height:40vh;" >
+                    <div  >
+                        <canvas id="all-tasks-overview-chart-<?php echo $type; ?>" style="width: 100%; height: 160px;"></canvas>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6 pl20 <?php echo count($task_statuses) > 8 ? "" : "pt-4"; ?>">
+            <div class="col-md-6 pl20 d-flex align-items-center <?php echo count($task_statuses) > 8 ? "" : "pt-4"; ?>">
+                <div style="width:100%" >
                 <?php
                 foreach ($task_statuses as $task_status) {
                     ?>
@@ -20,6 +25,7 @@
                     <?php
                 }
                 ?>
+                </div>
             </div>
         </div>
         <div class="position-absolute" style="bottom: 15px;">
