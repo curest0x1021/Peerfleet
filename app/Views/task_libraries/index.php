@@ -415,7 +415,7 @@
                                                     "id" => "gas_free_certificate_yes",
                                                     "name" => "gas_free_certificate",
                                                     "class" => "form-check-input",
-                                                ), "1", true);
+                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->gas_free_certificate:1);
                                                 ?>
                                                 <label for="gas_free_certificate_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                                 <?php
@@ -423,7 +423,7 @@
                                                     "id" => "gas_free_certificate_no",
                                                     "name" => "gas_free_certificate",
                                                     "class" => "form-check-input",
-                                                ), "0", false);
+                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->gas_free_certificate:0);
                                                 ?>
                                                 <label for="gas_free_certificate_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
@@ -668,7 +668,7 @@
                                                     "id" => "material_owners_supply_yes",
                                                     "name" => "material_owners_supply",
                                                     "class" => "form-check-input",
-                                                ), "1", true);
+                                                ), "1", 0);
                                                 ?>
                                                 <label for="material_owners_supply_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                                 <?php
@@ -676,7 +676,7 @@
                                                     "id" => "material_owners_supply_no",
                                                     "name" => "material_owners_supply",
                                                     "class" => "form-check-input",
-                                                ), "0", false);
+                                                ), "0", 1);
                                                 ?>
                                                 <label for="material_owners_supply_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
@@ -691,7 +691,7 @@
                                                     "id" => "work_permit_yes",
                                                     "name" => "work_permit",
                                                     "class" => "form-check-input",
-                                                ), "1", true);
+                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->work_permit:1);
                                                 ?>
                                                 <label for="work_permit_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                                 <?php
@@ -699,7 +699,7 @@
                                                     "id" => "work_permit_no",
                                                     "name" => "work_permit",
                                                     "class" => "form-check-input",
-                                                ), "0", false);
+                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->work_permit:0);
                                                 ?>
                                                 <label for="work_permit_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
@@ -714,7 +714,7 @@
                                                     "id" => "risk_assessment_yes",
                                                     "name" => "risk_assessment",
                                                     "class" => "form-check-input",
-                                                ), "1", true);
+                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->risk_assessment:1);
                                                 ?>
                                                 <label for="risk_assessment_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                                 <?php
@@ -722,7 +722,7 @@
                                                     "id" => "risk_assessment_no",
                                                     "name" => "risk_assessment",
                                                     "class" => "form-check-input",
-                                                ), "0", false);
+                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->risk_assessment:0);
                                                 ?>
                                                 <label for="risk_assessment_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
