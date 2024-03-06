@@ -1,11 +1,11 @@
-<div class="card bg-white">
+<div class="card bg-white" style="height:49vh">
     <div class="card-header clearfix">
         <i data-feather="list" class="icon-16"></i> &nbsp;<?php echo app_lang($type); ?>
     </div>
     <div class="card-body rounded-bottom" id="<?php echo $type; ?>-widget">
         <div class="row">
             <div class="col-md-6">
-                <canvas id="all-tasks-overview-chart-<?php echo $type; ?>" style="width: 100%; height: 160px;"></canvas>
+                <canvas id="all-tasks-overview-chart-<?php echo $type; ?>" style="width: 80%; height: 35vh;"></canvas>
             </div>
             <div class="col-md-6 pl20 <?php echo count($task_statuses) > 8 ? "" : "pt-4"; ?>">
                 <?php
