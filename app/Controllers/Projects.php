@@ -3904,7 +3904,7 @@ class Projects extends Security_Controller {
         return $response;
     }
     function modal_import_yard_xlsx($shipyard_id){
-        return $this->template->view('projects/comparison/modal_import_yard_xlsx',['shipyard_id'=>$shipyard_id]);
+        return $this->template->view('projects/comparison/modal_import_shipyard_items',['shipyard_id'=>$shipyard_id]);
     }
     function import_yard_xlsx(){
         upload_file_to_temp(true);
@@ -4201,87 +4201,7 @@ class Projects extends Security_Controller {
         );
         return json_encode($headers);
     }
-//     function download_project_form_xlsx($shipyard_id){
-//         require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
-//         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-//         $project_yard=$this->Project_yards_model->get_one($shipyard_id);
-//         $project_info=$this->Projects_model->get_one($project_yard->project_id);
-//         $allYardCostItems=$this->Shipyard_cost_items_model->get_all_where(array("shipyard_id"=>$shipyard_id))->getResult();
 
-//         // Add data to the first worksheet
-//         $sheet1 = $spreadsheet->getActiveSheet();
-//         $sheet1->setTitle('Read me');
-//         $sheet1->setCellValue('A1', 'About the quotation form');
-//         $sheet1->setCellValue('A3', 'General');
-//         $sheet1->setCellValue('A4', 'This quotation form is generated via Maindeck (www.maindeck.io).');
-//         $sheet1->setCellValue('A5', 'It contains all the necessary functionality required by the shipyard providing a quotation.');
-//         $sheet1->setCellValue('A7', 'The shipyard understands that this quotation form must be read and understood in connection with the project specification PDF sent along with it.');
-//         $sheet1->setCellValue('A8', 'The project specification PDF contains all the detailed specifications about the work scope.');
-//         $sheet1->setCellValue('A10', 'The shipyard also accepts that, if selected, billed and/or final costs should be provided to the owner in this same format.');
-//         $sheet1->setCellValue('A13', 'How to use');
-//         $sheet1->setCellValue('A14', 'For a quick and easy intro, please view this video.(ctrl + click to view)');
-//         $sheet1->setCellValue('A16', 'For additional information, please see this article.(ctrl + click to view)');
-//         $sheet1->setCellValue('A19', 'Support');
-//         $sheet1->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
-//         $sheet1->setCellValue('A21', '+47 91999771');
-
-//         // Add data to the second worksheet
-//         $sheet2 = $spreadsheet->createSheet();
-//         $sheet2->setTitle('Cost items');
-//         $sheet2->setCellValue('A1', 'SFI Code');
-//         $sheet2->setCellValue('B1', 'WO name');
-//         $sheet2->setCellValue('C1', 'Group');
-//         $sheet2->setCellValue('D1', 'Cost item');
-//         $sheet2->setCellValue('E1', 'Description');
-//         $sheet2->setCellValue('F1', 'Cost type');
-//         $sheet2->setCellValue('G1', 'Est. quantity');
-//         $sheet2->setCellValue('H1', 'Measurement unit');
-//         $sheet2->setCellValue('I1', 'Unit price');
-//         $sheet2->setCellValue('J1', 'Unit price currency');
-//         $sheet2->setCellValue('K1', 'Quote');
-//         $sheet2->setCellValue('L1', 'Discount (0-100%)');
-//         $sheet2->setCellValue('M1', 'Discounted quote');
-//         $sheet2->setCellValue('N1', 'Yard remarks');
-//         $sheet2->setCellValue('O1', 'Cost ID');
-//         $sheet2->setCellValue('P1', 'WO ID');
-//         $rowNumber=2;
-//         foreach ($allYardCostItems as $oneItem) {
-//             $task_info=$this->Tasks_model->get_one($oneItem->task_id);
-//             $sheet2->setCellValue('A'.$rowNumber, '');
-//             $sheet2->setCellValue('B'.$rowNumber, $task_info->title);
-//             $sheet2->setCellValue('C'.$rowNumber, $task_info->category);
-//             $sheet2->setCellValue('D'.$rowNumber, $oneItem->name);
-//             $sheet2->setCellValue('E'.$rowNumber, $oneItem->description);
-//             $sheet2->setCellValue('F'.$rowNumber, $oneItem->quote_type);
-//             $sheet2->setCellValue('G'.$rowNumber, $oneItem->quantity);
-//             $sheet2->setCellValue('H'.$rowNumber, $oneItem->measurement);
-//             $sheet2->setCellValue('I'.$rowNumber, $oneItem->unit_price);
-//             $sheet2->setCellValue('J'.$rowNumber, $oneItem->currency);
-//             $sheet2->setCellValue('K'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity);
-//             $sheet2->setCellValue('L'.$rowNumber, $oneItem->discount);
-//             $sheet2->setCellValue('M'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity*(float)$oneItem->discount/100);
-//             $sheet2->setCellValue('N'.$rowNumber, $oneItem->yard_remarks);
-//             $sheet2->setCellValue('O'.$rowNumber, '');
-//             $sheet2->setCellValue('P'.$rowNumber, '');
-//             $rowNumber++;
-//         }
-
-//         // Create a writer object
-//         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-
-//         $response = service('response');
-
-// // Set response headers for file download
-//         $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-//         $response->setHeader('Content-Disposition', 'attachment;filename="'.$project_info->title.'_cost_sheet_for_'.$project_yard->title.'.xlsx"');
-//         $response->setHeader('Cache-Control', 'max-age=0');
-
-//         // Write the Excel file content to the response body
-//         $writer->save('php://output');
-
-//         // Return the response object
-//         return $response;
-//     }
     function download_quotation_form_xlsx($project_id){
         require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
@@ -5131,6 +5051,101 @@ class Projects extends Security_Controller {
 
         return $this->download_app_files(get_setting("temp_file_path"), $serialized_file_data);
     }
+    function modal_import_quotation_file($project_id){
+        $project_info=$this->Projects_model->get_one($project_id);
+        return $this->template->view("projects/comparison/modal_import_items",["project_info"=>$project_info,"project_id"=>$project_id]);
+    }
+    function import_quotation_file($project_id){
+        $project_info=$this->Projects_model->get_one($project_id);
+        $allShipyards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id))->getResult();
+
+        upload_file_to_temp(true);
+        $file = get_array_value($_FILES, "file");
+
+        // if (!$file) {
+        //     die("Invalid file");
+        // }
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $temp_file = get_array_value($file, "tmp_name");
+        $file_name = get_array_value($file, "name");
+        $file_size = get_array_value($file, "size");
+        $temp_file_path = get_setting("temp_file_path");
+        $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
+
+        $shipyard_id=$this->request->getPost('shipyard_id');
+        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
+
+        $excel_file->setActiveSheetIndex(0);
+        $worksheet=$excel_file->getActiveSheet();
+        $highestRow = $worksheet->getHighestRow(); // e.g., 10
+        $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
+        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+        $info_data = [];
+
+        // Loop through each row and column to read the data
+        for ($row = 1; $row <= $highestRow; ++$row) {
+            $rowData = [];
+            for ($col = 1; $col <= $highestColumnIndex; ++$col) {
+                $cellValue = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+                $rowData[] = $cellValue;
+            }
+            $info_data[] = $rowData;
+        }
+        // return json_encode($info_data);
+        $task_id=$info_data[1][1];
+        
+        $project_id=$info_data[3][1];
+        if((string)$shipyard_info->project_id!=(string)$project_id) return json_encode(array("success"=>false));
+
+        $excel_file->setActiveSheetIndex(1);
+        $worksheet=$excel_file->getActiveSheet();
+        $highestRow = $worksheet->getHighestRow(); // e.g., 10
+        $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
+
+        // Convert the highest column letter to a numeric index (e.g., 'F' => 6)
+        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+
+        // Initialize an empty array to store the data
+        $data = [];
+
+        // Loop through each row and column to read the data
+        for ($row = 1; $row <= $highestRow; ++$row) {
+            $rowData = [];
+            for ($col = 1; $col <= $highestColumnIndex; ++$col) {
+                $cellValue = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+                $rowData[] = $cellValue;
+            }
+            $data[] = $rowData;
+        }
+        // return json_encode($data);
+        for($count=1;$count<count($data);$count++){
+            // $task_info=$this->Tasks_model->get_one($task_id);
+            foreach ($allShipyards as $oneYard) {
+                # code...
+                $saveData=array(
+                    "shipyard_id"=>$oneYard->id,
+                    "task_id"=>$data[$count][2],
+                    "project_id"=>$project_id,
+                    "name"=>$data[$count][5],
+                    "description"=>$data[$count][6],
+                    "quantity"=>$data[$count][8],
+                    "measurement"=>$data[$count][9],
+                    "unit_price"=>$data[$count][10],
+                    "currency"=>$project_info->currency,
+                    "discount"=>$data[$count][13],
+                    "yard_remarks"=>$data[$count][15],
+                );
+                $this->Shipyard_cost_items_model->ci_save($saveData,null);
+            }
+            
+        }
+        echo json_encode(array("success"=>true));
+    }
+    // function modal_import_shipyard_quotation_file($shipyard_id){
+    //     $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
+    //     $project_info=$this->Projects_model->get_one($shipyard_info->project_id);
+    //     return $this->template->view("projects/comparison/modal_import_shipyard_items",["shipyard_id"=>$shipyard_id,"project_info"=>$project_info,"shipyard_info"=>$shipyard_info,"project_id"=>$shipyard_info->project_id]);
+    // }
 }
 
 /* End of file projects.php */

@@ -5126,7 +5126,7 @@ class Tasks extends Security_Controller {
     function save_task_one_cost_item(){
         $id=$this->request->getPost("id");
         $task_id=$this->request->getPost("task_id");
-        $task_info=$this->Task_cost_items_model->get_one($task_id);
+        $task_info=$this->Tasks_model->get_one($task_id);
         $newData=array(
             "task_id"=>$this->request->getPost("task_id"),
             "project_id"=>$task_info->project_id,

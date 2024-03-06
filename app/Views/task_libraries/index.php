@@ -834,6 +834,7 @@
                                             <?php
                                             if(isset($gotTasklibrary)&&$gotTasklibrary->reference_drawing){
                                                 $cost_items=json_decode($gotTasklibrary->reference_drawing);
+                                                if($cost_items)
                                                 foreach ($cost_items as $key=>$oneItem) {
                                                     # code...
                                                     echo "<tr><td>";
