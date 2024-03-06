@@ -5257,28 +5257,13 @@ class Tasks extends Security_Controller {
         return $this->template->view('tasks/files/modal_form', $view_data);
     }
     function files_list_data($project_id = 0) {
-        // validate_numeric_value($project_id);
-        // $this->init_project_permission_checker($project_id);
-
-        // if (!$this->can_view_files()) {
-        //     app_redirect("forbidden");
-        // }
-
-        // $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("project_files", $this->login_user->is_admin, $this->login_user->user_type);
 
         $options = array(
             "task_id" => $project_id,
             "description"=>""
-            // "category_id" => $this->request->getPost("category_id"),
-            // "custom_fields" => $custom_fields,
-            // "custom_field_filter" => $this->prepare_custom_field_filter_values("project_files", $this->login_user->is_admin, $this->login_user->user_type)
         );
 
-        // $list_data = $this->Project_commnets_model->get_details($options)->getResult();
-        // $result = array();
-        // foreach ($list_data as $data) {
-        //     $result[] = $this->_make_file_row($data, $custom_fields);
-        // }
+        
 
         $allComments = $this->Project_comments_model->get_details($options)->getResult();
         $view_data['files'] =array();
@@ -5301,33 +5286,12 @@ class Tasks extends Security_Controller {
     private function _make_file_row($data, $custom_fields) {
         $file_icon = get_file_icon(strtolower(pathinfo($data['file_name'], PATHINFO_EXTENSION)));
 
-        // $image_url = get_avatar($data->uploaded_by_user_image);
-        // $uploaded_by = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->uploaded_by_user_name";
         $uploaded_by =  $data['uploaded_by_user_name'];
 
-        // if ($data->uploaded_by_user_type == "staff") {
-        //     $uploaded_by = get_team_member_profile_link($data->uploaded_by, $uploaded_by);
-        // } else {
-        //     $uploaded_by = get_client_contact_profile_link($data->uploaded_by, $uploaded_by);
-        // }
-
-        // $description = "<div class='float-start text-wrap'>" .
-                // js_anchor(remove_file_prefix($data['file_name']), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "1", "data-url" => get_uri("projects/view_file/" . $data['id'])));
-
-        // if ($data->description) {
-        //     $description .= "<br /><span class='text-wrap'>" . $data->description . "</span></div>";
-        // } else {
-        //     $description .= "</div>";
-        // }
-
-        //show checkmark to download multiple files
-        // $checkmark = js_anchor("<span class='checkbox-blank mr15 float-start'></span>", array('title' => "", "class" => "", "data-id" => $data->id, "data-act" => "download-multiple-file-checkbox")) . $data->id;
 
         $row_data = array(
             remove_file_prefix($data['file_name']),
-            // $checkmark,
-            // "<div data-feather='$file_icon' class='mr10 float-start'></div>" . $description,
-            // $data->category_name ? $data->category_name : "-",
+
             convert_file_size($data['file_size']),
             $uploaded_by,
             format_to_datetime($data['created_at']),
@@ -5339,15 +5303,8 @@ class Tasks extends Security_Controller {
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
-        // $options = anchor(get_uri("projects/download_file/" . $data->id), "<i data-feather='download-cloud' class='icon-16'></i>", array("title" => app_lang("download")));
-        // if ($this->can_add_files()) {
-        //     $options .= modal_anchor(get_uri("projects/file_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_files'), "data-post-id" => $data->id));
-        // }
-        // if ($this->can_delete_files($data->uploaded_by)) {
-        //     $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_file'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("projects/delete_file"), "data-action" => "delete-confirmation"));
-        // }
+     
 
-        //$row_data[] = $options;
 
         return $row_data;
     }
