@@ -7,7 +7,7 @@
         </div>
         <div class="b-t pt10 list-container">
             <?php 
-            echo view("tasks/comments/comment_list_text"); 
+                echo view("tasks/comments/comment_list_text"); 
             ?>
             
             

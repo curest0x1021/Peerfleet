@@ -21,13 +21,7 @@ foreach ($comments as $comment) {
         $type_id = $comment->customer_feedback_id;
     }
 
-    // if ($comment->pinned_comment_status) {
-    //     $pin_status = "hide";
-    //     $unpin_status = "";
-    // } else {
-    //     $pin_status = "";
-    //     $unpin_status = "hide";
-    // }
+
     ?>
     <div id="comment-<?php echo $comment->id; ?>" class="comment-highlight-section" >
         <div id="prject-comment-container-<?php echo $type . "-" . $comment->id; ?>"  class="comment-container text-break b-b <?php echo "comment-" . $type; ?>">
@@ -40,11 +34,11 @@ foreach ($comments as $comment) {
                 <div class="w-100 ps-2">
                     <div class="mb5">
                         <?php
-                        //if ($comment->user_type === "staff") {
-                         //   echo get_team_member_profile_link($comment->created_by, $comment->created_by_user, array("class" => "dark strong"));
-                        //} else {
-                            //echo get_client_contact_profile_link($comment->created_by, $comment->created_by_user, array("class" => "dark strong"));
-                        //}
+                        if ($comment->user_type === "staff") {
+                           echo get_team_member_profile_link($comment->created_by, $comment->created_by_user, array("class" => "dark strong"));
+                        } else {
+                            echo get_client_contact_profile_link($comment->created_by, $comment->created_by_user, array("class" => "dark strong"));
+                        }
                         ?>
                         <small><span class="text-off"><?php echo format_to_relative_time($comment->created_at); ?></span></small>
 
