@@ -3,9 +3,9 @@
         <i data-feather="list" class="icon-16"></i> &nbsp;<?php echo app_lang($type); ?>
     </div>
     <div class="card-body rounded-bottom" id="<?php echo $type; ?>-widget">
-        <div class="row">
-            <div class="col-md-6">
-                <canvas id="all-tasks-overview-chart-<?php echo $type; ?>" style="width: 80%; height: 35vh;"></canvas>
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-md-6 d-flex justify-content-center">
+                <canvas id="all-tasks-overview-chart-<?php echo $type; ?>" style=" height: 25vh;max-width:80%"></canvas>
             </div>
             <div class="col-md-6 pl20 <?php echo count($task_statuses) > 8 ? "" : "pt-4"; ?>">
                 <?php
