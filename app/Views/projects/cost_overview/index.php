@@ -276,7 +276,7 @@ $totalComments=0;
                         <td>0</td>
                         <td>
                             
-                            <?php echo modal_anchor(get_uri("projects/modal_task_comments/".$oneTask->id),'<span class="badge pill bg-secondary" >'. $oneTaskTotalComments.'</span>',array());?>
+                            <?php echo modal_anchor(get_uri("task_comments/modal_task_comments/".$oneTask->id),'<span class="badge pill bg-secondary" >'. $oneTaskTotalComments.'</span>',array());?>
                         </td>
                     </tr>
                     <?php
