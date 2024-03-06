@@ -68,6 +68,7 @@
                                 <tbody>
                                     <?php
                                         $cost_items=json_decode($oneLibrary->reference_drawing);
+                                        if($cost_items)
                                         foreach ($cost_items as $oneItem) {
                                             # code...
                                         
