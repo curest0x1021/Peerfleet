@@ -27,13 +27,13 @@ class Task_libraries extends Security_Controller {
         $view_data['project_id'] = $this->request->getPost('project_id');
         return $this->template->view("task_libraries/import_modal", $view_data);
     }
-    function export_modal(){
+    function export_modal($id){
         $this->access_only_team_members();
         if (!$this->can_create_tasks()) {
             app_redirect("forbidden");
         }
-        $view_data['project_id'] = $this->request->getPost('project_id');
-        return $this->template->view("task_libraries/export_modal", $view_data);
+        $view_data['library_id'] = $id;
+        return $this->template->view("task_libraries/export_modal",$view_data);
     }
     function download_sample_excel_file() {
         return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => "import-task-libraries-sample.xlsx"))));
@@ -254,19 +254,15 @@ class Task_libraries extends Security_Controller {
             "title",
             "category",
             "dock_list_number",
-            "reference_drawing",
-            "description",
-            "location",
-            "specification",
-            "requisition_number",
-            "milestone",
-            "assigned_to",
-            "collaborators",
+            "supplier",
             "status",
             "priority",
+            
             "start_date",
             "deadline",
-            "budget",
+            "description",
+            "location",
+            "specification", 
             "gas_free_certificate",
             "light",
             "ventilation",
@@ -281,7 +277,7 @@ class Task_libraries extends Security_Controller {
             "material_yards_supply",
             "material_owners_supply",
             "risk_assessment",
-            "marker",
+            "maker",
             "type",
             "serial_number",
             "pms_scs_number"
@@ -771,6 +767,175 @@ class Task_libraries extends Security_Controller {
     }
     function delete_dependency(){
         return json_encode(array("success"=>true));
+    }
+    function export_one_library($id){
+        $library_info=$this->Task_libraries_model->get_one($id);
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet1 = $spreadsheet->getActiveSheet();
+        $sheet1->setCellValue('A1', 'Title');
+        $sheet1->setCellValue('B1', 'Category');
+        $sheet1->setCellValue('C1', 'Dock List number');
+        $sheet1->setCellValue('D1', 'Supplier');
+        $sheet1->setCellValue('E1', 'Status');
+        $sheet1->setCellValue('F1', 'Priority');
+        $sheet1->setCellValue('G1', 'Start date');
+        $sheet1->setCellValue('H1', 'Deadline');
+        $sheet1->setCellValue('I1', 'Description');
+        $sheet1->setCellValue('J1', 'Location');
+        $sheet1->setCellValue('K1', 'Specification');
+        $sheet1->setCellValue('L1', 'Gas free certificate');
+        $sheet1->setCellValue('M1', 'Light');
+        $sheet1->setCellValue('N1', 'Ventilation');
+        $sheet1->setCellValue('O1', 'Crane assistance');
+        $sheet1->setCellValue('P1', 'Cleaning before');
+        $sheet1->setCellValue('Q1', 'Cleaning after');
+        $sheet1->setCellValue('R1', 'Work permit');
+        $sheet1->setCellValue('S1', 'Painting after completion');
+        $sheet1->setCellValue('T1', 'Parts on board');
+        $sheet1->setCellValue('U1', 'Transport to yard workshop');
+        $sheet1->setCellValue('V1', 'Transport outside yard');
+        $sheet1->setCellValue('W1', 'Material yards supply');
+        $sheet1->setCellValue('X1', 'Material owners supply');
+        $sheet1->setCellValue('Y1', 'Risk assessment');
+        $sheet1->setCellValue('Z1', 'Maker');
+        $sheet1->setCellValue('AA', 'Type');
+        $sheet1->setCellValue('AB', 'Serial number');
+        $sheet1->setCellValue('AB', 'PMS SCS number');
+        $rowNumber=2;
+        $sheet1->setCellValue('A2', $library_info->title);
+        $sheet1->setCellValue('B2', $library_info->category);
+        $sheet1->setCellValue('C2', $library_info->dock_list_number);
+        $sheet1->setCellValue('D2', "");
+        $library_status=$this->Task_status_model->get_one($library_info->status_id);
+        $sheet1->setCellValue('E2', $library_status->title);
+        $library_priority=$this->Task_priority_model->get_one($library_info->priority_id);
+        $sheet1->setCellValue('F2', $library_priority->title);
+        $sheet1->setCellValue('G2', '');
+        $sheet1->setCellValue('H2', '');
+        $sheet1->setCellValue('I2', $library_info->description);
+        $sheet1->setCellValue('J2', $library_info->location);
+        $sheet1->setCellValue('K2', $library_info->specification);
+        $sheet1->setCellValue('L2', $library_info->gas_free_certificate);
+        $sheet1->setCellValue('M2', $library_info->light);
+        $sheet1->setCellValue('N2', $library_info->ventilation);
+        $sheet1->setCellValue('O2', $library_info->crane_assistance);
+        $sheet1->setCellValue('P2', $library_info->cleaning_before);
+        $sheet1->setCellValue('Q2', $library_info->cleaning_after);
+        $sheet1->setCellValue('R2', $library_info->work_permit);
+        $sheet1->setCellValue('S2', $library_info->painting_after_completion);
+        $sheet1->setCellValue('T2', $library_info->parts_on_board);
+        $sheet1->setCellValue('U2', $library_info->transport_to_yard_workshop);
+        $sheet1->setCellValue('V2', $library_info->transport_outside_yard);
+        $sheet1->setCellValue('W2', $library_info->material_yards_supply);
+        $sheet1->setCellValue('X2', isset($library_info->material_owners_supply)?$library_info->material_owners_supply:"");
+        $sheet1->setCellValue('Y2', $library_info->risk_assessment);
+        $sheet1->setCellValue('Z2', $library_info->marker);
+        $sheet1->setCellValue('AA2', $library_info->type);
+        $sheet1->setCellValue('AB2', $library_info->serial_number);
+        $sheet1->setCellValue('AC2', $library_info->pms_scs_number);
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+        $response = service('response');
+
+// Set response headers for file download
+        $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->setHeader('Content-Disposition', 'attachment;filename="'.$library_info->title.'_task_library.xlsx"');
+        $response->setHeader('Cache-Control', 'max-age=0');
+
+        // Write the Excel file content to the response body
+        $writer->save('php://output');
+
+        // Return the response object
+        return $response;
+    }
+    function export_all_libraries(){
+        $allLibraries=$this->Task_libraries_model->get_all()->getResult();
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet1 = $spreadsheet->getActiveSheet();
+        $sheet1->setCellValue('A1', 'Title');
+        $sheet1->setCellValue('B1', 'Category');
+        $sheet1->setCellValue('C1', 'Dock List number');
+        $sheet1->setCellValue('D1', 'Supplier');
+        $sheet1->setCellValue('E1', 'Status');
+        $sheet1->setCellValue('F1', 'Priority');
+        $sheet1->setCellValue('G1', 'Start date');
+        $sheet1->setCellValue('H1', 'Deadline');
+        $sheet1->setCellValue('I1', 'Description');
+        $sheet1->setCellValue('J1', 'Location');
+        $sheet1->setCellValue('K1', 'Specification');
+        $sheet1->setCellValue('L1', 'Gas free certificate');
+        $sheet1->setCellValue('M1', 'Light');
+        $sheet1->setCellValue('N1', 'Ventilation');
+        $sheet1->setCellValue('O1', 'Crane assistance');
+        $sheet1->setCellValue('P1', 'Cleaning before');
+        $sheet1->setCellValue('Q1', 'Cleaning after');
+        $sheet1->setCellValue('R1', 'Work permit');
+        $sheet1->setCellValue('S1', 'Painting after completion');
+        $sheet1->setCellValue('T1', 'Parts on board');
+        $sheet1->setCellValue('U1', 'Transport to yard workshop');
+        $sheet1->setCellValue('V1', 'Transport outside yard');
+        $sheet1->setCellValue('W1', 'Material yards supply');
+        $sheet1->setCellValue('X1', 'Material owners supply');
+        $sheet1->setCellValue('Y1', 'Risk assessment');
+        $sheet1->setCellValue('Z1', 'Maker');
+        $sheet1->setCellValue('AA', 'Type');
+        $sheet1->setCellValue('AB', 'Serial number');
+        $sheet1->setCellValue('AB', 'PMS SCS number');
+        $rowNumber=2;
+        foreach ($allLibraries as $library_info) {
+            # code...
+            $sheet1->setCellValue('A'.$rowNumber, $library_info->title);
+            $sheet1->setCellValue('B'.$rowNumber, $library_info->category);
+            $sheet1->setCellValue('C'.$rowNumber, $library_info->dock_list_number);
+            $sheet1->setCellValue('D'.$rowNumber, "");
+            $library_status=$this->Task_status_model->get_one($library_info->status_id);
+            $sheet1->setCellValue('E'.$rowNumber, $library_status->title);
+            $library_priority=$this->Task_priority_model->get_one($library_info->priority_id);
+            $sheet1->setCellValue('F'.$rowNumber, $library_priority->title);
+            $sheet1->setCellValue('G'.$rowNumber, '');
+            $sheet1->setCellValue('H'.$rowNumber, '');
+            $sheet1->setCellValue('I'.$rowNumber, $library_info->description);
+            $sheet1->setCellValue('J'.$rowNumber, $library_info->location);
+            $sheet1->setCellValue('K'.$rowNumber, $library_info->specification);
+            $sheet1->setCellValue('L'.$rowNumber, $library_info->gas_free_certificate);
+            $sheet1->setCellValue('M'.$rowNumber, $library_info->light);
+            $sheet1->setCellValue('N'.$rowNumber, $library_info->ventilation);
+            $sheet1->setCellValue('O'.$rowNumber, $library_info->crane_assistance);
+            $sheet1->setCellValue('P'.$rowNumber, $library_info->cleaning_before);
+            $sheet1->setCellValue('Q'.$rowNumber, $library_info->cleaning_after);
+            $sheet1->setCellValue('R'.$rowNumber, $library_info->work_permit);
+            $sheet1->setCellValue('S'.$rowNumber, $library_info->painting_after_completion);
+            $sheet1->setCellValue('T'.$rowNumber, $library_info->parts_on_board);
+            $sheet1->setCellValue('U'.$rowNumber, $library_info->transport_to_yard_workshop);
+            $sheet1->setCellValue('V'.$rowNumber, $library_info->transport_outside_yard);
+            $sheet1->setCellValue('W'.$rowNumber, $library_info->material_yards_supply);
+            $sheet1->setCellValue('X'.$rowNumber, isset($library_info->material_owners_supply)?$library_info->material_owners_supply:"");
+            $sheet1->setCellValue('Y'.$rowNumber, $library_info->risk_assessment);
+            $sheet1->setCellValue('Z'.$rowNumber, $library_info->marker);
+            $sheet1->setCellValue('AA'.$rowNumber, $library_info->type);
+            $sheet1->setCellValue('AB'.$rowNumber, $library_info->serial_number);
+            $sheet1->setCellValue('AC'.$rowNumber, $library_info->pms_scs_number);
+            $rowNumber++;
+        }
+        
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+        $response = service('response');
+
+// Set response headers for file download
+        $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->setHeader('Content-Disposition', 'attachment;filename="'.$library_info->title.'_task_library.xlsx"');
+        $response->setHeader('Cache-Control', 'max-age=0');
+
+        // Write the Excel file content to the response body
+        $writer->save('php://output');
+
+        // Return the response object
+        return $response;
     }
 
 }

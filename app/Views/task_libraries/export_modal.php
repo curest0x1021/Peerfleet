@@ -13,7 +13,8 @@
                 <hr/>
                 <div class="card-body d-flex flex-column align-items-center">
                     <img width="100px" src="<?php echo get_file_uri("assets/images/excel.png") ?>" alt="style_1" />
-                    <button type="button" class="btn btn-primary export_project_btn"><span data-feather="download" class="icon-16"></span> <?php echo app_lang('export_project_form'); ?></button>
+                    <!-- <button type="button" class="btn btn-primary export_project_btn"><span data-feather="download" class="icon-16"></span> <?php //echo app_lang('export_project_form'); ?></button> -->
+                    <a class="btn btn-primary" target="_blank" href="<?php echo get_uri("task_libraries/export_one_library/").$library_id;?>" >Export project form</a>
                 </div>
                 
             </div>
@@ -29,7 +30,8 @@
                 <hr/>
                 <div class="card-body d-flex flex-column align-items-center">
                     <img width="100px" src="<?php echo get_file_uri("assets/images/excel.png") ?>" alt="style_1" />
-                    <button type="button" class="btn btn-primary export_quotation_btn"><span data-feather="download" class="icon-16"></span> <?php echo app_lang('export_quotation_form'); ?></button>
+                    <!-- <button type="button" class="btn btn-primary export_quotation_btn"><span data-feather="download" class="icon-16"></span> <?php //echo app_lang('export_quotation_form'); ?></button> -->
+                    <a class="btn btn-primary" target="_blank" href="<?php echo get_uri("task_libraries/export_all_libraries/");?>" >Export quotation form</a>
                 </div>
                 
             </div>

@@ -19,7 +19,7 @@
                         <div style="margin:5px" >
                         <?php echo modal_anchor(get_uri("task_libraries/import_modal"), "<i data-feather='upload' class='icon-16'></i> " . "Import Task Templates", array("class" => "btn btn-default import_tasks_btn", "title" => "Import Task Libraries")); ?>
                         </div>
-                        <?php echo modal_anchor(get_uri("task_libraries/export_modal"), "<i data-feather='external-link' class='icon-16'></i> " . "Export", array("class" => "btn btn-default export-excel-btn", "title" => "Export Task Libraries")); ?>
+                        <?php if(isset($gotTasklibrary)) echo modal_anchor(get_uri("task_libraries/export_modal/").$gotTasklibrary->id, "<i data-feather='external-link' class='icon-16'></i> " . "Export", array("class" => "btn btn-default export-excel-btn", "title" => "Export Task Libraries")); ?>
                     </div>
                 </div>
             </div>
@@ -438,7 +438,7 @@
                                                     "id" => "painting_after_completion_yes",
                                                     "name" => "painting_after_completion",
                                                     "class" => "form-check-input",
-                                                ), "1", true);
+                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->painting_after_completion:1);
                                                 ?>
                                                 <label for="painting_after_completion_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                                 <?php
@@ -446,7 +446,7 @@
                                                     "id" => "painting_after_completion_no",
                                                     "name" => "painting_after_completion",
                                                     "class" => "form-check-input",
-                                                ), "0", false);
+                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->painting_after_completion:0);
                                                 ?>
                                                 <label for="painting_after_completion_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
@@ -461,7 +461,7 @@
                                                     "id" => "light_yes",
                                                     "name" => "light",
                                                     "class" => "form-check-input",
-                                                ), "1", true);
+                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->light:1);
                                                 ?>
                                                 <label for="light_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                                 <?php
@@ -469,7 +469,7 @@
                                                     "id" => "light_no",
                                                     "name" => "light",
                                                     "class" => "form-check-input",
-                                                ), "0", false);
+                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->light:0);
                                                 ?>
                                                 <label for="light_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
@@ -484,7 +484,7 @@
                                                     "id" => "parts_on_board_yes",
                                                     "name" => "parts_on_board",
                                                     "class" => "form-check-input",
-                                                ), "1", true);
+                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->parts_on_board:1);
                                                 ?>
                                                 <label for="parts_on_board_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                                 <?php
@@ -492,7 +492,7 @@
                                                     "id" => "parts_on_board_no",
                                                     "name" => "parts_on_board",
                                                     "class" => "form-check-input",
-                                                ), "0", false);
+                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->parts_on_board:0);
                                                 ?>
                                                 <label for="parts_on_board_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
@@ -507,7 +507,7 @@
                                                     "id" => "ventilation_yes",
                                                     "name" => "ventilation",
                                                     "class" => "form-check-input",
-                                                ), "1", true);
+                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->ventilation:1);
                                                 ?>
                                                 <label for="ventilation_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                                 <?php
@@ -515,7 +515,7 @@
                                                     "id" => "ventilation_no",
                                                     "name" => "ventilation",
                                                     "class" => "form-check-input",
-                                                ), "0", false);
+                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->ventilation:0);
                                                 ?>
                                                 <label for="ventilation_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
@@ -530,7 +530,7 @@
                                                     "id" => "transport_to_yard_workshop_yes",
                                                     "name" => "transport_to_yard_workshop",
                                                     "class" => "form-check-input",
-                                                ), "1", true);
+                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->transport_to_yard_workshop:1);
                                                 ?>
                                                 <label for="transport_to_yard_workshop_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                                 <?php
@@ -538,7 +538,7 @@
                                                     "id" => "transport_to_yard_workshop_no",
                                                     "name" => "transport_to_yard_workshop",
                                                     "class" => "form-check-input",
-                                                ), "0", false);
+                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->transport_to_yard_workshop:0);
                                                 ?>
                                                 <label for="transport_to_yard_workshop_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
@@ -553,7 +553,7 @@
                                                     "id" => "crane_assistance_yes",
                                                     "name" => "crane_assistance",
                                                     "class" => "form-check-input",
-                                                ), "1", true);
+                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->crane_assistance:1);
                                                 ?>
                                                 <label for="crane_assistance_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                                 <?php
@@ -561,7 +561,7 @@
                                                     "id" => "crane_assistance_no",
                                                     "name" => "crane_assistance",
                                                     "class" => "form-check-input",
-                                                ), "0", false);
+                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->crane_assistance:0);
                                                 ?>
                                                 <label for="crane_assistance_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
@@ -576,7 +576,7 @@
                                                     "id" => "transport_outside_yard_yes",
                                                     "name" => "transport_outside_yard",
                                                     "class" => "form-check-input",
-                                                ), "1", true);
+                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->transport_outside_yard:1);
                                                 ?>
                                                 <label for="transport_outside_yard_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                                 <?php
@@ -584,7 +584,7 @@
                                                     "id" => "transport_outside_yard_no",
                                                     "name" => "transport_outside_yard",
                                                     "class" => "form-check-input",
-                                                ), "0", false);
+                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->transport_outside_yard:0);
                                                 ?>
                                                 <label for="transport_outside_yard_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
@@ -599,7 +599,7 @@
                                                     "id" => "cleaning_before_yes",
                                                     "name" => "cleaning_before",
                                                     "class" => "form-check-input",
-                                                ), "1", true);
+                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->cleaning_before:1);
                                                 ?>
                                                 <label for="cleaning_before_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                                 <?php
@@ -607,7 +607,7 @@
                                                     "id" => "cleaning_before_no",
                                                     "name" => "cleaning_before",
                                                     "class" => "form-check-input",
-                                                ), "0", false);
+                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->cleaning_before:0);
                                                 ?>
                                                 <label for="cleaning_before_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
@@ -622,7 +622,7 @@
                                                     "id" => "material_yards_supply_yes",
                                                     "name" => "material_yards_supply",
                                                     "class" => "form-check-input",
-                                                ), "1", true);
+                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->material_yards_supply:1);
                                                 ?>
                                                 <label for="material_yards_supply_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                                 <?php
@@ -630,7 +630,7 @@
                                                     "id" => "material_yards_supply_no",
                                                     "name" => "material_yards_supply",
                                                     "class" => "form-check-input",
-                                                ), "0", false);
+                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->material_yards_supply:0);
                                                 ?>
                                                 <label for="material_yards_supply_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
@@ -645,7 +645,7 @@
                                                     "id" => "cleaning_after_yes",
                                                     "name" => "cleaning_after",
                                                     "class" => "form-check-input",
-                                                ), "1", true);
+                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->cleaning_after:1);
                                                 ?>
                                                 <label for="cleaning_after_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                                 <?php
@@ -653,7 +653,7 @@
                                                     "id" => "cleaning_after_no",
                                                     "name" => "cleaning_after",
                                                     "class" => "form-check-input",
-                                                ), "0", false);
+                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->cleaning_after:0);
                                                 ?>
                                                 <label for="cleaning_after_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>

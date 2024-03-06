@@ -39,12 +39,12 @@
        });
        $(".input-file-yard-items").on('change',function(){
         var myForm=new FormData();
-        myForm.append("shipyard_id",<?php echo $shipyard_id?>);
+        myForm.append("project_id",<?php echo $project_id?>);
         myForm.append("file",$(this)[0].files[0]);
         var rise_csrf_token = $('[name="rise_csrf_token"]').val();
         myForm.append("rise_csrf_token",rise_csrf_token);
         $.ajax({
-            url:"<?php echo get_uri('projects/import_task_cost_items');?>",
+            url:"<?php echo get_uri('projects/import_quotation_file');?>",
             method:"POST",
             data:myForm,
             contentType: false, // Set contentType to false, as FormData will automatically set the correct type

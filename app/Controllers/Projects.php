@@ -5055,7 +5055,8 @@ class Projects extends Security_Controller {
         $project_info=$this->Projects_model->get_one($project_id);
         return $this->template->view("projects/comparison/modal_import_items",["project_info"=>$project_info,"project_id"=>$project_id]);
     }
-    function import_quotation_file($project_id){
+    function import_quotation_file(){
+        $project_id=$this->request->getPost("project_id");
         $project_info=$this->Projects_model->get_one($project_id);
         $allShipyards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id))->getResult();
 
@@ -5072,32 +5073,7 @@ class Projects extends Security_Controller {
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
 
-        $shipyard_id=$this->request->getPost('shipyard_id');
-        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
-
         $excel_file->setActiveSheetIndex(0);
-        $worksheet=$excel_file->getActiveSheet();
-        $highestRow = $worksheet->getHighestRow(); // e.g., 10
-        $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
-        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
-        $info_data = [];
-
-        // Loop through each row and column to read the data
-        for ($row = 1; $row <= $highestRow; ++$row) {
-            $rowData = [];
-            for ($col = 1; $col <= $highestColumnIndex; ++$col) {
-                $cellValue = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
-                $rowData[] = $cellValue;
-            }
-            $info_data[] = $rowData;
-        }
-        // return json_encode($info_data);
-        $task_id=$info_data[1][1];
-        
-        $project_id=$info_data[3][1];
-        if((string)$shipyard_info->project_id!=(string)$project_id) return json_encode(array("success"=>false));
-
-        $excel_file->setActiveSheetIndex(1);
         $worksheet=$excel_file->getActiveSheet();
         $highestRow = $worksheet->getHighestRow(); // e.g., 10
         $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
@@ -5141,11 +5117,7 @@ class Projects extends Security_Controller {
         }
         echo json_encode(array("success"=>true));
     }
-    // function modal_import_shipyard_quotation_file($shipyard_id){
-    //     $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
-    //     $project_info=$this->Projects_model->get_one($shipyard_info->project_id);
-    //     return $this->template->view("projects/comparison/modal_import_shipyard_items",["shipyard_id"=>$shipyard_id,"project_info"=>$project_info,"shipyard_info"=>$shipyard_info,"project_id"=>$shipyard_info->project_id]);
-    // }
+
 }
 
 /* End of file projects.php */
