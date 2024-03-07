@@ -6,7 +6,7 @@ $categorizedTasks=array(
     "Ship Equipment"=>array(),
     "Safety & Crew Equipment"=>array(),
     "Machinery Main Components"=>array(),
-    "Systems machinery main components"=>array(),
+    "System Machinery Main Components"=>array(),
     "Common systems"=>array(),
     "Others"=>array(),
 );
@@ -17,7 +17,7 @@ $categorizedOwnerSupplies=array(
     "Ship Equipment"=>array(),
     "Safety & Crew Equipment"=>array(),
     "Machinery Main Components"=>array(),
-    "Systems machinery main components"=>array(),
+    "System Machinery Main Components"=>array(),
     "Common systems"=>array(),
     "Others"=>array(),
 );
@@ -28,7 +28,7 @@ $categorizedCostItems=array(
     "Ship Equipment"=>array(),
     "Safety & Crew Equipment"=>array(),
     "Machinery Main Components"=>array(),
-    "Systems machinery main components"=>array(),
+    "System Machinery Main Components"=>array(),
     "Common systems"=>array(),
     "Others"=>array(),
 );
@@ -39,7 +39,7 @@ $categorizedShipyardCostItems=array(
     "Ship Equipment"=>array(),
     "Safety & Crew Equipment"=>array(),
     "Machinery Main Components"=>array(),
-    "Systems machinery main components"=>array(),
+    "System Machinery Main Components"=>array(),
     "Common systems"=>array(),
     "Others"=>array(),
 );
@@ -50,7 +50,7 @@ $categorizedVariationOrders=array(
     "Ship Equipment"=>array(),
     "Safety & Crew Equipment"=>array(),
     "Machinery Main Components"=>array(),
-    "Systems machinery main components"=>array(),
+    "System Machinery Main Components"=>array(),
     "Common systems"=>array(),
     "Others"=>array(),
 );
@@ -62,7 +62,7 @@ $categorizedComments=array(
     "Ship Equipment"=>array(),
     "Safety & Crew Equipment"=>array(),
     "Machinery Main Components"=>array(),
-    "Systems machinery main components"=>array(),
+    "System Machinery Main Components"=>array(),
     "Common systems"=>array(),
     "Others"=>array(),
 );
@@ -73,7 +73,7 @@ $categorizedStats=array(
     "Ship Equipment"=>array(),
     "Safety & Crew Equipment"=>array(),
     "Machinery Main Components"=>array(),
-    "Systems machinery main components"=>array(),
+    "System Machinery Main Components"=>array(),
     "Common systems"=>array(),
     "Others"=>array(),
 );
@@ -323,7 +323,7 @@ $totalComments=0;
             "Ship Equipment",
             "Safety & Crew Equipment",
             "Machinery Main Components",
-            "Systems machinery main components",
+            "System Machinery Main Components",
             "Common systems",
             "Others",
         ]){
