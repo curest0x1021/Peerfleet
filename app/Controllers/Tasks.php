@@ -5338,6 +5338,23 @@ class Tasks extends Security_Controller {
                 "specification"=>$oneLibrary->specification,
             );
             $saved_id=$this->Tasks_model->save_gantt_task_date($newTaskData,null);
+            $costItems=json_decode($oneLibrary->reference_drawing);
+            if(isset($costItems)) foreach ($costItems as $oneItem) {
+                $newItem=array(
+                    "name"=>$oneItem->name,
+                    "description"=>$oneItem->description,
+                    "quantity"=>$oneItem->quantity,
+                    "unit_price"=>$oneItem->unit_price,
+                    "currency"=>$oneItem->currency,
+                    "quote_type"=>$oneItem->quote_type,
+                    "discount"=>$oneItem->discount,
+                    "yard_remarks"=>$oneItem->yard_remarks,
+                    "measurement"=>$oneItem->measurement,
+                    "task_id"=>$saved_id,
+                    "project_id"=>$this->request->getPost("project_id"),
+                );
+                $this->Task_cost_items_model->ci_save($newItem);
+            }
         }
         return json_encode(array("success"=>true,"save_id"=>$saved_id));
     }
