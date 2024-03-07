@@ -906,7 +906,7 @@ class Projects extends Security_Controller {
             anchor(get_uri("projects/view/" . $data->id), $data->id),
             $title,
             $client_name,
-            $price,
+            // $price,
             $data->start_date,
             $start_date,
             $data->deadline,

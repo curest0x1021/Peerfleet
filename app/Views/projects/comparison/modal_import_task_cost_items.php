@@ -1,9 +1,14 @@
 <div id="ajaxModalContent" >
+    <style>
+        .dragover{
+            background-color:lightgray;
+        }
+    </style>
 <div class="modal-body clearfix" id="panel-import-yard-xlsx">
     <div class="container-fluid">
         <?php echo form_open(get_uri("projects/import_yard_xlsx"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
         <?php echo form_close();?>
-        <div id="upload-area">
+        <div id="upload-area-task-cost-items">
             <?php
             // echo view("includes/multi_file_uploader", array(
             //     "upload_url" => get_uri("projects/import_yard_xlsx"),
@@ -38,13 +43,55 @@
        $(".panel-drop-zone").on("click",function(){
         $(".input-file-yard-items").click();
        });
-       $("#upload-area").on("drag",function(e){
-        e.preventDefault();
-       });
-       $("#upload-area").on("drop",function(e){
-        e.preventDefault();
-        console.log(e)
-       });
+       $('#upload-area-task-cost-items').on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        })
+        .on('dragover dragenter', function() {
+            $(this).addClass('dragover');
+        })
+        .on('dragleave dragend drop', function() {
+            $(this).removeClass('dragover');
+        })
+        .on('drop', function(e) {
+            console.log(e.originalEvent.dataTransfer.files)
+            if(e.originalEvent.dataTransfer.files.length<1) return;
+            var myForm=new FormData();
+            myForm.append("shipyard_id",<?php echo $shipyard_id?>);
+            myForm.append("file",e.originalEvent.dataTransfer.files[0]);
+            var rise_csrf_token = $('[name="rise_csrf_token"]').val();
+            myForm.append("rise_csrf_token",rise_csrf_token);
+            $.ajax({
+                url:"<?php echo get_uri('projects/import_task_cost_items');?>",
+                method:"POST",
+                data:myForm,
+                contentType: false, // Set contentType to false, as FormData will automatically set the correct type
+                processData: false,
+                success:function(response){
+                    if(JSON.parse(response).success) {
+                        $maskTarget=$("#ajaxModalContent").find(".modal-body");
+                        var padding = $maskTarget.height() - 80;
+                        if (padding > 0) {
+                            padding = Math.floor(padding / 2);
+                        }
+                        $maskTarget.after("<div class='modal-mask'><div class='circle-loader'></div></div>");
+                        //check scrollbar
+                        var height = $maskTarget.outerHeight();
+                        $('.modal-mask').css({"width": $maskTarget.width() + 22 + "px", "height": height + "px", "padding-top": padding + "px"});
+                        $maskTarget.closest('.modal-dialog').find('[type="submit"]').attr('disabled', 'disabled');
+                        $maskTarget.addClass("hide");
+                        window.panel_import_yard_xlsx.closeModal()
+                        window.location.reload();
+                    }else{
+                        
+                    }
+                
+                },
+                error:function(data){
+                    console.log(data)
+                }
+            })
+        });
        $(".input-file-yard-items").on('change',function(){
         var myForm=new FormData();
         myForm.append("shipyard_id",<?php echo $shipyard_id?>);
