@@ -4229,6 +4229,7 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('N1', 'Discount (0-100%)');
         $sheet1->setCellValue('O1', 'Discounted quote');
         $sheet1->setCellValue('P1', 'Yard remarks');
+        $sheet1->setCellValue('Q1', 'Link to Task');
         $rowNumber=2;
         foreach ($allProjectCostItems as $oneItem) {
             $task_info=$this->Tasks_model->get_one($oneItem->task_id);
@@ -4247,6 +4248,7 @@ class Projects extends Security_Controller {
             $sheet1->setCellValue('N'.$rowNumber, $oneItem->discount);
             $sheet1->setCellValue('O'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity*(float)$oneItem->discount/100);
             $sheet1->setCellValue('P'.$rowNumber, $oneItem->yard_remarks);
+            $sheet1->setCellValue('Q'.$rowNumber, get_uri("tasks/view/").$oneItem->task_id);
             $rowNumber++;
         }
 
