@@ -3067,3 +3067,13 @@ if (!function_exists('is_valid_date')) {
         return (strtotime($date) !== false);
     }
 }
+
+if (!function_exists('get_first_letter')) {
+
+    function get_first_letter($text = "")
+    {
+        if ($text) {
+            return substr($text, 0, 1);
+        }
+    }
+}
