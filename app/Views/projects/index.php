@@ -96,9 +96,10 @@
                     "class": "all"
                 },
                 {
-                    title: '<?php echo app_lang("client") ?>',
+                    title: 'Vessel',
                     "class": "w10p"
                 },
+                
                 // {
                 //     visible: optionVisibility,
                 //     title: '<?php //echo app_lang("price"); ?>',

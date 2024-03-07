@@ -1381,7 +1381,7 @@ class Clients extends Security_Controller
             if ($key === 0) { //first line is headers, continue for the next loop
                 continue;
             }
-
+            
             $client_data_array = $this->_prepare_client_data($value, $allowed_headers);
             $client_data = get_array_value($client_data_array, "client_data");
             $contact_data = get_array_value($client_data_array, "contact_data");
@@ -1417,6 +1417,10 @@ class Clients extends Security_Controller
             if ($this->Clients_model->is_duplicate_charter_name($client_data["charter_name"])) {
                 continue;
             }
+            //////////////////
+            $similar_clients=$this->Clients_model->get_all_where(array("charter_name"=>$client_data["charter_name"]))->getResult();
+            if(count($similar_clients)>0) continue;
+            /////////////////
 
             //save client data
             $client_save_id = $this->Clients_model->ci_save($client_data);
