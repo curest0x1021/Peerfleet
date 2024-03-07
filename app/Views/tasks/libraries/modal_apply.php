@@ -75,7 +75,7 @@
                                     ?>
                                         <tr>
                                             <td><?php echo $oneItem->name; ?></td>
-                                            <td><?php echo $oneItem->unit_price*$oneItem->quantity; ?></td>
+                                            <td><?php echo number_format(floatval($oneItem->unit_price) * floatval($oneItem->quantity), 2, '.', ''); ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
