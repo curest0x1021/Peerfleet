@@ -4347,7 +4347,7 @@ class Projects extends Security_Controller {
         $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allVariationOrders=$this->Task_variation_orders_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allComments=$this->Project_comments_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        $allComments=$this->Task_comments_model->get_all_where(array("project_id"=>$project_id))->getResult();
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
@@ -4501,7 +4501,8 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('F1', "Total");
         $sheet1->setCellValue('G1', 'Total yard');
         $sheet1->setCellValue('H1', "Billed yard");
-        $sheet1->setCellValue('I1', 'Comment');
+        $sheet1->setCellValue('I1', "Final yard");
+        $sheet1->setCellValue('J1', 'Comment');
 
         $sheet1->setCellValue('B2', "Total:");
         $sheet1->setCellValue('C2', 0);
@@ -4511,6 +4512,7 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('G2', 0);
         $sheet1->setCellValue('H2', 0);
         $sheet1->setCellValue('I2', 0);
+        $sheet1->setCellValue('J2', 0);
 
         $rowIndex=3;
         foreach ($categorizedTasks as $category=>$oneList) {
@@ -4528,6 +4530,7 @@ class Projects extends Security_Controller {
             $sheet1->setCellValue('G'.$rowIndex, 0);
             $sheet1->setCellValue('H'.$rowIndex, 0);
             $sheet1->setCellValue('I'.$rowIndex, 0);
+            $sheet1->setCellValue('J'.$rowIndex, 0);
             $category_row=$rowIndex;
             $rowIndex++;
             foreach ($oneList as $key => $oneTask) {
@@ -4589,6 +4592,7 @@ class Projects extends Security_Controller {
                 $sheet1->setCellValue('G'.$rowIndex, $oneTaskTotalShipyardCostItems);
                 $sheet1->setCellValue('H'.$rowIndex, 0);
                 $sheet1->setCellValue('I'.$rowIndex, 0);
+                $sheet1->setCellValue('J'.$rowIndex, $oneTaskTotalComments);
                 $rowIndex++;
             }
             $categorizedStats[$category]["owner_supplies"]=$categoryOwnerSupply;
@@ -4603,7 +4607,7 @@ class Projects extends Security_Controller {
             $sheet1->setCellValue('F'.$category_row, 0);
             $sheet1->setCellValue('G'.$category_row, $categoryShipyardCostItems);
             $sheet1->setCellValue('H'.$category_row, 0);
-            $sheet1->setCellValue('I'.$category_row, 0);
+            $sheet1->setCellValue('I'.$category_row, $categoryComments);
         }
         $sheet1->setCellValue('C2', $totalOwnerSupplies);
         $sheet1->setCellValue('D2', $totalCostItems);
@@ -4612,6 +4616,7 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('G2', $totalShipyardCostItems);
         $sheet1->setCellValue('H2', 0);
         $sheet1->setCellValue('I2', 0);
+        $sheet1->setCellValue('J2', $totalComments);
 
         // $dom = new \DOMDocument();
         // $svgFiltered=preg_replace('/<svg[^>]*>.*?<\/svg>/is', '', $this->request->getPost('data'));
