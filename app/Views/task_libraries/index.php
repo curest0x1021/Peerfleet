@@ -923,7 +923,9 @@
                                                         <!-- <input readonly type="text" id="cost_item_currency_symbol" class="form-control" value="$"> -->
                                                         <input id="cost_item_unit_price" type="text" class="form-control" value="0.00">
                                                         <?php
-                                                        $cost_item_currency_dropdown=array(array("id"=>"AUD","text"=>"AUD"),
+                                                        $cost_item_currency_dropdown=array(
+                                                        array("id"=>"USD","text"=>"USD"),
+                                                        array("id"=>"AUD","text"=>"AUD"),
                                                         array("id"=>"GBP","text"=>"GBP"),
                                                         array("id"=>"EUR","text"=>"EUR"),
                                                         array("id"=>"JPY","text"=>"JPY"),
@@ -1104,7 +1106,7 @@
                                                         echo form_input(array(
                                                                 "id" => "cost_item_currency",
                                                                 "name" => "cost_item_currency",
-                                                                "value" => "AUD",
+                                                                "value" => "USD",
                                                                 "class" => "form-control",
                                                                 "placeholder" => app_lang('category'),
                                                                 "data-rule-required" => true,

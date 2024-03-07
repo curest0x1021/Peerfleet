@@ -1811,6 +1811,8 @@ class Tasks extends Security_Controller {
         $view_data['allYards']=$this->Project_yards_model->get_all_where(array("project_id"=>$model_info->project_id))->getResult();
         $allCostItems=$this->Task_cost_items_model->get_all_where(array("task_id"=>$task_id))->getResult();
         $view_data['allCostItems']=$allCostItems;
+        $project_info=$this->Projects_model->get_one($model_info->project_id);
+        $view_data['project_info']=$project_info;
         $view_data['model_info']->cost_items=json_encode($allCostItems);
         $allVariationOrders=$this->Task_variation_orders_model->get_all_where(array("task_id"=>$task_id))->getResult();
         $view_data['variation_orders']=$allVariationOrders;
