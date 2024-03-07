@@ -55,7 +55,7 @@ class CreateFoldersTable extends Migration
                 'type'=>"INT",
                 'null'=>true,
             ],
-            "starred_by_by"=>[
+            "starred_by"=>[
                 'type'=>"MEDIUMTEXT",
                 'null'=>true,
             ],

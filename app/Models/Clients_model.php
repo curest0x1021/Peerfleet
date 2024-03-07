@@ -281,5 +281,31 @@ class Clients_model extends Crud_model {
         $result = $this->db->query($sql)->getResult();
         return $result;
     }
+    function get_clients_id_and_name($options = array()) {
+        $clients_table = $this->db->prefixTable('clients');
+
+        $where = "";
+        $limit_offset = "";
+        $id = $this->_get_clean_value($options, "id");
+        if ($id) {
+            $where .= " AND $clients_table.id=$id";
+        }
+
+        $ids = $this->_get_clean_value($options, "ids");
+        if ($ids) {
+            $where .= " AND (FIND_IN_SET('$ids', $clients_table.id)";
+        }
+
+        $limit = $this->_get_clean_value($options, "limit");
+        if ($limit) {
+            $limit_offset = " LIMIT $limit OFFSET 0 ";
+        }
+
+
+        $sql = "SELECT $clients_table.id, $clients_table.company_name AS name
+        FROM $clients_table 
+        WHERE $clients_table.deleted=0 AND $clients_table.is_lead=0 $where $limit_offset";
+        return $this->db->query($sql);
+    }
 
 }
