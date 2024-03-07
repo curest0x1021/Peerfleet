@@ -39,7 +39,7 @@
                             // array("id"=>"Ship Equipment","text"=>"Ship Equipment"),
                             // array("id"=>"Safety & Crew Equipment","text"=>"Safety & Crew Equipment"),
                             // array("id"=>"Machinery Main Components","text"=>"Machinery Main Components"),
-                            // array("id"=>"Systems machinery main components","text"=>"Systems machinery main components"),
+                            // array("id"=>"System Machinery Main Components","text"=>"System Machinery Main Components"),
                             // array("id"=>"Common systems","text"=>"Common systems"),
                             // array("id"=>"Others","text"=>"Others"),
                         );

@@ -3471,7 +3471,7 @@ class Tasks extends Security_Controller {
             array("id"=>"Ship","text"=>"Ship Equipment"),
             array("id"=>"Safety","text"=>"Safety & Crew Equipment"),
             array("id"=>"Machinery","text"=>"Machinery Main Components"),
-            array("id"=>"Systems","text"=>"Systems machinery main components"),
+            array("id"=>"Systems","text"=>"System Machinery Main Components"),
             array("id"=>"Common","text"=>"Common systems"),
             array("id"=>"Others","text"=>"Others"),
         );
@@ -3542,7 +3542,7 @@ class Tasks extends Security_Controller {
         //     array("id"=>"Ship","text"=>"Ship Equipment"),
         //     array("id"=>"Safety","text"=>"Safety & Crew Equipment"),
         //     array("id"=>"Machinery","text"=>"Machinery Main Components"),
-        //     array("id"=>"Systems","text"=>"Systems machinery main components"),
+        //     array("id"=>"Systems","text"=>"System Machinery Main Components"),
         //     array("id"=>"Common","text"=>"Common systems"),
         //     array("id"=>"Others","text"=>"Others"),
         // );
@@ -3718,7 +3718,7 @@ class Tasks extends Security_Controller {
             array("id"=>"Ship","text"=>"Ship Equipment"),
             array("id"=>"Safety","text"=>"Safety & Crew Equipment"),
             array("id"=>"Machinery","text"=>"Machinery Main Components"),
-            array("id"=>"Systems","text"=>"Systems machinery main components"),
+            array("id"=>"Systems","text"=>"System Machinery Main Components"),
             array("id"=>"Common","text"=>"Common systems"),
             array("id"=>"Others","text"=>"Others"),
         );

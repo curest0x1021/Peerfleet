@@ -4370,7 +4370,7 @@ class Projects extends Security_Controller {
             "Ship Equipment"=>array(),
             "Safety & Crew Equipment"=>array(),
             "Machinery Main Components"=>array(),
-            "Systems machinery main components"=>array(),
+            "System Machinery Main Components"=>array(),
             "Common systems"=>array(),
             "Others"=>array(),
         );
@@ -4381,7 +4381,7 @@ class Projects extends Security_Controller {
             "Ship Equipment"=>array(),
             "Safety & Crew Equipment"=>array(),
             "Machinery Main Components"=>array(),
-            "Systems machinery main components"=>array(),
+            "System Machinery Main Components"=>array(),
             "Common systems"=>array(),
             "Others"=>array(),
         );
@@ -4392,7 +4392,7 @@ class Projects extends Security_Controller {
             "Ship Equipment"=>array(),
             "Safety & Crew Equipment"=>array(),
             "Machinery Main Components"=>array(),
-            "Systems machinery main components"=>array(),
+            "System Machinery Main Components"=>array(),
             "Common systems"=>array(),
             "Others"=>array(),
         );
@@ -4403,7 +4403,7 @@ class Projects extends Security_Controller {
             "Ship Equipment"=>array(),
             "Safety & Crew Equipment"=>array(),
             "Machinery Main Components"=>array(),
-            "Systems machinery main components"=>array(),
+            "System Machinery Main Components"=>array(),
             "Common systems"=>array(),
             "Others"=>array(),
         );
@@ -4414,7 +4414,7 @@ class Projects extends Security_Controller {
             "Ship Equipment"=>array(),
             "Safety & Crew Equipment"=>array(),
             "Machinery Main Components"=>array(),
-            "Systems machinery main components"=>array(),
+            "System Machinery Main Components"=>array(),
             "Common systems"=>array(),
             "Others"=>array(),
         );
@@ -4426,7 +4426,7 @@ class Projects extends Security_Controller {
             "Ship Equipment"=>array(),
             "Safety & Crew Equipment"=>array(),
             "Machinery Main Components"=>array(),
-            "Systems machinery main components"=>array(),
+            "System Machinery Main Components"=>array(),
             "Common systems"=>array(),
             "Others"=>array(),
         );
@@ -4437,7 +4437,7 @@ class Projects extends Security_Controller {
             "Ship Equipment"=>array(),
             "Safety & Crew Equipment"=>array(),
             "Machinery Main Components"=>array(),
-            "Systems machinery main components"=>array(),
+            "System Machinery Main Components"=>array(),
             "Common systems"=>array(),
             "Others"=>array(),
         );
@@ -4794,7 +4794,7 @@ class Projects extends Security_Controller {
             "Ship Equipment"=>array(),
             "Safety & Crew Equipment"=>array(),
             "Machinery Main Components"=>array(),
-            "Systems machinery main components"=>array(),
+            "System Machinery Main Components"=>array(),
             "Common systems"=>array(),
             "Others"=>array(),
         );
@@ -4805,7 +4805,7 @@ class Projects extends Security_Controller {
             "Ship Equipment"=>array(),
             "Safety & Crew Equipment"=>array(),
             "Machinery Main Components"=>array(),
-            "Systems machinery main components"=>array(),
+            "System Machinery Main Components"=>array(),
             "Common systems"=>array(),
             "Others"=>array(),
         );
@@ -4816,7 +4816,7 @@ class Projects extends Security_Controller {
             "Ship Equipment"=>array(),
             "Safety & Crew Equipment"=>array(),
             "Machinery Main Components"=>array(),
-            "Systems machinery main components"=>array(),
+            "System Machinery Main Components"=>array(),
             "Common systems"=>array(),
             "Others"=>array(),
         );
@@ -4827,7 +4827,7 @@ class Projects extends Security_Controller {
             "Ship Equipment"=>array(),
             "Safety & Crew Equipment"=>array(),
             "Machinery Main Components"=>array(),
-            "Systems machinery main components"=>array(),
+            "System Machinery Main Components"=>array(),
             "Common systems"=>array(),
             "Others"=>array(),
         );
@@ -4838,7 +4838,7 @@ class Projects extends Security_Controller {
             "Ship Equipment"=>array(),
             "Safety & Crew Equipment"=>array(),
             "Machinery Main Components"=>array(),
-            "Systems machinery main components"=>array(),
+            "System Machinery Main Components"=>array(),
             "Common systems"=>array(),
             "Others"=>array(),
         );
@@ -4850,7 +4850,7 @@ class Projects extends Security_Controller {
             "Ship Equipment"=>array(),
             "Safety & Crew Equipment"=>array(),
             "Machinery Main Components"=>array(),
-            "Systems machinery main components"=>array(),
+            "System Machinery Main Components"=>array(),
             "Common systems"=>array(),
             "Others"=>array(),
         );
@@ -4861,7 +4861,7 @@ class Projects extends Security_Controller {
             "Ship Equipment"=>array(),
             "Safety & Crew Equipment"=>array(),
             "Machinery Main Components"=>array(),
-            "Systems machinery main components"=>array(),
+            "System Machinery Main Components"=>array(),
             "Common systems"=>array(),
             "Others"=>array(),
         );
