@@ -70,7 +70,10 @@
                 <li class="<?php echo $active_class . " " . $expend_class . " " . $submenu_open_class . " "; ?> main">
                     <a <?php echo $target; ?> href="<?php echo $is_custom_menu_item ? $url : get_uri($url); ?>">
                         <i data-feather="<?php echo $class; ?>" class="icon"></i>
-                        <span class="menu-text <?php echo $custom_class; ?>"><?php echo $main_menu_name; ?></span>
+                        <span class="menu-text <?php echo $custom_class; ?>"><?php 
+                        if($main_menu_name=="Clients") echo "Vessels";
+                        else echo $main_menu_name; 
+                        ?></span>
     <?php
     if ($badge) {
         echo "<span class='badge rounded-pill $badge_class'>$badge</span>";
