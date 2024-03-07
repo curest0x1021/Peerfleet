@@ -99,11 +99,11 @@
                     title: '<?php echo app_lang("client") ?>',
                     "class": "w10p"
                 },
-                {
-                    visible: optionVisibility,
-                    title: '<?php echo app_lang("price") ?>',
-                    "class": "w10p"
-                },
+                // {
+                //     visible: optionVisibility,
+                //     title: '<?php //echo app_lang("price"); ?>',
+                //     "class": "w10p"
+                // },
                 {
                     visible: false,
                     searchable: false
