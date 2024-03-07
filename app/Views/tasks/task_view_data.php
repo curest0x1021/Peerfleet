@@ -780,6 +780,8 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                             
                                             <input id="cost_item_unit_price" type="text" class="form-control" value="0.00">
                                             <select id="cost_item_currency"  class="form-control">
+                                                <?php if($project_info){ ?><option><?php echo $project_info->currency;?></option><?php }?>
+                                                <option>USD</option>
                                                 <option>AUD</option>
                                                 <option>GBP</option>
                                                 <option>EUR</option>
@@ -1066,7 +1068,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                 ?>
                                 <tr>
                                     <td><?php echo $oneItem->name;?></td>
-                                    <td><?php echo $oneItem->cost;?></td>
+                                    <td><?php if(isset($project_info)&&isset($project_info->currency)) echo $project_info->currency;?> <?php echo $oneItem->cost;?></td>
                                     <td><?php echo $oneItem->order_number;?></td>
                                     <td><button  class="btn btn-sm btn-default" ><i data-feather="x" class="icon-16" ></i></button></td>
                                 </tr>
@@ -1368,7 +1370,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             var cell2 = newRow.insertCell(2);
             var cell3 = newRow.insertCell(3);
             cell0.innerHTML = owner_supply_name;
-            cell1.innerHTML = "USD "+owner_supply_price;
+            cell1.innerHTML = '<?php if(isset($project_info)&&isset($project_info->currency)) echo $project_info->currency;?> '+owner_supply_price;
             cell2.innerHTML = owner_supply_order_number;
             cell3.innerHTML=`
             <button onClick="view_owner_supply(${owner_supplies.length})" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="eye" class="icon-16" ></i></button>
