@@ -840,7 +840,7 @@
                                                     echo "<tr><td>";
                                                     echo $oneItem->name;
                                                     echo "</td><td>";
-                                                    echo number_format($oneItem->quantity,1,".","")." ( ".$oneItem->measurement." ) X ".$oneItem->currency." ".number_format($oneItem->unit_price,2,".","")." ( ".$oneItem->quote_type." )";
+                                                    echo number_format(floatval($oneItem->quantity),1,".","")." ( ".$oneItem->measurement." ) X ".$oneItem->currency." ".number_format(floatval($oneItem->unit_price),2,".","")." ( ".$oneItem->quote_type." )";
                                                     echo "</td><td>";
                                                     echo $oneItem->currency." ".number_format(floatval($oneItem->quantity)*floatval($oneItem->unit_price), 2, '.', '');
                                                     echo "</td><td>";
