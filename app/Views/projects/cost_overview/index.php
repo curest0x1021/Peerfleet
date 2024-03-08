@@ -344,6 +344,7 @@ $totalPrice=0;
             $("."+category.split(" ")[0]+"-comments")[0].innerHTML=`<span class="badge pill bg-secondary" >${categorizedStats[category]['comments']}</span>`;
         }
         
+        
     });
     var totalCostItems;
     var totalVariationOrders;

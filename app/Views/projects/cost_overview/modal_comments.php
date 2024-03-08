@@ -1,4 +1,4 @@
-<div class="modal-body clearfix import-task-modal-body">
+<div class="modal-body clearfix comments-modal-body">
     <div class="box-title"><span ><?php echo app_lang("comments"); ?></span></div>
     <!--Task comment section-->
     <div class="clearfix">
