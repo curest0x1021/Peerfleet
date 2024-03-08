@@ -129,6 +129,7 @@ $totalVariationOrders=0;
 $totalCostItems=0;
 $totalShipyardCostItems=0;
 $totalComments=0;
+$totalPrice=0;
 ?>
 <style>
     .collapse-arrow {
@@ -177,13 +178,13 @@ $totalComments=0;
             <tbody>
                 <tr>
                     <th>Total cost:</th>
-                    <td class="total-owner-supplies">0</td>
-                    <td class="total-cost-items">0</td>
-                    <td class="total-variation-orders" >0</td>
-                    <td class="total-cost">0</td>
-                    <td class="total-shipyard-cost-items">0</td>
-                    <td>0</td>
-                    <td>0</td>
+                    <td class="total-owner-supplies"><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
+                    <td class="total-cost-items"><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
+                    <td class="total-variation-orders" ><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
+                    <td class="total-cost"><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
+                    <td class="total-shipyard-cost-items"><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
+                    <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
+                    <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
                     <td class="">
                         <?php echo modal_anchor(get_uri("task_comments/modal_project_comments/".$project_id),'<span class="badge pill bg-secondary total-comments" >0</span>',array());?>
                     </td>
@@ -197,6 +198,7 @@ $totalComments=0;
                     $categoryShipyardCostItems=0;
                     $categoryVariationOrder=0;
                     $categoryComments=0;
+                    $categoryTotalPrice=0;
             ?>
             <tbody>
                 <tr  data-bs-toggle="collapse" data-bs-target="#<?php echo explode(" ",$category)[0]."-tasks-panel";?>" aria-expanded="false" aria-controls="<?php echo explode(" ",$category)[0]."-tasks-panel";?>">
@@ -206,8 +208,8 @@ $totalComments=0;
                     <td class="<?php echo explode(" ",$category)[0];?>-variation-orders" ></td>
                     <td class="<?php echo explode(" ",$category)[0];?>-total-costs" ></td>
                     <td class="<?php echo explode(" ",$category)[0];?>-shipyard-cost-items" ></td>
-                    <td class="<?php echo explode(" ",$category)[0];?>-billed-yard" ></td>
-                    <td class="<?php echo explode(" ",$category)[0];?>-final-yard" ></td>
+                    <td class="<?php echo explode(" ",$category)[0];?>-billed-yard" ><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
+                    <td class="<?php echo explode(" ",$category)[0];?>-final-yard" ><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
                     <td class="<?php echo explode(" ",$category)[0];?>-comments" ></td>
                 </tr>
             </tbody>
@@ -252,6 +254,9 @@ $totalComments=0;
                         }
                         $categoryVariationOrder+=$oneTaskTotalVariationOrders;
 
+                        $oneTaskTotalPrice=$oneTaskTotalCostItems+$oneTaskTotalSupplies+$oneTaskTotalVariationOrders;
+                        $categoryTotalPrice+=$oneTaskTotalPrice;
+
                         $oneTaskTotalComments=count($oneTaskComments);
                         $categoryComments+=$oneTaskTotalComments;
 
@@ -260,6 +265,7 @@ $totalComments=0;
                         $totalCostItems+=$oneTaskTotalCostItems;
                         $totalShipyardCostItems+=$oneTaskTotalShipyardCostItems;
                         $totalVariationOrders+=$oneTaskTotalVariationOrders;
+                        $totalPrice+=$oneTaskTotalPrice;
                         $totalComments+=$oneTaskTotalComments;
 
                     ?>
@@ -267,13 +273,13 @@ $totalComments=0;
                         <td style="word-wrap:break-word;max-width:12vw;" >
                             <?php echo $oneTask->title;?>
                         </td>
-                        <td><?php echo $oneTaskTotalSupplies;?></td>
-                        <td><?php echo $oneTaskTotalCostItems?></td>
-                        <td><?php echo $oneTaskTotalVariationOrders;?></td>
-                        <td>0</td>
-                        <td><?php echo $oneTaskTotalShipyardCostItems;?></td>
-                        <td>0</td>
-                        <td>0</td>
+                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo $oneTaskTotalSupplies;?></td>
+                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo $oneTaskTotalCostItems?></td>
+                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo $oneTaskTotalVariationOrders;?></td>
+                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo $oneTaskTotalPrice;?></td>
+                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo $oneTaskTotalShipyardCostItems;?></td>
+                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
+                        <td> 0</td>
                         <td>
                             
                             <?php echo modal_anchor(get_uri("task_comments/modal_task_comments/".$oneTask->id),'<span class="badge pill bg-secondary" >'. $oneTaskTotalComments.'</span>',array());?>
@@ -285,6 +291,7 @@ $totalComments=0;
                         $categorizedStats[$category]["cost_items"]=$categoryCostItems;
                         $categorizedStats[$category]["variation_orders"]=$categoryVariationOrder;
                         $categorizedStats[$category]["shipyard_cost_items"]=$categoryShipyardCostItems;
+                        $categorizedStats[$category]["total_price"]=$categoryTotalPrice;
                         $categorizedStats[$category]["comments"]=$categoryComments;
                     ?>
             </tbody>
@@ -302,8 +309,9 @@ $totalComments=0;
     $(document).ready(function(){
         <?php if(isset($totalOwnerSupplies)) echo 'totalOwnerSupplies='.$totalOwnerSupplies.';'; ?>
         <?php if(isset($totalVariationOrders)) echo 'totalVariationOrders='.$totalVariationOrders.';'; ?>
-        <?php if(isset($totalCostItems)) echo 'totalCostItems='.$totalOwnerSupplies.';'; ?>
+        <?php if(isset($totalCostItems)) echo 'totalCostItems='.$totalCostItems.';'; ?>
         <?php if(isset($totalShipyardCostItems)) echo 'totalShipyardCostItems='.$totalShipyardCostItems.';'; ?>
+        <?php if(isset($totalPrice)) echo 'totalCosts='.$totalPrice.';'; ?>
         <?php if(isset($totalComments)) echo 'totalComments='.$totalComments.';'; ?>
         <?php if(isset($categorizedStats)) echo 'categorizedStats='.json_encode($categorizedStats).';'; ?>
         $("[data-bs-toggle=collapse]").on("click",function(){
@@ -311,10 +319,11 @@ $totalComments=0;
             else $(this).find(".collapse-arrow").removeClass('collapse-active')
         });
         console.log($(".total-owner-supplies"))
-        $(".total-owner-supplies")[0].innerHTML=totalOwnerSupplies;
-        $(".total-cost-items")[0].innerHTML=totalCostItems;
-        $(".total-shipyard-cost-items")[0].innerHTML=totalShipyardCostItems;
-        $(".total-variation-orders")[0].innerHTML=totalVariationOrders;
+        $(".total-owner-supplies")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalOwnerSupplies;
+        $(".total-cost-items")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalCostItems;
+        $(".total-shipyard-cost-items")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalShipyardCostItems;
+        $(".total-variation-orders")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalVariationOrders;
+        $(".total-cost")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalCosts;
         $(".total-comments")[0].innerHTML=totalComments;
         for(var category of [
             "General & Docking",
@@ -327,10 +336,11 @@ $totalComments=0;
             "Common systems",
             "Others",
         ]){
-            $("."+category.split(" ")[0]+"-owner-supplies")[0].innerHTML=categorizedStats[category]['owner_supplies'];
-            $("."+category.split(" ")[0]+"-variation-orders")[0].innerHTML=categorizedStats[category]['variation_orders'];
-            $("."+category.split(" ")[0]+"-cost-items")[0].innerHTML=categorizedStats[category]['cost_items'];
-            $("."+category.split(" ")[0]+"-shipyard-cost-items")[0].innerHTML=categorizedStats[category]['shipyard_cost_items'];
+            $("."+category.split(" ")[0]+"-owner-supplies")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['owner_supplies'];
+            $("."+category.split(" ")[0]+"-variation-orders")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['variation_orders'];
+            $("."+category.split(" ")[0]+"-cost-items")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['cost_items'];
+            $("."+category.split(" ")[0]+"-total-costs")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['total_price'];
+            $("."+category.split(" ")[0]+"-shipyard-cost-items")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['shipyard_cost_items'];
             $("."+category.split(" ")[0]+"-comments")[0].innerHTML=`<span class="badge pill bg-secondary" >${categorizedStats[category]['comments']}</span>`;
         }
         
@@ -340,5 +350,6 @@ $totalComments=0;
     var totalShipyardCostItems;
     var totalOwnerSupplies;
     var totalComments;
+    var totalCosts;
     var categorizedStats;
 </script>
