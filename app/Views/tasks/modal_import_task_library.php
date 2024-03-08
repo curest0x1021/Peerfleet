@@ -1857,6 +1857,9 @@
                     // window.location='<?php 
                     //echo get_uri('task_libraries/view/'); 
                     ?>'+JSON.parse(response).saved_id;
+                },
+                error:e=>{
+                    appAlert.error("Something went wrong..", {duration: 10000});
                 }
             });
         });
