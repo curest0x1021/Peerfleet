@@ -3832,23 +3832,23 @@ class Projects extends Security_Controller {
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
-        $sheet1->setTitle('Read me');
-        $sheet1->setCellValue('A1', 'About the quotation form');
-        $sheet1->setCellValue('A3', 'General');
-        $sheet1->setCellValue('A4', 'This quotation form is generated via Maindeck (www.maindeck.io).');
-        $sheet1->setCellValue('A5', 'It contains all the necessary functionality required by the shipyard providing a quotation.');
-        $sheet1->setCellValue('A7', 'The shipyard understands that this quotation form must be read and understood in connection with the project specification PDF sent along with it.');
-        $sheet1->setCellValue('A8', 'The project specification PDF contains all the detailed specifications about the work scope.');
-        $sheet1->setCellValue('A10', 'The shipyard also accepts that, if selected, billed and/or final costs should be provided to the owner in this same format.');
-        $sheet1->setCellValue('A13', 'How to use');
-        $sheet1->setCellValue('A14', 'For a quick and easy intro, please view this video.(ctrl + click to view)');
-        $sheet1->setCellValue('A16', 'For additional information, please see this article.(ctrl + click to view)');
-        $sheet1->setCellValue('A19', 'Support');
-        $sheet1->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
-        $sheet1->setCellValue('A21', '+47 91999771');
+        // $sheet1->setTitle('Read me');
+        // $sheet1->setCellValue('A1', 'About the quotation form');
+        // $sheet1->setCellValue('A3', 'General');
+        // $sheet1->setCellValue('A4', 'This quotation form is generated via Maindeck (www.maindeck.io).');
+        // $sheet1->setCellValue('A5', 'It contains all the necessary functionality required by the shipyard providing a quotation.');
+        // $sheet1->setCellValue('A7', 'The shipyard understands that this quotation form must be read and understood in connection with the project specification PDF sent along with it.');
+        // $sheet1->setCellValue('A8', 'The project specification PDF contains all the detailed specifications about the work scope.');
+        // $sheet1->setCellValue('A10', 'The shipyard also accepts that, if selected, billed and/or final costs should be provided to the owner in this same format.');
+        // $sheet1->setCellValue('A13', 'How to use');
+        // $sheet1->setCellValue('A14', 'For a quick and easy intro, please view this video.(ctrl + click to view)');
+        // $sheet1->setCellValue('A16', 'For additional information, please see this article.(ctrl + click to view)');
+        // $sheet1->setCellValue('A19', 'Support');
+        // $sheet1->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
+        // $sheet1->setCellValue('A21', '+47 91999771');
 
-        // Add data to the second worksheet
-        $sheet2 = $spreadsheet->createSheet();
+        // // Add data to the second worksheet
+        // $sheet2 = $spreadsheet->createSheet();
         $sheet2->setTitle('Cost items');
         $sheet2->setCellValue('A1', 'SFI Code');
         $sheet2->setCellValue('B1', 'WO name');
@@ -3920,7 +3920,7 @@ class Projects extends Security_Controller {
         $file_size = get_array_value($file, "size");
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
-        $excel_file->setActiveSheetIndex(1);
+        $excel_file->setActiveSheetIndex(0);
         $worksheet=$excel_file->getActiveSheet();
         $highestRow = $worksheet->getHighestRow(); // e.g., 10
         $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
@@ -4057,7 +4057,7 @@ class Projects extends Security_Controller {
         $project_id=$info_data[3][1];
         if((string)$shipyard_info->project_id!=(string)$project_id) return json_encode(array("success"=>false));
 
-        $excel_file->setActiveSheetIndex(1);
+        $excel_file->setActiveSheetIndex(0);
         $worksheet=$excel_file->getActiveSheet();
         $highestRow = $worksheet->getHighestRow(); // e.g., 10
         $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
@@ -4276,16 +4276,16 @@ class Projects extends Security_Controller {
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
-        $sheet1->setTitle('About project');
-        $sheet1->setCellValue('A1', $project_info->id);
-        $sheet1->setCellValue('A3', $project_info->title);
-        $sheet1->setCellValue('A14', $project_info->start_date);
-        $sheet1->setCellValue('B14', "~");
-        $sheet1->setCellValue('C14', $project_info->deadline);
-        $sheet1->setCellValue('A19', 'Support');
-        $sheet1->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
-        $sheet1->setCellValue('A21', '+47 91999771');
-        $sheet1 = $spreadsheet->createSheet();
+        // $sheet1->setTitle('About project');
+        // $sheet1->setCellValue('A1', $project_info->id);
+        // $sheet1->setCellValue('A3', $project_info->title);
+        // $sheet1->setCellValue('A14', $project_info->start_date);
+        // $sheet1->setCellValue('B14', "~");
+        // $sheet1->setCellValue('C14', $project_info->deadline);
+        // $sheet1->setCellValue('A19', 'Support');
+        // $sheet1->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
+        // $sheet1->setCellValue('A21', '+47 91999771');
+        // $sheet1 = $spreadsheet->createSheet();
         $sheet1->setTitle('Cost items');
         $sheet1->setCellValue('A1', 'project_id');
         $sheet1->setCellValue('B1', 'project_title');
