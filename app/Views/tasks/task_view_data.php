@@ -674,7 +674,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                 </a>
                 <div class="card" style="min-height:20vh;">
                     <div class="card-header d-flex">
-                        <b>Cost Item List</b>&nbsp;<i data-feather="info" class="icon-16" style="color:lightgray" ></i>
+                        <b>Cost Item List</b>
                     </div>
                     <div class="card-body" style="padding:10px" >
                         
