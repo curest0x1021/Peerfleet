@@ -1858,7 +1858,7 @@
                     //echo get_uri('task_libraries/view/'); 
                     ?>'+JSON.parse(response).saved_id;
                 },
-                error:e=>{
+                error:function(e){
                     appAlert.error("Something went wrong..", {duration: 10000});
                 }
             });
