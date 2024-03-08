@@ -50,20 +50,25 @@ if (!isset($project_id)) {
         $('body').on('click', '[data-act=update-task-status-checkbox]', function () {
             $(this).find("span").removeClass("checkbox-checked");
             $(this).find("span").addClass("inline-loader");
+            $myEl=$(this);
             $.ajax({
                 url: '<?php echo_uri("tasks/save_task_status") ?>/' + $(this).attr('data-id'),
                 type: 'POST',
                 dataType: 'json',
-                data: {value: $(this).attr('data-value')},
+                data: {value: $myEl.attr('data-value')},
                 success: function (response) {
                     if (response.success) {
                         console.log(response)
                         $("#reload-kanban-button:visible").trigger("click");
-                        
-                        $(this).find("span").removeClass("inline-loader");
-                        if($(this).find("span").hasClass("checkbox-checked"))
-                            $(this).find("span").removeClass("checkbox-checked");
-                        else $(this).find("span").addClass("checkbox-checked");
+                        $myEl.find("span").removeClass("inline-loader");
+                        $myEl.parent().parent().find('td:nth-last-child(2)').html(response.data[13])
+                        if(response.data[response.data.length-1]=="done"){
+                            $myEl.find("span").removeClass("checkbox-blank").addClass("checkbox-checked");
+                            $myEl.attr('data-value',1);
+                        }else{
+                            $myEl.find("span").removeClass("checkbox-checked").addClass("checkbox-blank");
+                            $myEl.attr('data-value',3);
+                        }
                         // $("#task-table table").appTable({newData: response.data, dataId: response.id});
                     }
                 }
