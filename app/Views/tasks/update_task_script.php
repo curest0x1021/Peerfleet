@@ -33,6 +33,7 @@ foreach ($task_statuses as $status) {
                 dataType: 'json',
                 data: {value: $(this).attr('data-value')},
                 success: function (response) {
+                    // console.log($("#task-table"))
                     if (response.success) {
                         $("#task-table").appTable({newData: response.data, dataId: response.id});
                     } else {

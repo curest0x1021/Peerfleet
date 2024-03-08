@@ -57,7 +57,14 @@ if (!isset($project_id)) {
                 data: {value: $(this).attr('data-value')},
                 success: function (response) {
                     if (response.success) {
+                        console.log(response)
                         $("#reload-kanban-button:visible").trigger("click");
+                        
+                        $(this).find("span").removeClass("inline-loader");
+                        if($(this).find("span").hasClass("checkbox-checked"))
+                            $(this).find("span").removeClass("checkbox-checked");
+                        else $(this).find("span").addClass("checkbox-checked");
+                        // $("#task-table table").appTable({newData: response.data, dataId: response.id});
                     }
                 }
             });

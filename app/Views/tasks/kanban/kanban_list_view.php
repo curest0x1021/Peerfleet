@@ -75,8 +75,8 @@
                     ));
                     ?>
                 </div>
-
-                <table class="w-100 display dataTable no-footer" id="kanban-item-list-<?php echo $column['id']; ?>" class="kanban-list-items" data-status_id="<?php echo $column['id']; ?>">
+                <div id="task-table" >
+                <table class="w-100 display dataTable no-footer kanban-list-items" id="kanban-item-list-<?php echo $column['id']; ?>"  data-status_id="<?php echo $column['id']; ?>">
                 <thead style="visibility:collapse;">
                     <tr role="row">
                         <th width="50px" class="sorting"  aria-controls="task-table"  aria-sort="descending" aria-label=""></th>
@@ -105,6 +105,7 @@
                     ?>
                 </tbody>
                 </table>
+                </div>
             </div>
         <?php } ?>
 
@@ -284,7 +285,7 @@
 <?php } ?>
 
         //add activated sub task filter class
-        if ($(".custom-filter-search").val().substring(0, 1) === "#") {
+        if ($(".custom-filter-search").val()&&$(".custom-filter-search").val().substring(0, 1) === "#") {
             $("#kanban-list-container").find("[main-task-id='" + $(".custom-filter-search").val() + "']").addClass("sub-task-filter-kanban-active");
         }
 

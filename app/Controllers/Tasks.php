@@ -3731,7 +3731,7 @@ class Tasks extends Security_Controller {
         }
         //////////////
         foreach ($tasks as $task) {
-            $tasks_edit_permissions_list[$task->id] = true;
+            // $tasks_edit_permissions_list[$task->id] = true;
             if ($sort_by == 'category') {
                 ////////////////////////////////////
                 // if(!array_key_exists($tasks_list[explode(" ",$task->category)[0]])){
@@ -3767,8 +3767,11 @@ class Tasks extends Security_Controller {
     
                 // } else {
                 //     $tasks_list['-1'][] = $task;
-                    $tasks_edit_permissions_list['-1'] = $this->_get_tasks_status_edit_permissions($tasks);
+                    // $tasks_edit_permissions_list['-1'] = $this->_get_tasks_status_edit_permissions($tasks);
                 // }
+                $category_can=array_filter($categories,function($oneCategory)use($task){return $oneCategory['text']==$task->category;});
+                if(count($category_can)<1) $category_can[]=$categories[8];
+                $tasks_edit_permissions_list[end($category_can)['id']][$task->id]=true;
     
             } else {
                 if ($task->dock_list_number) {

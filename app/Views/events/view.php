@@ -49,7 +49,7 @@
                 </div>
             <?php } ?>
 
-            <?php if ($model_info->company_name && $login_user->user_type != "client") { ?>
+            <?php if (isset($model_info->company_name) && $login_user->user_type != "client") { ?>
                 <div class="col-md-12 pb10 pt10 ">
                     <i data-feather="<?php echo $model_info->is_lead ? "box" : "briefcase"; ?>" class="icon-16"></i>
                     <?php
