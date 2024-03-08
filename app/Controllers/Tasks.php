@@ -5333,7 +5333,7 @@ class Tasks extends Security_Controller {
             $oneLibrary=$this->Task_libraries_model->get_one($oneId);
             $newTaskData=array(
                 "title"=>$oneLibrary->title,
-                "status_id"=>1,
+                "status_id"=>$oneLibrary->status_id,
                 "milestone_id"=>0,
                 "project_id"=>$this->request->getPost("project_id"),
                 "description"=>$oneLibrary->description,
