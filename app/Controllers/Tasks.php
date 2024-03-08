@@ -3499,15 +3499,15 @@ class Tasks extends Security_Controller {
         $columns[] = $temp;
         //////////////////
         $categories=array(
-            array("id"=>"General","text"=>"General & Docking"),
-            array("id"=>"Hull","text"=>"Hull"),
-            array("id"=>"Equipment","text"=>"Equipment for Cargo"),
-            array("id"=>"Ship","text"=>"Ship Equipment"),
-            array("id"=>"Safety","text"=>"Safety & Crew Equipment"),
-            array("id"=>"Machinery","text"=>"Machinery Main Components"),
-            array("id"=>"Systems","text"=>"System Machinery Main Components"),
-            array("id"=>"Common","text"=>"Common systems"),
-            array("id"=>"Others","text"=>"Others"),
+            array("id"=>"General","text"=>"General & Docking","color"=>"blue"),
+            array("id"=>"Hull","text"=>"Hull","color"=>"darkblue"),
+            array("id"=>"Equipment","text"=>"Equipment for Cargo","color"=>"aqua"),
+            array("id"=>"Ship","text"=>"Ship Equipment","color"=>"green"),
+            array("id"=>"Safety","text"=>"Safety & Crew Equipment","color"=>"darkgreen"),
+            array("id"=>"Machinery","text"=>"Machinery Main Components","color"=>"red"),
+            array("id"=>"Systems","text"=>"System Machinery Main Components","color"=>"brown"),
+            array("id"=>"Common","text"=>"Common systems","color"=>"orange"),
+            array("id"=>"Others","text"=>"Others","color"=>"gray"),
         );
         $tasks_list=array();
         foreach ($categories as $key => $category) {
@@ -3756,15 +3756,15 @@ class Tasks extends Security_Controller {
         $columns[] = $temp;
         //////////////////
         $categories=array(
-            array("id"=>"General","text"=>"General & Docking"),
-            array("id"=>"Hull","text"=>"Hull"),
-            array("id"=>"Equipment","text"=>"Equipment for Cargo"),
-            array("id"=>"Ship","text"=>"Ship Equipment"),
-            array("id"=>"Safety","text"=>"Safety & Crew Equipment"),
-            array("id"=>"Machinery","text"=>"Machinery Main Components"),
-            array("id"=>"Systems","text"=>"System Machinery Main Components"),
-            array("id"=>"Common","text"=>"Common systems"),
-            array("id"=>"Others","text"=>"Others"),
+            array("id"=>"General","text"=>"General & Docking","color"=>"blue"),
+            array("id"=>"Hull","text"=>"Hull","color"=>"darkblue"),
+            array("id"=>"Equipment","text"=>"Equipment for Cargo","color"=>"aqua"),
+            array("id"=>"Ship","text"=>"Ship Equipment","color"=>"green"),
+            array("id"=>"Safety","text"=>"Safety & Crew Equipment","color"=>"darkgreen"),
+            array("id"=>"Machinery","text"=>"Machinery Main Components","color"=>"red"),
+            array("id"=>"Systems","text"=>"System Machinery Main Components","color"=>"brown"),
+            array("id"=>"Common","text"=>"Common systems","color"=>"orange"),
+            array("id"=>"Others","text"=>"Others","color"=>"gray"),
         );
         $tasks_list=array();
         foreach ($categories as $key => $category) {

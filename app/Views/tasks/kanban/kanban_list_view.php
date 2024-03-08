@@ -66,7 +66,7 @@
             ?>" >
                 <input checked type="checkbox" id="list-item-<?php echo $column['id'];?>">
                 <!-- <label for="list-item-<?php //echo $column['id'];?>" class="kanban-list-col-title  mt20 mb10" style="background-color: <?php //echo $column->color ? $column->color : "#2e4053"; ?>;"> <?php //echo $column->title; ?> <span class="kanban-item-count <?php //echo $column['id']; ?>-task-count float-end ml10"><?php //echo $tasks_count; ?> </span></label> -->
-                <label for="list-item-<?php echo $column['id'];?>" class="kanban-list-col-title  mt20 mb10" style="background-color: <?php echo  "#2e4053"; ?>;"> <?php echo $column['text']; ?> <span class="kanban-item-count <?php echo $column['id']; ?>-task-count float-end ml10"><?php echo $tasks_count; ?> </span></label>
+                <label for="list-item-<?php echo $column['id'];?>" class="kanban-list-col-title  mt20 mb10" style="background-color: <?php echo  $column['color']; ?>;"> <?php echo $column['text']; ?> <span class="kanban-item-count <?php echo $column['id']; ?>-task-count float-end ml10"><?php echo $tasks_count; ?> </span></label>
                 <div class="kanban-input general-form hide">
                     <?php
                     echo form_input(array(
