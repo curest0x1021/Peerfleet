@@ -38,12 +38,15 @@
                                 <input class="form-check-input input-check-library" type="checkbox"/>
                             </th>
                             <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:10%;" rowspan="1" colspan="1" aria-label="Dock list number: activate to sort column ascending">Dock list number</th>
-                            <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:27%;" rowspan="1" colspan="1" aria-label="Title: activate to sort column ascending">Title</th>
+                            <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:16%;" rowspan="1" colspan="1" aria-label="Title: activate to sort column ascending">Title</th>
                             <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:8%;" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending">Start date</th>
                             <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:6%;" rowspan="1" colspan="1" aria-label="Deadline: activate to sort column ascending">Deadline</th>
                             <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:6%;"  rowspan="1" colspan="1" aria-label="Milestone: activate to sort column ascending">Milestone</th>
-                            <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1"   rowspan="1" colspan="1" aria-label="Supplier: activate to sort column ascending">Supplier</th>
-                            <th class="sorting_desc" tabindex="0" aria-controls="kanban-item-list--1" rowspan="1" colspan="1" aria-label="Assigned to: activate to sort column ascending" aria-sort="descending">Assigned to</th><th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" rowspan="1" colspan="1" aria-label="Collaborators: activate to sort column ascending">Collaborators</th><th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">Status</th><th class="text-center option w150 sorting" tabindex="0" aria-controls="kanban-item-list--1" rowspan="1" colspan="1" aria-label=": activate to sort column ascending"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu icon-16"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></th>
+                            <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1"   rowspan="1" colspan="1" style="width:5%;" aria-label="Supplier: activate to sort column ascending">Supplier</th>
+                            <th class="sorting_desc" tabindex="0" aria-controls="kanban-item-list--1" style="width:12%;" rowspan="1" colspan="1" aria-label="Assigned to: activate to sort column ascending" aria-sort="descending">Assigned to</th>
+                            <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" rowspan="1" style="width:12%;" colspan="1" aria-label="Collaborators: activate to sort column ascending">Collaborators</th>
+                            <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">Status</th>
+                            <th class="text-center option w150 sorting" tabindex="0" aria-controls="kanban-item-list--1" rowspan="1" colspan="1" aria-label=": activate to sort column ascending"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu icon-16"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></th>
                         </tr>
                     </thead>
                 </table>
@@ -81,14 +84,14 @@
                     <tr role="row">
                         <th width="50px" class="sorting"  aria-controls="task-table"  aria-sort="descending" aria-label=""></th>
                         <th width="10%" class="sorting"  aria-controls="task-table"  aria-label="">Dock list number</th>
-                        <th width="30%" class="sorting"  aria-controls="task-table"  aria-label="">Title</th>
+                        <th width="18%" class="sorting"  aria-controls="task-table"  aria-label="">Title</th>
                         <!-- <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Reference drawing</th> -->
                         <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Start date</th>
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Deadline</th>
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Milestones</th>
                         <th width="6%" class="sorting"  aria-controls="task-table"  aria-label="">Suppliers</th>
-                        <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Assigned to</th>
-                        <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Collaborators</th>
+                        <th width="15%" class="sorting"  aria-controls="task-table"  aria-label="">Assigned to</th>
+                        <th width="15%" class="sorting"  aria-controls="task-table"  aria-label="">Collaborators</th>
                         <th width="8%" class="sorting_disabled"  aria-label="">Status</th>
                         <th width="8%" class="sorting"  aria-controls="task-table"  aria-label=""></th>
                     </tr>
