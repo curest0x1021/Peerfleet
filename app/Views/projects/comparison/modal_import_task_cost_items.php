@@ -83,13 +83,13 @@
                         window.panel_import_yard_xlsx.closeModal()
                         window.location.reload();
                     }else{
-                        appAlert.error("That was an unvalid file.", {duration: 10000});
+                        return appAlert.error("That was an unvalid file.", {duration: 10000});
                     }
                 
                 },
                 error:function(data){
                     console.log(data)
-                    appAlert.error("That was an unvalid file.", {duration: 10000});
+                    return appAlert.error("That was an unvalid file.", {duration: 10000});
                 }
             })
         });
@@ -121,12 +121,13 @@
                     window.panel_import_yard_xlsx.closeModal()
                     window.location.reload();
                 }else{
-                    
+                    appAlert.error("That was an unvalid file.", {duration: 10000});
                 }
             
             },
             error:function(data){
                 console.log(data)
+                appAlert.error("That was an unvalid file.", {duration: 10000});
             }
         })
        })

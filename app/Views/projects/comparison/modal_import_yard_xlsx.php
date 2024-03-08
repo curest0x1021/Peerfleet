@@ -47,7 +47,7 @@ $(document).ready(function(){
                     window.location.reload();
                 },
                 error:function(e){
-                    appAlert.error("That was an unvalid file.", {duration: 10000});
+                    return appAlert.error("That was an unvalid file.", {duration: 10000});
                 }
             })
         }
