@@ -95,7 +95,10 @@ $priorityMark="";
         // }
     }
 
-
+    $collaborators="-";
+    if(isset($data->collaborators_data)){
+        $collaborators=$data->collaborators_data;
+    }
     // $collaborators = $this->_get_collaborators($data->collaborator_list);
 
     // if (!$collaborators) {
@@ -201,9 +204,9 @@ $milestone_title.
 "</td><td>
 Yard
 </td><td>" . 
-"$assigned_to" . 
-"</td><td><div class='d-flex align-items-center'><span class='avatar-xs avatar me-1' ><img alt='...' src='".base_url("assets/images/avatar.jpg")."' /></span>".
-$data->collaborators.
+$assigned_to . 
+"</td><td>
+".$collaborators.
 "</div></td><td>" . 
 $status . $priorityMark.
 "</td><td class='text-center option '>" . 

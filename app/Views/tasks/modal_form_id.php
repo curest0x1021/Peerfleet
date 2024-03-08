@@ -220,7 +220,7 @@
                                     # code...
                                     // echo json_encode($oneMember);
                                     $members_dropdown[]=array(
-                                        "id"=>$oneMember->id,
+                                        "id"=>$oneMember->user_id,
                                         "text"=>$oneMember->member_name
                                     );
                                 }
