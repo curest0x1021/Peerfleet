@@ -138,7 +138,7 @@
 
 <!--checklist-->
 <?php echo form_open(get_uri("todo/save_checklist_item"), array("id" => "checklist_form", "class" => "general-form", "role" => "form")); ?>
-<div id="todo-checklist" class="m20">
+<div hidden id="todo-checklist" class="m20">
     <div class="pb10 pt10">
         <strong class="float-start mr10"><?php echo app_lang("checklist"); ?></strong><span class="chcklists_status_count">0</span><span>/</span><span class="chcklists_count"></span>
     </div>
