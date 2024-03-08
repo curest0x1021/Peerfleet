@@ -3763,11 +3763,11 @@ class Tasks extends Security_Controller {
                 //         $columns[] = $temp;
                 //     }
                 //     $tasks_list[$id][] = $task;
-                //     $tasks_edit_permissions_list[$id] = $this->_get_tasks_status_edit_permissions($tasks);
+                    // $tasks_edit_permissions_list[$id] = $this->_get_tasks_status_edit_permissions($tasks);
     
                 // } else {
                 //     $tasks_list['-1'][] = $task;
-                //     $tasks_edit_permissions_list['-1'] = $this->_get_tasks_status_edit_permissions($tasks);
+                    $tasks_edit_permissions_list['-1'] = $this->_get_tasks_status_edit_permissions($tasks);
                 // }
     
             } else {
