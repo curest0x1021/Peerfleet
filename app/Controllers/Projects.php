@@ -4208,7 +4208,7 @@ class Projects extends Security_Controller {
         require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $project_info=$this->Projects_model->get_one($project_id);
-        $allProjectCostItems=$this->Task_cost_items_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        $allProjectCostItems=$this->Task_cost_items_model->get_all_where(array("project_id"=>$project_id,"deleted"=>0))->getResult();
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
@@ -4272,7 +4272,7 @@ class Projects extends Security_Controller {
         require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $project_info=$this->Projects_model->get_one($project_id);
-        $allProjectCostItems=$this->Task_cost_items_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        $allProjectCostItems=$this->Task_cost_items_model->get_all_where(array("project_id"=>$project_id,"deleted"=>0))->getResult();
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
