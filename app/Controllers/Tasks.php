@@ -674,6 +674,10 @@ class Tasks extends Security_Controller {
         $allMembers=$this->Project_members_model->get_details(array("project_id"=>$gotProject->id))->getResult();
         return $this->template->view('tasks/modal_form_id',["allMembers"=>$allMembers,"allCostItems"=>$allCostItems,"allOwnerSupplies"=>$allOwnerSupplies,"allTasks"=>$allTasks,"gotChecklistItems"=>$gotChecklistItems,"gotTask"=>$gotTask,"task_id"=>$task_id,"gotProject"=>$gotProject,"project_id"=>$gotTask->project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
+    function members($project_id){
+        $allMembers=$this->Project_members_model->get_details(array("project_id"=>$project_id))->getResult();
+        return json_encode($allMembers);
+    }
     /*----*/
 
     private function get_removed_task_status_ids($project_id = 0) {
@@ -1413,21 +1417,35 @@ class Tasks extends Security_Controller {
         $assigned_to = "-";
 
         if ($data->assigned_to) {
+            
+           
             $image_url = get_avatar($data->assigned_to_avatar);
+            //////////////////////
+            // $user_info=$this->Users_model->get_one($this->Project_members_model->get_one($data->assigned_to)->user_id);
+            // $avatar_file=unserialize($user_info->image)->file_name;
+            // $image_url=base_url("files/profile_images/".$avatar_file);
+            ///////////////////////
+
             $assigned_to_user = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $data->assigned_to_user";
             $assigned_to = get_team_member_profile_link($data->assigned_to, $assigned_to_user);
 
             if ($data->user_type != "staff") {
                 $assigned_to = get_client_contact_profile_link($data->assigned_to, $assigned_to_user);
             }
+            // $assigned_to=[];
+            // $assigned_to['avatar']=$image_url;
+            // $assigned_to['name']=$user_info->first_name." ".$user_info->last_name;
         }
 
 
-        $collaborators = $this->_get_collaborators($data->collaborator_list);
+        $collaborators = $this->_get_collaborators($data->collaborators);
 
         if (!$collaborators) {
             $collaborators = "-";
         }
+
+        
+        
 
 
         $checkbox_class = "checkbox-blank";
@@ -1525,6 +1543,8 @@ class Tasks extends Security_Controller {
 
         $row_data[] = $options;
         $row_data[]= $newGotStatus->key_name;
+
+        
         return $row_data;
     }
 
@@ -1828,9 +1848,21 @@ class Tasks extends Security_Controller {
         }
         $view_data["file_categories_dropdown"] = json_encode($file_categories_dropdown);
 
+        $collaborators=explode(",",$model_info->collaborators);
+        $collaborators_data="";
+        foreach ($collaborators as $oneCol) {
+            # code...
+            $oneCol_info=$this->Users_model->get_one($oneCol);
+            $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
+            $oneCol_name=$oneCol_info->first_name." ".$oneCol_info->last_name;
+            $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span>'.$oneCol_name.'</a>';
+        }
+        $model_info->collaborators_data=$collaborators_data;
+        ///////////////////////////////////////
         $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("task_files", $this->login_user->is_admin, $this->login_user->user_type);
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("task_files", $this->login_user->is_admin, $this->login_user->user_type);
 
+        
         if ($view_type == "details") {
             return $this->template->rander('tasks/view', $view_data);
         } else {
@@ -3484,7 +3516,17 @@ class Tasks extends Security_Controller {
         }
         //////////////
         foreach ($tasks as $task) {
-            
+            $collaborators=explode(",",$task->collaborators);
+            $collaborators_data="";
+            foreach ($collaborators as $oneCol) {
+                # code...
+                $oneCol_info=$this->Users_model->get_one($oneCol);
+                $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
+                $oneCol_name=$oneCol_info->first_name." ".$oneCol_info->last_name;
+                $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span>'.$oneCol_name.'</a>';
+            }
+            $task->collaborators_data=$collaborators_data;
+                
             if ($sort_by == 'category') {
                 ////////////////
                 if(array_key_exists(explode(" ",$task->category)[0],$tasks_list))
@@ -3731,6 +3773,16 @@ class Tasks extends Security_Controller {
         }
         //////////////
         foreach ($tasks as $task) {
+            $collaborators=explode(",",$task->collaborators);
+            $collaborators_data="";
+            foreach ($collaborators as $oneCol) {
+                # code...
+                $oneCol_info=$this->Users_model->get_one($oneCol);
+                $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
+                $oneCol_name=$oneCol_info->first_name." ".$oneCol_info->last_name;
+                $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span>'.$oneCol_name.'</a>';
+            }
+            $task->collaborators_data=$collaborators_data;
             // $tasks_edit_permissions_list[$task->id] = true;
             if ($sort_by == 'category') {
                 ////////////////////////////////////
@@ -3772,6 +3824,7 @@ class Tasks extends Security_Controller {
                 $category_can=array_filter($categories,function($oneCategory)use($task){return $oneCategory['text']==$task->category;});
                 if(count($category_can)<1) $category_can[]=$categories[8];
                 $tasks_edit_permissions_list[end($category_can)['id']][$task->id]=true;
+                
     
             } else {
                 if ($task->dock_list_number) {
@@ -4217,6 +4270,7 @@ class Tasks extends Security_Controller {
             $list_data = $result->getResult();
             $result = array();
         }
+        
 
 
         $tasks_edit_permissions = $this->_get_tasks_edit_permissions($list_data);
@@ -4224,8 +4278,23 @@ class Tasks extends Security_Controller {
 
         $result_data = array();
         foreach ($list_data as $data) {
+            
+                # code...
             $result_data[] = $this->_make_row($data, $custom_fields, $show_time_with_task, $tasks_edit_permissions, $tasks_status_edit_permissions);
         }
+        // foreach ($result_data as $data) {
+        //     # code...
+        //     $collaborators=explode(",",$data->collaborators);
+        //     $collaborators_data="";
+        //     foreach ($collaborators as $oneCol) {
+        //         # code...
+        //         $oneCol_info=$this->Users_model->get_one($oneCol);
+        //         $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
+        //         $oneCol_name=$oneCol_info->first_name." ".$oneCol_info->last_name;
+        //         $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span>'.$oneCol_name.'</a>';
+        //     }
+        //     $data->collaborators_data=$collaborators_data;
+        // }
 
         $result["data"] = $result_data;
         
