@@ -17,8 +17,18 @@
     <div class="sidebar-scroll">
         <ul id="sidebar-menu" class="sidebar-menu">
             <?php
+            $menu_index=0;
             foreach ($sidebar_menu as $main_menu) {
                 $main_menu_name = get_array_value($main_menu, "name");
+                if($menu_index==11){
+                    echo '<li class="    main">
+                            <a href="'.get_uri("file_manager").'">
+                                <i class="icon-16" data-feather="file" ></i>
+                                <span class="menu-text ">File Manager</span>
+                            </a>
+                        </li>';
+                }
+                $menu_index++;
                 if (!$main_menu_name) {
                     continue;
                 }
@@ -121,12 +131,7 @@
                 <?php
             }
             ?>
-            <li class="    main">
-            <a href="<?php echo get_uri("file_manager");?>">
-                <i class="icon-16" data-feather="file" ></i>
-                <span class="menu-text ">File Manager</span>
-                </a>
-            </li>
+            
         </ul>
     </div>
 </div>
