@@ -322,7 +322,7 @@
                             echo form_input(array(
                                 "id" => "collaborators",
                                 "name" => "collaborators",
-                                "value" => isset($gotTask)&&$gotTask->collaborators?$gotTask->collaborators:"-",
+                                "value" => isset($gotTask)&&$gotTask->collaborators?$gotTask->collaborators:"",
                                 "class" => "form-control",
                                 "required"=>true,
                                 "style"=>"border:1px solid lightgray",
@@ -1393,6 +1393,7 @@
             });
         })
         $("#collaborators").select2({
+            multiple:true,
             data: <?php echo (json_encode($collaborators_dropdown)); ?>
         });
         $("#status_id").select2({
