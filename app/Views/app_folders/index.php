@@ -133,7 +133,7 @@ if ($view_type) {
 
         var clientId = "<?php echo $client_id ? $client_id : 0; ?>";
         var folderId = folder_id ? folder_id : 0;
-
+        console.log(folderId)
         $.ajax({
             url: "<?php echo get_uri($controller_slag . '/get_folder_items/'); ?>" + folderId + "/" + clientId,
             dataType: "json",
