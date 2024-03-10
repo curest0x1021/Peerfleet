@@ -580,7 +580,6 @@ trait App_folders
         $data["has_full_access"] = false;
 
         $options = $this->_preapare_folder_params($client_id);
-
         $options["folder_id"] = $folder_id;
         $options["id"] = $id;
 
@@ -626,7 +625,7 @@ trait App_folders
         }
 
         $folder_main_id = $folder_info ? $folder_info->id : "";
-
+        $data["folder_main_id"]=$folder_main_id;
         $data["folder_items"] = $this->_folder_items($folder_main_id, $options['context'], $client_id);
 
         $data["folder_item_type"] = $this->folder_item_type;
@@ -687,7 +686,8 @@ trait App_folders
         echo json_encode(array(
             "success" => true,
             "window_content" => $this->template->view('app_folders/window', $data, true),
-            "title_bar_content" => $this->template->view('app_folders/title_bar', $data, true)
+            "title_bar_content" => $this->template->view('app_folders/title_bar', $data, true),
+            "data"=>$data
         ));
     }
 
