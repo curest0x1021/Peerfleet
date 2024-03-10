@@ -1855,7 +1855,7 @@ class Tasks extends Security_Controller {
             $oneCol_info=$this->Users_model->get_one($oneCol);
             $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
             $oneCol_name=$oneCol_info->first_name." ".$oneCol_info->last_name;
-            $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span>'.$oneCol_name.'</a>';
+            $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span>'.$oneCol_name.'</a><br/>';
         }
         $model_info->collaborators_data=$collaborators_data;
         ///////////////////////////////////////
@@ -3523,7 +3523,7 @@ class Tasks extends Security_Controller {
                 $oneCol_info=$this->Users_model->get_one($oneCol);
                 $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
                 $oneCol_name=$oneCol_info->first_name." ".$oneCol_info->last_name;
-                $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span>'.$oneCol_name.'</a>';
+                $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span>'.$oneCol_name.'</a><br/>';
             }
             $task->collaborators_data=$collaborators_data;
                 
@@ -3782,7 +3782,7 @@ class Tasks extends Security_Controller {
                     $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
                 else $avatar_file=base_url("assets/images/avatar.jpg");
                 $oneCol_name=$oneCol_info->first_name." ".$oneCol_info->last_name;
-                $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span>'.$oneCol_name.'</a>';
+                $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span>'.$oneCol_name.'</a><br/>';
             }
             $task->collaborators_data=$collaborators_data;
             // $tasks_edit_permissions_list[$task->id] = true;
