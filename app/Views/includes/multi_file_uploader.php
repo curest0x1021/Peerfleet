@@ -39,7 +39,15 @@
         </div>
     </div>
 </div>
+<?php
+if (!isset($upload_url)) {
+    $upload_url = get_uri("uploader/upload_file");
+}
 
+if (!isset($validation_url)) {
+    $validation_url = get_uri("uploader/validate_file");
+}
+?>
 <script type="text/javascript">
     $(document).ready(function () {
         fileSerial = 0;
