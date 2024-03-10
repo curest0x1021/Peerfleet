@@ -121,6 +121,12 @@
                 <?php
             }
             ?>
+            <li class="    main">
+            <a href="<?php echo get_uri("file_manager");?>">
+                <i class="icon-16" data-feather="file" ></i>
+                <span class="menu-text ">File Manager</span>
+                </a>
+            </li>
         </ul>
     </div>
 </div>
