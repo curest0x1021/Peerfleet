@@ -247,7 +247,7 @@
                             echo form_input(array(
                                 "id" => "collaborators".$modalId,
                                 "name" => "collaborators",
-                                "value" => isset($gotTask)&&$gotTask->collaborators?$gotTask->collaborators:$members_dropdown[0]['id'],
+                                "value" => isset($gotTask)&&$gotTask->collaborators?$gotTask->collaborators:"",
                                 "class" => "form-control",
                                 "required"=>true,
                                 "style"=>"border:1px solid lightgray",
@@ -1332,6 +1332,7 @@
             });
         })
         $("#collaborators<?php echo $modalId;?>").select2({
+            multiple:true,
             data: <?php echo (json_encode($members_dropdown)); ?>
         });
         $("#status_id<?php echo $modalId;?>").select2({
