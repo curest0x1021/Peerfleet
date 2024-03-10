@@ -3778,7 +3778,9 @@ class Tasks extends Security_Controller {
             foreach ($collaborators as $oneCol) {
                 # code...
                 $oneCol_info=$this->Users_model->get_one($oneCol);
-                $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
+                if(unserialize($oneCol_info->image))
+                    $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
+                else $avatar_file=base_url("assets/images/avatar.jpg");
                 $oneCol_name=$oneCol_info->first_name." ".$oneCol_info->last_name;
                 $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span>'.$oneCol_name.'</a>';
             }
