@@ -32,11 +32,15 @@ trait App_folders
     private $permissions_value_memory = null;
     private $root_folders_default_permissions = "";
     private $global_files_path = "";
+    private $Client_groups_model;
 
     private function init()
     {
         if (!$this->Folders_model) {
             $this->Folders_model = model('App\Models\Folders_model');
+        }
+        if (!$this->Client_groups_model) {
+            $this->Client_groups_model = model('App\Models\Client_groups_model');
         }
 
         $configs = array(

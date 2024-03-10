@@ -907,3 +907,26 @@ if (!function_exists('is_iframe_preview_available')) {
     }
 
 }
+
+/**
+ * Replace large file name with some ... in the middle. 
+ * 
+ * @param string $file_name
+ * @return short file name
+ */
+if (!function_exists('short_file_name')) {
+
+    function short_file_name($file_name = "") {
+        if (strlen($file_name) > 70) {
+  
+            $pattern = '/^(.{32}).*(.{5})(\..{3,4})$/';
+
+            $new_file_name = preg_replace($pattern, '$1................$2$3', $file_name);
+
+            return $new_file_name;
+        } else {
+            return $file_name;
+        }
+    }
+
+}

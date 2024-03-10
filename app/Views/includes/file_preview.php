@@ -18,7 +18,7 @@ if (!get_setting("disable_google_preview") && ($is_google_drive_file || (!is_loc
     <?php
 } else if ($is_image_file) {
     ?>
-    <img src="<?php echo $file_url; ?>" />
+    <img src="<?php echo $file_url; ?>" style="width:100%;" />
     <?php
 } else if (($is_viewable_video_file && !$is_google_drive_file) || (isset($is_iframe_preview_available) && $is_iframe_preview_available)) {
     //show with default iframe
