@@ -273,11 +273,11 @@ $totalPrice=0;
                         <td style="word-wrap:break-word;max-width:12vw;" >
                             <?php echo $oneTask->title;?>
                         </td>
-                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo $oneTaskTotalSupplies;?></td>
-                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo $oneTaskTotalCostItems?></td>
-                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo $oneTaskTotalVariationOrders;?></td>
-                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo $oneTaskTotalPrice;?></td>
-                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo $oneTaskTotalShipyardCostItems;?></td>
+                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo number_format($oneTaskTotalSupplies,1,".",",");?></td>
+                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo number_format( $oneTaskTotalCostItems,1,".",",");?></td>
+                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo number_format($oneTaskTotalVariationOrders,1,".",",");?></td>
+                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo number_format($oneTaskTotalPrice,1,".",",");?></td>
+                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo number_format($oneTaskTotalShipyardCostItems,1,".",",");?></td>
                         <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
                         <td> 0</td>
                         <td>
@@ -287,11 +287,11 @@ $totalPrice=0;
                     </tr>
                     <?php
                         }
-                        $categorizedStats[$category]["owner_supplies"]=$categoryOwnerSupply;
-                        $categorizedStats[$category]["cost_items"]=$categoryCostItems;
-                        $categorizedStats[$category]["variation_orders"]=$categoryVariationOrder;
-                        $categorizedStats[$category]["shipyard_cost_items"]=$categoryShipyardCostItems;
-                        $categorizedStats[$category]["total_price"]=$categoryTotalPrice;
+                        $categorizedStats[$category]["owner_supplies"]=number_format( $categoryOwnerSupply,1,".",".");
+                        $categorizedStats[$category]["cost_items"]=number_format($categoryCostItems,1,".",".");
+                        $categorizedStats[$category]["variation_orders"]=number_format($categoryVariationOrder,1,".",".");
+                        $categorizedStats[$category]["shipyard_cost_items"]=number_format($categoryShipyardCostItems,1,".",".");
+                        $categorizedStats[$category]["total_price"]=number_format($categoryTotalPrice,1,".",".");
                         $categorizedStats[$category]["comments"]=$categoryComments;
                     ?>
             </tbody>
@@ -307,11 +307,11 @@ $totalPrice=0;
 </div>
 <script>
     $(document).ready(function(){
-        <?php if(isset($totalOwnerSupplies)) echo 'totalOwnerSupplies='.$totalOwnerSupplies.';'; ?>
-        <?php if(isset($totalVariationOrders)) echo 'totalVariationOrders='.$totalVariationOrders.';'; ?>
-        <?php if(isset($totalCostItems)) echo 'totalCostItems='.$totalCostItems.';'; ?>
-        <?php if(isset($totalShipyardCostItems)) echo 'totalShipyardCostItems='.$totalShipyardCostItems.';'; ?>
-        <?php if(isset($totalPrice)) echo 'totalCosts='.$totalPrice.';'; ?>
+        <?php if(isset($totalOwnerSupplies)) echo 'totalOwnerSupplies="'. number_format($totalOwnerSupplies,1,".",",").'";'; ?>
+        <?php if(isset($totalVariationOrders)) echo 'totalVariationOrders="'.number_format($totalVariationOrders,1,".",",").'";'; ?>
+        <?php if(isset($totalCostItems)) echo 'totalCostItems="'.number_format($totalCostItems,1,".",",").'";'; ?>
+        <?php if(isset($totalShipyardCostItems)) echo 'totalShipyardCostItems="'.number_format($totalShipyardCostItems,1,".",",").'";'; ?>
+        <?php if(isset($totalPrice)) echo 'totalCosts="'.number_format($totalPrice,1,".",",").'";'; ?>
         <?php if(isset($totalComments)) echo 'totalComments='.$totalComments.';'; ?>
         <?php if(isset($categorizedStats)) echo 'categorizedStats='.json_encode($categorizedStats).';'; ?>
         $("[data-bs-toggle=collapse]").on("click",function(){
