@@ -8,7 +8,7 @@ if ($view_type) {
 <div id="page-content" class="<?php echo $page_wrapper; ?> clearfix">
     <div class="box row">
         <?php if ($show_left_menu) { ?>
-            <div class="col-md-3 box-content content-sidebar pr15" id="file-manager-sidebar">
+            <div class="col-md-2 box-content content-sidebar pr15" id="file-manager-sidebar">
                 <ul class="list-group mb10">
                     <div class="input-group search-box">
                         <?php
@@ -43,7 +43,7 @@ if ($view_type) {
             </div>
         <?php } ?>
 
-        <div class="box-content col-md-4" id="file-manager-items-box">
+        <div class="box-content col-md-7" id="file-manager-items-box">
             <div class="card grid-button" id="file-manager-container-card">
                 <div class="page-title" id="file-manger-title-bar">
                     <?php echo view('app_folders/title_bar'); ?>
@@ -58,7 +58,7 @@ if ($view_type) {
             </div>
         </div>
 
-        <div class="box-content col-md-5 " id="file-details-box">
+        <div class="box-content col-md-3 " id="file-details-box">
             <div class="sticky-details-section">
                 <div class="card">
                     <div class="page-title">
