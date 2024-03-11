@@ -163,8 +163,9 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                 <div class="mt5">
                                     <?php 
                                     // echo get_update_task_info_anchor_data($model_info, "collaborators", $can_edit_tasks, $collaborators); 
-                                    echo $model_info->collaborators_data;
+                                    //echo $model_info->collaborators_data;
                                     ?>
+                                    <?php echo get_update_task_info_anchor_data($model_info, "collaborators", $can_edit_tasks, $collaborators); ?>
                                 </div>
                             </div>
 
