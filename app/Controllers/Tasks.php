@@ -1857,7 +1857,7 @@ class Tasks extends Security_Controller {
                 $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
             else $avatar_file=base_url("assets/images/avatar.jpg");
             $oneCol_name=$oneCol_info->first_name." ".$oneCol_info->last_name;
-            $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span>'.$oneCol_name.'</a><br/>';
+            $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." />'.$oneCol_name.'</span></a><br/>';
         }
         $model_info->collaborators_data=$collaborators_data;
         ///////////////////////////////////////
@@ -3527,7 +3527,7 @@ class Tasks extends Security_Controller {
                     $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
                 else $avatar_file=base_url("assets/images/avatar.jpg");
                 $oneCol_name=$oneCol_info->first_name." ".$oneCol_info->last_name;
-                $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span>'.$oneCol_name.'</a><br/>';
+                $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span></a>';
             }
             $task->collaborators_data=$collaborators_data;
                 
@@ -3786,7 +3786,7 @@ class Tasks extends Security_Controller {
                     $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
                 else $avatar_file=base_url("assets/images/avatar.jpg");
                 $oneCol_name=$oneCol_info->first_name." ".$oneCol_info->last_name;
-                $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span>'.$oneCol_name.'</a><br/>';
+                $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span></a>';
             }
             $task->collaborators_data=$collaborators_data;
             // $tasks_edit_permissions_list[$task->id] = true;
@@ -5410,6 +5410,7 @@ class Tasks extends Security_Controller {
                 "title"=>$oneLibrary->title,
                 "status_id"=>$oneLibrary->status_id,
                 "milestone_id"=>0,
+                "dock_list_number"=>$oneLibrary->dock_list_number,
                 "project_id"=>$this->request->getPost("project_id"),
                 "description"=>$oneLibrary->description,
                 "category"=>$oneLibrary->category,
