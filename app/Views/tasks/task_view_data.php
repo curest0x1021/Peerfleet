@@ -697,9 +697,9 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                         echo "<tr><td>";
                                         echo $oneItem->name;
                                         echo "</td><td>";
-                                        echo number_format($oneItem->quantity,1,".","")." ( ".$oneItem->measurement." ) X ".$oneItem->currency." ".number_format($oneItem->unit_price,2,".","")." ( ".$oneItem->quote_type." )";
+                                        echo number_format($oneItem->quantity)." ( ".$oneItem->measurement." ) X ".$oneItem->currency." ".number_format($oneItem->unit_price)." ( ".$oneItem->quote_type." )";
                                         echo "</td><td>";
-                                        echo $oneItem->currency." ".number_format(floatval($oneItem->quantity)*floatval($oneItem->unit_price), 2, '.', '');
+                                        echo $oneItem->currency." ".number_format(floatval($oneItem->quantity)*floatval($oneItem->unit_price));
                                         echo "</td><td>";
                                         echo '<input class="edit-cost-item-id" value='.$oneItem->id.' hidden /><button onClick="start_edit_cost_item(event)" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button><button onClick="delete_item(event)" type="button" class="btn btn-sm" ><i color="gray" data-feather="x-circle" class="icon-16" ></i></button>';
                                         echo "</td></tr>";
@@ -1024,7 +1024,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                         }) as $oneItem) {
                                             $totalYardCost+=(float)$oneItem->quantity*(float)$oneItem->unit_price;
                                         };
-                                        echo $totalYardCost;
+                                        echo number_format($totalYardCost);
                                         ?>
                                     </td>
                                 </tr>
@@ -1069,7 +1069,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                 ?>
                                 <tr>
                                     <td><?php echo $oneItem->name;?></td>
-                                    <td><?php if(isset($project_info)&&isset($project_info->currency)) echo $project_info->currency;?> <?php echo $oneItem->cost;?></td>
+                                    <td><?php if(isset($project_info)&&isset($project_info->currency)) echo $project_info->currency;?> <?php echo number_format($oneItem->cost);?></td>
                                     <td><?php echo $oneItem->order_number;?></td>
                                     <td><button  class="btn btn-sm btn-default" ><i data-feather="x" class="icon-16" ></i></button></td>
                                 </tr>
@@ -1154,7 +1154,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                 ?>
                                 <tr>
                                     <td><?php echo $oneOrder->name; ?></td>
-                                    <td><?php echo $oneOrder->currency; ?> <?php echo $oneOrder->cost; ?></td>
+                                    <td><?php echo $oneOrder->currency; ?> <?php echo number_format($oneOrder->cost); ?></td>
                                     <td><?php echo date("d.m.Y", strtotime($oneOrder->start_date)); ?></td>
                                     <td><?php echo date("d.m.Y", strtotime($oneOrder->finish_date)); ?></td>
                                     <td><input hidden value='<?php echo $oneOrder->id;?>' /><button class="btn btn-sm btn-default delete-variation-order-item" ><i class="icon-16" data-feather="x" ></i></button></td>

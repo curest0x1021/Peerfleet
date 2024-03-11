@@ -582,7 +582,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         >
                             <?php
 
-                                echo ($totalYardCosts[$i])." ".$project_info->currency;
+                                echo number_format($totalYardCosts[$i])." ".$project_info->currency;
                             ?>
                         </th>
                         <?php
@@ -626,7 +626,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                         echo modal_anchor(get_uri('projects/modal_yard_cost_items/'.$oneTask->id),'<span class="badge task-info-box pill bg-secondary" >'.$oneTaskItemCounts[$i].'</span>',array());
                                     ?>
                                     <div class="flex-grow-1" ></div>
-                                    <?php echo ($oneTaskAllCosts[$i])." ".$project_info->currency; ?>
+                                    <?php echo number_format($oneTaskAllCosts[$i])." ".$project_info->currency; ?>
                                 </div>
                             </td>
                         <?php
@@ -783,7 +783,7 @@ $(document).ready(function(){
     // })
     var totalCostEls=$(".td-total-cost");
     for(var index in totalCosts){
-        totalCostEls[index].innerHTML=(totalCosts[index]+" "+"<?php echo $project_info->currency;?>");
+        totalCostEls[index].innerHTML=(Number(totalCosts[index]).toLocaleString()+" "+"<?php echo $project_info->currency;?>");
         var background="rgba(0,0,0,0)";
         if(totalCosts[index]==0) background="#F9A52D";
         else if(totalCosts[index]==Math.min(...totalCosts)) {

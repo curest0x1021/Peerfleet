@@ -5127,6 +5127,9 @@ class Projects extends Security_Controller {
         }
         echo json_encode(array("success"=>true));
     }
+    function download_all_in_one($project_id){
+        
+    }
 
 }
 
