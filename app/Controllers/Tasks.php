@@ -1852,6 +1852,7 @@ class Tasks extends Security_Controller {
         $collaborators_data="";
         foreach ($collaborators as $oneCol) {
             # code...
+            if($oneCol=="") continue;
             $oneCol_info=$this->Users_model->get_one($oneCol);
             if(unserialize($oneCol_info->image))
                 $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
@@ -3522,6 +3523,7 @@ class Tasks extends Security_Controller {
             $collaborators_data="";
             foreach ($collaborators as $oneCol) {
                 # code...
+                if($oneCol=="") continue;
                 $oneCol_info=$this->Users_model->get_one($oneCol);
                 if(unserialize($oneCol_info->image))
                     $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
@@ -3781,6 +3783,7 @@ class Tasks extends Security_Controller {
             $collaborators_data="";
             foreach ($collaborators as $oneCol) {
                 # code...
+                if($oneCol=="") continue;
                 $oneCol_info=$this->Users_model->get_one($oneCol);
                 if(unserialize($oneCol_info->image))
                     $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
