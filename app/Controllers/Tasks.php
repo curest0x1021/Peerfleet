@@ -5410,11 +5410,13 @@ class Tasks extends Security_Controller {
         $project_info=$this->Projects_model->get_one($this->request->getPost("project_id"));
         foreach($selected_libraries as $oneId){
             $oneLibrary=$this->Task_libraries_model->get_one($oneId);
+            $count_of_dock_lists=$this->Tasks_model->getCount("category",$oneLibrary->category);
+            $new_dock_list_number=strtoupper(substr($oneLibrary->category, 0, 1)).sprintf("%02d", $count_of_dock_lists+1);
             $newTaskData=array(
                 "title"=>$oneLibrary->title,
                 "status_id"=>$oneLibrary->status_id,
                 "milestone_id"=>0,
-                "dock_list_number"=>$oneLibrary->dock_list_number,
+                "dock_list_number"=>$new_dock_list_number,
                 "project_id"=>$this->request->getPost("project_id"),
                 "description"=>$oneLibrary->description,
                 "category"=>$oneLibrary->category,
