@@ -3502,15 +3502,15 @@ class Tasks extends Security_Controller {
         $columns[] = $temp;
         //////////////////
         $categories=array(
-            array("id"=>"General","text"=>"General & Docking","color"=>"blue"),
-            array("id"=>"Hull","text"=>"Hull","color"=>"darkblue"),
-            array("id"=>"Equipment","text"=>"Equipment for Cargo","color"=>"aqua"),
-            array("id"=>"Ship","text"=>"Ship Equipment","color"=>"green"),
-            array("id"=>"Safety","text"=>"Safety & Crew Equipment","color"=>"darkgreen"),
-            array("id"=>"Machinery","text"=>"Machinery Main Components","color"=>"red"),
-            array("id"=>"Systems","text"=>"System Machinery Main Components","color"=>"brown"),
-            array("id"=>"Common","text"=>"Common systems","color"=>"orange"),
-            array("id"=>"Others","text"=>"Others","color"=>"gray"),
+            array("id"=>"General","text"=>"General & Docking","color"=>"#489ad9"),
+            array("id"=>"Hull","text"=>"Hull","color"=>"#3270b8"),
+            array("id"=>"Equipment","text"=>"Equipment for Cargo","color"=>"#4bc0c1"),
+            array("id"=>"Ship","text"=>"Ship Equipment","color"=>"#87c245"),
+            array("id"=>"Safety","text"=>"Safety & Crew Equipment","color"=>"#36b293"),
+            array("id"=>"Machinery","text"=>"Machinery Main Components","color"=>"#de5341"),
+            array("id"=>"Systems","text"=>"System Machinery Main Components","color"=>"#da8d19"),
+            array("id"=>"Common","text"=>"Common systems","color"=>"#ebc626"),
+            array("id"=>"Others","text"=>"Others","color"=>"#37485d"),
         );
         $tasks_list=array();
         foreach ($categories as $key => $category) {
@@ -3762,15 +3762,15 @@ class Tasks extends Security_Controller {
         $columns[] = $temp;
         //////////////////
         $categories=array(
-            array("id"=>"General","text"=>"General & Docking","color"=>"blue"),
-            array("id"=>"Hull","text"=>"Hull","color"=>"darkblue"),
-            array("id"=>"Equipment","text"=>"Equipment for Cargo","color"=>"aqua"),
-            array("id"=>"Ship","text"=>"Ship Equipment","color"=>"green"),
-            array("id"=>"Safety","text"=>"Safety & Crew Equipment","color"=>"darkgreen"),
-            array("id"=>"Machinery","text"=>"Machinery Main Components","color"=>"red"),
-            array("id"=>"Systems","text"=>"System Machinery Main Components","color"=>"brown"),
-            array("id"=>"Common","text"=>"Common systems","color"=>"orange"),
-            array("id"=>"Others","text"=>"Others","color"=>"gray"),
+            array("id"=>"General","text"=>"General & Docking","color"=>"#489ad9"),
+            array("id"=>"Hull","text"=>"Hull","color"=>"#3270b8"),
+            array("id"=>"Equipment","text"=>"Equipment for Cargo","color"=>"#4bc0c1"),
+            array("id"=>"Ship","text"=>"Ship Equipment","color"=>"#87c245"),
+            array("id"=>"Safety","text"=>"Safety & Crew Equipment","color"=>"#36b293"),
+            array("id"=>"Machinery","text"=>"Machinery Main Components","color"=>"#de5341"),
+            array("id"=>"Systems","text"=>"System Machinery Main Components","color"=>"#da8d19"),
+            array("id"=>"Common","text"=>"Common systems","color"=>"#ebc626"),
+            array("id"=>"Others","text"=>"Others","color"=>"#37485d"),
         );
         $tasks_list=array();
         foreach ($categories as $key => $category) {
@@ -5407,6 +5407,7 @@ class Tasks extends Security_Controller {
     }
     function apply_libraries(){
         $selected_libraries=$this->request->getPost("selected_libraries");
+        $project_info=$this->Projects_model->get_one($this->request->getPost("project_id"));
         foreach($selected_libraries as $oneId){
             $oneLibrary=$this->Task_libraries_model->get_one($oneId);
             $newTaskData=array(
@@ -5420,6 +5421,8 @@ class Tasks extends Security_Controller {
                 "supplier"=>$oneLibrary->supplier,
                 "location"=>$oneLibrary->location,
                 "specification"=>$oneLibrary->specification,
+                "start_date"=>$project_info->start_date,
+                "deadline"=>$project_info->deadline,
             );
             $saved_id=$this->Tasks_model->save_gantt_task_date($newTaskData,null);
             $costItems=json_decode($oneLibrary->reference_drawing);
