@@ -1560,8 +1560,6 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
 <?php //echo $custom_field_headers; ?>,
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w150"}
             ],
-            printColumns: combineCustomFieldsColumns([0, 1, 2, 3, 4, 5], '<?php echo $custom_field_headers; ?>'),
-            xlsColumns: combineCustomFieldsColumns([0, 1, 2, 3, 4, 5], '<?php echo $custom_field_headers; ?>')
         });
 
         //change the add button attributes on changing tab panel
