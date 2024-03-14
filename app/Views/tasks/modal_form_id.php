@@ -1281,10 +1281,22 @@
             </div>
             <div><?php echo view("includes/dropzone_preview"); ?></div>
             <div stlyle="margin-top:10px" class="row" >
+                <div id="link-of-new-view" class="hide">
+                    <?php
+                    echo modal_anchor(get_uri("tasks/view"), "", array("data-modal-lg" => "1"));
+                    ?>
+                </div>
                 <div class="col-md-2" >
                     <button id="btn-file-upload-task<?php echo $modalId;?>" class="btn btn-default upload-file-button float-start me-auto btn-sm round" type="button" style="color:#7988a2"><i data-feather="camera" class="icon-16"></i> <?php echo app_lang("upload_file"); ?></button>
                 </div>
-                <div class="col-md-9" ></div>
+                <div class="col-md-7" ></div>
+                <div class="col-md-2"  >
+                    <button type="button"
+                    style="float:right"
+                    old-id="btn-task-save"
+                    id="btn-save-and-show-task-library<?php echo $modalId;?>"
+                    class="btn btn-primary" ><i data-feather="check-circle" class="icon-16"></i> Save & Show</button>
+                </div>
                 <div class="col-md-1"  >
                     <button type="button"
                     style="float:right"
@@ -1632,6 +1644,10 @@
         var uploadUrl = "<?php echo get_uri('tasks/upload_file'); ?>";
         var validationUri = "<?php echo get_uri('tasks/validate_task_file'); ?>";
         var dropzone = attachDropzoneWithForm("#tasks-dropzone", uploadUrl, validationUri);
+        $("#btn-save-and-show-task-library<?php echo $modalId; ?>").on("click",function(){
+            window.continueShow=true;
+            $("#btn-save-task-library<?php echo $modalId; ?>").click();
+        })
         $("#btn-save-task-library<?php echo $modalId; ?>").on("click",function(){
             var rise_csrf_token = $('[name="rise_csrf_token"]').val();
             var id=$('[name="id"]').val();
@@ -1732,8 +1748,20 @@
                         $('.modal-mask').css({"width": $maskTarget.width() + 22 + "px", "height": height + "px", "padding-top": padding + "px"});
                         $maskTarget.closest('.modal-dialog').find('[type="submit"]').attr('disabled', 'disabled');
                         $maskTarget.addClass("hide");
-                        window.edit_task_panel.closeModal()
-                        window.location.reload();
+                        // window.responseData=JSON.parse(response);
+                        // console.log(window.responseData)
+                        if(window.continueShow){
+                            var $taskViewLink = $("#link-of-new-view").find("a");
+                            $taskViewLink.attr("data-action-url", "<?php echo get_uri("tasks/view"); ?>");
+                            // $taskViewLink.attr("data-title", taskShowText + " #" + JSON.parse(response).saved_id);
+                            $taskViewLink.attr("data-post-id", JSON.parse(response).saved_id);
+                            $taskViewLink.trigger("click");
+                        }else{
+                            window.continueShow=null;
+                            window.edit_task_panel.closeModal()
+                            window.location.reload();
+                        }
+                        
                         //window.location.reload();
                     }
                     // appLoader.hide();
@@ -1745,6 +1773,13 @@
         });
         window.edit_task_panel=$("#edit-task-panel<?php echo $modalId;?>").appForm({
             closeModalOnSuccess: false,
+            // onSuccess: function (result) {
+            //     if (window.continueShow) {
+            //         console.log(window.responseData)
+            //     }else{
+            //         window.edit_task_panel.closeModal()
+            //     }
+            // }
         });
         $('#toggle-blocking-panel<?php echo $modalId; ?>').on('click',function(){
             if($("#blocking-area<?php echo $modalId; ?>").hasClass('hide')) $("#blocking-area<?php echo $modalId; ?>").removeClass("hide");
