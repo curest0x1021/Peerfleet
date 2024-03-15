@@ -1017,7 +1017,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                         Total yard quote from <?php echo $oneYard->title;?>
                                     </td>
                                     <td>
-                                        USD <?php
+                                        <?php echo $project_info->currency;?> <?php
                                         $totalYardCost=0;
                                         foreach (array_filter($allYardCostItems,function($oneItem)use($oneYard){
                                             return (string)$oneItem->shipyard_id==(string)$oneYard->id;
@@ -1034,11 +1034,11 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                 
                                 <tr>
                                     <td>Billed cost</td>
-                                    <td>USD 0.00</td>
+                                    <td><?php echo $project_info->currency;?> 0.00</td>
                                 </tr>
                                 <tr>
                                     <td>Final cost</td>
-                                    <td>USD 0.00</td>
+                                    <td><?php echo $project_info->currency;?> 0.00</td>
                                 </tr>
                             </tbody>
                         </table>
