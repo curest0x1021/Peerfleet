@@ -1,4 +1,15 @@
 <div id="kanban-wrapper"  >
+    <style>
+        .collapse-arrow {
+      
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+            
+        }
+        .collapse-active.collapse-arrow {
+            transform: rotate(180deg);
+        }
+    </style>
     <ul id="kanban-list-container" class="card kanban-list-container clearfix">
         <li class="kanban-list-col kanban--1" >
             <div id="kanban-item-list--1_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
@@ -64,9 +75,10 @@
             $index++;
             
             ?>" >
-                <input checked type="checkbox" id="list-item-<?php echo $column['id'];?>">
+                <!-- <input checked type="checkbox" id="list-item-<?php echo $column['id'];?>"> -->
                 <!-- <label for="list-item-<?php //echo $column['id'];?>" class="kanban-list-col-title  mt20 mb10" style="background-color: <?php //echo $column->color ? $column->color : "#2e4053"; ?>;"> <?php //echo $column->title; ?> <span class="kanban-item-count <?php //echo $column['id']; ?>-task-count float-end ml10"><?php //echo $tasks_count; ?> </span></label> -->
-                <label for="list-item-<?php echo $column['id'];?>" class="kanban-list-col-title  mt20 mb10" style="background-color: <?php echo  $column['color']; ?>;"> <?php echo $column['text']; ?> <span class="kanban-item-count <?php echo $column['id']; ?>-task-count float-end ml10"><?php echo $tasks_count; ?> </span></label>
+                <label for="list-item-<?php echo $column['id'];?>" class="kanban-list-col-title  mt20 mb10" style="background-color: <?php echo  $column['color']; ?>;" data-bs-toggle="collapse" data-bs-target="#task-table-<?php echo $column['id'];?>" aria-expanded="false" aria-controls="task-table-<?php echo $column['id'];?>"> <?php echo $column['text']; ?> <span class="kanban-item-count <?php echo $column['id']; ?>-task-count float-end ml10"><?php echo $tasks_count; ?> </span><div class="flex-grow-1" ></div><i data-feather="chevron-up" style="word-wrap:break-word;" class="collapse-arrow"></i></label>
+                
                 <div class="kanban-input general-form hide">
                     <?php
                     echo form_input(array(
@@ -78,7 +90,7 @@
                     ));
                     ?>
                 </div>
-                <div id="task-table" >
+                <div id="task-table-<?php echo $column['id'];?>" class="collapse show" >
                 <table class="w-100 display dataTable no-footer kanban-list-items" id="kanban-item-list-<?php echo $column['id']; ?>"  data-status_id="<?php echo $column['id']; ?>">
                 <thead style="visibility:collapse;">
                     <tr role="row">
@@ -295,6 +307,12 @@
         adjustViewHeightWidth();
 
         $('[data-bs-toggle="tooltip"]').tooltip();
+        //////////////////////
+        $("[data-bs-toggle=collapse]").on("click",function(){
+            if(!$(this).find(".collapse-arrow").hasClass('collapse-active')) $(this).find(".collapse-arrow").addClass('collapse-active');
+            else $(this).find(".collapse-arrow").removeClass('collapse-active')
+        });
+        ////////////////////////
 
     });
 
