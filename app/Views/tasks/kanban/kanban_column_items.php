@@ -58,6 +58,10 @@ foreach ($tasks as $task) {
             $kanban_custom_fields_data .= "<div class='mt5 font-12'>" . get_array_value($kanban_custom_field, "custom_field_title") . ": " . view("custom_fields/output_" . get_array_value($kanban_custom_field, "custom_field_type"), array("value" => get_array_value($kanban_custom_field, "value"))) . "</div>";
         }
     }
+    $task_dock_list_number="";
+    if($task_dock_list_number){
+        $task_dock_list_number="<div class='mt10 font-12 float-start' title='Dock List Number'><i data-feather='calendar' class='icon-14 text-off mr5'></i> " . $task->dock_list_number. "</div>";
+    }
 
     $start_date = "";
     if ($task->start_date) {
@@ -116,6 +120,6 @@ foreach ($tasks as $task) {
 
     echo modal_anchor(get_uri("tasks/view"), "<span class='avatar'>" .
             "<img src='" . get_avatar($task->assigned_to_avatar) . "'>" .
-            "</span>" . $sub_task_icon . $task_id . $task->title . $toggle_sub_task_icon . $batch_operation_checkbox . "<div class='clearfix'>" . $start_date . $end_date . "</div>" . $project_name . $client_name . $kanban_custom_fields_data .
+            "</span>" . $sub_task_icon . $task_id." <span style='color:".$column_color.";' >" .$task->dock_list_number."</span> ". $task->title . $toggle_sub_task_icon . $batch_operation_checkbox . "<div class='clearfix'>".$task_dock_list_number . $start_date . $end_date . "</div>" . $project_name . $client_name . $kanban_custom_fields_data .
             $task_labels . $task_checklist_status . $sub_task_status . "<div class='clearfix'></div>" . $parent_task, array("class" => "kanban-item d-block $disable_dragging $unread_comments_class", "data-status_id" => $task->status_id, "data-id" => $task->id, "data-project_id" => $task->project_id, "data-sort" => $task->new_sort, "data-post-id" => $task->id, "title" => app_lang('task_info') . " #$task->id", "data-modal-lg" => "1"));
 }
