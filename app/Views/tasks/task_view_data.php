@@ -63,7 +63,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             <a class="nav-link" data-bs-toggle="tab" href="#costs">Quotes & Costs</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#files">Files</a>
+            <a class="nav-link" data-bs-toggle="tab" href="#task-files">Files</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="#activity">Comments</a>
@@ -1197,38 +1197,24 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             </div>
         <?php //} ?> -->
     </div>
-    <div id="files" class="tab-pane fade" >
+    <div id="task-files" class="tab-pane fade" >
         <!------->
         <?php //echo view("tasks/view/tab_files"); ?>
         <!------->
-        <div class="card">
 
                 <div class="tab-title clearfix no-border">
                     <div class="title-button-group">
-
-                        <?php //echo js_anchor("<i data-feather='check-square' class='icon-16'></i> <span id='btn-text-content'>" . app_lang("select_all") . "</span>", array("title" => app_lang("select_all"), "id" => "select-un-select-all-file-btn", "class" => "btn btn-default hide")); ?>
-                        <?php //echo anchor("", "<i data-feather='download' class='icon-16'></i> " . app_lang("download"), array("title" => app_lang("download"), "id" => "download-multiple-file-btn", "class" => "btn btn-default hide")); ?>
-                        <?php //echo anchor("", "<i data-feather='x' class='icon-16'></i> " . app_lang("delete"), array("title" => app_lang("delete"), "id" => "delete-multiple-file-btn", "class" => "btn btn-default hide")); ?>
-
-                        <?php
-                        // if ($can_add_files) {
-                            // echo modal_anchor(get_uri("tasks/file_modal_form/").$task_id, "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_files'), array("class" => "btn btn-default", "title" => app_lang('add_files'), "data-post-project_id" => $project_id, "id" => "file_or_category_add_button"));
-                        // }
-                        ?>
                         <button class="btn btn-default btn-start-upload" ><i data-feather='plus-circle' class='icon-16'></i>Add a File</button>
                         <input type="file" hidden class="input-upload-file" />
                     </div>
                 </div>
 
 
-                <div role="tabpanel" class="tab-pane show" id="files">
                     <div class="table-responsive">
-                        <table id="project-file-table" class="display" width="100%">            
+                        <table id="task-files-table" class="display" width="100%">            
                         </table>
                     </div>
-                </div>
 
-        </div>
         <!---->
         
     </div>
@@ -1266,7 +1252,6 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     yard_remarks:$("#cost_item_yard_remarks")[0].value,
                 },
                 success:function(response){
-                    console.log(response);
                     var table=$("#table-quotes-from-yard")[0].getElementsByTagName('tbody')[0];
                     if(!item_id){
                         
@@ -1361,7 +1346,6 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
 
                 },
                 success:function(response){
-                    console.log(response)
                 }
             })
             var table=$("#table-owners-supplies")[0].getElementsByTagName('tbody')[0];
@@ -1441,7 +1425,6 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         // });
         /////////////////////////////
         var fields = [];
-
         $('body').on('click', '[data-act=download-multiple-file-checkbox]', function () {
 
             var checkbox = $(this).find("span"),
@@ -1506,7 +1489,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                     if (result.success) {
                         appLoader.hide();
                         appAlert.warning(result.message, {duration: 10000});
-                        $("#project-file-table").appTable({reload: true});
+                        $("#task-files-table").appTable({reload: true});
                     } else {
                         appAlert.error(result.message);
                     }
@@ -1545,19 +1528,16 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         if (userType == "client") {
             showUploadeBy = false;
         }
-
-        $("#project-file-table").appTable({
+        console.log($("#task-files-table"))
+        $("#task-files-table").appTable({
             source: '<?php echo_uri("tasks/files_list_data/".$task_id); ?>',
             order: [[0, "desc"]],
             
             columns: [
-                // {title: '<?php //echo app_lang("id") ?>'},
                 {title: '<?php echo app_lang("file") ?>'},
-                // {title: '<?php //echo app_lang("category") ?>'},
                 {title: '<?php echo app_lang("size") ?>'},
                 {visible: showUploadeBy, title: '<?php echo app_lang("uploaded_by") ?>'},
-                {title: '<?php echo app_lang("created_date") ?>'}
-<?php //echo $custom_field_headers; ?>,
+                {title: '<?php echo app_lang("created_date") ?>'},
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w150"}
             ],
         });
@@ -1586,7 +1566,6 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
             $(".input-upload-file").click();
         })
         $(".input-upload-file").on("change",function(){
-            console.log($(this)[0].files)
             var myForm=new FormData();
             var rise_csrf_token = $('[name="rise_csrf_token"]').val();
             myForm.append("rise_csrf_token",rise_csrf_token);
@@ -1600,7 +1579,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                 processData: false, // Prevent jQuery from automatically processing the data
                 contentType: false, 
                 success:function(response){
-                    $("#project-file-table").appTable({newData: JSON.parse(response).newRow, dataId: JSON.parse(response).rowId});
+                    $("#task-files-table").appTable({newData: JSON.parse(response).newRow, dataId: JSON.parse(response).rowId});
                 }
             })
         })
@@ -1640,7 +1619,6 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
     }
     function start_edit_cost_item(e){
         var item_id=e.target.parentNode.parentNode.querySelector(".edit-cost-item-id").value;
-        console.log(item_id)
         $.ajax({
             url:'<?php echo get_uri('tasks/get_task_cost_item');?>/'+item_id,
             method:"GET",
