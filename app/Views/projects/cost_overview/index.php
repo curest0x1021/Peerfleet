@@ -322,7 +322,7 @@ $totalPrice=0;
         $(".total-owner-supplies")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalOwnerSupplies;
         $(".total-cost-items")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalCostItems;
         $(".total-shipyard-cost-items")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalShipyardCostItems;
-        $(".total-variation-orders")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalVariationOrders;
+        $(".total-variation-orders")[0].innerHTML='<?php if(isset($project_info->currency))  echo $project_info->currency;?> '+totalVariationOrders;
         $(".total-cost")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalCosts;
         $(".total-comments")[0].innerHTML=totalComments;
         for(var category of [

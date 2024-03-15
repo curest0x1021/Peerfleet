@@ -4102,14 +4102,21 @@ class Projects extends Security_Controller {
         return json_encode(array("success"=>true));
     }
     function cost_overview($project_id){
+        $project_info=$this->Projects_model->get_one($project_id);
         // $allCostItems=$this->Task_cost_items_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allCostItems=$this->Task_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
-        $allShipyardCostItems=$this->Shipyard_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
+        $allShipyardCostItems=[];
+        if($project_info->status_id==4){
+            $selected_yards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id))->getResult();
+            if(count($selected_yards)>0)
+                $allShipyardCostItems=$this->Shipyard_cost_items_model->get_all_with_costs_where(array("shipyard_id"=>$selected_yards[0]->id))->getResult();
+        }
+            
         $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allVariationOrders=$this->Task_variation_orders_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allComments=$this->Task_comments_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $project_info=$this->Projects_model->get_one($project_id);
+        
         return $this->template->view('projects/cost_overview/index',["project_id"=>$project_id,"project_info"=>$project_info,"allComments"=>$allComments,"allShipyardCostItems"=>$allShipyardCostItems,"allOwnerSupplies"=>$allOwnerSupplies,"allVariationOrders"=>$allVariationOrders,"allTasks"=>$allTasks,'allCostItems'=>$allCostItems]);
     }
 
