@@ -38,7 +38,8 @@ if (!function_exists("make_project_tabs_data")) {
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <a onclick="history.back()" style="cursor: pointer; font-size: 16px;"><i data-feather="arrow-left" class="icon-24"></i><?php echo app_lang("back"); ?></a>
+                <!-- <a onclick="history.back()" style="cursor: pointer; font-size: 16px;"><i data-feather="arrow-left" class="icon-24"></i><?php //echo app_lang("back"); ?></a> -->
+                <a href="<?php echo get_uri('projects/all_projects');?>" class="go-back-link" style="cursor: pointer; font-size: 16px;text-decoration: none;"><i data-feather="arrow-left" class="icon-24"></i><?php echo app_lang("back"); ?></a>
 
                 <div class="project-title-section">
                     <div class="page-title no-bg clearfix mb5 no-border">
