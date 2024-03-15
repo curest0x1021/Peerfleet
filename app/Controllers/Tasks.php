@@ -4475,7 +4475,7 @@ class Tasks extends Security_Controller {
             //add task data under a group
             $gantt_array_data = array(
                 "id" => $data->task_id,
-                "name" => $data->task_title,
+                "name" =>$data->task_dock_list_number." ". $data->task_title,
                 "start" => $start_date,
                 "end" => $end_date,
                 "bg_color" => $color,

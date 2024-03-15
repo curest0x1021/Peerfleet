@@ -271,7 +271,7 @@ $totalPrice=0;
                     ?>
                     <tr>
                         <td style="word-wrap:break-word;max-width:12vw;" >
-                            <?php echo $oneTask->title;?>
+                            <?php echo "<span style='color:gray;' >".$oneTask->dock_list_number."</span> ".$oneTask->title;?>
                         </td>
                         <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo number_format($oneTaskTotalSupplies);?></td>
                         <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo number_format( $oneTaskTotalCostItems);?></td>

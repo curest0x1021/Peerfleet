@@ -45,11 +45,11 @@
                 <table table-id="headers-table" class="w-100 display dataTable no-footer" id="kanban-item-list--1" data-status_id="-1" role="grid" aria-describedby="kanban-item-list--1_info">
                     <thead>
                         <tr role="row">
-                            <th style="width:50px;" class="sorting" tabindex="0" aria-controls="kanban-item-list--1" rowspan="1" colspan="1" aria-label="select: activate to sort column ascending">
+                            <th style="width:4%;" class="sorting" tabindex="0" aria-controls="kanban-item-list--1" rowspan="1" colspan="1" aria-label="select: activate to sort column ascending">
                                 <input class="form-check-input input-check-library" type="checkbox"/>
                             </th>
                             <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:10%;" rowspan="1" colspan="1" aria-label="Dock list number: activate to sort column ascending">Dock list number</th>
-                            <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:16%;" rowspan="1" colspan="1" aria-label="Title: activate to sort column ascending">Title</th>
+                            <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:17%;" rowspan="1" colspan="1" aria-label="Title: activate to sort column ascending">Title</th>
                             <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:8%;" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending">Start date</th>
                             <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:6%;" rowspan="1" colspan="1" aria-label="Deadline: activate to sort column ascending">Deadline</th>
                             <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:6%;"  rowspan="1" colspan="1" aria-label="Milestone: activate to sort column ascending">Milestone</th>

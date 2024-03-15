@@ -596,7 +596,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
 
                     ?>
                     <tr>
-                        <td > <div style="max-width:10vw;word-wrap:break-word;" ><?php echo $oneTask->title; ?></div></td>
+                        <td > <div style="max-width:10vw;word-wrap:break-word;" ><?php echo "<span style='color:gray;' >".$oneTask->dock_list_number."</span> ".$oneTask->title; ?></div></td>
                         <?php
                         $oneTaskAllCosts=array();
                         $oneTaskItemCounts=array();
