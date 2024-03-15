@@ -5154,7 +5154,9 @@ class Tasks extends Security_Controller {
         return json_encode(array("success"=>true));
     }
     function modal_add_order($task_id){
-        return $this->template->view("tasks/variation_orders/modal_add_order",["task_id"=>$task_id]);
+        $task_info=$this->Tasks_model->get_one($task_id);
+        $project_info=$this->Projects_model->get_one($task_info->project_id);
+        return $this->template->view("tasks/variation_orders/modal_add_order",["project_info"=>$project_info,"task_info"=>$task_info,"task_id"=>$task_id]);
     }
     function save_variation_order(){
         $task_info=$this->Tasks_model->get_one($this->request->getPost('task_id'));

@@ -209,7 +209,7 @@
                     echo form_input(array(
                         "id" => "order_currency",
                         "name" => "order_currency",
-                        "value" => "USD",
+                        "value" => isset($project_info->currency)?$project_info->currency:"USD",
                         "class" => "form-control",
                         "data-rule-required" => true,
                         "style"=>"border:1px solid lightgray;",
