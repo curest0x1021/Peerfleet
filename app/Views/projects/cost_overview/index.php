@@ -150,7 +150,8 @@ $totalPrice=0;
             <h4>Cost overview</h4>
             <div class="flex-grow-1" ></div>
             <?php echo modal_anchor(get_uri('projects/modal_import_cost_overview/').$project_id,'<button style="margin-right:10px;" class="btn btn-default" ><i class="icon-16"  data-feather="upload" ></i>Import</button>',array());?>
-            <?php echo modal_anchor(get_uri('projects/modal_export_cost_overview/').$project_id,'<button class="btn btn-default" ><i class="icon-16"  data-feather="download" ></i>Export</button>',array());?>
+            <?php //echo modal_anchor(get_uri('projects/modal_export_cost_overview/').$project_id,'<button class="btn btn-default" ><i class="icon-16"  data-feather="download" ></i>Export</button>',array());?>
+            <?php echo modal_anchor(get_uri("tasks/export_project_modal_form"), "<i data-feather='external-link' class='icon-16'></i> " . app_lang('export'), array("class" => "btn btn-default export-excel-btn", "title" => app_lang('export_project'), "data-post-project_id" => $project_id));?>
         </div>
     </div>
     <div class="card-body" >
