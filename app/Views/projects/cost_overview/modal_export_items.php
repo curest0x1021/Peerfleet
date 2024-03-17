@@ -77,7 +77,7 @@
                 <hr/>
                 <div class="card-body d-flex flex-column align-items-center">
                     <img style="margin-bottom:20px" width="100px" src="<?php echo get_file_uri("assets/images/pdf.png") ?>" alt="style_1" />
-                    <a href="<?php echo get_uri("projects/download_cost_overview_xlsx/").$project_id;?>" target="_blank"  class="btn btn-primary btn_export_cost_overview1"><span data-feather="download" class="icon-16"></span> Create PDF export</a>
+                    <a href="<?php echo get_uri("projects/download_project_specification_pdf/").$project_id;?>" target="_blank"  class="btn btn-primary btn_export_cost_overview1"><span data-feather="download" class="icon-16"></span> Create PDF export</a>
                 </div>
                 
             </div>

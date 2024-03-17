@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Controllers;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 
 class Projects extends Security_Controller {
@@ -5133,6 +5135,26 @@ class Projects extends Security_Controller {
             
         }
         echo json_encode(array("success"=>true));
+    }
+    function download_project_specification_pdf($project_id){
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $dompdf = new Dompdf($options);
+
+        // Set document properties
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Load HTML content (replace 'sample_html_content' with your HTML content)
+        // $html = view('sample_html_content'); // Load HTML view file
+
+        // Convert HTML to PDF
+        $dompdf->loadHtml("<h1>Hello World!</h1>");
+
+        // Render PDF (optional: set additional options, e.g., DPI, quality)
+        $dompdf->render();
+
+        // Output the PDF as a file (example: my_pdf.pdf)
+        $dompdf->stream('my_pdf.pdf', array('Attachment' => 0));
     }
     function download_all_in_one($project_id){
         
