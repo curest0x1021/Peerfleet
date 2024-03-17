@@ -5172,6 +5172,7 @@ class Projects extends Security_Controller {
         $dompdf->render();
 
         // Output the PDF as a file (example: my_pdf.pdf)
+        header('Content-Type: application/pdf');
         $dompdf->stream('my_pdf.pdf', array('Attachment' => 0));
     }
     function download_all_in_one($project_id){
