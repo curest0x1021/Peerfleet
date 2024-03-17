@@ -1064,10 +1064,10 @@ class Clients extends Security_Controller
             $profile_image_file = get_array_value($_FILES, "profile_image_file");
             $image_file_name = get_array_value($profile_image_file, "tmp_name");
             if ($image_file_name) {
-                if (!$this->check_profile_image_dimension($image_file_name)) {
-                    echo json_encode(array("success" => false, 'message' => app_lang('profile_image_error_message')));
-                    exit();
-                }
+                // if (!$this->check_profile_image_dimension($image_file_name)) {
+                //     echo json_encode(array("success" => false, 'message' => app_lang('profile_image_error_message')));
+                //     exit();
+                // }
 
                 $profile_image = serialize(move_temp_file("avatar.png", get_setting("profile_image_path"), "", $image_file_name));
 

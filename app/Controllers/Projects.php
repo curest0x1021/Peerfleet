@@ -34,6 +34,7 @@ class Projects extends Security_Controller {
         $this->Task_owner_supplies_model = model("App\Models\Task_owner_supplies_model");
         $this->Project_currency_rates_model = model("App\Models\Project_currency_rates_model");
         $this->Task_comments_model = model("App\Models\Task_comments_model");
+        $this->Clients_model = model('App\Models\Clients_model');
         $this->Projects_model->auto_update();
 
     }
@@ -5137,18 +5138,35 @@ class Projects extends Security_Controller {
         echo json_encode(array("success"=>true));
     }
     function download_project_specification_pdf($project_id){
+        $project_info=$this->Projects_model->get_one($project_id);
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
+        // $options->set('debugPng', false);
+        $options->set('isPhpEnabled', true);
+        $options->set('enableRemote', true);
+//         $options->set('debugPng', true);
+// $options->set('debugKeepTemp', true);
         $dompdf = new Dompdf($options);
 
         // Set document properties
         $dompdf->setPaper('A4', 'portrait');
 
         // Load HTML content (replace 'sample_html_content' with your HTML content)
-        // $html = view('sample_html_content'); // Load HTML view file
-
+        
+        $client_info=$this->Clients_model->get_one($project_info->client_id);
+        // return json_encode($project_info);
+        // return $this->template->view('projects/export_pdf/pages/first_page',["test"=>"test","project_info"=>$project_info,"client_info"=>$client_info]);
+        $first_page = $this->template->view('projects/export_pdf/pages/first_page',["test"=>"test","project_info"=>$project_info,"client_info"=>$client_info]); // Load HTML view file
+        // return $first_page;
         // Convert HTML to PDF
-        $dompdf->loadHtml("<h1>Hello World!</h1>");
+        $dompdf->loadHtml($first_page);
+        // $dompdf->render();
+
+        // $second_page = $this->template->view('projects/export_pdf/pages/second_page'); // Load HTML view file
+
+        // // Convert HTML to PDF
+        // $dompdf->loadHtml($second_page);
+        // $dompdf->addPage();
 
         // Render PDF (optional: set additional options, e.g., DPI, quality)
         $dompdf->render();
