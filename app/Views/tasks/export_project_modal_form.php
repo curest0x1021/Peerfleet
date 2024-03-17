@@ -66,7 +66,23 @@
                 
             </div>
         </div>
-        
+        <div class="col-md-3" ></div>
+        <div class=" col-md-6" >
+            <div class=" card border p-2" style="height:35vh;">
+                <div class="card-title  d-flex flex-column align-items-center" style="height:10vh;">
+                    <h5>PROJECT SPECIFICATION</h5>
+                    <div>Create a PDF export, and customize it with work order information, general project information, your contact details and ship particulars.
+                    </div>
+                </div>
+                <hr/>
+                <div class="card-body d-flex flex-column align-items-center">
+                    <img style="margin-bottom:20px" width="100px" src="<?php echo get_file_uri("assets/images/pdf.png") ?>" alt="style_1" />
+                    <a href="<?php echo get_uri("projects/download_cost_overview_xlsx/").$project_id;?>" target="_blank"  class="btn btn-primary btn_export_cost_overview1"><span data-feather="download" class="icon-16"></span> Create PDF export</a>
+                </div>
+                
+            </div>
+        </div>
+        <div class="col-md-3" ></div>
         <input type="hidden" name="file_name" id="import_file_name" value="" />
         <input type="hidden" name="project_id" value="<?php echo $project_id; ?>" />
         <div id="preview-area"></div>
