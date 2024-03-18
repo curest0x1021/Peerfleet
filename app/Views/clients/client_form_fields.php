@@ -380,6 +380,307 @@
     </div>
 </div>
 
+<h3>Vessel Dimensions and Capacities</h3>
+<div class="row" >
+    <div class="col-md-4" >
+        <div class="form-group" >
+            <label>Gross Tonnage</label>
+            <div class="input-group" >
+                <input class="form-control" name="gross_tonnage" />
+                <!-- <span class="input-group-text" >t</span> -->
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Net Tonnage</label>
+            <div class="input-group" >
+                <input class="form-control" name="net_tonnage" />
+                <!-- <span class="input-group-text" >t</span> -->
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Ligthweight</label>
+            <div class="input-group" >
+                <input class="form-control" name="lightweight" />
+                <!-- <span class="input-group-text" >mt</span> -->
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Length over all</label>
+            <div class="input-group" >
+                <input class="form-control" name="length_over_all" />
+                <!-- <span class="input-group-text" >m</span> -->
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Length between Perpendiculars</label>
+            <div class="input-group" >
+                <input class="form-control" name="length_between_perpendiculars" />
+                <!-- <span class="input-group-text" >m</span> -->
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Length of Waterline</label>
+            <div class="input-group" >
+                <input class="form-control" name="length_of_waterline" />
+                <!-- <span class="input-group-text" >m</span> -->
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Beam / Breadth Moulded</label>
+            <div class="input-group" >
+                <input class="form-control" name="breadth_moulded" />
+                <!-- <span class="input-group-text" >m</span> -->
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Depth Moulded</label>
+            <div class="input-group" >
+                <input class="form-control" name="depth_moulded" />
+                <!-- <span class="input-group-text" >m</span> -->
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Draft/Draught Design</label>
+            <div class="input-group" >
+                <input class="form-control" name="draught_design" />
+                <!-- <span class="input-group-text" >m</span> -->
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Draft/Draught Scantling</label>
+            <div class="input-group" >
+                <input class="form-control" name="draught_scantling" />
+                <!-- <span class="input-group-text" >m</span> -->
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Hull Design</label>
+            <input class="form-control" name="hull_design" />
+        </div>
+    </div>
+    <div class="col-md-2" ></div>
+    <div class="col-md-4" >
+        <div class="form-group" >
+            <label>DWT Cargo</label>
+            <input class="form-control" name="dwt_cargo" />
+        </div>
+        <div class="form-group" >
+            <label>DWT Design</label>
+            <input class="form-control" name="dwt_design" />
+        </div>
+        <div class="form-group" >
+            <label>DWT Scantling</label>
+            <div class="input-group" >
+                <input class="form-control" name="dwt_scantling" />
+                <!-- <span class="input-group-text" >m</span> -->
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Heavy Fuel Oil</label>
+            <div class="input-group" >
+                <input class="form-control" name="heavy_fuel_oil" />
+                <!-- <span class="input-group-text" ></span> -->
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Marine Diesel Oil</label>
+            <div class="input-group" >
+                <input class="form-control" name="marine_diesel_oil" />
+                <!-- <span class="input-group-text" ></span> -->
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Marine Gas Oil</label>
+            <div class="input-group" >
+                <input class="form-control" name="marine_gas_oil" />
+                <!-- <span class="input-group-text" ></span> -->
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>lng_capacity</label>
+            <div class="input-group" >
+                <input class="form-control" name="lng_capacity" />
+                <!-- <span class="input-group-text" ></span> -->
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Lub Oil</label>
+            <div class="input-group" >
+                <input class="form-control" name="lub_oil" />
+                <!-- <span class="input-group-text" ></span> -->
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Ballast Water</label>
+            <div class="input-group" >
+                <input class="form-control" name="ballast_water" />
+            </div>
+        </div>
+        <div class="form-group" >
+            <label>Fresh Water</label>
+            <div class="input-group" >
+                <input class="form-control" name="fresh_water" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-group" >
+    <label>Top Sides</label>
+    <input class="form-control" name="top_sides" />
+</div>
+<div class="form-group" >
+    <label>Bottom Sides</label>
+    <input class="form-control" name="top_sides" />
+</div>
+<div class="form-group" >
+    <label>Flat Bottom</label>
+    <input class="form-control" name="flat_bottom" />
+</div>
+<h3>Propulsion Details</h3>
+<div class="row" >
+    <div class="col-md-4" >
+        <h4>Main Engine</h4>
+        <div class="form-group" >
+            <label>Maker</label>
+            <input class="form-control" name="main_engin_maker" />
+        </div>
+        <div class="form-group" >
+            <label>Model</label>
+            <input class="form-control" name="main_engin_model" />
+        </div>
+        <div class="form-group" >
+            <label>Continuous Output</label>
+            <input class="form-control" name="main_engin_continuous_output" />
+        </div>
+        <div class="form-group" >
+            <label>Bore</label>
+            <input class="form-control" name="main_engin_bore" />
+        </div>
+        <div class="form-group" >
+            <label>Stroke</label>
+            <input class="form-control" name="main_engin_stroke" />
+        </div>
+        <div class="form-group" >
+            <label>Serial Number</label>
+            <input class="form-control" name="main_engin_serial_number" />
+        </div>
+        <div class="form-group" >
+            <label>Quantity</label>
+            <input class="form-control" name="main_engin_quantity" />
+        </div>
+        
+    </div>
+    <div class="col-md-2" ></div>
+    <div class="col-md-4" >
+        <h4>Auxiliary Engine</h4>
+        <div class="form-group" >
+            <label>Maker</label>
+            <input class="form-control" name="auxiliary_engine_maker" />
+        </div>
+        <div class="form-group" >
+            <label>Model</label>
+            <input class="form-control" name="auxiliary_engine_model" />
+        </div>
+        <div class="form-group" >
+            <label>Serial Number</label>
+            <input class="form-control" name="auxiliary_engine_serial_number" />
+        </div>
+        <div class="form-group" >
+            <label>Output</label>
+            <input class="form-control" name="auxiliary_engine_output" />
+        </div>
+        <div class="form-group" >
+            <label>Quantity</label>
+            <input class="form-control" name="auxiliary_engine_quantity" />
+        </div>
+    </div>
+</div>
+<div class="row" >
+    <div class="col-md-4" >
+        <h4>Emergency Generator</h4>
+        <div class="form-group" >
+            <label>Maker</label>
+            <input class="form-control" name="emergency_generator_maker" />
+        </div>
+        <div class="form-group" >
+            <label>Model</label>
+            <input class="form-control" name="emergency_generator_model" />
+        </div>
+        <div class="form-group" >
+            <label>Serial Number</label>
+            <input class="form-control" name="emergency_generator_serial_number" />
+        </div>
+        <div class="form-group" >
+            <label>Output</label>
+            <input class="form-control" name="emergency_generator_output" />
+        </div>
+        <div class="form-group" >
+            <label>Quantity</label>
+            <input class="form-control" name="emergency_generator_quantity" />
+        </div>
+    </div>
+    <div class="col-md-2" ></div>
+    <div class="col-md-4" >
+        <h4>Shaft Generator</h4>
+        <div class="form-group" >
+            <label>Maker</label>
+            <input class="form-control" name="shaft_generator_maker" />
+        </div>
+        <div class="form-group" >
+            <label>Model</label>
+            <input class="form-control" name="shaft_generator_model" />
+        </div>
+        <div class="form-group" >
+            <label>Serial Number</label>
+            <input class="form-control" name="shaft_generator_serial_number" />
+        </div>
+        <div class="form-group" >
+            <label>Output</label>
+            <input class="form-control" name="shaft_generator_output" />
+        </div>
+        <div class="form-group" >
+            <label>Quantity</label>
+            <input class="form-control" name="shaft_generator_quantity" />
+        </div>
+    </div>
+</div>
+<div class="row" >
+    <div class="col-md-4" >
+        <h4>Propeller</h4>
+        <div class="form-group" >
+            <label>Maker</label>
+            <input class="form-control" name="propeller_maker" />
+        </div>
+        <div class="form-group" >
+            <label>Type</label>
+            <input class="form-control" name="propeller_type" />
+        </div>
+        <div class="form-group" >
+            <label>Number of blades</label>
+            <input class="form-control" name="propeller_number_of_blades" />
+        </div>
+        <div class="form-group" >
+            <label>Diameter</label>
+            <input class="form-control" name="propeller_diameter" />
+        </div>
+        <div class="form-group" >
+            <label>Pitch</label>
+            <input class="form-control" name="propeller_pitch" />
+        </div>
+        <div class="form-group" >
+            <label>Material</label>
+            <input class="form-control" name="propeller_material" />
+        </div>
+        <div class="form-group" >
+            <label>Weight</label>
+            <input class="form-control" name="propeller_weight" />
+        </div>
+        <div class="form-group" >
+            <label>Output</label>
+            <input class="form-control" name="propeller_output" />
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
     $(document).ready(function() {
         $('[data-bs-toggle="tooltip"]').tooltip();
