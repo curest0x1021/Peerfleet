@@ -417,7 +417,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $("#category_input").select2({
-            multiple:true,
+            // multiple:true,
             data:<?php echo json_encode($category_dropdown); ?>
         })
         $("#project_currency").select2({
