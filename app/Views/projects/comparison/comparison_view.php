@@ -512,6 +512,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                             <td  >
                                 <?php echo modal_anchor(get_uri("projects/modal_edit_penalties/").$allYards[$i]->id,'<button class="btn btn-default btn-sm" ><i data-feather="edit" class="icon-16" ></i></button>',array());?>
+                                <span style="float:right" ><?php echo $project_info->currency?$project_info->currency:"USD";?> <?php echo $allYards[$i]->penalty_per_day?$allYards[$i]->penalty_per_day:0;?></span>
                             </td>
                         <?php
                             # code...
@@ -526,6 +527,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                             <td  >
                                 <?php echo modal_anchor(get_uri("projects/modal_edit_penalties/").$allYards[$i]->id,'<button class="btn btn-default btn-sm" ><i data-feather="edit" class="icon-16" ></i></button>',array());?>
+                                <span style="float:right" ><?php echo $allYards[$i]->penalty_limit?$allYards[$i]->penalty_limit:0;?>%</span>
                             </td>
                         <?php
                             # code...

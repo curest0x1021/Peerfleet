@@ -1,3 +1,4 @@
+<div id="ajaxModalContent" >
 <div class="modal-body" id="panel-edit-penalties">
     <h3>Set Penalties of <?php echo $shipyard_info->title;?></h3>
     <?php echo form_open(get_uri("projects/edit_penalties"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
@@ -26,11 +27,12 @@
     <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
     <button type="button" class="btn btn-primary save-penalties-<?php echo $shipyard_info->id;?>" >Save</button>
 </div>
+</div>
 <script>
     $(document).ready(function(){
         $(".save-penalties-<?php echo $shipyard_info->id;?>").on("click",function(){
-            var penalty_price=$(".input-penalty-limitation")[0].value;
-            var penalty_limit=$(".input-penalty-price")[0].value;
+            var penalty_price=$(".input-penalty-price")[0].value;
+            var penalty_limit=$(".input-penalty-limitation")[0].value;
             var rise_csrf_token = $('[name="rise_csrf_token"]').val();
             $.ajax({
                 url:'<?php echo get_uri("projects/save_penalty");?>',
@@ -42,7 +44,21 @@
                     shipyard_id:<?php echo $shipyard_info->id;?>
                 },
                 success:function(response){
-                    console.log(response)
+                    if(JSON.parse(response).success){
+                        $maskTarget=$("#ajaxModalContent").find(".modal-body");
+                        var padding = $maskTarget.height() - 80;
+                        if (padding > 0) {
+                            padding = Math.floor(padding / 2);
+                        }
+                        $maskTarget.after("<div class='modal-mask'><div class='circle-loader'></div></div>");
+                        //check scrollbar
+                        var height = $maskTarget.outerHeight();
+                        $('.modal-mask').css({"width": $maskTarget.width() + 22 + "px", "height": height + "px", "padding-top": padding + "px"});
+                        $maskTarget.closest('.modal-dialog').find('[type="submit"]').attr('disabled', 'disabled');
+                        $maskTarget.addClass("hide");
+                        window.panel_edit_penalties.closeModal()
+                        window.location.reload();
+                    }
                 }
             })
         })

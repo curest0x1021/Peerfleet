@@ -4106,7 +4106,7 @@ class Projects extends Security_Controller {
     }
     function modal_edit_payment_terms($shipyard_id){
         $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
-        $project_info=$this->Projects_model->get_one($shipyard_info->project_info);
+        $project_info=$this->Projects_model->get_one($shipyard_info->project_id);
         return $this->template->view('projects/comparison/modal_edit_payment_terms',["project_info"=>$project_info,"shipyard_info"=>$shipyard_info]);
     }
     function modal_edit_penalties($shipyard_id){
@@ -4118,6 +4118,10 @@ class Projects extends Security_Controller {
         $shipyard_id=$this->request->getPost("shipyard_id");
         $price=$this->request->getPost("price");
         $limit=$this->request->getPost("limit");
+        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
+        $shipyard_info->penalty_per_day=$price;
+        $shipyard_info->penalty_limit=$limit;
+        $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
         return json_encode(array("success"=>true));
     }
     ///////////////////////////
