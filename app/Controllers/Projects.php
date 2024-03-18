@@ -4015,6 +4015,7 @@ class Projects extends Security_Controller {
         $shipyard_info->general=json_encode($this->request->getPost('data'));
         $shipyard_info->deviation_cost=$this->request->getPost('deviation_cost');
         $shipyard_info->loss_of_earnings=$this->request->getPost('loss_of_earnings');
+        $shipyard_info->bunker_cost=$this->request->getPost('bunker_cost');
         $shipyard_info->additional_expenditures=$this->request->getPost('other_additional_expenditures');
         $shipyard_info->total_offhire_period=$this->request->getPost('total_offhire_period');
         $shipyard_info->total_repair_period=$this->request->getPost('total_repair_period');
