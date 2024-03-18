@@ -11,22 +11,22 @@ class AddFieldsToProjectYardsTable extends Migration
         //
         $this->forge->addColumn('project_yards', [
             "deviation_cost"=>[
-                'type' => 'INT',
+                'type' => 'FLOAT',
                 "null"=>true,
                 'constraint'=>10
             ],
             "loss_of_earnings"=>[
-                'type' => 'INT',
+                'type' => 'FLOAT',
                 "null"=>true,
                 'constraint'=>10
             ],
             "bunker_cost"=>[
-                'type' => 'INT',
+                'type' => 'FLOAT',
                 "null"=>true,
                 'constraint'=>10
             ],
             "additional_expenditures"=>[
-                'type' => 'INT',
+                'type' => 'FLOAT',
                 "null"=>true,
                 'constraint'=>10
             ],
