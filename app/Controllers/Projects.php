@@ -4259,7 +4259,7 @@ class Projects extends Security_Controller {
             $sheet1->setCellValue('N'.$rowNumber, $oneItem->discount);
             $sheet1->setCellValue('O'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity*(float)$oneItem->discount/100);
             $sheet1->setCellValue('P'.$rowNumber, $oneItem->yard_remarks);
-            $sheet1->setCellValue('Q'.$rowNumber, get_uri("tasks/view/").$oneItem->task_id);
+            $sheet1->setCellValue('Q'.$rowNumber, get_uri("task_view/view/").$oneItem->task_id);
             $rowNumber++;
         }
 
@@ -5198,7 +5198,7 @@ class Projects extends Security_Controller {
             }
             $sheet1->setCellValue('I'.$rowNumber, $collaborators_names);
             $sheet1->setCellValue('J'.$rowNumber, $oneTask->status_title);
-            $sheet1->setCellValue('K'.$rowNumber, get_uri("tasks/view/").$oneTask->id);
+            $sheet1->setCellValue('K'.$rowNumber, get_uri("task_view/view/").$oneTask->id);
             $sheet1->setCellValue('L'.$rowNumber, $oneTask->location);
             $sheet1->setCellValue('M'.$rowNumber, $oneTask->specification);
             $sheet1->setCellValue('N'.$rowNumber, $oneTask->maker);
@@ -5270,7 +5270,7 @@ class Projects extends Security_Controller {
             }
             $sheet1->setCellValue('I'.$rowNumber, $collaborators_names);
             $sheet1->setCellValue('J'.$rowNumber, $oneTask->status_title);
-            $sheet1->setCellValue('K'.$rowNumber, get_uri("tasks/view/").$oneTask->id);
+            $sheet1->setCellValue('K'.$rowNumber, get_uri("task_view/view/").$oneTask->id);
             $sheet1->setCellValue('L'.$rowNumber, $oneTask->location);
             $sheet1->setCellValue('M'.$rowNumber, $oneTask->specification);
             $sheet1->setCellValue('N'.$rowNumber, $oneTask->maker);
@@ -5327,7 +5327,7 @@ class Projects extends Security_Controller {
             $sheet1->setCellValue('N'.$rowNumber, $oneItem->discount);
             $sheet1->setCellValue('O'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity*(float)$oneItem->discount/100);
             $sheet1->setCellValue('P'.$rowNumber, $oneItem->yard_remarks);
-            $sheet1->setCellValue('Q'.$rowNumber, get_uri("tasks/view/").$oneItem->task_id);
+            $sheet1->setCellValue('Q'.$rowNumber, get_uri("task_view/view/").$oneItem->task_id);
             $rowNumber++;
         }
 

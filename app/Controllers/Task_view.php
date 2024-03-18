@@ -11,10 +11,14 @@ class Task_view extends App_Controller {
 
         $this->Checklist_items_model = model('App\Models\Checklist_items_model');
     }
-
-    function index($task_id=0) {
+    function test($task_id){
+        return $task_id;
+    }
+    function view($task_id=0) {
         validate_numeric_value($task_id);
+        // return $task_id;
         $model_info = $this->Tasks_model->get_details(array("id" => $task_id))->getRow();
+        // return json_encode($model_info);
         if (!$model_info->id) {
             show_404();
         }
