@@ -52,7 +52,7 @@ class AddFieldsToClientsTable extends Migration
                 "null"=>true,
                 'constraint'=>10
             ],
-            "draught_desgin"=>[
+            "draught_design"=>[
                 'type' => 'FLOAT',
                 "null"=>true,
                 'constraint'=>10
@@ -195,53 +195,53 @@ class AddFieldsToClientsTable extends Migration
                 'constraint'=>3
             ],
             ////////////
-            "emergency_generator_engine_maker"=>[
+            "emergency_generator_maker"=>[
                 'type' => 'VARCHAR',
                 "null"=>true,
                 'constraint'=>100
             ],
-            "emergency_generator_engine_model"=>[
+            "emergency_generator_model"=>[
                 'type' => 'VARCHAR',
                 "null"=>true,
                 'constraint'=>100
             ],
-            "emergency_generator_engine_output"=>[
+            "emergency_generator_output"=>[
                 'type' => 'VARCHAR',
                 "null"=>true,
                 'constraint'=>100
             ],
-            "emergency_generator_engine_serial_number"=>[
+            "emergency_generator_serial_number"=>[
                 'type' => 'VARCHAR',
                 "null"=>true,
                 'constraint'=>100
             ],
-            "emergency_generator_engine_quantity"=>[
+            "emergency_generator_quantity"=>[
                 'type' => 'INT',
                 "null"=>true,
                 'constraint'=>3
             ],
             /////////////////////////////////
-            "shaft_generator_engine_maker"=>[
+            "shaft_generator_maker"=>[
                 'type' => 'VARCHAR',
                 "null"=>true,
                 'constraint'=>100
             ],
-            "shaft_generator_engine_model"=>[
+            "shaft_generator_model"=>[
                 'type' => 'VARCHAR',
                 "null"=>true,
                 'constraint'=>100
             ],
-            "shaft_generator_engine_output"=>[
+            "shaft_generator_output"=>[
                 'type' => 'VARCHAR',
                 "null"=>true,
                 'constraint'=>100
             ],
-            "shaft_generator_engine_serial_number"=>[
+            "shaft_generator_serial_number"=>[
                 'type' => 'VARCHAR',
                 "null"=>true,
                 'constraint'=>100
             ],
-            "shaft_generator_engine_quantity"=>[
+            "shaft_generator_quantity"=>[
                 'type' => 'INT',
                 "null"=>true,
                 'constraint'=>3
