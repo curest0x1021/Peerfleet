@@ -437,7 +437,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
                             <td >
-                                <button class="btn btn-sm btn-default" data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal" ><i data-feather="edit" class="icon-16"></i></button>
+                                <?php echo modal_anchor(get_uri("projects/modal_edit_payment_terms/").$allYards[$i]->id,'<button class="btn btn-sm btn-default" ><i data-feather="edit" class="icon-16"></i></button>',array())?>
                             </td>
                         <?php
                             # code...
@@ -451,7 +451,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
                             <td>
-                                <button class="btn btn-sm btn-default" data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal" ><i data-feather="edit" class="icon-16"></i></button>
+                                <?php echo modal_anchor(get_uri("projects/modal_edit_payment_terms/").$allYards[$i]->id,'<button class="btn btn-sm btn-default" ><i data-feather="edit" class="icon-16"></i></button>',array())?> 
                             </td>
                         <?php
                             # code...
@@ -465,7 +465,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
                             <td>
-                                <button class="btn btn-sm btn-default" data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal" ><i data-feather="edit" class="icon-16"></i></button>
+                            <?php echo modal_anchor(get_uri("projects/modal_edit_payment_terms/").$allYards[$i]->id,'<button class="btn btn-sm btn-default" ><i data-feather="edit" class="icon-16"></i></button>',array())?>
                             </td>
                         <?php
                             # code...
@@ -479,7 +479,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
                             <td>
-                                <button class="btn btn-sm btn-default" data-bs-toggle="modal" data-bs-target="#edit-payment-term-modal" ><i data-feather="edit" class="icon-16"></i></button>
+                                <?php echo modal_anchor(get_uri("projects/modal_edit_payment_terms/").$allYards[$i]->id,'<button class="btn btn-sm btn-default" ><i data-feather="edit" class="icon-16"></i></button>',array())?>
                             </td>
                         <?php
                             # code...
@@ -510,7 +510,9 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td data-bs-toggle="modal" data-bs-target="#edit-penalties-modal" >0</td>
+                            <td  >
+                                <?php echo modal_anchor(get_uri("projects/modal_edit_penalties/").$allYards[$i]->id,'<button class="btn btn-default btn-sm" ><i data-feather="edit" class="icon-16" ></i></button>',array());?>
+                            </td>
                         <?php
                             # code...
                             $totalCosts[$i]+=0;
@@ -522,7 +524,9 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td data-bs-toggle="modal" data-bs-target="#edit-penalties-modal" >-</td>
+                            <td  >
+                                <?php echo modal_anchor(get_uri("projects/modal_edit_penalties/").$allYards[$i]->id,'<button class="btn btn-default btn-sm" ><i data-feather="edit" class="icon-16" ></i></button>',array());?>
+                            </td>
                         <?php
                             # code...
                             $totalCosts[$i]+=0;
@@ -654,109 +658,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
         </div>
     </div>
 </div>
-<!-- The Modal -->
-<div class="modal" id="myModal">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
 
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Modal Heading</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <!-- Modal body -->
-      <div class="modal-body">
-        Modal body...
-      </div>
-
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-
-<!-- The Modal -->
-<div class="modal" id="edit-payment-term-modal">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title" class="payment-term-title">Edit Payment terms</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <!-- Modal body -->
-      <div class="modal-body">
-        <div class="form-group" >
-            <label>Payment before departure</label>
-            <input class="form-control" />
-        </div>
-        <div class="form-group" >
-            <label>Payment within 30 days</label>
-            <input class="form-control" />
-        </div>
-        <div class="form-group" >
-            <label>Payment within 60 days</label>
-            <input class="form-control" />
-        </div>
-        <div class="form-group" >
-            <label>Payment within 90 days</label>
-            <input class="form-control" />
-        </div>
-      </div>
-
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-info" data-bs-dismiss="modal">Save</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-
-<!-- The Modal -->
-<div class="modal" id="edit-penalties-modal">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title" class="penalties-title" >Edit Penalties</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <!-- Modal body -->
-      <div class="modal-body">
-        <div class="form-groud" >
-            <div class="input-group mb-3">
-                <span class="input-group-text">$</span>
-                <input type="number" class="form-control" value="0.00">
-                <input type="text" class="form-control" value="USD" readonly>
-            </div>
-        </div>
-        <div class="form-group" >
-            <label>Penalty Limitations</label>
-            <input class="form-control" />
-        </div>
-      </div>
-
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-info" data-bs-dismiss="modal">Save</button>
-      </div>
-
-    </div>
-  </div>
-</div>
 
 <script>
 $(document).ready(function(){
