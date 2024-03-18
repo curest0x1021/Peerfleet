@@ -4114,6 +4114,12 @@ class Projects extends Security_Controller {
         $project_info=$this->Projects_model->get_one($shipyard_info->project_id);
         return $this->template->view('projects/comparison/modal_edit_penalties',["project_info"=>$project_info,"shipyard_info"=>$shipyard_info]);
     }
+    function save_penalty(){
+        $shipyard_id=$this->request->getPost("shipyard_id");
+        $price=$this->request->getPost("price");
+        $limit=$this->request->getPost("limit");
+        return json_encode(array("success"=>true));
+    }
     ///////////////////////////
     /////////////////////////////
     function cost_overview($project_id){
