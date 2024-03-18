@@ -5,19 +5,31 @@
     <?php echo form_close();?>
     <div class="form-group" >
         <label>Payment before departure</label>
-        <input type="number" class="form-control payment_before_departure" />
+        <div class="input-group">
+            <input type="number" value="<?php echo $shipyard_info->payment_before_departure?$shipyard_info->payment_before_departure:0;?>" class="form-control payment_before_departure" />
+            <span class="input-group-text" ><?php echo $project_info->currency?$project_info->currency:"USD";?></span>
+        </div>
     </div>
     <div class="form-group" >
         <label>Payment within 30 days</label>
-        <input type="number" class="form-control payment_within_30" />
+        <div class="input-group">
+            <input type="number" value="<?php echo $shipyard_info->payment_within_30?$shipyard_info->payment_within_30:0;?>" class="form-control payment_within_30" />
+            <span class="input-group-text" ><?php echo $project_info->currency?$project_info->currency:"USD";?></span>
+        </div>
     </div>
     <div class="form-group" >
         <label>Payment within 60 days</label>
-        <input type="number" class="form-control payment_within_60" />
+        <div class="input-group">
+            <input type="number" value="<?php echo $shipyard_info->payment_within_60?$shipyard_info->payment_within_60:0;?>" class="form-control payment_within_60" />
+            <span class="input-group-text" ><?php echo $project_info->currency?$project_info->currency:"USD";?></span>
+        </div>
     </div>
     <div class="form-group" >
         <label>Payment within 90 days</label>
-        <input type="number" class="form-control payment_within_90" />
+        <div class="input-group">
+            <input type="number" value="<?php echo $shipyard_info->payment_within_90?$shipyard_info->payment_within_90:0;?>" class="form-control payment_within_90" />
+            <span class="input-group-text" ><?php echo $project_info->currency?$project_info->currency:"USD";?></span>
+        </div>
     </div>
 </div>
 
@@ -39,7 +51,7 @@
                 url:'<?php echo get_uri('projects/save_payment_terms');?>',
                 method:"POST",
                 data:{
-                    shipyard:<?php echo $shipyard_info->id;?>,
+                    shipyard_id:<?php echo $shipyard_info->id;?>,
                     payment_before_departure,
                     payment_within_30,
                     payment_within_60,

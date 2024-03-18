@@ -438,6 +438,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                             <td >
                                 <?php echo modal_anchor(get_uri("projects/modal_edit_payment_terms/").$allYards[$i]->id,'<button class="btn btn-sm btn-default" ><i data-feather="edit" class="icon-16"></i></button>',array())?>
+                                <span style="float:right;" ><?php echo $project_info->currency?$project_info->currency:"USD"; ?> <?php echo $allYards[$i]->payment_before_departure?$allYards[$i]->payment_before_departure:0;?></span>
                             </td>
                         <?php
                             # code...
@@ -452,6 +453,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                             <td>
                                 <?php echo modal_anchor(get_uri("projects/modal_edit_payment_terms/").$allYards[$i]->id,'<button class="btn btn-sm btn-default" ><i data-feather="edit" class="icon-16"></i></button>',array())?> 
+                                <span style="float:right;" ><?php echo $project_info->currency?$project_info->currency:"USD"; ?> <?php echo $allYards[$i]->payment_within_30?$allYards[$i]->payment_within_30:0;?></span>
                             </td>
                         <?php
                             # code...
@@ -466,6 +468,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                             <td>
                             <?php echo modal_anchor(get_uri("projects/modal_edit_payment_terms/").$allYards[$i]->id,'<button class="btn btn-sm btn-default" ><i data-feather="edit" class="icon-16"></i></button>',array())?>
+                            <span style="float:right;" ><?php echo $project_info->currency?$project_info->currency:"USD"; ?> <?php echo $allYards[$i]->payment_within_60?$allYards[$i]->payment_within_60:0;?></span>
                             </td>
                         <?php
                             # code...
@@ -480,6 +483,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                             <td>
                                 <?php echo modal_anchor(get_uri("projects/modal_edit_payment_terms/").$allYards[$i]->id,'<button class="btn btn-sm btn-default" ><i data-feather="edit" class="icon-16"></i></button>',array())?>
+                                <span style="float:right;" ><?php echo $project_info->currency?$project_info->currency:"USD"; ?> <?php echo $allYards[$i]->payment_within_90?$allYards[$i]->payment_within_90:0;?></span>
                             </td>
                         <?php
                             # code...

@@ -1,5 +1,5 @@
-
-<div class="modal-body clearfix" >
+<div id="ajaxModalContent" >
+<div class="modal-body clearfix" id="panel-edit-general" >
     <h3> <?php echo 'Edit general information about '.$shipyard_info->title;  ?></h3>
     <?php echo form_open(get_uri("projects/save_edit_yards_general"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
     <?php echo form_close(); ?>
@@ -78,7 +78,8 @@
 </div>
 <div class="modal-footer" >
     <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
-    <button type="button" class="btn btn-primary btn-save-yards-general" data-bs-dismiss="modal"><span data-feather="check" class="icon-16"></span> <?php echo app_lang('save'); ?></button> 
+    <button type="button" class="btn btn-primary btn-save-yards-general"><span data-feather="check" class="icon-16"></span> <?php echo app_lang('save'); ?></button> 
+</div>
 </div>
 <script>
 $(document).ready(function(){
@@ -109,12 +110,37 @@ $(document).ready(function(){
             data:{
                 rise_csrf_token:rise_csrf_token,
                 shipyard_id:shipyard_id,
+                deviation_cost,
+                loss_of_earnings,
+                bunker_cost,
+                other_additional_expenditures,
+                total_offhire_period,
+                total_repair_period,
+                days_in_dry_dock,
+                days_at_berth,
                 data:sendData
             },
             success:function(response){
-                if(JSON.parse(response).success) window.location.reload();
+                if(JSON.parse(response).success){
+                    $maskTarget=$("#ajaxModalContent").find(".modal-body");
+                    var padding = $maskTarget.height() - 80;
+                    if (padding > 0) {
+                        padding = Math.floor(padding / 2);
+                    }
+                    $maskTarget.after("<div class='modal-mask'><div class='circle-loader'></div></div>");
+                    //check scrollbar
+                    var height = $maskTarget.outerHeight();
+                    $('.modal-mask').css({"width": $maskTarget.width() + 22 + "px", "height": height + "px", "padding-top": padding + "px"});
+                    $maskTarget.closest('.modal-dialog').find('[type="submit"]').attr('disabled', 'disabled');
+                    $maskTarget.addClass("hide");
+                    window.panel_edit_general.closeModal()
+                    window.location.reload();
+                }
             }
         })
+    })
+    window.panel_edit_general=$("#panel-edit-general").appForm({
+        closeModalOnSuccess:false
     })
 })
 </script>

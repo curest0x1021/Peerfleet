@@ -5,7 +5,7 @@
     <?php echo form_close();?>
     <div class="row" >
         <div class="col-md-6" >
-            <div class="form-groud" >
+            <div class="form-group" >
                 <div class="input-group mb-3">
                     <input type="number" value="<?php echo $shipyard_info->penalty_per_day?$shipyard_info->penalty_per_day:0;?>" class="form-control input-penalty-price">
                     <span class="input-group-text" ><?php echo $project_info->currency?$project_info->currency:"USD"; ?></span>

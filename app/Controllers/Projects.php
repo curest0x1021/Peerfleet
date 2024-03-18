@@ -4013,6 +4013,13 @@ class Projects extends Security_Controller {
     function save_edit_yards_general(){
         $shipyard_info=$this->Project_yards_model->get_one($this->request->getPost('shipyard_id'));
         $shipyard_info->general=json_encode($this->request->getPost('data'));
+        $shipyard_info->deviation_cost=$this->request->getPost('deviation_cost');
+        $shipyard_info->loss_of_earnings=$this->request->getPost('loss_of_earnings');
+        $shipyard_info->additional_expenditures=$this->request->getPost('other_additional_expenditures');
+        $shipyard_info->total_offhire_period=$this->request->getPost('total_offhire_period');
+        $shipyard_info->total_repair_period=$this->request->getPost('total_repair_period');
+        $shipyard_info->days_in_dry_dock=$this->request->getPost('days_in_dry_dock');
+        $shipyard_info->days_at_berth=$this->request->getPost('days_at_berth');
         $save_id=$this->Project_yards_model->ci_save($shipyard_info,$shipyard_info->id);
         return json_encode(array("success"=>true,"save_id"=>$save_id));
     }
