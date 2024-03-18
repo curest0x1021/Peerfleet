@@ -7,14 +7,14 @@
         <div class="col-md-6" >
             <div class="form-groud" >
                 <div class="input-group mb-3">
-                    <input type="number" class="form-control input-penalty-price" value="0.00">
+                    <input type="number" value="<?php echo $shipyard_info->penalty_per_day?$shipyard_info->penalty_per_day:0;?>" class="form-control input-penalty-price">
                     <span class="input-group-text" ><?php echo $project_info->currency?$project_info->currency:"USD"; ?></span>
                 </div>
             </div>
             <div class="form-group" >
                 <label>Penalty Limitations</label>
                 <div class="input-group">
-                    <input type="number" max="100" min="0" class="form-control input-penalty-limitation" value="0.00">
+                    <input type="number" max="100" min="0" value="<?php echo $shipyard_info->penalty_limit?$shipyard_info->penalty_limit:0;?>" class="form-control input-penalty-limitation" value="0.00">
                     <span class="input-group-text" >%</span>
                 </div>
             </div>

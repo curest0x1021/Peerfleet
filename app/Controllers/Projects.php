@@ -4124,6 +4124,21 @@ class Projects extends Security_Controller {
         $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
         return json_encode(array("success"=>true));
     }
+    function save_payment_terms(){
+        $shipyard_id=$this->request->getPost("shipyard_id");
+        $payment_before_departure=$this->request->getPost("payment_before_departure");
+        $payment_within_30=$this->request->getPost("payment_within_30");
+        $payment_within_60=$this->request->getPost("payment_within_60");
+        $payment_within_90=$this->request->getPost("payment_within_90");
+        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
+        $shipyard_info->payment_before_departure=$payment_before_departure;
+        $shipyard_info->payment_within_30=$payment_within_30;
+        $shipyard_info->payment_within_60=$payment_within_60;
+        $shipyard_info->payment_within_90=$payment_within_90;
+        $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
+        return json_encode(array("success"=>true));
+
+    }
     ///////////////////////////
     /////////////////////////////
     function cost_overview($project_id){

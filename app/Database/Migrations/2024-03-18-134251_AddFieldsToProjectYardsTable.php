@@ -55,7 +55,7 @@ class AddFieldsToProjectYardsTable extends Migration
                 "null"=>true,
                 'constraint'=>10
             ],
-            "payment_winthin_30"=>[
+            "payment_within_30"=>[
                 'type' => 'INT',
                 "null"=>true,
                 'constraint'=>10
