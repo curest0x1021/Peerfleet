@@ -536,6 +536,7 @@
     <label>Flat Bottom</label>
     <input class="form-control" name="flat_bottom" />
 </div>
+<br/>
 <h3>Propulsion Details</h3>
 <div class="row" >
     <div class="col-md-4" >
@@ -595,6 +596,7 @@
         </div>
     </div>
 </div>
+<br/>
 <div class="row" >
     <div class="col-md-4" >
         <h4>Emergency Generator</h4>
@@ -644,6 +646,7 @@
         </div>
     </div>
 </div>
+<br/>
 <div class="row" >
     <div class="col-md-4" >
         <h4>Propeller</h4>
@@ -679,6 +682,47 @@
             <label>Output</label>
             <input class="form-control" name="propeller_output" />
         </div>
+        <div class="form-group" >
+            <label>Quantity</label>
+            <input class="form-control" name="propeller_quantity" />
+        </div>
+    </div>
+    <div class="col-md-2" ></div>
+    <div class="col-md-4" >
+        <h4>Side Thruster</h4>
+        <div class="form-group" >
+            <label>Number of bow thrusters</label>
+            <input class="form-control" name="bow_thruster_number" />
+        </div>
+        <div class="form-group" >
+            <label>Maker of bow thruster</label>
+            <input class="form-control" name="bow_thruster_maker" />
+        </div>
+        <div class="form-group" >
+            <label>Type of bow thruster</label>
+            <input class="form-control" name="bow_thruster_type" />
+        </div>
+        <div class="form-group" >
+            <label>Power of stern thruster</label>
+            <input class="form-control" name="bow_thruster_power" />
+        </div>
+        <div class="form-group" >
+            <label>Number of stern thrusters</label>
+            <input class="form-control" name="stern_thruster_number" />
+        </div>
+        <div class="form-group" >
+            <label>Maker of stern thruster</label>
+            <input class="form-control" name="stern_thruster_maker" />
+        </div>
+        <div class="form-group" >
+            <label>Type of stern thruster</label>
+            <input class="form-control" name="stern_thruster_type" />
+        </div>
+        <div class="form-group" >
+            <label>Power of stern thruster</label>
+            <input class="form-control" name="stern_thruster_power" />
+        </div>
+        
     </div>
 </div>
 <script type="text/javascript">
