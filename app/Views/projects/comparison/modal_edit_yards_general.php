@@ -10,6 +10,7 @@
         name="deviation_cost"
         type="number"
         class="form-control"
+        value="<?php echo $shipyard_info->deviation_cost?$shipyard_info->deviation_cost:0; ?>"
         />
     </div>
     <div class="form-group" >
@@ -19,6 +20,7 @@
         name="loss_of_earnings"
         type="number"
         class="form-control"
+        value="<?php echo $shipyard_info->loss_of_earnings?$shipyard_info->loss_of_earnings:0; ?>"
         />
     </div>
     <div class="form-group" >
@@ -28,6 +30,7 @@
         name="bunker_cost"
         type="number"
         class="form-control"
+        value="<?php echo $shipyard_info->bunker_cost?$shipyard_info->bunker_cost:0; ?>"
         />
     </div>
     <div class="form-group" >
@@ -37,6 +40,7 @@
         name="other_additional_expenditures"
         type="number"
         class="form-control"
+        value="<?php echo $shipyard_info->additional_expenditures?$shipyard_info->additional_expenditures:0; ?>"
         />
     </div>
     <div class="form-group" >
@@ -46,6 +50,7 @@
         name="total_offhire_period"
         type="number"
         class="form-control"
+        value="<?php echo $shipyard_info->total_offhire_period?$shipyard_info->total_offhire_period:0; ?>"
         />
     </div>
     <div class="form-group" >
@@ -55,6 +60,7 @@
         name="total_repair_period"
         type="number"
         class="form-control"
+        value="<?php echo $shipyard_info->total_repair_period?$shipyard_info->total_repair_period:0; ?>"
         />
     </div>
     <div class="form-group" >
@@ -64,6 +70,7 @@
         name="days_in_dry_dock"
         type="number"
         class="form-control"
+        value="<?php echo $shipyard_info->days_in_dry_dock?$shipyard_info->days_in_dry_dock:0; ?>"
         />
     </div>
     <div class="form-group" >
@@ -73,6 +80,7 @@
         name="days_at_berth"
         type="number"
         class="form-control"
+        value="<?php echo $shipyard_info->days_at_berth?$shipyard_info->days_at_berth:0; ?>"
         />
     </div>
 </div>
