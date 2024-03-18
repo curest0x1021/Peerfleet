@@ -2432,6 +2432,13 @@ class Clients extends Security_Controller
 
         return $final_headers;
     }
+    //////////////////////////////////////////////////////
+    function tab_dimensions_capacities($client_id){
+
+    }
+    function tab_propulsion($client_id){
+        
+    }
 }
 
 /* End of file clients.php */
