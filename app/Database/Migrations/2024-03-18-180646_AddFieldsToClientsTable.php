@@ -10,6 +10,8 @@ class AddFieldsToClientsTable extends Migration
     {
         //
         $this->forge->addColumn('clients', [
+            //////////dimensions/////////////
+            ////////////////////////
             "gross_tonnage"=>[
                 'type' => 'FLOAT',
                 "null"=>true,
@@ -130,12 +132,214 @@ class AddFieldsToClientsTable extends Migration
                 "null"=>true,
                 'constraint'=>10
             ],
+            //////////////////////////////////////
+            "main_engine_maker"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "main_engine_model"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "main_engine_continuous_output"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "main_engine_bore"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "main_engine_stroke"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "main_engine_serial_number"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "main_engine_quantity"=>[
+                'type' => 'INT',
+                "null"=>true,
+                'constraint'=>3
+            ],
+            ////////
+            "auxiliary_engine_maker"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "auxiliary_engine_model"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "auxiliary_engine_output"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "auxiliary_engine_serial_number"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "auxiliary_engine_quantity"=>[
+                'type' => 'INT',
+                "null"=>true,
+                'constraint'=>3
+            ],
+            ////////////
+            "emergency_generator_engine_maker"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "emergency_generator_engine_model"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "emergency_generator_engine_output"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "emergency_generator_engine_serial_number"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "emergency_generator_engine_quantity"=>[
+                'type' => 'INT',
+                "null"=>true,
+                'constraint'=>3
+            ],
+            /////////////////////////////////
+            "shaft_generator_engine_maker"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "shaft_generator_engine_model"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "shaft_generator_engine_output"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "shaft_generator_engine_serial_number"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "shaft_generator_engine_quantity"=>[
+                'type' => 'INT',
+                "null"=>true,
+                'constraint'=>3
+            ],
+            ///////////////////////////
+            "propeller_maker"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "propeller_type"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "propeller_number_of_blades"=>[
+                'type' => 'INT',
+                "null"=>true,
+                'constraint'=>3
+            ],
+            "propeller_diameter"=>[
+                'type' => 'FLOAT',
+                "null"=>true,
+                'constraint'=>10
+            ],
+            "propeller_pitch"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "propeller_material"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "propeller_weight"=>[
+                'type' => 'FLOAT',
+                "null"=>true,
+                'constraint'=>10
+            ],
+            "propeller_output"=>[
+                'type' => 'FLOAT',
+                "null"=>true,
+                'constraint'=>10
+            ],
+            "propeller_quantity"=>[
+                'type' => 'INT',
+                "null"=>true,
+                'constraint'=>2
+            ],
+            ///////////////////////////////
+            "bow_thruster_number"=>[
+                'type' => 'INT',
+                "null"=>true,
+                'constraint'=>10
+            ],
+            "bow_thruster_maker"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "bow_thruster_type"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "bow_thruster_power"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "stern_thruster_number"=>[
+                'type' => 'INT',
+                "null"=>true,
+                'constraint'=>10
+            ],
+            "stern_thruster_maker"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "stern_thruster_type"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+            "stern_thruster_power"=>[
+                'type' => 'VARCHAR',
+                "null"=>true,
+                'constraint'=>100
+            ],
+
+
         ]);
     }
 
     public function down()
     {
         //
-        $this->forge->dropColumn('clients', 'penalty_limit');
     }
 }
