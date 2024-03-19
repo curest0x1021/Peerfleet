@@ -13,7 +13,7 @@ class Shipyard_cost_items_model extends Crud_model {
     public function get_all_with_costs(){
         $task_cost_items_table = $this->db->prefixTable('shipyard_cost_items');
         $sql="SELECT id, shipyard_id, task_id, project_id, name, description, quantity, unit_price, currency, quote_type,
-        measurement, discount, yard_remarks, quantity * unit_price AS total_cost FROM $task_cost_items_table";
+        measurement, discount, yard_remarks, quantity * unit_price * ( 100 - discount ) / 100 AS total_cost FROM $task_cost_items_table";
         return $this->db->query($sql);
     }
     public function get_all_with_costs_where($where = array()){
@@ -28,7 +28,7 @@ class Shipyard_cost_items_model extends Crud_model {
             $where_count++;
         }
         
-        $sql="SELECT id, shipyard_id, task_id, project_id, name, description, quantity, unit_price, currency, quote_type, measurement, discount, yard_remarks, quantity * unit_price AS total_cost FROM $task_cost_items_table $where_clause";
+        $sql="SELECT id, shipyard_id, task_id, project_id, name, description, quantity, unit_price, currency, quote_type, measurement, discount, yard_remarks, quantity * unit_price * ( 100 - discount ) / 100  AS total_cost FROM $task_cost_items_table $where_clause";
         return $this->db->query($sql);
     }
 

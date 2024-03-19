@@ -699,7 +699,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                         echo "</td><td>";
                                         echo number_format($oneItem->quantity)." ( ".$oneItem->measurement." ) X ".$oneItem->currency." ".number_format($oneItem->unit_price)." ( ".$oneItem->quote_type." )";
                                         echo "</td><td>";
-                                        echo $oneItem->currency." ".number_format(floatval($oneItem->quantity)*floatval($oneItem->unit_price));
+                                        echo $oneItem->currency." ".number_format($oneItem->total_cost);
                                         echo "</td><td>";
                                         echo '<input class="edit-cost-item-id" value='.$oneItem->id.' hidden /><button onClick="start_edit_cost_item(event)" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button><button onClick="delete_item(event)" type="button" class="btn btn-sm" ><i color="gray" data-feather="x-circle" class="icon-16" ></i></button>';
                                         echo "</td></tr>";
@@ -1022,7 +1022,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                         foreach (array_filter($allYardCostItems,function($oneItem)use($oneYard){
                                             return (string)$oneItem->shipyard_id==(string)$oneYard->id;
                                         }) as $oneItem) {
-                                            $totalYardCost+=(float)$oneItem->quantity*(float)$oneItem->unit_price;
+                                            $totalYardCost+=(float)$oneItem->total_cost;
                                         };
                                         echo number_format($totalYardCost);
                                         ?>
@@ -1264,7 +1264,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
 
                         cell0.innerHTML = $("#cost_item_name")[0].value;
                         cell1.innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement")[0].value+" X "+$("#cost_item_currency")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
-                        cell2.innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
+                        cell2.innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)*(100-Number($("#cost_item_discount")[0].value))/100).toFixed(2);
                         cell3.innerHTML=`
                         <input class="edit-cost-item-id" value="${JSON.parse(response).save_id}" hidden />
                         <button onClick="start_edit_cost_item(event)" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button>
@@ -1276,7 +1276,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                             if(oneRow.cells[oneRow.cells.length-1].querySelector(".edit-cost-item-id").value==item_id){
                                 oneRow.cells[0].innerHTML = $("#cost_item_name")[0].value;
                                 oneRow.cells[1].innerHTML = Number($("#cost_item_quantity")[0].value).toFixed(1)+' '+$("#cost_item_measurement")[0].value+" X "+$("#cost_item_currency")[0].value+" "+Number($("#cost_item_unit_price")[0].value).toFixed(2)+" ( "+$("#cost_item_quote_type")[0].value+" ) ";
-                                oneRow.cells[2].innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)).toFixed(2);
+                                oneRow.cells[2].innerHTML = $("#cost_item_currency")[0].value+" "+(Number($("#cost_item_quantity")[0].value)*Number($("#cost_item_unit_price")[0].value)*(100-Number($("#cost_item_discount")[0].value))/100).toFixed(2);
                                 oneRow.cells[3].innerHTML=`
                                 <input class="edit-cost-item-id" value="${JSON.parse(response).save_id}" hidden />
                                 <button onClick="start_edit_cost_item(event)" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button>
