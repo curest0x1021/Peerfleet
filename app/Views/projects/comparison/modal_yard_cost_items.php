@@ -224,7 +224,7 @@ $(document).ready(function(){
                 <td>${editPanelEl.find("#name")[0].value}</td>
                 <td>${editPanelEl.find("#quantity")[0].value} ${editPanelEl.find("#measurement")[0].value} X<?php echo " ".$project_info->currency." ";?> ${editPanelEl.find("#unit_price")[0].value} (per unit)</td>
                 <td>${editPanelEl.find("#discount")[0].value} %</td>
-                <td><?php echo " ".$project_info->currency." ";?>${parseFloat(editPanelEl.find("#quantity")[0].value)*parseFloat(editPanelEl.find("#unit_price")[0].value)}</td>
+                <td><?php echo " ".$project_info->currency." ";?>${parseFloat(editPanelEl.find("#quantity")[0].value)*parseFloat(editPanelEl.find("#unit_price")[0].value)*(100-parseFloat(editPanelEl.find("#discount")[0].value))/100}</td>
                 <td><input hidden value="" /><button onclick="delete_cost_item(event)" class="btn btn-sm delete-cost-item" ><i data-feather="trash" class="icon-16"></i></button></td>
                 </tr>`);
                 tbodyEl.append(newRow);
