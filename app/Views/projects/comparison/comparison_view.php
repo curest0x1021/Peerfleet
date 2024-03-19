@@ -493,17 +493,6 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 <?php
                 foreach ($categorizedTasks as $category => $oneList) {
                     $totalTaskCost=0;
-                    // $taskCosts=array();
-                    // foreach($oneList as $oneTask){
-                    //     $costItems=json_decode($oneTask->cost_items);
-                    //     if(!$costItems) $costItems=array();
-                    //     $oneTaskCost=0;
-                    //     foreach($costItems as $oneItem){
-                    //         $totalTaskCost+=(float)$oneItem->unit_price*(float)$oneItem->quantity;
-                    //         $oneTaskCost+=(float)$oneItem->unit_price*(float)$oneItem->quantity;
-                    //     }
-                    //     $taskCosts[]=array('count'=>count($costItems),'cost'=>$oneTaskCost);
-                    // }
                     
 
                 ?>
@@ -543,7 +532,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         >
                             <?php
 
-                                echo number_format($totalYardCosts[$i])." ".$project_info->currency;
+                                echo number_format($totalYardCosts[$i],2)." ".$project_info->currency;
                             ?>
                         </th>
                         <?php
@@ -587,7 +576,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                         echo modal_anchor(get_uri('projects/modal_yard_cost_items/'.$oneTask->id),'<span class="badge task-info-box pill bg-secondary" >'.$oneTaskItemCounts[$i].'</span>',array());
                                     ?>
                                     <div class="flex-grow-1" ></div>
-                                    <?php echo number_format($oneTaskAllCosts[$i])." ".$project_info->currency; ?>
+                                    <?php echo number_format($oneTaskAllCosts[$i],2)." ".$project_info->currency; ?>
                                 </div>
                             </td>
                         <?php

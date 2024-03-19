@@ -3803,7 +3803,7 @@ class Projects extends Security_Controller {
         $project_id=$this->Tasks_model->get_one($task_id)->project_id;
         $project_info=$this->Projects_model->get_one($project_id);
         $allProjectYards=$this->Project_yards_model->get_all_where(array('project_id'=>$project_id))->getResult();
-        $allYardCostItems=$this->Shipyard_cost_items_model->get_all_where(array('task_id'=>$task_id))->getResult();
+        $allYardCostItems=$this->Shipyard_cost_items_model->get_all_with_costs_where(array('task_id'=>$task_id))->getResult();
         return $this->template->view("projects/comparison/modal_yard_cost_items",["project_info"=>$project_info,'project_id'=>$project_id,'task_id'=>$task_id,'allProjectYards'=>$allProjectYards,'allYardCostItems'=>$allYardCostItems]);
     }
     function save_yard_cost_item(){
