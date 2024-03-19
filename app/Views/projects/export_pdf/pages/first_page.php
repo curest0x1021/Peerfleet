@@ -27,9 +27,9 @@ if(array_key_exists(1,$label_data)) echo $label_data[1];
 <h4><?php if($client_info->depth_moulded) echo "Depth moulded : ".$client_info->depth_moulded." m"; ?></h4>
 <h4><?php if($client_info->draught_scantling) echo "Draught scantling : ".$client_info->draught_scantling." m"; ?></h4>
 <h4><?php if($client_info->hull_design) echo "Hull design : ".$client_info->hull_design; ?></h4>
-<div></div>
 <div style="page-break-before: always;"></div>
 <?php echo view('projects/export_pdf/layouts/header.php');?>
+<div style="column-count:2;column-fill: balance;" >
 <h2>Propulsion</h2>
 <h3>Main engine</h3>
 <p><?php if($client_info->main_engine_maker) echo "Maker : ".$client_info->main_engine_maker; ?></p>
@@ -42,9 +42,22 @@ if(array_key_exists(1,$label_data)) echo $label_data[1];
 <h3>Auxiliary engine</h3>
 <p><?php if($client_info->auxiliary_engine_maker) echo "Maker : ".$client_info->auxiliary_engine_maker; ?></p>
 <p><?php if($client_info->auxiliary_engine_model) echo "Model : ".$client_info->auxiliary_engine_model; ?></p>
-<p><?php if($client_info->auxiliary_engine_output) echo "Output: ".$client_info->auxiliary_engine_output; ?></p>
+<p><?php if($client_info->auxiliary_engine_output) echo "Output : ".$client_info->auxiliary_engine_output; ?></p>
 <p><?php if($client_info->auxiliary_engine_serial_number) echo "Serial number : ".$client_info->auxiliary_engine_serial_number." m"; ?></p>
 <p><?php if($client_info->auxiliary_engine_quantity) echo "Quantity : ".$client_info->auxiliary_engine_quantity; ?></p>
+<h3>Emergency generator</h3>
+<p><?php if($client_info->emergency_generator_maker) echo "Maker : ".$client_info->emergency_generator_maker; ?></p>
+<p><?php if($client_info->emergency_generator_model) echo "Model : ".$client_info->emergency_generator_model; ?></p>
+<p><?php if($client_info->emergency_generator_output) echo "Output : ".$client_info->emergency_generator_output; ?></p>
+<p><?php if($client_info->emergency_generator_serial_number) echo "Serial number : ".$client_info->emergency_generator_serial_number." m"; ?></p>
+<p><?php if($client_info->emergency_generator_quantity) echo "Quantity : ".$client_info->emergency_generator_quantity; ?></p>
+<h3>Shaft generator</h3>
+<p><?php if($client_info->shaft_generator_maker) echo "Maker : ".$client_info->shaft_generator_maker; ?></p>
+<p><?php if($client_info->shaft_generator_model) echo "Model : ".$client_info->shaft_generator_model; ?></p>
+<p><?php if($client_info->shaft_generator_output) echo "Output : ".$client_info->shaft_generator_output; ?></p>
+<p><?php if($client_info->shaft_generator_serial_number) echo "Serial number : ".$client_info->shaft_generator_serial_number." m"; ?></p>
+<p><?php if($client_info->shaft_generator_quantity) echo "Quantity : ".$client_info->shaft_generator_quantity; ?></p>
+</div>
 <div style="page-break-before: always;"></div>
 <?php echo view('projects/export_pdf/layouts/header.php');?>
 <h1>Side Thruster</h1>
