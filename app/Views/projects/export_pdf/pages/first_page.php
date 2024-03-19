@@ -129,3 +129,60 @@ if(array_key_exists(1,$label_data)) echo $label_data[1];
 <?php
 };?>
 <div style="page-break-before: always;"></div>
+<?php echo view('projects/export_pdf/layouts/header.php');?>
+<h3>Task List</h3>
+<?php
+$categorized_tasks=array(
+    "General & Docking"=>array(),
+    "Hull"=>array(),
+    "Equipment for Cargo"=>array(),
+    "Ship Equipment"=>array(),
+    "Safety & Crew Equipment"=>array(),
+    "Machinery Main Components"=>array(),
+    "System Machinery Main Components"=>array(),
+    "Common systems"=>array(),
+    "Others"=>array(),
+);
+foreach ($tasks as $key => $task) {
+    # code...
+    if($task->category=="") $task->category="Others";
+    if(!isset($categorized_tasks[$task->category])) $categorized_tasks[$task->category]=array();
+    $categorized_tasks[$task->category][]=$task;
+}
+foreach ($categorized_tasks as $category=>$list) {
+?>
+<h4><?php if(count($list)>0) echo $category;?></h4>
+<?php foreach ($list as $task) {
+?>
+<p style="margin-left:40px;" >
+    <?php echo $task->title; ?>
+</p>
+<?php
+}?>
+<?php
+}
+?>
+<div style="page-break-before: always;"></div>
+
+<?php foreach ($tasks as $task) {
+?>
+<?php echo view('projects/export_pdf/layouts/header.php');?>
+<table style="width:100%;" >
+    <tbody>
+        <tr>
+            <td  style="width:50%;">
+                <?php echo $task->title;?>
+            </td>
+            <td  style="width:10%;">
+                <?php echo $task->dock_list_number;?>
+            </td>
+            <td style="width:40%;" >
+                <?php echo $task->category;?>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p> <?php echo "Supplier : ".$task->supplier?></p>
+<div style="page-break-before: always;"></div>
+<?php
+}?>
