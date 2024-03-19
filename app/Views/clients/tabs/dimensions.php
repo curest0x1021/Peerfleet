@@ -35,6 +35,15 @@
                 <h4>
                     Hull design : <?php echo $client_info->hull_design;?>
                 </h4>
+                <h4>
+                    Top sides : <?php echo $client_info->top_sides;?>
+                </h4>
+                <h4>
+                    Bottom sides : <?php echo $client_info->bottom_sides;?>
+                </h4>
+                <h4>
+                    Flat bottom : <?php echo $client_info->flat_bottom;?>
+                </h4>
             </div>
         </div>
     </div>
