@@ -31,6 +31,7 @@ foreach ($allProjectYards as $oneYard) {
                             <tr>
                                 <th>Name</th>
                                 <th>Quantity & Unit</th>
+                                <th>Discount</th>
                                 <th>Quote</th>
                                 <th><button class="btn btn-sm btn-default btn-start-edit-panel" ><i data-feather="plus-circle" class="icon-16" ></i></button></th>
                             </tr>
@@ -42,6 +43,7 @@ foreach ($allProjectYards as $oneYard) {
                             <tr>
                                 <td><?php echo $oneItem->name;?></td>
                                 <td><?php echo $oneItem->quantity;?> <?php echo $oneItem->measurement;?> X <?php echo $project_info->currency." ".$oneItem->unit_price;?> (Per unit) </td>
+                                <td><?php echo $oneItem->discount;?> %</td>
                                 <td><?php echo $project_info->currency." ".(double)$oneItem->total_cost;?> </td>
                                 <td><input hidden value='<?php echo $oneItem->id;?>' /><button class="btn btn-sm delete-cost-item"><i data-feather="trash" class="icon-16" ></i></button></td>
                             </tr>
@@ -221,6 +223,7 @@ $(document).ready(function(){
                 <tr>
                 <td>${editPanelEl.find("#name")[0].value}</td>
                 <td>${editPanelEl.find("#quantity")[0].value} ${editPanelEl.find("#measurement")[0].value} X<?php echo " ".$project_info->currency." ";?> ${editPanelEl.find("#unit_price")[0].value} (per unit)</td>
+                <td>${editPanelEl.find("#discount")[0].value} %</td>
                 <td><?php echo " ".$project_info->currency." ";?>${parseFloat(editPanelEl.find("#quantity")[0].value)*parseFloat(editPanelEl.find("#unit_price")[0].value)}</td>
                 <td><input hidden value="" /><button onclick="delete_cost_item(event)" class="btn btn-sm delete-cost-item" ><i data-feather="trash" class="icon-16"></i></button></td>
                 </tr>`);
