@@ -35,6 +35,7 @@ class Projects extends Security_Controller {
         $this->Project_currency_rates_model = model("App\Models\Project_currency_rates_model");
         $this->Task_comments_model = model("App\Models\Task_comments_model");
         $this->Clients_model = model('App\Models\Clients_model');
+        $this->Vessel_types_model=model('App\Models\Vessel_types_model');
         $this->Projects_model->auto_update();
 
     }
@@ -5191,7 +5192,9 @@ class Projects extends Security_Controller {
         // Load HTML content (replace 'sample_html_content' with your HTML content)
         
         $client_info=$this->Clients_model->get_one($project_info->client_id);
-        $first_page = $this->template->view('projects/export_pdf/pages/first_page',["test"=>"test","project_info"=>$project_detail,"client_info"=>$client_info]); // Load HTML view file
+        $vessel_info=$this->Vessel_types_model->get_one($client_info->type);
+
+        $first_page = $this->template->view('projects/export_pdf/pages/first_page',["vessel_info"=>$vessel_info,"project_info"=>$project_detail,"client_info"=>$client_info]); // Load HTML view file
 
         $dompdf->loadHtml($first_page);
 
