@@ -1827,9 +1827,9 @@ class Tasks extends Security_Controller {
 
         $view_data['contexts'] = $this->_get_accessible_contexts();
         ////////////////////////////
-        $view_data['allYardCostItems']=$this->Shipyard_cost_items_model->get_all_where(array("task_id"=>$task_id))->getResult();
+        $view_data['allYardCostItems']=$this->Shipyard_cost_items_model->get_all_with_costs_where(array("task_id"=>$task_id))->getResult();
         $view_data['allYards']=$this->Project_yards_model->get_all_where(array("project_id"=>$model_info->project_id))->getResult();
-        $allCostItems=$this->Task_cost_items_model->get_all_where(array("task_id"=>$task_id))->getResult();
+        $allCostItems=$this->Task_cost_items_model->get_all_with_costs_where(array("task_id"=>$task_id))->getResult();
         $view_data['allCostItems']=$allCostItems;
         $project_info=$this->Projects_model->get_one($model_info->project_id);
         $view_data['project_info']=$project_info;
