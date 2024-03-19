@@ -3945,6 +3945,7 @@ class Projects extends Security_Controller {
         }
         $shipyard_id=$this->request->getPost('shipyard_id');
         $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
+        $this->Shipyard_cost_items_model->delete_where(array("shipyard_id"=>$shipyard_id));
         for($count=1;$count<count($data);$count++){
             $task_info=$this->Tasks_model->get_all_where(array("title"=>$data[$count][1]))->getResult()[0];
             $saveData=array(
@@ -5149,6 +5150,7 @@ class Projects extends Security_Controller {
             $data[] = $rowData;
         }
         // return json_encode($data);
+        $this->Shipyard_cost_items_model->delete_where(array("project_id"=>$project_id));
         for($count=1;$count<count($data);$count++){
             // $task_info=$this->Tasks_model->get_one($task_id);
             foreach ($allShipyards as $oneYard) {
@@ -5157,14 +5159,14 @@ class Projects extends Security_Controller {
                     "shipyard_id"=>$oneYard->id,
                     "task_id"=>$data[$count][2],
                     "project_id"=>$project_id,
-                    "name"=>$data[$count][5],
-                    "description"=>$data[$count][6],
-                    "quantity"=>$data[$count][8],
-                    "measurement"=>$data[$count][9],
-                    "unit_price"=>$data[$count][10],
+                    "name"=>$data[$count][6],
+                    "description"=>$data[$count][7],
+                    "quantity"=>$data[$count][9],
+                    "measurement"=>$data[$count][10],
+                    "unit_price"=>$data[$count][11],
                     "currency"=>$project_info->currency,
-                    "discount"=>$data[$count][13],
-                    "yard_remarks"=>$data[$count][15],
+                    "discount"=>$data[$count][14],
+                    "yard_remarks"=>$data[$count][16],
                 );
                 $this->Shipyard_cost_items_model->ci_save($saveData,null);
             }
