@@ -162,10 +162,11 @@ foreach ($categorized_tasks as $category=>$list) {
 <?php
 }
 ?>
-<div style="page-break-before: always;"></div>
+<!-- <div style="page-break-before: always;"></div> -->
 
 <?php foreach ($tasks as $task) {
 ?>
+<div style="page-break-before: always;"></div>
 <?php echo view('projects/export_pdf/layouts/header.php');?>
 <table style="width:100%;" >
     <tbody>
@@ -182,7 +183,53 @@ foreach ($categorized_tasks as $category=>$list) {
         </tr>
     </tbody>
 </table>
-<p> <?php echo "Supplier : ".$task->supplier?></p>
-<div style="page-break-before: always;"></div>
+<p><?php if($task->supplier) echo "Supplier : ".$task->supplier?></p>
+<p>Description : </p>
+<div>
+    <?php echo $task->description;?>
+</div>
+<p>Cost Items : </p>
+<div>
+    <?php
+    $task_cost_items=array_filter($cost_items,function($item)use($task){
+        return $item->task_id==$task->id;
+    });
+    if(count($task_cost_items)>0){
+    ?>
+    <table style="width:80%;border:1px solid lightgray; border-collapse:collapse;" >
+        <thead>
+            <tr>
+                <th style="border:1px solid lightgray;width:20%;">Name</th>
+                <th style="border:1px solid lightgray;width:50%;">Quantity X Unit Price</th>
+                <th style="border:1px solid lightgray;width:10%;">Discount</th>
+                <th style="border:1px solid lightgray;width:20%;">Quote</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($task_cost_items as $key => $item) {
+            ?>
+            <tr>
+                <td style="border:1px solid lightgray;text-align:center;" >
+                    <?php echo $item->name;?>
+                </td>
+                <td style="border:1px solid lightgray;text-align:center;" >
+                    <?php echo $item->quantity." ".$item->measurement." X ".$project_info->currency." ".$item->unit_price;?>
+                </td>
+                <td style="border:1px solid lightgray;text-align:center;" >
+                    <?php echo $item->discount." %";?>
+                </td>
+                <td style="border:1px solid lightgray;text-align:center;" >
+                    <?php echo $item->total_cost;?>
+                </td>
+            </tr>
+            <?php
+            } ?>
+        </tbody>
+    </table>
+    <?php }else{ ?>
+    <p>No cost items yet!</p>
+    <?php }?>
+</div>
+
 <?php
 }?>
