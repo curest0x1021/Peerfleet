@@ -532,7 +532,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         >
                             <?php
 
-                                echo number_format($totalYardCosts[$i],2)." ".$project_info->currency;
+                                echo number_format($totalYardCosts[$i],1)." ".$project_info->currency;
                             ?>
                         </th>
                         <?php
@@ -576,7 +576,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                         echo modal_anchor(get_uri('projects/modal_yard_cost_items/'.$oneTask->id),'<span class="badge task-info-box pill bg-secondary" >'.$oneTaskItemCounts[$i].'</span>',array());
                                     ?>
                                     <div class="flex-grow-1" ></div>
-                                    <?php echo number_format($oneTaskAllCosts[$i],2)." ".$project_info->currency; ?>
+                                    <?php echo number_format($oneTaskAllCosts[$i],1)." ".$project_info->currency; ?>
                                 </div>
                             </td>
                         <?php
