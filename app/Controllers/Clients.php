@@ -2499,10 +2499,12 @@ class Clients extends Security_Controller
     }
     //////////////////////////////////////////////////////
     function tab_dimensions_capacities($client_id){
-
+        $client_info=$this->Clients_model->get_one($client_id);
+        return $this->template->view("clients/tabs/dimensions",["client_info"=>$client_info]);
     }
     function tab_propulsion($client_id){
-
+        $client_info=$this->Clients_model->get_one($client_id);
+        return $this->template->view("clients/tabs/propulsion",["client_info"=>$client_info]);
     }
 }
 

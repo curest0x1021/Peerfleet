@@ -63,8 +63,8 @@
                 <ul id="vessel-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs" role="tablist">
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/company_info_tab/" . $client_info->id); ?>" data-bs-target="#client-info"> <?php echo app_lang('vessel_info'); ?></a></li>
                     <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/contacts/" . $client_info->id); ?>" data-bs-target="#client-contacts"> <?php echo app_lang('communication'); ?></a></li>
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/contacts/" . $client_info->id); ?>" data-bs-target="#client-contacts"> Dimensions & Capacities</a></li>
-                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/contacts/" . $client_info->id); ?>" data-bs-target="#client-contacts"> Propulsion</a></li>
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/tab_dimensions_capacities/" . $client_info->id); ?>" data-bs-target="#client-dimensions"> Dimensions & Capacities</a></li>
+                    <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/tab_propulsion/" . $client_info->id); ?>" data-bs-target="#client-propulsion"> Propulsion</a></li>
                     <?php if ($show_project_info) { ?>
                         <li><a  role="presentation" data-bs-toggle="tab" href="<?php echo_uri("clients/projects/" . $client_info->id); ?>" data-bs-target="#client-projects"><?php echo app_lang('projects'); ?></a></li>
                     <?php } ?>
@@ -102,6 +102,8 @@
                     <?php foreach ($hook_tabs as $hook_tab) { ?>
                         <div role="tabpanel" class="tab-pane fade" id="<?php echo get_array_value($hook_tab, 'target') ?>"></div>
                     <?php } ?>
+                    <div role="tabpanel" class="tab-pane fade" id="client-dimensions"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="client-propulsion"></div>
                 </div>
             </div>
         </div>
