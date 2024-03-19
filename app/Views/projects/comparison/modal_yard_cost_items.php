@@ -41,8 +41,8 @@ foreach ($allProjectYards as $oneYard) {
                             ?>
                             <tr>
                                 <td><?php echo $oneItem->name;?></td>
-                                <td><?php echo $project_info->currency." ".$oneItem->quantity;?> <?php echo $oneItem->measurement;?> X <?php echo $oneItem->unit_price;?> (Per unit) </td>
-                                <td><?php echo $project_info->currency." ".(double)$oneItem->quantity*(double)$oneItem->unit_price;?> </td>
+                                <td><?php echo $oneItem->quantity;?> <?php echo $oneItem->measurement;?> X <?php echo $project_info->currency." ".$oneItem->unit_price;?> (Per unit) </td>
+                                <td><?php echo $project_info->currency." ".(double)$oneItem->total_cost;?> </td>
                                 <td><input hidden value='<?php echo $oneItem->id;?>' /><button class="btn btn-sm delete-cost-item"><i data-feather="trash" class="icon-16" ></i></button></td>
                             </tr>
                             <?php

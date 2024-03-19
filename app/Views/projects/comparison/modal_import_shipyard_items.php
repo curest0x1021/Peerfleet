@@ -62,7 +62,7 @@
             var rise_csrf_token = $('[name="rise_csrf_token"]').val();
             myForm.append("rise_csrf_token",rise_csrf_token);
             $.ajax({
-                url:"<?php echo get_uri('projects/import_yard_xlsx');?>",
+                url:"<?php echo get_uri('projects/import_yard_quotation_file');?>",
                 method:"POST",
                 data:myForm,
                 contentType: false, // Set contentType to false, as FormData will automatically set the correct type
@@ -100,7 +100,7 @@
         var rise_csrf_token = $('[name="rise_csrf_token"]').val();
         myForm.append("rise_csrf_token",rise_csrf_token);
         $.ajax({
-            url:"<?php echo get_uri('projects/import_yard_xlsx');?>",
+            url:"<?php echo get_uri('projects/import_yard_quotation_file');?>",
             method:"POST",
             data:myForm,
             contentType: false, // Set contentType to false, as FormData will automatically set the correct type
