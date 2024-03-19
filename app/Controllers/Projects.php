@@ -5195,13 +5195,15 @@ class Projects extends Security_Controller {
         $vessel_info=$this->Vessel_types_model->get_one($client_info->type);
         $members=$this->Project_members_model->get_details(array("project_id"=>$project_id))->getResult();
         $tasks=$this->Tasks_model->get_details(array("project_id"=>$project_id))->getResult();
+        $cost_items=$this->Task_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
         // return json_encode($tasks);
         $view_data=[
             "tasks"=>$tasks,
             "members"=>$members,
             "vessel_info"=>$vessel_info,
             "project_info"=>$project_detail,
-            "client_info"=>$client_info
+            "client_info"=>$client_info,
+            "cost_items"=>$cost_items
         ];
         $first_page = $this->template->view('projects/export_pdf/pages/first_page',$view_data); // Load HTML view file
         // return $first_page;
