@@ -135,7 +135,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                             <i data-feather="more-vertical" class="icon-16" ></i>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="<?php echo get_uri('projects/download_yard_xlsx/'.$allYards[$i]->id);?>" target="_blank"><i data-feather="download" class="icon-16" ></i> Export xlsx</a></li>
+                                            <!-- <li><a class="dropdown-item" href="<?php //echo get_uri('projects/download_yard_xlsx/'.$allYards[$i]->id);?>" target="_blank"><i data-feather="download" class="icon-16" ></i> Export xlsx</a></li> -->
+                                            <li><a class="dropdown-item" href="<?php echo get_uri('projects/export_yard_quotation/'.$allYards[$i]->id);?>" target="_blank"><i data-feather="download" class="icon-16" ></i> Export xlsx</a></li>
                                             <li><?php echo modal_anchor(get_uri('projects/modal_import_yard_xlsx/'.$allYards[$i]->id),'<li class="dropdown-item" ><i data-feather="upload" class="icon-16" ></i> Import quotation</li>',array());?></li>
                                             <li><?php echo modal_anchor(get_uri('projects/modal_import_task_cost_items/'.$allYards[$i]->id),'<li class="dropdown-item" ><i data-feather="upload-cloud" class="icon-16" ></i> Import cost items of task</li>',array());?></li>
                                             <!-- <li><?php 
