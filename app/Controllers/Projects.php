@@ -5194,8 +5194,16 @@ class Projects extends Security_Controller {
         $client_info=$this->Clients_model->get_one($project_info->client_id);
         $vessel_info=$this->Vessel_types_model->get_one($client_info->type);
         $members=$this->Project_members_model->get_details(array("project_id"=>$project_id))->getResult();
-        // return json_encode($members);
-        $first_page = $this->template->view('projects/export_pdf/pages/first_page',["members"=>$members,"vessel_info"=>$vessel_info,"project_info"=>$project_detail,"client_info"=>$client_info]); // Load HTML view file
+        $tasks=$this->Tasks_model->get_details(array("project_id"=>$project_id))->getResult();
+        // return json_encode($tasks);
+        $view_data=[
+            "tasks"=>$tasks,
+            "members"=>$members,
+            "vessel_info"=>$vessel_info,
+            "project_info"=>$project_detail,
+            "client_info"=>$client_info
+        ];
+        $first_page = $this->template->view('projects/export_pdf/pages/first_page',$view_data); // Load HTML view file
         // return $first_page;
         $dompdf->loadHtml($first_page);
 
