@@ -5775,7 +5775,74 @@ class Projects extends Security_Controller {
         }
         echo json_encode(array("success"=>true));
     }
+    function export_yard_quotation($shipyard_id){
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
+        $project_info=$this->Projects_model->get_one($shipyard_info->project_id);
+        $allShipyardCostItems=$this->Shipyard_cost_items_model->get_all_with_costs_where(array("shipyard_id"=>$shipyard_id))->getResult();
 
+        // Add data to the first worksheet
+        $sheet1 = $spreadsheet->getActiveSheet();
+        $sheet1->setTitle('Cost items');
+        $sheet1->setCellValue('A1', 'Project ID');
+        $sheet1->setCellValue('B1', 'Project Title');
+        $sheet1->setCellValue('C1', 'Task ID');
+        $sheet1->setCellValue('D1', 'Task Title');
+        $sheet1->setCellValue('E1', 'Group');
+        $sheet1->setCellValue('F1', 'Dock List Number');
+        $sheet1->setCellValue('G1', 'Cost item');
+        $sheet1->setCellValue('H1', 'Description');
+        $sheet1->setCellValue('I1', 'Cost type');
+        $sheet1->setCellValue('J1', 'Est. quantity');
+        $sheet1->setCellValue('K1', 'Measurement unit');
+        $sheet1->setCellValue('L1', 'Unit price');
+        $sheet1->setCellValue('M1', 'Unit price currency');
+        $sheet1->setCellValue('N1', 'Quote');
+        $sheet1->setCellValue('O1', 'Discount (0-100%)');
+        $sheet1->setCellValue('P1', 'Discounted quote');
+        $sheet1->setCellValue('Q1', 'Yard remarks');
+        $sheet1->setCellValue('R1', 'Link to Task');
+        $rowNumber=2;
+        foreach ($allShipyardCostItems as $oneItem) {
+            $task_info=$this->Tasks_model->get_one($oneItem->task_id);
+            $sheet1->setCellValue('A'.$rowNumber, $project_info->id);
+            $sheet1->setCellValue('B'.$rowNumber, $project_info->title);
+            $sheet1->setCellValue('C'.$rowNumber, $task_info->id);
+            $sheet1->setCellValue('D'.$rowNumber, $task_info->title);
+            $sheet1->setCellValue('E'.$rowNumber, $task_info->category);
+            $sheet1->setCellValue('F'.$rowNumber, $task_info->dock_list_number);
+            $sheet1->setCellValue('G'.$rowNumber, $oneItem->name);
+            $sheet1->setCellValue('H'.$rowNumber, $oneItem->description);
+            $sheet1->setCellValue('I'.$rowNumber, $oneItem->quote_type);
+            $sheet1->setCellValue('J'.$rowNumber, $oneItem->quantity);
+            $sheet1->setCellValue('K'.$rowNumber, $oneItem->measurement);
+            $sheet1->setCellValue('L'.$rowNumber, $oneItem->unit_price);
+            $sheet1->setCellValue('M'.$rowNumber, $oneItem->currency);
+            $sheet1->setCellValue('N'.$rowNumber, $oneItem->currency." ".(float)$oneItem->unit_price*(float)$oneItem->quantity);
+            $sheet1->setCellValue('O'.$rowNumber, $oneItem->discount." %");
+            $sheet1->setCellValue('P'.$rowNumber, $oneItem->currency." ".$oneItem->total_cost);
+            $sheet1->setCellValue('Q'.$rowNumber, $oneItem->yard_remarks);
+            $sheet1->setCellValue('R'.$rowNumber, get_uri("task_view/view/").$oneItem->task_id);
+            $rowNumber++;
+        }
+
+        // Create a writer object
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+        $response = service('response');
+
+// Set response headers for file download
+        $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->setHeader('Content-Disposition', 'attachment;filename="'.$shipyard_info->title.'_yard_quotation_form.xlsx"');
+        $response->setHeader('Cache-Control', 'max-age=0');
+
+        // Write the Excel file content to the response body
+        $writer->save('php://output');
+
+        // Return the response object
+        return $response;
+    }
 
 }
 
