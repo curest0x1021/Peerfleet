@@ -64,7 +64,7 @@ class Project_members_model extends Crud_model {
             }
         }
 
-        $sql = "SELECT $project_members_table.*, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS member_name, $clients_table.charter_name, $users_table.image as member_image, $users_table.job_title, $users_table.user_type
+        $sql = "SELECT $project_members_table.*, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS member_name, $users_table.email AS member_email, $users_table.mobile AS member_mobile, $clients_table.charter_name, $users_table.image as member_image, $users_table.job_title, $users_table.user_type
         FROM $project_members_table
         LEFT JOIN $users_table ON $users_table.id= $project_members_table.user_id
         LEFT JOIN $clients_table ON $clients_table.id=$users_table.client_id
@@ -96,7 +96,7 @@ class Project_members_model extends Crud_model {
             $where .= " AND $project_members_table.user_id IN (SELECT $users_table.id FROM $users_table WHERE $users_table.deleted=0 AND $users_table.is_admin=0 $user_where)";
         }
 
-        $sql = "SELECT $project_members_table.user_id, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS member_name, $users_table.status AS member_status, $users_table.user_type
+        $sql = "SELECT $project_members_table.user_id, CONCAT($users_table.first_name, ' ',$users_table.last_name) AS member_name,  $users_table.mobile AS member_mobile, $users_table.status AS member_status, $users_table.user_type
         FROM $project_members_table
         LEFT JOIN $users_table ON $users_table.id= $project_members_table.user_id
         WHERE $project_members_table.deleted=0 $where 
