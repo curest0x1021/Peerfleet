@@ -744,6 +744,7 @@ class Task_libraries extends Security_Controller {
             // "material_owners_supply"=>$this->request->getPost("material_owners_supply"),
             "work_permit"=>$this->request->getPost("work_permit"),
             "risk_assessment"=>$this->request->getPost("risk_assessment"),
+            "class_relevant"=>$this->request->getPost("class_relevant"),
             "marker"=>$this->request->getPost("maker"),
             "type"=>$this->request->getPost("type"),
             "serial_number"=>$this->request->getPost("serial_number"),
