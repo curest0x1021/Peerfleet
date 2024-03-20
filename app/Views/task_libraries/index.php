@@ -112,7 +112,7 @@
                                             "maxlength" => 15,
                                             "readonly"=>true,
                                             "style"=>"border:1px solid lightgray",
-                                            "placeholder" => app_lang('dock_list_number'),
+                                            "placeholder" => "DLN",
                                             "autocomplete" => "off"
                                         ));
                                         ?>
