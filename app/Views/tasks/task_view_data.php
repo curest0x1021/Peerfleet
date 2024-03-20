@@ -297,7 +297,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                             <?php if ($model_info->parent_task_id == 0) { ?>
                                 <?php if ($model_info->dock_list_number) { ?>
                                     <div class="col-md-12 mb15 mb15">
-                                        <strong><?php echo app_lang('dock_list_number') . ": "; ?></strong> <?php echo $model_info->dock_list_number; ?>
+                                        <strong><a data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Dock List Number" >DLN : </a></strong> <?php echo $model_info->dock_list_number; ?>
                                     </div>
                                 <?php } ?>
 
@@ -1222,6 +1222,10 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
 </div>
 <script>
     $(document).ready(function(){
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl)
+        })
         $("#cost_item_currency_symbol").on('mousedown', false);
         $("#cost_item_currency_symbol").on('keydown', false);
         $("#owner_supply_currency_symbol").on('mousedown', false);

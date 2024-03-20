@@ -83,7 +83,7 @@
                     </div>
                     <div class="form-group">
                         <div class="row">
-                            <label for="dock_list_number" class="col-md-4"><?php echo app_lang('dock_list_number'); ?>:</label>
+                            <label for="dock_list_number" class="col-md-4"><a data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Dock List Number" >DLN:</a></label>
                             <div class="col-md-8" >
                                 <?php
                                 // $dock_list_number_now="";
@@ -1364,6 +1364,10 @@
     $(document).ready(function () {
         // $("#cost_item_currency_symbol").on('mousedown', false);
         // $("#cost_item_currency_symbol").on('keydown', false);
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl)
+        })
         $("#file-selector-btn").on("click",function(){
             $("#file-selector")[0].click();
         })

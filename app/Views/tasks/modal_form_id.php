@@ -64,7 +64,7 @@
                     </div>
                     <div class="form-group">
                         <div class="row">
-                            <label for="dock_list_number" class="col-md-4"><?php echo app_lang('dock_list_number'); ?>:</label>
+                            <label for="dock_list_number" class="col-md-4"><a data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Dock List Number" >DLN:</a></label>
                             <div class="col-md-8" >
                                 <?php                                
                                 echo form_input(array(
@@ -75,7 +75,7 @@
                                     "maxlength" => 15,
                                     "readonly"=>true,
                                     "style"=>"border:1px solid lightgray",
-                                    "placeholder" => app_lang('dock_list_number'),
+                                    "placeholder" => app_lang('DLN'),
                                     "autocomplete" => "off"
                                 ));
                                 ?>
@@ -1314,6 +1314,10 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl)
+        })
         // $("#cost_item_currency_symbol").on('mousedown', false);
         // $("#cost_item_currency_symbol").on('keydown', false);
         $("#file-selector-btn<?php echo $modalId;?>").on("click",function(){
