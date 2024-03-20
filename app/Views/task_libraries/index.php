@@ -119,6 +119,28 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group" >
+                                <div class="row">
+                                    <label for="budget_group" class="col-md-4"  >Budget group : </label>
+                                    <div class="col-md-8" >
+                                        <?php
+                                        $budget_group_dropdown=array();
+                                        
+                                        echo form_input(array(
+                                            "id" => "budget_group",
+                                            "name" => "budget_group",
+                                            "value" => isset($gotTasklibrary)&&property_exists($gotTasklibrary,"budget_group")?$gotTasklibrary->budget_group:"",
+                                            // "value" => $dock_list_number_now,
+                                            "class" => "form-control",
+                                            "maxlength" => 15,
+                                            "style"=>"border:1px solid lightgray",
+                                            "placeholder" => "Budget group",
+                                            "autocomplete" => "off"
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="col-md-4">
@@ -196,6 +218,30 @@
                                             "maxlength" => 15,
                                             "style"=>"border:1px solid lightgray",
                                             "placeholder" => app_lang('priority'),
+                                            "autocomplete" => "off"
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label for="class_relevant" class="col-md-3"><?php echo "Class relevant"; ?>:</label>
+                                    <div class="col-md-9"  >
+                                        <?php
+                                        $class_relevant_dropdown=array(
+                                            array("id"=>1,"text"=>"Yes"),
+                                            array("id"=>0,"text"=>"No"),
+                                        );
+                                        
+                                        echo form_input(array(
+                                            "id" => "class_relevant",
+                                            "name" => "class_relevant",
+                                            "value" => isset($gotTasklibrary)&&property_exists($gotTasklibrary,"class_relevant")?$gotTasklibrary->class_relevant:1,
+                                            "class" => "form-control",
+                                            "maxlength" => 15,
+                                            "style"=>"border:1px solid lightgray",
+                                            "placeholder" => "Class relevant",
                                             "autocomplete" => "off"
                                         ));
                                         ?>
@@ -322,6 +368,28 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label for="collaborators" class="col-md-3">PMS/SCS number:</label>
+                                    <div class="col-md-9"  >
+                                    <?php
+
+                                    echo form_input(array(
+                                        "id" => "pms_scs_number",
+                                        "name" => "pms_scs_number",
+                                        "value" => isset($gotTasklibrary)&&$gotTasklibrary->pms_scs_number?$gotTasklibrary->pms_scs_number:"",
+                                        "class" => "form-control",
+                                        "required"=>true,
+                                        "style"=>"border:1px solid lightgray",
+                                        "placeholder" => "PMS SCS number",
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
+                                        "autocomplete" => "off"
+                                    ));
+                                    ?>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -428,31 +496,6 @@
                                                 <label for="gas_free_certificate_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="row">
-                                            <label for="painting_after_completion" class="col-7"><?php echo app_lang('painting_after_completion'); ?></label>
-                                            <div class="col-5">
-                                                <?php
-                                                echo form_radio(array(
-                                                    "id" => "painting_after_completion_yes",
-                                                    "name" => "painting_after_completion",
-                                                    "class" => "form-check-input",
-                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->painting_after_completion:1);
-                                                ?>
-                                                <label for="painting_after_completion_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
-                                                <?php
-                                                echo form_radio(array(
-                                                    "id" => "painting_after_completion_no",
-                                                    "name" => "painting_after_completion",
-                                                    "class" => "form-check-input",
-                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->painting_after_completion:0);
-                                                ?>
-                                                <label for="painting_after_completion_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
                                         <div class="row">
                                             <label for="light" class="col-7"><?php echo app_lang('light'); ?></label>
                                             <div class="col-5">
@@ -474,31 +517,6 @@
                                                 <label for="light_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="row">
-                                            <label for="parts_on_board" class="col-7"><?php echo app_lang('parts_on_board'); ?></label>
-                                            <div class="col-5">
-                                                <?php
-                                                echo form_radio(array(
-                                                    "id" => "parts_on_board_yes",
-                                                    "name" => "parts_on_board",
-                                                    "class" => "form-check-input",
-                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->parts_on_board:1);
-                                                ?>
-                                                <label for="parts_on_board_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
-                                                <?php
-                                                echo form_radio(array(
-                                                    "id" => "parts_on_board_no",
-                                                    "name" => "parts_on_board",
-                                                    "class" => "form-check-input",
-                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->parts_on_board:0);
-                                                ?>
-                                                <label for="parts_on_board_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
                                         <div class="row">
                                             <label for="ventilation" class="col-7"><?php echo app_lang('ventilation'); ?></label>
                                             <div class="col-5">
@@ -520,31 +538,6 @@
                                                 <label for="ventilation_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="row">
-                                            <label for="transport_to_yard_workshop" class="col-7"><?php echo app_lang('transport_to_yard_workshop'); ?></label>
-                                            <div class="col-5">
-                                                <?php
-                                                echo form_radio(array(
-                                                    "id" => "transport_to_yard_workshop_yes",
-                                                    "name" => "transport_to_yard_workshop",
-                                                    "class" => "form-check-input",
-                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->transport_to_yard_workshop:1);
-                                                ?>
-                                                <label for="transport_to_yard_workshop_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
-                                                <?php
-                                                echo form_radio(array(
-                                                    "id" => "transport_to_yard_workshop_no",
-                                                    "name" => "transport_to_yard_workshop",
-                                                    "class" => "form-check-input",
-                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->transport_to_yard_workshop:0);
-                                                ?>
-                                                <label for="transport_to_yard_workshop_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
                                         <div class="row">
                                             <label for="crane_assistance" class="col-7"><?php echo app_lang('crane_assistance'); ?></label>
                                             <div class="col-5">
@@ -566,31 +559,6 @@
                                                 <label for="crane_assistance_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="row">
-                                            <label for="transport_outside_yard" class="col-7"><?php echo app_lang('transport_outside_yard'); ?></label>
-                                            <div class="col-5">
-                                                <?php
-                                                echo form_radio(array(
-                                                    "id" => "transport_outside_yard_yes",
-                                                    "name" => "transport_outside_yard",
-                                                    "class" => "form-check-input",
-                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->transport_outside_yard:1);
-                                                ?>
-                                                <label for="transport_outside_yard_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
-                                                <?php
-                                                echo form_radio(array(
-                                                    "id" => "transport_outside_yard_no",
-                                                    "name" => "transport_outside_yard",
-                                                    "class" => "form-check-input",
-                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->transport_outside_yard:0);
-                                                ?>
-                                                <label for="transport_outside_yard_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
                                         <div class="row">
                                             <label for="cleaning_before" class="col-7"><?php echo app_lang('cleaning_before'); ?></label>
                                             <div class="col-5">
@@ -612,31 +580,6 @@
                                                 <label for="cleaning_before_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="row">
-                                            <label for="material_yards_supply" class="col-7"><?php echo app_lang('material_yards_supply'); ?></label>
-                                            <div class="col-5">
-                                                <?php
-                                                echo form_radio(array(
-                                                    "id" => "material_yards_supply_yes",
-                                                    "name" => "material_yards_supply",
-                                                    "class" => "form-check-input",
-                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->material_yards_supply:1);
-                                                ?>
-                                                <label for="material_yards_supply_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
-                                                <?php
-                                                echo form_radio(array(
-                                                    "id" => "material_yards_supply_no",
-                                                    "name" => "material_yards_supply",
-                                                    "class" => "form-check-input",
-                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->material_yards_supply:0);
-                                                ?>
-                                                <label for="material_yards_supply_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
                                         <div class="row">
                                             <label for="cleaning_after" class="col-7"><?php echo app_lang('cleaning_after'); ?></label>
                                             <div class="col-5">
@@ -658,31 +601,6 @@
                                                 <label for="cleaning_after_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="row">
-                                            <label for="material_owners_supply" class="col-7"><?php echo app_lang('material_owners_supply'); ?></label>
-                                            <div class="col-5">
-                                                <?php
-                                                echo form_radio(array(
-                                                    "id" => "material_owners_supply_yes",
-                                                    "name" => "material_owners_supply",
-                                                    "class" => "form-check-input",
-                                                ), "1", 0);
-                                                ?>
-                                                <label for="material_owners_supply_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
-                                                <?php
-                                                echo form_radio(array(
-                                                    "id" => "material_owners_supply_no",
-                                                    "name" => "material_owners_supply",
-                                                    "class" => "form-check-input",
-                                                ), "0", 1);
-                                                ?>
-                                                <label for="material_owners_supply_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
                                         <div class="row">
                                             <label for="work_permit" class="col-7"><?php echo app_lang('work_permit'); ?></label>
                                             <div class="col-5">
@@ -706,6 +624,48 @@
                                         </div>
                                     </div>
                                     <div class="col-6">
+                                        <div class="row">
+                                            <label for="painting_after_completion" class="col-7"><?php echo app_lang('painting_after_completion'); ?></label>
+                                            <div class="col-5">
+                                                <?php
+                                                echo form_radio(array(
+                                                    "id" => "painting_after_completion_yes",
+                                                    "name" => "painting_after_completion",
+                                                    "class" => "form-check-input",
+                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->painting_after_completion:1);
+                                                ?>
+                                                <label for="painting_after_completion_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                                <?php
+                                                echo form_radio(array(
+                                                    "id" => "painting_after_completion_no",
+                                                    "name" => "painting_after_completion",
+                                                    "class" => "form-check-input",
+                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->painting_after_completion:0);
+                                                ?>
+                                                <label for="painting_after_completion_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label for="parts_on_board" class="col-7"><?php echo app_lang('parts_on_board'); ?></label>
+                                            <div class="col-5">
+                                                <?php
+                                                echo form_radio(array(
+                                                    "id" => "parts_on_board_yes",
+                                                    "name" => "parts_on_board",
+                                                    "class" => "form-check-input",
+                                                ), "1", isset($gotTasklibrary)?$gotTasklibrary->parts_on_board:1);
+                                                ?>
+                                                <label for="parts_on_board_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                                <?php
+                                                echo form_radio(array(
+                                                    "id" => "parts_on_board_no",
+                                                    "name" => "parts_on_board",
+                                                    "class" => "form-check-input",
+                                                ), "0", isset($gotTasklibrary)?!$gotTasklibrary->parts_on_board:0);
+                                                ?>
+                                                <label for="parts_on_board_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <label for="risk_assessment" class="col-7"><?php echo app_lang('risk_assessment'); ?></label>
                                             <div class="col-5">
@@ -793,25 +753,25 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <div class="row">
                                     <label for="pms_scs_number" class=" col-md-4"><?php echo app_lang('pms_scs_number'); ?></label>
                                     <div class=" col-md-8" >
                                         <?php
-                                        echo form_input(array(
-                                            "id" => "pms_scs_number",
-                                            "name" => "pms_scs_number",
-                                            "value" => "",
-                                            "class" => "form-control",
-                                            "maxlength" => 30,
-                                            "style"=>"border:1px solid lightgray",
-                                            "placeholder" => app_lang('pms_scs_number'),
-                                            "autocomplete" => "off"
-                                        ));
+                                        // echo form_input(array(
+                                        //     "id" => "pms_scs_number",
+                                        //     "name" => "pms_scs_number",
+                                        //     "value" => "",
+                                        //     "class" => "form-control",
+                                        //     "maxlength" => 30,
+                                        //     "style"=>"border:1px solid lightgray",
+                                        //     "placeholder" => app_lang('pms_scs_number'),
+                                        //     "autocomplete" => "off"
+                                        // ));
                                         ?>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="row" >
@@ -1377,6 +1337,12 @@
         $("#cost_item_currency").select2({
             data: <?php echo (json_encode($cost_item_currency_dropdown)); ?>
         });
+        $("#class_relevant").select2({
+            data: <?php echo (json_encode($class_relevant_dropdown)); ?>
+        });
+        $("#budget_group").select2({
+            data: <?php echo (json_encode($budget_group_dropdown)); ?>
+        });
         // $("#milestone_id").select2({
         //     data: <?php //echo (json_encode($milestone_dropdown)); ?>
         // });
@@ -1657,13 +1623,13 @@
             var light_yes=$("#light_yes")[0].value;
             var parts_on_board_yes=$("#parts_on_board_yes")[0].value;
             var ventilation_yes=$("#ventilation_yes")[0].value;
-            var transport_to_yard_workshop_yes=$("#transport_to_yard_workshop_yes")[0].value;
+            // var transport_to_yard_workshop_yes=$("#transport_to_yard_workshop_yes")[0].value;
             var crane_assistance_yes=$("#crane_assistance_yes")[0].value;
-            var transport_outside_yard_yes=$("#transport_outside_yard_yes")[0].value;
+            // var transport_outside_yard_yes=$("#transport_outside_yard_yes")[0].value;
             var cleaning_before_yes=$("#cleaning_before_yes")[0].value;
-            var material_yards_supply_yes=$("#material_yards_supply_yes")[0].value;
+            // var material_yards_supply_yes=$("#material_yards_supply_yes")[0].value;
             var cleaning_after_yes=$("#cleaning_after_yes")[0].value;
-            var material_owners_supply_yes=$("#material_owners_supply_yes")[0].value;
+            // var material_owners_supply_yes=$("#material_owners_supply_yes")[0].value;
             var work_permit_yes=$("#work_permit_yes")[0].value;
             var risk_assessment_yes=$("#risk_assessment_yes")[0].value;
             var maker=$("#maker")[0].value;
@@ -1695,13 +1661,13 @@
                     ,light:light_yes
                     ,parts_on_board:parts_on_board_yes
                     ,ventilation:ventilation_yes
-                    ,transport_to_yard_workshop:transport_to_yard_workshop_yes
+                    // ,transport_to_yard_workshop:transport_to_yard_workshop_yes
                     ,crane_assistance:crane_assistance_yes
-                    ,transport_outside_yard:transport_outside_yard_yes
+                    // ,transport_outside_yard:transport_outside_yard_yes
                     ,cleaning_before:cleaning_before_yes
-                    ,material_yards_supply:material_yards_supply_yes
+                    // ,material_yards_supply:material_yards_supply_yes
                     ,cleaning_after:cleaning_after_yes
-                    ,material_owners_supply:material_owners_supply_yes
+                    // ,material_owners_supply:material_owners_supply_yes
                     ,work_permit:work_permit_yes
                     ,risk_assessment:risk_assessment_yes
                     ,maker
