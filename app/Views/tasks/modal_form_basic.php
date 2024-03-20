@@ -215,6 +215,30 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="class_relevant" class="col-md-3"><?php echo "Class relevant"; ?>:</label>
+                            <div class="col-md-9"  >
+                                <?php
+                                $class_relevant_dropdown=array(
+                                    array("id"=>1,"text"=>"Yes"),
+                                    array("id"=>0,"text"=>"No"),
+                                );
+                                
+                                echo form_input(array(
+                                    "id" => "class_relevant",
+                                    "name" => "class_relevant",
+                                    "value" => 1,
+                                    "class" => "form-control",
+                                    "maxlength" => 15,
+                                    "style"=>"border:1px solid lightgray",
+                                    "placeholder" => "Class relevant",
+                                    "autocomplete" => "off"
+                                ));
+                                ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-4">
@@ -352,6 +376,28 @@
                                     "data-msg-greaterThanOrEqual" => app_lang("deadline_must_be_equal_or_greater_than_start_date")
                                 ));
                                 ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="collaborators" class="col-md-3">PMS/SCS number:</label>
+                            <div class="col-md-9"  >
+                            <?php
+
+                            echo form_input(array(
+                                "id" => "pms_scs_number",
+                                "name" => "pms_scs_number",
+                                "value" => isset($gotTask)&&$gotTask->pms_scs_number?$gotTask->pms_scs_number:"",
+                                "class" => "form-control",
+                                "required"=>true,
+                                "style"=>"border:1px solid lightgray",
+                                "placeholder" => "PMS SCS number",
+                                "data-rule-required" => true,
+                                "data-msg-required" => app_lang("field_required"),
+                                "autocomplete" => "off"
+                            ));
+                            ?>
                             </div>
                         </div>
                     </div>
@@ -826,25 +872,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <label for="pms_scs_number" class=" col-md-4"><?php echo app_lang('pms_scs_number'); ?></label>
-                            <div class=" col-md-8" >
-                                <?php
-                                echo form_input(array(
-                                    "id" => "pms_scs_number",
-                                    "name" => "pms_scs_number",
-                                    "value" => isset($gotTask)&&$gotTask->pms_scs_number?$gotTask->pms_scs_number:"",
-                                    "class" => "form-control",
-                                    "maxlength" => 30,
-                                    "style"=>"border:1px solid lightgray",
-                                    "placeholder" => app_lang('pms_scs_number'),
-                                    "autocomplete" => "off"
-                                ));
-                                ?>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
             <div class="row" >
@@ -1462,6 +1490,9 @@
         $("#dependency-task").select2({
             data: <?php echo (json_encode($dependency_dropdown)); ?>
         });
+        $("#class_relevant").select2({
+            data: <?php echo (json_encode($class_relevant_dropdown)); ?>
+        });
         setDatePicker("#start_date");
         setDatePicker("#deadline");
         $('#description').summernote({
@@ -1761,6 +1792,7 @@
             var type=$("#type")[0].value;
             var serial_number=$("#serial_number")[0].value;
             var pms_scs_number=$("#pms_scs_number")[0].value;
+            var class_relevant=$("#class_relevant")[0].value;
             var start_date=$("#start_date")[0].value;
             var deadline=$("#deadline")[0].value;
             var project_id=$("#project_id")[0].value;
@@ -1799,6 +1831,7 @@
             myForm.append("type",type);
             myForm.append("serial_number",serial_number);
             myForm.append("pms_scs_number",pms_scs_number);
+            myForm.append("class_relevant",class_relevant);
             myForm.append("checklist_items",JSON.stringify(checklist_items));
             myForm.append("dependencies",dependencies);
             myForm.append("cost_items",JSON.stringify(cost_items));
