@@ -48,7 +48,7 @@
                             <th style="width:4%;" class="sorting" tabindex="0" aria-controls="kanban-item-list--1" rowspan="1" colspan="1" aria-label="select: activate to sort column ascending">
                                 <input class="form-check-input input-check-library" type="checkbox"/>
                             </th>
-                            <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:10%;" rowspan="1" colspan="1" aria-label="Dock list number: activate to sort column ascending">Dock list number</th>
+                            <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:10%;" rowspan="1" colspan="1" aria-label="Dock list number: activate to sort column ascending"><a data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Dock List Number" >DLN</a></th>
                             <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:17%;" rowspan="1" colspan="1" aria-label="Title: activate to sort column ascending">Title</th>
                             <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:8%;" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending">Start date</th>
                             <th class="sorting" tabindex="0" aria-controls="kanban-item-list--1" style="width:6%;" rowspan="1" colspan="1" aria-label="Deadline: activate to sort column ascending">Deadline</th>
@@ -95,7 +95,7 @@
                 <thead style="visibility:collapse;">
                     <tr role="row">
                         <th width="50px" class="sorting"  aria-controls="task-table"  aria-sort="descending" aria-label=""></th>
-                        <th width="10%" class="sorting"  aria-controls="task-table"  aria-label="">Dock list number</th>
+                        <th width="10%" class="sorting"  aria-controls="task-table"  aria-label=""><a data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Dock List Number" >DLN</a></th>
                         <th width="18%" class="sorting"  aria-controls="task-table"  aria-label="">Title</th>
                         <!-- <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Reference drawing</th> -->
                         <th width="8%" class="sorting"  aria-controls="task-table"  aria-label="">Start date</th>
@@ -130,8 +130,12 @@
 <img id="move-icon" class="hide" src="<?php echo get_file_uri("assets/images/move.png"); ?>" alt="..." />
 
 <script type="text/javascript">
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl)
+    })
     var kanbanContainerWidth = "";
-
+    
     adjustViewHeightWidth = function () {
 
         if (!$("#kanban-list-container").length) {
