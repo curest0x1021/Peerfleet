@@ -5427,6 +5427,7 @@ class Tasks extends Security_Controller {
                 "specification"=>$oneLibrary->specification,
                 "start_date"=>$project_info->start_date,
                 "deadline"=>$project_info->deadline,
+                "class_relevant"=>$oneLibrary->class_relevant?$oneLibrary->class_relevant:0
             );
             $saved_id=$this->Tasks_model->save_gantt_task_date($newTaskData,null);
             $costItems=json_decode($oneLibrary->reference_drawing);
