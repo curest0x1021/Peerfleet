@@ -184,8 +184,8 @@ $totalPrice=0;
                     <td class="total-variation-orders" ><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
                     <td class="total-cost"><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
                     <td class="total-shipyard-cost-items"><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
-                    <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
-                    <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
+                    <td>-</td>
+                    <td>-</td>
                     <td class="">
                         <?php echo modal_anchor(get_uri("task_comments/modal_project_comments/".$project_id),'<span class="badge pill bg-secondary total-comments" >0</span>',array());?>
                     </td>
@@ -209,8 +209,8 @@ $totalPrice=0;
                     <td class="<?php echo explode(" ",$category)[0];?>-variation-orders" ></td>
                     <td class="<?php echo explode(" ",$category)[0];?>-total-costs" ></td>
                     <td class="<?php echo explode(" ",$category)[0];?>-shipyard-cost-items" ></td>
-                    <td class="<?php echo explode(" ",$category)[0];?>-billed-yard" ><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
-                    <td class="<?php echo explode(" ",$category)[0];?>-final-yard" ><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
+                    <td class="<?php echo explode(" ",$category)[0];?>-billed-yard" >-</td>
+                    <td class="<?php echo explode(" ",$category)[0];?>-final-yard" >-</td>
                     <td class="<?php echo explode(" ",$category)[0];?>-comments" ></td>
                 </tr>
             </tbody>
@@ -274,13 +274,18 @@ $totalPrice=0;
                         <td style="word-wrap:break-word;max-width:12vw;" >
                             <?php echo "<span style='color:gray;' >".$oneTask->dock_list_number."</span> ".$oneTask->title;?>
                         </td>
-                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo number_format($oneTaskTotalSupplies);?></td>
-                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo number_format( $oneTaskTotalCostItems);?></td>
-                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo number_format($oneTaskTotalVariationOrders);?></td>
-                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo number_format($oneTaskTotalPrice);?></td>
-                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> <?php echo number_format($oneTaskTotalShipyardCostItems);?></td>
-                        <td><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
-                        <td> 0</td>
+                        <!-- <td><?php //if(isset($project_info->currency)) echo $project_info->currency;?> <?php //echo number_format($oneTaskTotalSupplies);?></td> -->
+                        <td><?php if($oneTaskTotalSupplies>0) echo ($project_info->currency?$project_info->currency:"USD")." ".number_format($oneTaskTotalSupplies,1); else echo "-";?></td>
+                        <!-- <td><?php //if(isset($project_info->currency)) echo $project_info->currency;?> <?php //echo number_format( $oneTaskTotalCostItems);?></td> -->
+                        <td><?php if($oneTaskTotalCostItems>0) echo ($project_info->currency?$project_info->currency:"USD")." ".number_format($oneTaskTotalCostItems,1); else echo "-";?></td>
+                        <!-- <td><?php //if(isset($project_info->currency)) echo $project_info->currency;?> <?php //echo number_format($oneTaskTotalVariationOrders);?></td> -->
+                        <td><?php if($oneTaskTotalVariationOrders>0) echo ($project_info->currency?$project_info->currency:"USD")." ".number_format($oneTaskTotalVariationOrders,1); else echo "-";?></td>
+                        <!-- <td><?php //if(isset($project_info->currency)) echo $project_info->currency;?> <?php //echo number_format($oneTaskTotalPrice);?></td> -->
+                        <td><?php if($oneTaskTotalPrice>0) echo ($project_info->currency?$project_info->currency:"USD")." ".number_format($oneTaskTotalPrice,1); else echo "-";?></td>
+                        <!-- <td><?php //if(isset($project_info->currency)) echo $project_info->currency;?> <?php //echo number_format($oneTaskTotalShipyardCostItems);?></td> -->
+                        <td><?php if($oneTaskTotalShipyardCostItems>0) echo ($project_info->currency?$project_info->currency:"USD")." ".number_format($oneTaskTotalShipyardCostItems,1); else echo "-";?></td>
+                        <td>-</td>
+                        <td>-</td>
                         <td>
                             
                             <?php echo modal_anchor(get_uri("task_comments/modal_task_comments/".$oneTask->id),'<span class="badge pill bg-secondary" >'. $oneTaskTotalComments.'</span>',array());?>
@@ -288,11 +293,11 @@ $totalPrice=0;
                     </tr>
                     <?php
                         }
-                        $categorizedStats[$category]["owner_supplies"]=number_format( $categoryOwnerSupply);
-                        $categorizedStats[$category]["cost_items"]=number_format($categoryCostItems);
-                        $categorizedStats[$category]["variation_orders"]=number_format($categoryVariationOrder);
-                        $categorizedStats[$category]["shipyard_cost_items"]=number_format($categoryShipyardCostItems);
-                        $categorizedStats[$category]["total_price"]=number_format($categoryTotalPrice);
+                        $categorizedStats[$category]["owner_supplies"]=( $categoryOwnerSupply);
+                        $categorizedStats[$category]["cost_items"]=($categoryCostItems);
+                        $categorizedStats[$category]["variation_orders"]=($categoryVariationOrder);
+                        $categorizedStats[$category]["shipyard_cost_items"]=($categoryShipyardCostItems);
+                        $categorizedStats[$category]["total_price"]=($categoryTotalPrice);
                         $categorizedStats[$category]["comments"]=$categoryComments;
                     ?>
             </tbody>
@@ -308,11 +313,11 @@ $totalPrice=0;
 </div>
 <script>
     $(document).ready(function(){
-        <?php if(isset($totalOwnerSupplies)) echo 'totalOwnerSupplies="'. number_format($totalOwnerSupplies).'";'; ?>
-        <?php if(isset($totalVariationOrders)) echo 'totalVariationOrders="'.number_format($totalVariationOrders).'";'; ?>
-        <?php if(isset($totalCostItems)) echo 'totalCostItems="'.number_format($totalCostItems).'";'; ?>
-        <?php if(isset($totalShipyardCostItems)) echo 'totalShipyardCostItems="'.number_format($totalShipyardCostItems).'";'; ?>
-        <?php if(isset($totalPrice)) echo 'totalCosts="'.number_format($totalPrice).'";'; ?>
+        <?php if(isset($totalOwnerSupplies)) echo 'totalOwnerSupplies="'. ($totalOwnerSupplies).'";'; ?>
+        <?php if(isset($totalVariationOrders)) echo 'totalVariationOrders="'.($totalVariationOrders).'";'; ?>
+        <?php if(isset($totalCostItems)) echo 'totalCostItems="'.($totalCostItems).'";'; ?>
+        <?php if(isset($totalShipyardCostItems)) echo 'totalShipyardCostItems="'.($totalShipyardCostItems).'";'; ?>
+        <?php if(isset($totalPrice)) echo 'totalCosts="'.($totalPrice).'";'; ?>
         <?php if(isset($totalComments)) echo 'totalComments='.$totalComments.';'; ?>
         <?php if(isset($categorizedStats)) echo 'categorizedStats='.json_encode($categorizedStats).';'; ?>
         $("[data-bs-toggle=collapse]").on("click",function(){
@@ -320,11 +325,16 @@ $totalPrice=0;
             else $(this).find(".collapse-arrow").removeClass('collapse-active')
         });
         console.log($(".total-owner-supplies"))
-        $(".total-owner-supplies")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalOwnerSupplies;
-        $(".total-cost-items")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalCostItems;
-        $(".total-shipyard-cost-items")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalShipyardCostItems;
-        $(".total-variation-orders")[0].innerHTML='<?php if(isset($project_info->currency))  echo $project_info->currency;?> '+totalVariationOrders;
-        $(".total-cost")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalCosts;
+        // $(".total-owner-supplies")[0].innerHTML='<?php //if(isset($project_info->currency)) echo $project_info->currency;?> '+totalOwnerSupplies;
+        $(".total-owner-supplies")[0].innerHTML=Number(totalOwnerSupplies)>0?'<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalOwnerSupplies.toLocaleString():"-";
+        // $(".total-cost-items")[0].innerHTML='<?php //if(isset($project_info->currency)) echo $project_info->currency;?> '+totalCostItems;
+        $(".total-cost-items")[0].innerHTML=Number(totalCostItems)>0?'<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalCostItems.toLocaleString():"-";
+        // $(".total-shipyard-cost-items")[0].innerHTML='<?php //if(isset($project_info->currency)) echo $project_info->currency;?> '+totalShipyardCostItems;
+        $(".total-shipyard-cost-items")[0].innerHTML=Number(totalShipyardCostItems)>0?'<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalShipyardCostItems.toLocaleString():"-";
+        // $(".total-variation-orders")[0].innerHTML='<?php //if(isset($project_info->currency))  echo $project_info->currency;?> '+totalVariationOrders;
+        $(".total-variation-orders")[0].innerHTML=Number(totalVariationOrders)>0?'<?php if(isset($project_info->currency))  echo $project_info->currency;?> '+totalVariationOrders.toLocaleString():"-";
+        // $(".total-cost")[0].innerHTML='<?php //if(isset($project_info->currency)) echo $project_info->currency;?> '+totalCosts;
+        $(".total-cost")[0].innerHTML=Number(totalCosts)>0?'<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalCosts.toLocaleString():"-";
         $(".total-comments")[0].innerHTML=totalComments;
         for(var category of [
             "General & Docking",
@@ -337,11 +347,16 @@ $totalPrice=0;
             "Common systems",
             "Others",
         ]){
-            $("."+category.split(" ")[0]+"-owner-supplies")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['owner_supplies'];
-            $("."+category.split(" ")[0]+"-variation-orders")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['variation_orders'];
-            $("."+category.split(" ")[0]+"-cost-items")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['cost_items'];
-            $("."+category.split(" ")[0]+"-total-costs")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['total_price'];
-            $("."+category.split(" ")[0]+"-shipyard-cost-items")[0].innerHTML='<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['shipyard_cost_items'];
+            // $("."+category.split(" ")[0]+"-owner-supplies")[0].innerHTML='<?php //if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['owner_supplies'];
+            $("."+category.split(" ")[0]+"-owner-supplies")[0].innerHTML=Number(categorizedStats[category]['owner_supplies'])>0?'<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['owner_supplies'].toLocaleString():"-";
+            // $("."+category.split(" ")[0]+"-variation-orders")[0].innerHTML='<?php //if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['variation_orders'];
+            $("."+category.split(" ")[0]+"-variation-orders")[0].innerHTML=Number(categorizedStats[category]['variation_orders'])>0?'<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['variation_orders'].toLocaleString():"-";
+            // $("."+category.split(" ")[0]+"-cost-items")[0].innerHTML='<?php //if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['cost_items'];
+            $("."+category.split(" ")[0]+"-cost-items")[0].innerHTML=Number(categorizedStats[category]['cost_items'])>0?'<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['cost_items'].toLocaleString():"-";
+            // $("."+category.split(" ")[0]+"-total-costs")[0].innerHTML='<?php //if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['total_price'];
+            $("."+category.split(" ")[0]+"-total-costs")[0].innerHTML=Number(categorizedStats[category]['total_price'])>0?'<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['total_price'].toLocaleString():"-";
+            // $("."+category.split(" ")[0]+"-shipyard-cost-items")[0].innerHTML='<?php //if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['shipyard_cost_items'];
+            $("."+category.split(" ")[0]+"-shipyard-cost-items")[0].innerHTML=Number(categorizedStats[category]['shipyard_cost_items'])>0?'<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['shipyard_cost_items'].toLocaleString():"-";
             $("."+category.split(" ")[0]+"-comments")[0].innerHTML=`<span class="badge pill bg-secondary" >${categorizedStats[category]['comments']}</span>`;
         }
         
