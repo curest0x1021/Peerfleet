@@ -245,7 +245,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                             <td class="">
                                     <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit" class="icon-16" ></i></button>',array());?>
-                                    <span style="float:right" ><?php echo $project_info->currency?$project_info->currency:"USD";?> <?php echo $allYards[$i]->deviation_cost?$allYards[$i]->deviation_cost:0;?></span>
+                                    <!-- <span style="float:right" ><?php //echo $project_info->currency?$project_info->currency:"USD";?> <?php //echo $allYards[$i]->deviation_cost?$allYards[$i]->deviation_cost:0;?></span> -->
+                                    <span style="float:right" ><?php echo $allYards[$i]->deviation_cost?($project_info->currency?$project_info->currency:"USD")." ".$allYards[$i]->deviation_cost:"-";?></span>
                             </td>
                         <?php
                             # code...
@@ -260,7 +261,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                             <td class="">
                                 <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit" class="icon-16" ></i></button>',array());?>
-                                <span style="float:right" ><?php echo $project_info->currency?$project_info->currency:"USD";?> <?php echo $allYards[$i]->loss_of_earnings?$allYards[$i]->loss_of_earnings:0;?></span>
+                                <!-- <span style="float:right" ><?php //echo $project_info->currency?$project_info->currency:"USD";?> <?php //echo $allYards[$i]->loss_of_earnings?$allYards[$i]->loss_of_earnings:0;?></span> -->
+                                <span style="float:right" ><?php echo $allYards[$i]->loss_of_earnings?($project_info->currency?$project_info->currency:"USD")." ".$allYards[$i]->loss_of_earnings:"-";?></span>
                             </td>
                         <?php
                         $totalCosts[$i]+=0;
@@ -274,7 +276,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                             <td class="">
                                 <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit" class="icon-16"></i></button>',array());?>
-                                <span style="float:right" ><?php echo $project_info->currency?$project_info->currency:"USD";?> <?php echo $allYards[$i]->bunker_cost?$allYards[$i]->bunker_cost:0;?></span>
+                                <!-- <span style="float:right" ><?php //echo $project_info->currency?$project_info->currency:"USD";?> <?php //echo $allYards[$i]->bunker_cost?$allYards[$i]->bunker_cost:0;?></span> -->
+                                <span style="float:right" ><?php echo $allYards[$i]->bunker_cost?($project_info->currency?$project_info->currency:"USD")." ".$allYards[$i]->bunker_cost:"-";?></span>
                             </td>
                         <?php
                         $totalCosts[$i]+=0;
@@ -288,7 +291,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                             <td class="">
                                 <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit" class="icon-16" ></i></button>',array());?>
-                                <span style="float:right" ><?php echo $project_info->currency?$project_info->currency:"USD";?> <?php echo $allYards[$i]->additional_expenditures?$allYards[$i]->additional_expenditures:0;?></span>
+                                <!-- <span style="float:right" ><?php //echo $project_info->currency?$project_info->currency:"USD";?> <?php //echo $allYards[$i]->additional_expenditures?$allYards[$i]->additional_expenditures:0;?></span> -->
+                                <span style="float:right" ><?php echo $allYards[$i]->additional_expenditures?($project_info->currency?$project_info->currency:"USD")." ".$allYards[$i]->additional_expenditures:"-";?></span>
                             </td>
                         <?php
                         $totalCosts[$i]+=0;
@@ -302,7 +306,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                             <td class="">
                                 <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit" class="icon-16" ></i></button>',array());?>
-                                <span style="float:right" ><?php echo $allYards[$i]->total_offhire_period?$allYards[$i]->total_offhire_period:0;?> days</span>
+                                <!-- <span style="float:right" ><?php //echo $allYards[$i]->total_offhire_period?$allYards[$i]->total_offhire_period:0;?> days</span> -->
+                                <span style="float:right" ><?php echo $allYards[$i]->total_offhire_period?$allYards[$i]->total_offhire_period." days":"-";?></span>
                             </td>
                         <?php
                             # code...
@@ -317,7 +322,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                             <td class="">
                                 <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit" class="icon-16" ></i></button>',array());?>
-                                <span style="float:right" ><?php echo $allYards[$i]->total_repair_period?$allYards[$i]->total_repair_period:0;?> days</span>
+                                <!-- <span style="float:right" ><?php //echo $allYards[$i]->total_repair_period?$allYards[$i]->total_repair_period:0;?> days</span> -->
+                                <span style="float:right" ><?php echo $allYards[$i]->total_repair_period?$allYards[$i]->total_repair_period." days":"-";?></span>
                             </td>
                         <?php
                             # code...
@@ -332,7 +338,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                             <td class="">
                                 <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit" class="icon-16" ></i></button>',array());?>
-                                <span style="float:right" ><?php echo $allYards[$i]->days_in_dry_dock?$allYards[$i]->days_in_dry_dock:0;?> days</span>
+                                <!-- <span style="float:right" ><?php //echo $allYards[$i]->days_in_dry_dock?$allYards[$i]->days_in_dry_dock:0;?> days</span> -->
+                                <span style="float:right" ><?php echo $allYards[$i]->days_in_dry_dock?$allYards[$i]->days_in_dry_dock." days":"-";?></span>
                             </td>
                         <?php
                             # code...
@@ -347,7 +354,8 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                             <td class="">
                                     <?php echo modal_anchor(get_uri("projects/modal_edit_yards_general/".$allYards[$i]->id),'<button class="btn btn-sm btn-default" ><i data-feather="edit" class="icon-16" ></i></button>',array());?>
-                                    <span style="float:right" ><?php echo $allYards[$i]->days_at_berth?$allYards[$i]->days_at_berth:0;?> days</span>
+                                    <!-- <span style="float:right" ><?php //echo $allYards[$i]->days_at_berth?$allYards[$i]->days_at_berth:0;?> days</span> -->
+                                    <span style="float:right" ><?php echo $allYards[$i]->days_at_berth?$allYards[$i]->days_at_berth." days":"-";?></span>
                             </td>
                         <?php
                             # code...
@@ -533,7 +541,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         >
                             <?php
 
-                                echo number_format($totalYardCosts[$i],1)." ".$project_info->currency;
+                               if($totalYardCosts[$i]>0)  echo number_format($totalYardCosts[$i],1)." ".$project_info->currency; else echo "-";
                             ?>
                         </th>
                         <?php
@@ -577,7 +585,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                         echo modal_anchor(get_uri('projects/modal_yard_cost_items/'.$oneTask->id),'<span class="badge task-info-box pill bg-secondary" >'.$oneTaskItemCounts[$i].'</span>',array());
                                     ?>
                                     <div class="flex-grow-1" ></div>
-                                    <?php echo number_format($oneTaskAllCosts[$i],1)." ".$project_info->currency; ?>
+                                    <?php if($oneTaskAllCosts[$i]>0) echo number_format($oneTaskAllCosts[$i],1)." ".$project_info->currency; else echo "-"; ?>
                                 </div>
                             </td>
                         <?php
