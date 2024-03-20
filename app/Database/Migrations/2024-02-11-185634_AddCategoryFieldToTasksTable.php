@@ -9,8 +9,8 @@ class AddCategoryFieldToTasksTable extends Migration
     public function up()
     {
         //
-        $this->forge->dropColumn('tasks', 'category');
-        $this->forge->dropColumn('tasks', 'supplier');
+        // $this->forge->dropColumn('tasks', 'category');
+        // $this->forge->dropColumn('tasks', 'supplier');
         $this->forge->addColumn('tasks', [
             'category' => [
                 'type' => 'VARCHAR',

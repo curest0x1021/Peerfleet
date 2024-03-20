@@ -1636,6 +1636,7 @@
             var type=$("#type")[0].value;
             var serial_number=$("#serial_number")[0].value;
             var pms_scs_number=$("#pms_scs_number")[0].value;
+            var class_relevant=$("#class_relevant")[0].value;
             console.log(checklist_items)
             if(!title) return;
             $.ajax({
@@ -1676,7 +1677,8 @@
                     ,pms_scs_number
                     ,checklist_items,
                     dependencies:JSON.stringify(dependencies),
-                    cost_items:JSON.stringify(cost_items)
+                    cost_items:JSON.stringify(cost_items),
+                    class_relevant
                 },
                 success: function (response) {
                     // appLoader.hide();
