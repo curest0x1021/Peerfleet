@@ -4914,6 +4914,7 @@ class Tasks extends Security_Controller {
             "type"=>$this->request->getPost("type"),
             "serial_number"=>$this->request->getPost("serial_number"),
             "pms_scs_number"=>$this->request->getPost("pms_scs_number"),
+            "class_relevant"=>$this->request->getPost("class_relevant"),
             // "cost_items"=>$this->request->getPost("cost_items"),
             "start_date"=>date('Y-m-d', strtotime($this->request->getPost("start_date"))),
             "deadline"=>date('Y-m-d', strtotime($this->request->getPost("deadline"))),
