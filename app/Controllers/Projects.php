@@ -3760,10 +3760,10 @@ class Projects extends Security_Controller {
         $selectedYard=$this->Shipyards_model->get_one($this->request->getPost('shipyard_id'))->id;
         $yardcounts=$this->Project_yards_model->getCount("project_id",$this->request->getPost('project_id'));
         $project_info=$this->Projects_model->get_one($this->request->getPost('project_id'));
-        if($yardcounts==0){
+        // if($yardcounts==0){
             $project_info->status_id=3;
             $this->Projects_model->ci_save($project_info,$project_info->id);
-        }
+        // }
         $save_data=array(
             "project_id"=>$this->request->getPost('project_id'),
             'shipyard_id'=>$this->request->getPost('shipyard_id'),
@@ -5116,7 +5116,8 @@ class Projects extends Security_Controller {
         $project_id=$this->request->getPost("project_id");
         $project_info=$this->Projects_model->get_one($project_id);
         $allShipyards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id))->getResult();
-
+        $project_info->status_id=5;
+        $this->Projects_model->ci_save($project_info,$project_id);
         upload_file_to_temp(true);
         $file = get_array_value($_FILES, "file");
 
@@ -5152,6 +5153,7 @@ class Projects extends Security_Controller {
         }
         // return json_encode($data);
         $this->Shipyard_cost_items_model->delete_where(array("project_id"=>$project_id));
+        $this->Task_cost_items_model->delete_where(array("project_id"=>$project_id));
         for($count=1;$count<count($data);$count++){
             // $task_info=$this->Tasks_model->get_one($task_id);
             foreach ($allShipyards as $oneYard) {
@@ -5171,6 +5173,20 @@ class Projects extends Security_Controller {
                 );
                 $this->Shipyard_cost_items_model->ci_save($saveData,null);
             }
+            
+            $saveCostItem=array(
+                "task_id"=>$data[$count][2],
+                "project_id"=>$project_id,
+                "name"=>$data[$count][6],
+                "description"=>$data[$count][7],
+                "quantity"=>$data[$count][9],
+                "measurement"=>$data[$count][10],
+                "unit_price"=>$data[$count][11],
+                "currency"=>$project_info->currency,
+                "discount"=>$data[$count][14],
+                "yard_remarks"=>$data[$count][16],
+            );
+            $this->Task_cost_items_model->ci_save($saveCostItem,null);
             
         }
         echo json_encode(array("success"=>true));
