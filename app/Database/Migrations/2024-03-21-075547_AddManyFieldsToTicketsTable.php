@@ -13,27 +13,27 @@ class AddManyFieldsToTicketsTable extends Migration
             'manufacturer' => [
                 'type' => 'VARCHAR',
                 "null"=>true,
-                "constraints"=>200
+                "constraint"=>200
             ],
             'equipment' => [
                 'type' => 'VARCHAR',
                 "null"=>true,
-                "constraints"=>200
+                "constraint"=>200
             ],
             'serial_number' => [
                 'type' => 'VARCHAR',
                 "null"=>true,
-                "constraints"=>200
+                "constraint"=>200
             ],
             'critical_disturbance' => [
                 'type' => 'VARCHAR',
                 "null"=>true,
-                "constraints"=>200
+                "constraint"=>200
             ],
             'critical_equipment' => [
                 'type' => 'VARCHAR',
                 "null"=>true,
-                "constraints"=>200
+                "constraint"=>200
             ],
         ]);
     }
