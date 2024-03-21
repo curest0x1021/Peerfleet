@@ -1231,13 +1231,16 @@ class Tickets extends Security_Controller {
         return $this->template->view("tickets/reports/chart_report_view", $view_data);
     }
     function tab_actions($ticket_id){
-        return $this->template->view("tickets/tabs/actions");
+        return $this->template->view("tickets/tabs/actions",["ticket_id"=>$ticket_id]);
     }
     function tab_requisitions($ticket_id){
-        return $this->template->view("tickets/tabs/requisitions");
+        return $this->template->view("tickets/tabs/requisitions",["ticket_id"=>$ticket_id]);
     }
     function tab_activities($ticket_id){
-        return $this->template->view("tickets/tabs/activities");
+        return $this->template->view("tickets/tabs/activities",["ticket_id"=>$ticket_id]);
+    }
+    function modal_add_corrective_action($ticket_id){
+        return $this->template->view("tickets/modals/modal_add_corrective_action",["ticket_id"=>$ticket_id]);
     }
 
 }
