@@ -1,6 +1,12 @@
-<div class="modal-body clearfix">
+<div id="ajaxModalContent" >
+<div class="modal-body clearfix" id="add-variation-order" >
 <?php echo form_open(get_uri("tasks/save_variation_order"), array()); ?>
 <?php echo form_close()?>
+<div id="link-of-new-view" class="hide">
+    <?php
+    echo modal_anchor(get_uri("tasks/view"), "", array("data-modal-lg" => "1"));
+    ?>
+</div>
     <div>
         <p>
         Please note: With this process, you change the total cost of this task and a subtask will be created with its own start date and deadline. Within this process, you have to explain the reasons for the variation order. Please provide a clear explanation of the variation order and the reason for it.
@@ -269,7 +275,8 @@
     <div class="d-flex" ></div>
     <button class="btn btn-default" data-bs-dismiss="modal" >Cancel</button>
     <div class="flex-grow-1" ></div>
-    <button class="btn btn-success btn-save-variation-order" data-bs-dismiss="modal" >Save</button>
+    <button class="btn btn-success btn-save-variation-order"  >Save</button>
+</div>
 </div>
 <script>
     $(document).ready(function(){
@@ -315,10 +322,38 @@
                             </tr>
                         `;
                         $(".table-variation-orders tbody").append(new_row);
+                        $maskTarget=$("#ajaxModalContent").find(".modal-body");
+                        var padding = $maskTarget.height() - 80;
+                        if (padding > 0) {
+                            padding = Math.floor(padding / 2);
+                        }
+                        $maskTarget.after("<div class='modal-mask'><div class='circle-loader'></div></div>");
+                        //check scrollbar
+                        var height = $maskTarget.outerHeight();
+                        $('.modal-mask').css({"width": $maskTarget.width() + 22 + "px", "height": height + "px", "padding-top": padding + "px"});
+                        $maskTarget.closest('.modal-dialog').find('[type="submit"]').attr('disabled', 'disabled');
+                        $maskTarget.addClass("hide");
+                        if(window.modal_opened==1){
+                            window.modal_opened=null;
+                            var $taskViewLink = $("#link-of-new-view").find("a");
+                            $taskViewLink.attr("data-action-url", "<?php echo get_uri("tasks/view"); ?>");
+                            // $taskViewLink.attr("data-title", taskShowText + " #" + JSON.parse(response).saved_id);
+                            $taskViewLink.attr("data-post-id", <?php echo $task_id;?>);
+                            $taskViewLink.trigger("click");
+                        }else{
+                            window.modal_opened=null;
+                            window.add_variation_order.closeModal()
+                            window.location.reload();
+                        }
+                        
                     }
                     
                 }
             })
         })
+        window.add_variation_order=$("#add-variation-order").appForm({
+            closeModalOnSuccess: false,
+            
+        });
     })
 </script>

@@ -21,6 +21,30 @@
         />
     </div>
     <p>The following processes can be linked to this corrective action.</p>
+    <!-- <div class="row" > -->
+        <button class="w-100 btn btn-lg btn-default mb-2" style="height:5vh;" >
+            <div class="d-flex" >
+                <i data-feather="tool" class="icon-16" ></i>
+                <div class="flex-grow-1"></div>
+                <i data-feather="plus" class="icon-16" ></i>
+            </div>
+        </button>
+        <button class="w-100 btn btn-lg btn-default mb-2" style="height:5vh;"  data-act="ajax-modal" data-title="Add Task" data-action-url="<?php echo get_uri("tasks/modal_form_basic");?>">
+            <div class="d-flex" >
+                <i data-feather="shopping-cart" class="icon-16" ></i>
+                <div class="flex-grow-1"></div>
+                <i data-feather="plus" class="icon-16" ></i>
+            </div>
+        </button>
+        <button class="w-100 btn btn-lg btn-default mb-2" style="height:5vh;" >
+            <div class="d-flex" >
+                <i data-feather="calendar" class="icon-16" ></i>
+                <div class="flex-grow-1"></div>
+                <i data-feather="plus" class="icon-16" ></i>
+            </div>
+        </button>
+    <!-- </div> -->
+    <br/>
     <div class="form-group" >
         <label for="remark" >Remark : </label>
         <textarea

@@ -461,9 +461,9 @@ $task_link = anchor(get_uri("tasks/view/$model_info->id"), '<i data-feather="ext
         checklists--;
         $(".chcklists_count").text(checklists);
     }
-    <?php
     
-    ?>
+    window.modal_opened=<?php echo $modal_opened;?>;
+
 </script>
 
 <?php
