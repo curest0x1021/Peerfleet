@@ -1242,6 +1242,12 @@ class Tickets extends Security_Controller {
     function modal_add_corrective_action($ticket_id){
         return $this->template->view("tickets/modals/modal_add_corrective_action",["ticket_id"=>$ticket_id]);
     }
+    function modal_connect_requisition($ticket_id){
+        return $this->template->view("tickets/modals/modal_connect_requisition",["ticket_id"=>$ticket_id]);
+    }
+    function modal_add_schedule($ticket_id){
+        return $this->template->view("tickets/modals/modal_add_schedule",["ticket_id"=>$ticket_id]);
+    }
 
 }
 
