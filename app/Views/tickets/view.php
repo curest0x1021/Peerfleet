@@ -47,6 +47,9 @@
                         <?php if ($login_user->user_type === "staff") { ?>
                             <ul id="ticket-tabs" data-bs-toggle="ajax-tab" class="nav nav-pills rounded classic mb20 scrollable-tabs border-white" role="tablist">
                                 <li><a role="presentation" data-bs-toggle="tab" href="javascript:;" data-bs-target="#ticket-details-section"><?php echo app_lang("details"); ?></a></li>
+                                <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("tickets/tab_actions/" . $ticket_info->id); ?>" data-bs-target="#ticket-actions-section"><?php echo "Actions"; ?></a></li>
+                                <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("tickets/tab_requisitions/" . $ticket_info->id); ?>" data-bs-target="#ticket-requisitions-section"><?php echo "Requisitions"; ?></a></li>
+                                <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("tickets/tab_activities/" . $ticket_info->id); ?>" data-bs-target="#ticket-activities-section"><?php echo "Activities"; ?></a></li>
                                 <li><a role="presentation" data-bs-toggle="tab" href="<?php echo_uri("tickets/tasks/" . $ticket_info->id); ?>" data-bs-target="#ticket-tasks-section"><?php echo app_lang('tasks'); ?></a></li>
                             </ul>
                         <?php } ?>
@@ -57,6 +60,9 @@
                             <div role="tabpanel" class="tab-pane fade"id="ticket-details-section">
                                 <?php echo view("tickets/details"); ?>
                             </div>
+                            <div role="tabpanel" class="tab-pane fade grid-button" id="ticket-actions-section"></div>
+                            <div role="tabpanel" class="tab-pane fade grid-button" id="ticket-requisitions-section"></div>
+                            <div role="tabpanel" class="tab-pane fade grid-button" id="ticket-activities-section"></div>
                             <div role="tabpanel" class="tab-pane fade grid-button" id="ticket-tasks-section"></div>
                         </div>
                     <?php } else { ?>
