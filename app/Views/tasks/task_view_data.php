@@ -1145,7 +1145,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                 <td>Additional cost</td>
                                 <td>Start date</td>
                                 <td>Finish date</td>
-                                <td><?php echo modal_anchor(get_uri('tasks/modal_add_order/'.$task_id),'<button class="btn btn-sm btn-default" ><i class="icon-16" data-feather="plus-circle" ></i></button>',array("title"=>"Creation Variation Order"));?></td>
+                                <td><?php echo modal_anchor(get_uri('tasks/modal_add_order/'.$task_id),'<button class="btn btn-sm btn-default" ><i class="icon-16" data-feather="plus-circle" ></i></button>',array("id"=>"add-task-variation-order","title"=>"Creation Variation Order"));?></td>
                             </tr>
                             </thead>
                             <tbody >
@@ -1669,7 +1669,6 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
         if(isset($model_info)&&$model_info->cost_items)
         echo 'cost_items=JSON.parse(`'.$model_info->cost_items.'`);';
     ?>
-    
     <?php 
     // if(count($all_files)>0)
     // echo 'var all_files='.json_encode($all_files).';'

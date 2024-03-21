@@ -1867,8 +1867,10 @@ class Tasks extends Security_Controller {
 
         
         if ($view_type == "details") {
+            $view_data['modal_opened']=0;
             return $this->template->rander('tasks/view', $view_data);
         } else {
+            $view_data['modal_opened']=1;
             return $this->template->view('tasks/view', $view_data);
         }
     }
