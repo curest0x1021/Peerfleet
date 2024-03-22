@@ -1,5 +1,5 @@
 <div id="kanban-wrapper">
-    <ul id="kanban-container" style="width:100%;transform-origin:0 0;" class="kanban-container clearfix">
+    <ul id="kanban-container" style="width:100%;transform-origin:0 0;overflow-x:scroll;" class="kanban-container clearfix">
 
         <?php foreach ($columns as $column) { ?>
             <li class="kanban-col kanban-<?php
@@ -171,12 +171,15 @@
     };
 
     var zoom=1;
+    var is_dragging=false;
+    var past_x=0;
+    var past_y=0;
     $(document).ready(function () {
         kanbanContainerWidth = $("#kanban-container").width();
 
         
         $("#kanban-wrapper").on("wheel",function(event){
-            event.preventDefault()
+            event.originalEvent.preventDefault()
             var deltaY=event.originalEvent.deltaY;
             // console.log(event)
             if(deltaY>0) zoom+=0.1;
@@ -184,6 +187,29 @@
                 if(zoom>0) zoom-=0.1;
             }
             $(".kanban-container").css("transform","scale("+zoom+")");
+            $(".kanban-container").css("overflow-x","scroll");
+        })
+        $("#kanban-wrapper").on("mousedown",function(event){
+            event.originalEvent.preventDefault()
+            is_dragging=true;
+            past_x=event.clientX;
+            past_y=event.clientY;
+        })
+        $("#kanban-wrapper").on("mousemove",function(event){
+            event.originalEvent.preventDefault();
+            if(is_dragging){
+                $("#kanban-wrapper")[0].scrollLeft-=(event.clientX-past_x);
+                $("#kanban-wrapper")[0].scrollTop-=(event.clientY-past_y);
+                past_x=event.clientX;
+                past_y=event.clientY;
+            }
+            
+        })
+        $("#kanban-wrapper").on("mouseup",function(event){
+            event.originalEvent.preventDefault()
+            is_dragging=false;
+            past_x=0;
+            past_y=0;
         })
         
 
