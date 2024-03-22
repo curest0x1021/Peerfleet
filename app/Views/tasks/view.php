@@ -46,7 +46,7 @@
             var browserState = {
                 Url: "<?php echo get_uri("tasks/view/" . $model_info->id); ?>"
             };
-            history.pushState(browserState, "", browserState.Url);
+            // history.pushState(browserState, "", browserState.Url);
 
             //restore previous url
             if (!window.modalEventAttached) {
