@@ -390,6 +390,29 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label for="estimated_cost" class="col-md-3">Estimated cost:</label>
+                                    <div class="col-md-9"  >
+                                    <?php
+
+                                    echo form_input(array(
+                                        "id" => "estimated_cost",
+                                        "name" => "estimated_cost",
+                                        "value" => isset($gotTasklibrary)&&$gotTasklibrary->estimated_cost?$gotTasklibrary->estimated_cost:"",
+                                        "class" => "form-control",
+                                        "type"=>"number",
+                                        "required"=>true,
+                                        "style"=>"border:1px solid lightgray",
+                                        "placeholder" => "Estimated cost",
+                                        "data-rule-required" => true,
+                                        "data-msg-required" => app_lang("field_required"),
+                                        "autocomplete" => "off"
+                                    ));
+                                    ?>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -1637,6 +1660,7 @@
             var serial_number=$("#serial_number")[0].value;
             var pms_scs_number=$("#pms_scs_number")[0].value;
             var class_relevant=$("#class_relevant")[0].value;
+            var estimated_cost=$("#estimated_cost")[0].value;
             console.log(checklist_items)
             if(!title) return;
             $.ajax({
@@ -1678,7 +1702,8 @@
                     ,checklist_items,
                     dependencies:JSON.stringify(dependencies),
                     cost_items:JSON.stringify(cost_items),
-                    class_relevant
+                    class_relevant,
+                    estimated_cost
                 },
                 success: function (response) {
                     // appLoader.hide();

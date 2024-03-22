@@ -86,19 +86,7 @@
                             <label for="dock_list_number" class="col-md-4"><a data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Dock List Number" >DLN:</a></label>
                             <div class="col-md-8" >
                                 <?php
-                                // $dock_list_number_now="";
-                                // if(isset($gotTask)){
-                                //     $count=1;
-                                //     if(!$gotTask->category){
-                                //         $gotTask["category"]="Others";
-                                //     }
-                                //     foreach($allTasklibraries as $oneTask){
-                                //         if($oneTask['title']==$gotTask->title) break;
-                                //         if($oneTask['category']==$gotTask->category) $count++;
-                                //     }
-                                //     $dock_list_number_now=strtoupper($gotTask->category[0]).sprintf("%02d",$count);
-                                // }
-                                
+
                                 echo form_input(array(
                                     "id" => "dock_list_number",
                                     "name" => "dock_list_number",
@@ -109,6 +97,27 @@
                                     "style"=>"border:1px solid lightgray",
                                     "placeholder" => "DLN",
                                     "autocomplete" => "off"
+                                ));
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="estimated_cost" class="col-md-4">Estimated cost:</label>
+                            <div class="col-md-8" >
+                                <?php
+
+                                echo form_input(array(
+                                    "id" => "estimated_cost",
+                                    "name" => "estimated_cost",
+                                    "value" => isset($gotTask)?$gotTask->estimated_cost:0,
+                                    "class" => "form-control",
+                                    "maxlength" => 15,
+                                    "style"=>"border:1px solid lightgray",
+                                    "placeholder" => "Estimated cost",
+                                    "autocomplete" => "off",
+                                    "type"=>"number"
                                 ));
                                 ?>
                             </div>
@@ -1793,6 +1802,7 @@
             var serial_number=$("#serial_number")[0].value;
             var pms_scs_number=$("#pms_scs_number")[0].value;
             var class_relevant=$("#class_relevant")[0].value;
+            var estimated_cost=$("#estimated_cost")[0].value;
             var start_date=$("#start_date")[0].value;
             var deadline=$("#deadline")[0].value;
             var project_id=$("#project_id")[0].value;
@@ -1832,6 +1842,7 @@
             myForm.append("serial_number",serial_number);
             myForm.append("pms_scs_number",pms_scs_number);
             myForm.append("class_relevant",class_relevant);
+            myForm.append("estimated_cost",estimated_cost);
             myForm.append("checklist_items",JSON.stringify(checklist_items));
             myForm.append("dependencies",dependencies);
             myForm.append("cost_items",JSON.stringify(cost_items));

@@ -3796,9 +3796,10 @@ class Projects extends Security_Controller {
         //     return $oneYard->selected==1;
         // });
         // if(count($selectedYards)>0) $allYards=$selectedYards;
+        $allCostItems=$this->Task_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
         $allCurrencyRates=$this->Project_currency_rates_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allYardCostItems=$this->Shipyard_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
-        return $this->template->view("projects/comparison/comparison_view",["allCurrencyRates"=>$allCurrencyRates,"allYardCostItems"=>$allYardCostItems,"allProjectTasks"=>$allProjectTasks,"project_info"=>$project_info,"allYards"=>$allYards]);
+        return $this->template->view("projects/comparison/comparison_view",["allCostItems"=>$allCostItems,"allCurrencyRates"=>$allCurrencyRates,"allYardCostItems"=>$allYardCostItems,"allProjectTasks"=>$allProjectTasks,"project_info"=>$project_info,"allYards"=>$allYards]);
     }
     function modal_yard_cost_items($task_id){
         $project_id=$this->Tasks_model->get_one($task_id)->project_id;

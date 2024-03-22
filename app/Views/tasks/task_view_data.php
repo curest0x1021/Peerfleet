@@ -697,9 +697,9 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                                         echo "<tr><td>";
                                         echo $oneItem->name;
                                         echo "</td><td>";
-                                        echo number_format($oneItem->quantity)." ( ".$oneItem->measurement." ) X ".$oneItem->currency." ".number_format($oneItem->unit_price)." ( ".$oneItem->quote_type." )";
+                                        echo number_format($oneItem->quantity)." ( ".$oneItem->measurement." ) X ".$oneItem->currency." ".number_format($oneItem->unit_price).($oneItem->quote_type?" ( ".$oneItem->quote_type." )":"");
                                         echo "</td><td>";
-                                        echo $oneItem->currency." ".number_format($oneItem->total_cost);
+                                        echo $oneItem->currency." ".number_format($oneItem->total_cost,1);
                                         echo "</td><td>";
                                         echo '<input class="edit-cost-item-id" value='.$oneItem->id.' hidden /><button onClick="start_edit_cost_item(event)" type="button" class="btn btn-sm" ><i style="color:gray" data-feather="edit" class="icon-16" ></i></button><button onClick="delete_item(event)" type="button" class="btn btn-sm" ><i color="gray" data-feather="x-circle" class="icon-16" ></i></button>';
                                         echo "</td></tr>";
@@ -1009,6 +1009,21 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                             </tr>
                             </thead>
                             <tbody>
+                                <tr>
+                                    <td>
+                                        Estimated cost
+                                    </td>
+                                    <td>
+                                        <?php
+                                        // $estimated_cost=0;
+                                        // foreach ($allCostItems as $key => $item) {
+                                        //     # code...
+                                        //     $estimated_cost+=$item->total_cost;
+                                        // }
+                                        echo ($project_info->currency?$project_info->currency:"USD")." ".number_format($model_info->estimated_cost,1);
+                                        ?>
+                                    </td>
+                                </tr>
                                 <?php
                                 foreach ($allYards as $oneYard) {
                                 ?>
