@@ -11,9 +11,8 @@ class AddEstimatedCostFieldToTaskLibraries extends Migration
         //
         $this->forge->addColumn('task_libraries', [
             'estimated_cost' => [
-                'type' => 'FLOAT',
+                'type' => 'DOUBLE',
                 "default"=>0,
-                "constraint"=>20
             ]
         ]);
         
