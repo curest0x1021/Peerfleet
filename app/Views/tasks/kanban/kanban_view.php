@@ -1,5 +1,5 @@
 <div id="kanban-wrapper">
-    <ul id="kanban-container" style="width:100%;" class="kanban-container clearfix">
+    <ul id="kanban-container" style="width:100%;transform-origin:0 0;" class="kanban-container clearfix">
 
         <?php foreach ($columns as $column) { ?>
             <li class="kanban-col kanban-<?php
@@ -59,12 +59,13 @@
 
         var totalColumns = "<?php echo $total_columns ?>";
         var columnWidth = (335 * totalColumns) + 5;
-
+        //////////////commented for zoom///////////////////////////
         // if (columnWidth > kanbanContainerWidth) {
         //     $("#kanban-container").css({width: columnWidth + "px"});
         // } else {
         //     $("#kanban-container").css({width: "100%"});
         // }
+        ///////////////////////
         $("#kanban-container").css({width: "100%"});
 
 
@@ -75,26 +76,27 @@
             $("#kanban-wrapper").css("overflow-x", "hidden");
         }
 
-
+        ///////////Commented For Zoom//////////////
         //set column scroll
 
-        var columnHeight = $(window).height() - $(".kanban-item-list").offset().top - 57;
-        if (isMobile()) {
-            columnHeight = $(window).height() - 30;
-        }
+        // var columnHeight = $(window).height() - $(".kanban-item-list").offset().top - 57;
+        // if (isMobile()) {
+        //     columnHeight = $(window).height() - 30;
+        // }
 
-        $(".kanban-item-list").height(columnHeight);
+        // $(".kanban-item-list").height(columnHeight);
 
-        $(".kanban-item-list").each(function (index) {
+        // $(".kanban-item-list").each(function (index) {
 
-            //set scrollbar on column... if requred
-            if ($(this)[0].offsetHeight < $(this)[0].scrollHeight) {
-                $(this).css("overflow-y", "scroll");
-            } else {
-                $(this).css("overflow-y", "hidden");
-            }
+        //     //set scrollbar on column... if requred
+        //     if ($(this)[0].offsetHeight < $(this)[0].scrollHeight) {
+        //         $(this).css("overflow-y", "scroll");
+        //     } else {
+        //         $(this).css("overflow-y", "hidden");
+        //     }
 
-        });
+        // });
+        ////////////////////////////////////////
     };
 
 
@@ -168,9 +170,24 @@
         });
     };
 
-
+    var zoom=1;
     $(document).ready(function () {
         kanbanContainerWidth = $("#kanban-container").width();
+
+        $(".kanban-container").on("click",function(event){
+            console.log($(this))
+        })
+        $("#kanban-wrapper").on("wheel",function(event){
+            event.preventDefault()
+            var deltaY=event.originalEvent.deltaY;
+            // console.log(event)
+            if(deltaY>0) zoom+=0.1;
+            else {
+                if(zoom>0) zoom-=0.1;
+            }
+            $(".kanban-container").css("transform","scale("+zoom+")");
+        })
+        
 
         if (isMobile() && window.scrollToKanbanContent) {
             window.scrollTo(0, 220); //scroll to the content for mobile devices
@@ -283,7 +300,6 @@
     $(window).resize(function () {
         adjustViewHeightWidth();
     });
-
 
 
 </script>
