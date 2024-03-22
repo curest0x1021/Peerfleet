@@ -179,6 +179,27 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         ?>
                     </tr>
                     <tr>
+                        <td><b>Estimated cost</b></td>
+                        <?php
+                        $total_estimated_cost=0;
+                        foreach ($allProjectTasks as $key => $task) {
+                            # code...
+                            $total_estimated_cost+=$task->estimated_cost?$task->estimated_cost:0;
+                        }
+                        for ($i=0; $i < $numberYards; $i++) { 
+                        ?>
+                            <td class="td-total-cost"><?php
+                            if($total_estimated_cost>0){
+                                echo number_format($total_estimated_cost,1)." ".($project_info->currency?$project_info->currency:"USD");
+                            }else echo "-";
+                            ?></td>
+                        <?php
+                            # code...
+                            $totalCosts[$i]=0;
+                        }
+                        ?>
+                    </tr>
+                    <tr>
                         <td><b>Sum of Yard Quotes</b></td>
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 

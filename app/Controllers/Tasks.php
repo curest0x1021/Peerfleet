@@ -4917,6 +4917,8 @@ class Tasks extends Security_Controller {
             "serial_number"=>$this->request->getPost("serial_number"),
             "pms_scs_number"=>$this->request->getPost("pms_scs_number"),
             "class_relevant"=>$this->request->getPost("class_relevant"),
+            "estimated_cost"=>$this->request->getPost("estimated_cost"),
+            "budget_group"=>$this->request->getPost("budget_group"),
             // "cost_items"=>$this->request->getPost("cost_items"),
             "start_date"=>date('Y-m-d', strtotime($this->request->getPost("start_date"))),
             "deadline"=>date('Y-m-d', strtotime($this->request->getPost("deadline"))),
@@ -5430,7 +5432,9 @@ class Tasks extends Security_Controller {
                 "specification"=>$oneLibrary->specification,
                 "start_date"=>$project_info->start_date,
                 "deadline"=>$project_info->deadline,
-                "class_relevant"=>$oneLibrary->class_relevant?$oneLibrary->class_relevant:0
+                "class_relevant"=>$oneLibrary->class_relevant?$oneLibrary->class_relevant:0,
+                "estimated_cost"=>$oneLibrary->estimated_cost?$oneLibrary->estimated_cost:0,
+                // "budget_group"=>$oneLibrary->budget_group?$oneLibrary->budget_group:0
             );
             $saved_id=$this->Tasks_model->save_gantt_task_date($newTaskData,null);
             $costItems=json_decode($oneLibrary->reference_drawing);

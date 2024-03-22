@@ -82,6 +82,45 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="estimated_cost" class="col-md-4">Estimated cost:</label>
+                            <div class="col-md-8" >
+                                <?php                                
+                                echo form_input(array(
+                                    "id" => "estimated_cost".$modalId,
+                                    "name" => "estimated_cost",
+                                    "value" => isset($gotTask)&&property_exists($gotTask,"estimated_cost")?$gotTask->estimated_cost:"",
+                                    "class" => "form-control",
+                                    "maxlength" => 15,
+                                    "type"=>"number",
+                                    "style"=>"border:1px solid lightgray",
+                                    "placeholder" => "Estimated cost",
+                                    "autocomplete" => "off"
+                                ));
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="budget_group" class="col-md-4">Budget group:</label>
+                            <div class="col-md-8" >
+                                <?php                                
+                                echo form_input(array(
+                                    "id" => "budget_group".$modalId,
+                                    "name" => "budget_group",
+                                    "value" => isset($gotTask)&&property_exists($gotTask,"budget_group")?$gotTask->budget_group:"",
+                                    "class" => "form-control",
+                                    "maxlength" => 15,
+                                    "style"=>"border:1px solid lightgray",
+                                    "placeholder" => "Budget group",
+                                    "autocomplete" => "off"
+                                ));
+                                ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-4">
@@ -1719,6 +1758,8 @@
             var class_relevant=$("#class_relevant<?php echo $modalId; ?>")[0].value;
             var start_date=$("#start_date<?php echo $modalId; ?>")[0].value;
             var deadline=$("#deadline<?php echo $modalId; ?>")[0].value;
+            var estimated_cost=$("#estimated_cost<?php echo $modalId; ?>")[0].value;
+            var budget_group=$("#budget_group<?php echo $modalId; ?>")[0].value;
             var project_id=`<?php echo $project_id; ?>`
             const myForm=new FormData();
             myForm.append("rise_csrf_token",rise_csrf_token);
@@ -1756,6 +1797,8 @@
             myForm.append("serial_number",serial_number);
             myForm.append("pms_scs_number",pms_scs_number);
             myForm.append("class_relevant",class_relevant);
+            myForm.append("estimated_cost",estimated_cost);
+            myForm.append("budget_group",budget_group);
             myForm.append("checklist_items",JSON.stringify(checklist_items));
             myForm.append("dependencies",dependencies);
             myForm.append("cost_items",JSON.stringify(cost_items));

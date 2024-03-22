@@ -129,6 +129,7 @@ $totalVariationOrders=0;
 $totalCostItems=0;
 $totalShipyardCostItems=0;
 $totalComments=0;
+$totalEstimatedCost=0;
 $totalPrice=0;
 ?>
 <style>
@@ -166,6 +167,7 @@ $totalPrice=0;
             <thead>
                 <tr>
                     <th class="col" style="min-width:15vw;max-width:15vw;width:15vw;" >Name</th>
+                    <th class="col"  >Estimated cost</th>
                     <th class="col"  >Owner's supply</th>
                     <th class="col"   >Quoted</th>
                     <th class="col" >Variation orders</th>
@@ -179,6 +181,7 @@ $totalPrice=0;
             <tbody>
                 <tr>
                     <th>Total cost:</th>
+                    <td class="total-estimated-cost" ></td>
                     <td class="total-owner-supplies"><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
                     <td class="total-cost-items"><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
                     <td class="total-variation-orders" ><?php if(isset($project_info->currency)) echo $project_info->currency;?> 0</td>
@@ -200,10 +203,12 @@ $totalPrice=0;
                     $categoryVariationOrder=0;
                     $categoryComments=0;
                     $categoryTotalPrice=0;
+                    $categoryEstimatedCost=0;
             ?>
             <tbody>
                 <tr  data-bs-toggle="collapse" data-bs-target="#<?php echo explode(" ",$category)[0]."-tasks-panel";?>" aria-expanded="false" aria-controls="<?php echo explode(" ",$category)[0]."-tasks-panel";?>">
                     <td><i data-feather="chevron-down" style="word-wrap:break-word;" class="collapse-arrow icon-16"></i><b class="" ><?php echo $category;?></b></td>
+                    <td class="<?php echo explode(" ",$category)[0];?>-estimated-cost" ></td>
                     <td class="<?php echo explode(" ",$category)[0];?>-owner-supplies" ></td>
                     <td class="<?php echo explode(" ",$category)[0];?>-cost-items" ></td>
                     <td class="<?php echo explode(" ",$category)[0];?>-variation-orders" ></td>
@@ -261,6 +266,8 @@ $totalPrice=0;
                         $oneTaskTotalComments=count($oneTaskComments);
                         $categoryComments+=$oneTaskTotalComments;
 
+                        $categoryEstimatedCost+=($oneTask->estimated_cost?$oneTask->estimated_cost:0);
+
                         
                         $totalOwnerSupplies+=$oneTaskTotalSupplies;
                         $totalCostItems+=$oneTaskTotalCostItems;
@@ -268,12 +275,14 @@ $totalPrice=0;
                         $totalVariationOrders+=$oneTaskTotalVariationOrders;
                         $totalPrice+=$oneTaskTotalPrice;
                         $totalComments+=$oneTaskTotalComments;
+                        $totalEstimatedCost+=($oneTask->estimated_cost?$oneTask->estimated_cost:0);
 
                     ?>
                     <tr>
                         <td style="word-wrap:break-word;max-width:12vw;" >
                             <?php echo "<span style='color:gray;' >".$oneTask->dock_list_number."</span> ".$oneTask->title;?>
                         </td>
+                        <td><?php if($oneTask->estimated_cost>0) echo ($project_info->currency?$project_info->currency:"USD")." ".number_format($oneTask->estimated_cost,1); else echo "-";?></td>
                         <!-- <td><?php //if(isset($project_info->currency)) echo $project_info->currency;?> <?php //echo number_format($oneTaskTotalSupplies);?></td> -->
                         <td><?php if($oneTaskTotalSupplies>0) echo ($project_info->currency?$project_info->currency:"USD")." ".number_format($oneTaskTotalSupplies,1); else echo "-";?></td>
                         <!-- <td><?php //if(isset($project_info->currency)) echo $project_info->currency;?> <?php //echo number_format( $oneTaskTotalCostItems);?></td> -->
@@ -298,6 +307,7 @@ $totalPrice=0;
                         $categorizedStats[$category]["variation_orders"]=($categoryVariationOrder);
                         $categorizedStats[$category]["shipyard_cost_items"]=($categoryShipyardCostItems);
                         $categorizedStats[$category]["total_price"]=($categoryTotalPrice);
+                        $categorizedStats[$category]["estimated_cost"]=($categoryEstimatedCost);
                         $categorizedStats[$category]["comments"]=$categoryComments;
                     ?>
             </tbody>
@@ -318,13 +328,15 @@ $totalPrice=0;
         <?php if(isset($totalCostItems)) echo 'totalCostItems="'.($totalCostItems).'";'; ?>
         <?php if(isset($totalShipyardCostItems)) echo 'totalShipyardCostItems="'.($totalShipyardCostItems).'";'; ?>
         <?php if(isset($totalPrice)) echo 'totalCosts="'.($totalPrice).'";'; ?>
+        <?php if(isset($totalEstimatedCost)) echo 'totalEstimatedCost="'.($totalEstimatedCost).'";'; ?>
         <?php if(isset($totalComments)) echo 'totalComments='.$totalComments.';'; ?>
         <?php if(isset($categorizedStats)) echo 'categorizedStats='.json_encode($categorizedStats).';'; ?>
         $("[data-bs-toggle=collapse]").on("click",function(){
             if(!$(this).find(".collapse-arrow").hasClass('collapse-active')) $(this).find(".collapse-arrow").addClass('collapse-active');
             else $(this).find(".collapse-arrow").removeClass('collapse-active')
         });
-        console.log($(".total-owner-supplies"))
+        // console.log($(".total-owner-supplies"))
+        $(".total-estimated-cost")[0].innerHTML=Number(totalEstimatedCost)>0?'<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalEstimatedCost.toLocaleString():"-";
         // $(".total-owner-supplies")[0].innerHTML='<?php //if(isset($project_info->currency)) echo $project_info->currency;?> '+totalOwnerSupplies;
         $(".total-owner-supplies")[0].innerHTML=Number(totalOwnerSupplies)>0?'<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+totalOwnerSupplies.toLocaleString():"-";
         // $(".total-cost-items")[0].innerHTML='<?php //if(isset($project_info->currency)) echo $project_info->currency;?> '+totalCostItems;
@@ -347,6 +359,7 @@ $totalPrice=0;
             "Common systems",
             "Others",
         ]){
+            $("."+category.split(" ")[0]+"-estimated-cost")[0].innerHTML=Number(categorizedStats[category]['estimated_cost'])>0?'<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['estimated_cost'].toLocaleString():"-";
             // $("."+category.split(" ")[0]+"-owner-supplies")[0].innerHTML='<?php //if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['owner_supplies'];
             $("."+category.split(" ")[0]+"-owner-supplies")[0].innerHTML=Number(categorizedStats[category]['owner_supplies'])>0?'<?php if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['owner_supplies'].toLocaleString():"-";
             // $("."+category.split(" ")[0]+"-variation-orders")[0].innerHTML='<?php //if(isset($project_info->currency)) echo $project_info->currency;?> '+categorizedStats[category]['variation_orders'];
