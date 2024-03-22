@@ -174,9 +174,7 @@
     $(document).ready(function () {
         kanbanContainerWidth = $("#kanban-container").width();
 
-        $(".kanban-container").on("click",function(event){
-            console.log($(this))
-        })
+        
         $("#kanban-wrapper").on("wheel",function(event){
             event.preventDefault()
             var deltaY=event.originalEvent.deltaY;
