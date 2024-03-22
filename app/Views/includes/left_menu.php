@@ -20,6 +20,14 @@
             $menu_index=0;
             foreach ($sidebar_menu as $main_menu) {
                 $main_menu_name = get_array_value($main_menu, "name");
+                if($menu_index==10){
+                    echo '<li class="    main">
+                            <a href="'.get_uri("budget_groups").'">
+                                <i class="icon-16" data-feather="database" ></i>
+                                <span class="menu-text ">Budget groups</span>
+                            </a>
+                        </li>';
+                }
                 if($menu_index==11){
                     echo '<li class="    main">
                             <a href="'.get_uri("file_manager").'">

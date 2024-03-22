@@ -125,6 +125,12 @@
                                     <div class="col-md-8" >
                                         <?php
                                         $budget_group_dropdown=array();
+                                        foreach($allBudgetGroups as $oneGroup){
+                                            $budget_group_dropdown[]=array(
+                                                "id"=>$oneGroup->id,
+                                                "text"=>$oneGroup->title
+                                            );
+                                        }
                                         
                                         echo form_input(array(
                                             "id" => "budget_group",
@@ -1661,6 +1667,7 @@
             var pms_scs_number=$("#pms_scs_number")[0].value;
             var class_relevant=$("#class_relevant")[0].value;
             var estimated_cost=$("#estimated_cost")[0].value;
+            var budget_group=$("#budget_group")[0].value;
             console.log(checklist_items)
             if(!title) return;
             $.ajax({
@@ -1703,7 +1710,8 @@
                     dependencies:JSON.stringify(dependencies),
                     cost_items:JSON.stringify(cost_items),
                     class_relevant,
-                    estimated_cost
+                    estimated_cost,
+                    budget_group
                 },
                 success: function (response) {
                     // appLoader.hide();

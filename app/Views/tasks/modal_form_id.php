@@ -106,7 +106,14 @@
                         <div class="row">
                             <label for="budget_group" class="col-md-4">Budget group:</label>
                             <div class="col-md-8" >
-                                <?php                                
+                                <?php
+                                $budget_group_dropdown=array();
+                                foreach($allBudgetGroups as $oneGroup){
+                                    $budget_group_dropdown[]=array(
+                                        "id"=>$oneGroup->id,
+                                        "text"=>$oneGroup->title
+                                    );
+                                }
                                 echo form_input(array(
                                     "id" => "budget_group".$modalId,
                                     "name" => "budget_group",
@@ -1438,6 +1445,9 @@
         });
         $("#class_relevant<?php echo $modalId;?>").select2({
             data: <?php echo (json_encode($class_relevant_dropdown)); ?>
+        });
+        $("#budget_group<?php echo $modalId;?>").select2({
+            data: <?php echo (json_encode($budget_group_dropdown)); ?>
         });
         // $("#cost_item_budget_group<?php 
         // // echo $modalId;
