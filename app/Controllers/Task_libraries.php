@@ -10,6 +10,7 @@ class Task_libraries extends Security_Controller {
         $this->Task_libraries_model = model("App\Models\Task_libraries_model");
         $this->Checklist_items_model= model("App\Models\Checklist_items_model");
         $this->Task_library_checklist_items_model= model("App\Models\Task_library_checklist_items_model");
+        $this->Budget_groups_model= model("App\Models\Budget_groups_model");
     }
 
     function index() {
@@ -17,7 +18,8 @@ class Task_libraries extends Security_Controller {
         $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
         $allMilestones=$this->Milestones_model->get_all()->getResultArray();
         $allTasklibraries=$this->Task_libraries_model->get_all()->getResultArray();
-        return $this->template->rander('task_libraries/index',["allTasklibraries"=>$allTasklibraries,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        $allBudgetGroups=$this->Budget_groups_model->get_all()->getResult();
+        return $this->template->rander('task_libraries/index',["allBudgetGroups"=>$allBudgetGroups,"allTasklibraries"=>$allTasklibraries,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     function import_modal(){
         $this->access_only_team_members();
@@ -65,9 +67,10 @@ class Task_libraries extends Security_Controller {
         $allMilestones=$this->Milestones_model->get_all()->getResultArray();
         $allTasklibraries=$this->Task_libraries_model->get_all()->getResultArray();
         $gotTasklibrary=$this->Task_libraries_model->get_one($id);
+        $allBudgetGroups=$this->Budget_groups_model->get_all()->getResult();
         $gotChecklistItems=$this->Task_library_checklist_items_model->get_all_where(array("task_library"=>$id,"deleted"=>0))->getResult();
         // echo json_encode($gotChecklistItems);
-        return $this->template->rander('task_libraries/index',["gotChecklistItems"=>$gotChecklistItems,"gotTasklibrary"=>$gotTasklibrary,"allTasklibraries"=>$allTasklibraries,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        return $this->template->rander('task_libraries/index',["allBudgetGroups"=>$allBudgetGroups,"gotChecklistItems"=>$gotChecklistItems,"gotTasklibrary"=>$gotTasklibrary,"allTasklibraries"=>$allTasklibraries,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     function validate_import_tasks_file() {
         $file_name = $this->request->getPost("file_name");
@@ -750,6 +753,7 @@ class Task_libraries extends Security_Controller {
             "type"=>$this->request->getPost("type"),
             "serial_number"=>$this->request->getPost("serial_number"),
             "pms_scs_number"=>$this->request->getPost("pms_scs_number"),
+            "budget_group"=>$this->request->getPost("budget_group"),
             "reference_drawing"=>$this->request->getPost("cost_items")
         );
         $save_id = $this->Task_libraries_model->ci_save($data, $id);

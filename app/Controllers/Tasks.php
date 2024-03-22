@@ -36,6 +36,7 @@ class Tasks extends Security_Controller {
         $this->Project_members_model=model("App\Models\Project_members_model");
 
         $this->File_category_model=model('App\Models\File_category_model');
+        $this->Budget_groups_model=model('App\Models\Budget_groups_model');
     }
 
     private function get_context_id_pairs() {
@@ -651,8 +652,9 @@ class Tasks extends Security_Controller {
         $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $gotProject=$this->Projects_model->get_one($project_id);
         $allMembers=$this->Project_members_model->get_details(array("project_id"=>$project_id))->getResult();
+        $allBudgetGroups=$this->Budget_groups_model->get_all()->getResult();
         // $allVariationOrders=$this->Task_variation_orders_model->get_all()->getResult();
-        return $this->template->view('tasks/modal_form_id',["allMembers"=>$allMembers,"gotProject"=>$gotProject,"allTasks"=>$allTasks,"project_id"=>$project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        return $this->template->view('tasks/modal_form_id',["allBudgetGroups"=>$allBudgetGroups,"allMembers"=>$allMembers,"gotProject"=>$gotProject,"allTasks"=>$allTasks,"project_id"=>$project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     /*----*/
     /*----*/
@@ -672,7 +674,8 @@ class Tasks extends Security_Controller {
         $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("task_id"=>$task_id))->getResult();
         $allCostItems=$this->Task_cost_items_model->get_all_where(array("task_id"=>$task_id))->getResult();
         $allMembers=$this->Project_members_model->get_details(array("project_id"=>$gotProject->id))->getResult();
-        return $this->template->view('tasks/modal_form_id',["allMembers"=>$allMembers,"allCostItems"=>$allCostItems,"allOwnerSupplies"=>$allOwnerSupplies,"allTasks"=>$allTasks,"gotChecklistItems"=>$gotChecklistItems,"gotTask"=>$gotTask,"task_id"=>$task_id,"gotProject"=>$gotProject,"project_id"=>$gotTask->project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        $allBudgetGroups=$this->Budget_groups_model->get_all()->getResult();
+        return $this->template->view('tasks/modal_form_id',["allBudgetGroups"=>$allBudgetGroups,"allMembers"=>$allMembers,"allCostItems"=>$allCostItems,"allOwnerSupplies"=>$allOwnerSupplies,"allTasks"=>$allTasks,"gotChecklistItems"=>$gotChecklistItems,"gotTask"=>$gotTask,"task_id"=>$task_id,"gotProject"=>$gotProject,"project_id"=>$gotTask->project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     function members($project_id){
         $allMembers=$this->Project_members_model->get_details(array("project_id"=>$project_id))->getResult();
@@ -5022,8 +5025,9 @@ class Tasks extends Security_Controller {
         $allMilestones=$this->Milestones_model->get_all()->getResultArray();
         $allProjects=$this->Projects_model->get_all()->getResultArray();
         $allTasks=$this->Tasks_model->get_all()->getResultArray();
+        $allBudgetGroups=$this->Budget_groups_model->get_all()->getResult();
         // $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_library"=>$id,"deleted"=>0))->getResult();
-        return $this->template->view('tasks/modal_form_basic',["allTasks"=>$allTasks,"allProjects"=>$allProjects,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        return $this->template->view('tasks/modal_form_basic',["allBudgetGroups"=>$allBudgetGroups,"allTasks"=>$allTasks,"allProjects"=>$allProjects,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
     }
     function get_project_tasks($project_id){
         $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
