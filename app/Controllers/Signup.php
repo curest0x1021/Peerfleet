@@ -238,6 +238,7 @@ class Signup extends App_Controller {
 
             $client_data = array(
                 "company_name" => $company_name,
+                "charter_name"=>$company_name,
                 "type" => $this->request->getPost("account_type"),
                 "created_by" => 1 //add default admin
             );
