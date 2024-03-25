@@ -102,7 +102,7 @@ if (!function_exists("make_project_tabs_data")) {
                             $project_tabs["files"] = "projects/files/" . $project_info->id;
                             
                             $project_tabs["comments"] = "projects/comments/" . $project_info->id;
-                            $project_tabs["reports"] = "projects/reports/" . $project_info->id;
+                            $project_tabs["reports"] = "projects/report_documents/" . $project_info->id;
 
                             // if ($project_info->project_type === "client_project" && $show_customer_feedback) {
                             //     $project_tabs["customer_feedback"] = "projects/customer_feedback/" . $project_info->id;
