@@ -22,6 +22,14 @@
                 $main_menu_name = get_array_value($main_menu, "name");
                 if($menu_index==10){
                     echo '<li class="    main">
+                            <a href="'.get_uri("report_templates").'">
+                                <i class="icon-16" data-feather="book" ></i>
+                                <span class="menu-text ">Report templates</span>
+                            </a>
+                        </li>';
+                }
+                if($menu_index==10){
+                    echo '<li class="    main">
                             <a href="'.get_uri("budget_groups").'">
                                 <i class="icon-16" data-feather="database" ></i>
                                 <span class="menu-text ">Budget groups</span>

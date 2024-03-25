@@ -36,6 +36,8 @@ class Projects extends Security_Controller {
         $this->Task_comments_model = model("App\Models\Task_comments_model");
         $this->Clients_model = model('App\Models\Clients_model');
         $this->Vessel_types_model=model('App\Models\Vessel_types_model');
+        $this->Report_documents_model=model('App\Models\Report_documents_model');
+        $this->Report_templates_model=model('App\Models\Report_templates_model');
         $this->Projects_model->auto_update();
 
     }
@@ -5874,8 +5876,30 @@ class Projects extends Security_Controller {
         // Return the response object
         return $response;
     }
+    function save_report_document(){
+        $title=$this->request->getPost('title');
+        $description=$this->request->getPost('description');
+        $content=$this->request->getPost('content');
+        $id=$this->request->getPost('id');
+        $new_data=array(
+            "title"=>$title,
+            "description"=>$description,
+            "content"=>$content
+        );
+        $saved_id=$this->Report_documents_model->ci_save($new_data,$id);
+        return json_encode(array("success"=>true,"saved_id"=>$saved_id));
+    }
+    function delete_report_document(){
+        $report_id=$this->request->getPost('id');
+        $this->Report_documents_model->delete_permanently($report_id);
+        return json_encode(array("success"=>true));
+    }
+    
     function report_documents($product_id){
         return $this->template->view("projects/report_documents/index");
+    }
+    function modal_report_edit(){
+        return $this->template->view("projects/report_documents/editor");
     }
 
 }
