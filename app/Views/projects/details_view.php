@@ -102,6 +102,7 @@ if (!function_exists("make_project_tabs_data")) {
                             $project_tabs["files"] = "projects/files/" . $project_info->id;
                             
                             $project_tabs["comments"] = "projects/comments/" . $project_info->id;
+                            $project_tabs["reports"] = "projects/reports/" . $project_info->id;
 
                             // if ($project_info->project_type === "client_project" && $show_customer_feedback) {
                             //     $project_tabs["customer_feedback"] = "projects/customer_feedback/" . $project_info->id;
@@ -165,6 +166,8 @@ if (!function_exists("make_project_tabs_data")) {
 
                             $project_tabs["comments"] = "projects/customer_feedback/" . $project_info->id;
 
+                            $project_tabs["reports"] = "projects/reports/" . $project_info->id;
+
                             
 
                             
@@ -214,6 +217,7 @@ if (!function_exists("make_project_tabs_data")) {
                     <div role="tabpanel" class="tab-pane fade" id="project-checklist-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-quote_overview-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-cost_overview-section"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="project-reports-section"></div>
 
                     <?php
                     if ($login_user->user_type === "staff") {
