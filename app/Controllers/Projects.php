@@ -5874,6 +5874,9 @@ class Projects extends Security_Controller {
         // Return the response object
         return $response;
     }
+    function report_documents($product_id){
+        return $this->template->view("projects/report_documents/index");
+    }
 
 }
 
