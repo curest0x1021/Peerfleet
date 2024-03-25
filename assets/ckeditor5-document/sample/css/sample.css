@@ -9,143 +9,10 @@
 	--ck-sample-color-green: #279863;
 }
 
-body, html {
-	padding: 0;
-	margin: 0;
 
-	font-family: sans-serif, Arial, Verdana, "Trebuchet MS", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-	font-size: 16px;
-	line-height: 22px;
-}
-
-body {
-	height: 100%;
-	color: #2D3A4A;
-	background-image: url(../img/bg.png);
-	background-repeat: no-repeat;
-	background-position: 50% 100%;
-	background-size: 100% auto;
-}
-
-body * {
-	box-sizing: border-box;
-}
-
-a {
-	color: #38A5EE;
-}
-
-abbr {
-	border-bottom: 1px dotted #333;
-	text-decoration: none;
-}
-
-.centered {
-	max-width: 960px;
-	margin: 0 auto;
-	padding: 0 var(--ck-sample-base-spacing);
-}
-
-/* --------- HEADER ---------------------------------------------------------------------------- */
-
-header .centered {
-	display: flex;
-	flex-flow: row nowrap;
-	justify-content: space-between;
-	align-items: center;
-	min-height: 8em;
-}
-
-header h1 {
-	margin: 0;
-	font-size: 1em;
-	display: inline-block;
-}
-
-header h1 a {
-	display: inline-block;
-	line-height: 0;
-}
-
-header h1 img {
-	height: 3em;
-}
-
-header nav ul {
-	margin: 0;
-	padding: 0;
-	list-style-type: none;
-}
-
-header nav ul li {
-	display: inline-block;
-}
-
-header nav ul li + li {
-	margin-left: 1em;
-}
-
-header nav ul li a {
-	font-weight: bold;
-	text-decoration: none;
-	color: #2D3A4A;
-}
-
-header nav ul li a:hover {
-	text-decoration: underline;
-}
-
-header nav ul li:last-child a::before {
-	content: url(../img/github.svg);
-	width: 1.4em;
-	height: 1.4em;
-	display: inline-block;
-	margin-right: .4em;
-	position: relative;
-	top: .3em;
-}
-
-header input {
-	display: none;
-}
-
-header label {
-	display: none;
-}
 
 /* --------- MAIN ------------------------------------------------------------------------------- */
 
-main .message {
-	padding: 0 0 var(--ck-sample-base-spacing);
-	background: var(--ck-sample-color-green);
-	color: var(--ck-sample-color-white);
-}
-
-main .message::after {
-	content: "";
-	z-index: -1;
-	display: block;
-	height: 10em;
-	width: 100%;
-	background: var(--ck-sample-color-green);
-	position: absolute;
-	left: 0;
-}
-
-main .message h1 {
-	padding-top: var(--ck-sample-base-spacing);
-	margin: 0 0 1em;
-	font-size: 2.2em;
-}
-
-main .message p {
-	font-size: 1.1em;
-	line-height: 1.6em;
-}
-
-main .message p a {
-	color: var(--ck-sample-color-white);
-}
 
 main #editor {
 	background: var(--ck-sample-color-white);
@@ -167,51 +34,9 @@ main .ck.ck-content {
 	padding: 1.5em 2em;
 }
 
-main #references {
-	margin: 4em 0 var(--ck-sample-base-spacing);
-	display: grid;
-	grid-template-columns: repeat( auto-fit, minmax(320px, 1fr) );
-	grid-gap: var(--ck-sample-base-spacing);
-}
 
-main #references > section {
-	background: var(--ck-sample-color-white);
-	border-radius: 2px;
-	border: 1px solid #DFE4E6;			
-	padding: var(--ck-sample-base-spacing);
-	line-height: 1.8em;
 
-	display: flex;
-	flex-flow: column nowrap;
-	justify-content: space-between;
-}
 
-main #references > section h2 {
-	margin: .5em 0;
-}
-
-main #references > section p:first-of-type {
-	flex: 1 0 auto;
-}
-
-main #references > section p:last-child {
-	margin: calc(.25*var(--ck-sample-base-spacing)) 0 0;
-}
-
-main #references > section p:last-child a {
-	background: #38A5EE;
-	border-radius: 5px;
-	padding: .4em 1em;
-	color: var(--ck-sample-color-white);
-	text-decoration: none;
-	font-weight: bold;
-	display: block;
-	text-align: center;
-}
-
-main #references > section p:last-child a:hover {
-	background: #218cd4;
-}
 
 /* --------- MAIN / DOCUMENT EDITOR --------------------------------------------------------------- */
 
@@ -257,13 +82,6 @@ main .content-container #editor {
 }
 
 /* --------- FOOTER ------------------------------------------------------------------------------- */
-
-footer {
-	margin: calc(2*var(--ck-sample-base-spacing)) var(--ck-sample-base-spacing);
-	font-size: .8em;
-	text-align: center;
-	color: rgba(0,0,0,.4);
-}
 
 /* --------- RWD ------------------------------------------------------------------------------- */
 
