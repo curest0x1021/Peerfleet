@@ -105,6 +105,7 @@
             var rise_csrf_token = $('[name="rise_csrf_token"]').val();
             var myForm=new FormData();
             myForm.append("title",title);
+            myForm.append("project_id",<?php echo $project_detail->id;?>);
             myForm.append("id","");
             myForm.append("content",content);
             myForm.append("rise_csrf_token",rise_csrf_token);

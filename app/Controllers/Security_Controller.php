@@ -734,7 +734,7 @@ class Security_Controller extends App_Controller {
 
         list($width, $height) = getimagesize($image_file_name);
 
-        if ($width === 200 && $height === 200) {
+        if ($width === 400 && $height === 400) {
             return true;
         }
 

@@ -5881,10 +5881,12 @@ class Projects extends Security_Controller {
         $description=$this->request->getPost('description');
         $content=$this->request->getPost('content');
         $id=$this->request->getPost('id');
+        $project_id=$this->request->getPost("project_id");
         $new_data=array(
             "title"=>$title,
             "description"=>$description,
-            "content"=>$content
+            "content"=>$content,
+            "project_id"=>$project_id
         );
         $saved_id=$this->Report_documents_model->ci_save($new_data,$id);
         return json_encode(array("success"=>true,"saved_id"=>$saved_id));
@@ -5898,8 +5900,19 @@ class Projects extends Security_Controller {
     function tab_report_documents($project_id){
         $project_info=$this->Projects_model->get_one($project_id);
         $allTemplates=$this->Report_templates_model->get_all()->getResult();
+        return $this->template->view("projects/report_documents/index",["project_info"=>$project_info,"allTemplates"=>$allTemplates]);
+    }
+    function report_documents_list_data($project_id){
         $allDocuments=$this->Report_documents_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        return $this->template->view("projects/report_documents/index",["project_info"=>$project_info,"allTemplates"=>$allTemplates,"allDocuments"=>$allDocuments]);
+        $data=array();
+        foreach ($allDocuments as $key => $oneDocument) {
+            $data[]=array(
+                $oneBudgetGroup->id,
+                $oneBudgetGroup->title,
+                js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_note'), "class" => "delete", "data-id" => $oneBudgetGroup->id, "data-action-url" => get_uri("budget_groups/delete"), "data-action" => "delete-confirmation"))
+            );
+        }
+        return json_encode(array("data"=>$data));
     }
     function report_documents($id){
         $document_info=$this->Report_documents_model->get_one($id);
