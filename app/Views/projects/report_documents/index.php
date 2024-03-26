@@ -1,7 +1,18 @@
-<link type="text/css" href="<?php echo base_url("assets/ckeditor5-document/");?>sample/css/sample.css" rel="stylesheet" media="screen" />
 <div class="card" >
     <div class="card-body" >
-        <?php echo modal_anchor(get_uri("projects/modal_report_edit"),'<button class="btn btn-sm btn-default" >New template</button>',array()); ?>
+        <div class="row" >
+        <?php foreach ($allTemplates as $key => $template) {
+        ?>
+            <div class="col-md-1" >
+                <a href="<?php echo get_uri("projects/report_templates/".$project_info->id."/".$template->id);?>" >
+                    <div class="d-flex align-items-center justify-content-center" >
+                        <i data-feather="book" class="icon-64" ></i>
+                    </div>
+                    <p class="text-center" ><?php echo $template->title;?></p>
+                </a>
+            </div>
+        <?php
+        } ?>
+        </div>
     </div>
 </div>
-<script src="<?php echo base_url("assets/ckeditor5-document/");?>ckeditor.js"></script>

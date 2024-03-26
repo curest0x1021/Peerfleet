@@ -14,6 +14,10 @@ class Report_templates extends Security_Controller {
     function edit(){
         return $this->template->rander("report_templates/edit");
     }
+    function view($id){
+        $gotTemplate=$this->Report_templates_model->get_one($id);
+        return $this->template->rander("report_templates/edit",["gotTemplate"=>$gotTemplate]);
+    }
     function save(){
         $title=$this->request->getPost('title');
         $description=$this->request->getPost('description');
@@ -38,7 +42,7 @@ class Report_templates extends Security_Controller {
         foreach ($allTemplates as $key => $oneTemplate) {
             $data[]=array(
                 $oneTemplate->id,
-                $oneTemplate->title,
+                "<a href='".get_uri("report_templates/view/".$oneTemplate->id)."' >".$oneTemplate->title."</a>",
                 js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_note'), "class" => "delete", "data-id" => $oneTemplate->id, "data-action-url" => get_uri("report_templates/delete"), "data-action" => "delete-confirmation"))
             );
         }
