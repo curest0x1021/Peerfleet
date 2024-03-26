@@ -2,6 +2,14 @@
 <div id="page-content" class="page-wrapper clearfix grid-button">
     <div class="card" >
         <div class="card-body" >
+            <div class="form-group" >
+                <label>Title : </label>
+                <input
+                name="title"
+                id="title"
+                class="form-control"
+                />
+            </div>
             <main>
                 <div class="centered">
                     <div class="document-editor">
