@@ -16,6 +16,11 @@ class CreateReportDocumentTable extends Migration
                 'unsigned' => true,
                 'auto_increment' => true,
             ],
+            "project_id"=>[
+                'type'=>"INT",
+                'null'=>true,
+                "constraint"=>5
+            ],
             "title"=>[
                 'type'=>"TEXT",
                 'null'=>true,

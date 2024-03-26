@@ -8,7 +8,6 @@
                     name="id"
                     id="id"
                     class="form-control report-template-id"
-                    value="<?php echo isset($gotTemplate)?$gotTemplate->id:""; ?>"
                     hidden
                 />
             <div class="form-group" >
@@ -17,7 +16,7 @@
                 name="title"
                 id="title"
                 class="form-control report-template-title"
-                value="<?php echo isset($gotTemplate)?$gotTemplate->title:""; ?>"
+                value="<?php echo isset($template_info)?$template_info->title:"";?>"
                 />
             </div>
             <main>
@@ -26,7 +25,7 @@
                         <div class="toolbar-container"></div>
                         <div class="content-container">
                             <div id="editor">
-                            <?php echo isset($gotTemplate)?$gotTemplate->content:""; ?>
+                                <?php echo isset($template_info)?$template_info->content:"";?>
                             </div>
                         </div>
                     </div>
