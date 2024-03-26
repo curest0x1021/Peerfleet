@@ -5895,11 +5895,16 @@ class Projects extends Security_Controller {
         return json_encode(array("success"=>true));
     }
     
-    function report_documents($project_id){
+    function tab_report_documents($project_id){
         $project_info=$this->Projects_model->get_one($project_id);
         $allTemplates=$this->Report_templates_model->get_all()->getResult();
         $allDocuments=$this->Report_documents_model->get_all_where(array("project_id"=>$project_id))->getResult();
         return $this->template->view("projects/report_documents/index",["project_info"=>$project_info,"allTemplates"=>$allTemplates,"allDocuments"=>$allDocuments]);
+    }
+    function report_documents($id){
+        $document_info=$this->Report_documents_model->get_one($id);
+        $project_detail=$this->Projects_model->get_details(array("id"=>$document_info->project_id))->getResult()[0];
+        return $this->template->rander("projects/report_documents/edit",["document_info"=>$document_info,"project_detail"=>$project_detail]);
     }
     function report_templates($project_id,$template_id){
         $project_info=$this->Projects_model->get_one($project_id);
