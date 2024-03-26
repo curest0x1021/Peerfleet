@@ -46,6 +46,16 @@
 <?php echo view("report_templates/editor_script");?>
 <script>
 	$(document).ready(function(){
+        function replaceWord(text, oldWord, newWord) {
+            // Create a regular expression with the 'g' flag to replace all occurrences
+            const regex = new RegExp( oldWord , 'gi');
+            // Replace all occurrences of the old word with the new word
+            return text.replace(regex, newWord);
+        }
+        var report_content=document.getElementById("editor").innerHTML;
+        var report_content=replaceWord(report_content,"{{project.title}}","<?php echo $project_detail->title;?>")
+        var report_content=replaceWord(report_content,"{{project.currency}}","<?php echo $project_detail->currency;?>")
+        document.getElementById("editor").innerHTML=report_content;
         DecoupledEditor
 		.create( document.querySelector( '#editor' ), {
 			// toolbar: [ 'heading', '|', 'bold', 'italic', 'link' ]

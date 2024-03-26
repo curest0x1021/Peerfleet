@@ -353,14 +353,14 @@ toggleLeftMenu = function (keyPressed) {
 
 keyboardShortcuts = function (keyupCode) {
     var shortcuts = {
-        "84": "#js-quick-add-task",
-        "77": "#js-quick-add-multiple-task",
-        "73": "#js-quick-add-project-time",
-        "69": "#js-quick-add-event",
-        "78": "#js-quick-add-note",
-        "68": "#js-quick-add-to-do",
-        "83": "#js-quick-add-ticket",
-        "191": "#global-search-btn"
+        // "84": "#js-quick-add-task",
+        // "77": "#js-quick-add-multiple-task",
+        // "73": "#js-quick-add-project-time",
+        // "69": "#js-quick-add-event",
+        // "78": "#js-quick-add-note",
+        // "68": "#js-quick-add-to-do",
+        // "83": "#js-quick-add-ticket",
+        // "191": "#global-search-btn"
     };
 
     return shortcuts[keyupCode];
