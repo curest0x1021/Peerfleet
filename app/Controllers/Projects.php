@@ -5907,9 +5907,9 @@ class Projects extends Security_Controller {
         $data=array();
         foreach ($allDocuments as $key => $oneDocument) {
             $data[]=array(
-                $oneBudgetGroup->id,
-                $oneBudgetGroup->title,
-                js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_note'), "class" => "delete", "data-id" => $oneBudgetGroup->id, "data-action-url" => get_uri("budget_groups/delete"), "data-action" => "delete-confirmation"))
+                $oneDocument->id,
+                '<a href="'.get_uri('projects/report_documents/'.$oneDocument->id).'" >'.$oneDocument->title.'</a>',
+                js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_note'), "class" => "delete", "data-id" => $oneDocument->id, "data-action-url" => get_uri("projects/delete_report_document"), "data-action" => "delete-confirmation"))
             );
         }
         return json_encode(array("data"=>$data));
