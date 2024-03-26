@@ -1,5 +1,6 @@
 <link type="text/css" href="<?php echo base_url("assets/ckeditor5-document/");?>sample/css/sample.css" rel="stylesheet" media="screen" />
 <div id="page-content" class="page-wrapper clearfix grid-button">
+<a href="<?php echo get_uri("projects/view/".$project_detail->id);?>" ><h3><i data-feather="arrow-left"   ></i>Back</h3></a>
     <div class="card" >
         <div class="card-body" >
         <?php echo form_open(get_uri("tasks/save"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
@@ -41,9 +42,7 @@
 <script>
 	$(document).ready(function(){
         var project_detail=<?php echo json_encode($project_detail);?>;
-        console.log(project_detail)
         var client_info=<?php echo json_encode($client_info);?>;
-        console.log(client_info)
         function replaceWord(text, oldWord, newWord) {
             // Create a regular expression with the 'g' flag to replace all occurrences
             const regex = new RegExp( oldWord , 'gi');
@@ -101,7 +100,6 @@
         $(".save-report-template").on("click",function(){
             var title=$(".report-template-title")[0].value;
             var content=window.editor.getData();
-            console.log(content)
             var rise_csrf_token = $('[name="rise_csrf_token"]').val();
             var myForm=new FormData();
             myForm.append("title",title);
