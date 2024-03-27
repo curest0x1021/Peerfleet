@@ -38,6 +38,12 @@
                 </div>
             </div>
         </div>
+        <div class="form-group" >
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="mySwitch" name="lifts" value="yes" checked>
+            <label class="form-check-label" for="mySwitch">Lifts</label>
+        </div>
+        </div>
     </div>
 </div>
 

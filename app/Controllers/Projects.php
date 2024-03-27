@@ -5877,6 +5877,8 @@ class Projects extends Security_Controller {
         return $response;
     }
     function save_report_document(){
+        ini_set('upload_max_filesize', '100M');
+        ini_set('post_max_size', '100M');
         $title=$this->request->getPost('title');
         $description=$this->request->getPost('description');
         $content=$this->request->getPost('content');
