@@ -52,6 +52,7 @@ class Wires extends Security_Controller {
             'equipment' => $this->request->getPost('equipments'),
             'wire_type' => $this->request->getPost('wire_type')
         );
+        if($this->request->getPost("lifts")=="yes") $item["lifts"]=1;
         $this->Wires_model->ci_save($item, null);
 
         echo json_encode(array("success" => true, 'message' => app_lang('record_saved')));
@@ -220,6 +221,12 @@ class Wires extends Security_Controller {
         }
         $data["files"] = serialize($new_files);
         $save_id = $this->Wires_info_model->ci_save($data, $id);
+        if($this->request->getPost("lifts")=="yes"){
+            $wire_info = $this->Wires_model->get_one($wire_id);
+            unset($wire_info->name);
+            $wire_info->lifts=1;
+            $this->Wires_model->ci_save($wire_info,$wire_id);
+        }
 
         if ($save_id) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_saved')));
@@ -347,6 +354,13 @@ class Wires extends Security_Controller {
                 $files_str .= anchor(get_uri("wires/download_certificate_file/" . $data->id . "/" .$key), remove_file_prefix($file["file_name"]));
             }
         }
+
+        $lifts_info="";
+        if($data->lifts==1){
+            $lifts_info='<div style="display: inline-block; width: 12px; height: 12px; background-color: #00e676; border-radius: 6px;" title="Yes"></div>';
+        }else{
+            $lifts_info='<div style="display: inline-block; width: 12px; height: 12px; background-color: #d50000; border-radius: 6px;" title="No"></div>';
+        }
         return array(
             $data->wire_id,
             $data->wire,
@@ -357,6 +371,7 @@ class Wires extends Security_Controller {
             $data->installed,
             $loadtest_passed,
             $visual_inspection_passed,
+            $lifts_info,
             $files_str,
             $action
         );

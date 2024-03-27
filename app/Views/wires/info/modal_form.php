@@ -110,6 +110,13 @@
                     </div>
                 </div>
             </div>
+            <div class="form-group" >
+                <div class="form-check form-switch">
+                    <label class="form-check-label" for="mySwitch">Lifts</label>
+                    <input class="form-check-input" type="checkbox" id="mySwitch" name="lifts" value="yes" <?php if($model_info->lifts==1){ ?>checked<?php }?>>
+                    
+                </div>
+            </div>
 
             <?php echo view("includes/dropzone_preview"); ?>
         </div>

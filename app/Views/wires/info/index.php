@@ -30,6 +30,7 @@
                 {title: '<?php echo app_lang("installed") ?>'},
                 {title: '<?php echo app_lang("loadtest") ?>'},
                 {title: '<?php echo app_lang("visual_inspection") ?>'},
+                {title: '<?php echo "Lifts" ?>'},
                 {visible: false, searchable: false},
                 {title: '<i data-feather="menu" class="icon-16"></i>', "class": "text-center option w100"}
             ],
