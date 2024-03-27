@@ -32,6 +32,7 @@
             columns: [
                 {title: '<?php echo app_lang("id"); ?>', "class": "w200"},
                 {title: '<?php echo app_lang("title"); ?>', "class": "all"},
+                {title: 'Download', "class": "all"},
                 {title: "<i data-feather='menu' class='icon-16'></i>", "class": "text-center option w100"}
             ]
         });

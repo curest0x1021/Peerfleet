@@ -5909,10 +5909,32 @@ class Projects extends Security_Controller {
             $data[]=array(
                 $oneDocument->id,
                 '<a href="'.get_uri('projects/report_documents/'.$oneDocument->id).'" >'.$oneDocument->title.'</a>',
+                '<a target="_blank" href="'.get_uri("projects/export_report_document/".$oneDocument->id).'" ><i data-feather="download" class="icon-16" ></i></a>',
                 js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_note'), "class" => "delete", "data-id" => $oneDocument->id, "data-action-url" => get_uri("projects/delete_report_document"), "data-action" => "delete-confirmation"))
             );
         }
         return json_encode(array("data"=>$data));
+    }
+    function export_report_document($document_id){
+        // return json_encode($project_detail);
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isPhpEnabled', true);
+        $options->set('enableRemote', true);
+
+        $dompdf = new Dompdf($options);
+
+        // Set document properties
+        $dompdf->setPaper('A4', 'portrait');
+        $document_info=$this->Report_documents_model->get_one($document_id);
+        // return $first_page;
+        $dompdf->loadHtml($document_info->content);
+
+        $dompdf->render();
+
+        // Output the PDF as a file (example: my_pdf.pdf)
+        $this->response->setHeader('Content-Type', 'application/pdf');
+        $dompdf->stream('my_pdf.pdf', array('Attachment' => 0));
     }
     function report_documents($id){
         $document_info=$this->Report_documents_model->get_one($id);
