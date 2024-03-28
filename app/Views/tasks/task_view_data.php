@@ -1183,6 +1183,43 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                 </div>
             </div>
             <!----->
+            <!--Shipyard Hisotry-->
+            <div class="col-md-12" >
+                <div class="card" style="min-height:30vh;">
+                    <div class="card-header d-flex">
+                        <b>History on Shipyard</b>
+                    </div>
+                    <div class="card-body" style="padding:10px" >
+                        <table id="table-quotes-from-yard" class="table table-variation-orders table-bordered" style="margin:0" >
+                            <thead>
+                            <tr>
+                                <td>Project title</td>
+                                <td>Shipyard name</td>
+                                <td>Number of items</td>
+                                <td>Total</td>
+                                <!-- <td></td> -->
+                            </tr>
+                            </thead>
+                            <tbody >
+                                <?php
+                                foreach ($allYardCostItems as $oneYard) {
+                                ?>
+                                <tr>
+                                    <td><?php echo $oneYard->project_title; ?></td>
+                                    <td><?php echo $oneYard->shipyard_title; ?></td>
+                                    <td><?php echo $oneYard->number_of_items; ?></td>
+                                    <td><?php echo $project_info->currency; ?> <?php echo number_format($oneYard->total_yard_cost); ?></td>
+                                    <!-- <td><input hidden value='<?php //echo $oneOrder->id;?>' /><button class="btn btn-sm btn-default delete-variation-order-item" ><i class="icon-16" data-feather="x" ></i></button></td> -->
+                                </tr>
+                                <?php
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!----->
         </div>
         <!---->
     </div>
@@ -1688,4 +1725,5 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
     // if(count($all_files)>0)
     // echo 'var all_files='.json_encode($all_files).';'
     ?>
+    console.log(`<?php echo json_encode($allYardCostItems);?>`)
 </script>
