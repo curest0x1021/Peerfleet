@@ -37,6 +37,7 @@ class Tasks extends Security_Controller {
 
         $this->File_category_model=model('App\Models\File_category_model');
         $this->Budget_groups_model=model('App\Models\Budget_groups_model');
+        $this->Shipyard_cost_items_model=model('App\Models\Shipyard_cost_items_model');
     }
 
     private function get_context_id_pairs() {
@@ -1830,7 +1831,7 @@ class Tasks extends Security_Controller {
 
         $view_data['contexts'] = $this->_get_accessible_contexts();
         ////////////////////////////
-        $view_data['allYardCostItems']=$this->Shipyard_cost_items_model->get_all_with_costs_where(array("task_id"=>$task_id))->getResult();
+        $view_data['allYardCostItems']=$this->Shipyard_cost_items_model->get_details_grouped_yards(array("task_id"=>$task_id))->getResult();
         $view_data['allYards']=$this->Project_yards_model->get_all_where(array("project_id"=>$model_info->project_id))->getResult();
         $allCostItems=$this->Task_cost_items_model->get_all_with_costs_where(array("task_id"=>$task_id))->getResult();
         $view_data['allCostItems']=$allCostItems;
@@ -1843,6 +1844,7 @@ class Tasks extends Security_Controller {
         $view_data['owner_supplies']=$allOwnerSupplies;
         $file_categories = $this->File_category_model->get_details()->getResult();
         $file_categories_dropdown = array("" => "-");
+        $allYardCostItems=$this->Shipyard_cost_items_model->get_details(array("task_id"=>$task_id))->getResult();
 
         if ($file_categories) {
             foreach ($file_categories as $file_category) {

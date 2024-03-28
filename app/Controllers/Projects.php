@@ -3793,7 +3793,11 @@ class Projects extends Security_Controller {
     function comparison_tab($project_id){
         $project_info=$this->Projects_model->get_one($project_id);
         $allProjectTasks=$this->Tasks_model->get_all_where(array('project_id'=>$project_id,"deleted"=>0))->getResult();
+        
         $allYards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        if($project_info->status_id==4||$project_info->status_id==5){
+            $allYards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id,"selected"=>1))->getResult();
+        }
         // $selectedYards=array_filter($allYards,function($oneYard){
         //     return $oneYard->selected==1;
         // });
@@ -3978,9 +3982,9 @@ class Projects extends Security_Controller {
         $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
         $shipyard_info->selected=1;
         $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
-        $this->Project_yards_model->delete_where(array("project_id"=>$shipyard_info->project_id,"selected"=>0));
-        $shipyard_info->selected=0;
-        $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
+        // $this->Project_yards_model->delete_where(array("project_id"=>$shipyard_info->project_id,"selected"=>0));
+        // $shipyard_info->selected=0;
+        // $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
         $project_info=$this->Projects_model->get_one($shipyard_info->project_id);
         $project_info->status_id=4;
         $this->Projects_model->ci_save($project_info,$project_info->id);
