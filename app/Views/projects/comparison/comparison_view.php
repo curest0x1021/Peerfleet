@@ -557,7 +557,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                             if($totalYardCosts[$i]==0) echo "#F9A52D";
                             else if(max($totalYardCosts)==$totalYardCosts[$i]) echo "#e74c3c;";
                             else if(min($totalYardCosts)==$totalYardCosts[$i]) echo "#2d9cdb;";
-                            else echo "rgba(0,0,0,0);";
+                            else echo "rgba(0,0,0,1);";
                             ?>"
                         >
                             <?php
@@ -599,7 +599,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                                 if($oneTaskAllCosts[$i]==0) echo "#F9A52D";
                                 else if(max($oneTaskAllCosts)==$oneTaskAllCosts[$i]) echo "#e74c3c;";
                                 else if(min($oneTaskAllCosts)==$oneTaskAllCosts[$i]) echo "#2d9cdb;";
-                                else echo "rgba(0,0,0,0)";
+                                else echo "rgba(0,0,0,1)";
                                 ?>;" >
                                 <div class="d-flex" style="align-items:center;" >
                                     <?php
@@ -662,7 +662,7 @@ $(document).ready(function(){
     var totalCostEls=$(".td-total-cost");
     for(var index in totalCosts){
         totalCostEls[index].innerHTML=(Number(totalCosts[index]).toLocaleString()+" "+"<?php echo $project_info->currency;?>");
-        var background="rgba(0,0,0,0)";
+        var background="rgba(0,0,0,1)";
         if(totalCosts[index]==0) background="#F9A52D";
         else if(totalCosts[index]==Math.min(...totalCosts)) {
             background="#2d9cdb";
