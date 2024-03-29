@@ -11,6 +11,7 @@ class Tickets extends Security_Controller {
         $this->init_permission_checker("ticket");
 
         $this->Ticket_templates_model = model('App\Models\Ticket_templates_model');
+        $this->Ticket_actions_model = model('App\Models\Ticket_actions_model');
     }
 
     private function validate_ticket_access($ticket_id = 0) {
@@ -1231,7 +1232,8 @@ class Tickets extends Security_Controller {
         return $this->template->view("tickets/reports/chart_report_view", $view_data);
     }
     function tab_actions($ticket_id){
-        return $this->template->view("tickets/tabs/actions",["ticket_id"=>$ticket_id]);
+        $allActions=$this->Ticket_actions_model->get_all_where(array("ticket_id"=>$ticket_id))->getResult();
+        return $this->template->view("tickets/tabs/actions",["ticket_id"=>$ticket_id,"allActions"=>$allActions]);
     }
     function tab_requisitions($ticket_id){
         return $this->template->view("tickets/tabs/requisitions",["ticket_id"=>$ticket_id]);
@@ -1250,6 +1252,61 @@ class Tickets extends Security_Controller {
     }
     function modal_add_task($ticket_id){
         return $this->template->view("tickets/modals/modal_add_task",["ticket_id"=>$ticket_id]);
+    }
+    function save_corrective_action(){
+        $id=$this->request->getPost("id");
+        $ticket_id=$this->request->getPost("ticket_id");
+        $corrective_action=$this->request->getPost("corrective_action");
+        $new_data=array("ticket_id"=>$ticket_id,"corrective_action"=>$corrective_action);
+        $saved_id=$this->Ticket_actions_model->ci_save($new_data,$id);
+        return json_encode(array("success"=>true, "saved_id"=>$saved_id));
+    }
+    function save_task(){
+        $id=$this->request->getPost("id");
+        $title=$this->request->getPost("title");
+        $description=$this->request->getPost("description");
+        $start_date=$this->request->getPost("start_date");
+        $deadline=$this->request->getPost("deadline");
+        $new_data=array();
+        $new_data["id"]=$id;
+        $new_data["task_title"]=$title;
+        $new_data["task_description"]=$description;
+        $new_data["task_start_date"]=$start_date;
+        $new_data["task_deadline"]=$deadline;
+        $saved_id=$this->Ticket_actions_model->ci_save($new_data,$id);
+        return json_encode(array("success"=>true, "saved_id"=>$saved_id));
+    }
+
+    function save_requisition(){
+        $id=$this->request->getPost("id");
+        $title=$this->request->getPost("title");
+        $number=$this->request->getPost("number");
+        $remarks=$this->request->getPost("remarks");
+        $new_data=array();
+        $new_data["id"]=$id;
+        $new_data["requisition_title"]=$title;
+        $new_data["requisition_number"]=$number;
+        $new_data["requisition_remarks"]=$remarks;
+        $saved_id=$this->Ticket_actions_model->ci_save($new_data,$id);
+        return json_encode(array("success"=>true, "saved_id"=>$saved_id));
+    }
+
+    function save_schedule(){
+        $id=$this->request->getPost("id");
+        $port=$this->request->getPost("port");
+        $eta=$this->request->getPost("eta");
+        $etd=$this->request->getPost("etd");
+        $agent=$this->request->getPost("agent");
+        $remarks=$this->request->getPost("remarks");
+        $new_data=array();
+        $new_data["id"]=$id;
+        $new_data["schedule_port"]=$port;
+        $new_data["schedule_eta"]=$eta;
+        $new_data["schedule_etd"]=$etd;
+        $new_data["schedule_agent"]=$agent;
+        $new_data["schedule_remarks"]=$remarks;
+        $saved_id=$this->Ticket_actions_model->ci_save($new_data,$id);
+        return json_encode(array("success"=>true, "saved_id"=>$saved_id));
     }
 
 }
