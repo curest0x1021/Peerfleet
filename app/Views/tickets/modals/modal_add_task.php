@@ -16,7 +16,7 @@
                     "value" => "",
                     "class" => "form-control",
                     "placeholder" => app_lang('title'),
-                    "value"=>isset($action_info)?$action_info->title:"",
+                    "value"=>isset($action_info)?$action_info->task_title:"",
                     "autofocus" => true,
                     "data-rule-required" => true,
                     "data-msg-required" => app_lang("field_required"),
@@ -36,7 +36,7 @@
                     "value" => "",
                     "class" => "form-control",
                     "placeholder" => app_lang('description'),
-                    "value"=>isset($action_info)?$action_info->description:"",
+                    "value"=>isset($action_info)?$action_info->task_description:"",
                     "data-rich-text-editor" => true
                 ));
                 ?>
@@ -135,7 +135,7 @@
             $newViewLink.trigger("click");
         })
         $(".btn-save-task").on("click",function(){
-            
+
         })
     })
 </script>
