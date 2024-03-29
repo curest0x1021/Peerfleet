@@ -4,7 +4,7 @@
         echo modal_anchor(get_uri("tasks/view"), "", array("data-modal-lg" => "1"));
         ?>
     </div>
-    <input hidden class="input-action-id" value="" />
+    <input hidden class="input-action-id" value="<?php if(isset($action_info)) echo $action_info->id;?>" />
     <div class="form-group" >
         <label>Corrective Action : </label>
         <?php
@@ -29,21 +29,21 @@
     </div>
     <p>The following processes can be linked to this corrective action.</p>
     <!-- <div class="row" > -->
-        <button class="w-100 btn btn-lg btn-default mb-2 btn-add-task" style="height:5vh;" <?php if(!isset($action_info)){?>disabled<?php }?>  data-post-id="2" data-act="ajax-modal" data-title="Add Task" data-action-url="<?php echo get_uri("tickets/modal_add_task/".$ticket_id);?>">
+        <button class="w-100 btn btn-lg btn-default mb-2 btn-add-task" style="height:5vh;" <?php if(!isset($action_info)){?>disabled<?php }?>  data-post-id="<?php  if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Add Task" data-action-url="<?php echo get_uri("tickets/modal_add_task/".$ticket_id);?>">
             <div class="d-flex" >
                 <i data-feather="tool" class="icon-16" ></i>
                 <div class="flex-grow-1"></div>
                 <i data-feather="plus" class="icon-16" ></i>
             </div>
         </button>
-        <button class="w-100 btn btn-lg btn-default mb-2 btn-add-requisition" style="height:5vh;" <?php if(!isset($action_info)){?>disabled<?php }?> data-act="ajax-modal" data-title="Connect requisition" data-action-url="<?php echo get_uri("tickets/modal_connect_requisition/".$ticket_id);?>">
+        <button class="w-100 btn btn-lg btn-default mb-2 btn-add-requisition" style="height:5vh;" <?php if(!isset($action_info)){?>disabled<?php }?> data-post-id="<?php if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Connect requisition" data-action-url="<?php echo get_uri("tickets/modal_connect_requisition/".$ticket_id);?>">
             <div class="d-flex" >
                 <i data-feather="shopping-cart" class="icon-16" ></i>
                 <div class="flex-grow-1"></div>
                 <i data-feather="plus" class="icon-16" ></i>
             </div>
         </button>
-        <button class="w-100 btn btn-lg btn-default mb-2 btn-add-schedule" style="height:5vh;" <?php if(!isset($action_info)){?>disabled<?php }?> data-act="ajax-modal" data-title="Add schedule" data-action-url="<?php echo get_uri("tickets/modal_add_schedule/".$ticket_id);?>">
+        <button class="w-100 btn btn-lg btn-default mb-2 btn-add-schedule" style="height:5vh;" <?php if(!isset($action_info)){?>disabled<?php }?> data-post-id="<?php if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Add schedule" data-action-url="<?php echo get_uri("tickets/modal_add_schedule/".$ticket_id);?>">
             <div class="d-flex" >
                 <i data-feather="calendar" class="icon-16" ></i>
                 <div class="flex-grow-1"></div>
@@ -74,7 +74,9 @@
             data: <?php echo (json_encode($corrective_action_dropdown)); ?>
         });
         $(".corrective-action").on("change",function(event){
-            console.log(event.added.text)
+            $(".btn-add-task").prop("disabled",false);
+            $(".btn-add-requisition").prop("disabled",false);
+            $(".btn-add-schedule").prop("disabled",false);
             $.ajax({
                 url:"<?php echo get_uri("tickets/save_corrective_action");?>",
                 method:"POST",
@@ -86,9 +88,10 @@
                 success:function(response){
                     if(JSON.parse(response).success){
                         $(".input-action-id")[0].value=JSON.parse(response).saved_id;
-                        $(".btn-add-task").prop("disabled",false);
-                        $(".btn-add-requisition").prop("disabled",false);
-                        $(".btn-add-schedule").prop("disabled",false);
+                        $(".btn-add-task").prop("disabled",false).attr("data-post-id",JSON.parse(response).saved_id);
+                        $(".btn-add-requisition").prop("disabled",false).attr("data-post-id",JSON.parse(response).saved_id);
+                        $(".btn-add-schedule").prop("disabled",false).attr("data-post-id",JSON.parse(response).saved_id);
+
                     }
                 }
             })
