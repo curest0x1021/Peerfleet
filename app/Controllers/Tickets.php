@@ -1309,6 +1309,11 @@ class Tickets extends Security_Controller {
         return json_encode(array("success"=>true, "saved_id"=>$saved_id));
     }
 
+    function modal_corrective_action($id){
+        $action_info=$this->Ticket_actions_model->get_one($id);
+        return $this->template->view("tickets/modals/modal_add_corrective_action",["ticket_id"=>$action_info->ticket_id,"action_info"=>$action_info]);
+    }
+
 }
 
 /* End of file tickets.php */
