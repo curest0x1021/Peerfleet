@@ -10,12 +10,12 @@
 </div>
 <div class="modal-footer" >
     <!-- <button  class="btn btn-default" data-bs-dismiss="modal" >Close</button> -->
-    <button  class="btn btn-default cancel-ticket-task"  ><i data-feather="x" class="icon-16" ></i>Cancel</button>
-    <button  class="btn btn-primary save-ticket-task"  ><i data-feather="check-cirlce" class="icon-16" ></i>Save</button>
+    <button  class="btn btn-default btn-cancel-task"  ><i data-feather="x" class="icon-16" ></i>Cancel</button>
+    <button  class="btn btn-primary btn-save-task"  ><i data-feather="check-cirlce" class="icon-16" ></i>Save</button>
 </div>
 <script>
     $(document).ready(function(){
-        $(".cancel-ticket-task").on("click",function(){
+        $(".btn-cancel-task").on("click",function(){
             var $newViewLink = $("#link-of-new-view").find("a");
             $newViewLink.attr("data-action-url", "<?php echo get_uri("tickets/modal_add_corrective_action/".$ticket_id); ?>");
             // $taskViewLink.attr("data-title", taskShowText + " #" + JSON.parse(response).saved_id);
