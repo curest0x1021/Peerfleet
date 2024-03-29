@@ -4,6 +4,7 @@
         echo modal_anchor(get_uri("tasks/view"), "", array("data-modal-lg" => "1"));
         ?>
     </div>
+    <input hidden value="<?php if(isset($action_info)) echo $action_info->id;?>" />
     <div class="form-group">
         <div class="row">
             <label for="title" class=" col-md-3"><?php echo app_lang('title'); ?></label>
@@ -15,6 +16,7 @@
                     "value" => "",
                     "class" => "form-control",
                     "placeholder" => app_lang('title'),
+                    "value"=>isset($action_info)?$action_info->title:"",
                     "autofocus" => true,
                     "data-rule-required" => true,
                     "data-msg-required" => app_lang("field_required"),
@@ -34,6 +36,7 @@
                     "value" => "",
                     "class" => "form-control",
                     "placeholder" => app_lang('description'),
+                    "value"=>isset($action_info)?$action_info->description:"",
                     "data-rich-text-editor" => true
                 ));
                 ?>
@@ -130,6 +133,9 @@
             // $taskViewLink.attr("data-title", taskShowText + " #" + JSON.parse(response).saved_id);
             $newViewLink.attr("data-post-id", <?php echo $ticket_id;?>);
             $newViewLink.trigger("click");
+        })
+        $(".btn-save-task").on("click",function(){
+            
         })
     })
 </script>
