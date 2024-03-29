@@ -46,6 +46,7 @@ if (!$sort_as_decending) {
                         echo modal_anchor(get_uri("tickets/insert_template_modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('insert_template'), array("class" => "btn btn-default float-start btn-sm round ml10 mt-1", "title" => app_lang('insert_template'), "style" => "color: #7988a2", "data-post-ticket_type_id" => $ticket_info->ticket_type_id, "id" => "insert-template-btn"));
                     }
                     ?>
+                    <button class="btn btn-default upload-file-button float-start me-auto btn-sm round mt-1" type="button" style="color:#7988a2"><i data-feather='plus-circle' class='icon-16'></i> Add email</button>
 
                     <div class="float-end">
                         <?php if ($login_user->user_type === "staff") { ?>
