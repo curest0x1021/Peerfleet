@@ -1245,13 +1245,19 @@ class Tickets extends Security_Controller {
         return $this->template->view("tickets/modals/modal_add_corrective_action",["ticket_id"=>$ticket_id]);
     }
     function modal_connect_requisition($ticket_id){
-        return $this->template->view("tickets/modals/modal_connect_requisition",["ticket_id"=>$ticket_id]);
+        $action_id=$this->request->getPost("id");
+        $action_info=$this->Ticket_actions_model->get_one($action_id);
+        return $this->template->view("tickets/modals/modal_connect_requisition",["ticket_id"=>$ticket_id,"action_info"=>$action_info]);
     }
     function modal_add_schedule($ticket_id){
-        return $this->template->view("tickets/modals/modal_add_schedule",["ticket_id"=>$ticket_id]);
+        $action_id=$this->request->getPost("id");
+        $action_info=$this->Ticket_actions_model->get_one($action_id);
+        return $this->template->view("tickets/modals/modal_add_schedule",["ticket_id"=>$ticket_id,"action_info"=>$action_info]);
     }
     function modal_add_task($ticket_id){
-        return $this->template->view("tickets/modals/modal_add_task",["ticket_id"=>$ticket_id]);
+        $action_id=$this->request->getPost("id");
+        $action_info=$this->Ticket_actions_model->get_one($action_id);
+        return $this->template->view("tickets/modals/modal_add_task",["ticket_id"=>$ticket_id,"action_info"=>$action_info]);
     }
     function save_corrective_action(){
         $id=$this->request->getPost("id");
