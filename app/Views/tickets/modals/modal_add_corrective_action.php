@@ -23,26 +23,27 @@
         class="form-control corrective-action"
         name="corrective_action"
         id="corrective_action"
+        value="<?php if(isset($action_info)) echo $action_info->corrective_action;?>"
 
         />
     </div>
     <p>The following processes can be linked to this corrective action.</p>
     <!-- <div class="row" > -->
-        <button class="w-100 btn btn-lg btn-default mb-2 btn-add-task" style="height:5vh;" disabled  data-act="ajax-modal" data-title="Add Task" data-action-url="<?php echo get_uri("tickets/modal_add_task/".$ticket_id);?>">
+        <button class="w-100 btn btn-lg btn-default mb-2 btn-add-task" style="height:5vh;" <?php if(!isset($action_info)){?>disabled<?php }?>  data-post-id="2" data-act="ajax-modal" data-title="Add Task" data-action-url="<?php echo get_uri("tickets/modal_add_task/".$ticket_id);?>">
             <div class="d-flex" >
                 <i data-feather="tool" class="icon-16" ></i>
                 <div class="flex-grow-1"></div>
                 <i data-feather="plus" class="icon-16" ></i>
             </div>
         </button>
-        <button class="w-100 btn btn-lg btn-default mb-2 btn-add-requisition" style="height:5vh;" disabled data-act="ajax-modal" data-title="Connect requisition" data-action-url="<?php echo get_uri("tickets/modal_connect_requisition/".$ticket_id);?>">
+        <button class="w-100 btn btn-lg btn-default mb-2 btn-add-requisition" style="height:5vh;" <?php if(!isset($action_info)){?>disabled<?php }?> data-act="ajax-modal" data-title="Connect requisition" data-action-url="<?php echo get_uri("tickets/modal_connect_requisition/".$ticket_id);?>">
             <div class="d-flex" >
                 <i data-feather="shopping-cart" class="icon-16" ></i>
                 <div class="flex-grow-1"></div>
                 <i data-feather="plus" class="icon-16" ></i>
             </div>
         </button>
-        <button class="w-100 btn btn-lg btn-default mb-2 btn-add-schedule" style="height:5vh;" disabled data-act="ajax-modal" data-title="Add schedule" data-action-url="<?php echo get_uri("tickets/modal_add_schedule/".$ticket_id);?>">
+        <button class="w-100 btn btn-lg btn-default mb-2 btn-add-schedule" style="height:5vh;" <?php if(!isset($action_info)){?>disabled<?php }?> data-act="ajax-modal" data-title="Add schedule" data-action-url="<?php echo get_uri("tickets/modal_add_schedule/".$ticket_id);?>">
             <div class="d-flex" >
                 <i data-feather="calendar" class="icon-16" ></i>
                 <div class="flex-grow-1"></div>
@@ -86,6 +87,8 @@
                     if(JSON.parse(response).success){
                         $(".input-action-id")[0].value=JSON.parse(response).saved_id;
                         $(".btn-add-task").prop("disabled",false);
+                        $(".btn-add-requisition").prop("disabled",false);
+                        $(".btn-add-schedule").prop("disabled",false);
                     }
                 }
             })

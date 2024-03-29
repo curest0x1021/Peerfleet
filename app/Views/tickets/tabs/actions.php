@@ -3,12 +3,14 @@
         <h4>Actions</h4>
         <?php foreach ($allActions as $key => $action) {
         ?>
-            <button class='btn btn-default btn-lg mb-1 w-100' ><div class="d-flex align-items-center justify-content-around" >
-                <p><?php echo $action->corrective_action;?></p>
-                <div class="flex-grow-1" ></div>
-                <span class="badge bg-secondary" style="margin-left:10px;" ><i data-feather="tool" class="icon-16" ></i></span>
-                <span class="badge bg-secondary" style="margin-left:10px;" ><i data-feather="shopping-cart" class="icon-16" ></i></span>
-                <span class="badge bg-secondary" style="margin-left:10px;" ><i data-feather="calendar" class="icon-16" ></i></span>
+            <button class='btn btn-default btn-lg mb-1 w-100' data-act="ajax-modal" data-title="Edit Corrective Action" data-action-url="<?php echo get_uri("tickets/modal_corrective_action/".$action->id);?>"  >
+                <div class="d-flex align-items-center justify-content-around" >
+                    <p><?php echo $action->corrective_action;?></p>
+                    <div class="flex-grow-1" ></div>
+                    <span class="badge bg-secondary" style="margin-left:10px;" ><i data-feather="tool" class="icon-16" ></i></span>
+                    <span class="badge bg-secondary" style="margin-left:10px;" ><i data-feather="shopping-cart" class="icon-16" ></i></span>
+                    <span class="badge bg-secondary" style="margin-left:10px;" ><i data-feather="calendar" class="icon-16" ></i></span>
+                </div>
             </button>
         <?php
         } ?>
