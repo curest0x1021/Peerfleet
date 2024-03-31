@@ -32,7 +32,12 @@
         
         <?php if($action_info->task_title){ ?>
             <div style="border-style:none none none solid; margin-bottom:10px; background-color:#eeeeee; border-width:3px; border-color:green; border-radius:10px; min-height:10vh; width:100%; padding:10px;" >
-                <div class="d-flex align-items-center" ><i data-feather="tool" class="icon-16" ></i> <h5>&nbsp;<?php echo $action_info->task_title;?></h5></div>
+                <div class="d-flex align-items-center" >
+                    <i data-feather="tool" class="icon-16" ></i>
+                    <h5>&nbsp;Task : <?php echo $action_info->task_title;?></h5>
+                    <a href="#" style="margin-left:1vw;" data-post-id="<?php  if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Edit Action Task " data-action-url="<?php echo get_uri("tickets/modal_add_task/".$ticket_id);?>" ><i data-feather="edit" class="icon-16" ></i></a>
+                    <a href="#" style="margin-left:1vw;" ><i data-feather="trash-2" class="icon-16" ></i></a>
+                </div>
             </div>
         <?php }else{?>
             <button class="w-100 btn btn-lg btn-default mb-2 btn-add-task" style="height:5vh;" <?php if(!isset($action_info)){?>disabled<?php }?>  data-post-id="<?php  if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Add Task" data-action-url="<?php echo get_uri("tickets/modal_add_task/".$ticket_id);?>">
@@ -43,20 +48,57 @@
                 </div>
             </button>
         <?php }?>
-        <button class="w-100 btn btn-lg btn-default mb-2 btn-add-requisition" style="height:5vh;" <?php if(!isset($action_info)){?>disabled<?php }?> data-post-id="<?php if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Connect requisition" data-action-url="<?php echo get_uri("tickets/modal_connect_requisition/".$ticket_id);?>">
-            <div class="d-flex" >
-                <i data-feather="shopping-cart" class="icon-16" ></i>
-                <div class="flex-grow-1"></div>
-                <i data-feather="plus" class="icon-16" ></i>
+        <?php if($action_info->requisition_title){?>
+            <div style="border-style:none none none solid; margin-bottom:10px; background-color:#eeeeee; border-width:3px; border-color:green; border-radius:10px; min-height:10vh; width:100%; padding:10px;" >
+                <div class="d-flex align-items-center" >
+                    <i data-feather="shopping-cart" class="icon-16" ></i>
+                    <h5>&nbsp;Requisition : <?php echo $action_info->requisition_title;?></h5>
+                    <a href="#" style="margin-left:1vw;" data-post-id="<?php  if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Edit Action Task " data-action-url="<?php echo get_uri("tickets/modal_connect_requisition/".$ticket_id);?>" ><i data-feather="edit" class="icon-16" ></i></a>
+                    <a href="#" style="margin-left:1vw;" ><i data-feather="trash-2" class="icon-16" ></i></a>
+                </div>
             </div>
-        </button>
-        <button class="w-100 btn btn-lg btn-default mb-2 btn-add-schedule" style="height:5vh;" <?php if(!isset($action_info)){?>disabled<?php }?> data-post-id="<?php if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Add schedule" data-action-url="<?php echo get_uri("tickets/modal_add_schedule/".$ticket_id);?>">
-            <div class="d-flex" >
-                <i data-feather="calendar" class="icon-16" ></i>
-                <div class="flex-grow-1"></div>
-                <i data-feather="plus" class="icon-16" ></i>
+        <?php }else{?>
+            <button class="w-100 btn btn-lg btn-default mb-2 btn-add-requisition" style="height:5vh;" <?php if(!isset($action_info)){?>disabled<?php }?> data-post-id="<?php if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Connect requisition" data-action-url="<?php echo get_uri("tickets/modal_connect_requisition/".$ticket_id);?>">
+                <div class="d-flex" >
+                    <i data-feather="shopping-cart" class="icon-16" ></i>
+                    <div class="flex-grow-1"></div>
+                    <i data-feather="plus" class="icon-16" ></i>
+                </div>
+            </button>
+        <?php }?>
+        <?php if($action_info->schedule_port){?>
+            <div style="border-style:none none none solid; margin-bottom:10px; background-color:#eeeeee; border-width:3px; border-color:green; border-radius:10px; min-height:10vh; width:100%; padding:10px;" >
+                <div class="d-flex align-items-center" >
+                    <i data-feather="calendar" class="icon-16" ></i>
+                    <h5>&nbsp;Port : <?php echo $action_info->schedule_port;?></h5>
+                    <a href="#" style="margin-left:1vw;" data-post-id="<?php  if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Edit Action Schedule " data-action-url="<?php echo get_uri("tickets/modal_add_schedule/".$ticket_id);?>" ><i data-feather="edit" class="icon-16" ></i></a>
+                    <a href="#" style="margin-left:1vw;" ><i data-feather="trash-2" class="icon-16" ></i></a>
+                </div>
+                <div class="row" >
+                    <div class="col-md-4" >
+                        <h5>
+                            ETA :
+                        </h5>
+                        <p><?php if(isset($action_info)&&($action_info->schedule_eta!="0000-00-00")) echo (date('d.m.Y', strtotime($action_info->schedule_eta)));?></p>
+                    </div>
+                    <div class="col-md-4" >
+                        <h5>
+                            ETD :
+                        </h5>
+                        <p><?php if(isset($action_info)&&($action_info->schedule_etd!="0000-00-00")) echo (date('d.m.Y', strtotime($action_info->schedule_etd)));?></p>
+                    </div>
+                </div>
             </div>
-        </button>
+        <?php }else{?>
+            <button class="w-100 btn btn-lg btn-default mb-2 btn-add-schedule" style="height:5vh;" <?php if(!isset($action_info)){?>disabled<?php }?> data-post-id="<?php if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Add schedule" data-action-url="<?php echo get_uri("tickets/modal_add_schedule/".$ticket_id);?>">
+                <div class="d-flex" >
+                    <i data-feather="calendar" class="icon-16" ></i>
+                    <div class="flex-grow-1"></div>
+                    <i data-feather="plus" class="icon-16" ></i>
+                </div>
+            </button>
+        <?php }?>
+        
     <!-- </div> -->
     <br/>
     <div class="form-group" >
