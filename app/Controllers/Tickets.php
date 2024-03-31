@@ -1277,8 +1277,8 @@ class Tickets extends Security_Controller {
         $new_data["id"]=$id;
         $new_data["task_title"]=$title;
         $new_data["task_description"]=$description;
-        $new_data["task_start_date"]=$start_date;
-        $new_data["task_deadline"]=$deadline;
+        $new_data["task_start_date"]=date('Y-m-d', strtotime($this->request->getPost("start_date")));
+        $new_data["task_deadline"]=date('Y-m-d', strtotime($this->request->getPost("deadline")));
         $saved_id=$this->Ticket_actions_model->ci_save($new_data,$id);
         return json_encode(array("success"=>true, "saved_id"=>$saved_id));
     }
