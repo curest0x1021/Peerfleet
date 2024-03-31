@@ -1307,8 +1307,8 @@ class Tickets extends Security_Controller {
         $new_data=array();
         $new_data["id"]=$id;
         $new_data["schedule_port"]=$port;
-        $new_data["schedule_eta"]=$eta;
-        $new_data["schedule_etd"]=$etd;
+        $new_data["schedule_eta"]=date('Y-m-d', strtotime($this->request->getPost("eta")));
+        $new_data["schedule_etd"]=date('Y-m-d', strtotime($this->request->getPost("etd")));
         $new_data["schedule_agent"]=$agent;
         $new_data["schedule_remarks"]=$remarks;
         $saved_id=$this->Ticket_actions_model->ci_save($new_data,$id);
