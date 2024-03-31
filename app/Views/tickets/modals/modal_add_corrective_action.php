@@ -56,6 +56,13 @@
                     <a href="#" style="margin-left:1vw;" data-post-id="<?php  if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Edit Action Task " data-action-url="<?php echo get_uri("tickets/modal_connect_requisition/".$ticket_id);?>" ><i data-feather="edit" class="icon-16" ></i></a>
                     <a href="#" style="margin-left:1vw;" ><i data-feather="trash-2" class="icon-16" ></i></a>
                 </div>
+                <div class="row" >
+                    <div class="col-md-4" >
+                        <h5>
+                            Number :
+                        </h5>
+                        <p><?php if(isset($action_info)) echo $action_info->requisition_number;?></p>
+                    </div>
             </div>
         <?php }else{?>
             <button class="w-100 btn btn-lg btn-default mb-2 btn-add-requisition" style="height:5vh;" <?php if(!isset($action_info)){?>disabled<?php }?> data-post-id="<?php if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Connect requisition" data-action-url="<?php echo get_uri("tickets/modal_connect_requisition/".$ticket_id);?>">
