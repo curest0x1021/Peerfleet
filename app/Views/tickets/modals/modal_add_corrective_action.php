@@ -63,6 +63,7 @@
                         </h5>
                         <p><?php if(isset($action_info)) echo $action_info->requisition_number;?></p>
                     </div>
+                </div>
             </div>
         <?php }else{?>
             <button class="w-100 btn btn-lg btn-default mb-2 btn-add-requisition" style="height:5vh;" <?php if(!isset($action_info)){?>disabled<?php }?> data-post-id="<?php if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Connect requisition" data-action-url="<?php echo get_uri("tickets/modal_connect_requisition/".$ticket_id);?>">
