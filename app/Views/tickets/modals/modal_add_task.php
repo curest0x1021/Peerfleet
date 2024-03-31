@@ -39,7 +39,8 @@
                     "class" => "form-control input-task-description",
                     "placeholder" => app_lang('description'),
                     "value"=>isset($action_info)?$action_info->task_description:"",
-                    "data-rich-text-editor" => true
+                    "data-rich-text-editor" => true,
+                    "style"=>"height:15vh"
                 ));
                 ?>
             </div>
@@ -91,7 +92,7 @@
                 echo form_input(array(
                     "id" => "start_date",
                     "name" => "start_date",
-                    "value" => "",
+                    "value" => isset($action_info)?(date('d.m.Y', strtotime($action_info->task_start_date))):"",
                     "class" => "form-control  input-task-start-date",
                     "placeholder" => app_lang('start_date'),
                     "autofocus" => true,
@@ -110,7 +111,7 @@
                 echo form_input(array(
                     "id" => "deadline",
                     "name" => "deadline",
-                    "value" => "",
+                    "value" => isset($action_info)?(date('d.m.Y', strtotime($action_info->task_deadline))):"",
                     "class" => "form-control input-task-deadline",
                     "placeholder" => app_lang('deadline'),
                     "autofocus" => true,
@@ -163,7 +164,14 @@
                 processData: false, // Prevent jQuery from automatically processing the data
                 contentType: false, 
                 success:function(response){
-                    
+                    if(JSON.parse(response).success)
+                        {
+                            var $newViewLink = $("#link-of-new-view").find("a");
+                            $newViewLink.attr("data-action-url", "<?php echo get_uri("tickets/modal_corrective_action/".$action_info->id); ?>");
+                            // $taskViewLink.attr("data-title", taskShowText + " #" + JSON.parse(response).saved_id);
+                            $newViewLink.attr("data-post-id", <?php echo $ticket_id;?>);
+                            $newViewLink.trigger("click");
+                        }
                 }
             })
         })
