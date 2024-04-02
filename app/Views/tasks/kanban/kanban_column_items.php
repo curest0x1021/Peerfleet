@@ -1,5 +1,15 @@
 <?php
-
+$category_colors=array(
+    "General & Docking"=>"#489ad9",
+    "Hull"=>"#3270b8",
+    "Equipment for Cargo"=>"#4bc0c1",
+    "Ship Equipment"=>"#87c245",
+    "Safety & Crew Equipment"=>"#36b293",
+    "Machinery Main Components"=>"#de5341",
+    "System Machinery Main Components"=>"#da8d19",
+    "Common systems"=>"#ebc626",
+    "Others"=>"#37485d",
+);
 $show_in_kanban = get_setting("show_in_kanban");
 $show_in_kanban_items = explode(',', $show_in_kanban);
 
@@ -15,7 +25,7 @@ foreach ($tasks as $task) {
     }
 
     if ($task->priority_id) {
-        $task_labels .= "<div class='meta float-start mr5'><span class='sub-task-icon priority-badge' data-bs-toggle='tooltip' title='" . app_lang("priority") . ": " . $task->priority_title . "' style='background: $task->priority_color'><i data-feather='$task->priority_icon' class='icon-14'></i></span></div>";
+        $task_labels .= ("<div class='meta float-start mr5'><span class='sub-task-icon priority-badge' data-bs-toggle='tooltip' title='" . app_lang("priority") . ": " . $task->priority_title . "' style='background: $task->priority_color'><i data-feather='$task->priority_icon' class='icon-14'></i></span> ".(isset($task->category)&&$task->category!=""?"<span class='' style='color:white;background-color:".(array_key_exists($task->category,$category_colors)?$category_colors[$task->category]:$category_colors["Others"]).";  padding:3px; border-radius:5px;' >$task->category</span>":"")."</div>");
     }
 
     if ($task->total_checklist) {
@@ -31,6 +41,11 @@ foreach ($tasks as $task) {
     if ($task_labels_data) {
         $task_labels .= "<div class='meta float-start mr5'>$task_labels_data</div>";
     }
+    // if($task->category){
+    //     $task_labels .="<p>$task->category</p>";
+    // }
+
+    $task_labels.="";
 
     $unread_comments_class = "";
     if (isset($task->unread) && $task->unread && $task->unread != "0") {
