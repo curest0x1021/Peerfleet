@@ -1070,7 +1070,8 @@ class Projects extends Security_Controller {
 
             return $view_data;
         } else {
-            show_404();
+            // show_404();
+            app_redirect("forbidden");
         }
     }
 
