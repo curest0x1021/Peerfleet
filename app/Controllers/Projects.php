@@ -226,6 +226,9 @@ class Projects extends Security_Controller {
             $view_data['client_id'] = $this->login_user->client_id;
             $view_data['page_type'] = "full";
             return $this->template->rander("clients/projects/index", $view_data);
+            // $view_data["can_edit_projects"] = false;
+            // $view_data["can_delete_projects"] = false;
+            // return $this->template->rander("projects/index", $view_data);
         }
     }
 
@@ -826,7 +829,7 @@ class Projects extends Security_Controller {
         $status_ids = $this->request->getPost('status_id') ? implode(",", $this->request->getPost('status_id')) : "";
 
         $options = array(
-            "client_id" => $client_id,
+            // "client_id" => $client_id,
             "status_ids" => $status_ids,
             "project_label" => $this->request->getPost("project_label"),
             "custom_fields" => $custom_fields,
