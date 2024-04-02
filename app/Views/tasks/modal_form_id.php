@@ -1214,7 +1214,7 @@
                             <?php
                                 if(isset($gotChecklistItems))
                                 foreach($gotChecklistItems as $key=>$oneItem){
-                                    echo '<div id="checklist-item-row-'.$oneItem->id.'" class="list-group-item mb5 checklist-item-row-'.$modalId.' b-a rounded text-break" data-id="'.$oneItem->id.'"><a href="#" title="" data-id="'.$oneItem->id.'" data-value="'.$oneItem->id.'" data-act="update-checklist-item-status-checkbox'.$modalId.'"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" item-id="'.$oneItem->id.'" class="delete-checklist-item'.$modalId.'" title="Delete checklist item"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">'.$oneItem->title.'</span></div>';
+                                    echo '<div id="checklist-item-row-'.$oneItem->id.'" class="list-group-item mb5 checklist-item-row-'.$modalId.' b-a rounded text-break" data-id="'.$oneItem->id.'"><a href="#" title="" data-id="'.$oneItem->id.'" data-value="'.$oneItem->id.'" data-act="update-checklist-item-status-checkbox'.$modalId.'"><span class="'.($oneItem->is_checked==1?"checkbox-checked":"checkbox-blank").' mr15 float-start"></span></a><a href="#" item-id="'.$oneItem->id.'" class="delete-checklist-item'.$modalId.'" title="Delete checklist item"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">'.$oneItem->title.'</span></div>';
                                 }
                             ?>
                             </div>
@@ -1633,9 +1633,13 @@
             var status_checkbox = $(this).find("span");
             if(status_checkbox.hasClass('checkbox-checked')){
                 status_checkbox.removeClass("checkbox-checked");
+                status_checkbox.addClass("checkbox-blank");
+                checklist_items[$(this).parent().index()].is_checked=0;
                 checklist_complete--;
             }else {
                 status_checkbox.addClass("checkbox-checked");
+                status_checkbox.removeClass("checkbox-blank");
+                checklist_items[$(this).parent().index()].is_checked=1;
                 checklist_complete++;
             }
             $(".chcklists_status_count_modal<?php echo $modalId;?>").text(checklist_complete);
@@ -2008,7 +2012,7 @@
     ?>
     <?php
         if(isset($gotChecklistItems)){
-            echo 'checklist_items=JSON.parse(`'.json_encode($gotChecklistItems).'`);';
+            echo 'checklist_items='.json_encode($gotChecklistItems).';';
         }
         
     ?>

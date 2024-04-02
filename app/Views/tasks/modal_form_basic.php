@@ -1572,16 +1572,16 @@
         checklists = $(".checklist-items .checklist-item-row").length;
         $(".delete-checklist-item").click(function () {
 
-            checklist_items.splice(checklist_items.findIndex(oneItem=>oneItem.id==$(this).attr("item-id")),1)
+            checklist_items.splice($(this).parent().index(),1)
             $(this).parent().remove();
             checklists--;
             $(".chcklists_count").text(checklists);
         });
-        $("#checklist-items").on('click','div',function(){
-            var indexToDel = $(this).index();
-            checklist_items.splice(indexToDel,1);
-            console.log(checklist_items)
-        })
+        // $("#checklist-items").on('click','div',function(){
+        //     var indexToDel = $(this).index();
+        //     checklist_items.splice(indexToDel,1);
+        //     console.log(checklist_items)
+        // })
 
         count_checklists();
 
@@ -1668,15 +1668,21 @@
         
         $('body').on('click', '[data-act=update-checklist-item-status-checkbox]', function () {
             var status_checkbox = $(this).find("span");
+            console.log(checklist_items)
+            console.log($(this).parent().index())
             if(status_checkbox.hasClass('checkbox-checked')){
                 status_checkbox.removeClass("checkbox-checked");
+                status_checkbox.addClass("checkbox-blank");
+                checklist_items[$(this).parent().index()].is_checked=0;
                 checklist_complete--;
             }else {
                 status_checkbox.addClass("checkbox-checked");
+                status_checkbox.removeClass("checkbox-blank");
+                checklist_items[$(this).parent().index()].is_checked=1;
                 checklist_complete++;
             }
             $(".chcklists_status_count").text(checklist_complete);
-
+            console.log(checklist_items)
 
         });
         $("#btn-add-new-quote-start").on("click",function(){

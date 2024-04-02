@@ -38,6 +38,7 @@ class Tasks extends Security_Controller {
         $this->File_category_model=model('App\Models\File_category_model');
         $this->Budget_groups_model=model('App\Models\Budget_groups_model');
         $this->Shipyard_cost_items_model=model('App\Models\Shipyard_cost_items_model');
+
     }
 
     private function get_context_id_pairs() {
@@ -4935,6 +4936,7 @@ class Tasks extends Security_Controller {
              $newItem=array(
                 "task_id"=>$save_id,
                 "title"=>$oneItem->title,
+                "is_checked"=>$oneItem->is_checked,
                 "deleted"=>0
              );
              $this->Checklist_items_model->ci_save($newItem);
@@ -5459,6 +5461,16 @@ class Tasks extends Security_Controller {
                     "project_id"=>$this->request->getPost("project_id"),
                 );
                 $this->Task_cost_items_model->ci_save($newItem);
+            }
+            $checklist_items=$this->Task_library_checklist_items_model->get_all_where(array("task_library"=>$oneId))->getResult();
+            foreach ($checklist_items as $key => $oneItem) {
+                # code...
+                $newItem=array(
+                    "title"=>$oneItem->title,
+                    "is_checked"=>$oneItem->checked,
+                    "task_id"=>$saved_id
+                );
+                $this->Checklist_items_model->ci_save($newItem);
             }
         }
         return json_encode(array("success"=>true,"save_id"=>$saved_id));
