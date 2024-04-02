@@ -757,11 +757,13 @@ class Task_libraries extends Security_Controller {
             "reference_drawing"=>$this->request->getPost("cost_items")
         );
         $save_id = $this->Task_libraries_model->ci_save($data, $id);
+        $this->Task_library_checklist_items_model->delete_where(array("task_library"=>$save_id));
         $checklist_items=$this->request->getPost("checklist_items");
         if($checklist_items)foreach($checklist_items as $oneItem){
             $newItem=array(
-                "title"=>$oneItem,
-                "task_library"=>$save_id
+                "title"=>$oneItem['title'],
+                "task_library"=>$save_id,
+                "checked"=>$oneItem['checked']==1?1:0
             );
             $this->Task_library_checklist_items_model->ci_save($newItem);
         }

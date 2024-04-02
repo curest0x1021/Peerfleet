@@ -94,7 +94,7 @@
                                         if(isset($gotTasklibrary)){
                                             $count=1;
                                             if(!$gotTasklibrary->category){
-                                                $gotTasklibrary["category"]="Others";
+                                                $gotTasklibrary->category="Others";
                                             }
                                             foreach($allTasklibraries as $oneTaskLibrary){
                                                 if($oneTaskLibrary['title']==$gotTasklibrary->title) break;
@@ -1155,8 +1155,8 @@
                                         <!--chekclist-items-lsiting-here-->
                                     <?php
                                         if(isset($gotChecklistItems))
-                                        foreach($gotChecklistItems as $oneItem){
-                                            echo '<div id="checklist-item-row-33" class="list-group-item mb5 checklist-item-row b-a rounded text-break" data-id="33"><a href="#" title="" data-id="33" data-value="1" data-act="update-checklist-item-status-checkbox"><span class="checkbox-blank mr15 float-start"></span></a><a href="#" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-33" data-act="ajax-request" data-action-url="'. get_uri("/task_libraries"."/delete_checklist_item"."/".$oneItem->id).'"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">'.$oneItem->title.'</span></div>';
+                                        foreach($gotChecklistItems as $item_index=>$oneItem){
+                                            echo '<div id="checklist-item-row-33" class="list-group-item mb5 checklist-item-row b-a rounded text-break" data-id="33"><a href="#" title="" data-id="33" data-value="1" data-act="update-checklist-item-status-checkbox"><span class="'.($oneItem->checked==1?"checkbox-checked":"checkbox-blank").' mr15 float-start"></span></a><a href="#" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-33" data-act="ajax-request" data-action-url="'. get_uri("/task_libraries"."/delete_checklist_item"."/".$oneItem->id).'"><div class="float-end"><i data-feather="x" class="icon-16"></i></div></a><span class="font-13">'.$oneItem->title.'</span></div>';
                                         }
                                     ?>
                                     </div>
@@ -1544,14 +1544,18 @@
             var status_checkbox = $(this).find("span");
             if(status_checkbox.hasClass('checkbox-checked')){
                 status_checkbox.removeClass("checkbox-checked");
+                status_checkbox.addClass("checkbox-blank");
+                checklist_items[$(this).parent().index()].checked=0;
                 checklist_complete--;
             }else {
                 status_checkbox.addClass("checkbox-checked");
+                status_checkbox.removeClass("checkbox-blank");
                 checklist_complete++;
+                checklist_items[$(this).parent().index()].checked=1;
             }
             $(".chcklists_status_count").text(checklist_complete);
-
-
+            console.log(checklist_items)
+           
         });
         $("#btn-add-new-quote").on("click",function(){
             if($("#insert-cost-item-panel").prop("hidden")){
@@ -1620,7 +1624,7 @@
         
         $("#add-checklist-item").on("click",function(){
             var checklist_item_title=$("#checklist-add-item")[0].value;
-            checklist_items.push(checklist_item_title);
+            checklist_items.push({title:checklist_item_title,checked:0});
             var newTempId=checklist_items.length;
             $('#checklist-items').append(`
                 <div id='checklist-item-row-${newTempId}' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='${newTempId}'><a href="#" title="" data-id="${newTempId}" data-value="${newTempId}" data-act="update-checklist-item-status-checkbox"><span class='checkbox-blank mr15 float-start'></span></a><a href="#" class="delete-checklist-item" title="Delete checklist item" data-fade-out-on-success="#checklist-item-row-${newTempId}" data-act="ajax-request" data-action-url="<?php echo get_uri("/task_libraries"."/delete_checklist_item"."/");?>${newTempId}"><div class='float-end'><i data-feather='x' class='icon-16'></i></div></a><span class='font-13 '>${checklist_item_title}</span></div>
@@ -1851,6 +1855,10 @@
     <?php
         if(isset($gotTasklibrary)&&$gotTasklibrary->reference_drawing)
         echo 'cost_items=JSON.parse(`'.$gotTasklibrary->reference_drawing.'`);';
+    ?>
+    <?php
+        if(isset($gotChecklistItems))
+        echo 'checklist_items='.json_encode($gotChecklistItems).';'
     ?>
     
 </script>
