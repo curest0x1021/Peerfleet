@@ -1293,6 +1293,8 @@ class Tickets extends Security_Controller {
             "corrective_action"=>$corrective_action,
             "task_start_date"=>date('Y-m-d'),
             "task_deadline"=>date('Y-m-d'),
+            "schedule_eta"=>date('Y-m-d'),
+            "schedule_etd"=>date('Y-m-d'),
         );
         $saved_id=$this->Ticket_actions_model->ci_save($new_data,$id);
         return json_encode(array("success"=>true, "saved_id"=>$saved_id));
