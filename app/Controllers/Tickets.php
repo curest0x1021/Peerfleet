@@ -144,7 +144,8 @@ class Tickets extends Security_Controller {
 
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("tickets", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
-        return $this->template->view('tickets/modal_form', $view_data);
+        // return $this->template->view('tickets/modal_form', $view_data);
+        return $this->template->view('tickets/modal_form_new', $view_data);
     }
 
     //get project suggestion against client
@@ -275,6 +276,30 @@ class Tickets extends Security_Controller {
         } else {
             echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
         }
+    }
+
+    function save_new(){
+        $now = get_current_utc_time();
+        $id=$this->request->getPost("id");
+        $saveData=array(
+            "title"=>$this->request->getPost("title"),
+            "manufacturer"=>$this->request->getPost("client_id"),
+            "equipment"=>$this->request->getPost("equipment"),
+            "serial_number"=>$this->request->getPost("serial_number"),
+            "critical_disturbance"=>$this->request->getPost("critical_disturbance"),
+            "critical_equipment"=>$this->request->getPost("critical_equipment"),
+            "client_id" => $this->request->getPost('client_id'),
+            "project_id"=>0,
+            "ticket_type_id"=>1,
+            "created_by" => $this->login_user->id,
+            "created_at" => $now,
+            "status"=>"new",
+            "last_activity_at"=>$now,
+            "assigned_to"=>$this->login_user->id,
+
+        );
+        $saved_id=$this->Tickets_model->ci_save($saveData,$id);
+        return json_encode(array("success"=>true,"data" => $this->_row_data($saved_id), 'message' => app_lang('record_saved'),"id"=>$saved_id,));
     }
 
     /* upload a file */
