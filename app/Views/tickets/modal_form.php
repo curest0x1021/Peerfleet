@@ -23,7 +23,103 @@
                     </div>
                 </div>
             </div>
-
+            <!------------------------------------------>
+            <div class="form-group">
+                <div class="row">
+                    <label for="manufaturer" class=" col-md-3"><?php echo "Manufacturer"; ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "manufaturer",
+                            "name" => "manufaturer",
+                            "value" => $model_info->manufacturer?$model_info->manufacturer:"",
+                            "class" => "form-control",
+                            "placeholder" => 'Manufaturer',
+                            "autofocus" => true,
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="equipment" class=" col-md-3"><?php echo "Equipment"; ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "equipment",
+                            "name" => "equipment",
+                            "value" => $model_info->equipment?$model_info->equipment:"",
+                            "class" => "form-control",
+                            "placeholder" => 'Equipment',
+                            "autofocus" => true,
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="serial_number" class=" col-md-3"><?php echo "Serial Number"; ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "serial_number",
+                            "name" => "serial_number",
+                            "value" => $model_info->serial_number?$model_info->serial_number:"",
+                            "class" => "form-control",
+                            "placeholder" => 'Serial Number',
+                            "autofocus" => true,
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="critical_disturbance" class=" col-md-3"><?php echo "Critical Disturbance"; ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "critical_disturbance",
+                            "name" => "critical_disturbance",
+                            "value" => $model_info->critical_disturbance?$model_info->critical_disturbance:"",
+                            "class" => "form-control",
+                            "placeholder" => 'Critical Disturbance',
+                            "autofocus" => true,
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="critical_equipment" class=" col-md-3"><?php echo "Critical Equipment"; ?></label>
+                    <div class=" col-md-9">
+                        <?php
+                        echo form_input(array(
+                            "id" => "critical_equipment",
+                            "name" => "critical_equipment",
+                            "value" => $model_info->critical_equipment?$model_info->critical_equipment:"",
+                            "class" => "form-control",
+                            "placeholder" => 'Critical Equipment',
+                            "autofocus" => true,
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        ));
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <!------------------------------------------>
             <!-- client can't be changed during editing -->
             <?php if ($client_id) { ?>
                 <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" />
