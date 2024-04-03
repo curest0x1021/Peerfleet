@@ -1288,7 +1288,12 @@ class Tickets extends Security_Controller {
         $id=$this->request->getPost("id");
         $ticket_id=$this->request->getPost("ticket_id");
         $corrective_action=$this->request->getPost("corrective_action");
-        $new_data=array("ticket_id"=>$ticket_id,"corrective_action"=>$corrective_action);
+        $new_data=array(
+            "ticket_id"=>$ticket_id,
+            "corrective_action"=>$corrective_action,
+            "task_start_date"=>date('Y-m-d'),
+            "task_deadline"=>date('Y-m-d'),
+        );
         $saved_id=$this->Ticket_actions_model->ci_save($new_data,$id);
         return json_encode(array("success"=>true, "saved_id"=>$saved_id));
     }
