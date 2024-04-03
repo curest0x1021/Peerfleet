@@ -30,7 +30,7 @@
     <p>The following processes can be linked to this corrective action.</p>
     <!-- <div class="row" > -->
         
-        <?php if($action_info->task_title){ ?>
+        <?php if(isset($action_info)&&$action_info->task_title){ ?>
             <div style="border-style:none none none solid; margin-bottom:10px; background-color:#eeeeee; border-width:3px; border-color:green; border-radius:10px; min-height:10vh; width:100%; padding:10px;" >
                 <div class="d-flex align-items-center" >
                     <i data-feather="tool" class="icon-16" ></i>
@@ -48,7 +48,7 @@
                 </div>
             </button>
         <?php }?>
-        <?php if($action_info->requisition_title){?>
+        <?php if(isset($action_info)&&$action_info->requisition_title){?>
             <div style="border-style:none none none solid; margin-bottom:10px; background-color:#eeeeee; border-width:3px; border-color:green; border-radius:10px; min-height:10vh; width:100%; padding:10px;" >
                 <div class="d-flex align-items-center" >
                     <i data-feather="shopping-cart" class="icon-16" ></i>
@@ -74,7 +74,7 @@
                 </div>
             </button>
         <?php }?>
-        <?php if($action_info->schedule_port){?>
+        <?php if(isset($action_info)&&$action_info->schedule_port){?>
             <div style="border-style:none none none solid; margin-bottom:10px; background-color:#eeeeee; border-width:3px; border-color:green; border-radius:10px; min-height:10vh; width:100%; padding:10px;" >
                 <div class="d-flex align-items-center" >
                     <i data-feather="calendar" class="icon-16" ></i>
