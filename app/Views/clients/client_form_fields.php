@@ -737,7 +737,14 @@
         <?php } ?>
 
         $('#owner_id').select2({
-            data: <?php echo $team_members_dropdown; ?>
+            data: <?php 
+            $team_members=json_decode($team_members_dropdown);
+                array_unshift($team_members,array(
+                    "id"=>$model_info->owner_id,
+                    "text"=>($owner_info->first_name." ".$owner_info->last_name)
+                ));
+                echo json_encode($team_members); 
+            ?>
         });
 
         $('#backup_id').select2({
