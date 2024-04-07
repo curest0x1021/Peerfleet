@@ -78,6 +78,7 @@ class Clients extends Security_Controller
         $view_data["view"] = $this->request->getPost('view'); //view='details' needed only when loading from the client's details view
         $view_data["ticket_id"] = $this->request->getPost('ticket_id'); //needed only when loading from the ticket's details view and created by unknown client
         $view_data['model_info'] = $this->Clients_model->get_one($client_id);
+        $view_data['owner_info']=$this->Users_model->get_one($view_data['model_info']->owner_id);
         //prepare vessel types dropdown list
         $view_data['types_dropdown'] = $this->_get_vessel_types_dropdown_select2_data();
         $view_data["team_members_dropdown"] = $this->get_team_members_dropdown(true);
@@ -204,7 +205,7 @@ class Clients extends Security_Controller
             "stern_thruster_type" => $this->request->getPost('stern_thruster_type'),
             "stern_thruster_power" => $this->request->getPost('stern_thruster_power'),
         );
-
+        
         //user has access to change created by
         $data["created_by"] = $this->login_user->id;
 

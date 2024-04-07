@@ -829,7 +829,7 @@ class Projects extends Security_Controller {
         $status_ids = $this->request->getPost('status_id') ? implode(",", $this->request->getPost('status_id')) : "";
 
         $options = array(
-            // "client_id" => $client_id,
+            "client_id" => $client_id,
             "status_ids" => $status_ids,
             "project_label" => $this->request->getPost("project_label"),
             "custom_fields" => $custom_fields,
