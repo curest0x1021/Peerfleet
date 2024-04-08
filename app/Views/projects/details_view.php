@@ -159,7 +159,7 @@ if (!function_exists("make_project_tabs_data")) {
                             }
 
                             /////////////////////
-                            $project_tabs["quote_overview"] = "projects/comparison_tab/" . $project_info->id;
+                            // $project_tabs["quote_overview"] = "projects/comparison_tab/" . $project_info->id;
                             ////////////////////
 
                             if ($show_files) {
