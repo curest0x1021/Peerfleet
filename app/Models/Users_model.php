@@ -65,6 +65,7 @@ class Users_model extends Crud_model {
             return false;
         } else if ($user_info->user_type === "client") {
             //user can't be loged in if client has deleted
+            return true;
             $clients_table = $this->db->prefixTable('clients');
 
             $sql = "SELECT $clients_table.id

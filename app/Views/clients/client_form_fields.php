@@ -735,16 +735,27 @@
                 data: <?php echo json_encode($types_dropdown); ?>
             });
         <?php } ?>
+        <?php 
+                // echo $team_members_dropdown;
+                $all_clients_dropdown=array(
+                    array(
+                        "id"=>$owner_info->id,
+                        "text"=>($owner_info->first_name." ".$owner_info->last_name)
+                    )
+                );
+                foreach ($all_clients as $key => $client) {
+                    # code...
+                    $all_clients_dropdown[]=array(
+                        "id"=>$client->id,
+                        "text"=>($client->first_name." ".$client->last_name)
+                    );
+                }
+                
 
-        $('#owner_id').select2({
-            data: <?php 
-            $team_members=json_decode($team_members_dropdown);
-                array_unshift($team_members,array(
-                    "id"=>$model_info->owner_id,
-                    "text"=>($owner_info->first_name." ".$owner_info->last_name)
-                ));
-                echo json_encode($team_members); 
             ?>
+            console.log(<?php echo json_encode($all_clients_dropdown);?>)
+        $('#owner_id').select2({
+            data: <?php echo json_encode($all_clients_dropdown);?>
         });
 
         $('#backup_id').select2({

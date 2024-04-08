@@ -234,26 +234,27 @@ class Signup extends App_Controller {
                 }
             }
 
-            $company_name = $this->request->getPost("company_name") ? $this->request->getPost("company_name") : $first_name . " " . $last_name; //save user name as company name if there is no company name entered
+            // $company_name = $this->request->getPost("company_name") ? $this->request->getPost("company_name") : $first_name . " " . $last_name; //save user name as company name if there is no company name entered
 
-            $client_data = array(
-                "company_name" => $company_name,
-                "charter_name"=>$company_name,
-                "type" => $this->request->getPost("account_type"),
-                "created_by" => 1 //add default admin
-            );
+            // $client_data = array(
+            //     "company_name" => $company_name,
+            //     "charter_name"=>$company_name,
+            //     "type" => $this->request->getPost("account_type"),
+            //     "created_by" => 1 //add default admin
+            // );
 
-            $client_data = clean_data($client_data);
+            // $client_data = clean_data($client_data);
 
-            //check duplicate company name, if found then show an error message
-            if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($company_name)) {
-                echo json_encode(array("success" => false, 'message' => app_lang("account_already_exists_for_your_company_name") . " " . anchor(get_uri("signin"), app_lang('signin'), array("class" => "text-white text-off"))));
-                return false;
-            }
+            // //check duplicate company name, if found then show an error message
+            // if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($company_name)) {
+            //     echo json_encode(array("success" => false, 'message' => app_lang("account_already_exists_for_your_company_name") . " " . anchor(get_uri("signin"), app_lang('signin'), array("class" => "text-white text-off"))));
+            //     return false;
+            // }
 
 
-            //create a client
-            $client_id = $this->Clients_model->ci_save($client_data);
+            // //create a client
+            // $client_id = $this->Clients_model->ci_save($client_data);
+            $client_id=1;
             if ($client_id) {
                 //client created, now create the client contact
                 $user_data["user_type"] = "client";
