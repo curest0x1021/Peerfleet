@@ -1054,11 +1054,11 @@ class Projects extends Security_Controller {
     private function _get_project_info_data($project_id) {
         $options = array(
             "id" => $project_id,
-            "client_id" => $this->login_user->client_id,
+            // "client_id" => $this->login_user->client_id,
         );
 
         if (!$this->can_manage_all_projects()) {
-            $options["user_id"] = $this->login_user->id;
+            // $options["user_id"] = $this->login_user->id;
         }
 
         $project_info = $this->Projects_model->get_details($options)->getRow();
@@ -1188,6 +1188,10 @@ class Projects extends Security_Controller {
             $view_data['show_activity'] = false;
             $view_data['show_overview'] = false;
             $view_data['activity_logs_params'] = array();
+            /////
+            ///////
+            $view_data['status_info']=$this->Project_status_model->get_one($view_data['project_info']->status_id);
+            /////
 
             $this->init_project_permission_checker($project_id);
             $this->init_project_settings($project_id);
