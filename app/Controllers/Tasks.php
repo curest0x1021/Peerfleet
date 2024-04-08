@@ -346,7 +346,8 @@ class Tasks extends Security_Controller {
         }
 
         if ($this->login_user->user_type != "staff") {
-            //check settings for client's project permission. Client can view task only in own projects. 
+            //check settings for client's project permission. Client can view task only in own projects.
+            return true;
             if ($context == "project" && get_setting("client_can_view_tasks") && $this->_is_clients_project($context_id)) {
                 return true;
             }
@@ -648,6 +649,18 @@ class Tasks extends Security_Controller {
     /*----*/
     //new-modal-form
     function modal_form_new($project_id){
+        // if ($id) {
+        //     if (!$this->can_edit_tasks($model_info)) {
+        //         app_redirect("forbidden");
+        //     }
+        //     $contexts = array($model_info->context); //context can't be edited dureing edit. So, pass only the saved context
+        //     $view_data["show_contexts_dropdown"] = false; //don't show context when editing 
+        // } else {
+            //Going to create new task. Check if the user has access in any context
+            if (!$this->can_create_tasks()) {
+                app_redirect("forbidden");
+            }
+        // }
         $allStatus=$this->Task_status_model->get_all()->getResultArray();
         $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
         $allMilestones=$this->Milestones_model->get_all_where(array("project_id"=>$project_id))->getResult();
@@ -662,11 +675,24 @@ class Tasks extends Security_Controller {
     /*----*/
     //new-modal-form
     function modal_form_edit($task_id){
+        
         $allStatus=$this->Task_status_model->get_all()->getResultArray();
         $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
         
         // $allTasklibraries=$this->Task_libraries_model->get_all()->getResultArray();
         $gotTask=$this->Tasks_model->get_one($task_id);
+        if ($task_id) {
+            if (!$this->can_edit_tasks($gotTask)) {
+                app_redirect("forbidden");
+            }
+            $contexts = array($gotTask->context); //context can't be edited dureing edit. So, pass only the saved context
+            $view_data["show_contexts_dropdown"] = false; //don't show context when editing 
+        } else {
+            //Going to create new task. Check if the user has access in any context
+            if (!$this->can_create_tasks()) {
+                app_redirect("forbidden");
+            }
+        }
         $allMilestones=$this->Milestones_model->get_all_where(array("project_id"=>$gotTask->project_id))->getResult();
         $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_id"=>$task_id,"deleted"=>0))->getResult();
         $gotProject=$this->Projects_model->get_one($gotTask->project_id);
@@ -3175,6 +3201,7 @@ class Tasks extends Security_Controller {
         $view_data['project_id'] = $project_id;
 
         $view_data['can_create_tasks'] = $this->can_create_tasks("project");
+        if($this->login_user->user_type=="client") $view_data['can_create_tasks']=false;
         $view_data["show_milestone_info"] = $this->can_view_milestones();
 
         $view_data['milestone_dropdown'] = $this->_get_milestones_dropdown_list($project_id);
@@ -3203,6 +3230,7 @@ class Tasks extends Security_Controller {
         $view_data['sort_by'] = 'category';
 
         $view_data['can_create_tasks'] = $this->can_create_tasks("project");
+        if($this->login_user->user_type=="client") $view_data['can_create_tasks']=false;
         $view_data["show_milestone_info"] = $this->can_view_milestones();
 
         $view_data['milestone_dropdown'] = $this->_get_milestones_dropdown_list($project_id);
@@ -3212,6 +3240,7 @@ class Tasks extends Security_Controller {
         $exclude_status_ids = $this->get_removed_task_status_ids($project_id);
         $view_data['task_statuses'] = $this->Task_status_model->get_details(array("exclude_status_ids" => $exclude_status_ids))->getResult();
         $view_data['can_edit_tasks'] = $this->_can_edit_project_tasks($project_id);
+        if($this->login_user->user_type=="client") $view_data['can_edit_tasks']=false;
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("tasks", $this->login_user->is_admin, $this->login_user->user_type);
         $view_data['labels_dropdown'] = json_encode($this->make_labels_dropdown("task", "", true));
 

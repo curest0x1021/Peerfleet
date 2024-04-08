@@ -3646,6 +3646,7 @@ class Projects extends Security_Controller {
         if ($this->login_user->user_type != "staff") {
             //check settings for client's project permission
             if (get_setting("client_can_view_tasks")) {
+                return true;
                 //even the settings allow to create/edit task, the client can only create their own project's tasks
                 return $this->is_clients_project;
             }
