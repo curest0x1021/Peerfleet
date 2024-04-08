@@ -147,7 +147,9 @@ if (!function_exists("make_project_tabs_data")) {
                                 $project_tabs["tasks_list"] = "tasks/project_tasks_kanban_list/" . $project_info->id;
                                 $project_tabs["tasks_kanban"] = "tasks/project_tasks_kanban_kanban/" . $project_info->id;
                             }
-
+                            //////////////////////////////
+                            // $project_tabs["tasks_kanban"] = "tasks/project_tasks_kanban_kanban/" . $project_info->id;
+                            ///////////////////////////////
                             if ($show_milestone_info) {
                                 $project_tabs["milestones"] = "projects/milestones/" . $project_info->id;
                             }
