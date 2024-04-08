@@ -821,22 +821,37 @@ class Projects extends Security_Controller {
 
     function projects_list_data_of_client($client_id = 0) {
         validate_numeric_value($client_id);
-
-        $this->access_only_team_members_or_client_contact($client_id);
-
+        /////////////////
+        // $this->access_only_team_members_or_client_contact($client_id);
+        ///////////////////////////
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("projects", $this->login_user->is_admin, $this->login_user->user_type);
 
         $status_ids = $this->request->getPost('status_id') ? implode(",", $this->request->getPost('status_id')) : "";
 
         $options = array(
-            "client_id" => $client_id,
+            // "client_id" => $client_id,
             "status_ids" => $status_ids,
             "project_label" => $this->request->getPost("project_label"),
             "custom_fields" => $custom_fields,
             "custom_field_filter" => $this->prepare_custom_field_filter_values("projects", $this->login_user->is_admin, $this->login_user->user_type)
         );
 
-        $list_data = $this->Projects_model->get_details($options)->getResult();
+        /////////////////////////////////////////
+        //$list_data = $this->Projects_model->get_details($options)->getResult();
+        $list_data=array();
+        $vessels=$this->Clients_model->get_all_where(array("owner_id"=>$this->login_user->id))->getResult();
+        foreach ($vessels as $key => $one_vessel) {
+            # code...
+            $new_option=$options;
+            $new_option["client_id"]=$one_vessel->id;
+            $list_data=array_merge($list_data, $this->Projects_model->get_details($new_option)->getResult());
+        }
+
+        
+
+
+
+        ////////////////////////////////////////////////////
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_make_row($data, $custom_fields);

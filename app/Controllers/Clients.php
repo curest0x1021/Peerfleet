@@ -82,6 +82,7 @@ class Clients extends Security_Controller
         //prepare vessel types dropdown list
         $view_data['types_dropdown'] = $this->_get_vessel_types_dropdown_select2_data();
         $view_data["team_members_dropdown"] = $this->get_team_members_dropdown(true);
+        $view_data["all_clients"]=$this->Users_model->get_all_where(array("user_type"=>"client"))->getResult();
 
         return $this->template->view('clients/modal_form', $view_data);
     }
@@ -1495,17 +1496,17 @@ class Clients extends Security_Controller
             }
 
             //add client id to contact data
-            if (isset($contact_data["email"])) {
-                //validate duplicate email address
-                if ($this->Users_model->is_email_exists($contact_data["email"], 0, $client_save_id)) {
-                    continue;
-                }
-                $contact_data["client_id"] = $client_save_id;
-                $contact_data["first_name"] = "";
-                $contact_data["last_name"] = "";
-                $contact_data["is_primary_contact"] = 1;
-                $this->Users_model->ci_save($contact_data);
-            }
+            // if (isset($contact_data["email"])) {
+            //     //validate duplicate email address
+            //     if ($this->Users_model->is_email_exists($contact_data["email"], 0, $client_save_id)) {
+            //         continue;
+            //     }
+            //     $contact_data["client_id"] = $client_save_id;
+            //     $contact_data["first_name"] = "";
+            //     $contact_data["last_name"] = "";
+            //     $contact_data["is_primary_contact"] = 1;
+            //     $this->Users_model->ci_save($contact_data);
+            // }
         }
 
         delete_file_from_directory($temp_file_path . $file_name); //delete temp file
