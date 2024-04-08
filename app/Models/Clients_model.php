@@ -103,7 +103,7 @@ class Clients_model extends Crud_model {
         LEFT JOIN $users_table as t ON t.client_id = $clients_table.id AND t.deleted=0 AND t.is_primary_contact = 3
         LEFT JOIN $vessel_types_table ON $vessel_types_table.id = $clients_table.type
         LEFT JOIN (SELECT client_id, COUNT(id) AS total_projects FROM $projects_table WHERE deleted=0 AND project_type='client_project' GROUP BY client_id) AS project_table ON project_table.client_id= $clients_table.id
-        LEFT JOIN (SELECT $users_table.id, CONCAT($users_table.first_name, ' ', $users_table.last_name) AS owner_name, $users_table.image AS owner_avatar FROM $users_table WHERE $users_table.deleted=0 AND $users_table.is_admin=0 AND $users_table.user_type='staff') AS owner_details ON owner_details.id=$clients_table.owner_id
+        LEFT JOIN (SELECT $users_table.id, CONCAT($users_table.first_name, ' ', $users_table.last_name) AS owner_name, $users_table.image AS owner_avatar FROM $users_table WHERE $users_table.deleted=0 AND $users_table.is_admin=0 ) AS owner_details ON owner_details.id=$clients_table.owner_id
         WHERE $clients_table.deleted=0 $where
         $order $limit_offset";
 
