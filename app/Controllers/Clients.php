@@ -2,6 +2,9 @@
 
 namespace App\Controllers;
 
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\PhpWord;
+
 use stdClass;
 
 class Clients extends Security_Controller
@@ -2510,6 +2513,151 @@ class Clients extends Security_Controller
     function tab_propulsion($client_id){
         $client_info=$this->Clients_model->get_one($client_id);
         return $this->template->view("clients/tabs/propulsion",["client_info"=>$client_info]);
+    }
+    function export_propulsion($client_id){
+        // Create a new PhpWord object
+        $client_info=$this->Clients_model->get_one($client_id);
+        if(!$client_info->id) return "Not valid client_id";
+        $phpWord = new PhpWord();
+
+        // Add some content to the document
+        $section = $phpWord->addSection();
+
+        $phpWord->addTitleStyle(2, array('bold' => true, 'size' => 16));
+        $section->addTitle('Main engine',2);
+        
+        $section->addText('Maker : '.$client_info->main_engine_maker);
+        $section->addText('Model : '.$client_info->main_engine_model);
+        $section->addText('Continuous output : '.$client_info->main_engine_continuous_output);
+        $section->addText('Bore : '.$client_info->main_engine_bore);
+        $section->addText('Stroke : '.$client_info->main_engine_stroke);
+        $section->addText('Serial No : '.$client_info->main_engine_serial_number);
+        $section->addText('Quantity : '.$client_info->main_engine_quantity);
+
+        $section->addTitle('Auxiliary engine',2);
+        
+        $section->addText('Maker : '.$client_info->auxiliary_engine_maker);
+        $section->addText('Model : '.$client_info->auxiliary_engine_model);
+        $section->addText('Serial No : '.$client_info->auxiliary_engine_serial_number);
+        $section->addText('Output : '.$client_info->auxiliary_engine_output);
+        $section->addText('Quantity : '.$client_info->auxiliary_engine_quantity);
+
+        $section->addTitle('Emergency generator',2);
+        
+        $section->addText('Maker : '.$client_info->emergency_generator_maker);
+        $section->addText('Model : '.$client_info->emergency_generator_model);
+        $section->addText('Serial No : '.$client_info->emergency_generator_serial_number);
+        $section->addText('Output : '.$client_info->emergency_generator_output);
+        $section->addText('Quantity : '.$client_info->emergency_generator_quantity);
+
+        $section->addTitle('Shaft generator',2);
+        
+        $section->addText('Maker : '.$client_info->shaft_generator_maker);
+        $section->addText('Model : '.$client_info->shaft_generator_model);
+        $section->addText('Serial No : '.$client_info->shaft_generator_serial_number);
+        $section->addText('Output : '.$client_info->shaft_generator_output);
+        $section->addText('Quantity : '.$client_info->shaft_generator_quantity);
+
+        $section->addTitle('Propeller',2);
+        
+        $section->addText('Maker : '.$client_info->propeller_maker);
+        $section->addText('Type : '.$client_info->propeller_type);
+        $section->addText('Number of blades : '.$client_info->propeller_number_of_blades);
+        $section->addText('Diameter : '.$client_info->propeller_diameter);
+        $section->addText('Pitch : '.$client_info->propeller_pitch);
+        $section->addText('Material : '.$client_info->propeller_material);
+        $section->addText('Weight : '.$client_info->propeller_weight);
+        $section->addText('Quantity : '.$client_info->propeller_quantity);
+
+        $section->addTitle('Side thruster',2);
+        
+        $section->addText('Number of bow thrusters : '.$client_info->bow_thruster_number);
+        $section->addText('Maker of bow thrusters : '.$client_info->bow_thruster_maker);
+        $section->addText('Type of bow thrusters : '.$client_info->bow_thruster_type);
+        $section->addText('Power of bow thrusters : '.$client_info->bow_thruster_power);
+        $section->addText('Number of stern thrusters : '.$client_info->stern_thruster_number);
+        $section->addText('Maker of stern thrusters : '.$client_info->stern_thruster_maker);
+        $section->addText('Type of stern thrusters : '.$client_info->stern_thruster_type);
+        $section->addText('Power of stern thrusters : '.$client_info->stern_thruster_power);
+
+        // Save the document to a temporary file
+        $tempFile = WRITEPATH . 'export.docx';
+        $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
+        // $objWriter->save($tempFile);
+
+        $response = service('response');
+
+// Set response headers for file download
+        $response->setHeader('Content-Type', 'application/msword');
+        $response->setHeader('Content-Disposition', 'attachment;filename="'.$client_info->charter_name.'-propulsion.docx"');
+        $response->setHeader('Cache-Control', 'max-age=0');
+
+        // Write the Excel file content to the response body
+        $objWriter->save('php://output');
+
+        // Return the response object
+        return $response;
+    
+    }
+    function export_dimensions($client_id){
+        // Create a new PhpWord object
+        $client_info=$this->Clients_model->get_one($client_id);
+        if(!$client_info->id) return "Not valid client_id";
+        $phpWord = new PhpWord();
+
+        // Add some content to the document
+        $section = $phpWord->addSection();
+
+        $phpWord->addTitleStyle(2, array('bold' => true, 'size' => 16));
+        $section->addTitle('Dimensions',2);
+        
+        $section->addText('Gross tonnage : '.$client_info->gross_tonnage);
+        $section->addText('Net tonnage : '.$client_info->net_tonnage);
+        $section->addText('Lightweight : '.$client_info->lightweight);
+        $section->addText('Length over all : '.$client_info->length_over_all);
+        $section->addText('Length between perpendiculars : '.$client_info->length_between_perpendiculars);
+        $section->addText('Length of waterline : '.$client_info->length_of_waterline);
+        $section->addText('Breadth moulded : '.$client_info->breadth_moulded);
+        $section->addText('Depth moulded : '.$client_info->depth_moulded);
+        $section->addText('Draught design : '.$client_info->draught_design);
+        $section->addText('Draught scantling : '.$client_info->draught_scantling);
+        $section->addText('Hull Design : '.$client_info->hull_design);
+
+        $section->addTitle('Hull surfaces',2);
+        $section->addText('Top sides : '.$client_info->top_sides);
+        $section->addText('Bottom sides : '.$client_info->bottom_sides);
+        $section->addText('Flat bottom : '.$client_info->flat_bottom);
+
+
+        $section->addTitle('Capacities',2);
+        $section->addText('DWT cargo : '.$client_info->dwt_cargo);
+        $section->addText('DWT scantling : '.$client_info->dwt_scantling);
+        $section->addText('DWT design : '.$client_info->dwt_design);
+        $section->addText('Heavy fuel oil : '.$client_info->heavy_fuel_oil);
+        $section->addText('Marine diesel oil : '.$client_info->marine_diesel_oil);
+        $section->addText('Marine gas oil : '.$client_info->marine_gas_oil);
+        $section->addText('LNG capacity : '.$client_info->lng_capacity);
+        $section->addText('Lub oil : '.$client_info->lub_oil);
+        $section->addText('Ballast water : '.$client_info->ballast_water);
+        $section->addText('Fresh water : '.$client_info->fresh_water);
+
+        // Save the document to a temporary file
+        $tempFile = WRITEPATH . 'export.docx';
+        $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
+        // $objWriter->save($tempFile);
+
+        $response = service('response');
+
+// Set response headers for file download
+        $response->setHeader('Content-Type', 'application/msword');
+        $response->setHeader('Content-Disposition', 'attachment;filename="'.$client_info->charter_name.'-dimensions.docx"');
+        $response->setHeader('Cache-Control', 'max-age=0');
+
+        // Write the Excel file content to the response body
+        $objWriter->save('php://output');
+
+        // Return the response object
+        return $response;
     }
 }
 
