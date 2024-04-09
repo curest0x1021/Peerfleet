@@ -1,5 +1,6 @@
 <div class="card" >
     <div class="card-body" >
+        <a class="btn btn-default" target="_blank" href="<?php echo get_uri("clients/export_propulsion/".$client_info->id);?>" ><i data-feather="download" class="icon-16"  ></i>Export Propulsion Info</a>
         <div class="row" >
             <div class="col-md-4" >
                 <h3>Main Engine</h3>
@@ -9,177 +10,140 @@
                 <h4>
                     Model : <?php echo $client_info->main_engine_model;?>
                 </h4>
-                <div class="form-group" >
-                    <label>Continuous Output</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->main_engine_continuous_output;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Bore</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->main_engine_bore;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Stroke</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->main_engine_stroke;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Serial number</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->main_engine_serial_number;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Quantity</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->main_engine_quantity;?>" />
-                </div>
+                <h4>
+                    Continuous output : <?php echo $client_info->main_engine_continuous_output;?>
+                </h4>
+                <h4>
+                    Bore : <?php echo $client_info->main_engine_bore;?>
+                </h4>
+                <h4>
+                    Stroke : <?php echo $client_info->main_engine_stroke;?>
+                </h4>
+                <h4>
+                    Serial number : <?php echo $client_info->main_engine_serial_number;?>
+                </h4>
+                <h4>
+                    Quantity : <?php echo $client_info->main_engine_quantity;?>
+                </h4>
             </div>
             <div class="col-md-2" ></div>
             <div class="col-md-4" >
-                <h4>Auxiliary Engine</h4>
-                <div class="form-group" >
-                    <label>Maker</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->auxiliary_engine_maker;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Model</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->auxiliary_engine_model;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Output</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->auxiliary_engine_output;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Serial number</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->auxiliary_engine_serial_number;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Quantity</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->auxiliary_engine_quantity;?>" />
-                </div>
+                <h3>Auxiliary Engine</h3>
+                <h4>
+                    Maker : <?php echo $client_info->auxiliary_engine_maker;?>
+                </h4>
+                <h4>
+                    Model : <?php echo $client_info->auxiliary_engine_model;?>
+                </h4>
+                <h4>
+                    Output : <?php echo $client_info->auxiliary_engine_output;?>
+                </h4>
+                <h4>
+                    Serial number : <?php echo $client_info->auxiliary_engine_serial_number;?>
+                </h4>
+                <h4>
+                    Quantity : <?php echo $client_info->auxiliary_engine_quantity;?>
+                </h4>
             </div>
         </div>
         <div class="row" >
             <div class="col-md-4" >
-                <h4>Emergency Generator</h4>
-                <div class="form-group" >
-                    <label>Maker</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->emergency_generator_maker;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Model</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->emergency_generator_model;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Output</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->emergency_generator_output;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Serial number</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->emergency_generator_serial_number;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Quantity</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->emergency_generator_quantity;?>" />
-                </div>
+                <h3>Emergency Generator</h3>
+                <h4>
+                    Maker : <?php echo $client_info->emergency_generator_maker;?>
+                </h4>
+                <h4>
+                    Model : <?php echo $client_info->emergency_generator_model;?>
+                </h4>
+                <h4>
+                    Output : <?php echo $client_info->emergency_generator_output;?>
+                </h4>
+                <h4>
+                    Serial number : <?php echo $client_info->emergency_generator_serial_number;?>
+                </h4>
+                <h4>
+                    Quantity : <?php echo $client_info->emergency_generator_quantity;?>
+                </h4>
             </div>
             <div class="col-md-2" ></div>
             <div class="col-md-4" >
-                <h4>Shaft Generator</h4>
-                <div class="form-group" >
-                    <label>Maker</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->shaft_generator_maker;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Model</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->shaft_generator_model;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Output</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->shaft_generator_output;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Serial number</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->shaft_generator_serial_number;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Quantity</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->shaft_generator_quantity;?>" />
-                </div>
+                <h3>Shaft Generator</h3>
+                <h4>
+                    Maker : <?php echo $client_info->shaft_generator_maker;?>
+                </h4>
+                <h4>
+                    Model : <?php echo $client_info->shaft_generator_model;?>
+                </h4>
+                <h4>
+                    Output : <?php echo $client_info->shaft_generator_output;?>
+                </h4>
+                <h4>
+                    Serial number : <?php echo $client_info->shaft_generator_serial_number;?>
+                </h4>
+                <h4>
+                    Quantity : <?php echo $client_info->shaft_generator_quantity;?>
+                </h4>
             </div>
         </div>
         <div class="row" >
             <div class="col-md-4" >
-                <h4>Propeller </h4>
-                <div class="form-group" >
-                    <label>Maker</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->propeller_maker;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Type</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->propeller_type;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Number of blades</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->propeller_number_of_blades;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Diameter</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->propeller_diameter;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Pitch</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->propeller_pitch;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Material</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->propeller_material;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Weight</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->propeller_weight;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Output</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->propeller_output;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Quantity</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->propeller_quantity;?>" />
-                </div>
+                <h3>Propeller </h3>
+                <h4>
+                    Maker : <?php echo $client_info->propeller_maker;?>
+                </h4>
+                <h4>
+                    Type : <?php echo $client_info->propeller_type;?>
+                </h4>
+                <h4>
+                    Number of blades : <?php echo $client_info->propeller_number_of_blades;?>
+                </h4>
+                <h4>
+                    Diameter : <?php echo $client_info->propeller_diameter;?>
+                </h4>
+                <h4>
+                    Pitch : <?php echo $client_info->propeller_pitch;?>
+                </h4>
+                <h4>
+                    Material : <?php echo $client_info->propeller_material;?>
+                </h4>
+                <h4>
+                    Weight : <?php echo $client_info->propeller_weight;?>
+                </h4>
+                <h4>
+                    Output : <?php echo $client_info->propeller_output;?>
+                </h4>
+                <h4>
+                    Quantity : <?php echo $client_info->propeller_quantity;?>
+                </h4>
             </div>
             <div class="col-md-2" ></div>
             <div class="col-md-4" >
-                <h4>Side Thruster</h4>
-                <div class="form-group" >
-                    <label>Number of bow thrusters</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->bow_thruster_number;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Maker of bow thrusters</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->bow_thruster_maker;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Type of bow thrusters</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->bow_thruster_type;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Power of bow thrusters</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->bow_thruster_power;?>" />
-                </div>
+                <h3>Side Thruster</h3>
+                <h4>
+                    Number of bow thrusters : <?php echo $client_info->bow_thruster_number;?>
+                </h4>
+                <h4>
+                    Maker of bow thrusters : <?php echo $client_info->bow_thruster_maker;?>
+                </h4>
+                <h4>
+                    Type of bow thrusters : <?php echo $client_info->bow_thruster_type;?>
+                </h4>
+                <h4>
+                    Power of bow thrusters : <?php echo $client_info->bow_thruster_power;?>
+                </h4>
 
-                <div class="form-group" >
-                    <label>Number of Stern thrusters</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->stern_thruster_number;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Maker of Stern thrusters</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->stern_thruster_maker;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Type of Stern thrusters</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->stern_thruster_type;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Power of Stern thrusters</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->stern_thruster_power;?>" />
-                </div>
+                <h4>
+                    Number of stern thrusters : <?php echo $client_info->stern_thruster_number;?>
+                </h4>
+                <h4>
+                    Maker of stern thrusters : <?php echo $client_info->stern_thruster_maker;?>
+                </h4>
+                <h4>
+                    Type of stern thrusters : <?php echo $client_info->stern_thruster_type;?>
+                </h4>
+                <h4>
+                    Power of stern thrusters : <?php echo $client_info->stern_thruster_power;?>
+                </h4>
             </div>
         </div>
     </div>

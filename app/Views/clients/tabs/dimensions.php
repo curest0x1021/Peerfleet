@@ -1,5 +1,6 @@
 <div class="card" >
     <div class="card-body">
+        <a class="btn btn-default" href="<?php echo get_uri("clients/export_dimensions/".$client_info->id);?>" target="_blank" ><i data-feather="download" class="icon-16"  ></i>Export Dimensions & Capacities</a>
         <div class="row" >
             <div class="col-md-6" >
                 <h3>Dimensions</h3>
