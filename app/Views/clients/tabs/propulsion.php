@@ -2,15 +2,13 @@
     <div class="card-body" >
         <div class="row" >
             <div class="col-md-4" >
-                <h4>Main Engine</h4>
-                <div class="form-group" >
-                    <label>Maker</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->main_engine_maker;?>" />
-                </div>
-                <div class="form-group" >
-                    <label>Model</label>
-                    <input readonly disabled class="form-control" value="<?php echo $client_info->main_engine_model;?>" />
-                </div>
+                <h3>Main Engine</h3>
+                <h4>
+                    Maker : <?php echo $client_info->main_engine_maker;?>
+                </h4>
+                <h4>
+                    Model : <?php echo $client_info->main_engine_model;?>
+                </h4>
                 <div class="form-group" >
                     <label>Continuous Output</label>
                     <input readonly disabled class="form-control" value="<?php echo $client_info->main_engine_continuous_output;?>" />

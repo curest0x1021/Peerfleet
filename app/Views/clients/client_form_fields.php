@@ -386,155 +386,155 @@
         <div class="form-group" >
             <label>Gross Tonnage</label>
             <div class="input-group" >
-                <input class="form-control" name="gross_tonnage" />
+                <input class="form-control" name="gross_tonnage" value="<?php echo $model_info->gross_tonnage ? $model_info->gross_tonnage : "";?>" />
                 <!-- <span class="input-group-text" >t</span> -->
             </div>
         </div>
         <div class="form-group" >
             <label>Net Tonnage</label>
             <div class="input-group" >
-                <input class="form-control" name="net_tonnage" />
+                <input class="form-control" name="net_tonnage" value="<?php echo $model_info->net_tonnage ? $model_info->net_tonnage : "";?>" />
                 <!-- <span class="input-group-text" >t</span> -->
             </div>
         </div>
         <div class="form-group" >
             <label>Ligthweight</label>
             <div class="input-group" >
-                <input class="form-control" name="lightweight" />
+                <input class="form-control" name="lightweight" value="<?php echo $model_info->lightweight ? $model_info->lightweight : "";?>" />
                 <!-- <span class="input-group-text" >mt</span> -->
             </div>
         </div>
         <div class="form-group" >
             <label>Length over all</label>
             <div class="input-group" >
-                <input class="form-control" name="length_over_all" />
+                <input class="form-control" name="length_over_all" value="<?php echo $model_info->length_over_all ? $model_info->length_over_all : "";?>" />
                 <!-- <span class="input-group-text" >m</span> -->
             </div>
         </div>
         <div class="form-group" >
             <label>Length between Perpendiculars</label>
             <div class="input-group" >
-                <input class="form-control" name="length_between_perpendiculars" />
+                <input class="form-control" name="length_between_perpendiculars" value="<?php echo $model_info->length_between_perpendiculars ? $model_info->length_between_perpendiculars : "";?>" />
                 <!-- <span class="input-group-text" >m</span> -->
             </div>
         </div>
         <div class="form-group" >
             <label>Length of Waterline</label>
             <div class="input-group" >
-                <input class="form-control" name="length_of_waterline" />
+                <input class="form-control" name="length_of_waterline" value="<?php echo $model_info->length_of_waterline ? $model_info->length_of_waterline : "";?>" />
                 <!-- <span class="input-group-text" >m</span> -->
             </div>
         </div>
         <div class="form-group" >
             <label>Beam / Breadth Moulded</label>
             <div class="input-group" >
-                <input class="form-control" name="breadth_moulded" />
+                <input class="form-control" name="breadth_moulded" value="<?php echo $model_info->breadth_moulded ? $model_info->breadth_moulded : "";?>" />
                 <!-- <span class="input-group-text" >m</span> -->
             </div>
         </div>
         <div class="form-group" >
             <label>Depth Moulded</label>
             <div class="input-group" >
-                <input class="form-control" name="depth_moulded" />
+                <input class="form-control" name="depth_moulded" value="<?php echo $model_info->depth_moulded ? $model_info->depth_moulded : "";?>" />
                 <!-- <span class="input-group-text" >m</span> -->
             </div>
         </div>
         <div class="form-group" >
             <label>Draft/Draught Design</label>
             <div class="input-group" >
-                <input class="form-control" name="draught_design" />
+                <input class="form-control" name="draught_design" value="<?php echo $model_info->draught_design ? $model_info->draught_design : "";?>" />
                 <!-- <span class="input-group-text" >m</span> -->
             </div>
         </div>
         <div class="form-group" >
             <label>Draft/Draught Scantling</label>
             <div class="input-group" >
-                <input class="form-control" name="draught_scantling" />
+                <input class="form-control" name="draught_scantling" value="<?php echo $model_info->draught_scantling ? $model_info->draught_scantling : "";?>" />
                 <!-- <span class="input-group-text" >m</span> -->
             </div>
         </div>
         <div class="form-group" >
             <label>Hull Design</label>
-            <input class="form-control" name="hull_design" />
+            <input class="form-control" name="hull_design" value="<?php echo $model_info->hull_design ? $model_info->hull_design : "";?>" />
         </div>
     </div>
     <div class="col-md-2" ></div>
     <div class="col-md-4" >
         <div class="form-group" >
             <label>DWT Cargo</label>
-            <input class="form-control" name="dwt_cargo" />
+            <input class="form-control" name="dwt_cargo" value="<?php echo $model_info->dwt_cargo ? $model_info->dwt_cargo : "";?>"/>
         </div>
         <div class="form-group" >
             <label>DWT Design</label>
-            <input class="form-control" name="dwt_design" />
+            <input class="form-control" name="dwt_design" value="<?php echo $model_info->dwt_design ? $model_info->dwt_design : "";?>"/>
         </div>
         <div class="form-group" >
             <label>DWT Scantling</label>
             <div class="input-group" >
-                <input class="form-control" name="dwt_scantling" />
+                <input class="form-control" name="dwt_scantling" value="<?php echo $model_info->dwt_scantling ? $model_info->dwt_scantling : "";?>" />
                 <!-- <span class="input-group-text" >m</span> -->
             </div>
         </div>
         <div class="form-group" >
             <label>Heavy Fuel Oil</label>
             <div class="input-group" >
-                <input class="form-control" name="heavy_fuel_oil" />
+                <input class="form-control" name="heavy_fuel_oil" value="<?php echo $model_info->heavy_fuel_oil ? $model_info->heavy_fuel_oil : "";?>" />
                 <!-- <span class="input-group-text" ></span> -->
             </div>
         </div>
         <div class="form-group" >
             <label>Marine Diesel Oil</label>
             <div class="input-group" >
-                <input class="form-control" name="marine_diesel_oil" />
+                <input class="form-control" name="marine_diesel_oil" value="<?php echo $model_info->marine_diesel_oil ? $model_info->marine_diesel_oil : "";?>" />
                 <!-- <span class="input-group-text" ></span> -->
             </div>
         </div>
         <div class="form-group" >
             <label>Marine Gas Oil</label>
             <div class="input-group" >
-                <input class="form-control" name="marine_gas_oil" />
+                <input class="form-control" name="marine_gas_oil" value="<?php echo $model_info->marine_gas_oil ? $model_info->marine_gas_oil : "";?>" />
                 <!-- <span class="input-group-text" ></span> -->
             </div>
         </div>
         <div class="form-group" >
             <label>lng_capacity</label>
             <div class="input-group" >
-                <input class="form-control" name="lng_capacity" />
+                <input class="form-control" name="lng_capacity" value="<?php echo $model_info->lng_capacity ? $model_info->lng_capacity : "";?>" />
                 <!-- <span class="input-group-text" ></span> -->
             </div>
         </div>
         <div class="form-group" >
             <label>Lub Oil</label>
             <div class="input-group" >
-                <input class="form-control" name="lub_oil" />
+                <input class="form-control" name="lub_oil" value="<?php echo $model_info->lub_oil ? $model_info->lub_oil : "";?>" />
                 <!-- <span class="input-group-text" ></span> -->
             </div>
         </div>
         <div class="form-group" >
             <label>Ballast Water</label>
             <div class="input-group" >
-                <input class="form-control" name="ballast_water" />
+                <input class="form-control" name="ballast_water" value="<?php echo $model_info->ballast_water ? $model_info->ballast_water : "";?>"/>
             </div>
         </div>
         <div class="form-group" >
             <label>Fresh Water</label>
             <div class="input-group" >
-                <input class="form-control" name="fresh_water" />
+                <input class="form-control" name="fresh_water" value="<?php echo $model_info->fresh_water ? $model_info->fresh_water : "";?>" />
             </div>
         </div>
     </div>
 </div>
 <div class="form-group" >
     <label>Top Sides</label>
-    <input class="form-control" name="top_sides" />
+    <input class="form-control" name="top_sides" value="<?php echo $model_info->top_sides ? $model_info->top_sides : "";?>" />
 </div>
 <div class="form-group" >
     <label>Bottom Sides</label>
-    <input class="form-control" name="top_sides" />
+    <input class="form-control" name="bottom_sides" value="<?php echo $model_info->bottom_sides ? $model_info->bottom_sides : "";?>" />
 </div>
 <div class="form-group" >
     <label>Flat Bottom</label>
-    <input class="form-control" name="flat_bottom" />
+    <input class="form-control" name="flat_bottom" value="<?php echo $model_info->flat_bottom ? $model_info->flat_bottom : "";?>"/>
 </div>
 <br/>
 <h3>Propulsion Details</h3>
@@ -543,31 +543,31 @@
         <h4>Main Engine</h4>
         <div class="form-group" >
             <label>Maker</label>
-            <input class="form-control" name="main_engine_maker" />
+            <input class="form-control" name="main_engine_maker" value="<?php echo $model_info->main_engine_maker ? $model_info->main_engine_maker : "";?>" />
         </div>
         <div class="form-group" >
             <label>Model</label>
-            <input class="form-control" name="main_engine_model" />
+            <input class="form-control" name="main_engine_model" value="<?php echo $model_info->main_engine_model ? $model_info->main_engine_model : "";?>" />
         </div>
         <div class="form-group" >
             <label>Continuous Output</label>
-            <input class="form-control" name="main_engine_continuous_output" />
+            <input class="form-control" name="main_engine_continuous_output" value="<?php echo $model_info->main_engine_continuous_output ? $model_info->main_engine_continuous_output : "";?>" />
         </div>
         <div class="form-group" >
             <label>Bore</label>
-            <input class="form-control" name="main_engine_bore" />
+            <input class="form-control" name="main_engine_bore" value="<?php echo $model_info->main_engine_bore ? $model_info->main_engine_bore : "";?>" />
         </div>
         <div class="form-group" >
             <label>Stroke</label>
-            <input class="form-control" name="main_engine_stroke" />
+            <input class="form-control" name="main_engine_stroke" value="<?php echo $model_info->main_engine_stroke ? $model_info->main_engine_stroke : "";?>" />
         </div>
         <div class="form-group" >
             <label>Serial Number</label>
-            <input class="form-control" name="main_engine_serial_number" />
+            <input class="form-control" name="main_engine_serial_number" value="<?php echo $model_info->main_engine_serial_number ? $model_info->main_engine_serial_number : "";?>" />
         </div>
         <div class="form-group" >
             <label>Quantity</label>
-            <input class="form-control" name="main_engine_quantity" />
+            <input class="form-control" name="main_engine_quantity" value="<?php echo $model_info->main_engine_quantity ? $model_info->main_engine_quantity : "";?>" />
         </div>
         
     </div>
@@ -576,23 +576,23 @@
         <h4>Auxiliary Engine</h4>
         <div class="form-group" >
             <label>Maker</label>
-            <input class="form-control" name="auxiliary_engine_maker" />
+            <input class="form-control" name="auxiliary_engine_maker" value="<?php echo $model_info->auxiliary_engine_maker ? $model_info->auxiliary_engine_maker : "";?>" />
         </div>
         <div class="form-group" >
             <label>Model</label>
-            <input class="form-control" name="auxiliary_engine_model" />
+            <input class="form-control" name="auxiliary_engine_model" value="<?php echo $model_info->auxiliary_engine_model ? $model_info->auxiliary_engine_model : "";?>" />
         </div>
         <div class="form-group" >
             <label>Serial Number</label>
-            <input class="form-control" name="auxiliary_engine_serial_number" />
+            <input class="form-control" name="auxiliary_engine_serial_number" value="<?php echo $model_info->auxiliary_engine_serial_number ? $model_info->auxiliary_engine_serial_number : "";?>" />
         </div>
         <div class="form-group" >
             <label>Output</label>
-            <input class="form-control" name="auxiliary_engine_output" />
+            <input class="form-control" name="auxiliary_engine_output" value="<?php echo $model_info->auxiliary_engine_output ? $model_info->auxiliary_engine_output : "";?>" />
         </div>
         <div class="form-group" >
             <label>Quantity</label>
-            <input class="form-control" name="auxiliary_engine_quantity" />
+            <input class="form-control" name="auxiliary_engine_quantity" value="<?php echo $model_info->auxiliary_engine_quantity ? $model_info->auxiliary_engine_quantity : "";?>" />
         </div>
     </div>
 </div>
@@ -602,23 +602,23 @@
         <h4>Emergency Generator</h4>
         <div class="form-group" >
             <label>Maker</label>
-            <input class="form-control" name="emergency_generator_maker" />
+            <input class="form-control" name="emergency_generator_maker" value="<?php echo $model_info->emergency_generator_maker ? $model_info->emergency_generator_maker : "";?>" />
         </div>
         <div class="form-group" >
             <label>Model</label>
-            <input class="form-control" name="emergency_generator_model" />
+            <input class="form-control" name="emergency_generator_model" value="<?php echo $model_info->emergency_generator_model ? $model_info->emergency_generator_model : "";?>" />
         </div>
         <div class="form-group" >
             <label>Serial Number</label>
-            <input class="form-control" name="emergency_generator_serial_number" />
+            <input class="form-control" name="emergency_generator_serial_number" value="<?php echo $model_info->emergency_generator_serial_number ? $model_info->emergency_generator_serial_number : "";?>" />
         </div>
         <div class="form-group" >
             <label>Output</label>
-            <input class="form-control" name="emergency_generator_output" />
+            <input class="form-control" name="emergency_generator_output" value="<?php echo $model_info->emergency_generator_output ? $model_info->emergency_generator_output : "";?>" />
         </div>
         <div class="form-group" >
             <label>Quantity</label>
-            <input class="form-control" name="emergency_generator_quantity" />
+            <input class="form-control" name="emergency_generator_quantity" value="<?php echo $model_info->emergency_generator_quantity ? $model_info->emergency_generator_quantity : "";?>" />
         </div>
     </div>
     <div class="col-md-2" ></div>
@@ -626,23 +626,23 @@
         <h4>Shaft Generator</h4>
         <div class="form-group" >
             <label>Maker</label>
-            <input class="form-control" name="shaft_generator_maker" />
+            <input class="form-control" name="shaft_generator_maker" value="<?php echo $model_info->shaft_generator_maker ? $model_info->shaft_generator_maker : "";?>" />
         </div>
         <div class="form-group" >
             <label>Model</label>
-            <input class="form-control" name="shaft_generator_model" />
+            <input class="form-control" name="shaft_generator_model" value="<?php echo $model_info->shaft_generator_model ? $model_info->shaft_generator_model : "";?>" />
         </div>
         <div class="form-group" >
             <label>Serial Number</label>
-            <input class="form-control" name="shaft_generator_serial_number" />
+            <input class="form-control" name="shaft_generator_serial_number" value="<?php echo $model_info->shaft_generator_serial_number ? $model_info->gross_tonnage : "";?>" />
         </div>
         <div class="form-group" >
             <label>Output</label>
-            <input class="form-control" name="shaft_generator_output" />
+            <input class="form-control" name="shaft_generator_output" value="<?php echo $model_info->shaft_generator_output ? $model_info->shaft_generator_output : "";?>" />
         </div>
         <div class="form-group" >
             <label>Quantity</label>
-            <input class="form-control" name="shaft_generator_quantity" />
+            <input class="form-control" name="shaft_generator_quantity" value="<?php echo $model_info->shaft_generator_quantity ? $model_info->shaft_generator_quantity : "";?>" />
         </div>
     </div>
 </div>
@@ -652,39 +652,39 @@
         <h4>Propeller</h4>
         <div class="form-group" >
             <label>Maker</label>
-            <input class="form-control" name="propeller_maker" />
+            <input class="form-control" name="propeller_maker" value="<?php echo $model_info->propeller_maker ? $model_info->propeller_maker : "";?>" />
         </div>
         <div class="form-group" >
             <label>Type</label>
-            <input class="form-control" name="propeller_type" />
+            <input class="form-control" name="propeller_type" value="<?php echo $model_info->propeller_type ? $model_info->propeller_type : "";?>" />
         </div>
         <div class="form-group" >
             <label>Number of blades</label>
-            <input class="form-control" name="propeller_number_of_blades" />
+            <input class="form-control" name="propeller_number_of_blades" value="<?php echo $model_info->propeller_number_of_blades ? $model_info->propeller_number_of_blades : "";?>" />
         </div>
         <div class="form-group" >
             <label>Diameter</label>
-            <input class="form-control" name="propeller_diameter" />
+            <input class="form-control" name="propeller_diameter" value="<?php echo $model_info->propeller_diameter ? $model_info->propeller_diameter : "";?>"/>
         </div>
         <div class="form-group" >
             <label>Pitch</label>
-            <input class="form-control" name="propeller_pitch" />
+            <input class="form-control" name="propeller_pitch" value="<?php echo $model_info->propeller_pitch ? $model_info->propeller_pitch : "";?>" />
         </div>
         <div class="form-group" >
             <label>Material</label>
-            <input class="form-control" name="propeller_material" />
+            <input class="form-control" name="propeller_material" value="<?php echo $model_info->propeller_material ? $model_info->propeller_material : "";?>"/>
         </div>
         <div class="form-group" >
             <label>Weight</label>
-            <input class="form-control" name="propeller_weight" />
+            <input class="form-control" name="propeller_weight" value="<?php echo $model_info->propeller_weight ? $model_info->propeller_weight : "";?>"/>
         </div>
         <div class="form-group" >
             <label>Output</label>
-            <input class="form-control" name="propeller_output" />
+            <input class="form-control" name="propeller_output" value="<?php echo $model_info->propeller_output ? $model_info->propeller_output : "";?>"/>
         </div>
         <div class="form-group" >
             <label>Quantity</label>
-            <input class="form-control" name="propeller_quantity" />
+            <input class="form-control" name="propeller_quantity" value="<?php echo $model_info->propeller_quantity ? $model_info->propeller_quantity : "";?>" />
         </div>
     </div>
     <div class="col-md-2" ></div>
@@ -692,35 +692,35 @@
         <h4>Side Thruster</h4>
         <div class="form-group" >
             <label>Number of bow thrusters</label>
-            <input class="form-control" name="bow_thruster_number" />
+            <input class="form-control" name="bow_thruster_number" value="<?php echo $model_info->bow_thruster_number ? $model_info->bow_thruster_number : "";?>"/>
         </div>
         <div class="form-group" >
             <label>Maker of bow thruster</label>
-            <input class="form-control" name="bow_thruster_maker" />
+            <input class="form-control" name="bow_thruster_maker" value="<?php echo $model_info->bow_thruster_maker ? $model_info->bow_thruster_maker : "";?>" />
         </div>
         <div class="form-group" >
             <label>Type of bow thruster</label>
-            <input class="form-control" name="bow_thruster_type" />
+            <input class="form-control" name="bow_thruster_type" value="<?php echo $model_info->bow_thruster_type ? $model_info->bow_thruster_type : "";?>" />
         </div>
         <div class="form-group" >
             <label>Power of stern thruster</label>
-            <input class="form-control" name="bow_thruster_power" />
+            <input class="form-control" name="bow_thruster_power" value="<?php echo $model_info->bow_thruster_power ? $model_info->bow_thruster_power : "";?>" />
         </div>
         <div class="form-group" >
             <label>Number of stern thrusters</label>
-            <input class="form-control" name="stern_thruster_number" />
+            <input class="form-control" name="stern_thruster_number" value="<?php echo $model_info->stern_thruster_number ? $model_info->stern_thruster_number : "";?>" />
         </div>
         <div class="form-group" >
             <label>Maker of stern thruster</label>
-            <input class="form-control" name="stern_thruster_maker" />
+            <input class="form-control" name="stern_thruster_maker" value="<?php echo $model_info->stern_thruster_maker ? $model_info->stern_thruster_maker : "";?>"/>
         </div>
         <div class="form-group" >
             <label>Type of stern thruster</label>
-            <input class="form-control" name="stern_thruster_type" />
+            <input class="form-control" name="stern_thruster_type" value="<?php echo $model_info->stern_thruster_type ? $model_info->stern_thruster_type : "";?>" />
         </div>
         <div class="form-group" >
             <label>Power of stern thruster</label>
-            <input class="form-control" name="stern_thruster_power" />
+            <input class="form-control" name="stern_thruster_power" value="<?php echo $model_info->stern_thruster_power ? $model_info->stern_thruster_power : "";?>" />
         </div>
         
     </div>
@@ -743,6 +743,7 @@
                         "text"=>($owner_info->first_name." ".$owner_info->last_name)
                     )
                 );
+
                 foreach ($all_clients as $key => $client) {
                     # code...
                     $all_clients_dropdown[]=array(

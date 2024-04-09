@@ -360,7 +360,8 @@ class Clients extends Security_Controller
                 $view_data["is_starred"] = strpos($client_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
                 $view_data["view_type"] = "";
                 $view_data["tab"] = clean_data($tab);
-
+                $view_data["owner_info"]=$this->Users_model->get_one($client_info->owner_id);
+                $view_data["all_clients"]=$this->Users_model->get_all_where(array("user_type"=>"client"))->getResult();
                 //even it's hidden, admin can view all information of client
                 $view_data['hidden_menu'] = array("");
 
@@ -863,8 +864,8 @@ class Clients extends Security_Controller
         if ($client_id) {
             $this->access_only_allowed_members_or_client_contact($client_id);
             $this->can_access_own_client($client_id);
-
-            $view_data['model_info'] = $this->Clients_model->get_one($client_id);
+            $client_info=$this->Clients_model->get_one($client_id);
+            $view_data['model_info'] = $client_info;
 
             $view_data['label_column'] = "col-md-2";
             $view_data['field_column'] = "col-md-10";
@@ -872,6 +873,8 @@ class Clients extends Security_Controller
 
             $view_data["team_members_dropdown"] = $this->get_team_members_dropdown(true);
             $view_data['types_dropdown'] = $this->_get_vessel_types_dropdown_select2_data();
+            $view_data['owner_info'] = $this->Users_model->get_one($client_info->owner_id);
+            $view_data['all_clients'] = $this->Users_model->get_all_where(array("user_type"=>"client"))->getResult();
 
             return $this->template->view('clients/contacts/company_info_tab', $view_data);
         }
