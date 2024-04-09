@@ -5504,4 +5504,57 @@ class Tasks extends Security_Controller {
         }
         return json_encode(array("success"=>true,"save_id"=>$saved_id));
     }
+    function import_from_gl_shipmanager(){
+        $project_id=$this->request->getPost();
+        upload_file_to_temp(true);
+        $file = get_array_value($_FILES, "file");
+
+        // if (!$file) {
+        //     die("Invalid file");
+        // }
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $temp_file = get_array_value($file, "tmp_name");
+        $file_name = get_array_value($file, "name");
+        $file_size = get_array_value($file, "size");
+        $temp_file_path = get_setting("temp_file_path");
+        $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
+        $excel_file->setActiveSheetIndex(0);
+        $worksheet=$excel_file->getActiveSheet();
+        $highestRow = $worksheet->getHighestRow(); // e.g., 10
+        $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
+
+        // Convert the highest column letter to a numeric index (e.g., 'F' => 6)
+        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+
+        // Initialize an empty array to store the data
+        $data = [];
+
+        // Loop through each row and column to read the data
+        for ($row = 1; $row <= $highestRow; ++$row) {
+            $rowData = [];
+            for ($col = 1; $col <= $highestColumnIndex; ++$col) {
+                $cellValue = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+                $rowData[] = $cellValue;
+            }
+            $data[] = $rowData;
+        }
+        foreach ($data as $key => $row) {
+            # code...
+            $description=$row[8]."\n". $row[14]."\n".$row[26];
+            $deadline=strtotime($row[10]);
+            $start_date=strtotime("-30 days",$row[10]);
+            $new_task_data=array(
+                "project_id"=>$project_id,
+                "title"=>$row[5],
+                "pms_scs_number"=>$row[7],
+                "start_date"=>date("Y-m-d",$start_date),
+                "deadline"=>date("Y-m-d",$deadline),
+                "description"=>$description
+
+            );
+            if($row[15]!="crew") $new_task_data["specification"]="content";
+            $saved_id=$this->Tasks_model->ci_save($new_task_data);
+        }
+        return json_encode(array("success"=>true));
+    }
 }
