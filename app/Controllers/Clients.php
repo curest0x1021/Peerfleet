@@ -2581,9 +2581,7 @@ class Clients extends Security_Controller
         $section->addText('Power of stern thrusters : '.$client_info->stern_thruster_power);
 
         // Save the document to a temporary file
-        $tempFile = WRITEPATH . 'export.docx';
         $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
-        // $objWriter->save($tempFile);
 
         $response = service('response');
 
@@ -2642,9 +2640,7 @@ class Clients extends Security_Controller
         $section->addText('Fresh water : '.$client_info->fresh_water);
 
         // Save the document to a temporary file
-        $tempFile = WRITEPATH . 'export.docx';
         $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
-        // $objWriter->save($tempFile);
 
         $response = service('response');
 
