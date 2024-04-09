@@ -2,6 +2,7 @@
     <div class="card-body">
         <div class="row" >
             <div class="col-md-6" >
+                <h3>Dimensions</h3>
                 <h4>
                     Gross Tonnage : <?php echo $client_info->gross_tonnage;?>
                 </h4>
@@ -35,6 +36,7 @@
                 <h4>
                     Hull design : <?php echo $client_info->hull_design;?>
                 </h4>
+                <h3>Hull surfaces</h3>
                 <h4>
                     Top sides : <?php echo $client_info->top_sides;?>
                 </h4>
@@ -46,6 +48,7 @@
                 </h4>
             </div>
             <div class="col-md-6" >
+                <h3>Capacities</h3>
                 <h4>
                     DWT cargo : <?php echo $client_info->dwt_cargo;?>
                 </h4>
@@ -59,35 +62,22 @@
                     Heavy fuel oil : <?php echo $client_info->heavy_fuel_oil;?>
                 </h4>
                 <h4>
-                    Length between perpendiculars : <?php echo $client_info->length_between_perpendiculars;?>
+                    Marine diesel oil : <?php echo $client_info->marine_diesel_oil;?>
                 </h4>
                 <h4>
-                    Length of waterline : <?php echo $client_info->length_of_waterline;?>
+                    Marine gas oil : <?php echo $client_info->marine_gas_oil;?>
                 </h4>
                 <h4>
-                    BEAM/Bredth Moulded : <?php echo $client_info->breadth_moulded;?>
+                    LNG Capacity : <?php echo $client_info->lng_capacity;?>
                 </h4>
                 <h4>
-                    Depth Moulded : <?php echo $client_info->depth_moulded;?>
+                    Lub oil : <?php echo $client_info->lub_oil;?>
                 </h4>
                 <h4>
-                    Draft/Draught Design : <?php echo $client_info->draught_design;?>
+                    Ballast water : <?php echo $client_info->ballast_water;?>
                 </h4>
                 <h4>
-                    Draught scantling : <?php echo $client_info->draught_scantling;?>
-                </h4>
-                <h4>
-                    Hull design : <?php echo $client_info->hull_design;?>
-                </h4>
-                <h4>
-                    Top sides : <?php echo $client_info->top_sides;?>
-                </h4>
-                <h4>
-                    Bottom sides : <?php echo $client_info->bottom_sides;?>
-                </h4>
-                <h4>
-                    Flat bottom : <?php echo $client_info->flat_bottom;?>
-                </h4>
+                    Fresh water : <?php echo $client_info->fresh_water;?>
             </div>
         </div>
     </div>
