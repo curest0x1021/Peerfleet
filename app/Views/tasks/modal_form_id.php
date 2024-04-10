@@ -111,7 +111,7 @@
                                 foreach($allBudgetGroups as $oneGroup){
                                     $budget_group_dropdown[]=array(
                                         "id"=>$oneGroup->id,
-                                        "text"=>$oneGroup->title
+                                        "text"=>($oneGroup->number." - ".$oneGroup->title)
                                     );
                                 }
                                 echo form_input(array(

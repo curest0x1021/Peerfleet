@@ -2159,7 +2159,7 @@ svg:not(.gantt) {
 .kanban-col {
     list-style-type: none;
     float: left;
-    margin: 0 9px;
+    margin: 0 20px;
     width: 305px;
 }
 
@@ -2180,8 +2180,8 @@ svg:not(.gantt) {
     border-top-right-radius: 5px;
 }
 .kanban-item-list{
-    max-height: 730px;
-    height: 730px;
+    // max-height: 730px;
+    // height: 730px;
     overflow: hidden;
 }
 .kanban-input .form-control{
