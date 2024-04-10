@@ -24,6 +24,9 @@
             </div>
             <main>
                 <div class="centered">
+                    <div class="row">
+                        <div class="document-editor__toolbar"></div>
+                    </div>
                     <div class="document-editor">
                         <div class="toolbar-container"></div>
                         <div class="content-container">
@@ -45,30 +48,16 @@
 </div>
 
 
-<script src="<?php echo base_url("assets/ckeditor5-document/");?>ckeditor.js"></script>
+<script src="<?php echo base_url("assets/ckeditor5-build/");?>build/ckeditor.js"></script>
 <?php echo view("report_templates/editor_script");?>
 <script>
 	$(document).ready(function(){
         var project_detail=<?php echo json_encode($project_detail);?>;
-        DecoupledEditor
-		.create( document.querySelector( '#editor' ), {
-			// toolbar: [ 'heading', '|', 'bold', 'italic', 'link' ]
-            extraPlugins: [ MyCustomUploadAdapterPlugin ]
-		} )
-		.then( editor => {
-			const toolbarContainer = document.querySelector( 'main .toolbar-container' );
-
-			toolbarContainer.prepend( editor.ui.view.toolbar.element );
-
-			window.editor = editor;
-		} )
-		.catch( err => {
-			console.error( err.stack );
-		} );
+        
         $(".save-report-template").on("click",function(){
             var title=$(".report-template-title")[0].value;
             var id=$(".report-template-id")[0].value;
-            var content=window.editor.getData();
+            var content=window.watchdog.editor.getData();
             var rise_csrf_token = $('[name="rise_csrf_token"]').val();
             var myForm=new FormData();
             myForm.append("id",id);
