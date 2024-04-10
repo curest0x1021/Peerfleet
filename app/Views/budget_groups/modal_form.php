@@ -45,6 +45,7 @@
         $("#budget-group").appForm({
             onSuccess: function (result) {
                 $("#budget-groups-table").appTable({newData: result.data, dataId: result.id});
+                window.location.reload();
             }
         });
         
