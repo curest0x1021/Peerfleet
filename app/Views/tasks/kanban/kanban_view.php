@@ -1,4 +1,4 @@
-<div id="kanban-wrapper">
+<div id="kanban-wrapper" style="height:60vh;overflow-y:scroll;">
     <ul id="kanban-container" style="width:100%;transform-origin:0 0;overflow-x:scroll;overflow-y:scroll;min-width:1800px;" class="kanban-container clearfix">
 
         <?php foreach ($columns as $column) { ?>
@@ -201,8 +201,9 @@
             event.originalEvent.preventDefault();
             if(is_dragging){
                 $("#kanban-wrapper")[0].scrollLeft-=(event.clientX-past_x);
-                if(first) $(".scrollable-page")[0].scrollTop-=(event.clientY-past_y);
-                else $("#kanban-wrapper")[0].scrollTop-=(event.clientY-past_y);
+                // if(first) $(".scrollable-page")[0].scrollTop-=(event.clientY-past_y);
+                // else 
+                $("#kanban-wrapper")[0].scrollTop-=(event.clientY-past_y);
                 past_x=event.clientX;
                 past_y=event.clientY;
             }
