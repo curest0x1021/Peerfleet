@@ -1,5 +1,5 @@
 <div id="kanban-wrapper">
-    <ul id="kanban-container" style="width:100%;transform-origin:0 0;overflow-x:scroll;" class="kanban-container clearfix">
+    <ul id="kanban-container" style="width:100%;transform-origin:0 0;overflow-x:scroll;overflow-y:scroll;min-width:1800px;" class="kanban-container clearfix">
 
         <?php foreach ($columns as $column) { ?>
             <li class="kanban-col kanban-<?php
@@ -171,6 +171,7 @@
     };
 
     var zoom=1;
+    var first=true;
     var is_dragging=false;
     var past_x=0;
     var past_y=0;
@@ -181,6 +182,7 @@
         $("#kanban-wrapper").on("wheel",function(event){
             event.originalEvent.preventDefault()
             var deltaY=event.originalEvent.deltaY;
+            first=false;
             // console.log(event)
             if(deltaY>0) zoom+=0.1;
             else {
@@ -199,7 +201,8 @@
             event.originalEvent.preventDefault();
             if(is_dragging){
                 $("#kanban-wrapper")[0].scrollLeft-=(event.clientX-past_x);
-                $("#kanban-wrapper")[0].scrollTop-=(event.clientY-past_y);
+                if(first) $(".scrollable-page")[0].scrollTop-=(event.clientY-past_y);
+                else $("#kanban-wrapper")[0].scrollTop-=(event.clientY-past_y);
                 past_x=event.clientX;
                 past_y=event.clientY;
             }
@@ -211,6 +214,7 @@
             past_x=0;
             past_y=0;
         })
+
         
 
         if (isMobile() && window.scrollToKanbanContent) {
