@@ -5558,7 +5558,8 @@ class Tasks extends Security_Controller {
                 "start_date"=>$start_date,
                 "deadline"=>$deadline,
                 "description"=>$description,
-                "status_id"=>1
+                "status_id"=>1,
+                "category"=>"Others"
 
             );
             if($row[15]!="crew") $new_task_data["specification"]="content";
