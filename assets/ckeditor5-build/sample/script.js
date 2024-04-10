@@ -1,4 +1,3 @@
-<script>
 const watchdog = new CKSource.EditorWatchdog();
 
 window.watchdog = watchdog;
@@ -10,14 +9,13 @@ watchdog.setCreator( ( element, config ) => {
 			// Set a custom container for the toolbar.
 			document.querySelector( '.document-editor__toolbar' ).appendChild( editor.ui.view.toolbar.element );
 			document.querySelector( '.ck-toolbar' ).classList.add( 'ck-reset_all' );
-            window.editor=editor;
+
 			return editor;
 		} );
 } );
 
 watchdog.setDestructor( editor => {
 	// Remove a custom container from the toolbar.
-    window.editor=null;
 	document.querySelector( '.document-editor__toolbar' ).removeChild( editor.ui.view.toolbar.element );
 
 	return editor.destroy();
@@ -26,12 +24,9 @@ watchdog.setDestructor( editor => {
 watchdog.on( 'error', handleSampleError );
 
 watchdog
-	.create( document.querySelector( '#editor' ), {
+	.create( document.querySelector( '.editor' ), {
 		// Editor configuration.
 	} )
-    .then(editor=>{
-        window.editor=editor
-    })
 	.catch( handleSampleError );
 
 function handleSampleError( error ) {
@@ -45,4 +40,3 @@ function handleSampleError( error ) {
 	console.error( message );
 	console.error( error );
 }
-</script>

@@ -16,6 +16,9 @@
             </div>
             <main>
                 <div class="centered">
+                    <div class="row">
+                        <div class="document-editor__toolbar"></div>
+                    </div>
                     <div class="document-editor">
                         <div class="toolbar-container"></div>
                         <div class="content-container">
@@ -37,7 +40,7 @@
 </div>
 
 
-<script src="<?php echo base_url("assets/ckeditor5-document/");?>ckeditor.js"></script>
+<script src="<?php echo base_url("assets/ckeditor5-build/");?>build/ckeditor.js"></script>
 <?php echo view("report_templates/editor_script");?>
 <script>
 	$(document).ready(function(){
@@ -79,27 +82,11 @@
         style="width:300px;"
         src="<?php echo encode_img_base64(get_setting("profile_image_path")."/".unserialize($client_info->image)["file_name"]);?>"
         />`)
-        
         var report_content=replaceWord(report_content,"{{project.currency}}","<?php echo $project_detail->currency;?>")
-        document.getElementById("editor").innerHTML=report_content;
-        DecoupledEditor
-		.create( document.querySelector( '#editor' ), {
-			// toolbar: [ 'heading', '|', 'bold', 'italic', 'link' ]
-            extraPlugins: [ MyCustomUploadAdapterPlugin ]
-		} )
-		.then( editor => {
-			const toolbarContainer = document.querySelector( 'main .toolbar-container' );
-
-			toolbarContainer.prepend( editor.ui.view.toolbar.element );
-
-			window.editor = editor;
-		} )
-		.catch( err => {
-			console.error( err.stack );
-		} );
+        window.watchdog.editor.setData(report_content)
         $(".save-report-template").on("click",function(){
             var title=$(".report-template-title")[0].value;
-            var content=window.editor.getData();
+            var content=window.watchdog.editor.getData();
             var rise_csrf_token = $('[name="rise_csrf_token"]').val();
             var myForm=new FormData();
             myForm.append("title",title);
