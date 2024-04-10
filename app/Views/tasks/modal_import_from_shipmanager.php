@@ -83,6 +83,12 @@
             })
         })
        $(".input-file-yard-items").on('change',function(){
+        $maskTarget=$("#ajaxModalContent").find(".modal-body");
+        var padding = $maskTarget.height() - 80;
+        if (padding > 0) {
+            padding = Math.floor(padding / 2);
+        }
+        $maskTarget.after("<div class='modal-mask'><div class='circle-loader'></div></div>");
         var myForm=new FormData();
         myForm.append("project_id",<?php echo $project_id?>);
         myForm.append("file",$(this)[0].files[0]);
@@ -96,12 +102,7 @@
             processData: false,
             success:function(response){
                 if(JSON.parse(response).success) {
-                    $maskTarget=$("#ajaxModalContent").find(".modal-body");
-                    var padding = $maskTarget.height() - 80;
-                    if (padding > 0) {
-                        padding = Math.floor(padding / 2);
-                    }
-                    $maskTarget.after("<div class='modal-mask'><div class='circle-loader'></div></div>");
+                    
                     //check scrollbar
                     var height = $maskTarget.outerHeight();
                     $('.modal-mask').css({"width": $maskTarget.width() + 22 + "px", "height": height + "px", "padding-top": padding + "px"});

@@ -5564,6 +5564,6 @@ class Tasks extends Security_Controller {
             if($row[15]!="crew") $new_task_data["specification"]="content";
             $saved_id=$this->Tasks_model->ci_save($new_task_data);
         }
-        // return json_encode(array("success"=>true));
+        return json_encode(array("success"=>true));
     }
 }
