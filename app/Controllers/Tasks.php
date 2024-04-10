@@ -5504,6 +5504,9 @@ class Tasks extends Security_Controller {
         }
         return json_encode(array("success"=>true,"save_id"=>$saved_id));
     }
+    function modal_import_from_gl_shipmanager($project_id){
+        return $this->template->view("tasks/modal_import_from_shipmanager",array("project_id"=>$project_id));
+    }
     function import_from_gl_shipmanager(){
         $project_id=$this->request->getPost();
         upload_file_to_temp(true);
@@ -5539,22 +5542,28 @@ class Tasks extends Security_Controller {
             $data[] = $rowData;
         }
         foreach ($data as $key => $row) {
+            if($key==0) continue;
+            
             # code...
             $description=$row[8]."\n". $row[14]."\n".$row[26];
-            $deadline=strtotime($row[10]);
-            $start_date=strtotime("-30 days",$row[10]);
+            $deadline=$row[10];
+            // $deadline = $row[10];
+            // $start_date=strtotime("-30 days",$deadline);
+            $deadline= date('Y-m-d', strtotime('1899-12-30 +' . ($row[10] - 1) . ' days'));
+            $start_date = date('Y-m-d', strtotime($deadline . ' -30 days'));
             $new_task_data=array(
                 "project_id"=>$project_id,
                 "title"=>$row[5],
                 "pms_scs_number"=>$row[7],
-                "start_date"=>date("Y-m-d",$start_date),
-                "deadline"=>date("Y-m-d",$deadline),
-                "description"=>$description
+                "start_date"=>$start_date,
+                "deadline"=>$deadline,
+                "description"=>$description,
+                "status_id"=>1
 
             );
             if($row[15]!="crew") $new_task_data["specification"]="content";
             $saved_id=$this->Tasks_model->ci_save($new_task_data);
         }
-        return json_encode(array("success"=>true));
+        // return json_encode(array("success"=>true));
     }
 }

@@ -12,6 +12,7 @@
             }
             if ($can_create_tasks) {
                 // echo modal_anchor(get_uri("tasks/modal_import_task_library/".$project_id), "<i data-feather='upload' class='icon-16'></i> " . "Import task templates", array("class" => "btn btn-default import_libraries_btn", "title" => "Import from libraries"));
+                echo modal_anchor(get_uri("tasks/modal_import_from_gl_shipmanager/".$project_id), "<i data-feather='upload' class='icon-16'></i> " . "Import xlsx from GL Shipmanager", array("class" => "btn btn-default import_libraries_btn", "title" => "Import xlsx from GL shipmanager"));
                 echo modal_anchor(get_uri("tasks/modal_apply/".$project_id), "<i data-feather='upload' class='icon-16'></i> " . "Import task templates", array("class" => "btn btn-default import_libraries_btn", "title" => "Import from libraries"));
                 echo modal_anchor(get_uri("tasks/modal_form_new/".$project_id), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_multiple_tasks'), array("class" => "btn btn-default", "title" => app_lang('add_multiple_tasks'), "data-post-project_id" => $project_id, "data-post-add_type" => "multiple"));
                 echo modal_anchor(get_uri("tasks/modal_form_new/".$project_id), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_task'), array("class" => "btn btn-default", "title" => app_lang('add_task'), "data-post-project_id" => $project_id));
