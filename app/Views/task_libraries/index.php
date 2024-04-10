@@ -112,7 +112,7 @@
                                             "maxlength" => 15,
                                             "readonly"=>true,
                                             "style"=>"border:1px solid lightgray",
-                                            "placeholder" => "Dpck list number",
+                                            "placeholder" => "Dock list number",
                                             "autocomplete" => "off"
                                         ));
                                         ?>
