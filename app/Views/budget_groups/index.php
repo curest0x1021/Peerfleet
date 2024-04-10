@@ -7,7 +7,7 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table id="note-table" class="display" cellspacing="0" width="100%">            
+            <table id="budget-groups-table" class="display" cellspacing="0" width="100%">            
             </table>
         </div>
     </div>
@@ -15,7 +15,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#note-table").appTable({
+        $("#budget-groups-table").appTable({
             source: '<?php echo_uri("budget_groups/list_data") ?>',
             order: [[0, 'desc']],
             columns: [
