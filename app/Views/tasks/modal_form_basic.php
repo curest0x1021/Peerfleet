@@ -123,6 +123,32 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="budget_group" class="col-md-4">Budget group:</label>
+                            <div class="col-md-8" >
+                                <?php
+                                $budget_group_dropdown=array();
+                                foreach($allBudgetGroups as $oneGroup){
+                                    $budget_group_dropdown[]=array(
+                                        "id"=>$oneGroup->id,
+                                        "text"=>($oneGroup->number." - ".$oneGroup->title)
+                                    );
+                                }
+                                echo form_input(array(
+                                    "id" => "budget_group",
+                                    "name" => "budget_group",
+                                    "value" => isset($gotTask)&&property_exists($gotTask,"budget_group")?$gotTask->budget_group:"",
+                                    "class" => "form-control",
+                                    "maxlength" => 15,
+                                    "style"=>"border:1px solid lightgray",
+                                    "placeholder" => "Budget group",
+                                    "autocomplete" => "off"
+                                ));
+                                ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-4">
@@ -1487,6 +1513,9 @@
         $("#priority_id").select2({
             data: <?php echo (json_encode($priority_dropdown)); ?>
         });
+        $("#budget_group").select2({
+            data: <?php echo (json_encode($budget_group_dropdown)); ?>
+        });
         $("#milestone_id").select2({
             data: <?php echo (json_encode($milestone_dropdown)); ?>
         });
@@ -1811,6 +1840,7 @@
             var estimated_cost=$("#estimated_cost")[0].value;
             var start_date=$("#start_date")[0].value;
             var deadline=$("#deadline")[0].value;
+            var budget_group=$("#budget_group")[0].value;
             var project_id=$("#project_id")[0].value;
             const myForm=new FormData();
             myForm.append("rise_csrf_token",rise_csrf_token);
@@ -1851,6 +1881,7 @@
             myForm.append("estimated_cost",estimated_cost);
             myForm.append("checklist_items",JSON.stringify(checklist_items));
             myForm.append("dependencies",dependencies);
+            myForm.append("budget_group",budget_group);
             myForm.append("cost_items",JSON.stringify(cost_items));
             myForm.append("dependencies",JSON.stringify(dependencies));
             myForm.append("project_id",project_id);
