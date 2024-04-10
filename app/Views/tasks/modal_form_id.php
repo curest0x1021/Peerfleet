@@ -75,7 +75,7 @@
                                     "maxlength" => 15,
                                     "readonly"=>true,
                                     "style"=>"border:1px solid lightgray",
-                                    "placeholder" => "DLN",
+                                    "placeholder" => "Dock list number",
                                     "autocomplete" => "off"
                                 ));
                                 ?>
