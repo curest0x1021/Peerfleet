@@ -5981,6 +5981,15 @@ class Projects extends Security_Controller {
     function modal_report_edit(){
         return $this->template->view("projects/report_documents/editor");
     }
+    function modal_table_templates($project_id){
+        return $this->template->view("projects/report_documents/modal_table_templates",array("project_id"=>$project_id));
+    }
+    function modal_chart_templates($project_id){
+        return $this->template->view("projects/report_documents/modal_chart_templates",array("project_id"=>$project_id));
+    }
+    function modal_project_images($project_id){
+        return $this->template->view("projects/report_documents/modal_project_images",array("project_id"=>$project_id));
+    }
 
 }
 

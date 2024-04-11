@@ -1,4 +1,4 @@
-<link type="text/css" href="<?php echo base_url("assets/ckeditor5-document/");?>sample/css/sample.css" rel="stylesheet" media="screen" />
+<link type="text/css" href="<?php echo base_url("assets/ckeditor5-build/");?>sample/styles.css" rel="stylesheet" media="screen" />
 <div id="page-content" class="page-wrapper clearfix grid-button">
 <a href="<?php echo get_uri("report_templates/");?>" ><h3><i data-feather="arrow-left"   ></i>Back</h3></a>
     <div class="card" >
@@ -30,7 +30,7 @@
                         <div class="toolbar-container"></div>
                         <div class="content-container">
                             <div id="editor">
-                            <?php echo isset($gotTemplate)?$gotTemplate->content:""; ?>
+                                <?php echo isset($gotTemplate)?$gotTemplate->content:""; ?>
                             </div>
                         </div>
                     </div>
