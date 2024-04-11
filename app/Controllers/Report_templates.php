@@ -49,36 +49,37 @@ class Report_templates extends Security_Controller {
         return json_encode(array("data"=>$data));
     }
     function upload_editor_image(){
-        if (!(isset($_FILES['upload']) && $_uploadS['upload']['error'] == 0)) {
-            //no file found
-            return false;
-        }
+        // if (!(isset($_FILES['upload']) && $_uploadS['upload']['error'] == 0)) {
+        //     //no file found
+        //     return false;
+        // }
 
-        $file = get_array_value($_FILES, "upload");
-        $temp_file = get_array_value($file, "tmp_name");
-        $file_name = get_array_value($file, "name");
-        $file_size = get_array_value($file, "size");
+        // $file = get_array_value($_FILES, "upload");
+        // $temp_file = get_array_value($file, "tmp_name");
+        // $file_name = get_array_value($file, "name");
+        // $file_size = get_array_value($file, "size");
 
-        if (!is_viewable_image_file($file_name)) {
-            //not an image file
-            return false;
-        }
+        // if (!is_viewable_image_file($file_name)) {
+        //     //not an image file
+        //     return false;
+        // }
 
-        $image_name = "image_" . make_random_string(5) . ".png";
-        $timeline_file_path = get_setting("timeline_file_path");
+        // $image_name = "image_" . make_random_string(5) . ".png";
+        // $timeline_file_path = get_setting("timeline_file_path");
 
-        $file_info = move_temp_file($image_name, $timeline_file_path, "pasted_image", $temp_file, "", "", false, $file_size);
-        if (!$file_info) {
-            // couldn't upload it
-            return false;
-        }
+        // $file_info = move_temp_file($image_name, $timeline_file_path, "pasted_image", $temp_file, "", "", false, $file_size);
+        // if (!$file_info) {
+        //     // couldn't upload it
+        //     return false;
+        // }
 
-        $new_file_name = get_array_value($file_info, 'file_name');
-        $url = get_source_url_of_file($file_info, $timeline_file_path, "thumbnail");
+        // $new_file_name = get_array_value($file_info, 'file_name');
+        // $url = get_source_url_of_file($file_info, $timeline_file_path, "thumbnail");
 
-        return json_encode(array(
-            "default"=>$new_file_name
-        ));
+        // return json_encode(array(
+        //     "default"=>$new_file_name
+        // ));
+        return json_encode(array("success"=>true));
     }
 
 }

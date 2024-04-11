@@ -1,3 +1,5 @@
+<?php echo form_open(get_uri("report_templates/upload_editor_image"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
+<?php echo form_close();?>
 <script>
 const watchdog = new CKSource.EditorWatchdog();
 
@@ -29,8 +31,9 @@ watchdog
 	.create( document.querySelector( '#editor' ), {
 		// Editor configuration.
         simpleUpload: {
-            uploadUrl: '<?php echo get_uri("report_templates/upload_editor_image");?>',
-        }
+            uploadUrl: '<?php echo get_uri("uploader/upload_file");?>',
+        },
+		
 	} )
     .then(editor=>{
         window.editor=editor

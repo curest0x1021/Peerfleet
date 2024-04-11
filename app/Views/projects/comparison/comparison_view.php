@@ -99,7 +99,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
             <div><label><input type="text" id="search-messages" class="datatable-search" placeholder="Search"></label></div>
         </div>
         
-        <div class="d-flex" style="overflow-x:auto;padding:10px;" >
+        <div class="d-flex" id="quotes-overview-table-panel" style="overflow-x:auto;padding:10px;" >
             <!--Main Info-->
             
             
@@ -227,11 +227,11 @@ foreach ($allProjectTasks as $index => $oneTask) {
             <table class="table table-bordered table-hover"  > -->
                 <tbody>
                     <tr data-bs-toggle="collapse" data-bs-target="#owner-supply-panel" >
-                        <th><i data-feather="chevron-down" class="collapse-arrow icon-16" ></i>Owner's supply</th>
+                        <td><i data-feather="chevron-down" class="collapse-arrow icon-16" ></i><b>Owner's supply</b></td>
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <th class="">0</th>
+                            <td class="">0</td>
                         <?php
                             # code...
                             $totalCosts[$i]+=0;
@@ -246,11 +246,11 @@ foreach ($allProjectTasks as $index => $oneTask) {
             <!-- <table class="table table-bordered table-hover"  > -->
                 <tbody>
                     <tr data-bs-toggle="collapse" data-bs-target="#general-panel" >
-                        <th><i data-feather="chevron-down" class="collapse-arrow icon-16"></i>General</th>
+                        <td><i data-feather="chevron-down" class="collapse-arrow icon-16"></i><b>General</b></td>
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <th class=""></th>
+                            <td class=""></td>
                         <?php
                             # code...
                             $totalCosts[$i]+=0;
@@ -391,11 +391,11 @@ foreach ($allProjectTasks as $index => $oneTask) {
             <!-- <table class="table table-bordered table-hover"  > -->
                 <tbody>
                     <tr data-bs-toggle="collapse" data-bs-target="#payment-terms-panel" >
-                        <th><i data-feather="chevron-down" class="collapse-arrow icon-16" ></i>Payment terms</th>
+                        <td><i data-feather="chevron-down" class="collapse-arrow icon-16" ></i><b>Payment terms</b></td>
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <th  ></th>
+                            <td  ></td>
                         <?php
                             # code...
                             $totalCosts[$i]+=0;
@@ -469,11 +469,11 @@ foreach ($allProjectTasks as $index => $oneTask) {
             <!-- <table class="table table-bordered table-hover"  > -->
                 <tbody>
                     <tr data-bs-toggle="collapse" data-bs-target="#penalties-panel" >
-                        <th><i data-feather="chevron-down" class="collapse-arrow icon-16"></i>Penalties</th>
+                        <td><i data-feather="chevron-down" class="collapse-arrow icon-16"></i><b>Penalties</b></td>
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <th>0</th>
+                            <td>0</td>
                         <?php
                             # code...
                             $totalCosts[$i]+=0;
@@ -515,11 +515,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                 </tbody>
             <!-- </table> -->
             <!-- <table class="table table-bordered table-hover"  > -->
-                <thead>
-                    <tr>
-                        <td></td>
-                    </tr>
-                </thead>
+                
                 <?php
                 foreach ($categorizedTasks as $category => $oneList) {
                     $totalTaskCost=0;
@@ -564,7 +560,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
 
                                if($totalYardCosts[$i]>0)  echo number_format($totalYardCosts[$i],1)." ".$project_info->currency; else echo "-";
                             ?>
-                        </th>
+                        </td>
                         <?php
                             }
                         ?>

@@ -1,4 +1,4 @@
-<link type="text/css" href="<?php echo base_url("assets/ckeditor5-document/");?>sample/css/sample.css" rel="stylesheet" media="screen" />
+<link type="text/css" href="<?php echo base_url("assets/ckeditor5-build/");?>sample/styles.css" rel="stylesheet" media="screen" />
 <div id="page-content" class="page-wrapper clearfix grid-button">
 <a href="<?php echo get_uri("projects/view/".$project_detail->id);?>" ><h3><i data-feather="arrow-left"   ></i>Back</h3></a>
     <div class="card" >
@@ -13,6 +13,11 @@
                 class="form-control report-template-title"
                 value="<?php echo isset($template_info)?$template_info->title:"";?>"
                 />
+            </div>
+            <div class="d-flex align-items-center justify-content-around" style="margin-bottom:10px;" >
+                <?php echo modal_anchor(get_uri("projects/modal_table_templates/".$project_detail->id),'<button class="btn btn-default" >Table templates</button>',array()); ?>
+                <?php echo modal_anchor(get_uri("projects/modal_chart_templates/".$project_detail->id),'<button class="btn btn-default" >Chart templates</button>',array()); ?>
+                <?php echo modal_anchor(get_uri("projects/modal_project_images/".$project_detail->id),'<button class="btn btn-default" >Project images</button>',array()); ?>
             </div>
             <main>
                 <div class="centered">
