@@ -10,8 +10,10 @@
                 echo js_anchor("<i data-feather='check-square' class='icon-16'></i> " . app_lang("cancel_selection"), array("class" => "hide btn btn-default batch-cancel-btn"));
             }
             if ($can_create_tasks) {
-                echo modal_anchor(get_uri("tasks/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_multiple_tasks'), array("class" => "btn btn-default", "title" => app_lang('add_multiple_tasks'), "data-post-project_id" => $project_id, "data-post-add_type" => "multiple"));
-                echo modal_anchor(get_uri("tasks/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_task'), array("class" => "btn btn-default", "title" => app_lang('add_task'), "data-post-project_id" => $project_id));
+                echo modal_anchor(get_uri("tasks/modal_import_from_gl_shipmanager/".$project_id), "<i data-feather='upload' class='icon-16'></i> " . "Import xlsx from GL Shipmanager", array("class" => "btn btn-default import_libraries_btn", "title" => "Import xlsx from GL shipmanager"));
+                echo modal_anchor(get_uri("tasks/modal_apply/".$project_id), "<i data-feather='upload' class='icon-16'></i> " . "Import task templates", array("class" => "btn btn-default import_libraries_btn", "title" => "Import from libraries"));
+                echo modal_anchor(get_uri("tasks/modal_form_new/".$project_id), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_multiple_tasks'), array("class" => "btn btn-default", "title" => app_lang('add_multiple_tasks'), "data-post-project_id" => $project_id, "data-post-add_type" => "multiple"));
+                echo modal_anchor(get_uri("tasks/modal_form_new/".$project_id), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_task'), array("class" => "btn btn-default", "title" => app_lang('add_task'), "data-post-project_id" => $project_id));
                 echo modal_anchor(get_uri("tasks/import_tasks_modal_form"), "<i data-feather='upload' class='icon-16'></i> " . app_lang('import_tasks'), array("class" => "btn btn-default import_tasks_btn", "title" => app_lang('import_tasks'), "data-post-project_id" => $project_id));
                 echo modal_anchor(get_uri("tasks/export_project_modal_form"), "<i data-feather='external-link' class='icon-16'></i> " . app_lang('export'), array("class" => "btn btn-default export-excel-btn", "title" => app_lang('export_project'), "data-post-project_id" => $project_id));
             }
