@@ -33,6 +33,9 @@
 
     $(document).ready(function () {
         var filterDropdown = [];
+        $(".modal-dialog").removeClass("modal-lg");
+        $(".modal-dialog").addClass("modal-xl");
+
 
         if ("<?php echo $login_user->user_type ?>" == "staff") {
             filterDropdown = [
