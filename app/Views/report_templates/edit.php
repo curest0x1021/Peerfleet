@@ -52,22 +52,6 @@
 <?php echo view("report_templates/editor_script");?>
 <script>
 	$(document).ready(function(){
-        
-        // DecoupledEditor
-		// .create( document.querySelector( '#editor' ), {
-		// 	// toolbar: [ 'heading', '|', 'bold', 'italic', 'link' ]
-        //     extraPlugins: [ MyCustomUploadAdapterPlugin, ],
-            
-		// } )
-		// .then( editor => {
-		// 	const toolbarContainer = document.querySelector( 'main .toolbar-container' );
-
-		// 	toolbarContainer.prepend( editor.ui.view.toolbar.element );
-		// 	window.editor = editor;
-		// } )
-		// .catch( err => {
-		// 	console.error( err.stack );
-		// } );
         $(".save-report-template").on("click",function(){
             var title=$(".report-template-title")[0].value;
             var id=$(".report-template-id")[0].value;

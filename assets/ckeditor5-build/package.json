@@ -44,6 +44,7 @@
     "@ckeditor/ckeditor5-style": "41.3.0",
     "@ckeditor/ckeditor5-table": "41.3.0",
     "@ckeditor/ckeditor5-typing": "41.3.0",
+    "@ckeditor/ckeditor5-ui": "41.3.0",
     "@ckeditor/ckeditor5-undo": "41.3.0",
     "@ckeditor/ckeditor5-upload": "41.3.0",
     "@ckeditor/ckeditor5-watchdog": "41.3.0",

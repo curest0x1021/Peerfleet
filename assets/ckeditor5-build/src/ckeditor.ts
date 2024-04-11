@@ -79,8 +79,9 @@ import {
 	TableToolbar
 } from '@ckeditor/ckeditor5-table';
 import { TextTransformation } from '@ckeditor/ckeditor5-typing';
+import { AccessibilityHelp } from '@ckeditor/ckeditor5-ui';
 import { Undo } from '@ckeditor/ckeditor5-undo';
-import { Base64UploadAdapter } from '@ckeditor/ckeditor5-upload';
+import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload';
 import { EditorWatchdog } from '@ckeditor/ckeditor5-watchdog';
 import { WordCount } from '@ckeditor/ckeditor5-word-count';
 
@@ -89,12 +90,12 @@ import { WordCount } from '@ckeditor/ckeditor5-word-count';
 
 class Editor extends DecoupledEditor {
 	public static override builtinPlugins = [
+		AccessibilityHelp,
 		Alignment,
 		AutoImage,
 		AutoLink,
 		Autoformat,
 		Autosave,
-		Base64UploadAdapter,
 		BlockQuote,
 		Bold,
 		CloudServices,
@@ -139,6 +140,7 @@ class Editor extends DecoupledEditor {
 		RemoveFormat,
 		SelectAll,
 		ShowBlocks,
+		SimpleUploadAdapter,
 		SourceEditing,
 		SpecialCharacters,
 		SpecialCharactersArrows,
@@ -200,17 +202,17 @@ class Editor extends DecoupledEditor {
 				'|',
 				'undo',
 				'redo',
+				'code',
 				'pageBreak',
-				'imageInsert',
 				'removeFormat',
+				'highlight',
 				'specialCharacters',
+				'sourceEditing',
 				'subscript',
 				'superscript',
-				'code',
-				'findAndReplace',
-				'highlight',
-				'horizontalLine',
-				'sourceEditing'
+				'style',
+				'codeBlock',
+				'selectAll'
 			]
 		},
 		language: 'en',

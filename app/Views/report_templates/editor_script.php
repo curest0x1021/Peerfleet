@@ -28,6 +28,9 @@ watchdog.on( 'error', handleSampleError );
 watchdog
 	.create( document.querySelector( '#editor' ), {
 		// Editor configuration.
+        simpleUpload: {
+            uploadUrl: '<?php echo get_uri("report_templates/upload_editor_image");?>',
+        }
 	} )
     .then(editor=>{
         window.editor=editor
