@@ -4,7 +4,7 @@
         <input hidden name="id" value="<?php if(isset($gotTask)) echo $gotTask->id; ?>" />
         <div class="card-header d-flex justify-content-between">
             <h4><?php 
-            // echo isset($gotTasklibrary)?"Edit Task" :"Add Task"; 
+            // echo isset($gotTask)?"Edit Task" :"Add Task"; 
             ?></h4>
             
         </div>
@@ -529,7 +529,7 @@
                                             "id" => "gas_free_certificate_yes",
                                             "name" => "gas_free_certificate",
                                             "class" => "form-check-input",
-                                        ), "1", false);
+                                        ), "1", isset($gotTask)?$gotTask->gas_free_certificate:0);
                                         ?>
                                         <label for="gas_free_certificate_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -537,9 +537,135 @@
                                             "id" => "gas_free_certificate_no",
                                             "name" => "gas_free_certificate",
                                             "class" => "form-check-input",
-                                        ), "0", true);
+                                        ), "0", isset($gotTask)?!$gotTask->gas_free_certificate:1);
                                         ?>
                                         <label for="gas_free_certificate_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="light" class="col-7"><?php echo app_lang('light'); ?></label>
+                                    <div class="col-5">
+                                        <?php
+                                        echo form_radio(array(
+                                            "id" => "light_yes",
+                                            "name" => "light",
+                                            "class" => "form-check-input",
+                                        ), "1", isset($gotTask)?$gotTask->light:0);
+                                        ?>
+                                        <label for="light_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                        <?php
+                                        echo form_radio(array(
+                                            "id" => "light_no",
+                                            "name" => "light",
+                                            "class" => "form-check-input",
+                                        ), "0", isset($gotTask)?!$gotTask->light:1);
+                                        ?>
+                                        <label for="light_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="ventilation" class="col-7"><?php echo app_lang('ventilation'); ?></label>
+                                    <div class="col-5">
+                                        <?php
+                                        echo form_radio(array(
+                                            "id" => "ventilation_yes",
+                                            "name" => "ventilation",
+                                            "class" => "form-check-input",
+                                        ), "1", isset($gotTask)?$gotTask->ventilation:0);
+                                        ?>
+                                        <label for="ventilation_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                        <?php
+                                        echo form_radio(array(
+                                            "id" => "ventilation_no",
+                                            "name" => "ventilation",
+                                            "class" => "form-check-input",
+                                        ), "0", isset($gotTask)?!$gotTask->ventilation:1);
+                                        ?>
+                                        <label for="ventilation_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="crane_assistance" class="col-7"><?php echo app_lang('crane_assistance'); ?></label>
+                                    <div class="col-5">
+                                        <?php
+                                        echo form_radio(array(
+                                            "id" => "crane_assistance_yes",
+                                            "name" => "crane_assistance",
+                                            "class" => "form-check-input",
+                                        ), "1", isset($gotTask)?$gotTask->crane_assistance:0);
+                                        ?>
+                                        <label for="crane_assistance_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                        <?php
+                                        echo form_radio(array(
+                                            "id" => "crane_assistance_no",
+                                            "name" => "crane_assistance",
+                                            "class" => "form-check-input",
+                                        ), "0", isset($gotTask)?!$gotTask->crane_assistance:1);
+                                        ?>
+                                        <label for="crane_assistance_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="cleaning_before" class="col-7"><?php echo app_lang('cleaning_before'); ?></label>
+                                    <div class="col-5">
+                                        <?php
+                                        echo form_radio(array(
+                                            "id" => "cleaning_before_yes",
+                                            "name" => "cleaning_before",
+                                            "class" => "form-check-input",
+                                        ), "1", isset($gotTask)?$gotTask->cleaning_before:0);
+                                        ?>
+                                        <label for="cleaning_before_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                        <?php
+                                        echo form_radio(array(
+                                            "id" => "cleaning_before_no",
+                                            "name" => "cleaning_before",
+                                            "class" => "form-check-input",
+                                        ), "0", isset($gotTask)?!$gotTask->cleaning_before:1);
+                                        ?>
+                                        <label for="cleaning_before_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="cleaning_after" class="col-7"><?php echo app_lang('cleaning_after'); ?></label>
+                                    <div class="col-5">
+                                        <?php
+                                        echo form_radio(array(
+                                            "id" => "cleaning_after_yes",
+                                            "name" => "cleaning_after",
+                                            "class" => "form-check-input",
+                                        ), "1", isset($gotTask)?$gotTask->cleaning_after:0);
+                                        ?>
+                                        <label for="cleaning_after_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                        <?php
+                                        echo form_radio(array(
+                                            "id" => "cleaning_after_no",
+                                            "name" => "cleaning_after",
+                                            "class" => "form-check-input",
+                                        ), "0", isset($gotTask)?!$gotTask->cleaning_after:1);
+                                        ?>
+                                        <label for="cleaning_after_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="work_permit" class="col-7"><?php echo app_lang('work_permit'); ?></label>
+                                    <div class="col-5">
+                                        <?php
+                                        echo form_radio(array(
+                                            "id" => "work_permit_yes",
+                                            "name" => "work_permit",
+                                            "class" => "form-check-input",
+                                        ), "1", isset($gotTask)?$gotTask->work_permit:0);
+                                        ?>
+                                        <label for="work_permit_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
+                                        <?php
+                                        echo form_radio(array(
+                                            "id" => "work_permit_no",
+                                            "name" => "work_permit",
+                                            "class" => "form-check-input",
+                                        ), "0", isset($gotTask)?!$gotTask->work_permit:1);
+                                        ?>
+                                        <label for="work_permit_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
                                 </div>
                             </div>
@@ -552,7 +678,7 @@
                                             "id" => "painting_after_completion_yes",
                                             "name" => "painting_after_completion",
                                             "class" => "form-check-input",
-                                        ), "1", false);
+                                        ), "1", isset($gotTask)?$gotTask->painting_after_completion:0);
                                         ?>
                                         <label for="painting_after_completion_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -560,36 +686,11 @@
                                             "id" => "painting_after_completion_no",
                                             "name" => "painting_after_completion",
                                             "class" => "form-check-input",
-                                        ), "0", true);
+                                        ), "0", isset($gotTask)?!$gotTask->painting_after_completion:1);
                                         ?>
                                         <label for="painting_after_completion_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="row">
-                                    <label for="light" class="col-7"><?php echo app_lang('light'); ?></label>
-                                    <div class="col-5">
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "light_yes",
-                                            "name" => "light",
-                                            "class" => "form-check-input",
-                                        ), "1", false);
-                                        ?>
-                                        <label for="light_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "light_no",
-                                            "name" => "light",
-                                            "class" => "form-check-input",
-                                        ), "0", true);
-                                        ?>
-                                        <label for="light_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
                                 <div class="row">
                                     <label for="parts_on_board" class="col-7"><?php echo app_lang('parts_on_board'); ?></label>
                                     <div class="col-5">
@@ -598,7 +699,7 @@
                                             "id" => "parts_on_board_yes",
                                             "name" => "parts_on_board",
                                             "class" => "form-check-input",
-                                        ), "1", false);
+                                        ), "1", isset($gotTask)?$gotTask->parts_on_board:0);
                                         ?>
                                         <label for="parts_on_board_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -606,220 +707,11 @@
                                             "id" => "parts_on_board_no",
                                             "name" => "parts_on_board",
                                             "class" => "form-check-input",
-                                        ), "0", true);
+                                        ), "0", isset($gotTask)?!$gotTask->parts_on_board:1);
                                         ?>
                                         <label for="parts_on_board_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="row">
-                                    <label for="ventilation" class="col-7"><?php echo app_lang('ventilation'); ?></label>
-                                    <div class="col-5">
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "ventilation_yes",
-                                            "name" => "ventilation",
-                                            "class" => "form-check-input",
-                                        ), "1", false);
-                                        ?>
-                                        <label for="ventilation_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "ventilation_no",
-                                            "name" => "ventilation",
-                                            "class" => "form-check-input",
-                                        ), "0", true);
-                                        ?>
-                                        <label for="ventilation_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="row">
-                                    <label for="transport_to_yard_workshop" class="col-7"><?php echo app_lang('transport_to_yard_workshop'); ?></label>
-                                    <div class="col-5">
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "transport_to_yard_workshop_yes",
-                                            "name" => "transport_to_yard_workshop",
-                                            "class" => "form-check-input",
-                                        ), "1", false);
-                                        ?>
-                                        <label for="transport_to_yard_workshop_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "transport_to_yard_workshop_no",
-                                            "name" => "transport_to_yard_workshop",
-                                            "class" => "form-check-input",
-                                        ), "0", true);
-                                        ?>
-                                        <label for="transport_to_yard_workshop_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="row">
-                                    <label for="crane_assistance" class="col-7"><?php echo app_lang('crane_assistance'); ?></label>
-                                    <div class="col-5">
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "crane_assistance_yes",
-                                            "name" => "crane_assistance",
-                                            "class" => "form-check-input",
-                                        ), "1", false);
-                                        ?>
-                                        <label for="crane_assistance_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "crane_assistance_no",
-                                            "name" => "crane_assistance",
-                                            "class" => "form-check-input",
-                                        ), "0", true);
-                                        ?>
-                                        <label for="crane_assistance_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="row">
-                                    <label for="transport_outside_yard" class="col-7"><?php echo app_lang('transport_outside_yard'); ?></label>
-                                    <div class="col-5">
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "transport_outside_yard_yes",
-                                            "name" => "transport_outside_yard",
-                                            "class" => "form-check-input",
-                                        ), "1", false);
-                                        ?>
-                                        <label for="transport_outside_yard_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "transport_outside_yard_no",
-                                            "name" => "transport_outside_yard",
-                                            "class" => "form-check-input",
-                                        ), "0", true);
-                                        ?>
-                                        <label for="transport_outside_yard_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="row">
-                                    <label for="cleaning_before" class="col-7"><?php echo app_lang('cleaning_before'); ?></label>
-                                    <div class="col-5">
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "cleaning_before_yes",
-                                            "name" => "cleaning_before",
-                                            "class" => "form-check-input",
-                                        ), "1", false);
-                                        ?>
-                                        <label for="cleaning_before_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "cleaning_before_no",
-                                            "name" => "cleaning_before",
-                                            "class" => "form-check-input",
-                                        ), "0", true);
-                                        ?>
-                                        <label for="cleaning_before_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="row">
-                                    <label for="material_yards_supply" class="col-7"><?php echo app_lang('material_yards_supply'); ?></label>
-                                    <div class="col-5">
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "material_yards_supply_yes",
-                                            "name" => "material_yards_supply",
-                                            "class" => "form-check-input",
-                                        ), "1", false);
-                                        ?>
-                                        <label for="material_yards_supply_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "material_yards_supply_no",
-                                            "name" => "material_yards_supply",
-                                            "class" => "form-check-input",
-                                        ), "0", true);
-                                        ?>
-                                        <label for="material_yards_supply_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="row">
-                                    <label for="cleaning_after" class="col-7"><?php echo app_lang('cleaning_after'); ?></label>
-                                    <div class="col-5">
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "cleaning_after_yes",
-                                            "name" => "cleaning_after",
-                                            "class" => "form-check-input",
-                                        ), "1", false);
-                                        ?>
-                                        <label for="cleaning_after_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "cleaning_after_no",
-                                            "name" => "cleaning_after",
-                                            "class" => "form-check-input",
-                                        ), "0", true);
-                                        ?>
-                                        <label for="cleaning_after_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="row">
-                                    <label for="material_owners_supply" class="col-7"><?php echo app_lang('material_owners_supply'); ?></label>
-                                    <div class="col-5">
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "material_owners_supply_yes",
-                                            "name" => "material_owners_supply",
-                                            "class" => "form-check-input",
-                                        ), "1", false);
-                                        ?>
-                                        <label for="material_owners_supply_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "material_owners_supply_no",
-                                            "name" => "material_owners_supply",
-                                            "class" => "form-check-input",
-                                        ), "0", true);
-                                        ?>
-                                        <label for="material_owners_supply_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="row">
-                                    <label for="work_permit" class="col-7"><?php echo app_lang('work_permit'); ?></label>
-                                    <div class="col-5">
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "work_permit_yes",
-                                            "name" => "work_permit",
-                                            "class" => "form-check-input",
-                                        ), "1", false);
-                                        ?>
-                                        <label for="work_permit_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
-                                        <?php
-                                        echo form_radio(array(
-                                            "id" => "work_permit_no",
-                                            "name" => "work_permit",
-                                            "class" => "form-check-input",
-                                        ), "0", true);
-                                        ?>
-                                        <label for="work_permit_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
                                 <div class="row">
                                     <label for="risk_assessment" class="col-7"><?php echo app_lang('risk_assessment'); ?></label>
                                     <div class="col-5">
@@ -828,7 +720,7 @@
                                             "id" => "risk_assessment_yes",
                                             "name" => "risk_assessment",
                                             "class" => "form-check-input",
-                                        ), "1", false);
+                                        ), "1", isset($gotTask)?$gotTask->risk_assessment:0);
                                         ?>
                                         <label for="risk_assessment_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
@@ -836,7 +728,7 @@
                                             "id" => "risk_assessment_no",
                                             "name" => "risk_assessment",
                                             "class" => "form-check-input",
-                                        ), "0", true);
+                                        ), "0", isset($gotTask)?!$gotTask->risk_assessment:1);
                                         ?>
                                         <label for="risk_assessment_no" class="mr15 p0"><?php echo app_lang('no'); ?></label>
                                     </div>
@@ -1823,13 +1715,13 @@
             var light_yes=$("#light_yes")[0].value;
             var parts_on_board_yes=$("#parts_on_board_yes")[0].value;
             var ventilation_yes=$("#ventilation_yes")[0].value;
-            var transport_to_yard_workshop_yes=$("#transport_to_yard_workshop_yes")[0].value;
+            // var transport_to_yard_workshop_yes=$("#transport_to_yard_workshop_yes")[0].value;
             var crane_assistance_yes=$("#crane_assistance_yes")[0].value;
-            var transport_outside_yard_yes=$("#transport_outside_yard_yes")[0].value;
+            // var transport_outside_yard_yes=$("#transport_outside_yard_yes")[0].value;
             var cleaning_before_yes=$("#cleaning_before_yes")[0].value;
-            var material_yards_supply_yes=$("#material_yards_supply_yes")[0].value;
+            // var material_yards_supply_yes=$("#material_yards_supply_yes")[0].value;
             var cleaning_after_yes=$("#cleaning_after_yes")[0].value;
-            var material_owners_supply_yes=$("#material_owners_supply_yes")[0].value;
+            // var material_owners_supply_yes=$("#material_owners_supply_yes")[0].value;
             var work_permit_yes=$("#work_permit_yes")[0].value;
             var risk_assessment_yes=$("#risk_assessment_yes")[0].value;
             var maker=$("#maker")[0].value;
@@ -1864,13 +1756,13 @@
             myForm.append("light",light_yes);
             myForm.append("parts_on_board",parts_on_board_yes);
             myForm.append("ventilation",ventilation_yes);
-            myForm.append("transport_to_yard_workshop",transport_to_yard_workshop_yes);
+            // myForm.append("transport_to_yard_workshop",transport_to_yard_workshop_yes);
             myForm.append("crane_assistance",crane_assistance_yes);
-            myForm.append("transport_outside_yard",transport_outside_yard_yes);
+            // myForm.append("transport_outside_yard",transport_outside_yard_yes);
             myForm.append("cleaning_before",cleaning_before_yes);
-            myForm.append("material_yards_supply",material_yards_supply_yes);
+            // myForm.append("material_yards_supply",material_yards_supply_yes);
             myForm.append("cleaning_after",cleaning_after_yes);
-            myForm.append("material_owners_supply",material_owners_supply_yes);
+            // myForm.append("material_owners_supply",material_owners_supply_yes);
             myForm.append("work_permit",work_permit_yes);
             myForm.append("risk_assessment",risk_assessment_yes);
             myForm.append("maker",maker);
