@@ -5471,6 +5471,7 @@ class Tasks extends Security_Controller {
                 "deadline"=>$project_info->deadline,
                 "class_relevant"=>$oneLibrary->class_relevant?$oneLibrary->class_relevant:0,
                 "estimated_cost"=>$oneLibrary->estimated_cost?$oneLibrary->estimated_cost:0,
+                "priority_id"=>1
                 // "budget_group"=>$oneLibrary->budget_group?$oneLibrary->budget_group:0
             );
             $saved_id=$this->Tasks_model->save_gantt_task_date($newTaskData,null);
@@ -5559,7 +5560,8 @@ class Tasks extends Security_Controller {
                 "deadline"=>$deadline,
                 "description"=>$description,
                 "status_id"=>1,
-                "category"=>"Others"
+                "category"=>"Others",
+                "priority_id"=>1
 
             );
             if($row[15]!="crew") $new_task_data["specification"]="content";
