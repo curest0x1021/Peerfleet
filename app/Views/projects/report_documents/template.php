@@ -107,7 +107,7 @@
                 contentType: false, 
                 success:function(response){
                     if(JSON.parse(response).success){
-                        window.location="<?php echo get_uri("projects/report_documents/")?>"+JSON.parse(response).saved_id;
+                        window.location="<?php echo get_uri("projects/view/".$project_detail->id);?>";
                     }
                 }
             })

@@ -12,10 +12,26 @@
                 success:function(response){
                     const virtual_box=document.createElement("div");
                     var result= response.replace(/data-bs-toggle="collapse"/g,"");
-                    var result= response.replace(/class="collapse"/g,"");
+                    result= result.replace(/class="collapse"/g,"");
                     virtual_box.hidden=true;
+                    
                     virtual_box.innerHTML=result;
                     
+                    var table_els=virtual_box.querySelectorAll("table");
+                    table_els.forEach(element => {
+                        element.style.border="1px solid lightgray";
+                        element.style.borderCollapse="collapse";
+                    });
+                    var th_els=virtual_box.querySelectorAll("td");
+                    th_els.forEach(element => {
+                        element.style.border="1px solid lightgray";
+                        element.style.borderCollapse="collapse";
+                    });
+                    var td_els=virtual_box.querySelectorAll("th");
+                    td_els.forEach(element => {
+                        element.style.border="1px solid lightgray";
+                        element.style.borderCollapse="collapse";
+                    });
                     document.body.querySelector(".vbox").appendChild(virtual_box);
                     var code=virtual_box.querySelector("script").innerHTML
                     eval(code)
@@ -42,12 +58,29 @@
                 success:function(response){
                     const virtual_box=document.createElement("div");
                     var result= response.replace(/data-bs-toggle="collapse"/g,"");
-                    var result= response.replace(/class="collapse"/g,"");
+                    result= result.replace(/class="collapse"/g,"");
                     virtual_box.hidden=true;
+                    
                     virtual_box.innerHTML=result;
 
                     var first_row=virtual_box.querySelector("thead").querySelector("tr");
                     first_row.remove();
+
+                    var table_els=virtual_box.querySelectorAll("table");
+                    table_els.forEach(element => {
+                        element.style.border="1px solid lightgray";
+                        element.style.borderCollapse="collapse";
+                    });
+                    var th_els=virtual_box.querySelectorAll("td");
+                    th_els.forEach(element => {
+                        element.style.border="1px solid lightgray";
+                        element.style.borderCollapse="collapse";
+                    });
+                    var td_els=virtual_box.querySelectorAll("th");
+                    td_els.forEach(element => {
+                        element.style.border="1px solid lightgray";
+                        element.style.borderCollapse="collapse";
+                    });
 
                     var dropdowns=virtual_box.querySelectorAll(".dropdown");
                     dropdowns.forEach(dropdown => {
