@@ -1,4 +1,9 @@
-<div id="kanban-wrapper" style="height:60vh;overflow-y:scroll;">
+<div class="d-flex justify-content-center bg-white" style="padding:10px;" >
+    <button class="btn btn-default btn-zoom-out" ><i data-feather="zoom-out" class="icon-16"  ></i></button>
+    <button class="btn btn-default btn-zoom-in" style="margin-left:10px;" ><i data-feather="zoom-in" class="icon-16"  ></i></button>
+</div> 
+<div id="kanban-wrapper" style="height:50vh;overflow-y:scroll;">
+    
     <ul id="kanban-container" style="width:100%;transform-origin:0 0;overflow-x:scroll;overflow-y:scroll;min-width:1800px;" class="kanban-container clearfix">
 
         <?php foreach ($columns as $column) { ?>
@@ -191,30 +196,42 @@
             $(".kanban-container").css("transform","scale("+zoom+")");
             $(".kanban-container").css("overflow-x","scroll");
         })
-        $("#kanban-wrapper").on("mousedown",function(event){
-            event.originalEvent.preventDefault()
-            is_dragging=true;
-            past_x=event.clientX;
-            past_y=event.clientY;
+
+        $(".btn-zoom-out").on("click",function(){
+            if(zoom>0) zoom-=0.1;
+            $(".kanban-container").css("transform","scale("+zoom+")");
+            $(".kanban-container").css("overflow-x","scroll");
         })
-        $("#kanban-wrapper").on("mousemove",function(event){
-            event.originalEvent.preventDefault();
-            if(is_dragging){
-                $("#kanban-wrapper")[0].scrollLeft-=(event.clientX-past_x);
-                // if(first) $(".scrollable-page")[0].scrollTop-=(event.clientY-past_y);
-                // else 
-                $("#kanban-wrapper")[0].scrollTop-=(event.clientY-past_y);
-                past_x=event.clientX;
-                past_y=event.clientY;
-            }
+        $(".btn-zoom-in").on("click",function(){
+            zoom+=0.1;
+            $(".kanban-container").css("transform","scale("+zoom+")");
+            $(".kanban-container").css("overflow-x","scroll");
+        })
+
+        // $("#kanban-wrapper").on("mousedown",function(event){
+        //     event.originalEvent.preventDefault()
+        //     is_dragging=true;
+        //     past_x=event.clientX;
+        //     past_y=event.clientY;
+        // })
+        // $("#kanban-wrapper").on("mousemove",function(event){
+        //     event.originalEvent.preventDefault();
+        //     if(is_dragging){
+        //         $("#kanban-wrapper")[0].scrollLeft-=(event.clientX-past_x);
+        //         // if(first) $(".scrollable-page")[0].scrollTop-=(event.clientY-past_y);
+        //         // else 
+        //         $("#kanban-wrapper")[0].scrollTop-=(event.clientY-past_y);
+        //         past_x=event.clientX;
+        //         past_y=event.clientY;
+        //     }
             
-        })
-        $("#kanban-wrapper").on("mouseup",function(event){
-            event.originalEvent.preventDefault()
-            is_dragging=false;
-            past_x=0;
-            past_y=0;
-        })
+        // })
+        // $("#kanban-wrapper").on("mouseup",function(event){
+        //     event.originalEvent.preventDefault()
+        //     is_dragging=false;
+        //     past_x=0;
+        //     past_y=0;
+        // })
 
         
 
