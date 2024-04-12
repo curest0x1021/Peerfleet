@@ -2805,6 +2805,7 @@ class Clients extends Security_Controller
         upload_file_to_temp(true);
         $file = get_array_value($_FILES, "file");
         $client_id=$this->request->getPost("client_id");
+        $client_info=$this->Clients_model->get_one($client_id);
         require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $temp_file = get_array_value($file, "tmp_name");
         $file_name = get_array_value($file, "name");
@@ -2831,18 +2832,52 @@ class Clients extends Security_Controller
             }
             $data[] = $rowData;
         }
+        // return json_encode($data);
+        $client_info->gross_tonnage=$data[0][1];
+        $client_info->net_tonnage=$data[1][1];
+        $client_info->lightweight=$data[2][1];
+        $client_info->length_over_all=$data[3][1];
+        $client_info->length_between_perpendiculars=$data[4][1];
+        $client_info->length_of_waterline=$data[5][1];
+        $client_info->breadth_moulded=$data[6][1];
+        $client_info->depth_moulded=$data[7][1];
+        $client_info->draught_design=$data[8][1];
+        $client_info->draught_scantling=$data[9][1];
+        $client_info->hull_design=$data[10][1];
+        $client_info->top_sides=$data[11][1];
+        $client_info->bottom_sides=$data[12][1];
+        $client_info->flat_bottom=$data[13][1];
+        $client_info->dwt_cargo=$data[14][1];
+        $client_info->dwt_scantling=$data[15][1];
+        $client_info->dwt_design=$data[16][1];
+        $client_info->heavy_fuel_oil=$data[17][1];
+        $client_info->marine_diesel_oil=$data[18][1];
+        $client_info->marine_gas_oil=$data[19][1];
+        $client_info->lng_capacity=$data[20][1];
+        $client_info->lub_oil=$data[21][1];
+        $client_info->ballast_water=$data[22][1];
+        $client_info->fresh_water=$data[23][1];
+
+        $this->Clients_model->ci_save($client_info,$client_id);
+
+        return json_encode(array("success"=>true));
+        
     }
     function modal_import_propulsion($client_id){
         return $this->template->view("clients/tabs/modal_import_propulsion",array("client_id"=>$client_id));
     }
     function import_propulsion(){
+        upload_file_to_temp(true);
+        $file = get_array_value($_FILES, "file");
+        $client_id=$this->request->getPost("client_id");
+        $client_info=$this->Clients_model->get_one($client_id);
         require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $temp_file = get_array_value($file, "tmp_name");
         $file_name = get_array_value($file, "name");
         $file_size = get_array_value($file, "size");
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
-        $excel_file->setActiveSheetIndex(1);
+        $excel_file->setActiveSheetIndex(0);
         $worksheet=$excel_file->getActiveSheet();
         $highestRow = $worksheet->getHighestRow(); // e.g., 10
         $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
@@ -2862,6 +2897,48 @@ class Clients extends Security_Controller
             }
             $data[] = $rowData;
         }
+        $client_info->main_engine_maker=$data[0][1];
+        $client_info->main_engine_model=$data[1][1];
+        $client_info->main_engine_continuous_output=$data[2][1];
+        $client_info->main_engine_bore=$data[3][1];
+        $client_info->main_engine_stroke=$data[4][1];
+        $client_info->main_engine_serial_number=$data[5][1];
+        $client_info->main_engine_quantity=$data[6][1];
+        $client_info->auxiliary_engine_maker=$data[7][1];
+        $client_info->auxiliary_engine_model=$data[8][1];
+        $client_info->auxiliary_engine_serial_number=$data[9][1];
+        $client_info->auxiliary_engine_output=$data[10][1];
+        $client_info->auxiliary_engine_quantity=$data[11][1];
+        $client_info->emergency_generator_maker=$data[12][1];
+        $client_info->emergency_generator_model=$data[13][1];
+        $client_info->emergency_generator_serial_number=$data[14][1];
+        $client_info->emergency_generator_output=$data[15][1];
+        $client_info->emergency_generator_quantity=$data[16][1];
+        $client_info->shaft_generator_maker=$data[17][1];
+        $client_info->shaft_generator_model=$data[18][1];
+        $client_info->shaft_generator_serial_number=$data[19][1];
+        $client_info->shaft_generator_output=$data[20][1];
+        $client_info->shaft_generator_quantity=$data[21][1];
+        $client_info->propeller_maker=$data[22][1];
+        $client_info->propeller_type=$data[23][1];
+        $client_info->propeller_number_of_blades=$data[24][1];
+        $client_info->propeller_diameter=$data[25][1];
+        $client_info->propeller_pitch=$data[26][1];
+        $client_info->propeller_material=$data[27][1];
+        $client_info->propeller_weight=$data[28][1];
+        $client_info->propeller_quantity=$data[29][1];
+        $client_info->bow_thruster_number=$data[30][1];
+        $client_info->bow_thruster_maker=$data[31][1];
+        $client_info->bow_thruster_type=$data[32][1];
+        $client_info->bow_thruster_power=$data[33][1];
+        $client_info->stern_thruster_number=$data[34][1];
+        $client_info->stern_thruster_maker=$data[35][1];
+        $client_info->stern_thruster_type=$data[36][1];
+        $client_info->stern_thruster_power=$data[37][1];
+
+        $this->Clients_model->ci_save($client_info,$client_id);
+
+        return json_encode(array("success"=>true));
     }
 }
 
