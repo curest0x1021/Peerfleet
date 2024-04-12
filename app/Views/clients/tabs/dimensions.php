@@ -1,84 +1,97 @@
 <div class="card" >
     <div class="card-body">
-        <a class="btn btn-default" href="<?php echo get_uri("clients/export_dimensions/".$client_info->id);?>" target="_blank" ><i data-feather="download" class="icon-16"  ></i>Export Dimensions & Capacities</a>
+        <div class="d-flex justify-content-end" >
+        
+        <?php echo modal_anchor(get_uri("clients/modal_import_dimensions/".$client_info->id),'<button class="btn btn-default" target="_blank" ><i data-feather="upload" class="icon-16"  ></i>Import</button>',array());?>
+        <a class="btn btn-default" style="margin-left:1vw;" href="<?php echo get_uri("clients/export_dimensions/".$client_info->id);?>" target="_blank" ><i data-feather="download" class="icon-16"  ></i>Export</a>
+        </div>
+        
         <div class="row" >
-            <div class="col-md-6" >
-                <h3>Dimensions</h3>
-                <h4>
+            <div class="col-md-4" >
+                <h4>Dimensions</h4>
+                <div style="margin-left:2vw;" >
+                <p>
                     Gross Tonnage : <?php echo $client_info->gross_tonnage;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     Net Tonnage : <?php echo $client_info->net_tonnage;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     Lightweight : <?php echo $client_info->lightweight;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     Length over all : <?php echo $client_info->length_over_all;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     Length between perpendiculars : <?php echo $client_info->length_between_perpendiculars;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     Length of waterline : <?php echo $client_info->length_of_waterline;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     BEAM/Bredth Moulded : <?php echo $client_info->breadth_moulded;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     Depth Moulded : <?php echo $client_info->depth_moulded;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     Draft/Draught Design : <?php echo $client_info->draught_design;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     Draught scantling : <?php echo $client_info->draught_scantling;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     Hull design : <?php echo $client_info->hull_design;?>
-                </h4>
-                <h3>Hull surfaces</h3>
-                <h4>
-                    Top sides : <?php echo $client_info->top_sides;?>
-                </h4>
-                <h4>
-                    Bottom sides : <?php echo $client_info->bottom_sides;?>
-                </h4>
-                <h4>
-                    Flat bottom : <?php echo $client_info->flat_bottom;?>
-                </h4>
+                </p>
             </div>
-            <div class="col-md-6" >
-                <h3>Capacities</h3>
-                <h4>
+            <br/>
+            <h4>Hull surfaces</h4>
+            <div style="margin-left:2vw;" >
+                <p>
+                    Top sides : <?php echo $client_info->top_sides;?>
+                </p>
+                <p>
+                    Bottom sides : <?php echo $client_info->bottom_sides;?>
+                </p>
+                <p>
+                    Flat bottom : <?php echo $client_info->flat_bottom;?>
+                </p>
+                </div>
+            </div>
+            <div class="col-md-4" >
+                <h4>Capacities</h4>
+                <div style="margin-left:2vw;" >
+                <p>
                     DWT cargo : <?php echo $client_info->dwt_cargo;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     DWT design : <?php echo $client_info->dwt_design;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     DWT scantling : <?php echo $client_info->dwt_scantling;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     Heavy fuel oil : <?php echo $client_info->heavy_fuel_oil;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     Marine diesel oil : <?php echo $client_info->marine_diesel_oil;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     Marine gas oil : <?php echo $client_info->marine_gas_oil;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     LNG Capacity : <?php echo $client_info->lng_capacity;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     Lub oil : <?php echo $client_info->lub_oil;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     Ballast water : <?php echo $client_info->ballast_water;?>
-                </h4>
-                <h4>
+                </p>
+                <p>
                     Fresh water : <?php echo $client_info->fresh_water;?>
+                </p>
+                </div>
             </div>
         </div>
     </div>

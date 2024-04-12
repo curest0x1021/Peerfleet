@@ -2516,82 +2516,168 @@ class Clients extends Security_Controller
     }
     function export_propulsion($client_id){
         // Create a new PhpWord object
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+
         $client_info=$this->Clients_model->get_one($client_id);
         if(!$client_info->id) return "Not valid client_id";
-        $phpWord = new PhpWord();
+        // $phpWord = new PhpWord();
 
-        // Add some content to the document
-        $section = $phpWord->addSection();
+        // // Add some content to the document
+        // $section = $phpWord->addSection();
 
-        $phpWord->addTitleStyle(2, array('bold' => true, 'size' => 16));
-        $section->addTitle('Main engine',2);
+        // $phpWord->addTitleStyle(2, array('bold' => true, 'size' => 16));
+        // $section->addTitle('Main engine',2);
         
-        $section->addText('Maker : '.$client_info->main_engine_maker);
-        $section->addText('Model : '.$client_info->main_engine_model);
-        $section->addText('Continuous output : '.$client_info->main_engine_continuous_output);
-        $section->addText('Bore : '.$client_info->main_engine_bore);
-        $section->addText('Stroke : '.$client_info->main_engine_stroke);
-        $section->addText('Serial No : '.$client_info->main_engine_serial_number);
-        $section->addText('Quantity : '.$client_info->main_engine_quantity);
+        // $section->addText('Maker : '.$client_info->main_engine_maker);
+        // $section->addText('Model : '.$client_info->main_engine_model);
+        // $section->addText('Continuous output : '.$client_info->main_engine_continuous_output);
+        // $section->addText('Bore : '.$client_info->main_engine_bore);
+        // $section->addText('Stroke : '.$client_info->main_engine_stroke);
+        // $section->addText('Serial No : '.$client_info->main_engine_serial_number);
+        // $section->addText('Quantity : '.$client_info->main_engine_quantity);
 
-        $section->addTitle('Auxiliary engine',2);
+        // $section->addTitle('Auxiliary engine',2);
         
-        $section->addText('Maker : '.$client_info->auxiliary_engine_maker);
-        $section->addText('Model : '.$client_info->auxiliary_engine_model);
-        $section->addText('Serial No : '.$client_info->auxiliary_engine_serial_number);
-        $section->addText('Output : '.$client_info->auxiliary_engine_output);
-        $section->addText('Quantity : '.$client_info->auxiliary_engine_quantity);
+        // $section->addText('Maker : '.$client_info->auxiliary_engine_maker);
+        // $section->addText('Model : '.$client_info->auxiliary_engine_model);
+        // $section->addText('Serial No : '.$client_info->auxiliary_engine_serial_number);
+        // $section->addText('Output : '.$client_info->auxiliary_engine_output);
+        // $section->addText('Quantity : '.$client_info->auxiliary_engine_quantity);
 
-        $section->addTitle('Emergency generator',2);
+        // $section->addTitle('Emergency generator',2);
         
-        $section->addText('Maker : '.$client_info->emergency_generator_maker);
-        $section->addText('Model : '.$client_info->emergency_generator_model);
-        $section->addText('Serial No : '.$client_info->emergency_generator_serial_number);
-        $section->addText('Output : '.$client_info->emergency_generator_output);
-        $section->addText('Quantity : '.$client_info->emergency_generator_quantity);
+        // $section->addText('Maker : '.$client_info->emergency_generator_maker);
+        // $section->addText('Model : '.$client_info->emergency_generator_model);
+        // $section->addText('Serial No : '.$client_info->emergency_generator_serial_number);
+        // $section->addText('Output : '.$client_info->emergency_generator_output);
+        // $section->addText('Quantity : '.$client_info->emergency_generator_quantity);
 
-        $section->addTitle('Shaft generator',2);
+        // $section->addTitle('Shaft generator',2);
         
-        $section->addText('Maker : '.$client_info->shaft_generator_maker);
-        $section->addText('Model : '.$client_info->shaft_generator_model);
-        $section->addText('Serial No : '.$client_info->shaft_generator_serial_number);
-        $section->addText('Output : '.$client_info->shaft_generator_output);
-        $section->addText('Quantity : '.$client_info->shaft_generator_quantity);
+        // $section->addText('Maker : '.$client_info->shaft_generator_maker);
+        // $section->addText('Model : '.$client_info->shaft_generator_model);
+        // $section->addText('Serial No : '.$client_info->shaft_generator_serial_number);
+        // $section->addText('Output : '.$client_info->shaft_generator_output);
+        // $section->addText('Quantity : '.$client_info->shaft_generator_quantity);
 
-        $section->addTitle('Propeller',2);
+        // $section->addTitle('Propeller',2);
         
-        $section->addText('Maker : '.$client_info->propeller_maker);
-        $section->addText('Type : '.$client_info->propeller_type);
-        $section->addText('Number of blades : '.$client_info->propeller_number_of_blades);
-        $section->addText('Diameter : '.$client_info->propeller_diameter);
-        $section->addText('Pitch : '.$client_info->propeller_pitch);
-        $section->addText('Material : '.$client_info->propeller_material);
-        $section->addText('Weight : '.$client_info->propeller_weight);
-        $section->addText('Quantity : '.$client_info->propeller_quantity);
+        // $section->addText('Maker : '.$client_info->propeller_maker);
+        // $section->addText('Type : '.$client_info->propeller_type);
+        // $section->addText('Number of blades : '.$client_info->propeller_number_of_blades);
+        // $section->addText('Diameter : '.$client_info->propeller_diameter);
+        // $section->addText('Pitch : '.$client_info->propeller_pitch);
+        // $section->addText('Material : '.$client_info->propeller_material);
+        // $section->addText('Weight : '.$client_info->propeller_weight);
+        // $section->addText('Quantity : '.$client_info->propeller_quantity);
 
-        $section->addTitle('Side thruster',2);
+        // $section->addTitle('Side thruster',2);
         
-        $section->addText('Number of bow thrusters : '.$client_info->bow_thruster_number);
-        $section->addText('Maker of bow thrusters : '.$client_info->bow_thruster_maker);
-        $section->addText('Type of bow thrusters : '.$client_info->bow_thruster_type);
-        $section->addText('Power of bow thrusters : '.$client_info->bow_thruster_power);
-        $section->addText('Number of stern thrusters : '.$client_info->stern_thruster_number);
-        $section->addText('Maker of stern thrusters : '.$client_info->stern_thruster_maker);
-        $section->addText('Type of stern thrusters : '.$client_info->stern_thruster_type);
-        $section->addText('Power of stern thrusters : '.$client_info->stern_thruster_power);
+        // $section->addText('Number of bow thrusters : '.$client_info->bow_thruster_number);
+        // $section->addText('Maker of bow thrusters : '.$client_info->bow_thruster_maker);
+        // $section->addText('Type of bow thrusters : '.$client_info->bow_thruster_type);
+        // $section->addText('Power of bow thrusters : '.$client_info->bow_thruster_power);
+        // $section->addText('Number of stern thrusters : '.$client_info->stern_thruster_number);
+        // $section->addText('Maker of stern thrusters : '.$client_info->stern_thruster_maker);
+        // $section->addText('Type of stern thrusters : '.$client_info->stern_thruster_type);
+        // $section->addText('Power of stern thrusters : '.$client_info->stern_thruster_power);
 
-        // Save the document to a temporary file
-        $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
+        // // Save the document to a temporary file
+        // $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
+        $sheet1 = $spreadsheet->getActiveSheet();
+        $sheet1->setTitle('Propulsion');
+
+        $sheet1->setCellValue('A1', 'Main engine maker');
+        $sheet1->setCellValue('A2', 'Main engine model');
+        $sheet1->setCellValue('A3', 'Main engine continuous output');
+        $sheet1->setCellValue('A4', 'Main engine bore');
+        $sheet1->setCellValue('A5', 'Main engine stroke');
+        $sheet1->setCellValue('A6', 'Main engine serial number');
+        $sheet1->setCellValue('A7', 'Main engine quantity');
+        $sheet1->setCellValue('A8', 'Auxiliary engine maker');
+        $sheet1->setCellValue('A9', 'Auxiliary engine model');
+        $sheet1->setCellValue('A10', 'Auxiliary engine serial number');
+        $sheet1->setCellValue('A11', 'Auxiliary engine output');
+        $sheet1->setCellValue('A12', 'Auxiliary engine quantity');
+        $sheet1->setCellValue('A13', 'Emergency generator maker');
+        $sheet1->setCellValue('A14', 'Emergency generator model');
+        $sheet1->setCellValue('A15', 'Emergency generator serial number');
+        $sheet1->setCellValue('A16', 'Emergency generator output');
+        $sheet1->setCellValue('A17', 'Emergency generator quantity');
+        $sheet1->setCellValue('A18', 'Shaft generator maker');
+        $sheet1->setCellValue('A19', 'Shaft generator model');
+        $sheet1->setCellValue('A20', 'Shaft generator serial number');
+        $sheet1->setCellValue('A21', 'Shaft generator output');
+        $sheet1->setCellValue('A22', 'Shaft generator quantity');
+        $sheet1->setCellValue('A23', 'Propeller maker');
+        $sheet1->setCellValue('A24', 'Propeller type');
+        $sheet1->setCellValue('A25', 'Number of Propeller blades');
+        $sheet1->setCellValue('A26', 'Propeller diameter');
+        $sheet1->setCellValue('A27', 'Propeller pitch');
+        $sheet1->setCellValue('A28', 'Propeller material');
+        $sheet1->setCellValue('A29', 'Propeller weight');
+        $sheet1->setCellValue('A30', 'Propeller quantity');
+        $sheet1->setCellValue('A31', 'Number of bow thrusters');
+        $sheet1->setCellValue('A32', 'Maker of bow thrusters');
+        $sheet1->setCellValue('A33', 'Type of bow thrusters');
+        $sheet1->setCellValue('A34', 'Power of bow thrusters');
+        $sheet1->setCellValue('A35', 'Number of stern thrusters');
+        $sheet1->setCellValue('A36', 'Maker of stern thrusters');
+        $sheet1->setCellValue('A37', 'Type of stern thrusters');
+        $sheet1->setCellValue('A38', 'Power of stern thrusters');
+
+        $sheet1->setCellValue('B1', $client_info->main_engine_maker);
+        $sheet1->setCellValue('B2', $client_info->main_engine_model);
+        $sheet1->setCellValue('B3', $client_info->main_engine_continuous_output);
+        $sheet1->setCellValue('B4', $client_info->main_engine_bore);
+        $sheet1->setCellValue('B5', $client_info->main_engine_stroke);
+        $sheet1->setCellValue('B6', $client_info->main_engine_serial_number);
+        $sheet1->setCellValue('B7', $client_info->main_engine_quantity);
+        $sheet1->setCellValue('B8', $client_info->auxiliary_engine_maker);
+        $sheet1->setCellValue('B9', $client_info->auxiliary_engine_model);
+        $sheet1->setCellValue('B10', $client_info->auxiliary_engine_serial_number);
+        $sheet1->setCellValue('B11', $client_info->auxiliary_engine_output);
+        $sheet1->setCellValue('B12', $client_info->auxiliary_engine_quantity);
+        $sheet1->setCellValue('B13', $client_info->emergency_generator_maker);
+        $sheet1->setCellValue('B14', $client_info->emergency_generator_model);
+        $sheet1->setCellValue('B15', $client_info->emergency_generator_serial_number);
+        $sheet1->setCellValue('B16', $client_info->emergency_generator_output);
+        $sheet1->setCellValue('B17', $client_info->emergency_generator_quantity);
+        $sheet1->setCellValue('B18', $client_info->shaft_generator_maker);
+        $sheet1->setCellValue('B19', $client_info->shaft_generator_model);
+        $sheet1->setCellValue('B20', $client_info->shaft_generator_serial_number);
+        $sheet1->setCellValue('B21', $client_info->shaft_generator_output);
+        $sheet1->setCellValue('B22', $client_info->shaft_generator_quantity);
+        $sheet1->setCellValue('B23', $client_info->propeller_maker);
+        $sheet1->setCellValue('B24', $client_info->propeller_type);
+        $sheet1->setCellValue('B25', $client_info->propeller_number_of_blades);
+        $sheet1->setCellValue('B26', $client_info->propeller_diameter);
+        $sheet1->setCellValue('B27', $client_info->propeller_pitch);
+        $sheet1->setCellValue('B28', $client_info->propeller_material);
+        $sheet1->setCellValue('B29', $client_info->propeller_weight);
+        $sheet1->setCellValue('B30', $client_info->propeller_quantity);
+        $sheet1->setCellValue('B31', $client_info->bow_thruster_number);
+        $sheet1->setCellValue('B32', $client_info->bow_thruster_maker);
+        $sheet1->setCellValue('B33', $client_info->bow_thruster_type);
+        $sheet1->setCellValue('B34', $client_info->bow_thruster_power);
+        $sheet1->setCellValue('B35', $client_info->stern_thruster_number);
+        $sheet1->setCellValue('B36', $client_info->stern_thruster_maker);
+        $sheet1->setCellValue('B37', $client_info->stern_thruster_type);
+        $sheet1->setCellValue('B38', $client_info->stern_thruster_power);
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 
         $response = service('response');
 
 // Set response headers for file download
         $response->setHeader('Content-Type', 'application/msword');
-        $response->setHeader('Content-Disposition', 'attachment;filename="'.$client_info->charter_name.'-propulsion.docx"');
+        $response->setHeader('Content-Disposition', 'attachment;filename="'.$client_info->charter_name.'-propulsion.xlsx"');
         $response->setHeader('Cache-Control', 'max-age=0');
 
         // Write the Excel file content to the response body
-        $objWriter->save('php://output');
+        // $objWriter->save('php://output');
+        $writer->save('php://output');
 
         // Return the response object
         return $response;
@@ -2599,61 +2685,183 @@ class Clients extends Security_Controller
     }
     function export_dimensions($client_id){
         // Create a new PhpWord object
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+
         $client_info=$this->Clients_model->get_one($client_id);
         if(!$client_info->id) return "Not valid client_id";
-        $phpWord = new PhpWord();
+        // $phpWord = new PhpWord();
 
-        // Add some content to the document
-        $section = $phpWord->addSection();
+        // // Add some content to the document
+        // $section = $phpWord->addSection();
 
-        $phpWord->addTitleStyle(2, array('bold' => true, 'size' => 16));
-        $section->addTitle('Dimensions',2);
+        // $phpWord->addTitleStyle(2, array('bold' => true, 'size' => 16));
+        // $section->addTitle('Dimensions',2);
         
-        $section->addText('Gross tonnage : '.$client_info->gross_tonnage);
-        $section->addText('Net tonnage : '.$client_info->net_tonnage);
-        $section->addText('Lightweight : '.$client_info->lightweight);
-        $section->addText('Length over all : '.$client_info->length_over_all);
-        $section->addText('Length between perpendiculars : '.$client_info->length_between_perpendiculars);
-        $section->addText('Length of waterline : '.$client_info->length_of_waterline);
-        $section->addText('Breadth moulded : '.$client_info->breadth_moulded);
-        $section->addText('Depth moulded : '.$client_info->depth_moulded);
-        $section->addText('Draught design : '.$client_info->draught_design);
-        $section->addText('Draught scantling : '.$client_info->draught_scantling);
-        $section->addText('Hull Design : '.$client_info->hull_design);
+        // $section->addText('Gross tonnage : '.$client_info->gross_tonnage);
+        // $section->addText('Net tonnage : '.$client_info->net_tonnage);
+        // $section->addText('Lightweight : '.$client_info->lightweight);
+        // $section->addText('Length over all : '.$client_info->length_over_all);
+        // $section->addText('Length between perpendiculars : '.$client_info->length_between_perpendiculars);
+        // $section->addText('Length of waterline : '.$client_info->length_of_waterline);
+        // $section->addText('Breadth moulded : '.$client_info->breadth_moulded);
+        // $section->addText('Depth moulded : '.$client_info->depth_moulded);
+        // $section->addText('Draught design : '.$client_info->draught_design);
+        // $section->addText('Draught scantling : '.$client_info->draught_scantling);
+        // $section->addText('Hull Design : '.$client_info->hull_design);
 
-        $section->addTitle('Hull surfaces',2);
-        $section->addText('Top sides : '.$client_info->top_sides);
-        $section->addText('Bottom sides : '.$client_info->bottom_sides);
-        $section->addText('Flat bottom : '.$client_info->flat_bottom);
+        // $section->addTitle('Hull surfaces',2);
+        // $section->addText('Top sides : '.$client_info->top_sides);
+        // $section->addText('Bottom sides : '.$client_info->bottom_sides);
+        // $section->addText('Flat bottom : '.$client_info->flat_bottom);
 
 
-        $section->addTitle('Capacities',2);
-        $section->addText('DWT cargo : '.$client_info->dwt_cargo);
-        $section->addText('DWT scantling : '.$client_info->dwt_scantling);
-        $section->addText('DWT design : '.$client_info->dwt_design);
-        $section->addText('Heavy fuel oil : '.$client_info->heavy_fuel_oil);
-        $section->addText('Marine diesel oil : '.$client_info->marine_diesel_oil);
-        $section->addText('Marine gas oil : '.$client_info->marine_gas_oil);
-        $section->addText('LNG capacity : '.$client_info->lng_capacity);
-        $section->addText('Lub oil : '.$client_info->lub_oil);
-        $section->addText('Ballast water : '.$client_info->ballast_water);
-        $section->addText('Fresh water : '.$client_info->fresh_water);
+        // $section->addTitle('Capacities',2);
+        // $section->addText('DWT cargo : '.$client_info->dwt_cargo);
+        // $section->addText('DWT scantling : '.$client_info->dwt_scantling);
+        // $section->addText('DWT design : '.$client_info->dwt_design);
+        // $section->addText('Heavy fuel oil : '.$client_info->heavy_fuel_oil);
+        // $section->addText('Marine diesel oil : '.$client_info->marine_diesel_oil);
+        // $section->addText('Marine gas oil : '.$client_info->marine_gas_oil);
+        // $section->addText('LNG capacity : '.$client_info->lng_capacity);
+        // $section->addText('Lub oil : '.$client_info->lub_oil);
+        // $section->addText('Ballast water : '.$client_info->ballast_water);
+        // $section->addText('Fresh water : '.$client_info->fresh_water);
 
-        // Save the document to a temporary file
-        $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
+        // // Save the document to a temporary file
+        // $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
+        $sheet1 = $spreadsheet->getActiveSheet();
+        $sheet1->setTitle('Dimensions');
+
+        $sheet1->setCellValue('A1', 'Gross tonnage');
+        $sheet1->setCellValue('A2', 'Net tonnage');
+        $sheet1->setCellValue('A3', 'Lightweight');
+        $sheet1->setCellValue('A4', 'Length over all');
+        $sheet1->setCellValue('A5', 'Length between perpendiculars');
+        $sheet1->setCellValue('A6', 'Length of waterline');
+        $sheet1->setCellValue('A7', 'Breadth moulded');
+        $sheet1->setCellValue('A8', 'Depth moulded');
+        $sheet1->setCellValue('A9', 'Draught design');
+        $sheet1->setCellValue('A10', 'Draught scantling');
+        $sheet1->setCellValue('A11', 'Hull design');
+        $sheet1->setCellValue('A12', 'Top sides');
+        $sheet1->setCellValue('A13', 'Bottom sides');
+        $sheet1->setCellValue('A14', 'Flat bottom');
+        $sheet1->setCellValue('A15', 'DWT cargo');
+        $sheet1->setCellValue('A16', 'DWT scantling');
+        $sheet1->setCellValue('A17', 'DWT design');
+        $sheet1->setCellValue('A18', 'Heavy fuel oil');
+        $sheet1->setCellValue('A19', 'Marine diesel oil');
+        $sheet1->setCellValue('A20', 'Marine gas oil');
+        $sheet1->setCellValue('A21', 'LNG capacity');
+        $sheet1->setCellValue('A22', 'Lub oil');
+        $sheet1->setCellValue('A23', 'Ballast water');
+        $sheet1->setCellValue('A24', 'Fresh water');
+
+        $sheet1->setCellValue('B1', $client_info->gross_tonnage);
+        $sheet1->setCellValue('B2', $client_info->net_tonnage);
+        $sheet1->setCellValue('B3', $client_info->lightweight);
+        $sheet1->setCellValue('B4', $client_info->length_over_all);
+        $sheet1->setCellValue('B5', $client_info->length_between_perpendiculars);
+        $sheet1->setCellValue('B6', $client_info->length_of_waterline);
+        $sheet1->setCellValue('B7', $client_info->breadth_moulded);
+        $sheet1->setCellValue('B8', $client_info->depth_moulded);
+        $sheet1->setCellValue('B9', $client_info->draught_design);
+        $sheet1->setCellValue('B10', $client_info->draught_scantling);
+        $sheet1->setCellValue('B11', $client_info->hull_design);
+        $sheet1->setCellValue('B12', $client_info->top_sides);
+        $sheet1->setCellValue('B13', $client_info->bottom_sides);
+        $sheet1->setCellValue('B14', $client_info->flat_bottom);
+        $sheet1->setCellValue('B15', $client_info->dwt_cargo);
+        $sheet1->setCellValue('B16', $client_info->dwt_scantling);
+        $sheet1->setCellValue('B17', $client_info->dwt_design);
+        $sheet1->setCellValue('B18', $client_info->heavy_fuel_oil);
+        $sheet1->setCellValue('B19', $client_info->marine_diesel_oil);
+        $sheet1->setCellValue('B20', $client_info->marine_gas_oil);
+        $sheet1->setCellValue('B21', $client_info->lng_capacity);
+        $sheet1->setCellValue('B22', $client_info->lub_oil);
+        $sheet1->setCellValue('B23', $client_info->ballast_water);
+        $sheet1->setCellValue('B24', $client_info->fresh_water);
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 
         $response = service('response');
 
 // Set response headers for file download
         $response->setHeader('Content-Type', 'application/msword');
-        $response->setHeader('Content-Disposition', 'attachment;filename="'.$client_info->charter_name.'-dimensions.docx"');
+        $response->setHeader('Content-Disposition', 'attachment;filename="'.$client_info->charter_name.'-dimensions.xlsx"');
         $response->setHeader('Cache-Control', 'max-age=0');
 
         // Write the Excel file content to the response body
-        $objWriter->save('php://output');
-
+        // $objWriter->save('php://output');
+        $writer->save('php://output');
         // Return the response object
         return $response;
+    }
+    function modal_import_dimensions($client_id){
+        return $this->template->view("clients/tabs/modal_import_dimensions",array("client_id"=>$client_id));
+    }
+    function import_dimensions(){
+        upload_file_to_temp(true);
+        $file = get_array_value($_FILES, "file");
+        $client_id=$this->request->getPost("client_id");
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $temp_file = get_array_value($file, "tmp_name");
+        $file_name = get_array_value($file, "name");
+        $file_size = get_array_value($file, "size");
+        $temp_file_path = get_setting("temp_file_path");
+        $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
+        $excel_file->setActiveSheetIndex(0);
+        $worksheet=$excel_file->getActiveSheet();
+        $highestRow = $worksheet->getHighestRow(); // e.g., 10
+        $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
+
+        // Convert the highest column letter to a numeric index (e.g., 'F' => 6)
+        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+
+        // Initialize an empty array to store the data
+        $data = [];
+
+        // Loop through each row and column to read the data
+        for ($row = 1; $row <= $highestRow; ++$row) {
+            $rowData = [];
+            for ($col = 1; $col <= $highestColumnIndex; ++$col) {
+                $cellValue = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+                $rowData[] = $cellValue;
+            }
+            $data[] = $rowData;
+        }
+    }
+    function modal_import_propulsion($client_id){
+        return $this->template->view("clients/tabs/modal_import_propulsion",array("client_id"=>$client_id));
+    }
+    function import_propulsion(){
+        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $temp_file = get_array_value($file, "tmp_name");
+        $file_name = get_array_value($file, "name");
+        $file_size = get_array_value($file, "size");
+        $temp_file_path = get_setting("temp_file_path");
+        $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
+        $excel_file->setActiveSheetIndex(1);
+        $worksheet=$excel_file->getActiveSheet();
+        $highestRow = $worksheet->getHighestRow(); // e.g., 10
+        $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
+
+        // Convert the highest column letter to a numeric index (e.g., 'F' => 6)
+        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+
+        // Initialize an empty array to store the data
+        $data = [];
+
+        // Loop through each row and column to read the data
+        for ($row = 1; $row <= $highestRow; ++$row) {
+            $rowData = [];
+            for ($col = 1; $col <= $highestColumnIndex; ++$col) {
+                $cellValue = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+                $rowData[] = $cellValue;
+            }
+            $data[] = $rowData;
+        }
     }
 }
 
