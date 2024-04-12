@@ -24,7 +24,8 @@
         </div>
     </ul>
     <div class="bg-white">
-        <div id="kanban-filters"></div>       
+        <div id="kanban-filters"></div>
+             
     </div>
 </div>
 <div id="load-kanban"></div>
