@@ -1648,13 +1648,9 @@
             var light_yes=$("#light_yes<?php echo $modalId; ?>")[0].value;
             var parts_on_board_yes=$("#parts_on_board_yes<?php echo $modalId; ?>")[0].value;
             var ventilation_yes=$("#ventilation_yes<?php echo $modalId; ?>")[0].value;
-            // var transport_to_yard_workshop_yes=$("#transport_to_yard_workshop_yes<?php //echo $modalId; ?>")[0].value;
             var crane_assistance_yes=$("#crane_assistance_yes<?php echo $modalId; ?>")[0].value;
-            // var transport_outside_yard_yes=$("#transport_outside_yard_yes<?php //echo $modalId; ?>")[0].value;
             var cleaning_before_yes=$("#cleaning_before_yes<?php echo $modalId; ?>")[0].value;
-            // var material_yards_supply_yes=$("#material_yards_supply_yes<?php// echo $modalId; ?>")[0].value;
             var cleaning_after_yes=$("#cleaning_after_yes<?php echo $modalId; ?>")[0].value;
-            // var material_owners_supply_yes=$("#material_owners_supply_yes<?php //echo $modalId; ?>")[0].value;
             var work_permit_yes=$("#work_permit_yes<?php echo $modalId; ?>")[0].value;
             var risk_assessment_yes=$("#risk_assessment_yes<?php echo $modalId; ?>")[0].value;
             var maker=$("#maker<?php echo $modalId; ?>")[0].value;
