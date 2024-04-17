@@ -23,9 +23,9 @@
                     </div>
                 </div>
             </div>
-            <?php if ($client_id) { ?>
-                <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" />
-            <?php } else if (!$model_info->creator_email) { ?>
+            <?php //if ($client_id) { ?>
+                <!-- <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" /> -->
+            <?php //} else if (!$model_info->creator_email) { ?>
                 <div class="form-group">
                     <div class="row">
                         <label for="client_id" class=" col-md-3"><?php echo "Manufacturer"; ?></label>
@@ -36,7 +36,7 @@
                         </div>
                     </div>
                 </div>
-            <?php } ?>
+            <?php //} ?>
             <!-- <div class="form-group">
                 <div class="row">
                     <label for="manufaturer" class=" col-md-3"><?php echo "Manufacturer"; ?></label>
