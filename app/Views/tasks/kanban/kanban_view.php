@@ -184,18 +184,18 @@
         kanbanContainerWidth = $("#kanban-container").width();
 
         
-        $("#kanban-wrapper").on("wheel",function(event){
-            event.originalEvent.preventDefault()
-            var deltaY=event.originalEvent.deltaY;
-            first=false;
-            // console.log(event)
-            if(deltaY>0) zoom+=0.1;
-            else {
-                if(zoom>0) zoom-=0.1;
-            }
-            $(".kanban-container").css("transform","scale("+zoom+")");
-            $(".kanban-container").css("overflow-x","scroll");
-        })
+        // $("#kanban-wrapper").on("wheel",function(event){
+        //     event.originalEvent.preventDefault()
+        //     var deltaY=event.originalEvent.deltaY;
+        //     first=false;
+        //     // console.log(event)
+        //     if(deltaY>0) zoom+=0.1;
+        //     else {
+        //         if(zoom>0) zoom-=0.1;
+        //     }
+        //     $(".kanban-container").css("transform","scale("+zoom+")");
+        //     $(".kanban-container").css("overflow-x","scroll");
+        // })
 
         $(".btn-zoom-out").on("click",function(){
             if(zoom>0) zoom-=0.1;
