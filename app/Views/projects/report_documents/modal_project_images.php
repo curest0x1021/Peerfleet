@@ -3,7 +3,7 @@
     <?php foreach ($project_files as $key => $oneFile) {
         if(is_image_file($oneFile->file_name)){
     ?>
-        <a href="#" onclick="insert_image('<?php echo $oneFile->file_name;?>')" ><img src="<?php echo base_url("files/project_files/$project_id/$oneFile->file_name");?>" style="width:7vw;height:8vh;" /></a>
+        <a href="#" style="margin:5px;" title="<?php echo remove_file_prefix($oneFile->file_name)?>" onclick="insert_image('<?php echo $oneFile->file_name;?>')" ><img src="<?php echo base_url("files/project_files/$project_id/$oneFile->file_name");?>" style="width:7vw;height:8vh;" /></a>
     <?php
     }} ?>
     </div>
