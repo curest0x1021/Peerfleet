@@ -38,6 +38,7 @@ class Projects extends Security_Controller {
         $this->Vessel_types_model=model('App\Models\Vessel_types_model');
         $this->Report_documents_model=model('App\Models\Report_documents_model');
         $this->Report_templates_model=model('App\Models\Report_templates_model');
+        $this->Text_templates_model=model('App\Models\Text_templates_model');
         $this->Projects_model->auto_update();
 
     }
@@ -5990,6 +5991,10 @@ class Projects extends Security_Controller {
     function modal_project_images($project_id){
         $project_files=$this->Project_files_model->get_details(array("project_id"=>$project_id))->getResult();
         return $this->template->view("projects/report_documents/modal_project_images",array("project_id"=>$project_id,"project_files"=>$project_files));
+    }
+    function modal_text_templates($project_id){
+        $text_templates=$this->Text_templates_model->get_all_where(array("deleted"=>0))->getResult();
+        return $this->template->view("projects/report_documents/modal_text_templates",array("project_id"=>$project_id,"text_templates"=>$text_templates));
     }
     function chart_task_status($project_id){
         $task_statuses= $this->Tasks_model->get_task_statistics(array("project_id" => $project_id))->task_statuses;
