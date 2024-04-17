@@ -4,7 +4,7 @@
 </div> 
 <div id="kanban-wrapper" style="height:50vh;overflow-y:scroll;">
     
-    <ul id="kanban-container" style="width:100%;transform-origin:0 0;overflow-x:scroll;overflow-y:scroll;min-width:1800px;" class="kanban-container clearfix">
+    <ul id="kanban-container" style="width:100%;transform-origin:0 0;overflow-x:scroll;overflow-y:scroll;min-width:1660px;" class="kanban-container clearfix">
 
         <?php foreach ($columns as $column) { ?>
             <li class="kanban-col kanban-<?php
