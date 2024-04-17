@@ -175,7 +175,7 @@ foreach ($categorized_tasks as $category=>$list) {
 <?php foreach ($list as $task) {
 ?>
 <p style="margin-left:40px;" >
-    <?php echo $task->title; ?>
+    <?php echo (isset($task->dock_list_number)?$task->dock_list_number:"&nbsp;&nbsp;&nbsp;&nbsp;")." ".$task->title; ?>
 </p>
 <?php
 }?>
@@ -192,7 +192,7 @@ foreach ($categorized_tasks as $category=>$list) {
     <tbody>
         <tr>
             <td  style="width:50%;">
-                <b><?php echo $task->title;?></b>
+                Title of task : <b><?php echo $task->title;?></b>
             </td>
             <td  style="width:20%;">
                 <?php echo "DLN : <b>".$task->dock_list_number."</b>";?>
