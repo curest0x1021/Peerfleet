@@ -22,7 +22,7 @@
     </tr>
     </tbody>
 </table> -->
-<p style="text-align:center;" ><?php echo $project_info->start_date." ~ ".$project_info->deadline;?></p>
+<p style="text-align:center;" ><?php echo date("d.m.Y",strtotime($project_info->start_date))." ~ ".date("d.m.Y",strtotime($project_info->deadline));?></p>
 <p style="text-align:center;">Labels : <?php
 $label_data=explode("--::--",$project_info->labels_list);
 if(array_key_exists(1,$label_data)) echo $label_data[1];
