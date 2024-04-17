@@ -5990,6 +5990,16 @@ class Projects extends Security_Controller {
     function modal_project_images($project_id){
         return $this->template->view("projects/report_documents/modal_project_images",array("project_id"=>$project_id));
     }
+    function chart_task_status($project_id){
+        $task_statuses= $this->Tasks_model->get_task_statistics(array("project_id" => $project_id))->task_statuses;
+        return $this->template->view("projects/report_documents/chart_task_status.php",array("task_statuses"=>$task_statuses));
+    }
+    function chart_project_progress($project_id){
+        $project_info = $this->Projects_model->get_details(array("project_id"=>$project_id))->getRow();
+        $project_progress=$project_info->total_points ? round(($project_info->completed_points / $project_info->total_points) * 100) : 0;
+        return $this->template->view("projects/report_documents/chart_project_progress.php",array("project_progress"=>$project_progress));
+    }
+
 
 }
 
