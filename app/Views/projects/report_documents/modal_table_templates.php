@@ -40,7 +40,6 @@
                     setTimeout(() => {
                         // window.watchdog.editor.insertData(table_code);
                         var table_code=document.body.querySelector(".vbox").querySelector("#table-panel-for-xlsx").innerHTML
-                        console.log(table_code)
                         const viewFragment = window.watchdog.editor.data.processor.toView( table_code );
                         const modelFragment = window.watchdog.editor.data.toModel( viewFragment );
 

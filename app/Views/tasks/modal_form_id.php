@@ -1629,6 +1629,16 @@
             $("#btn-save-task-library<?php echo $modalId; ?>").click();
         })
         $("#btn-save-task-library<?php echo $modalId; ?>").on("click",function(){
+            var maskTarget=$("#ajaxModalContent").find(".modal-body");
+            var padding = maskTarget.height() - 80;
+            if (padding > 0) {
+                padding = Math.floor(padding / 2);
+            }
+            maskTarget.after("<div class='modal-mask'><div class='circle-loader'></div></div>");
+            //check scrollbar
+            var height = maskTarget.outerHeight();
+            $('.modal-mask').css({"width": maskTarget.width() + 22 + "px", "height": height + "px", "padding-top": padding + "px"});
+            
             var rise_csrf_token = $('[name="rise_csrf_token"]').val();
             var id=$('[name="id"]').val();
             var title=$("#title_of_task<?php echo $modalId; ?>")[0].value;
@@ -1719,17 +1729,9 @@
                 success: function (response) {
                     // console.log(response)
                     if(JSON.parse(response).success) {
-                        $maskTarget=$("#ajaxModalContent").find(".modal-body");
-                        var padding = $maskTarget.height() - 80;
-                        if (padding > 0) {
-                            padding = Math.floor(padding / 2);
-                        }
-                        $maskTarget.after("<div class='modal-mask'><div class='circle-loader'></div></div>");
-                        //check scrollbar
-                        var height = $maskTarget.outerHeight();
-                        $('.modal-mask').css({"width": $maskTarget.width() + 22 + "px", "height": height + "px", "padding-top": padding + "px"});
-                        $maskTarget.closest('.modal-dialog').find('[type="submit"]').attr('disabled', 'disabled');
-                        $maskTarget.addClass("hide");
+                        
+                        maskTarget.closest('.modal-dialog').find('[type="submit"]').attr('disabled', 'disabled');
+                        maskTarget.addClass("hide");
                         // window.responseData=JSON.parse(response);
                         // console.log(window.responseData)
                         if(window.continueShow){

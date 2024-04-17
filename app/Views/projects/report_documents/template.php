@@ -85,7 +85,8 @@
         var report_content=replaceWord(report_content,"{{project.description}}","<div><?php echo $project_detail->description;?></div>")
         var report_content=replaceWord(report_content,"{{vessel.image}}",`<img 
         style="width:300px;"
-        src="<?php echo encode_img_base64(get_setting("profile_image_path")."/".unserialize($client_info->image)["file_name"]);?>"
+        src="<?php if(unserialize($client_info->image)) {echo encode_img_base64(get_setting("profile_image_path")."/".unserialize($client_info->image)["file_name"]);}
+        else {echo encode_img_base64(base_url("assets/images/ship_img.jpg"));}?>"
         />`)
         var report_content=replaceWord(report_content,"{{project.currency}}","<?php echo $project_detail->currency;?>")
         window.watchdog.editor.setData(report_content)
