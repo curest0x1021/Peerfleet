@@ -22,6 +22,11 @@
                 value="<?php echo isset($document_info)?$document_info->title:"";?>"
                 />
             </div>
+            <div class="d-flex align-items-center justify-content-around" style="margin-bottom:10px;" >
+                <?php echo modal_anchor(get_uri("projects/modal_table_templates/".$project_detail->id),'<button class="btn btn-default" >Table templates</button>',array()); ?>
+                <?php echo modal_anchor(get_uri("projects/modal_chart_templates/".$project_detail->id),'<button class="btn btn-default" >Chart templates</button>',array()); ?>
+                <?php echo modal_anchor(get_uri("projects/modal_project_images/".$project_detail->id),'<button class="btn btn-default" >Project images</button>',array()); ?>
+            </div>
             <main>
                 <div class="centered">
                     <div class="row">
