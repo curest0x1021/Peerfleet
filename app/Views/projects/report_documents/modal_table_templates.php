@@ -1,7 +1,9 @@
-<div class="modal-body clearfix " >
+<div id="ajaxModalContent" >
+<div class="modal-body clearfix " id="modal-insert-table" >
     <button class="btn btn-default insert-project-cost-overview-table" >Cost overview</button>
     <button class="btn btn-default insert-project-quotes-overview-table" >Quotes overview</button>
     <div class="vbox" ></div>
+</div>
 </div>
 <script>
     $(document).ready(function(){
@@ -44,6 +46,7 @@
                         const modelFragment = window.watchdog.editor.data.toModel( viewFragment );
 
                         window.watchdog.editor.model.insertContent( modelFragment,window.watchdog.editor.model.document.selection.getFirstPosition());
+                        window.modal_insert_table.closeModal();
                     }, 1000);
                     
                     
@@ -100,11 +103,22 @@
                         const modelFragment = window.watchdog.editor.data.toModel( viewFragment );
 
                         window.watchdog.editor.model.insertContent( modelFragment,window.watchdog.editor.model.document.selection.getFirstPosition());
+                        window.modal_insert_table.closeModal();
                     }, 1000);
                     
                     
                 }
             })
-        })
+        });
+        window.modal_insert_table=$("#modal-insert-table").appForm({
+            closeModalOnSuccess: false,
+            // onSuccess: function (result) {
+            //     if (window.continueShow) {
+            //         console.log(window.responseData)
+            //     }else{
+            //         window.edit_task_panel.closeModal()
+            //     }
+            // }
+        });
     })
 </script>

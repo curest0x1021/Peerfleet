@@ -343,5 +343,6 @@ $lang["notification_wire_inspection_required"] = "Wires visual inspection requir
 $lang["yards_comparison"]="Yards Comparison";
 $lang["quote_overview"]="Quote Overview";
 $lang["cost_overview"]="Cost Overview";
+$lang["text_templates"]="Text templates";
 
 return $lang;

@@ -26,6 +26,7 @@
                 <?php echo modal_anchor(get_uri("projects/modal_table_templates/".$project_detail->id),'<button class="btn btn-default" >Table templates</button>',array()); ?>
                 <?php echo modal_anchor(get_uri("projects/modal_chart_templates/".$project_detail->id),'<button class="btn btn-default" >Chart templates</button>',array()); ?>
                 <?php echo modal_anchor(get_uri("projects/modal_project_images/".$project_detail->id),'<button class="btn btn-default" >Project images</button>',array()); ?>
+                <?php echo modal_anchor(get_uri("projects/modal_text_templates/".$project_detail->id),'<button class="btn btn-default" >Text templates</button>',array()); ?>
             </div>
             <main>
                 <div class="centered">

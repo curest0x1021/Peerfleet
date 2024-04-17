@@ -12,6 +12,7 @@ $settings_menu = array(
         array("name" => "integration", "url" => "settings/integration"),
         array("name" => "cron_job", "url" => "settings/cron_job"),
         array("name" => "updates", "url" => "Updates"),
+        array("name" => "text_templates", "url" => "text_templates"),
     ),
     "access_permission" => array(),
     "client_portal" => array(
@@ -156,5 +157,4 @@ $settings_menu = app_hooks()->apply_filters('app_filter_admin_settings_menu', $s
         echo "</div>";
     }
     ?>
-
 </ul>
