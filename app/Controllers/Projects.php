@@ -5995,7 +5995,7 @@ class Projects extends Security_Controller {
         return $this->template->view("projects/report_documents/chart_task_status.php",array("task_statuses"=>$task_statuses));
     }
     function chart_project_progress($project_id){
-        $project_info = $this->Projects_model->get_details(array("project_id"=>$project_id))->getRow();
+        $project_info = $this->Projects_model->get_details(array("id"=>$project_id))->getRow();
         $project_progress=$project_info->total_points ? round(($project_info->completed_points / $project_info->total_points) * 100) : 0;
         return $this->template->view("projects/report_documents/chart_project_progress.php",array("project_progress"=>$project_progress));
     }
