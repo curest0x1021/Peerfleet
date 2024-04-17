@@ -13,7 +13,7 @@ class Tickets extends Security_Controller {
         $this->Ticket_templates_model = model('App\Models\Ticket_templates_model');
         $this->Ticket_actions_model = model('App\Models\Ticket_actions_model');
         ////////////////
-        $this->Mailboxes_model = model('App\..\Plugins\Mailbox\Models\Mailboxes_model');
+        $this->Mailboxes_model = model('App\..\plugins\Mailbox\Models\Mailboxes_model');
     }
 
     private function validate_ticket_access($ticket_id = 0) {
