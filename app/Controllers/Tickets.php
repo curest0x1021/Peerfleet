@@ -12,6 +12,8 @@ class Tickets extends Security_Controller {
 
         $this->Ticket_templates_model = model('App\Models\Ticket_templates_model');
         $this->Ticket_actions_model = model('App\Models\Ticket_actions_model');
+        ////////////////
+        $this->Mailboxes_model = model('App\..\Plugins\Mailbox\Models\Mailboxes_model');
     }
 
     private function validate_ticket_access($ticket_id = 0) {
@@ -556,6 +558,11 @@ class Tickets extends Security_Controller {
                 $view_data["show_project_reference"] = get_setting('project_reference_in_tickets');
 
                 $view_data["view_type"] = $view_type;
+                ///////////////////////////////////////
+                $view_data['vessel_info']=null;
+                if(isset($ticket_info->manufacturer)) $view_data['vessel_info']=$this->Clients_model->get_details(array("id"=>$ticket_info->manufacturer))->getRow();
+                $view_data['emailbox']=$this->Mailboxes_model->get_details(array("imap_authorized"=>1))->getRow();
+                ////////////////////////////////////////
 
                 $view_data["can_create_client"] = false;
                 if ($this->login_user->is_admin || (get_array_value($this->login_user->permissions, "client") == "all")) {
@@ -1351,6 +1358,7 @@ class Tickets extends Security_Controller {
         $action_info=$this->Ticket_actions_model->get_one($id);
         return $this->template->view("tickets/modals/modal_add_corrective_action",["ticket_id"=>$action_info->ticket_id,"action_info"=>$action_info]);
     }
+
 
 }
 

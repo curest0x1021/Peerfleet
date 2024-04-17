@@ -1,5 +1,5 @@
 <div id="ticket-title-section">
-    <?php echo view("tickets/ticket_sub_title"); ?>
+    <?php //echo view("tickets/ticket_sub_title"); ?>
 </div>
 
 <?php
@@ -39,14 +39,17 @@ if (!$sort_as_decending) {
                 ?>
                 <?php echo view("includes/dropzone_preview"); ?>
                 <footer class="card-footer b-a clearfix ticket-view-footer-button">
-                    <button class="btn btn-default upload-file-button float-start me-auto btn-sm round mt-1" type="button" style="color:#7988a2"><i data-feather='camera' class='icon-16'></i> <?php echo app_lang("upload_file"); ?></button>
+                    <!-- <button class="btn btn-default upload-file-button float-start me-auto btn-sm round mt-1" type="button" style="color:#7988a2"><i data-feather='camera' class='icon-16'></i> <?php //echo app_lang("upload_file"); ?></button> -->
 
                     <?php
                     if ($login_user->user_type === "staff" && $view_type != "modal_view") {
                         echo modal_anchor(get_uri("tickets/insert_template_modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('insert_template'), array("class" => "btn btn-default float-start btn-sm round ml10 mt-1", "title" => app_lang('insert_template'), "style" => "color: #7988a2", "data-post-ticket_type_id" => $ticket_info->ticket_type_id, "id" => "insert-template-btn"));
                     }
                     ?>
-                    <button class="btn btn-default upload-file-button float-start me-auto btn-sm round mt-1" type="button" style="color:#7988a2"><i data-feather='plus-circle' class='icon-16'></i> Add email</button>
+
+                    <?php
+                    if(isset($emailbox)) echo modal_anchor(get_uri("mailbox/compose/$emailbox->id"),'<button class="btn btn-default upload-file-button float-start me-auto btn-sm round mt-1 btn-compose-mailbox" type="button" style="color:#7988a2"><i data-feather="plus-circle" class="icon-16"></i> Add email</button>',array());
+                    ?>
 
                     <div class="float-end">
                         <?php if ($login_user->user_type === "staff") { ?>

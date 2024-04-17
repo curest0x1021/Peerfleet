@@ -9,25 +9,15 @@
             <div class="card p15" id="subscription-info-section">
                 <div class="clearfix p20">
                     <div class="row">
-                        <?php if ($login_user->user_type === "staff" && $ticket_info->client_id) { ?>
-                            <div class="col-md-12 mb15">
-                                <strong><?php echo app_lang("client") . ": "; ?></strong>
-                                <?php echo $ticket_info->title ? anchor(get_uri("clients/view/" . $ticket_info->client_id), $ticket_info->title) : "-"; ?>
-                            </div>
-
-                            <?php if ($ticket_info->requested_by) { ?>
-                                <div class="col-md-12 mb15">
-                                    <strong><?php echo app_lang("requested_by") . ": "; ?></strong>
-                                    <?php echo anchor(get_uri("clients/contact_profile/" . $ticket_info->requested_by), $ticket_info->requested_by_name ? $ticket_info->requested_by_name : ""); ?>
-                                </div>
-                                <div class="col-md-12 mb15">
-                                    <strong>More about requester:</strong>
-                                    <?php   if(isset($ticket_info->request_data)) echo $ticket_info->request_data; ?>
-                                </div>
-                            <?php } ?>
-
-                        <?php } ?>
-
+                        <div class="col-md-12 mb15">
+                            <strong>Title : </strong><?php echo $ticket_info->title;?>
+                        </div>
+                        <div class="col-md-12 mb15">
+                            <strong>Equipment : </strong><?php echo $ticket_info->equipment;?>
+                        </div>
+                        <div class="col-md-12 mb15">
+                            <strong>Manufacturer : </strong><?php if(isset($vessel_info)) echo $vessel_info->charter_name;?>
+                        </div>
                         <div class="col-md-12 mb15">
                             <strong><?php echo app_lang('status') . ": "; ?></strong>
                             <?php
