@@ -1,6 +1,5 @@
 <div class="d-flex justify-content-center bg-white" style="padding:10px;" >
-    <button class="btn btn-default btn-zoom-out" ><i data-feather="zoom-out" class="icon-16"  ></i></button>
-    <button class="btn btn-default btn-zoom-in" style="margin-left:10px;" ><i data-feather="zoom-in" class="icon-16"  ></i></button>
+    
 </div> 
 <div id="kanban-wrapper" style="height:50vh;overflow-y:scroll;">
     
@@ -182,6 +181,11 @@
     var past_y=0;
     $(document).ready(function () {
         kanbanContainerWidth = $("#kanban-container").width();
+        $(".filter-section-right .filter-item-box").addClass("d-flex align-items-center");
+        $(".filter-section-right .filter-item-box").prepend($(`
+        <button class="btn btn-default btn-zoom-out" ><i data-feather="zoom-out" class="icon-16"  ></i></button>
+        <button class="btn btn-default btn-zoom-in" style="margin-left:5px; margin-right:5px;" ><i data-feather="zoom-in" class="icon-16"  ></i></button>
+        `));
 
         
         // $("#kanban-wrapper").on("wheel",function(event){
