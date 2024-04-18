@@ -10,4 +10,5 @@
         </tr>
     </tbody>
 </table>
+<div style="background-color:#3270b8; width:100%; height:5px;" ></div>
 <br/>

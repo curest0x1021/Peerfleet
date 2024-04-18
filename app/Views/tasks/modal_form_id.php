@@ -462,7 +462,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "gas_free_certificate_yes",
+                                            "id" => "gas_free_certificate_yes".$modalId,
                                             "name" => "gas_free_certificate",
                                             "class" => "form-check-input",
                                         ), "1", isset($gotTask)?$gotTask->gas_free_certificate:0);
@@ -470,7 +470,7 @@
                                         <label for="gas_free_certificate_yes" class="mr15 p0"><?php echo app_lang('yes'); ?></label>
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "gas_free_certificate_no",
+                                            "id" => "gas_free_certificate_no".$modalId,
                                             "name" => "gas_free_certificate",
                                             "class" => "form-check-input",
                                         ), "0", isset($gotTask)?!$gotTask->gas_free_certificate:1);
@@ -483,7 +483,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "light_yes",
+                                            "id" => "light_yes".$modalId,
                                             "name" => "light",
                                             "class" => "form-check-input",
                                         ), "1", isset($gotTask)?$gotTask->light:0);
@@ -504,7 +504,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "ventilation_yes",
+                                            "id" => "ventilation_yes".$modalId,
                                             "name" => "ventilation",
                                             "class" => "form-check-input",
                                         ), "1", isset($gotTask)?$gotTask->ventilation:0);
@@ -525,7 +525,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "crane_assistance_yes",
+                                            "id" => "crane_assistance_yes".$modalId,
                                             "name" => "crane_assistance",
                                             "class" => "form-check-input",
                                         ), "1", isset($gotTask)?$gotTask->crane_assistance:0);
@@ -546,7 +546,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "cleaning_before_yes",
+                                            "id" => "cleaning_before_yes".$modalId,
                                             "name" => "cleaning_before",
                                             "class" => "form-check-input",
                                         ), "1", isset($gotTask)?$gotTask->cleaning_before:0);
@@ -567,7 +567,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "cleaning_after_yes",
+                                            "id" => "cleaning_after_yes".$modalId,
                                             "name" => "cleaning_after",
                                             "class" => "form-check-input",
                                         ), "1", isset($gotTask)?$gotTask->cleaning_after:0);
@@ -588,7 +588,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "work_permit_yes",
+                                            "id" => "work_permit_yes".$modalId,
                                             "name" => "work_permit",
                                             "class" => "form-check-input",
                                         ), "1", isset($gotTask)?$gotTask->work_permit:0);
@@ -611,7 +611,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "painting_after_completion_yes",
+                                            "id" => "painting_after_completion_yes".$modalId,
                                             "name" => "painting_after_completion",
                                             "class" => "form-check-input",
                                         ), "1", isset($gotTask)?$gotTask->painting_after_completion:0);
@@ -632,7 +632,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "parts_on_board_yes",
+                                            "id" => "parts_on_board_yes".$modalId,
                                             "name" => "parts_on_board",
                                             "class" => "form-check-input",
                                         ), "1", isset($gotTask)?$gotTask->parts_on_board:0);
@@ -653,7 +653,7 @@
                                     <div class="col-5">
                                         <?php
                                         echo form_radio(array(
-                                            "id" => "risk_assessment_yes",
+                                            "id" => "risk_assessment_yes".$modalId,
                                             "name" => "risk_assessment",
                                             "class" => "form-check-input",
                                         ), "1", isset($gotTask)?$gotTask->risk_assessment:0);
