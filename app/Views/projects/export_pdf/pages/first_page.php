@@ -4,8 +4,7 @@
 <?php }else{ ?>
     <img style="width:100%;height:auto;" src="<?php echo encode_img_base64(base_url("assets/images/ship_img.jpg"));?>" alt="logo"/>
 <?php } ?>
-<h1 style="text-align:center;" ><?php echo $project_info->title;?></h1>
-<h2 style="text-align:center;"><?php echo "-".$client_info->charter_name."-";?></h2>
+<h1 style="text-align:center;" ><?php echo $project_info->title." - ".$client_info->charter_name;?></h1>
 <!-- <table style="width:100%" >
     <tbody>
     <tr>
@@ -27,9 +26,12 @@
 $label_data=explode("--::--",$project_info->labels_list);
 if(array_key_exists(1,$label_data)) echo $label_data[1];
  ?></p>
+ <div style="page-break-before: always;"></div>
+ <?php echo view('projects/export_pdf/layouts/header.php');?>
+ <h1 style="text-align:center;margin-top:300px;" >1. Vessel Information</h1>
 <div style="page-break-before: always;"></div>
 <?php echo view('projects/export_pdf/layouts/header.php');?>
-<h1>Vessel Information</h1>
+
 <h2>General Information</h2>
 <p><?php if($client_info->charter_name) echo "Vessel name : ".$client_info->charter_name; ?></p>
 <p><?php if($vessel_info) echo "Vessel type : ".$vessel_info->title; ?></p>
@@ -45,9 +47,15 @@ if(array_key_exists(1,$label_data)) echo $label_data[1];
 <p><?php  echo "Depth moulded : ".($client_info->depth_moulded?$client_info->depth_moulded:0)." m"; ?></p>
 <p><?php echo "Draught scantling : ".($client_info->draught_scantling?$client_info->draught_scantling:0)." m"; ?></p>
 <p><?php  echo "Hull design : ".($client_info->hull_design?$client_info->hull_design:""); ?></p>
+<p><?php  echo "Heavy fuel oil : ".($client_info->heavy_fuel_oil?$client_info->heavy_fuel_oil:""); ?></p>
+<p><?php  echo "Marine diesel oil : ".($client_info->marine_diesel_oil?$client_info->marine_diesel_oil:""); ?></p>
+<p><?php  echo "Marine gas oil : ".($client_info->marine_gas_oil?$client_info->marine_gas_oil:""); ?></p>
+<p><?php  echo "LNG capaciry : ".($client_info->lng_capacity?$client_info->lng_capacity:""); ?></p>
+<p><?php  echo "Lub oil : ".($client_info->lub_oil?$client_info->lub_oil:""); ?></p>
+<p><?php  echo "Ballast water : ".($client_info->ballast_water?$client_info->ballast_water:""); ?></p>
+<p><?php  echo "Fresh water : ".($client_info->fresh_water?$client_info->fresh_water:""); ?></p>
 <div style="page-break-before: always;"></div>
 <?php echo view('projects/export_pdf/layouts/header.php');?>
-<h1>Vessel Information</h1>
 <h2>Propulsion</h2>
 <div style="" >
 <table style="width:100%;" >
