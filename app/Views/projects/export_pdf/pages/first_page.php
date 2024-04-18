@@ -4,7 +4,7 @@
 <?php }else{ ?>
     <img style="width:100%;height:auto;" src="<?php echo encode_img_base64(base_url("assets/images/ship_img.jpg"));?>" alt="logo"/>
 <?php } ?>
-<h1 style="text-align:center;" ><?php echo $project_info->title." - ".$client_info->charter_name;?></h1>
+<h1 style="text-align:center;color:#3270b8;" ><?php echo $project_info->title." - ".$client_info->charter_name;?></h1>
 <!-- <table style="width:100%" >
     <tbody>
     <tr>
@@ -27,19 +27,21 @@ $label_data=explode("--::--",$project_info->labels_list);
 if(array_key_exists(1,$label_data)) echo $label_data[1];
  ?></p>
  <div style="page-break-before: always;"></div>
- <?php echo view('projects/export_pdf/layouts/header.php');?>
- <h1 style="text-align:center;margin-top:300px;" >1. Vessel Information</h1>
-<div style="page-break-before: always;"></div>
-<?php echo view('projects/export_pdf/layouts/header.php');?>
 
-<h2>General Information</h2>
+ <?php echo view('projects/export_pdf/layouts/header.php');?>
+ <h1 style="text-align:center;margin-top:300px; color:#3270b8;" >1. Vessel Information</h1>
+
+<div style="page-break-before: always;"></div>
+
+<?php echo view('projects/export_pdf/layouts/header.php');?>
+<h2 style="text-align:center;color:#3270b8;" >General Information</h2>
 <p><?php if($client_info->charter_name) echo "Vessel name : ".$client_info->charter_name; ?></p>
 <p><?php if($vessel_info) echo "Vessel type : ".$vessel_info->title; ?></p>
 <p><?php if($client_info->imo_number) echo "IMO number : ".$client_info->imo_number; ?></p>
 <p><?php if($client_info->flag_state) echo "Flag state : ".$client_info->flag_state; ?></p>
 <p><?php if($client_info->port_of_registry) echo "Port of registry : ".$client_info->port_of_registry; ?></p>
 <p><?php if($client_info->classification_society) echo "Classification society : ".$client_info->classification_society; ?></p>
-<h2>Dimensions and Capacities</h2>
+<h2 style="text-align:center;color:#3270b8;">Dimensions and Capacities</h2>
 <p><?php  echo "Gross tonnage : ".($client_info->gross_tonnage?$client_info->gross_tonnage:0)." t"; ?></p>
 <p><?php echo "Length over all (L.O.A): ".($client_info->length_over_all?$client_info->length_over_all:0)." m"; ?></p>
 <p><?php  echo "Length between perpendiculars (L.B.P): ".($client_info->length_between_perpendiculars?$client_info->length_between_perpendiculars:0)." m"; ?></p>
@@ -56,7 +58,7 @@ if(array_key_exists(1,$label_data)) echo $label_data[1];
 <p><?php  echo "Fresh water : ".($client_info->fresh_water?$client_info->fresh_water:""); ?></p>
 <div style="page-break-before: always;"></div>
 <?php echo view('projects/export_pdf/layouts/header.php');?>
-<h2>Propulsion</h2>
+<h2 style="color:#3270b8;">Propulsion</h2>
 <div style="" >
 <table style="width:100%;" >
     <tbody>
@@ -109,8 +111,7 @@ if(array_key_exists(1,$label_data)) echo $label_data[1];
 </div>
 <div style="page-break-before: always;"></div>
 <?php echo view('projects/export_pdf/layouts/header.php');?>
-<h1>Vessel Information</h1>
-<h2>Side Thruster</h2>
+<h2 style="color:#3270b8;" >Side Thruster</h2>
 <p><?php  echo "Number of bow thrusters : ".$client_info->bow_thruster_number; ?></p>
 <p><?php  echo "Maker of bow thrusters : ".$client_info->bow_thruster_maker; ?></p>
 <p><?php  echo "Type of bow thrusters : ".$client_info->bow_thruster_type; ?></p>
@@ -119,12 +120,22 @@ if(array_key_exists(1,$label_data)) echo $label_data[1];
 <p><?php  echo "Maker of stern thrusters : ".$client_info->stern_thruster_maker; ?></p>
 <p><?php  echo "Type of stern thrusters : ".$client_info->stern_thruster_type; ?></p>
 <p><?php  echo "Power of stern thrusters : ".$client_info->stern_thruster_power; ?></p>
+
 <div style="page-break-before: always;"></div>
+
 <?php echo view('projects/export_pdf/layouts/header.php');?>
-<h1>Project Information</h1>
-<h2>Description</h2>
+<h1 style="text-align:center;color:#3270b8;margin-top:300px;" >2. Project Information</h1>
+
+<div style="page-break-before: always;"></div>
+
+<?php echo view('projects/export_pdf/layouts/header.php');?>
+<h2 style="color:#3270b8;" >About this project</h2>
 <div><?php echo $project_info->description;?></div>
-<h2>Team Members</h2>
+
+<div style="page-break-before: always;"></div>
+
+<?php echo view('projects/export_pdf/layouts/header.php');?>
+<h2 style="color:#3270b8;" >Team Members</h2>
 <?php foreach ($members as $key => $member) {
 ?>
 <table style="width:80%;" >
@@ -156,9 +167,11 @@ if(array_key_exists(1,$label_data)) echo $label_data[1];
 
 <?php
 };?>
+
 <div style="page-break-before: always;"></div>
+
 <?php echo view('projects/export_pdf/layouts/header.php');?>
-<h1><?php if(count($tasks)>0) echo "Task List";?></h1>
+<h2 style="color:#3270b8;" ><?php if(count($tasks)>0) echo "Task List";?></h2>
 <?php
 $categorized_tasks=array(
     "General & Docking"=>array(),
@@ -179,7 +192,7 @@ foreach ($tasks as $key => $task) {
 }
 foreach ($categorized_tasks as $category=>$list) {
 ?>
-<h2><?php if(count($list)>0) echo $category;?></h2>
+<?php if(count($list)>0) echo "<h4>$category</h4>";?>
 <?php foreach ($list as $task) {
 ?>
 <p style="margin-left:40px;" >
@@ -196,13 +209,12 @@ foreach ($categorized_tasks as $category=>$list) {
 ?>
 <div style="page-break-before: always;"></div>
 <?php echo view('projects/export_pdf/layouts/header.php');?>
+<h3 style="color:#3270b8;" ><?php echo $task->title;?></h3>
 <table style="width:100%;" >
     <tbody>
         <tr>
-            <td  style="width:50%;">
-                Title of task : <b><?php echo $task->title;?></b>
-            </td>
-            <td  style="width:20%;">
+                
+            <td  style="width:30%;">
                 <?php echo "DLN : <b>".$task->dock_list_number."</b>";?>
             </td>
             <td style="width:30%;" >
@@ -222,7 +234,9 @@ foreach ($categorized_tasks as $category=>$list) {
     });
     if(count($task_cost_items)>0){
     ?>
-    <table style="width:80%;border:1px solid lightgray; border-collapse:collapse;" >
+   <br/>
+    <table style="width:80%;border:1px solid lightgray; border-collapse:collapse; margin-left:40px; margin-right:40px;" >
+    <caption><b >Cost items</b></caption>
         <thead>
             <tr>
                 <th style="border:1px solid lightgray;width:20%;">Name</th>
