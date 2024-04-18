@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-center bg-white" style="padding:10px;" >
     
 </div> 
-<div id="kanban-wrapper" style="height:50vh;overflow-y:scroll;">
+<div id="kanban-wrapper" style="height:55vh;overflow-y:scroll;">
     
     <ul id="kanban-container" style="width:100%;transform-origin:0 0;overflow-x:scroll;overflow-y:scroll;min-width:1660px;" class="kanban-container clearfix">
 
