@@ -518,7 +518,7 @@ class Tickets extends Security_Controller {
         $view_type = $this->request->getPost('view_type');
 
         if ($ticket_id) {
-            $this->validate_ticket_access($ticket_id);
+            // $this->validate_ticket_access($ticket_id);
 
             $sort_as_decending = get_setting("show_recent_ticket_comments_at_the_top");
 
