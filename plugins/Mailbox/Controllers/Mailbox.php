@@ -326,7 +326,7 @@ class Mailbox extends Security_Controller {
             show_404();
         }
 
-        $this->can_access_this_mailbox($mailbox_id);
+        // $this->can_access_this_mailbox($mailbox_id);
         $mailbox_info = $this->Mailboxes_model->get_one($mailbox_id);
 
         $save_as_draft = $this->request->getPost("save_as_draft");
