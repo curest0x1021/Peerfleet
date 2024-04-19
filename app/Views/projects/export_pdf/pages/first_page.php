@@ -56,27 +56,175 @@ echo view('projects/export_pdf/layouts/footer.php',["page"=>$page]);
 
 <?php echo view('projects/export_pdf/layouts/header.php',["project_info"=>$project_info]);?>
 <h2 style="text-align:center;color:#3270b8;" >General Information</h2>
-<p><?php if($client_info->charter_name) echo "Vessel name : ".$client_info->charter_name; ?></p>
-<p><?php if($vessel_info) echo "Vessel type : ".$vessel_info->title; ?></p>
-<p><?php if($client_info->imo_number) echo "IMO number : ".$client_info->imo_number; ?></p>
-<p><?php if($client_info->flag_state) echo "Flag state : ".$client_info->flag_state; ?></p>
-<p><?php if($client_info->port_of_registry) echo "Port of registry : ".$client_info->port_of_registry; ?></p>
-<p><?php if($client_info->classification_society) echo "Classification society : ".$client_info->classification_society; ?></p>
+<table style="width:100%;text-align:center;border:1px solid lightgray; border-collapse:collapse;" >
+    <tbody>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;">
+                Vessel name
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php if($client_info->charter_name) echo $client_info->charter_name; ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;">
+            <td style="border:1px solid lightgray;padding:5px;">
+                Vessel type
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php if($vessel_info) echo $vessel_info->title; ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;">
+            <td style="border:1px solid lightgray;padding:5px;">
+                IMO Number
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php if($client_info->imo_number) echo $client_info->imo_number; ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;">
+            <td style="border:1px solid lightgray;padding:5px;">
+                Flag state
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php if($client_info->flag_state) echo $client_info->flag_state; ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;">
+            <td style="border:1px solid lightgray;padding:5px;">
+                Port of registry
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php if($client_info->port_of_registry) echo $client_info->port_of_registry; ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;">
+            <td style="border:1px solid lightgray;padding:5px;">
+                Classification society
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php if($client_info->classification_society) echo $client_info->classification_society; ?>
+            </td>
+        </tr>
+    </tbody>
+</table>
 <h2 style="text-align:center;color:#3270b8;">Dimensions and Capacities</h2>
-<p><?php  echo "Gross tonnage : ".($client_info->gross_tonnage?$client_info->gross_tonnage:0)." t"; ?></p>
-<p><?php echo "Length over all (L.O.A): ".($client_info->length_over_all?$client_info->length_over_all:0)." m"; ?></p>
-<p><?php  echo "Length between perpendiculars (L.B.P): ".($client_info->length_between_perpendiculars?$client_info->length_between_perpendiculars:0)." m"; ?></p>
-<p><?php  echo "BEAM/Breadth moulded : ".($client_info->breadth_moulded?$client_info->breadth_moulded:0)." m"; ?></p>
-<p><?php  echo "Depth moulded : ".($client_info->depth_moulded?$client_info->depth_moulded:0)." m"; ?></p>
-<p><?php echo "Draught scantling : ".($client_info->draught_scantling?$client_info->draught_scantling:0)." m"; ?></p>
-<p><?php  echo "Hull design : ".($client_info->hull_design?$client_info->hull_design:""); ?></p>
-<p><?php  echo "Heavy fuel oil : ".($client_info->heavy_fuel_oil?$client_info->heavy_fuel_oil:""); ?></p>
-<p><?php  echo "Marine diesel oil : ".($client_info->marine_diesel_oil?$client_info->marine_diesel_oil:""); ?></p>
-<p><?php  echo "Marine gas oil : ".($client_info->marine_gas_oil?$client_info->marine_gas_oil:""); ?></p>
-<p><?php  echo "LNG capaciry : ".($client_info->lng_capacity?$client_info->lng_capacity:""); ?></p>
-<p><?php  echo "Lub oil : ".($client_info->lub_oil?$client_info->lub_oil:""); ?></p>
-<p><?php  echo "Ballast water : ".($client_info->ballast_water?$client_info->ballast_water:""); ?></p>
-<p><?php  echo "Fresh water : ".($client_info->fresh_water?$client_info->fresh_water:""); ?></p>
+<table style="width:100%;text-align:center;border:1px solid lightgray; border-collapse:collapse;" >
+    <tbody>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                Gross tonnage
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo ($client_info->gross_tonnage?$client_info->gross_tonnage:0)." t"; ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;">
+                Length over all (L.O.A)
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php echo ($client_info->length_over_all?$client_info->length_over_all:0)." m"; ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;">
+                Length between perpendiculars (L.B.P)
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo ($client_info->length_between_perpendiculars?$client_info->length_between_perpendiculars:0)." m"; ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;">
+                BEAM/Breadth moulded
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo ($client_info->breadth_moulded?$client_info->breadth_moulded:0)." m"; ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;">
+                Depth moulded
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo ($client_info->depth_moulded?$client_info->depth_moulded:0)." m"; ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;">
+                Draught scantling
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php echo ($client_info->draught_scantling?$client_info->draught_scantling:0)." m"; ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;">
+                Hull design
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo ($client_info->hull_design?$client_info->hull_design:""); ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;">
+                Heavy fuel oil
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo ($client_info->heavy_fuel_oil?$client_info->heavy_fuel_oil:""); ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;">
+                Marine diesel oil
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo ($client_info->marine_diesel_oil?$client_info->marine_diesel_oil:""); ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;">
+                Marine gas oil
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo ($client_info->marine_gas_oil?$client_info->marine_gas_oil:""); ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;">
+                LNG capacity
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo ($client_info->lng_capacity?$client_info->lng_capacity:""); ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;">
+                Lub oil
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo ($client_info->lub_oil?$client_info->lub_oil:""); ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;">
+                Ballast water
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo ($client_info->ballast_water?$client_info->ballast_water:""); ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;">
+                Fresh water
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo ($client_info->fresh_water?$client_info->fresh_water:""); ?>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
 <?php
 $page++;
@@ -84,50 +232,287 @@ echo view('projects/export_pdf/layouts/footer.php',["page"=>$page]);
 ?> 
 <div style="page-break-before: always;"></div>
 <?php echo view('projects/export_pdf/layouts/header.php',["project_info"=>$project_info]);?>
-<h2 style="color:#3270b8;">Propulsion</h2>
+<h2 style="color:#3270b8;text-align:center;">Propulsion</h2>
 <div style="" >
 <table style="width:100%;" >
     <tbody>
         <tr>
             <td style="width:50%;" >
-                <h3>Main engine</h3>
-                <p><?php echo "Maker : ".($client_info->main_engine_maker?$client_info->main_engine_maker:""); ?></p>
-                <p><?php echo "Model : ".($client_info->main_engine_model?$client_info->main_engine_model:""); ?></p>
-                <p><?php echo "Continuous output: ".($client_info->main_engine_continuous_output?$client_info->main_engine_continuous_output:""); ?></p>
-                <p><?php echo "Bore : ".($client_info->main_engine_bore?$client_info->main_engine_bore:""); ?></p>
-                <p><?php echo "Stroke : ".($client_info->main_engine_stroke?$client_info->main_engine_stroke:0)." m"; ?></p>
-                <p><?php echo "Serial number : ".($client_info->main_engine_serial_number?$client_info->main_engine_serial_number:0)." m"; ?></p>
-                <p><?php echo "Quantity : ".($client_info->main_engine_quantity?$client_info->main_engine_quantity:""); ?></p>
-                <h3>Auxiliary engine</h3>
-                <p><?php echo "Maker : ".($client_info->auxiliary_engine_maker?$client_info->auxiliary_engine_maker:""); ?></p>
-                <p><?php echo "Model : ".($client_info->auxiliary_engine_model?$client_info->auxiliary_engine_model:""); ?></p>
-                <p><?php echo "Output : ".($client_info->auxiliary_engine_output?$client_info->auxiliary_engine_output:""); ?></p>
-                <p><?php echo "Serial number : ".($client_info->auxiliary_engine_serial_number?$client_info->auxiliary_engine_serial_number:""); ?></p>
-                <p><?php echo "Quantity : ".($client_info->auxiliary_engine_quantity?$client_info->auxiliary_engine_quantity:""); ?></p>
-                <h3>Emergency generator</h3>
-                <p><?php echo "Maker : ".($client_info->emergency_generator_maker?$client_info->emergency_generator_maker:""); ?></p>
-                <p><?php echo "Model : ".($client_info->emergency_generator_model?$client_info->emergency_generator_model:""); ?></p>
-                <p><?php echo "Output : ".($client_info->emergency_generator_output?$client_info->emergency_generator_output:""); ?></p>
-                <p><?php echo "Serial number : ".($client_info->emergency_generator_serial_number?$client_info->emergency_generator_serial_number:""); ?></p>
-                <p><?php echo "Quantity : ".($client_info->emergency_generator_quantity?$client_info->emergency_generator_quantity:""); ?></p>
+                <h3 style="text-align:center">Main engine</h3>
+                <table style="width:90%;text-align:center;border:1px solid lightgray; border-collapse:collapse;" >
+                    <tbody>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Maker
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->main_engine_maker?$client_info->main_engine_maker:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Model
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->main_engine_model?$client_info->main_engine_model:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Continuous output
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->main_engine_continuous_output?$client_info->main_engine_continuous_output:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Bore
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->main_engine_bore?$client_info->main_engine_bore:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Stroke
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->main_engine_stroke?$client_info->main_engine_stroke:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Serial number
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->main_engine_serial_number?$client_info->main_engine_serial_number:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Quantity
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->main_engine_quantity?$client_info->main_engine_quantity:""); ?>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3 style="text-align:center">Auxiliary engine</h3>
+                <table style="width:90%;text-align:center;border:1px solid lightgray; border-collapse:collapse;" >
+                    <tbody>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Maker
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->auxiliary_engine_maker?$client_info->auxiliary_engine_maker:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Model
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->auxiliary_engine_model?$client_info->auxiliary_engine_model:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Output
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->auxiliary_engine_output?$client_info->auxiliary_engine_output:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Serial number
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->auxiliary_engine_serial_number?$client_info->auxiliary_engine_serial_number:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Quantity
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->auxiliary_engine_quantity?$client_info->auxiliary_engine_quantity:""); ?>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3 style="text-align:center">Emergency generator</h3>
+                <table style="width:90%;text-align:center;border:1px solid lightgray; border-collapse:collapse;" >
+                    <tbody>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Maker
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->emergency_generator_maker?$client_info->emergency_generator_maker:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Model
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->emergency_generator_model?$client_info->emergency_generator_model:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Output
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->emergency_generator_output?$client_info->emergency_generator_output:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Serial number
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->emergency_generator_serial_number?$client_info->emergency_generator_serial_number:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Quantity
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->emergency_generator_quantity?$client_info->emergency_generator_quantity:""); ?>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </td>
             <td>
-                <h3>Shaft generator</h3>
-                <p><?php echo "Maker : ".$client_info->shaft_generator_maker; ?></p>
-                <p><?php echo "Model : ".$client_info->shaft_generator_model; ?></p>
-                <p><?php echo "Output : ".$client_info->shaft_generator_output; ?></p>
-                <p><?php echo "Serial number : ".$client_info->shaft_generator_serial_number; ?></p>
-                <p><?php echo "Quantity : ".$client_info->shaft_generator_quantity; ?></p>
-                <h3>Propeller</h3>
-                <p><?php echo "Maker : ".$client_info->propeller_maker; ?></p>
-                <p><?php echo "Type : ".$client_info->propeller_type; ?></p>
-                <p><?php echo "Number of blades : ".$client_info->propeller_number_of_blades; ?></p>
-                <p><?php echo "Diameter : ".($client_info->propeller_diameter?$client_info->propeller_diameter:0)." m"; ?></p>
-                <p><?php echo "Pitch : ".$client_info->propeller_pitch; ?></p>
-                <p><?php echo "Material : ".$client_info->propeller_material; ?></p>
-                <p><?php echo "Weight : ".$client_info->propeller_weight; ?></p>
-                <p><?php echo "Output : ".$client_info->propeller_output; ?></p>
-                <p><?php echo "Quantity : ".$client_info->propeller_quantity; ?></p>
+                <h3 style="text-align:center">Shaft generator</h3>
+                <table style="width:90%;text-align:center;border:1px solid lightgray; border-collapse:collapse;" >
+                    <tbody>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Maker
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->shaft_generator_maker?$client_info->shaft_generator_maker:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Model
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->shaft_generator_model?$client_info->shaft_generator_model:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Output
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->shaft_generator_output?$client_info->shaft_generator_output:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Serial number
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->shaft_generator_serial_number?$client_info->shaft_generator_serial_number:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Quantity
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->shaft_generator_quantity?$client_info->shaft_generator_quantity:""); ?>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3 style="text-align:center" >Propeller</h3>
+                <table style="width:90%;text-align:center;border:1px solid lightgray; border-collapse:collapse;" >
+                    <tbody>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Maker
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->propeller_maker?$client_info->propeller_maker:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Type
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->propeller_type?$client_info->propeller_type:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Number of blades
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->propeller_number_of_blades?$client_info->propeller_number_of_blades:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Diamter
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->propeller_diameter?$client_info->propeller_diameter:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Pitch
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->propeller_pitch?$client_info->propeller_pitch:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Material
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->propeller_material?$client_info->propeller_material:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Weight
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->propeller_weight?$client_info->propeller_weight:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Output
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->propeller_output?$client_info->propeller_output:""); ?>
+                            </td>
+                        </tr>
+                        <tr style="border:1px solid lightgray;" >
+                            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                                Quantity
+                            </td>
+                            <td style="border:1px solid lightgray;padding:5px;">
+                                <?php  echo ($client_info->propeller_quantity?$client_info->propeller_quantity:""); ?>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </td>
         </tr>
     </tbody>
@@ -141,15 +526,59 @@ echo view('projects/export_pdf/layouts/footer.php',["page"=>$page]);
 ?> 
 <div style="page-break-before: always;"></div>
 <?php echo view('projects/export_pdf/layouts/header.php',["project_info"=>$project_info]);?>
-<h2 style="color:#3270b8;" >Side Thruster</h2>
-<p><?php  echo "Number of bow thrusters : ".$client_info->bow_thruster_number; ?></p>
-<p><?php  echo "Maker of bow thrusters : ".$client_info->bow_thruster_maker; ?></p>
-<p><?php  echo "Type of bow thrusters : ".$client_info->bow_thruster_type; ?></p>
-<p><?php  echo "Power of bow thrusters : ".$client_info->bow_thruster_power; ?></p>
-<p><?php  echo "Number of stern thrusters : ".$client_info->stern_thruster_number; ?></p>
-<p><?php  echo "Maker of stern thrusters : ".$client_info->stern_thruster_maker; ?></p>
-<p><?php  echo "Type of stern thrusters : ".$client_info->stern_thruster_type; ?></p>
-<p><?php  echo "Power of stern thrusters : ".$client_info->stern_thruster_power; ?></p>
+<h2 style="color:#3270b8;text-align:center" >Side Thruster</h2>
+<table style="width:90%;text-align:center;border:1px solid lightgray; border-collapse:collapse;" >
+    <tbody>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                Number of bow thrusters
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo $client_info->bow_thruster_number; ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                Maker of bow thrusters
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo $client_info->bow_thruster_maker; ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                Type of bow thrusters
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo $client_info->bow_thruster_type; ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                Number of stern thrusters
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo $client_info->stern_thruster_number; ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                Maker of stern thrusters
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo $client_info->stern_thruster_maker; ?>
+            </td>
+        </tr>
+        <tr style="border:1px solid lightgray;" >
+            <td style="border:1px solid lightgray;padding:5px;width:50%;">
+                Type of stern thrusters
+            </td>
+            <td style="border:1px solid lightgray;padding:5px;">
+                <?php  echo $client_info->stern_thruster_type; ?>
+            </td>
+        </tr>
+    </tbody>
+</table>
 <?php
 $page++;
 echo view('projects/export_pdf/layouts/footer.php',["page"=>$page]);
