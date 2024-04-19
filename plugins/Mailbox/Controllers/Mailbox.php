@@ -109,7 +109,7 @@ class Mailbox extends Security_Controller {
             $mailbox_id = $parent_email_info->mailbox_id ? $parent_email_info->mailbox_id : $draft_email_info->mailbox_id;
         }
 
-        $this->can_access_this_mailbox($mailbox_id);
+        // $this->can_access_this_mailbox($mailbox_id);
         $mailbox_info = $this->Mailboxes_model->get_one($mailbox_id);
         $view_data['mailbox_info'] = $mailbox_info;
 
