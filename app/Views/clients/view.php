@@ -34,7 +34,7 @@
                             
                             <div class="file-upload btn mt0 p0 profile-image-upload" data-bs-toggle="tooltip" title="<?php echo app_lang("upload_and_crop"); ?>" data-placement="right">
                                 <span class="btn color-gray"><i data-feather="camera" class="icon-16"></i></span> 
-                                <input id="profile_image_file" class="upload" name="profile_image_file" type="file" data-height="200" data-width="200" data-preview-container="#profile-image-preview" data-input-field="#profile_image" />
+                                <input id="profile_image_file" class="upload" name="profile_image_file" type="file" data-height="600" data-width="600" data-preview-container="#profile-image-preview" data-input-field="#profile_image" />
                             </div>
                             <div class="file-upload btn p0 profile-image-upload profile-image-direct-upload" data-bs-toggle="tooltip" title="<?php echo app_lang("upload"); ?> (200x200 px)" data-placement="right">
                                 <?php

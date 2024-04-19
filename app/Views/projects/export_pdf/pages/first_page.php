@@ -1,4 +1,8 @@
-<?php echo view('projects/export_pdf/layouts/header.php');?>
+<?php
+$page=0;
+?>
+
+<?php echo view('projects/export_pdf/layouts/header.php',["project_info"=>$project_info]);?>
 <?php if(unserialize($client_info->image)){?>
     <img style="width:100%;height:auto;" src="<?php echo encode_img_base64(get_setting("profile_image_path")."/".unserialize($client_info->image)["file_name"]);?>" alt="logo"/>
 <?php }else{ ?>
@@ -26,14 +30,31 @@
 $label_data=explode("--::--",$project_info->labels_list);
 if(array_key_exists(1,$label_data)) echo $label_data[1];
  ?></p>
+<div style=" width:100%;position:absolute; bottom:5px;" >
+<div style="background-color:#3270b8;width:100%; height:5px;"></div>
+<table style="width:100%" >
+    <tbody>
+        <tr>
+            <td style="width:70%" >
+            </td>
+            <td>
+                <p>Exported on :<?php echo date('d.m.Y');?></p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
  <div style="page-break-before: always;"></div>
 
- <?php echo view('projects/export_pdf/layouts/header.php');?>
+ <?php echo view('projects/export_pdf/layouts/header.php',["project_info"=>$project_info]);?>
  <h1 style="text-align:center;margin-top:300px; color:#3270b8;" >1. Vessel Information</h1>
-
+<?php
+$page++;
+echo view('projects/export_pdf/layouts/footer.php',["page"=>$page]);
+?> 
 <div style="page-break-before: always;"></div>
 
-<?php echo view('projects/export_pdf/layouts/header.php');?>
+<?php echo view('projects/export_pdf/layouts/header.php',["project_info"=>$project_info]);?>
 <h2 style="text-align:center;color:#3270b8;" >General Information</h2>
 <p><?php if($client_info->charter_name) echo "Vessel name : ".$client_info->charter_name; ?></p>
 <p><?php if($vessel_info) echo "Vessel type : ".$vessel_info->title; ?></p>
@@ -56,8 +77,13 @@ if(array_key_exists(1,$label_data)) echo $label_data[1];
 <p><?php  echo "Lub oil : ".($client_info->lub_oil?$client_info->lub_oil:""); ?></p>
 <p><?php  echo "Ballast water : ".($client_info->ballast_water?$client_info->ballast_water:""); ?></p>
 <p><?php  echo "Fresh water : ".($client_info->fresh_water?$client_info->fresh_water:""); ?></p>
+
+<?php
+$page++;
+echo view('projects/export_pdf/layouts/footer.php',["page"=>$page]);
+?> 
 <div style="page-break-before: always;"></div>
-<?php echo view('projects/export_pdf/layouts/header.php');?>
+<?php echo view('projects/export_pdf/layouts/header.php',["project_info"=>$project_info]);?>
 <h2 style="color:#3270b8;">Propulsion</h2>
 <div style="" >
 <table style="width:100%;" >
@@ -109,8 +135,12 @@ if(array_key_exists(1,$label_data)) echo $label_data[1];
     
     
 </div>
+<?php
+$page++;
+echo view('projects/export_pdf/layouts/footer.php',["page"=>$page]);
+?> 
 <div style="page-break-before: always;"></div>
-<?php echo view('projects/export_pdf/layouts/header.php');?>
+<?php echo view('projects/export_pdf/layouts/header.php',["project_info"=>$project_info]);?>
 <h2 style="color:#3270b8;" >Side Thruster</h2>
 <p><?php  echo "Number of bow thrusters : ".$client_info->bow_thruster_number; ?></p>
 <p><?php  echo "Maker of bow thrusters : ".$client_info->bow_thruster_maker; ?></p>
@@ -120,21 +150,30 @@ if(array_key_exists(1,$label_data)) echo $label_data[1];
 <p><?php  echo "Maker of stern thrusters : ".$client_info->stern_thruster_maker; ?></p>
 <p><?php  echo "Type of stern thrusters : ".$client_info->stern_thruster_type; ?></p>
 <p><?php  echo "Power of stern thrusters : ".$client_info->stern_thruster_power; ?></p>
-
+<?php
+$page++;
+echo view('projects/export_pdf/layouts/footer.php',["page"=>$page]);
+?> 
 <div style="page-break-before: always;"></div>
 
-<?php echo view('projects/export_pdf/layouts/header.php');?>
+<?php echo view('projects/export_pdf/layouts/header.php',["project_info"=>$project_info]);?>
 <h1 style="text-align:center;color:#3270b8;margin-top:300px;" >2. Project Information</h1>
-
+<?php
+$page++;
+echo view('projects/export_pdf/layouts/footer.php',["page"=>$page]);
+?> 
 <div style="page-break-before: always;"></div>
 
-<?php echo view('projects/export_pdf/layouts/header.php');?>
+<?php echo view('projects/export_pdf/layouts/header.php',["project_info"=>$project_info]);?>
 <h2 style="color:#3270b8;" >About this project</h2>
 <div><?php echo $project_info->description;?></div>
-
+<?php
+$page++;
+echo view('projects/export_pdf/layouts/footer.php',["page"=>$page]);
+?> 
 <div style="page-break-before: always;"></div>
 
-<?php echo view('projects/export_pdf/layouts/header.php');?>
+<?php echo view('projects/export_pdf/layouts/header.php',["project_info"=>$project_info]);?>
 <h2 style="color:#3270b8;" >Team Members</h2>
 <?php foreach ($members as $key => $member) {
 ?>
@@ -168,9 +207,13 @@ if(array_key_exists(1,$label_data)) echo $label_data[1];
 <?php
 };?>
 
+<?php
+$page++;
+echo view('projects/export_pdf/layouts/footer.php',["page"=>$page]);
+?> 
 <div style="page-break-before: always;"></div>
 
-<?php echo view('projects/export_pdf/layouts/header.php');?>
+<?php echo view('projects/export_pdf/layouts/header.php',["project_info"=>$project_info]);?>
 <h2 style="color:#3270b8;" ><?php if(count($tasks)>0) echo "Task List";?></h2>
 <?php
 $categorized_tasks=array(
@@ -207,8 +250,12 @@ foreach ($categorized_tasks as $category=>$list) {
 
 <?php foreach ($tasks as $task) {
 ?>
+<?php
+$page++;
+echo view('projects/export_pdf/layouts/footer.php',["page"=>$page]);
+?> 
 <div style="page-break-before: always;"></div>
-<?php echo view('projects/export_pdf/layouts/header.php');?>
+<?php echo view('projects/export_pdf/layouts/header.php',["project_info"=>$project_info]);?>
 <h3 style="color:#3270b8;" ><?php echo $task->title;?></h3>
 <table style="width:100%;" >
     <tbody>
