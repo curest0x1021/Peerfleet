@@ -240,7 +240,7 @@
         });
 
         $('[data-bs-toggle="tooltip"]').tooltip();
-        $(".btn-compose-mailbox").on("click",function(){
+        $('#ajaxModal').on('show.bs.modal', function (event) {
             setTimeout(() => {
                 $("#email_to")[0].value=<?php echo $vessel_info->owner_id; ?>;
                 $("#email_to").select2({
@@ -249,7 +249,9 @@
                         text:"<?php echo $vessel_info->charter_name." - ".$vessel_info->owner_name; ?>"
                     }]
                 })
-            }, 800);
-        })
+            }, 500);
+            
+        // Additional code to execute when the modal is opening
+        });
     });
 </script>

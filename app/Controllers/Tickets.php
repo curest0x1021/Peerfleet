@@ -375,7 +375,7 @@ class Tickets extends Security_Controller {
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("tickets", $this->login_user->is_admin, $this->login_user->user_type);
 
         $options = array(
-            "client_id" => $client_id,
+            // "client_id" => $client_id,
             "access_type" => $this->access_type,
             "show_assigned_tickets_only_user_id" => $this->show_assigned_tickets_only_user_id(),
             "custom_fields" => $custom_fields,
