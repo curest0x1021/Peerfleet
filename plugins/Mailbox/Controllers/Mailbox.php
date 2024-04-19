@@ -14,9 +14,9 @@ class Mailbox extends Security_Controller {
     function __construct() {
         parent::__construct();
         $this->allowed_mailboxes_ids = get_allowed_mailboxes_ids();
-        if (!$this->allowed_mailboxes_ids) {
-            app_redirect("forbidden");
-        }
+        // if (!$this->allowed_mailboxes_ids) {
+        //     app_redirect("forbidden");
+        // }
 
         $this->Mailbox_emails_model = new \Mailbox\Models\Mailbox_emails_model();
         $this->Mailbox_templates_model = new \Mailbox\Models\Mailbox_templates_model();
