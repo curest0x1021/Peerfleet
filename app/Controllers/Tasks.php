@@ -5564,7 +5564,8 @@ class Tasks extends Security_Controller {
                 "priority_id"=>1
 
             );
-            if($row[15]!="crew") $new_task_data["specification"]="content";
+            if($row[15]!="crew") $new_task_data["supplier"]="Vessel (crew)";
+            else $new_task_data["supplier"]="Specialist";
             $saved_id=$this->Tasks_model->ci_save($new_task_data);
         }
         return json_encode(array("success"=>true));
