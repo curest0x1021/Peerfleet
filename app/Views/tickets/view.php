@@ -249,7 +249,7 @@
                         text:"<?php echo $vessel_info->charter_name." - ".$vessel_info->owner_name; ?>"
                     }]
                 })
-            }, 500);
+            }, 800);
         })
     });
 </script>
