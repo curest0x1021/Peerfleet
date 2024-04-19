@@ -48,7 +48,7 @@ if (!$sort_as_decending) {
                     ?>
 
                     <?php
-                    if(isset($emailbox)) echo modal_anchor(get_uri("mailbox/compose/$emailbox->id"),'<button class="btn btn-default upload-file-button float-start me-auto btn-sm round mt-1 btn-compose-mailbox" type="button" style="color:#7988a2"><i data-feather="plus-circle" class="icon-16"></i> Add email</button>',array());
+                    if(isset($emailbox)) echo modal_anchor(get_uri("mailbox/compose/$emailbox->id"),'<button class="btn btn-default upload-file-button float-start me-auto btn-sm round mt-1 btn-compose-mailbox" type="button" style="color:#7988a2"><i data-feather="plus-circle" class="icon-16"></i> Add email</button>',array("id"=>"email modal"));
                     ?>
 
                     <div class="float-end">
