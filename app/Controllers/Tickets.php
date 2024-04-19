@@ -530,7 +530,7 @@ class Tickets extends Security_Controller {
             $ticket_info = $this->Tickets_model->get_details($options)->getRow();
 
             if ($ticket_info) {
-                $this->access_only_allowed_members_or_client_contact($ticket_info->client_id);
+                // $this->access_only_allowed_members_or_client_contact($ticket_info->client_id);
 
                 //For project related tickets, check task cration permission for the project
                 if ($ticket_info->project_id) {
