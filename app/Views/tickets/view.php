@@ -241,7 +241,11 @@
 
         $('[data-bs-toggle="tooltip"]').tooltip();
         $('#ajaxModal').on('show.bs.modal', function (event) {
-            setTimeout(() => {
+            var loaded=false;
+            
+            var repeat=setInterval(() => {
+                console.log("kkk")
+                if($("#email_to").length==0) return;
                 $("#email_to")[0].value=<?php echo $vessel_info->owner_id; ?>;
                 $("#email_to").select2({
                     data:[{
@@ -249,7 +253,8 @@
                         text:"<?php echo $vessel_info->charter_name." - ".$vessel_info->owner_name; ?>"
                     }]
                 })
-            }, 2000);
+                clearInterval(repeat);
+            }, 500);
             
         // Additional code to execute when the modal is opening
         });
