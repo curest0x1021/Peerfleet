@@ -6030,9 +6030,26 @@ class Projects extends Security_Controller {
         return $this->template->view("projects/report_documents/tasks_overview_widget.php", $view_data);
     }
     function completion_dates($project_id){
-        return $this->template->view("projects/completion_dates/index");
+        $project_info=$this->Projects_model->get_one($project_id);
+        return $this->template->view("projects/completion_dates/index",["project_info"=>$project_info]);
     }
+    function save_completion_date(){
+        $project_id=$this->request->getPost("project_id");
+        $contractual_delivery_date=$this->request->getPost("contractual_delivery_date");
+        $yard_estimated_completion_date=$this->request->getPost("yard_estimated_completion_date");
+        $own_estimated_completion_date=$this->request->getPost("own_estimated_completion_date");
+        $actual_completion_date=$this->request->getPost("actual_completion_date");
+        $project_info=$this->Projects_model->get_one($project_id);
+        $project_info->contractual_delivery_date=$contractual_delivery_date;
+        $project_info->yard_estimated_completion_date=$yard_estimated_completion_date;
+        /////
+        $project_info->deadline=$own_estimated_completion_date;
+        /////
+        $project_info->actual_completion_date=$actual_completion_date;
+        $this->Projects_model->ci_save($project_info,$project_id);
+        return json_encode(array("success"=>true));
 
+    }
 
 }
 
