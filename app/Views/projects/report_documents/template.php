@@ -91,6 +91,42 @@
         else {echo encode_img_base64(base_url("assets/images/ship_img.jpg"));}?>"
         />`)
         var report_content=replaceWord(report_content,"{{project.currency}}","<?php echo $project_detail->currency;?>")
+        var report_content=replaceWord(report_content,"{{project.members}}",`
+        <div>
+        <h2 style="color:#3270b8;text-align:center;" >Team Members</h2>
+        <?php foreach ($members as $key => $member) {
+            ?>
+            <table style="width:80%;" >
+                <tbody>
+                    <tr>
+                        <td style="width:60px;" >
+                            <?php
+                                $avatar_path=base_url("assets/images/avatar.jpg");
+                                $avatar_data=unserialize($member->member_image);
+                                if($avatar_data&&file_exists(get_setting("profile_image_path").$avatar_data['file_name'])){
+                                    $avatar_path=get_setting("profile_image_path").$avatar_data['file_name'];
+                                }
+                                ?>
+                            <img src="<?php  echo encode_img_base64($avatar_path);?>" style="width:50px;border-radius:50%;" />    
+                                
+                        </td>
+                        <td style="width:40%" >
+                            <p style="float:left;" ><?php echo $member->member_name;?></p>
+                        </td>
+                        <td  >
+                            <p style="float:left;"><?php echo $member->member_email;?></p>
+                        </td>
+                        <td  >
+                            <p style="float:left;"><?php  echo $member->member_mobile;?></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <?php
+            };?>
+        </div>
+        `)
         window.watchdog.editor.setData(report_content)
         $(".save-report-template").on("click",function(){
             var title=$(".report-template-title")[0].value;

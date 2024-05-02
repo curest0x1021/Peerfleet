@@ -5974,10 +5974,11 @@ class Projects extends Security_Controller {
     }
     function report_templates($project_id,$template_id){
         $project_info=$this->Projects_model->get_one($project_id);
+        $members=$this->Project_members_model->get_details(array("project_id"=>$project_id))->getResult();
         $project_detail=$this->Projects_model->get_details(array("id"=>$project_id))->getResult()[0];
         $client_info=$this->Clients_model->get_details(array("id"=>$project_info->client_id))->getResult()[0];
         $template_info=$this->Report_templates_model->get_one($template_id);
-        return $this->template->rander("projects/report_documents/template",["client_info"=>$client_info,"project_detail"=>$project_detail,"template_info"=>$template_info]);
+        return $this->template->rander("projects/report_documents/template",["members"=>$members,"client_info"=>$client_info,"project_detail"=>$project_detail,"template_info"=>$template_info]);
     }
     function modal_report_edit(){
         return $this->template->view("projects/report_documents/editor");
