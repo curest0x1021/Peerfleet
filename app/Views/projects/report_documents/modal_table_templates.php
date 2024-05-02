@@ -2,6 +2,7 @@
 <div class="modal-body clearfix " id="modal-insert-table" >
     <button class="btn btn-default insert-project-cost-overview-table" >Cost overview</button>
     <button class="btn btn-default insert-project-quotes-overview-table" >Quotes overview</button>
+    <button class="btn btn-default insert-completion-dates-table" >Completion dates</button>
     <div class="vbox" ></div>
 </div>
 </div>
@@ -105,6 +106,65 @@
                         window.watchdog.editor.model.insertContent( modelFragment,window.watchdog.editor.model.document.selection.getFirstPosition());
                         window.modal_insert_table.closeModal();
                     }, 1000);
+                    
+                    
+                }
+            })
+        });
+        $(".insert-completion-dates-table").on("click",function(){
+            $.ajax({
+                url:"<?php echo get_uri("projects/get_project_info/".$project_id);?>",
+                method:"GET",
+                success:function(response){
+                    console.log(response)
+                    var contractual_delivery_date=new Date(JSON.parse(response).contractual_delivery_date);
+                    contractual_delivery_date=contractual_delivery_date.toLocaleDateString(undefined, { dateStyle: 'short' });
+                    var yard_estimated_completion_date=new Date(JSON.parse(response).yard_estimated_completion_date);
+                    yard_estimated_completion_date=yard_estimated_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });
+                    var own_estimated_completion_date=new Date(JSON.parse(response).deadline);
+                    own_estimated_completion_date=own_estimated_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });
+                    var own_estimated_completion_date=new Date(JSON.parse(response).own_estimated_completion_date);
+                    own_estimated_completion_date=own_estimated_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });
+                    var actual_completion_date=new Date(JSON.parse(response).actual_completion_date);
+                    actual_completion_date=actual_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });
+                    var table_code=`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>Contractual delivery date</td>
+                                <td>${contractual_delivery_date}</td>
+                            </tr>
+                            <tr>
+                                <td>Yard's estimated completion date</td>
+                                <td>${yard_estimated_completion_date}</td>
+                            </tr>
+                            <tr>
+                                <td>Own estimated completion date</td>
+                                <td>${own_estimated_completion_date}</td>
+                            </tr>
+                            <tr>
+                                <td>Actual completion date</td>
+                                <td>${actual_completion_date}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    `;
+                        const viewFragment = window.watchdog.editor.data.processor.toView( table_code );
+                        const modelFragment = window.watchdog.editor.data.toModel( viewFragment );
+
+                        window.watchdog.editor.model.insertContent( modelFragment,window.watchdog.editor.model.document.selection.getFirstPosition());
+                        window.modal_insert_table.closeModal();
+                    
+                    // setTimeout(() => {
+                    //     // window.watchdog.editor.insertData(table_code);
+                    //     var table_code=document.body.querySelector(".vbox").querySelector("#quotes-overview-table-panel").innerHTML
+                    //     console.log(table_code)
+                    //     const viewFragment = window.watchdog.editor.data.processor.toView( table_code );
+                    //     const modelFragment = window.watchdog.editor.data.toModel( viewFragment );
+
+                    //     window.watchdog.editor.model.insertContent( modelFragment,window.watchdog.editor.model.document.selection.getFirstPosition());
+                    //     window.modal_insert_table.closeModal();
+                    // }, 1000);
                     
                     
                 }
