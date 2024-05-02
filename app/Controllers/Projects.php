@@ -6029,6 +6029,9 @@ class Projects extends Security_Controller {
         // $template = new Template();
         return $this->template->view("projects/report_documents/tasks_overview_widget.php", $view_data);
     }
+    function completion_dates($project_id){
+        return $this->template->view("projects/completion_dates/index");
+    }
 
 
 }
