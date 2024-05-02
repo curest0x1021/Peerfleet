@@ -344,5 +344,6 @@ $lang["yards_comparison"]="Yards Comparison";
 $lang["quote_overview"]="Quote Overview";
 $lang["cost_overview"]="Cost Overview";
 $lang["text_templates"]="Text templates";
+$lang["completion_dates"]="Completion Dates";
 
 return $lang;
