@@ -128,6 +128,7 @@
                     var actual_completion_date=new Date(JSON.parse(response).actual_completion_date);
                     actual_completion_date=actual_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });
                     var table_code=`
+                    <h3 style="text-align:center;" >Completion dates<h3>
                     <table>
                         <tbody>
                             <tr>
