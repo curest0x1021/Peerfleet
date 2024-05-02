@@ -3,9 +3,10 @@
 <div class="modal-body clearfix" id="modal-insert-chart" >
     <button class="btn btn-default insert-chart-task-status" >Task status</button>
     <button class="btn btn-default insert-chart-project-progress" >Project progress</button>
-    <div style="width:0px;height:0px;overflow:hidden;" >
+    <button class="btn btn-default insert-chart-all-tasks-overview" >All tasks overview</button>
+    <!-- <div style="width:0px;height:0px;overflow:hidden;" > -->
         <div class="preview" ></div>
-    </div>
+    <!-- </div> -->
 </div>
 </div>
 <script src="<?php echo base_url("assets/js/html2canvas.min.js");?>" ></script>
@@ -90,6 +91,32 @@
                     
                 }
             })
+        })
+        $(".insert-chart-all-tasks-overview").on("click",function(){
+            const virtual_box=document.createElement("div");
+            const preview_box=document.body.querySelector(".preview");
+            var iframe_box=document.createElement("iframe");
+            preview_box.appendChild(iframe_box);
+            iframe_box.style.height="50vh";
+            iframe_box.style.width="50vw";
+            iframe_box.style.overflow="hidden";
+            iframe_box.src="<?php echo get_uri("projects/tasks_overview_chart/all_tasks_overview");?>";
+            console.log(iframe_box)
+            
+            setTimeout(() => {
+                var iframe_document=iframe_box.contentDocument || iframe_box.contentWindow.document;
+                var element = iframe_document.getElementById('card-tasks-overview-chart');
+                console.log(element)
+                html2canvas(element).then(canvas=>{
+                    console.log(canvas)
+                    const dataURL=canvas.toDataURL();
+                    // virtual_box.hidden=true;
+                    const viewFragment = window.watchdog.editor.data.processor.toView( `<img src="${dataURL}" />` );
+                    const modelFragment = window.watchdog.editor.data.toModel( viewFragment );
+                    window.watchdog.editor.model.insertContent( modelFragment,window.watchdog.editor.model.document.selection.getFirstPosition());
+                    window.modal_insert_chart.closeModal();
+                })
+            }, 3000);
         })
         window.modal_insert_chart=$("#modal-insert-chart").appForm({
             closeModalOnSuccess: false,

@@ -6005,6 +6005,29 @@ class Projects extends Security_Controller {
         $project_progress=$project_info->total_points ? round(($project_info->completed_points / $project_info->total_points) * 100) : 0;
         return $this->template->view("projects/report_documents/chart_project_progress.php",array("project_progress"=>$project_progress));
     }
+    function tasks_overview_chart($type=""){
+        // $ci = new Security_Controller(false);
+        $permissions = $this->login_user->permissions;
+        $option=array();
+        if ($type == "all_tasks_overview") {
+            if ($this->login_user->is_admin || get_array_value($permissions, "can_manage_all_projects") == "1") {
+                $options = array();
+            } else if (get_array_value($permissions, "show_assigned_tasks_only") == "1") {
+                $options["show_assigned_tasks_only_user_id"] = $this->login_user->id;
+            } else {
+                $options["project_member_id"] = $this->login_user->id; //don't show all tasks to non-admin users
+            }
+        } else {
+            $options = array("show_assigned_tasks_only_user_id" => $this->login_user->id);
+        }
+
+        $view_data["task_statuses"] = $this->Tasks_model->get_task_statistics($options)->task_statuses;
+        $view_data["task_priorities"] = $this->Tasks_model->get_task_statistics($options)->task_priorities;
+        $view_data["type"] = $type;
+
+        // $template = new Template();
+        return $this->template->view("projects/report_documents/tasks_overview_widget.php", $view_data);
+    }
 
 
 }
