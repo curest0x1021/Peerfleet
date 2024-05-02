@@ -21,7 +21,6 @@
                 success:function(response){
                     const virtual_box=document.createElement("div");
                     virtual_box.hidden=false;
-                    // virtual_box.style.display="none";
                     
                     virtual_box.innerHTML=response;
                     var code=virtual_box.querySelector("script").innerHTML
@@ -41,7 +40,6 @@
         })
         $(".insert-chart-project-progress").on("click",function(){
             $.ajax({
-                //url:"<?php// echo get_uri("projects/chart_project_progress/".$project_id);?>",
                 url:"<?php echo get_uri("projects/overview/".$project_id);?>",
                 method:"GET",
                 success:function(response){
