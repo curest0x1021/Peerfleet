@@ -6050,6 +6050,13 @@ class Projects extends Security_Controller {
         return json_encode(array("success"=>true));
 
     }
+    function get_project_info($project_id){
+        $project_info=$this->Projects_model->get_one($project_id);
+        $project_info->success=true;
+        
+        
+        return json_encode($project_info);
+    }
 
 }
 
