@@ -14,11 +14,12 @@
                 value="<?php echo isset($template_info)?$template_info->title:"";?>"
                 />
             </div>
-            <div class="d-flex align-items-center justify-content-around" style="margin-bottom:10px;" >
-                <?php echo modal_anchor(get_uri("projects/modal_table_templates/".$project_detail->id),'<button class="btn btn-default" >Table templates</button>',array()); ?>
-                <?php echo modal_anchor(get_uri("projects/modal_chart_templates/".$project_detail->id),'<button class="btn btn-default" >Chart templates</button>',array()); ?>
-                <?php echo modal_anchor(get_uri("projects/modal_project_images/".$project_detail->id),'<button class="btn btn-default" >Project images</button>',array()); ?>
-                <?php echo modal_anchor(get_uri("projects/modal_text_templates/".$project_detail->id),'<button class="btn btn-default" >Text templates</button>',array()); ?>
+            <div class="position-fixed d-flex flex-column align-items-center justify-content-around" style="z-index:1000;width:8vw;top:35vh;bottom:35vh;right:5vh;border-radius:15px;background-color:rgba(0,0,0,0.5);" >
+                <div class="text-white" >Digital Shelf</div>    
+                <?php echo modal_anchor(get_uri("projects/modal_table_templates/".$project_detail->id),'<button class="btn btn-default" style="margin-left:5px;margin-right:5px;" >Table templates</button>',array()); ?>
+                <?php echo modal_anchor(get_uri("projects/modal_chart_templates/".$project_detail->id),'<button class="btn btn-default" style="margin-left:5px;margin-right:5px;"  >Chart templates</button>',array()); ?>
+                <?php echo modal_anchor(get_uri("projects/modal_project_images/".$project_detail->id),'<button class="btn btn-default" style="margin-left:5px;margin-right:5px;"  >Project images</button>',array()); ?>
+                <?php echo modal_anchor(get_uri("projects/modal_text_templates/".$project_detail->id),'<button class="btn btn-default" style="margin-left:5px;margin-right:5px;"  >Text templates</button>',array()); ?>
             </div>
             <main>
                 <div class="centered">

@@ -1,4 +1,4 @@
-<div class="card" style="height:350px;" >
+<div class="card" style="height:350px;" id="card-project-progress-chart">
     <div class="bg-primary p30 rounded-top">
         <br />
     </div>
@@ -19,9 +19,9 @@
             <?php echo app_lang("deadline"); ?>: <?php echo is_date_exists($project_info->deadline) ? format_to_date($project_info->deadline, false) : "-"; ?>
         </li>
         <?php if ($login_user->user_type === "staff" && $project_info->project_type === "client_project") { ?>
-            <li class="list-group-item border-top">
+            <li class="list-group-item border-top d-flex align-items-center">
                 <?php //echo app_lang("client");
-                echo "Vessel" ?>: <?php echo anchor(get_uri("clients/view/" . $project_info->client_id), $project_info->charter_name); ?>
+                echo "<div>Vessel</div>" ?>: <?php echo anchor(get_uri("clients/view/" . $project_info->client_id), $project_info->charter_name); ?>
             </li>
         <?php } else { ?>
             <li class="list-group-item border-top">
