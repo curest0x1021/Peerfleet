@@ -60,6 +60,9 @@
 </div>
 <script>
     $(document).ready(function(){
-
+        window.project_completion_dates_form=$("#completion_dates_form").appForm({
+            onSuccess:function(response){
+            }
+        })
     })
 </script>
