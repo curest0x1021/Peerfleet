@@ -54,9 +54,7 @@
         var project_detail=<?php echo json_encode($project_detail);?>;
         var client_info=<?php echo json_encode($client_info);?>;
         function replaceWord(text, oldWord, newWord) {
-            // Create a regular expression with the 'g' flag to replace all occurrences
             const regex = new RegExp( oldWord , 'gi');
-            // Replace all occurrences of the old word with the new word
             return text.replace(regex, newWord);
         }
         function getImageBase64Sync(imageUrl) {
@@ -79,7 +77,7 @@
                 throw new Error('Failed to fetch image');
             }
         }
-        var report_content=document.getElementById("editor").innerHTML;
+        var report_content=`<?php echo isset($template_info)?$template_info->content:"";?>`;
         var report_content=replaceWord(report_content,"{{project.title}}","<?php echo $project_detail->title;?>")
         var report_content=replaceWord(report_content,"{{project.charter_name}}","<?php echo $project_detail->charter_name;?>")
         var report_content=replaceWord(report_content,"{{project.start_date}}","<?php echo date('d.m.Y', strtotime($project_detail->start_date));?>")
@@ -130,10 +128,11 @@
         var report_content=replaceWord(report_content,"{{team_members}}",`
         <div>
         <h2 style="color:#3270b8;text-align:center;" >Team Members</h2>
+        <table style="width:80%;" >
+                <tbody>
         <?php foreach ($members as $key => $member) {
             ?>
-            <table style="width:80%;" >
-                <tbody>
+            
                     <tr>
                         <td style="width:60px;" >
                             <?php
@@ -156,11 +155,12 @@
                             <p style="float:left;"><?php  echo $member->member_mobile;?></p>
                         </td>
                     </tr>
-                </tbody>
-            </table>
+                
 
             <?php
             };?>
+            </tbody>
+        </table>
         </div>
         `)
         window.watchdog.editor.setData(report_content)
