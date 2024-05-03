@@ -4901,6 +4901,7 @@ class Tasks extends Security_Controller {
 
                 $save_id=$this->Project_comments_model->save_comment($comment_data);
                 $oneFile=array();
+                $oneFile['id']=$save_id;
                 $oneFile['file_name']=get_array_value($file_data, "file_name");
                 $oneFile['file_size']=$file_size;
                 $oneFile['uploaded_by_user_name']=$this->login_user->first_name.$this->login_user->last_name;
@@ -5402,6 +5403,7 @@ class Tasks extends Security_Controller {
             foreach ($oneFiles as $oneFile) {
                 $oneFile['uploaded_by_user_name']=$user_info->first_name.$user_info->last_name;
                 $oneFile['created_at']=$oneComment->created_at;
+                $oneFile['id']=$oneComment->id;
                 $view_data['files'][]=$oneFile;
                 // echo json_encode($oneFile);
                 $result[]=$this->_make_file_row($oneFile,array());
@@ -5417,7 +5419,7 @@ class Tasks extends Security_Controller {
 
 
         $row_data = array(
-            remove_file_prefix($data['file_name']),
+            js_anchor(remove_file_prefix($data['file_name']),array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "1", "data-url" => get_uri("tasks/view_file/" . $data['id']))),
 
             convert_file_size($data['file_size']),
             $uploaded_by,
@@ -5434,6 +5436,45 @@ class Tasks extends Security_Controller {
 
 
         return $row_data;
+    }
+    function view_file($comment_id = 0) {
+        validate_numeric_value($comment_id);
+        $comment_info=$this->Project_comments_model->get_details(array("id" => $comment_id))->getRow();
+        $file_info_serialized = $comment_info->files;
+        $file_info=(object)unserialize($file_info_serialized)[0];
+        if ($file_info) {
+
+            //$this->init_project_permission_checker($file_info->project_id);
+
+            // if (!$this->can_view_files()) {
+            //     app_redirect("forbidden");
+            // }
+
+            // $view_data['can_comment_on_files'] = $this->can_comment_on_files();
+            $view_data['can_comment_on_files']=false;
+            $file_url = get_source_url_of_file(make_array_of_file($file_info), get_setting("timeline_file_path") );
+
+            $view_data["file_url"] = $file_url;
+            $view_data["is_image_file"] = is_image_file($file_info->file_name);
+            $view_data["is_iframe_preview_available"] = is_iframe_preview_available($file_info->file_name);
+            $view_data["is_google_preview_available"] = is_google_preview_available($file_info->file_name);
+            $view_data["is_viewable_video_file"] = is_viewable_video_file($file_info->file_name);
+            $view_data["is_google_drive_file"] = ($file_info->file_id && $file_info->service_type == "google") ? true : false;
+            $comment_info->uploaded_by_user_image=$comment_info->created_by_avatar;
+            $comment_info->uploaded_by_user_type=$comment_info->user_type;
+            $comment_info->uploaded_by=$comment_info->created_by;
+            $comment_info->uploaded_by_user_name=$comment_info->created_by_user;
+            $view_data["file_info"] = $comment_info;
+            $options = array("file_id" => $comment_id, "login_user_id" => $this->login_user->id);
+            $view_data['comments'] = $this->Project_comments_model->get_details($options)->getResult();
+            $view_data['file_id'] = $comment_id;
+            $view_data['project_id'] = $comment_info->project_id;
+            $view_data['current_url'] = get_uri("projects/view_file/" . $comment_id);
+            // return json_encode($view_data);
+            return $this->template->view("projects/files/view", $view_data);
+        } else {
+            show_404();
+        }
     }
     function task_list_headers($task_id){
         $headers=array(
