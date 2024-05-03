@@ -3,6 +3,7 @@
 namespace App\Controllers;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use CodeIgniter\I18n\Time;
 
 
 class Projects extends Security_Controller {
@@ -1147,6 +1148,10 @@ class Projects extends Security_Controller {
             $checklist_items_array[] = $this->_make_checklist_item_row($checklist_item, $flag_add, $task_title);
         }
         $view_data["checklist_items"] = json_encode($checklist_items_array);
+        $today=date("Y-m-d");
+        // return $today;
+        $view_data['upcoming_milestone']=$this->Milestones_model->upcoming(array("date"=>$today,"project_id"=>$project_id))->getRow();
+        // return json_encode($view_data);
         // $tasks = $this->Tasks_model->get_all_where(array("project_id" => $project_id, "deleted" => 0, "parent_task_id" => 0))->getResult();
         // $view_data["tasks"] = json_encode($tasks);
 

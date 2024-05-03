@@ -103,7 +103,7 @@ if (!function_exists("make_project_tabs_data")) {
                             
                             $project_tabs["comments"] = "projects/comments/" . $project_info->id;
                             ////////
-                            $project_tabs["completion_dates"] = "projects/completion_dates/" . $project_info->id;
+                            //$project_tabs["completion_dates"] = "projects/completion_dates/" . $project_info->id;
                             ////////
                             $project_tabs["reports"] = "projects/tab_report_documents/" . $project_info->id;
 
@@ -225,7 +225,7 @@ if (!function_exists("make_project_tabs_data")) {
                     <div role="tabpanel" class="tab-pane fade" id="project-quote_overview-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-cost_overview-section"></div>
                     <div role="tabpanel" class="tab-pane fade" id="project-reports-section"></div>
-                    <div role="tabpanel" class="tab-pane fade" id="project-completion_dates-section"></div>
+                    <!-- <div role="tabpanel" class="tab-pane fade" id="project-completion_dates-section"></div> -->
 
                     <?php
                     if ($login_user->user_type === "staff") {

@@ -57,7 +57,7 @@
         setDatePicker("#actual_completion_date");
 
         window.project_completion_dates_form=$("#completion_dates_form").appForm({
-            isModal: false,
+            // isModal: false,
             closeModalOnSuccess: true,
             onSuccess:function(response){
                 appAlert.success("Saved successfully!", {duration: 4000});

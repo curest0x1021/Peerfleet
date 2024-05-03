@@ -45,6 +45,7 @@
             </div>
         </div>
         <div class="col-md-6">
+            <?php echo view("projects/overview/completion_dates"); ?>
             <!--checklist-->
             <?php echo form_open(get_uri("tasks/save_checklist_item"), array("id" => "checklist_form", "class" => "general-form", "role" => "form")); ?>
             <div class="col-md-12 mb15 b-t p10 card" style="min-height:20vh;">
