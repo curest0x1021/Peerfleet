@@ -91,6 +91,9 @@ foreach ($allProjectTasks as $index => $oneTask) {
             <a style="margin-left:10px;" target="_blank" href="<?php echo get_uri("projects/download_quotation_form_xlsx/").$project_info->id;?>" class="btn btn-default"><span data-feather="download" class="icon-16"></span> Export quotation</a>
         </div>
     </div>
+
+    <?php echo form_open(get_uri("projects/save_yard_owner_supply"));?>
+    <?php echo form_close();?>
     <div class="card-body" >
         <div class="d-flex" style="margin-bottom:10px;" >
             <button class="btn btn-default" ><i class="icon-16"  data-feather="plus" ></i>Add filter</button>
@@ -231,7 +234,15 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td class="">0</td>
+                            <td class="">
+                                <div class="d-flex align-items-center justify-content-between" >
+                                <button class="btn btn-sm btn-default edit-yard-owner-supply" ><i data-feather="edit" class="icon-16" ></i></button>
+                                <input hidden class="input-project-yard-id" value="<?php echo $allYards[$i]->id; ?>" />
+                                <input hidden  class=" form-control input-yard-owner-supply" style="width:50%" value="<?php echo $allYards[$i]->owner_supply?$allYards[$i]->owner_supply:0; ?>" type="number" />
+                                <button class="btn btn-sm btn-default save-yard-owner-supply" onclick="save_yard_owner_supply(this)" style="float:right" hidden><i data-feather="save" class="icon-16" ></i></button>
+                                <p style="float:right" class="text-yard-owner-supply" ><?php echo $allYards[$i]->owner_supply?(($project_info->currency?$project_info->currency:"USD")." ".$allYards[$i]->owner_supply):"-"; ?></p>    
+                            </div>
+                            </td>
                         <?php
                             # code...
                             $totalCosts[$i]+=0;
@@ -646,15 +657,6 @@ $(document).ready(function(){
         },function(){
             $(this).removeClass('bg-success').addClass("bg-secondary");
     });
-    // $("[data-bs-toggle=collapse]").hover(function(){
-    //     $(this).css({
-    //         'background-color':"#eef1f9"
-    //     })
-    // },function(){
-    //     $(this).css({
-    //         'background-color':"#ffffff"
-    //     })
-    // })
     var totalCostEls=$(".td-total-cost");
     for(var index in totalCosts){
         totalCostEls[index].innerHTML=(Number(totalCosts[index]).toLocaleString()+" "+"<?php echo $project_info->currency;?>");
@@ -671,7 +673,46 @@ $(document).ready(function(){
         // else background="white";
         totalCostEls[index].style['color']=background
     }
+    $(".edit-yard-owner-supply").on("click",function(){
+        $(this).parent().find(".edit-yard-owner-supply").prop("hidden",true)
+        $(this).parent().find(".text-yard-owner-supply").prop("hidden",true)
+        $(this).parent().find(".save-yard-owner-supply").prop("hidden",false)
+        $(this).parent().find(".input-yard-owner-supply").prop("hidden",false)
+    })
+    $(".save-yard-owner-supply").on("click",function(){
+        var thisEl=$(this);
+        var project_yard_id=$(this).parent().find(".input-project-yard-id")[0].value;
+        var owner_supply=$(this).parent().find(".input-yard-owner-supply")[0].value;
+        var rise_csrf_token = $('[name="rise_csrf_token"]').val();
+        console.log(project_yard_id,owner_supply);
+        const myForm=new FormData();
+        myForm.append("project_yard_id",project_yard_id);
+        myForm.append("owner_supply",owner_supply);
+        myForm.append("rise_csrf_token",rise_csrf_token);
+        $.ajax({
+            url:"<?php echo get_uri("projects/save_yard_owner_supply");?>",
+            method:"POST",
+            data:{
+                project_yard_id,
+                owner_supply
+            },
+            success:function(response){
+                if(JSON.parse(response).success){
+                    appAlert.success("Saved successfully!", {duration: 4000});
+                    thisEl.parent().find(".text-yard-owner-supply").text("<?php echo ($project_info->currency?$project_info->currency:"USD");?> "+owner_supply);
+                    thisEl.parent().find(".edit-yard-owner-supply").prop("hidden",false)
+                    thisEl.parent().find(".text-yard-owner-supply").prop("hidden",false)
+                    thisEl.parent().find(".save-yard-owner-supply").prop("hidden",true)
+                    thisEl.parent().find(".input-yard-owner-supply").prop("hidden",true)
+                }
+            }
+        })
+        
+    })
 })
+function save_yard_owner_supply(element){
+    console.log(element)
+}
 var totalCosts;
 
 </script>
