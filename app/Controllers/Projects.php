@@ -6066,6 +6066,29 @@ class Projects extends Security_Controller {
         $tasks_list=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
         return json_encode(array("success"=>true,"tasks"=>$tasks_list));
     }
+    function modal_yard_owner_supply($project_yard_id){
+        $project_yard_info=$this->Project_yards_model->get_one($project_yard_id);
+    }
+    function save_yard_owner_supply(){
+        $project_yard_id=$this->request->getPost("project_yard_id");
+        $owner_supply=$this->request->getPost("owner_supply");
+        $project_yard_info=$this->Project_yards_model->get_one($project_yard_id);
+        $project_yard_info->owner_supply=$owner_supply;
+        $this->Project_yards_model->ci_save($project_yard_info,$project_yard_id);
+        return json_encode(array("success"=>true));
+    }
+    function modal_yard_estimated_cost($project_yard_id){
+        $project_yard_info=$this->Project_yards_model->get_one($project_yard_id);
+        
+    }
+    function save_yard_estimated_cost(){
+        $project_yard_id=$this->request->getPost("project_yard_id");
+        $estimated_cost=$this->request->getPost("estimated_cost");
+        $project_yard_info=$this->Project_yards_model->get_one($project_yard_id);
+        $project_yard_info->estimated_cost=$estimated_cost;
+        $this->Project_yards_model->ci_save($project_yard_info,$project_yard_id);
+        return json_encode(array("success"=>true));
+    }
 
 }
 
