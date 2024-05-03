@@ -62,4 +62,12 @@ class Milestones_model extends Crud_model {
         return $this->db->query($sql);
     }
 
+    function upcoming($options=array()){
+        $milestones_table = $this->db->prefixTable('milestones');
+        $date=$options['date'];
+        $project_id=$options['project_id'];
+        $sql = "SELECT * FROM $milestones_table where $milestones_table.due_date >= $date AND $milestones_table.project_id = $project_id ORDER BY $milestones_table.due_date ASC LIMIT 1;";
+        return $this->db->query($sql);
+    }
+
 }
