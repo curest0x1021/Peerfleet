@@ -119,15 +119,15 @@
                 success:function(response){
                     console.log(response)
                     var contractual_delivery_date=new Date(JSON.parse(response).contractual_delivery_date);
-                    contractual_delivery_date=contractual_delivery_date.toLocaleDateString(undefined, { dateStyle: 'short' });
+                    contractual_delivery_date=JSON.parse(response).contractual_delivery_date?contractual_delivery_date.toLocaleDateString(undefined, { dateStyle: 'short' }):"";
                     var yard_estimated_completion_date=new Date(JSON.parse(response).yard_estimated_completion_date);
-                    yard_estimated_completion_date=yard_estimated_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });
+                    yard_estimated_completion_date=JSON.parse(response).yard_estimated_completion_date?yard_estimated_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' }):"";
                     var own_estimated_completion_date=new Date(JSON.parse(response).deadline);
-                    own_estimated_completion_date=own_estimated_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });
+                    own_estimated_completion_date=JSON.parse(response).deadline?own_estimated_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });"";
                     // var own_estimated_completion_date=new Date(JSON.parse(response).own_estimated_completion_date);
                     // own_estimated_completion_date=own_estimated_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });
                     var actual_completion_date=new Date(JSON.parse(response).actual_completion_date);
-                    actual_completion_date=actual_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });
+                    actual_completion_date=JSON.parse(response).actual_completion_date?actual_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' }):"";
                     var table_code=`
                     
                     <table>
