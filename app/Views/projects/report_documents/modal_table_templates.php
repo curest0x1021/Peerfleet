@@ -123,7 +123,7 @@
                     var yard_estimated_completion_date=new Date(JSON.parse(response).yard_estimated_completion_date);
                     yard_estimated_completion_date=JSON.parse(response).yard_estimated_completion_date?yard_estimated_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' }):"";
                     var own_estimated_completion_date=new Date(JSON.parse(response).deadline);
-                    own_estimated_completion_date=JSON.parse(response).deadline?own_estimated_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });"";
+                    own_estimated_completion_date=JSON.parse(response).deadline?own_estimated_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' }):"";
                     // var own_estimated_completion_date=new Date(JSON.parse(response).own_estimated_completion_date);
                     // own_estimated_completion_date=own_estimated_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });
                     var actual_completion_date=new Date(JSON.parse(response).actual_completion_date);
