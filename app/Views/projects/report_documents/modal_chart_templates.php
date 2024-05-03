@@ -4,7 +4,7 @@
     <button class="btn btn-default insert-chart-task-status" >Task status</button>
     <button class="btn btn-default insert-chart-project-progress" >Project progress</button>
     <button class="btn btn-default insert-chart-all-tasks-overview" >All tasks overview</button>
-    <button class="btn btn-default insert-chart-my-tasks-overview" >All tasks overview</button>
+    <button class="btn btn-default insert-chart-my-tasks-overview" >My tasks overview</button>
     <div style="overflow:hidden;" >
         <div class="preview" ></div>
         <iframe id="iframe_box" ></iframe>

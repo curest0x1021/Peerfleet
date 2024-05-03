@@ -3,6 +3,7 @@
     <button class="btn btn-default insert-project-cost-overview-table" >Cost overview</button>
     <button class="btn btn-default insert-project-quotes-overview-table" >Quotes overview</button>
     <button class="btn btn-default insert-completion-dates-table" >Completion dates</button>
+    <button class="btn btn-default insert-tasks-list-table" >Tasks list</button>
     <div class="vbox" ></div>
 </div>
 </div>
@@ -123,8 +124,8 @@
                     yard_estimated_completion_date=yard_estimated_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });
                     var own_estimated_completion_date=new Date(JSON.parse(response).deadline);
                     own_estimated_completion_date=own_estimated_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });
-                    var own_estimated_completion_date=new Date(JSON.parse(response).own_estimated_completion_date);
-                    own_estimated_completion_date=own_estimated_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });
+                    // var own_estimated_completion_date=new Date(JSON.parse(response).own_estimated_completion_date);
+                    // own_estimated_completion_date=own_estimated_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });
                     var actual_completion_date=new Date(JSON.parse(response).actual_completion_date);
                     actual_completion_date=actual_completion_date.toLocaleDateString(undefined, { dateStyle: 'short' });
                     var table_code=`
@@ -155,19 +156,48 @@
                         const modelFragment = window.watchdog.editor.data.toModel( viewFragment );
 
                         window.watchdog.editor.model.insertContent( modelFragment,window.watchdog.editor.model.document.selection.getFirstPosition());
-                        window.modal_insert_table.closeModal();
+                        window.modal_insert_table.closeModal();                    
                     
-                    // setTimeout(() => {
-                    //     // window.watchdog.editor.insertData(table_code);
-                    //     var table_code=document.body.querySelector(".vbox").querySelector("#quotes-overview-table-panel").innerHTML
-                    //     console.log(table_code)
-                    //     const viewFragment = window.watchdog.editor.data.processor.toView( table_code );
-                    //     const modelFragment = window.watchdog.editor.data.toModel( viewFragment );
+                }
+            })
+        });
+        $(".insert-tasks-list-table").on("click",function(){
+            $.ajax({
+                url:"<?php echo get_uri("projects/tasks_list/".$project_id);?>",
+                method:"GET",
+                success:function(response){
+                    
+                    var tasks=JSON.parse(response).tasks;
+                    console.log(tasks)
+                    var table_code=`
+                    
+                    <table>
+                        <caption>Tasks list<caption>
+                        <thead>
+                            <tr>
+                                <th>DLN</th>
+                                <th>Title</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
 
-                    //     window.watchdog.editor.model.insertContent( modelFragment,window.watchdog.editor.model.document.selection.getFirstPosition());
-                    //     window.modal_insert_table.closeModal();
-                    // }, 1000);
-                    
+                            
+                    tasks.forEach(task => {
+                        table_code+= `
+                            <tr>
+                                <td>${task.dock_list_number?task.dock_list_number:""}</td>
+                                <td>${task.title}</td>
+                            </tr>
+                        `
+                    })
+                       table_code+= `</tbody>
+                    </table>
+                    `;
+                        const viewFragment = window.watchdog.editor.data.processor.toView( table_code );
+                        const modelFragment = window.watchdog.editor.data.toModel( viewFragment );
+
+                        window.watchdog.editor.model.insertContent( modelFragment,window.watchdog.editor.model.document.selection.getFirstPosition());
+                        window.modal_insert_table.closeModal();                    
                     
                 }
             })

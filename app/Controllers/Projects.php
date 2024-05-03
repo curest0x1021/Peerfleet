@@ -6062,6 +6062,10 @@ class Projects extends Security_Controller {
         
         return json_encode($project_info);
     }
+    function tasks_list($project_id){
+        $tasks_list=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        return json_encode(array("success"=>true,"tasks"=>$tasks_list));
+    }
 
 }
 
