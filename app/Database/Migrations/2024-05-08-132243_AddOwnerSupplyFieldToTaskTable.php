@@ -13,7 +13,6 @@ class AddOwnerSupplyFieldToTaskTable extends Migration
             'owner_supply' => [
                 'type' => 'LONG',
                 "null"=>true,
-                "default"=>0
             ],
         ]);
     }
