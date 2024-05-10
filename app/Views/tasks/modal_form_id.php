@@ -128,6 +128,25 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="owner_supply" class="col-md-4">Owner supply:</label>
+                            <div class="col-md-8" >
+                                <?php
+                                echo form_input(array(
+                                    "id" => "owner_supply".$modalId,
+                                    "name" => "owner_supply",
+                                    "value" => isset($gotTask)&&property_exists($gotTask,"owner_supply")?$gotTask->budget_group:"",
+                                    "class" => "form-control",
+                                    "maxlength" => 15,
+                                    "style"=>"border:1px solid lightgray",
+                                    "placeholder" => "Owner supply",
+                                    "autocomplete" => "off"
+                                ));
+                                ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-4">
@@ -1672,6 +1691,7 @@
             var deadline=$("#deadline<?php echo $modalId; ?>")[0].value;
             var estimated_cost=$("#estimated_cost<?php echo $modalId; ?>")[0].value;
             var budget_group=$("#budget_group<?php echo $modalId; ?>")[0].value;
+            var owner_supply=$("#owner_supply<?php echo $modalId; ?>")[0].value;
             var project_id=`<?php echo $project_id; ?>`
             const myForm=new FormData();
             myForm.append("rise_csrf_token",rise_csrf_token);
@@ -1713,6 +1733,7 @@
             myForm.append("budget_group",budget_group);
             myForm.append("checklist_items",JSON.stringify(checklist_items));
             myForm.append("dependencies",dependencies);
+            myForm.append("owner_supply",owner_supply);
             myForm.append("cost_items",JSON.stringify(cost_items));
             myForm.append("dependencies",JSON.stringify(dependencies));
             myForm.append("project_id",project_id);

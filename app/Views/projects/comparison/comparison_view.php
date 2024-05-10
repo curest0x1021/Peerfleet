@@ -207,7 +207,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td class="">0</td>
+                            <td class="">0  <?php echo ($project_info->currency?$project_info->currency:"USD");?></td>
                         <?php
                             # code...
                             $totalCosts[$i]+=0;
@@ -232,15 +232,27 @@ foreach ($allProjectTasks as $index => $oneTask) {
                     <tr data-bs-toggle="collapse" data-bs-target="#owner-supply-panel" >
                         <td><i data-feather="chevron-down" class="collapse-arrow icon-16" ></i><b>Owner's supply</b></td>
                         <?php
+                        $total_owner_supply=0;
+                        foreach ($allProjectTasks as $key => $task) {
+                            # code...
+                            $total_owner_supply+=$task->owner_supply?$task->owner_supply:0;
+                        }
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
                             <td class="">
-                                <div class="d-flex align-items-center justify-content-between" >
+                                <?php echo $total_owner_supply." ".($project_info->currency?$project_info->currency:"USD");?>
+                                <!-- <div class="d-flex align-items-center justify-content-between" >
                                 <button class="btn btn-sm btn-default edit-yard-owner-supply" ><i data-feather="edit" class="icon-16" ></i></button>
-                                <input hidden class="input-project-yard-id" value="<?php echo $allYards[$i]->id; ?>" />
-                                <input hidden  class=" form-control input-yard-owner-supply" style="width:50%" value="<?php echo $allYards[$i]->owner_supply?$allYards[$i]->owner_supply:0; ?>" type="number" />
+                                <input hidden class="input-project-yard-id" value="<?php 
+                                //echo $allYards[$i]->id; 
+                                ?>" />
+                                <input hidden  class=" form-control input-yard-owner-supply" style="width:50%" value="<?php 
+                                //echo $allYards[$i]->owner_supply?$allYards[$i]->owner_supply:0; 
+                                ?>" type="number" />
                                 <button class="btn btn-sm btn-default save-yard-owner-supply" onclick="save_yard_owner_supply(this)" style="float:right" hidden><i data-feather="save" class="icon-16" ></i></button>
-                                <p style="float:right" class="text-yard-owner-supply" ><?php echo $allYards[$i]->owner_supply?(($project_info->currency?$project_info->currency:"USD")." ".$allYards[$i]->owner_supply):"-"; ?></p>    
+                                <p style="float:right" class="text-yard-owner-supply" ><?php 
+                                //echo $allYards[$i]->owner_supply?(($project_info->currency?$project_info->currency:"USD")." ".$allYards[$i]->owner_supply):"-"; 
+                                ?></p>     -->
                             </div>
                             </td>
                         <?php
@@ -484,7 +496,7 @@ foreach ($allProjectTasks as $index => $oneTask) {
                         <?php
                         for ($i=0; $i < $numberYards; $i++) { 
                         ?>
-                            <td>0</td>
+                            <td>0 <?php echo ($project_info->currency?$project_info->currency:"USD");?></td>
                         <?php
                             # code...
                             $totalCosts[$i]+=0;
