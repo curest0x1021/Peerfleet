@@ -1034,6 +1034,10 @@ class Tasks extends Security_Controller {
         $status_id = $this->request->getPost('status_id');
         $priority_id = $this->request->getPost('priority_id') ?? 0;
 
+        //////////////////////////
+        $owner_supply=$this->request->getPost('owner_supply')??0;
+        ///////////////////////////
+
         $data = array(
             "title" => $this->request->getPost('title'),
             "description" => $this->request->getPost('description'),
@@ -1065,10 +1069,10 @@ class Tasks extends Security_Controller {
             "work_permit" => $this->request->getPost("work_permit"),
             "painting_after_completion" => $this->request->getPost("painting_after_completion"),
             "parts_on_board" => $this->request->getPost("parts_on_board"),
-            "transport_to_yard_workshop" => $this->request->getPost("transport_to_yard_workshop"),
-            "transport_outside_yard" => $this->request->getPost("transport_outside_yard"),
-            "material_yards_supply" => $this->request->getPost("material_yards_supply"),
-            "material_owners_supply" => $this->request->getPost("material_owners_supply"),
+            "transport_to_yard_workshop" => $this->request->getPost("transport_to_yard_workshop")?$this->request->getPost("transport_to_yard_workshop"):0,
+            "transport_outside_yard" => $this->request->getPost("transport_outside_yard")?$this->request->getPost("transport_outside_yard"):0,
+            "material_yards_supply" => $this->request->getPost("material_yards_supply")?$this->request->getPost("material_yards_supply"):0,
+            "material_owners_supply" => $this->request->getPost("material_owners_supply")?$this->request->getPost("material_owners_supply"):0,
             "risk_assessment" => $this->request->getPost("risk_assessment"),
             "maker" => $this->request->getPost("maker"),
             "type" => $this->request->getPost("type"),
@@ -1082,6 +1086,7 @@ class Tasks extends Security_Controller {
             "quote" => $this->request->getPost("quote"),
             "discount" => $this->request->getPost("discount"),
             "remarks" => $this->request->getPost("remarks"),
+            "owner_supply"=>$owner_supply
         );
 
         if (!$id) {
@@ -4941,11 +4946,11 @@ class Tasks extends Security_Controller {
             "light"=>$this->request->getPost("light"),
             "parts_on_board"=>$this->request->getPost("parts_on_board"),
             "ventilation"=>$this->request->getPost("ventilation"),
-            "transport_to_yard_workshop"=>$this->request->getPost("transport_to_yard_workshop"),
+            "transport_to_yard_workshop"=>$this->request->getPost("transport_to_yard_workshop")?$this->request->getPost("transport_to_yard_workshop"):0,
             "crane_assistance"=>$this->request->getPost("crane_assistance"),
-            "transport_outside_yard"=>$this->request->getPost("transport_outside_yard"),
+            "transport_outside_yard"=>$this->request->getPost("transport_outside_yard")?$this->request->getPost("transport_outside_yard"):0,
             "cleaning_before"=>$this->request->getPost("cleaning_before"),
-            "material_yards_supply"=>$this->request->getPost("material_yards_supply"),
+            "material_yards_supply"=>$this->request->getPost("material_yards_supply")?$this->request->getPost("material_yards_supply"):0,
             "cleaning_after"=>$this->request->getPost("cleaning_after"),
             "work_permit"=>$this->request->getPost("work_permit"),
             "risk_assessment"=>$this->request->getPost("risk_assessment"),
@@ -4955,6 +4960,7 @@ class Tasks extends Security_Controller {
             "class_relevant"=>$this->request->getPost("class_relevant"),
             "estimated_cost"=>$this->request->getPost("estimated_cost"),
             "budget_group"=>$this->request->getPost("budget_group"),
+            "owner_supply"=>$this->request->getPost("owner_supply"),
             // "cost_items"=>$this->request->getPost("cost_items"),
             "start_date"=>date('Y-m-d', strtotime($this->request->getPost("start_date"))),
             "deadline"=>date('Y-m-d', strtotime($this->request->getPost("deadline"))),
