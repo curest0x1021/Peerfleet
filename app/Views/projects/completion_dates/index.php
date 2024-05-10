@@ -8,7 +8,7 @@
                     <label>Contractual delivery date : </label>
                 </div>
                 <div class="col-md-3" >
-                    <input class="form-control"value="<?php echo isset($project_info)?(date('d.m.Y', strtotime($project_info->contractual_delivery_date))):($project_info->contractual_delivery_date?date('d.m.Y', strtotime($project_info->contractual_delivery_date)):"");?>"  name="contractual_delivery_date" id="contractual_delivery_date" />
+                    <input class="form-control"value="<?php echo isset($project_info)?($project_info->contractual_delivery_date?date('d.m.Y', strtotime($project_info->contractual_delivery_date)):""):"";?>"  name="contractual_delivery_date" id="contractual_delivery_date" />
                 </div>
             </div>
         </div>
@@ -18,7 +18,7 @@
                     <label>Yard's estimated completion date : </label>
                 </div>
                 <div class="col-md-3" >
-                    <input class="form-control" value="<?php echo isset($project_info)?(date('d.m.Y', strtotime($project_info->yard_estimated_completion_date))):($project_info->yard_estimated_completion_date?date('d.m.Y', strtotime($project_info->yard_estimated_completion_date)):"");?>" name="yard_estimated_completion_date" id="yard_estimated_completion_date" />
+                    <input class="form-control" value="<?php echo isset($project_info)?($project_info->yard_estimated_completion_date?date('d.m.Y', strtotime($project_info->yard_estimated_completion_date)):""):"";?>" name="yard_estimated_completion_date" id="yard_estimated_completion_date" />
                 </div>
             </div>
         </div>
@@ -28,7 +28,7 @@
                     <label>Own estimated completion date : </label>
                 </div>
                 <div class="col-md-3" >
-                    <input class="form-control" value="<?php echo isset($project_info)?(date('d.m.Y', strtotime($project_info->deadline))):($project_info->deadline?date('d.m.Y', strtotime($project_info->deadline)):"");?>" name="own_estimated_completion_date" id="own_estimated_completion_date" />
+                    <input class="form-control" value="<?php echo isset($project_info)?($project_info->deadline?date('d.m.Y', strtotime($project_info->deadline)):""):"";?>" name="own_estimated_completion_date" id="own_estimated_completion_date" />
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
                     <label>Actual completion date : </label>
                 </div>
                 <div class="col-md-3" >
-                    <input class="form-control" value="<?php echo isset($project_info)?(date('d.m.Y', strtotime($project_info->actual_completion_date))):($project_info->actual_completion_date?date('d.m.Y', strtotime($project_info->actual_completion_date)):"");?>" name="actual_completion_date" id="actual_completion_date" />
+                    <input class="form-control" value="<?php echo isset($project_info)?($project_info->actual_completion_date?date('d.m.Y', strtotime($project_info->actual_completion_date)):""):"";?>" name="actual_completion_date" id="actual_completion_date" />
                 </div>
             </div>
         </div>

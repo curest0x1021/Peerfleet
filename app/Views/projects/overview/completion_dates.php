@@ -45,6 +45,30 @@
         if(left_period>0) { 
             hours=Math.floor((left_period%(86400000))/3600000)
         };
+        const days_percent=((all_period-left_period)/all_period)*100;
+        var days_color="red";
+        if(days_percent<10){
+
+        }else if(days_percent<40){
+            days_color="orange";
+        }else if(days_percent<80){
+            days_color="green";
+        }else {
+            days_color="blue";
+        }
+        console.log(deadline-now);
+
+        const hours_percent=hours*100/24;
+        var hours_color="red";
+        if(hours_percent<10){
+
+        }else if(hours_percent<40){
+            hours_color="orange";
+        }else if(hours_percent<80){
+            hours_color="green";
+        }else {
+            hours_color="blue";
+        }
         console.log(deadline-now);
         new Chart(document.getElementById("completion-dates-days-chart"), {
             type: 'doughnut',
@@ -52,7 +76,7 @@
                 datasets: [{
                         label: 'Complete',
                         percent: ((all_period-left_period)/all_period)*100,
-                        backgroundColor: ['#66F490'],
+                        backgroundColor: [days_color],
                         borderWidth: 0
                     }]
             },
@@ -89,6 +113,7 @@
                     display: false
                 },
                 tooltips: {
+                    enabled:false,
                     filter: tooltipItem => tooltipItem.index === 0,
                     callbacks: {
                         afterLabel: function (tooltipItem, data) {
@@ -106,7 +131,7 @@
                 datasets: [{
                         label: 'Complete',
                         percent: hours*100/24,
-                        backgroundColor: ['#66F490'],
+                        backgroundColor: [hours_color],
                         borderWidth: 0
                     }]
             },
@@ -143,6 +168,7 @@
                     display: false
                 },
                 tooltips: {
+                    enabled:false,
                     filter: tooltipItem => tooltipItem.index === 0,
                     callbacks: {
                         afterLabel: function (tooltipItem, data) {
