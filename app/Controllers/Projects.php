@@ -6040,10 +6040,10 @@ class Projects extends Security_Controller {
     }
     function save_completion_dates(){
         $project_id=$this->request->getPost("project_id");
-        $contractual_delivery_date=$this->request->getPost("contractual_delivery_date");
-        $yard_estimated_completion_date=$this->request->getPost("yard_estimated_completion_date");
-        $own_estimated_completion_date=$this->request->getPost("own_estimated_completion_date");
-        $actual_completion_date=$this->request->getPost("actual_completion_date");
+        $contractual_delivery_date=$this->request->getPost("contractual_delivery_date")?$this->request->getPost("contractual_delivery_date"):null;
+        $yard_estimated_completion_date=$this->request->getPost("yard_estimated_completion_date")?$this->request->getPost("yard_estimated_completion_date"):null;
+        $own_estimated_completion_date=$this->request->getPost("own_estimated_completion_date")?$this->request->getPost("own_estimated_completion_date"):null;
+        $actual_completion_date=$this->request->getPost("actual_completion_date")?$this->request->getPost("actual_completion_date"):null;
         $project_info=$this->Projects_model->get_one($project_id);
         $project_info->contractual_delivery_date=$contractual_delivery_date;
         $project_info->yard_estimated_completion_date=$yard_estimated_completion_date;
