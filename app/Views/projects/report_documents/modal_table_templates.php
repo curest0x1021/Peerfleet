@@ -226,10 +226,10 @@
                         <tbody>
                             <tr>
                                 <th>Amount</th>
-                                <td>${project_info.deviation_costs?project_info.deviation_costs+(project_info.currency?project_info.currency:"USD"):"-"}</td>
-                                <td>${project_info.loss_of_earnings?project_info.loss_of_earnings+(project_info.currency?project_info.currency:"USD"):"-"}</td>
-                                <td>${project_info.bunker_costs?project_info.bunker_costs+(project_info.currency?project_info.currency:"USD"):"-"}</td>
-                                <td>${project_info.additional_expenditures?project_info.additional_expenditures+(project_info.currency?project_info.currency:"USD"):"-"}</td>
+                                <td>${project_info.deviation_costs?project_info.deviation_costs+" "+(project_info.currency?project_info.currency:"USD"):"-"}</td>
+                                <td>${project_info.loss_of_earnings?project_info.loss_of_earnings+" "+(project_info.currency?project_info.currency:"USD"):"-"}</td>
+                                <td>${project_info.bunker_costs?project_info.bunker_costs+" "+(project_info.currency?project_info.currency:"USD"):"-"}</td>
+                                <td>${project_info.additional_expenditures?project_info.additional_expenditures+" "+(project_info.currency?project_info.currency:"USD"):"-"}</td>
                             </tr>
                         </tbody>
                     </table>
