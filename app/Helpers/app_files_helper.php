@@ -243,6 +243,64 @@ if (!function_exists('upload_file_to_temp')) {
 }
 
 /**
+ * upload a file to temp folder when using dropzone autoque=true
+ * 
+ * @param file $_FILES
+ * @return void
+ */
+if (!function_exists('upload_file_to_temp_editor')) {
+
+    function upload_file_to_temp_editor($upload_to_local = false) {
+        if (!empty($_FILES)) {
+            $file = get_array_value($_FILES, "upload");
+
+            if (!$file) {
+                die("Invalid file");
+            }
+
+            $temp_file = get_array_value($file, "tmp_name");
+            $file_name = get_array_value($file, "name");
+            $file_size = get_array_value($file, "size");
+
+            if (!is_valid_file_to_upload($file_name)) {
+                return false;
+            }
+
+
+            if (defined('PLUGIN_CUSTOM_STORAGE') && !$upload_to_local) {
+                try {
+                    app_hooks()->do_action('app_hook_upload_file_to_temp', array(
+                        "temp_file" => $temp_file,
+                        "file_name" => $file_name,
+                        "file_size" => $file_size
+                    ));
+                } catch (\Exception $ex) {
+                    log_message('error', '[ERROR] {exception}', ['exception' => $ex]);
+                }
+            } else if (get_setting("enable_google_drive_api_to_upload_file") && get_setting("google_drive_authorized") && !$upload_to_local) {
+                $google = new Google();
+                $google->upload_file($temp_file, $file_name, "temp", "", $file_size);
+            } else {
+                $temp_file_path = get_setting("temp_file_path");
+                $target_path = getcwd() . '/' . $temp_file_path;
+                if (!is_dir($target_path)) {
+                    if (!mkdir($target_path, 0755, true)) {
+                        die('Failed to create file folders.');
+                    }
+                }
+                $target_file = $target_path . $file_name;
+                copy($temp_file, $target_file);
+                $dataUrl = 'data:' . $temp_file->getMimeType() . ';base64,' . base64_encode(file_get_contents($temp_file->getPath()));
+                $uploaded=array();
+                $uploaded['default']=$dataUrl;
+                return json_encode($uploaded);
+            }
+        }
+    }
+
+}
+
+/**
  * this method process 3 types of files
  * 1. direct upload
  * 2. move a uploaded file which has been uploaded in temp folder

@@ -26,12 +26,19 @@ watchdog.setDestructor( editor => {
 } );
 
 watchdog.on( 'error', handleSampleError );
-
+var csrf_token=$('input[name="<?= csrf_token() ?>"]').val()
 watchdog
 	.create( document.querySelector( '#editor' ), {
 		// Editor configuration.
         simpleUpload: {
             uploadUrl: '<?php echo get_uri("uploader/upload_file");?>',
+			 // Enable the XMLHttpRequest.withCredentials property.
+			 withCredentials: true,
+
+			// Headers sent along with the XMLHttpRequest to the upload server.
+			headers: {
+				'X-CSRF-TOKEN': csrf_token,
+			}
         },
 		
 	} )

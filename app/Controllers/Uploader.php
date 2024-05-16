@@ -20,7 +20,30 @@ class Uploader extends App_Controller
 
     function upload_file()
     {
-        upload_file_to_temp();
+        $image = $this->request->getFile('upload');
+
+        $temp_file_path = get_setting("temp_file_path");
+        $file_name = $image->getName();
+        $target_path = getcwd() . '/' . $temp_file_path;
+        if (!is_dir($target_path)) {
+            if (!mkdir($target_path, 0755, true)) {
+                die('Failed to create file folders.');
+            }
+        }
+        $target_file = $target_path . $file_name;
+        // Move the uploaded file to a desired location
+        $mimeType=$image->getMimeType();
+        $image->move($target_path);
+
+        // Get the path of the uploaded file
+        // $imagePath = 'uploads/' . $image->getName();
+
+        // Read the image file as a data URL
+        $dataUrl = 'data:' . $mimeType . ';base64,' . base64_encode(file_get_contents($target_file));
+
+        // Pass the data URL to the view
+        return json_encode(array("default"=>$dataUrl));
+        // return upload_file_to_temp_editor();
     }
 
     function upload_excel_import_file()
