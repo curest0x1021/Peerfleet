@@ -6090,6 +6090,21 @@ class Projects extends Security_Controller {
         return json_encode(array("success"=>true));
     }
 
+    function save_general_costs(){
+        $project_id=$this->request->getPost('project_id');
+        $deviation_costs=$this->request->getPost('deviation_costs');
+        $loss_of_earnings=$this->request->getPost('loss_of_earnings');
+        $bunker_costs=$this->request->getPost('bunker_costs');
+        $additional_expenditures=$this->request->getPost('additional_expenditures');
+        $project_info=$this->Projects_model->get_one($project_id);
+        $project_info->deviation_costs=$deviation_costs;
+        $project_info->loss_of_earnings=$loss_of_earnings;
+        $project_info->bunker_costs=$bunker_costs;
+        $project_info->additional_expenditures=$additional_expenditures;
+        $this->Projects_model->ci_save($project_info,$project_id);
+        return json_encode(array("success"=>true));
+    }
+
 }
 
 /* End of file projects.php */

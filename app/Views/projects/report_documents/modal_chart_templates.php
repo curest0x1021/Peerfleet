@@ -80,7 +80,7 @@
             var iframe_box=document.getElementById("iframe_box");
             preview_box.appendChild(iframe_box);
             iframe_box.style.height="90vh";
-            iframe_box.style.width="50vw";
+            iframe_box.style.width="30vw";
             iframe_box.style.overflow="hidden";
             iframe_box.src="<?php echo get_uri("projects/tasks_overview_chart/all_tasks_overview");?>";
             console.log(iframe_box)
@@ -105,8 +105,8 @@
             const preview_box=document.body.querySelector(".preview");
             var iframe_box=document.getElementById("iframe_box");
             preview_box.appendChild(iframe_box);
-            iframe_box.style.height="50vh";
-            iframe_box.style.width="50vw";
+            iframe_box.style.height="90vh";
+            iframe_box.style.width="30vw";
             iframe_box.style.overflow="hidden";
             iframe_box.src="<?php echo get_uri("projects/tasks_overview_chart/my_tasks_overview");?>";
             console.log(iframe_box)
