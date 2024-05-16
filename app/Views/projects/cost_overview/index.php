@@ -147,6 +147,37 @@ $totalPrice=0;
 </style>
 <div class="card" >
     <div class="card-header" >
+        <h4>General costs</h4>
+    </div>
+    <div class="card-body" >
+        <?php echo form_open(get_uri("projects/save_general")); ?>
+        <?php echo form_close(); ?>
+        <table class="table table-bordered" >
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Deviation cost</th>
+                    <th>Loss of earnings</th>
+                    <th>Bunker costs</th>
+                    <th>Other additional expenditures at yard</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Amount</th>
+                    <td><input value="<?php echo $project_info->deviation_costs?$project_info->deviation_costs:0;?>" class="form-control input-general-deviation-costs" type="number" /></td>
+                    <td><input value="<?php echo $project_info->loss_of_earnings?$project_info->loss_of_earnings:0;?>" class="form-control  input-general-loss-of-earnings" type="number" /></td>
+                    <td><input value="<?php echo $project_info->bunker_costs?$project_info->bunker_costs:0;?>" class="form-control  input-general-bunker-costs" type="number" /></td>
+                    <td><input value="<?php echo $project_info->additional_expenditures?$project_info->additional_expenditures:0;?>" class="form-control  input-general-additional-expenditures" type="number" /></td>
+                    <td><button class="btn btn-default btn-small btn-save-general-costs" ><i data-feather="save" class="icon-16" ></i>Save</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="card" >
+    <div class="card-header" >
         <div class="d-flex align-items-center" >
             <h4>Cost overview</h4>
             <div class="flex-grow-1" ></div>
@@ -156,12 +187,13 @@ $totalPrice=0;
         </div>
     </div>
     <div class="card-body" >
-        <div class="d-flex" style="margin-bottom:10px;" >
+        <!-- <div class="d-flex" style="margin-bottom:10px;" >
             <button class="btn btn-default" ><i class="icon-16"  data-feather="plus" ></i>Add filter</button>
             <div class="flex-grow-1" ></div>
             
             <div><label><input type="text" id="search-messages" class="datatable-search" placeholder="Search"></label></div>
-        </div>
+        </div> -->
+        
         <div id="table-panel-for-xlsx" >
         <table class="table table-bordered" >
             <thead>
@@ -240,7 +272,8 @@ $totalPrice=0;
                         foreach ($oneTaskSupplies as $oneSupply) {
                             $oneTaskTotalSupplies+=$oneSupply->cost;
                         }
-                        $categoryOwnerSupply+=$oneTaskTotalSupplies;
+                        // $categoryOwnerSupply+=$oneTaskTotalSupplies;
+                        $categoryOwnerSupply+=$oneTask->owner_supply;
 
                         $oneTaskTotalCostItems=0;
                         foreach ($oneTaskCostItems as $oneItem) {
@@ -269,7 +302,8 @@ $totalPrice=0;
                         $categoryEstimatedCost+=($oneTask->estimated_cost?$oneTask->estimated_cost:0);
 
                         
-                        $totalOwnerSupplies+=$oneTaskTotalSupplies;
+                        // $totalOwnerSupplies+=$oneTaskTotalSupplies;
+                        $totalOwnerSupplies+=$oneTask->owner_supply;
                         $totalCostItems+=$oneTaskTotalCostItems;
                         $totalShipyardCostItems+=$oneTaskTotalShipyardCostItems;
                         $totalVariationOrders+=$oneTaskTotalVariationOrders;
@@ -284,7 +318,7 @@ $totalPrice=0;
                         </td>
                         <td><?php if($oneTask->estimated_cost>0) echo ($project_info->currency?$project_info->currency:"USD")." ".number_format($oneTask->estimated_cost,1); else echo "-";?></td>
                         <!-- <td><?php //if(isset($project_info->currency)) echo $project_info->currency;?> <?php //echo number_format($oneTaskTotalSupplies);?></td> -->
-                        <td><?php if($oneTaskTotalSupplies>0) echo ($project_info->currency?$project_info->currency:"USD")." ".number_format($oneTaskTotalSupplies,1); else echo "-";?></td>
+                        <td><?php if($oneTask->owner_supply>0) echo ($project_info->currency?$project_info->currency:"USD")." ".number_format($oneTask->owner_supply,1); else echo "-";?></td>
                         <!-- <td><?php //if(isset($project_info->currency)) echo $project_info->currency;?> <?php //echo number_format( $oneTaskTotalCostItems);?></td> -->
                         <td><?php if($oneTaskTotalCostItems>0) echo ($project_info->currency?$project_info->currency:"USD")." ".number_format($oneTaskTotalCostItems,1); else echo "-";?></td>
                         <!-- <td><?php //if(isset($project_info->currency)) echo $project_info->currency;?> <?php //echo number_format($oneTaskTotalVariationOrders);?></td> -->
@@ -318,6 +352,7 @@ $totalPrice=0;
                 
             
         </table>
+        
         </div>
     </div>
 </div>
@@ -373,6 +408,30 @@ $totalPrice=0;
             $("."+category.split(" ")[0]+"-comments")[0].innerHTML=`<span class="badge pill bg-secondary" >${categorizedStats[category]['comments']}</span>`;
         }
         
+        $(".btn-save-general-costs").on("click",function(){
+            var deviation_costs=$(".input-general-deviation-costs")[0].value;
+            var loss_of_earnings=$(".input-general-loss-of-earnings")[0].value;
+            var bunker_costs=$(".input-general-bunker-costs")[0].value;
+            var additional_expenditures=$(".input-general-additional-expenditures")[0].value;
+            var rise_csrf_token = $('[name="rise_csrf_token"]').val();
+            $.ajax({
+                url:"<?php echo get_uri("projects/save_general_costs");?>",
+                method:"POST",
+                data:{
+                    deviation_costs,
+                    loss_of_earnings,
+                    bunker_costs,
+                    additional_expenditures,
+                    rise_csrf_token,
+                    project_id:<?php echo $project_id;?>
+                },
+                success:function(response){
+                    if(JSON.parse(response).success){
+                        appAlert.success("Saved successfully!", {duration: 4000});
+                    }
+                }
+            })
+        })
         
     });
     var totalCostItems;
