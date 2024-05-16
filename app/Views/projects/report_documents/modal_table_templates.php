@@ -1,6 +1,7 @@
 <div id="ajaxModalContent" >
 <div class="modal-body clearfix " id="modal-insert-table" >
     <button class="btn btn-default insert-project-cost-overview-table" >Cost overview</button>
+    <button class="btn btn-default insert-general-costs-table" >General costs</button>
     <button class="btn btn-default insert-project-quotes-overview-table" >Quotes overview</button>
     <button class="btn btn-default insert-completion-dates-table" >Completion dates</button>
     <button class="btn btn-default insert-tasks-list-table" >Tasks list</button>
@@ -191,6 +192,46 @@
                         `
                     })
                        table_code+= `</tbody>
+                    </table>
+                    `;
+                        const viewFragment = window.watchdog.editor.data.processor.toView( table_code );
+                        const modelFragment = window.watchdog.editor.data.toModel( viewFragment );
+
+                        window.watchdog.editor.model.insertContent( modelFragment,window.watchdog.editor.model.document.selection.getFirstPosition());
+                        window.modal_insert_table.closeModal();                    
+                    
+                }
+            })
+            
+        });
+        $(".insert-general-costs-table").on("click",function(){
+            $.ajax({
+                url:"<?php echo get_uri("projects/get_project_info/".$project_id);?>",
+                method:"GET",
+                success:function(response){
+                    const project_info=JSON.parse(response);
+                    var table_code=`
+                    
+                    <table>
+                        <caption>General costs<caption>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Deviation costs</th>
+                                <th>Loss of earnings</th>
+                                <th>Bunker costs</th>
+                                <th>Other additional expenditures</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Amount</th>
+                                <td>${project_info.deviation_costs?project_info.deviation_costs+(project_info.currency?project_info.currency:"USD"):"-"}</td>
+                                <td>${project_info.loss_of_earnings?project_info.loss_of_earnings+(project_info.currency?project_info.currency:"USD"):"-"}</td>
+                                <td>${project_info.bunker_costs?project_info.bunker_costs+(project_info.currency?project_info.currency:"USD"):"-"}</td>
+                                <td>${project_info.additional_expenditures?project_info.additional_expenditures+(project_info.currency?project_info.currency:"USD"):"-"}</td>
+                            </tr>
+                        </tbody>
                     </table>
                     `;
                         const viewFragment = window.watchdog.editor.data.processor.toView( table_code );
