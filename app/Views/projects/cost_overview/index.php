@@ -147,39 +147,79 @@ $totalPrice=0;
 </style>
 <div class="card" >
     <div class="card-header" >
-        <h4>General costs</h4>
+        <h4>Docking-related expenses</h4>
     </div>
     <div class="card-body" >
         <?php echo form_open(get_uri("projects/save_general")); ?>
         <?php echo form_close(); ?>
-        <table class="table table-bordered" >
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Deviation cost</th>
-                    <th>Loss of earnings</th>
-                    <th>Bunker costs</th>
-                    <th>Other additional expenditures at yard</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th>Amount</th>
-                    <td><input value="<?php echo $project_info->deviation_costs?$project_info->deviation_costs:0;?>" class="form-control input-general-deviation-costs" type="number" /></td>
-                    <td><input value="<?php echo $project_info->loss_of_earnings?$project_info->loss_of_earnings:0;?>" class="form-control  input-general-loss-of-earnings" type="number" /></td>
-                    <td><input value="<?php echo $project_info->bunker_costs?$project_info->bunker_costs:0;?>" class="form-control  input-general-bunker-costs" type="number" /></td>
-                    <td><input value="<?php echo $project_info->additional_expenditures?$project_info->additional_expenditures:0;?>" class="form-control  input-general-additional-expenditures" type="number" /></td>
-                    <td><button class="btn btn-default btn-small btn-save-general-costs" ><i data-feather="save" class="icon-16" ></i>Save</button></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="row" >
+            <div class="col-md-6" >
+                <table class="table table-bordered" >
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Estimated cost</th>
+                            <th>Final cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Deviation cost</th>
+                            <td></td>
+                            <td>
+                                <div class="input-group">
+                                    <input value="<?php echo $project_info->deviation_costs?$project_info->deviation_costs:0;?>" class="form-control input-general-deviation-costs" type="number" />
+                                    <span class="input-group-text"><?php echo $project_info->currency?$project_info->currency:"USD";?></span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Loss of earnings</th>
+                            <td></td>
+                            <td>
+                                <div class="input-group">
+                                    <input value="<?php echo $project_info->loss_of_earnings?$project_info->loss_of_earnings:0;?>" class="form-control  input-general-loss-of-earnings" type="number" />
+                                    <span class="input-group-text"><?php echo $project_info->currency?$project_info->currency:"USD";?></span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Bunker cost</th>
+                            <td></td>
+                            <td>
+                                <div class="input-group">
+                                    <input value="<?php echo $project_info->bunker_costs?$project_info->bunker_costs:0;?>" class="form-control  input-general-bunker-costs" type="number" />
+                                    <span class="input-group-text"><?php echo $project_info->currency?$project_info->currency:"USD";?></span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Other additional expenditures of yards</th>
+                            <td></td>
+                            <td>
+                                <div class="input-group">
+                                    <input value="<?php echo $project_info->additional_expenditures?$project_info->additional_expenditures:0;?>" class="form-control  input-general-additional-expenditures" type="number" />
+                                    <span class="input-group-text"><?php echo $project_info->currency?$project_info->currency:"USD";?></span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><button class="btn btn-default btn-small btn-save-general-costs" ><i data-feather="save" class="icon-16" ></i>Save</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
 </div>
+
 <div class="card" >
     <div class="card-header" >
         <div class="d-flex align-items-center" >
-            <h4>Cost overview</h4>
+            <h4>Repair-related expenses</h4>
             <div class="flex-grow-1" ></div>
             <?php echo modal_anchor(get_uri('projects/modal_import_cost_overview/').$project_id,'<button style="margin-right:10px;" class="btn btn-default" ><i class="icon-16"  data-feather="upload" ></i>Import</button>',array());?>
             <?php //echo modal_anchor(get_uri('projects/modal_export_cost_overview/').$project_id,'<button class="btn btn-default" ><i class="icon-16"  data-feather="download" ></i>Export</button>',array());?>
