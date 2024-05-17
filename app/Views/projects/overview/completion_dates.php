@@ -46,28 +46,28 @@
             hours=Math.floor((left_period%(86400000))/3600000)
         };
         const days_percent=((all_period-left_period)/all_period)*100;
-        var days_color="red";
+        var days_color="#e74c3c";
         if(days_percent<10){
 
         }else if(days_percent<40){
-            days_color="orange";
+            days_color="#F9A52D";
         }else if(days_percent<80){
-            days_color="green";
+            days_color="#00B393";
         }else {
-            days_color="blue";
+            days_color="#2d9cdb";
         }
         console.log(deadline-now);
 
         const hours_percent=hours*100/24;
-        var hours_color="red";
+        var hours_color="#e74c3c";
         if(hours_percent<10){
 
         }else if(hours_percent<40){
-            hours_color="orange";
+            hours_color="#F9A52D";
         }else if(hours_percent<80){
-            hours_color="green";
+            hours_color="#00B393";
         }else {
-            hours_color="blue";
+            hours_color="#2d9cdb";
         }
         console.log(deadline-now);
         new Chart(document.getElementById("completion-dates-days-chart"), {
