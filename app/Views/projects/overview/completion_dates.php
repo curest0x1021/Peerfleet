@@ -46,15 +46,15 @@
             hours=Math.floor((left_period%(86400000))/3600000)
         };
         const days_percent=((all_period-left_period)/all_period)*100;
-        var days_color="#e74c3c";
+        var days_color="#e74c3c";//red
         if(days_percent<10){
 
         }else if(days_percent<40){
-            days_color="#F9A52D";
+            days_color="#F9A52D";//orange
         }else if(days_percent<80){
-            days_color="#00B393";
+            days_color="#00B393";//green
         }else {
-            days_color="#2d9cdb";
+            days_color="#2d9cdb";//blue
         }
         console.log(deadline-now);
 

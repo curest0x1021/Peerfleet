@@ -4193,6 +4193,7 @@ class Projects extends Security_Controller {
         // $allCostItems=$this->Task_cost_items_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allCostItems=$this->Task_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
         $allShipyardCostItems=[];
+        $selected_yards=[];
         if($project_info->status_id==4){
             $selected_yards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id))->getResult();
             if(count($selected_yards)>0)
@@ -4204,7 +4205,7 @@ class Projects extends Security_Controller {
         $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("project_id"=>$project_id))->getResult();
         $allComments=$this->Task_comments_model->get_all_where(array("project_id"=>$project_id))->getResult();
         
-        return $this->template->view('projects/cost_overview/index',["project_id"=>$project_id,"project_info"=>$project_info,"allComments"=>$allComments,"allShipyardCostItems"=>$allShipyardCostItems,"allOwnerSupplies"=>$allOwnerSupplies,"allVariationOrders"=>$allVariationOrders,"allTasks"=>$allTasks,'allCostItems'=>$allCostItems]);
+        return $this->template->view('projects/cost_overview/index',["selectedYards"=>$selected_yards,"project_id"=>$project_id,"project_info"=>$project_info,"allComments"=>$allComments,"allShipyardCostItems"=>$allShipyardCostItems,"allOwnerSupplies"=>$allOwnerSupplies,"allVariationOrders"=>$allVariationOrders,"allTasks"=>$allTasks,'allCostItems'=>$allCostItems]);
     }
 
     function modal_import_cost_overview($project_id){
