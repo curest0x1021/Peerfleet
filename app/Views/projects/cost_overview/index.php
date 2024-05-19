@@ -153,7 +153,7 @@ $totalPrice=0;
         <?php echo form_open(get_uri("projects/save_general")); ?>
         <?php echo form_close(); ?>
         <div class="row" >
-            <div class="col-md-6" >
+            <div class="col-md-5" >
                 <table class="table table-bordered" >
                     <thead>
                         <tr>
@@ -165,40 +165,70 @@ $totalPrice=0;
                     <tbody>
                         <tr>
                             <th>Deviation cost</th>
-                            <td></td>
+                            <td  >
+                                <p class="text-end"  ><?php
+                                    if($project_info->status_id==4){
+                                        echo $selectedYards[0]->deviation_cost . " " . ($project_info->currency?$project_info->currency:"USD");
+                                    }else echo "-";
+                                ?></p>
+                            </td>
                             <td>
                                 <div class="input-group">
-                                    <input value="<?php echo $project_info->deviation_costs?$project_info->deviation_costs:0;?>" class="form-control input-general-deviation-costs" type="number" />
+                                    <input value="<?php echo $project_info->deviation_costs?$project_info->deviation_costs:0;?>" class="form-control text-end input-general-deviation-costs" type="number" />
                                     <span class="input-group-text"><?php echo $project_info->currency?$project_info->currency:"USD";?></span>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <th>Loss of earnings</th>
-                            <td></td>
+                            <td>
+                                <p class="text-end"  >
+                                <?php
+                                    if($project_info->status_id==4){
+                                        echo $selectedYards[0]->loss_of_earnings . " " . ($project_info->currency?$project_info->currency:"USD");
+                                    }else echo "-";
+                                ?>
+                                </p>
+                            </td>
                             <td>
                                 <div class="input-group">
-                                    <input value="<?php echo $project_info->loss_of_earnings?$project_info->loss_of_earnings:0;?>" class="form-control  input-general-loss-of-earnings" type="number" />
+                                    <input value="<?php echo $project_info->loss_of_earnings?$project_info->loss_of_earnings:0;?>" class="form-control text-end input-general-loss-of-earnings" type="number" />
                                     <span class="input-group-text"><?php echo $project_info->currency?$project_info->currency:"USD";?></span>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <th>Bunker cost</th>
-                            <td></td>
+                            <td>
+                                <p class="text-end" >
+                                <?php
+                                    if($project_info->status_id==4){
+                                        echo $selectedYards[0]->bunker_cost . " " . ($project_info->currency?$project_info->currency:"USD");
+                                    }else echo "-";
+                                ?>
+                                </p>
+                            </td>
                             <td>
                                 <div class="input-group">
-                                    <input value="<?php echo $project_info->bunker_costs?$project_info->bunker_costs:0;?>" class="form-control  input-general-bunker-costs" type="number" />
+                                    <input value="<?php echo $project_info->bunker_costs?$project_info->bunker_costs:0;?>" class="form-control text-end input-general-bunker-costs" type="number" />
                                     <span class="input-group-text"><?php echo $project_info->currency?$project_info->currency:"USD";?></span>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <th>Other additional expenditures of yards</th>
-                            <td></td>
+                            <td>
+                                <p class="text-end"  >
+                                <?php
+                                    if($project_info->status_id==4){
+                                        echo $selectedYards[0]->additional_expenditures . " " . ($project_info->currency?$project_info->currency:"USD");
+                                    }else echo "-";
+                                ?>
+                                </p>
+                            </td>
                             <td>
                                 <div class="input-group">
-                                    <input value="<?php echo $project_info->additional_expenditures?$project_info->additional_expenditures:0;?>" class="form-control  input-general-additional-expenditures" type="number" />
+                                    <input value="<?php echo $project_info->additional_expenditures?$project_info->additional_expenditures:0;?>" class="form-control text-end input-general-additional-expenditures" type="number" />
                                     <span class="input-group-text"><?php echo $project_info->currency?$project_info->currency:"USD";?></span>
                                 </div>
                             </td>
@@ -211,6 +241,33 @@ $totalPrice=0;
                     </tbody>
                 </table>
             </div>
+            <div class="col-md-1" ></div>
+            <?php if($project_info->status_id>=4){ ?>
+            <div class="col-md-5" >
+                <div style="width:80%" >
+                    <canvas id="general-costs-chart"></canvas>
+                </div>
+                
+                <div class="w-full" >
+                    <div class="d-flex align-items-center" >
+                        <div style="width:30%" >Estimated costs : </div>
+                        <div class="estimated-general-costs" >0</div>&nbsp;
+                        <div style="width:30%" ><?php echo $project_info->currency?$project_info->currency:"USD";?></div>
+                    </div>
+                    <div  class="d-flex align-items-center" >
+                        <div style="width:30%" >Final costs : </div>
+                        <div  class="final-general-costs" >0</div>&nbsp;
+                        <div style="width:30%" ><?php echo $project_info->currency?$project_info->currency:"USD";?></div>
+                    </div>
+                    <div class="d-flex align-items-center" >
+                        <div style="width:30%" >Delta costs : </div>
+                        <div  class="delta-general-costs" >0</div>&nbsp;
+                        <div style="width:30%" ><?php echo $project_info->currency?$project_info->currency:"USD";?></div>
+                    </div>
+                </div>
+                
+            </div>
+            <?php } ?>
         </div>
     </div>
 
@@ -472,7 +529,78 @@ $totalPrice=0;
                 }
             })
         })
+        <?php if($project_info->status_id>=4){ ?>
+        /////////////////////////////////
+        var yard_info=<?php echo json_encode($selectedYards);?>;
+        var project_info=<?php echo json_encode($project_info);?>;
+        var estimated_general_costs=0;
+        var final_general_costs=0
+        if(project_info.status_id>=4&&yard_info.length>0){
+            estimated_general_costs=Number(yard_info[0].deviation_cost)+Number(yard_info[0].loss_of_earnings)+Number(yard_info[0].bunker_cost)+Number(yard_info[0].additional_expenditures);
+        }
         
+        final_general_costs=Number(project_info.deviation_costs)+Number(project_info.loss_of_earnings)+Number(project_info.bunker_costs)+Number(project_info.additional_expenditures);
+        console.log(estimated_general_costs,final_general_costs)
+        var delta_costs=final_general_costs-estimated_general_costs;
+        var general_costs_chart = document.getElementById("general-costs-chart");
+        $(".estimated-general-costs").html(estimated_general_costs);
+        $(".final-general-costs").html(final_general_costs);
+        $(".delta-general-costs").html(Math.abs(delta_costs));
+        new Chart(
+            general_costs_chart,{
+                type:"bar",
+                data:{
+                    datasets: [
+                        {
+                            label: 'Estimated costs',
+                            data: [estimated_general_costs],
+                            backgroundColor: [
+                            '#00B393',//green
+                            ],
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Final costs',
+                            data: [final_general_costs],
+                            backgroundColor: [
+                            '#e74c3c',
+                            ],
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Delta',
+                            data: [Math.abs(delta_costs)],
+                            backgroundColor: [
+                            '#F9A52D',
+                            ],
+                            borderWidth: 1
+                        }
+                    ]
+
+                },
+                options: {
+                    animation: {
+                        animateScale: true
+                    },
+                    title:{
+                        text:"Estimated costs VS Final costs",
+                        position:"top",
+                        display:true
+
+                    },
+                    legend: {
+                        position: 'bottom',
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        }
+                    },
+                },
+            }
+        )
+        ///////
+        <?php } ?>
     });
     var totalCostItems;
     var totalVariationOrders;
