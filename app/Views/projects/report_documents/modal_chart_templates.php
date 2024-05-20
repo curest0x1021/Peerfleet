@@ -1,10 +1,12 @@
-
+<?php echo form_open(get_uri("projects/save_general")); ?>
+<?php echo form_close(); ?>
 <div id="ajaxModalContent" >
 <div class="modal-body clearfix" id="modal-insert-chart" >
     <button class="btn btn-default insert-chart-task-status" >Task status</button>
     <button class="btn btn-default insert-chart-project-progress" >Project progress</button>
     <button class="btn btn-default insert-chart-all-tasks-overview" >All tasks overview</button>
     <button class="btn btn-default insert-chart-my-tasks-overview" >My tasks overview</button>
+    <button class="btn btn-default insert-chart-general-costs" >General costs</button>
     <div style="overflow:hidden;" >
         <div class="preview" ></div>
         <iframe id="iframe_box" ></iframe>
@@ -58,6 +60,42 @@
 
 
                         var element = document.getElementById('card-project-progress-chart');
+                        element.style.height="40vh;"
+                        html2canvas(element).then(canvas=>{
+                            const dataURL=canvas.toDataURL();
+                            virtual_box.hidden=true;
+                            const viewFragment = window.watchdog.editor.data.processor.toView( `<img src="${dataURL}" />` );
+                            const modelFragment = window.watchdog.editor.data.toModel( viewFragment );
+                            window.watchdog.editor.model.insertContent( modelFragment,window.watchdog.editor.model.document.selection.getFirstPosition());
+                            window.modal_insert_chart.closeModal();
+                        })
+
+                        
+                    }, 800);
+                    
+                }
+            })
+        })
+        $(".insert-chart-general-costs").on("click",function(){
+            $.ajax({
+                url:"<?php echo get_uri("projects/cost_overview/".$project_id);?>",
+                method:"GET",
+                success:function(response){
+                    const virtual_box=document.createElement("div");
+                    const preview_box=document.body.querySelector(".preview");
+                    preview_box.style.width="100vw";
+                    preview_box.style.height="200vh"
+                    preview_box.style.overflowX="hidden"
+                    preview_box.style.overflowY="hidden"
+                    
+                    virtual_box.innerHTML=response;
+                    var code=virtual_box.querySelector("script").innerHTML
+                    preview_box.appendChild(virtual_box);
+                    eval(code)
+                    setTimeout(() => {
+
+
+                        var element = document.getElementById('card-general-costs');
                         element.style.height="40vh;"
                         html2canvas(element).then(canvas=>{
                             const dataURL=canvas.toDataURL();

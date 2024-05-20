@@ -145,13 +145,14 @@ $totalPrice=0;
         color:#eef1f9;
     }
 </style>
+<?php echo form_open(get_uri("projects/save_general")); ?>
+<?php echo form_close(); ?>
 <div class="card" >
     <div class="card-header" >
         <h4>Docking-related expenses</h4>
     </div>
-    <div class="card-body" >
-        <?php echo form_open(get_uri("projects/save_general")); ?>
-        <?php echo form_close(); ?>
+    <div class="card-body"  >
+        
         <div class="row" >
             <div class="col-md-5" >
                 <table class="table table-bordered" >
@@ -243,7 +244,7 @@ $totalPrice=0;
             </div>
             <div class="col-md-1" ></div>
             <?php if($project_info->status_id>=4){ ?>
-            <div class="col-md-5" >
+            <div class="col-md-5" id="card-general-costs">
                 <div style="width:80%" >
                     <canvas id="general-costs-chart"></canvas>
                 </div>
