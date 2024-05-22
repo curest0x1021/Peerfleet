@@ -24,6 +24,7 @@ class Uploader extends App_Controller
 
         $temp_file_path = get_setting("temp_file_path");
         $file_name = $image->getName();
+        $file_name=time();
         $target_path = getcwd() . '/' . $temp_file_path;
         if (!is_dir($target_path)) {
             if (!mkdir($target_path, 0755, true)) {
@@ -33,12 +34,15 @@ class Uploader extends App_Controller
         $target_file = $target_path . $file_name;
         // Move the uploaded file to a desired location
         $mimeType=$image->getMimeType();
+        // if(!file_exists($target_file))
         $image->move($target_path);
+        rename($target_path."/".$image->getName(),$target_file);
 
         // Get the path of the uploaded file
         // $imagePath = 'uploads/' . $image->getName();
 
         // Read the image file as a data URL
+        
         $dataUrl = 'data:' . $mimeType . ';base64,' . base64_encode(file_get_contents($target_file));
 
         // Pass the data URL to the view
