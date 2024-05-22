@@ -10,7 +10,7 @@
         <?php echo form_close();?>
         <div id="upload-area-cost-overview">
             
-            <div class="d-flex justify-content-center align-items-center panel-drop-zone" style="height:20vh;border:1px dashed lightgray;" >
+            <div class="d-flex justify-content-center align-items-center panel-drop-zone" id="upload-area-shipmanager-xlsx" style="height:20vh;border:1px dashed lightgray;" >
                 <div class="text-center" >    
                     <p>Drag-and-drop documents here</p>
                     <p>(or click to browse...)</p>
@@ -32,7 +32,7 @@
        $(".panel-drop-zone").on("click",function(){
         $(".input-file-yard-items").click();
        });
-       $('#upload-area-task-cost-items').on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+       $('#upload-area-shipmanager-xlsx').on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
             e.preventDefault();
             e.stopPropagation();
         })
