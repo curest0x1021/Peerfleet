@@ -43,6 +43,12 @@
             $(this).removeClass('dragover');
         })
         .on('drop', function(e) {
+            $maskTarget=$("#ajaxModalContent").find(".modal-body");
+            var padding = $maskTarget.height() - 80;
+            if (padding > 0) {
+                padding = Math.floor(padding / 2);
+            }
+            $maskTarget.after("<div class='modal-mask'><div class='circle-loader'></div></div>");
             console.log(e.originalEvent.dataTransfer.files)
             if(e.originalEvent.dataTransfer.files.length<1) return;
             var myForm=new FormData();
