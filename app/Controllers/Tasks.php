@@ -5591,6 +5591,8 @@ class Tasks extends Security_Controller {
         }
         foreach ($data as $key => $row) {
             if($key==0) continue;
+
+            
             
             # code...
             $description=$row[8]."\n". $row[14]."\n".$row[26];
@@ -5611,8 +5613,15 @@ class Tasks extends Security_Controller {
                 "priority_id"=>1
 
             );
-            if($row[15]!="crew") $new_task_data["supplier"]="Vessel (crew)";
-            else $new_task_data["supplier"]="Specialist";
+
+            $category_counts=count($this->Tasks_model->get_all_where(array("category"=>"Others"))->getResult());
+            if($category_counts<100) $new_task_data["dock_list_number"]=strtoupper(substr($new_task_data['category'], 0, 1)). sprintf('%02d', $category_counts+1);
+            else $new_task_data["dock_list_number"]=strtoupper(substr($new_task_data['category'], 0, 1)).($category_counts+1);
+
+            if($row[15]!="crew") $new_task_data["supplier"]="Vessel(Crew)";
+            else if($row[15]!="") $new_task_data["supplier"]="Specialist";
+            else  $new_task_data["supplier"]="";
+
             $saved_id=$this->Tasks_model->ci_save($new_task_data);
         }
         return json_encode(array("success"=>true));
