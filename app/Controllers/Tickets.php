@@ -147,6 +147,84 @@ class Tickets extends Security_Controller {
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("tickets", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
         // return $this->template->view('tickets/modal_form', $view_data);
+        return $this->template->view('tickets/modal_form_first', $view_data);
+    }
+
+
+    //load new tickt modal 
+    function modal_form_second() {
+        $this->validate_submitted_data(array(
+            "id" => "numeric"
+        ));
+
+        $id = $this->request->getPost('id');
+        $this->validate_ticket_access($id);
+
+        //client should not be able to edit ticket
+        if ($this->login_user->user_type === "client" && $id) {
+            app_redirect("forbidden");
+        }
+
+        $where = array();
+        if ($this->login_user->user_type === "staff" && $this->access_type !== "all" && $this->access_type !== "assigned_only") {
+            $where = array("where_in" => array("id" => $this->allowed_ticket_types));
+        }
+
+        $ticket_info = $this->Tickets_model->get_one($this->request->getPost("id"));
+
+        $projects = $this->Projects_model->get_dropdown_list(array("title"), "id", array("client_id" => $ticket_info->client_id, "project_type" => "client_project"));
+        if ($this->login_user->user_type == "client") {
+            $projects = $this->Projects_model->get_dropdown_list(array("title"), "id", array("client_id" => $this->login_user->client_id, "project_type" => "client_project"));
+            $ticket_info->client_id = $this->login_user->client_id;
+        }
+        $suggestion = array(array("id" => "", "text" => "-"));
+        foreach ($projects as $key => $value) {
+            $suggestion[] = array("id" => $key, "text" => $value);
+        }
+
+        $model_info = $this->Tickets_model->get_one($id);
+        $project_id = $this->request->getPost('project_id');
+
+        //here has a project id. now set the client from the project
+        if ($project_id) {
+            $client_id = $this->Projects_model->get_one($project_id)->client_id;
+            $model_info->client_id = $client_id;
+
+            $view_data['requested_by_dropdown'] = array("" => "-") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id", array("deleted" => 0, "client_id" => 1));
+        } else {
+            $requested_by_suggestion = array(array("id" => "", "text" => "-"));
+            $view_data['requested_by_dropdown'] = $requested_by_suggestion;
+        }
+
+        $view_data['projects_suggestion'] = $suggestion;
+
+        $view_data['ticket_types_dropdown'] = $this->Ticket_types_model->get_dropdown_list(array("title"), "id", $where);
+
+        $view_data['model_info'] = $model_info;
+        $view_data['client_id'] = $ticket_info->client_id;
+        $view_data['clients_dropdown'] = array("" => "-") + $this->Clients_model->get_dropdown_list(array("charter_name"), "id", array("is_lead" => 0));
+        $view_data['show_project_reference'] = get_setting('project_reference_in_tickets');
+
+        $view_data['project_id'] = $this->request->getPost('project_id');
+
+        $view_data['requested_by_id'] = $ticket_info->requested_by;
+
+        if ($this->login_user->user_type == "client") {
+            $view_data['project_id'] = $this->request->getPost('project_id');
+        } else {
+            $view_data['projects_dropdown'] = $this->Projects_model->get_dropdown_list(array("title"), "id", array("project_type" => "client_project"));
+        }
+
+        //prepare assign to list
+        $assigned_to_dropdown = array("" => "-") + $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id", array("deleted" => 0, "user_type" => "staff", "status" => "active"));
+        $view_data['assigned_to_dropdown'] = $assigned_to_dropdown;
+
+        //prepare label suggestions
+        $view_data['label_suggestions'] = $this->make_labels_dropdown("ticket", $view_data['model_info']->labels);
+
+        $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("tickets", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+
+        // return $this->template->view('tickets/modal_form', $view_data);
         return $this->template->view('tickets/modal_form_new', $view_data);
     }
 

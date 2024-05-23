@@ -345,5 +345,6 @@ $lang["quote_overview"]="Quote Overview";
 $lang["cost_overview"]="Cost Overview";
 $lang["text_templates"]="Text templates";
 $lang["completion_dates"]="Completion Dates";
+$lang["save_continue"]="Save & continue";
 
 return $lang;
