@@ -19,13 +19,19 @@
             array("id"=>"Support","text"=>"Support"),
         );
         ?>
-        <input
-        class="form-control corrective-action"
-        name="corrective_action"
-        id="corrective_action"
-        value="<?php if(isset($action_info)) echo $action_info->corrective_action;?>"
-
-        />
+        <div class="row" >
+            <div class="col-md-10" >
+                <input
+                class="form-control corrective-action"
+                name="corrective_action"
+                id="corrective_action"
+                value="<?php if(isset($action_info)) echo $action_info->corrective_action;?>"
+                />
+            </div>
+            <div class="col-md-2" >
+                <button class="btn btn-default btn-save-corrective-action"   ><i data-feather="check"  class="icon-16" ></i>Save</button>
+            </div>
+        </div>
     </div>
     <p>The following processes can be linked to this corrective action.</p>
     <!-- <div class="row" > -->
@@ -130,7 +136,7 @@
         $(".corrective-action").select2({
             data: <?php echo (json_encode($corrective_action_dropdown)); ?>
         });
-        $(".corrective-action").on("change",function(event){
+        $(".btn-save-corrective-action").on("click",function(){
             $(".btn-add-task").prop("disabled",false);
             $(".btn-add-requisition").prop("disabled",false);
             $(".btn-add-schedule").prop("disabled",false);
@@ -140,7 +146,7 @@
                 data:{
                     id:$(".input-action-id")[0].value,
                     ticket_id:<?php echo $ticket_id;?>,
-                    corrective_action:event.added.id
+                    corrective_action:$("#corrective_action")[0].value
                 },
                 success:function(response){
                     if(JSON.parse(response).success){
@@ -148,6 +154,7 @@
                         $(".btn-add-task").prop("disabled",false).attr("data-post-id",JSON.parse(response).saved_id);
                         $(".btn-add-requisition").prop("disabled",false).attr("data-post-id",JSON.parse(response).saved_id);
                         $(".btn-add-schedule").prop("disabled",false).attr("data-post-id",JSON.parse(response).saved_id);
+                        appAlert.success("Saved successfully!", {duration: 3000});
 
                     }
                 }

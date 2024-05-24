@@ -362,7 +362,7 @@ class Tickets extends Security_Controller {
         $now = get_current_utc_time();
         $id=$this->request->getPost("id");
         $saveData=array(
-            "title"=>$this->request->getPost("title"),
+            // "title"=>$this->request->getPost("title"),
             "manufacturer"=>$this->request->getPost("client_id"),
             "equipment"=>$this->request->getPost("equipment"),
             "serial_number"=>$this->request->getPost("serial_number"),
