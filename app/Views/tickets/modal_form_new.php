@@ -6,56 +6,14 @@
             <!------------------------------------------>
             <div class="form-group">
                 <div class="row">
-                    <label for="title" class=" col-md-3"><?php echo app_lang('title'); ?></label>
-                    <div class=" col-md-9">
+                    <label for="client_id" class=" col-md-3"><?php echo "Manufacturer"; ?></label>
+                    <div class="col-md-9">
                         <?php
-                        echo form_input(array(
-                            "id" => "title",
-                            "name" => "title",
-                            "value" => $model_info->title,
-                            "class" => "form-control",
-                            "placeholder" => app_lang('title'),
-                            "autofocus" => true,
-                            "data-rule-required" => true,
-                            "data-msg-required" => app_lang("field_required"),
-                        ));
+                        echo form_dropdown("client_id", $clients_dropdown, array($model_info->client_id), "class='select2 validate-hidden' id='client_id' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
                         ?>
                     </div>
                 </div>
             </div>
-            <?php //if ($client_id) { ?>
-                <!-- <input type="hidden" name="client_id" value="<?php echo $client_id; ?>" /> -->
-            <?php //} else if (!$model_info->creator_email) { ?>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="client_id" class=" col-md-3"><?php echo "Manufacturer"; ?></label>
-                        <div class="col-md-9">
-                            <?php
-                            echo form_dropdown("client_id", $clients_dropdown, array($model_info->client_id), "class='select2 validate-hidden' id='client_id' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
-                            ?>
-                        </div>
-                    </div>
-                </div>
-            <?php //} ?>
-            <!-- <div class="form-group">
-                <div class="row">
-                    <label for="manufaturer" class=" col-md-3"><?php echo "Manufacturer"; ?></label>
-                    <div class=" col-md-9">
-                        <?php
-                        // echo form_input(array(
-                        //     "id" => "manufaturer",
-                        //     "name" => "manufaturer",
-                        //     "value" => $model_info->manufacturer?$model_info->manufacturer:"",
-                        //     "class" => "form-control",
-                        //     "placeholder" => 'Manufaturer',
-                        //     "autofocus" => true,
-                        //     "data-rule-required" => true,
-                        //     "data-msg-required" => app_lang("field_required"),
-                        // ));
-                        ?>
-                    </div>
-                </div>
-            </div> -->
             <div class="form-group">
                 <div class="row">
                     <label for="equipment" class=" col-md-3"><?php echo "Equipment"; ?></label>
@@ -99,6 +57,16 @@
                     <label for="critical_disturbance" class=" col-md-3"><?php echo "Critical Disturbance"; ?></label>
                     <div class=" col-md-9">
                         <?php
+                        $critical_disturbances=[
+                            [
+                                "id"=>0,
+                                "text"=>"No"
+                            ],
+                            [
+                                "id"=>1,
+                                "text"=>"Yes"
+                            ],
+                        ];
                         echo form_input(array(
                             "id" => "critical_disturbance",
                             "name" => "critical_disturbance",
@@ -118,6 +86,16 @@
                     <label for="critical_equipment" class=" col-md-3"><?php echo "Critical Equipment"; ?></label>
                     <div class=" col-md-9">
                         <?php
+                        $critical_equipments=[
+                            [
+                                "id"=>0,
+                                "text"=>"No"
+                            ],
+                            [
+                                "id"=>1,
+                                "text"=>"Yes"
+                            ],
+                        ];
                         echo form_input(array(
                             "id" => "critical_equipment",
                             "name" => "critical_equipment",
@@ -265,6 +243,18 @@
 
         $('#requested_by_id').select2({
             data: <?php echo json_encode($requested_by_dropdown); ?>
+        });
+
+        $("#critical_disturbance").select2({
+            data: <?php 
+                echo (json_encode($critical_disturbances)); 
+                ?>
+        });
+
+        $("#critical_equipment").select2({
+            data: <?php 
+                echo (json_encode($critical_equipments)); 
+                ?>
         });
 
         if ("<?php echo $project_id; ?>") {
