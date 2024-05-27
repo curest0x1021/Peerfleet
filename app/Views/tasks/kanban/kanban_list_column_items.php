@@ -202,8 +202,9 @@ $title .
 "</td><td>".
 $milestone_title.
 "</td><td>
-Yard
-</td><td>" . 
+"
+.$data->supplier.
+"</td><td>" . 
 $assigned_to . 
 "</td><td>
 ".$collaborators.
