@@ -72,28 +72,7 @@
                     <label for="critical_disturbance" class=" col-md-3"><?php echo "Critical Disturbance"; ?></label>
                     <div class=" col-md-9">
                         <?php
-                        $critical_disturbances = [
-                            [
-                                "id" => 0,
-                                "text" => "No"
-                            ],
-                            [
-                                "id" => 1,
-                                "text" => "Yes"
-                            ],
-                        ];
-                        echo form_input(
-                            array(
-                                "id" => "critical_disturbance",
-                                "name" => "critical_disturbance",
-                                "value" => $model_info->critical_disturbance ? $model_info->critical_disturbance : "",
-                                "class" => "form-control",
-                                "placeholder" => 'Critical Disturbance',
-                                "autofocus" => true,
-                                "data-rule-required" => true,
-                                "data-msg-required" => app_lang("field_required"),
-                            )
-                        );
+                        echo form_dropdown("critical_disturbance", $critical_dropdown, array($model_info->critical_disturbance), "class='select2 validate-hidden' id='critical_disturbance' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
                         ?>
                     </div>
                 </div>
@@ -103,39 +82,13 @@
                     <label for="critical_equipment" class=" col-md-3"><?php echo "Critical Equipment"; ?></label>
                     <div class=" col-md-9">
                         <?php
-                        $critical_equipments = [
-                            [
-                                "id" => 0,
-                                "text" => "No"
-                            ],
-                            [
-                                "id" => 1,
-                                "text" => "Yes"
-                            ],
-                        ];
-                        echo form_input(
-                            array(
-                                "id" => "critical_equipment",
-                                "name" => "critical_equipment",
-                                "value" => $model_info->critical_equipment ? $model_info->critical_equipment : "",
-                                "class" => "form-control",
-                                "placeholder" => 'Critical Equipment',
-                                "autofocus" => true,
-                                "data-rule-required" => true,
-                                "data-msg-required" => app_lang("field_required"),
-                            )
-                        );
+                        echo form_dropdown("critical_equipment", $critical_dropdown, array($model_info->critical_equipment), "class='select2 validate-hidden' id='critical_disturbance' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
                         ?>
                     </div>
                 </div>
             </div>
             <!------------------------------------------>
             <!-- client can't be changed during editing -->
-
-
-
-
-
 
             <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => "col-md-3", "field_column" => " col-md-9")); ?>
 

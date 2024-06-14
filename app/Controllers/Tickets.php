@@ -216,6 +216,7 @@ class Tickets extends Security_Controller
         $view_data['model_info'] = $model_info;
         $view_data['client_id'] = $ticket_info->client_id;
         $view_data['clients_dropdown'] = array("" => "-") + $this->Clients_model->get_dropdown_list(array("charter_name"), "id", array("is_lead" => 0));
+        $view_data['critical_dropdown'] = array("" => "-", "yes" => "Yes", "no" => "No");
         $view_data['show_project_reference'] = get_setting('project_reference_in_tickets');
 
         $view_data['project_id'] = $this->request->getPost('project_id');
