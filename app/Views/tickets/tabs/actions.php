@@ -1,6 +1,6 @@
 <div class="card" >
     <div class="card-body" >
-        <h4>Actions</h4>
+        <div class="box-title"><span>Actions</span></div>
         <?php foreach ($allActions as $key => $action) {
         ?>
             <button class='btn btn-default btn-lg mb-1 w-100' data-act="ajax-modal" data-title="Edit Corrective Action" data-action-url="<?php echo get_uri("tickets/modal_corrective_action/".$action->id);?>"  >
