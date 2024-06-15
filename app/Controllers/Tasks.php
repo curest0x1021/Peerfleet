@@ -561,6 +561,92 @@ class Tasks extends Security_Controller {
         return array("context_options" => $context_options);
     }
 
+    function modal_form_simple() {
+        $id = $this->request->getPost('id');
+        $add_type = $this->request->getPost('add_type');
+        $last_id = $this->request->getPost('last_id');
+
+        $model_info = $this->Tasks_model->get_one($id);
+
+        $contexts = $this->_get_accessible_contexts();
+        $selected_context = get_array_value($contexts, 0);
+        $view_data["show_contexts_dropdown"] = count($contexts) > 1 ? true : false; //don't show context if there is only one context
+
+        $selected_context_id = 0;
+
+        foreach ($this->get_context_id_pairs() as $obj) {
+            $context_id_key = get_array_value($obj, "id_key");
+
+            $value = $this->request->getPost($context_id_key) ? $this->request->getPost($context_id_key) : $model_info->{$context_id_key};
+            $view_data[$context_id_key] = $value ? $value : ""; // prepare project_id, client_id, etc variables
+
+            if ($value) {
+                $selected_context = get_array_value($obj, "context");
+                $selected_context_id = $value;
+                $view_data["show_contexts_dropdown"] = false; //don't show context dropdown if any context is selected. 
+            }
+        }
+
+
+        if ($add_type == "multiple" && $last_id) {
+            //we've to show the lastly added information if it's the operation of adding multiple tasks
+            $model_info = $this->Tasks_model->get_one($last_id);
+        }
+
+        if ($model_info->context) {
+            $selected_context = $model_info->context; //has highest priority 
+            $context_id_key = $model_info->context."_id";
+            $selected_context_id = $model_info->{$context_id_key};
+        }
+
+        $dropdowns = $this->_get_task_related_dropdowns($selected_context, $selected_context_id, $selected_context_id ? true : false);
+
+        $view_data = array_merge($view_data, $dropdowns);
+
+        if ($id) {
+            if (!$this->can_edit_tasks($model_info)) {
+                app_redirect("forbidden");
+            }
+            $contexts = array($model_info->context); //context can't be edited dureing edit. So, pass only the saved context
+            $view_data["show_contexts_dropdown"] = false; //don't show context when editing 
+        } else {
+            //Going to create new task. Check if the user has access in any context
+            if (!$this->can_create_tasks()) {
+                app_redirect("forbidden");
+            }
+        }
+
+        $view_data['selected_context'] = $selected_context;
+        $view_data['contexts'] = $contexts;
+        $view_data['model_info'] = $model_info;
+        $view_data["add_type"] = $add_type;
+        $view_data['is_clone'] = $this->request->getPost('is_clone');
+        $view_data['view_type'] = $this->request->getPost("view_type");
+
+        $view_data['show_assign_to_dropdown'] = true;
+        if ($this->login_user->user_type == "client") {
+            if (!get_setting("client_can_assign_tasks")) {
+                $view_data['show_assign_to_dropdown'] = false;
+            }
+        } else {
+            //set default assigne to for new tasks
+            if (!$id && !$view_data['model_info']->assigned_to) {
+                $view_data['model_info']->assigned_to = $this->login_user->id;
+            }
+        }
+
+        $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("tasks", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+
+        $view_data['has_checklist'] = $this->Checklist_items_model->get_details(array("task_id" => $id))->resultID->num_rows;
+        $view_data['has_sub_task'] = count($this->Tasks_model->get_all_where(array("parent_task_id" => $id, "deleted" => 0))->getResult());
+
+        $view_data["project_deadline"] = $this->_get_project_deadline_for_task(get_array_value($view_data, "project_id"));
+        $view_data["show_time_with_task"] = (get_setting("show_time_with_task_start_date_and_deadline")) ? true : false;
+        $view_data['time_format_24_hours'] = get_setting("time_format") == "24_hours" ? true : false;
+
+        return $this->template->view('tasks/modal_form_simple', $view_data);
+    }
+
     function modal_form() {
         $id = $this->request->getPost('id');
         $add_type = $this->request->getPost('add_type');

@@ -1424,11 +1424,13 @@ class Tickets extends Security_Controller
     }
     function tab_requisitions($ticket_id)
     {
-        return $this->template->view("tickets/tabs/requisitions", ["ticket_id" => $ticket_id]);
+        $allActions = $this->Ticket_actions_model->get_all_where(array("ticket_id" => $ticket_id))->getResult();
+        return $this->template->view("tickets/tabs/requisitions", ["ticket_id" => $ticket_id, "allActions" => $allActions]);
     }
     function tab_activities($ticket_id)
     {
-        return $this->template->view("tickets/tabs/activities", ["ticket_id" => $ticket_id]);
+        $allActions = $this->Ticket_actions_model->get_all_where(array("ticket_id" => $ticket_id))->getResult();
+        return $this->template->view("tickets/tabs/activities", ["ticket_id" => $ticket_id, "allActions" => $allActions]);
     }
     function modal_add_corrective_action($ticket_id)
     {

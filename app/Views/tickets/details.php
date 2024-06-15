@@ -13,15 +13,15 @@
                             <strong>Title : </strong><?php echo $ticket_info->title; ?>
                         </div>
                         <div class="col-md-12 mb15">
-                            <strong>Vessel : </strong><?php echo $ticket_info->manufacturer; ?>
+                            <strong>Vessel :
+                            </strong><?php if (isset($vessel_info))
+                                echo $vessel_info->charter_name; ?>
                         </div>
                         <div class="col-md-12 mb15">
                             <strong>Equipment : </strong><?php echo $ticket_info->equipment; ?>
                         </div>
                         <div class="col-md-12 mb15">
-                            <strong>Manufacturer :
-                            </strong><?php if (isset($vessel_info))
-                                echo $vessel_info->charter_name; ?>
+                            <strong>manufacturer : </strong><?php echo $ticket_info->manufacturer; ?>
                         </div>
                         <div class="col-md-12 mb15">
                             <strong><?php echo app_lang('status') . ": "; ?></strong>
