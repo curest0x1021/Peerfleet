@@ -13,12 +13,12 @@
                     <div class="row text-start" >
                         <div class="col-md-4" >
                             <p>
-                                Title : <?php if(isset($action)) echo $action->requisition_title;?>
+                                Title : <?php echo $action->requisition_title;?>
                             </p>
                         </div>
                         <div class="col-md-4" >
                             <p>
-                                Number : <?php if(isset($action)) echo $action->requisition_number;?>
+                                Number : <?php echo $action->requisition_number;?>
                             </p>
                         </div>
                     </div>
