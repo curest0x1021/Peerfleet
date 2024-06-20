@@ -46,26 +46,26 @@
 
             <?php if (!$requested_by_id && !$model_info->id) { ?>
                 <?php if ($login_user->user_type == "staff") { ?>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <div class="row">
                             <label for="requested_by_id" class=" col-md-3"><?php echo app_lang('requested_by'); ?></label>
                             <div class="col-md-9" id="requested-by-dropdown-section">
                                 <?php
-                                if ($project_id) {
-                                    echo form_dropdown("requested_by_id", $requested_by_dropdown, "", "class='select2'");
-                                } else {
-                                    echo form_input(array(
-                                        "id" => "requested_by_id",
-                                        "name" => "requested_by_id",
-                                        "value" => $model_info->requested_by,
-                                        "class" => "form-control",
-                                        "placeholder" => app_lang('requested_by')
-                                    ));
-                                }
+                                // if ($project_id) {
+                                //     echo form_dropdown("requested_by_id", $requested_by_dropdown, "", "class='select2'");
+                                // } else {
+                                //     echo form_input(array(
+                                //         "id" => "requested_by_id",
+                                //         "name" => "requested_by_id",
+                                //         "value" => $model_info->requested_by,
+                                //         "class" => "form-control",
+                                //         "placeholder" => app_lang('requested_by')
+                                //     ));
+                                // }
                                 ?>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 <?php } else if ($login_user->user_type == "client") { ?>
                     <input type="hidden" name="requested_by_id" value="<?php echo $login_user->id; ?>" />
                 <?php } ?>

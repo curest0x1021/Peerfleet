@@ -1,8 +1,5 @@
 <div class="card" >
     <div class="card-body" >
-<<<<<<< HEAD
-        
-=======
         <!-- <h4>Requisitions</h4> -->
         <div class="box-title"><span>Requisitions</span></div>
         <?php foreach ($allActions as $key => $action) {
@@ -29,6 +26,5 @@
             <?php }?>
         <?php
         } ?>
->>>>>>> d1c9620768f386677ac1d351c2c7dcec4ee00ee3
     </div>
 </div>

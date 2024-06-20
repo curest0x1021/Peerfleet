@@ -312,7 +312,7 @@ class Tickets extends Security_Controller
             "last_activity_at" => $now,
             "labels" => $this->request->getPost('labels'),
             "assigned_to" => $assigned_to ? $assigned_to : 0,
-            "requested_by" => $requested_by ? $requested_by : 0,
+            // "requested_by" => $requested_by ? $requested_by : 0,
             "request_data" => $this->request->getPost('request_data')
         );
 

@@ -9,22 +9,7 @@
                     <label for="client_id" class=" col-md-3"><?php echo "Manufacturer"; ?></label>
                     <div class="col-md-9">
                         <?php
-<<<<<<< HEAD
                         echo form_dropdown("client_id", $clients_dropdown, array($model_info->client_id), "class='select2 validate-hidden' id='client_id' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
-=======
-                        echo form_input(
-                            array(
-                                "id" => "manufacturer_id",
-                                "name" => "manufacturer_id",
-                                "value" => $model_info->manufacturer ? $model_info->manufacturer : "",
-                                "class" => "form-control",
-                                "placeholder" => 'Manufacturer',
-                                "autofocus" => true,
-                                "data-rule-required" => true,
-                                "data-msg-required" => app_lang("field_required"),
-                            )
-                        );
->>>>>>> d1c9620768f386677ac1d351c2c7dcec4ee00ee3
                         ?>
                     </div>
                 </div>
@@ -34,7 +19,6 @@
                     <label for="equipment" class=" col-md-3"><?php echo "Equipment"; ?></label>
                     <div class=" col-md-9">
                         <?php
-<<<<<<< HEAD
                         echo form_input(array(
                             "id" => "equipment",
                             "name" => "equipment",
@@ -45,20 +29,6 @@
                             "data-rule-required" => true,
                             "data-msg-required" => app_lang("field_required"),
                         ));
-=======
-                        echo form_input(
-                            array(
-                                "id" => "equipment",
-                                "name" => "equipment",
-                                "value" => $model_info->equipment ? $model_info->equipment : "",
-                                "class" => "form-control",
-                                "placeholder" => 'Equipment',
-                                "autofocus" => true,
-                                "data-rule-required" => true,
-                                "data-msg-required" => app_lang("field_required"),
-                            )
-                        );
->>>>>>> d1c9620768f386677ac1d351c2c7dcec4ee00ee3
                         ?>
                     </div>
                 </div>
@@ -68,7 +38,6 @@
                     <label for="serial_number" class=" col-md-3"><?php echo "Serial Number"; ?></label>
                     <div class=" col-md-9">
                         <?php
-<<<<<<< HEAD
                         echo form_input(array(
                             "id" => "serial_number",
                             "name" => "serial_number",
@@ -79,20 +48,6 @@
                             "data-rule-required" => true,
                             "data-msg-required" => app_lang("field_required"),
                         ));
-=======
-                        echo form_input(
-                            array(
-                                "id" => "serial_number",
-                                "name" => "serial_number",
-                                "value" => $model_info->serial_number ? $model_info->serial_number : "",
-                                "class" => "form-control",
-                                "placeholder" => 'Serial Number',
-                                "autofocus" => true,
-                                "data-rule-required" => true,
-                                "data-msg-required" => app_lang("field_required"),
-                            )
-                        );
->>>>>>> d1c9620768f386677ac1d351c2c7dcec4ee00ee3
                         ?>
                     </div>
                 </div>
@@ -102,7 +57,6 @@
                     <label for="critical_disturbance" class=" col-md-3"><?php echo "Critical Disturbance"; ?></label>
                     <div class=" col-md-9">
                         <?php
-<<<<<<< HEAD
                         $critical_disturbances=[
                             [
                                 "id"=>0,
@@ -123,9 +77,6 @@
                             "data-rule-required" => true,
                             "data-msg-required" => app_lang("field_required"),
                         ));
-=======
-                        echo form_dropdown("critical_disturbance", $critical_dropdown, array($model_info->critical_disturbance), "class='select2 validate-hidden' id='critical_disturbance' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
->>>>>>> d1c9620768f386677ac1d351c2c7dcec4ee00ee3
                         ?>
                     </div>
                 </div>
@@ -135,7 +86,6 @@
                     <label for="critical_equipment" class=" col-md-3"><?php echo "Critical Equipment"; ?></label>
                     <div class=" col-md-9">
                         <?php
-<<<<<<< HEAD
                         $critical_equipments=[
                             [
                                 "id"=>0,
@@ -156,23 +106,12 @@
                             "data-rule-required" => true,
                             "data-msg-required" => app_lang("field_required"),
                         ));
-=======
-                        echo form_dropdown("critical_equipment", $critical_dropdown, array($model_info->critical_equipment), "class='select2 validate-hidden' id='critical_disturbance' data-rule-required='true', data-msg-required='" . app_lang('field_required') . "'");
->>>>>>> d1c9620768f386677ac1d351c2c7dcec4ee00ee3
                         ?>
                     </div>
                 </div>
             </div>
             <!------------------------------------------>
             <!-- client can't be changed during editing -->
-<<<<<<< HEAD
-            
-
-            
-
-          
-=======
->>>>>>> d1c9620768f386677ac1d351c2c7dcec4ee00ee3
 
             <?php echo view("custom_fields/form/prepare_context_fields", array("custom_fields" => $custom_fields, "label_column" => "col-md-3", "field_column" => " col-md-9")); ?>
 
@@ -184,15 +123,6 @@
 
         <!-- file can't be uploaded during editing -->
         <button class="btn btn-default upload-file-button float-start me-auto btn-sm round  <?php
-<<<<<<< HEAD
-                                                                                            if ($model_info->id) {
-                                                                                                echo "hide";
-                                                                                            }
-                                                                                            ?>" type="button" style="color:#7988a2"><i data-feather='camera' class='icon-16'></i> <?php echo app_lang("upload_file"); ?></button>
-
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
-        <button type="submit" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span> <?php echo app_lang('save'); ?></button>
-=======
         if ($model_info->id) {
             echo "hide";
         }
@@ -203,7 +133,6 @@
                 class="icon-16"></span> <?php echo app_lang('close'); ?></button>
         <button type="submit" class="btn btn-primary"><span data-feather="check-circle" class="icon-16"></span>
             <?php echo app_lang('save'); ?></button>
->>>>>>> d1c9620768f386677ac1d351c2c7dcec4ee00ee3
     </div>
 </div>
 <?php echo form_close(); ?>
@@ -211,11 +140,7 @@
 
 
 <script type="text/javascript">
-<<<<<<< HEAD
-    $(document).ready(function() {
-=======
     $(document).ready(function () {
->>>>>>> d1c9620768f386677ac1d351c2c7dcec4ee00ee3
         $('#description').summernote();
         var uploadUrl = "<?php echo get_uri("tickets/upload_file"); ?>";
         var validationUrl = "<?php echo get_uri("tickets/validate_ticket_file"); ?>";
@@ -224,11 +149,7 @@
         var dropzone = attachDropzoneWithForm("#new-ticket-dropzone", uploadUrl, validationUrl);
 
         $("#ticket-form").appForm({
-<<<<<<< HEAD
-            onSuccess: function(result) {
-=======
             onSuccess: function (result) {
->>>>>>> d1c9620768f386677ac1d351c2c7dcec4ee00ee3
                 if (editMode) {
 
                     appAlert.success(result.message, {
@@ -253,7 +174,6 @@
 
             }
         });
-<<<<<<< HEAD
         setTimeout(function() {
             $("#title").focus();
         }, 200);
@@ -339,11 +259,5 @@
             $("#client_id").select2("readonly", true);
         }
 
-=======
-        setTimeout(function () {
-            $("#title").focus();
-        }, 200);
-        $("#ticket-form .select2").select2();
->>>>>>> d1c9620768f386677ac1d351c2c7dcec4ee00ee3
     });
 </script>
