@@ -42,7 +42,7 @@
                     <i data-feather="tool" class="icon-16" ></i>
                     <h5>&nbsp;Task : <?php echo $action_info->task_title;?></h5>
                     <a href="#" style="margin-left:1vw;" data-post-id="<?php  if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Edit Action Task " data-action-url="<?php echo get_uri("tickets/modal_add_task/".$ticket_id);?>" ><i data-feather="edit" class="icon-16" ></i></a>
-                    <a href="#" style="margin-left:1vw;"  class="delete" data-action-url="<?php echo get_uri("tickets/delete_action_task");?>"  data-action="delete-confirmation" data-id="<?php  if(isset($action_info->id)) echo $action_info->id;?>" ><i data-feather="trash-2" class="icon-16" ></i></a>
+                    <a href="#" style="margin-left:1vw;" ><i data-feather="trash-2" class="icon-16" ></i></a>
                 </div>
             </div>
         <?php }else{?>
@@ -60,7 +60,7 @@
                     <i data-feather="shopping-cart" class="icon-16" ></i>
                     <h5>&nbsp;Requisition : <?php echo $action_info->requisition_title;?></h5>
                     <a href="#" style="margin-left:1vw;" data-post-id="<?php  if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Edit Action Task " data-action-url="<?php echo get_uri("tickets/modal_connect_requisition/".$ticket_id);?>" ><i data-feather="edit" class="icon-16" ></i></a>
-                    <a href="#" style="margin-left:1vw;"  class="delete" data-action-url="#" data-action="delete-confirmation" data-id="<?php  if(isset($action_info->id)) echo $action_info->id;?>" ><i data-feather="trash-2" class="icon-16" ></i></a>
+                    <a href="#" style="margin-left:1vw;" ><i data-feather="trash-2" class="icon-16" ></i></a>
                 </div>
                 <div class="row" >
                     <div class="col-md-4" >
@@ -86,7 +86,7 @@
                     <i data-feather="calendar" class="icon-16" ></i>
                     <h5>&nbsp;Port : <?php echo $action_info->schedule_port;?></h5>
                     <a href="#" style="margin-left:1vw;" data-post-id="<?php  if(isset($action_info->id)) echo $action_info->id;?>" data-act="ajax-modal" data-title="Edit Action Schedule " data-action-url="<?php echo get_uri("tickets/modal_add_schedule/".$ticket_id);?>" ><i data-feather="edit" class="icon-16" ></i></a>
-                    <a href="#" style="margin-left:1vw;" class="delete" data-action-url="#" data-action="delete-confirmation" data-id="<?php  if(isset($action_info->id)) echo $action_info->id;?>" ><i data-feather="trash-2" class="icon-16" ></i></a>
+                    <a href="#" style="margin-left:1vw;" ><i data-feather="trash-2" class="icon-16" ></i></a>
                 </div>
                 <div class="row" >
                     <div class="col-md-4" >

@@ -2,11 +2,13 @@
 
 namespace App\Controllers;
 
-class Tickets extends Security_Controller {
+class Tickets extends Security_Controller
+{
 
     protected $Ticket_templates_model;
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->init_permission_checker("ticket");
 
@@ -16,25 +18,29 @@ class Tickets extends Security_Controller {
         $this->Mailboxes_model = model('App\..\plugins\Mailbox\Models\Mailboxes_model');
     }
 
-    private function validate_ticket_access($ticket_id = 0) {
+    private function validate_ticket_access($ticket_id = 0)
+    {
         if (!$this->can_access_tickets($ticket_id)) {
             app_redirect("forbidden");
         }
     }
 
-    private function _validate_tickets_report_access() {
+    private function _validate_tickets_report_access()
+    {
         if (!$this->login_user->is_admin && $this->access_type != "all") {
             app_redirect("forbidden");
         }
     }
 
     //only admin can delete tickets
-    protected function can_delete_tickets() {
+    protected function can_delete_tickets()
+    {
         return $this->login_user->is_admin;
     }
 
     // load ticket list view
-    function index($status = "", $ticket_type_id = 0) {
+    function index($status = "", $ticket_type_id = 0)
+    {
         $this->check_module_availability("module_ticket");
 
         $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("tickets", $this->login_user->is_admin, $this->login_user->user_type);
@@ -63,7 +69,8 @@ class Tickets extends Security_Controller {
         }
     }
 
-    private function _get_assiged_to_dropdown() {
+    private function _get_assiged_to_dropdown()
+    {
         $assigned_to_dropdown = array(array("id" => "", "text" => "- " . app_lang("assigned_to") . " -"));
 
         $assigned_to_list = $this->Users_model->get_dropdown_list(array("first_name", "last_name"), "id", array("deleted" => 0, "user_type" => "staff", "status" => "active"));
@@ -74,10 +81,13 @@ class Tickets extends Security_Controller {
     }
 
     //load new tickt modal 
-    function modal_form() {
-        $this->validate_submitted_data(array(
-            "id" => "numeric"
-        ));
+    function modal_form()
+    {
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric"
+            )
+        );
 
         $id = $this->request->getPost('id');
         $this->validate_ticket_access($id);
@@ -152,10 +162,13 @@ class Tickets extends Security_Controller {
 
 
     //load new tickt modal 
-    function modal_form_second() {
-        $this->validate_submitted_data(array(
-            "id" => "numeric"
-        ));
+    function modal_form_second()
+    {
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric"
+            )
+        );
 
         $id = $this->request->getPost('id');
         $this->validate_ticket_access($id);
@@ -203,6 +216,7 @@ class Tickets extends Security_Controller {
         $view_data['model_info'] = $model_info;
         $view_data['client_id'] = $ticket_info->client_id;
         $view_data['clients_dropdown'] = array("" => "-") + $this->Clients_model->get_dropdown_list(array("charter_name"), "id", array("is_lead" => 0));
+        $view_data['critical_dropdown'] = array("" => "-", "yes" => "Yes", "no" => "No");
         $view_data['show_project_reference'] = get_setting('project_reference_in_tickets');
 
         $view_data['project_id'] = $this->request->getPost('project_id');
@@ -224,12 +238,14 @@ class Tickets extends Security_Controller {
 
         $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("tickets", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
 
+        // return $view_data;
         // return $this->template->view('tickets/modal_form', $view_data);
         return $this->template->view('tickets/modal_form_new', $view_data);
     }
 
     //get project suggestion against client
-    function get_project_suggestion($client_id = 0) {
+    function get_project_suggestion($client_id = 0)
+    {
         validate_numeric_value($client_id);
         $this->access_only_allowed_members();
 
@@ -242,19 +258,24 @@ class Tickets extends Security_Controller {
     }
 
     // add a new ticket
-    function save() {
+    function save()
+    {
         $id = $this->request->getPost('id');
         $this->validate_ticket_access($id);
 
         if ($id) {
-            $this->validate_submitted_data(array(
-                "ticket_type_id" => "required|numeric"
-            ));
+            $this->validate_submitted_data(
+                array(
+                    "ticket_type_id" => "required|numeric"
+                )
+            );
         } else {
-            $this->validate_submitted_data(array(
-                "client_id" => "required|numeric",
-                "ticket_type_id" => "required|numeric"
-            ));
+            $this->validate_submitted_data(
+                array(
+                    "client_id" => "required|numeric",
+                    "ticket_type_id" => "required|numeric"
+                )
+            );
         }
 
 
@@ -292,7 +313,7 @@ class Tickets extends Security_Controller {
             "labels" => $this->request->getPost('labels'),
             "assigned_to" => $assigned_to ? $assigned_to : 0,
             "requested_by" => $requested_by ? $requested_by : 0,
-            "request_data"=>$this->request->getPost('request_data')
+            "request_data" => $this->request->getPost('request_data')
         );
 
         if (!$id) {
@@ -358,44 +379,48 @@ class Tickets extends Security_Controller {
         }
     }
 
-    function save_new(){
+    function save_new()
+    {
         $now = get_current_utc_time();
-        $id=$this->request->getPost("id");
-        $saveData=array(
+        $id = $this->request->getPost("id");
+        $saveData = array(
             // "title"=>$this->request->getPost("title"),
-            "manufacturer"=>$this->request->getPost("client_id"),
-            "equipment"=>$this->request->getPost("equipment"),
-            "serial_number"=>$this->request->getPost("serial_number"),
-            "critical_disturbance"=>$this->request->getPost("critical_disturbance"),
-            "critical_equipment"=>$this->request->getPost("critical_equipment"),
-            "client_id" => $this->request->getPost('client_id'),
-            "project_id"=>0,
-            "ticket_type_id"=>1,
+            "manufacturer" => $this->request->getPost("manufacturer_id"),
+            "equipment" => $this->request->getPost("equipment"),
+            "serial_number" => $this->request->getPost("serial_number"),
+            "critical_disturbance" => $this->request->getPost("critical_disturbance"),
+            "critical_equipment" => $this->request->getPost("critical_equipment"),
+            // "client_id" => $this->request->getPost('client_id'),
+            "project_id" => 0,
+            "ticket_type_id" => 1,
             "created_by" => $this->login_user->id,
             "created_at" => $now,
-            "status"=>"new",
-            "last_activity_at"=>$now,
-            "assigned_to"=>$this->login_user->id,
+            "status" => "new",
+            "last_activity_at" => $now,
+            "assigned_to" => $this->login_user->id,
 
         );
-        $saved_id=$this->Tickets_model->ci_save($saveData,$id);
-        return json_encode(array("success"=>true,"data" => $this->_row_data($saved_id), 'message' => app_lang('record_saved'),"id"=>$saved_id,));
+        $saved_id = $this->Tickets_model->ci_save($saveData, $id);
+        return json_encode(array("success" => true, "data" => $this->_row_data($saved_id), 'message' => app_lang('record_saved'), "id" => $saved_id, ));
     }
 
     /* upload a file */
 
-    function upload_file() {
+    function upload_file()
+    {
         upload_file_to_temp();
     }
 
     /* check valid file for ticket */
 
-    function validate_ticket_file() {
+    function validate_ticket_file()
+    {
         return validate_post_file($this->request->getPost("file_name"));
     }
 
     // list of tickets, prepared for datatable 
-    function list_data($is_widget = 0) {
+    function list_data($is_widget = 0)
+    {
         $this->access_only_allowed_members();
 
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("tickets", $this->login_user->is_admin, $this->login_user->user_type);
@@ -404,7 +429,8 @@ class Tickets extends Security_Controller {
         $ticket_label = $this->request->getPost("ticket_label");
         $assigned_to = $this->request->getPost("assigned_to");
         $ticket_type_id = $this->request->getPost('ticket_type_id');
-        $options = array("status" => $status,
+        $options = array(
+            "status" => $status,
             "ticket_types" => $this->allowed_ticket_types,
             "ticket_label" => $ticket_label,
             "assigned_to" => $assigned_to,
@@ -446,7 +472,8 @@ class Tickets extends Security_Controller {
     }
 
     // list of tickets of a specific client, prepared for datatable 
-    function ticket_list_data_of_client($client_id, $is_widget = 0) {
+    function ticket_list_data_of_client($client_id, $is_widget = 0)
+    {
         validate_numeric_value($client_id);
         $this->access_only_allowed_members_or_client_contact($client_id);
 
@@ -478,7 +505,8 @@ class Tickets extends Security_Controller {
     }
 
     // return a row of ticket list table 
-    private function _row_data($id) {
+    private function _row_data($id)
+    {
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("tickets", $this->login_user->is_admin, $this->login_user->user_type);
 
         $options = array(
@@ -498,7 +526,8 @@ class Tickets extends Security_Controller {
     }
 
     //prepare a row of ticket list table
-    private function _make_row($data, $custom_fields) {
+    private function _make_row($data, $custom_fields)
+    {
         $ticket_status_class = "bg-danger";
         if ($data->status === "new") {
             $ticket_status_class = "bg-warning";
@@ -586,7 +615,8 @@ class Tickets extends Security_Controller {
     }
 
     // load ticket details view 
-    function view($ticket_id = 0) {
+    function view($ticket_id = 0)
+    {
         validate_numeric_value($ticket_id);
 
         if (!$ticket_id) {
@@ -637,9 +667,10 @@ class Tickets extends Security_Controller {
 
                 $view_data["view_type"] = $view_type;
                 ///////////////////////////////////////
-                $view_data['vessel_info']=null;
-                if(isset($ticket_info->manufacturer)) $view_data['vessel_info']=$this->Clients_model->get_details(array("id"=>$ticket_info->manufacturer))->getRow();
-                $view_data['emailbox']=$this->Mailboxes_model->get_details(array("imap_authorized"=>1))->getRow();
+                $view_data['vessel_info'] = null;
+                if (isset($ticket_info->client_id))
+                    $view_data['vessel_info'] = $this->Clients_model->get_details(array("id" => $ticket_info->client_id))->getRow();
+                $view_data['emailbox'] = $this->Mailboxes_model->get_details(array("imap_authorized" => 1))->getRow();
                 ////////////////////////////////////////
 
                 $view_data["can_create_client"] = false;
@@ -660,7 +691,8 @@ class Tickets extends Security_Controller {
 
     //delete ticket and sub comments
 
-    function delete() {
+    function delete()
+    {
 
         if (!$this->can_delete_tickets()) {
             app_redirect("forbidden");
@@ -669,9 +701,11 @@ class Tickets extends Security_Controller {
         $id = $this->request->getPost('id');
         $this->validate_ticket_access($id);
 
-        $this->validate_submitted_data(array(
-            "id" => "required|numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "required|numeric"
+            )
+        );
 
         if ($this->Tickets_model->delete_ticket_and_sub_items($id)) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
@@ -680,7 +714,8 @@ class Tickets extends Security_Controller {
         }
     }
 
-    function save_comment() {
+    function save_comment()
+    {
         $ticket_id = $this->request->getPost('ticket_id');
         $description = $this->request->getPost('description');
         $now = get_current_utc_time();
@@ -699,10 +734,12 @@ class Tickets extends Security_Controller {
             "is_note" => $is_note ? $is_note : 0
         );
 
-        $this->validate_submitted_data(array(
-            "description" => "required",
-            "ticket_id" => "required|numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "description" => "required",
+                "ticket_id" => "required|numeric"
+            )
+        );
 
         $comment_data = clean_data($comment_data);
         $comment_data["files"] = $files_data; //don't clean serialized data
@@ -739,7 +776,8 @@ class Tickets extends Security_Controller {
         }
     }
 
-    function save_ticket_status($ticket_id = 0, $status = "closed") {
+    function save_ticket_status($ticket_id = 0, $status = "closed")
+    {
         validate_numeric_value($ticket_id);
         if ($ticket_id) {
             $this->validate_ticket_access($ticket_id);
@@ -769,13 +807,15 @@ class Tickets extends Security_Controller {
 
     /* download files by zip */
 
-    function download_comment_files($id) {
+    function download_comment_files($id)
+    {
 
         $files = $this->Ticket_comments_model->get_one($id)->files;
         return $this->download_app_files(get_setting("timeline_file_path"), $files);
     }
 
-    function assign_to_me($ticket_id = 0) {
+    function assign_to_me($ticket_id = 0)
+    {
         if ($ticket_id) {
             validate_numeric_value($ticket_id);
 
@@ -795,12 +835,14 @@ class Tickets extends Security_Controller {
     }
 
     //load the ticket templates view of ticket template list
-    function ticket_templates() {
+    function ticket_templates()
+    {
         $this->access_only_team_members();
         return $this->template->rander("tickets/templates/index");
     }
 
-    private function can_view_ticket_template($id = 0) {
+    private function can_view_ticket_template($id = 0)
+    {
         if ($id) {
             $template_info = $this->Ticket_templates_model->get_one($id);
             if ($template_info->private && $template_info->created_by !== $this->login_user->id) {
@@ -809,7 +851,8 @@ class Tickets extends Security_Controller {
         }
     }
 
-    private function can_edit_ticket_template($id = 0) {
+    private function can_edit_ticket_template($id = 0)
+    {
         if ($id) {
             $template_info = $this->Ticket_templates_model->get_one($id);
             //admin could modify all public templates
@@ -825,7 +868,8 @@ class Tickets extends Security_Controller {
     }
 
     //add or edit form of ticket template form
-    function ticket_template_modal_form() {
+    function ticket_template_modal_form()
+    {
         $this->access_only_team_members();
         $where = array();
         if ($this->login_user->user_type === "staff" && $this->access_type !== "all" && $this->access_type !== "assigned_only") {
@@ -843,13 +887,16 @@ class Tickets extends Security_Controller {
     }
 
     // add a new ticket template
-    function save_ticket_template() {
+    function save_ticket_template()
+    {
         $this->access_only_team_members();
-        $this->validate_submitted_data(array(
-            "id" => "numeric",
-            "title" => "required",
-            "description" => "required"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric",
+                "title" => "required",
+                "description" => "required"
+            )
+        );
 
         $id = $this->request->getPost('id');
         $this->can_edit_ticket_template($id);
@@ -883,13 +930,16 @@ class Tickets extends Security_Controller {
         }
     }
 
-    function delete_ticket_template() {
+    function delete_ticket_template()
+    {
         $id = $this->request->getPost('id');
         $this->can_edit_ticket_template($id);
 
-        $this->validate_submitted_data(array(
-            "id" => "required|numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "required|numeric"
+            )
+        );
 
         if ($this->Ticket_templates_model->delete($id)) {
             echo json_encode(array("success" => true, 'message' => app_lang('record_deleted')));
@@ -898,7 +948,8 @@ class Tickets extends Security_Controller {
         }
     }
 
-    function ticket_template_list_data($view_type = "", $ticket_type_id = 0) {
+    function ticket_template_list_data($view_type = "", $ticket_type_id = 0)
+    {
         validate_numeric_value($ticket_type_id);
         $options = array("created_by" => $this->login_user->id, "ticket_type_id" => $ticket_type_id);
         if ($this->login_user->user_type === "staff" && $this->access_type !== "all" && $this->access_type !== "assigned_only") {
@@ -916,7 +967,8 @@ class Tickets extends Security_Controller {
     }
 
     // return a row of ticket template table 
-    private function _row_data_for_ticket_templates($id) {
+    private function _row_data_for_ticket_templates($id)
+    {
         $options = array(
             "id" => $id
         );
@@ -925,7 +977,8 @@ class Tickets extends Security_Controller {
         return $this->_make_row_for_ticket_templates($data);
     }
 
-    private function _make_row_for_ticket_templates($data, $view_type = "") {
+    private function _make_row_for_ticket_templates($data, $view_type = "")
+    {
 
         if ($view_type == "modal") {
             $title = $data->title;
@@ -946,7 +999,7 @@ class Tickets extends Security_Controller {
         $actions = modal_anchor(get_uri("tickets/ticket_template_view/" . $data->id), "<i data-feather='cloud-lightning' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('template_details'), "data-modal-title" => app_lang('template'), "data-post-id" => $data->id));
         if ($data->created_by == $this->login_user->id || $this->login_user->is_admin) {
             $actions = modal_anchor(get_uri("tickets/ticket_template_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_template'), "data-post-id" => $data->id))
-                    . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("tickets/delete_ticket_template"), "data-action" => "delete-confirmation"));
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("tickets/delete_ticket_template"), "data-action" => "delete-confirmation"));
         }
 
         if ($view_type == "modal") {
@@ -969,7 +1022,8 @@ class Tickets extends Security_Controller {
         }
     }
 
-    function ticket_template_view($id) {
+    function ticket_template_view($id)
+    {
         validate_numeric_value($id);
         $this->can_view_ticket_template($id);
         $view_data['model_info'] = $this->Ticket_templates_model->get_one($id);
@@ -978,7 +1032,8 @@ class Tickets extends Security_Controller {
     }
 
     //show a modal to choose a template for comment a ticket
-    function insert_template_modal_form() {
+    function insert_template_modal_form()
+    {
         $this->access_only_team_members();
         $view_data['ticket_type_id'] = $this->request->getPost('ticket_type_id');
 
@@ -986,7 +1041,8 @@ class Tickets extends Security_Controller {
     }
 
     //add client when there has unknown client
-    function add_client_modal_form($ticket_id = 0) {
+    function add_client_modal_form($ticket_id = 0)
+    {
         if ($ticket_id) {
             validate_numeric_value($ticket_id);
             $this->access_only_allowed_members();
@@ -998,13 +1054,16 @@ class Tickets extends Security_Controller {
         }
     }
 
-    function link_to_client() {
+    function link_to_client()
+    {
         $this->access_only_allowed_members();
 
-        $this->validate_submitted_data(array(
-            "client_id" => "required|numeric",
-            "ticket_id" => "required|numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "client_id" => "required|numeric",
+                "ticket_id" => "required|numeric"
+            )
+        );
 
         $ticket_id = $this->request->getPost("ticket_id");
         $this->validate_ticket_access($ticket_id);
@@ -1021,13 +1080,15 @@ class Tickets extends Security_Controller {
 
     /* load tickets settings modal */
 
-    function settings_modal_form() {
+    function settings_modal_form()
+    {
         return $this->template->view('tickets/settings/modal_form');
     }
 
     /* save tickets settings */
 
-    function save_settings() {
+    function save_settings()
+    {
         $settings = array("signature");
 
         foreach ($settings as $setting) {
@@ -1043,7 +1104,8 @@ class Tickets extends Security_Controller {
 
     /* prepare client contact dropdown based on this suggestion */
 
-    function get_client_contact_suggestion($client_id = 0) {
+    function get_client_contact_suggestion($client_id = 0)
+    {
         validate_numeric_value($client_id);
         $this->access_only_allowed_members();
 
@@ -1055,7 +1117,8 @@ class Tickets extends Security_Controller {
         echo json_encode($suggestion);
     }
 
-    private function _get_ticket_types_dropdown_list_for_filter($ticket_type_id = 0) {
+    private function _get_ticket_types_dropdown_list_for_filter($ticket_type_id = 0)
+    {
 
         $where = array();
         if ($this->login_user->user_type === "staff" && $this->access_type !== "all" && $this->access_type !== "assigned_only") {
@@ -1082,7 +1145,8 @@ class Tickets extends Security_Controller {
 
     /* list of ticket of a specific project, prepared for datatable  */
 
-    function ticket_list_data_of_project($project_id) {
+    function ticket_list_data_of_project($project_id)
+    {
         validate_numeric_value($project_id);
         $this->access_only_allowed_members();
 
@@ -1104,7 +1168,8 @@ class Tickets extends Security_Controller {
 
     /* batch update modal form */
 
-    function batch_update_modal_form($ticket_ids = "") {
+    function batch_update_modal_form($ticket_ids = "")
+    {
         $this->access_only_allowed_members();
         $view_data["ticket_ids"] = clean_data($ticket_ids);
 
@@ -1126,7 +1191,8 @@ class Tickets extends Security_Controller {
 
     /* save batch update */
 
-    function save_batch_update() {
+    function save_batch_update()
+    {
         $this->access_only_allowed_members();
 
         $batch_fields = $this->request->getPost("batch_fields");
@@ -1157,7 +1223,8 @@ class Tickets extends Security_Controller {
         }
     }
 
-    function delete_comment($id = 0) {
+    function delete_comment($id = 0)
+    {
         if (!$id) {
             exit();
         }
@@ -1183,10 +1250,13 @@ class Tickets extends Security_Controller {
     }
 
     //load merge tickt modal 
-    function merge_ticket_modal_form() {
-        $this->validate_submitted_data(array(
-            "id" => "numeric"
-        ));
+    function merge_ticket_modal_form()
+    {
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric"
+            )
+        );
 
         $ticket_id = $this->request->getPost('ticket_id');
         $this->validate_ticket_access($ticket_id);
@@ -1218,7 +1288,8 @@ class Tickets extends Security_Controller {
         return $this->template->view('tickets/merge_ticket_modal_form', $view_data);
     }
 
-    function save_merge_ticket() {
+    function save_merge_ticket()
+    {
         $ticket_id = $this->request->getPost('ticket_id');
         $this->validate_ticket_access($ticket_id);
 
@@ -1227,10 +1298,12 @@ class Tickets extends Security_Controller {
             app_redirect("forbidden");
         }
 
-        $this->validate_submitted_data(array(
-            "ticket_id" => "required|numeric",
-            "merge_with_ticket_id" => "required|numeric",
-        ));
+        $this->validate_submitted_data(
+            array(
+                "ticket_id" => "required|numeric",
+                "merge_with_ticket_id" => "required|numeric",
+            )
+        );
 
         $merge_with_ticket_id = $this->request->getPost('merge_with_ticket_id');
         $now = get_current_utc_time();
@@ -1260,7 +1333,8 @@ class Tickets extends Security_Controller {
 
     /* load tasks tab  */
 
-    function tasks($ticket_id) {
+    function tasks($ticket_id)
+    {
         $this->validate_ticket_access($ticket_id);
 
         $view_data["custom_field_headers_of_task"] = $this->Custom_fields_model->get_custom_field_headers_for_table("tasks", $this->login_user->is_admin, $this->login_user->user_type);
@@ -1269,7 +1343,8 @@ class Tickets extends Security_Controller {
         return $this->template->view("tickets/tasks/index", $view_data);
     }
 
-    function tickets_chart_report() {
+    function tickets_chart_report()
+    {
         $this->_validate_tickets_report_access();
 
         $view_data['ticket_labels_dropdown'] = json_encode($this->make_labels_dropdown("ticket", "", true));
@@ -1279,7 +1354,8 @@ class Tickets extends Security_Controller {
         return $this->template->rander("tickets/reports/chart_report_container", $view_data);
     }
 
-    function tickets_chart_report_data() {
+    function tickets_chart_report_data()
+    {
         $this->_validate_tickets_report_access();
 
         $start_date = $this->request->getPost("start_date");
@@ -1341,136 +1417,114 @@ class Tickets extends Security_Controller {
 
         return $this->template->view("tickets/reports/chart_report_view", $view_data);
     }
-    function tab_actions($ticket_id){
-        $allActions=$this->Ticket_actions_model->get_all_where(array("ticket_id"=>$ticket_id))->getResult();
-        return $this->template->view("tickets/tabs/actions",["ticket_id"=>$ticket_id,"allActions"=>$allActions]);
+    function tab_actions($ticket_id)
+    {
+        $allActions = $this->Ticket_actions_model->get_all_where(array("ticket_id" => $ticket_id))->getResult();
+        return $this->template->view("tickets/tabs/actions", ["ticket_id" => $ticket_id, "allActions" => $allActions]);
     }
-    function tab_requisitions($ticket_id){
-        return $this->template->view("tickets/tabs/requisitions",["ticket_id"=>$ticket_id]);
+    function tab_requisitions($ticket_id)
+    {
+        $allActions = $this->Ticket_actions_model->get_all_where(array("ticket_id" => $ticket_id))->getResult();
+        return $this->template->view("tickets/tabs/requisitions", ["ticket_id" => $ticket_id, "allActions" => $allActions]);
     }
-    function tab_activities($ticket_id){
-        return $this->template->view("tickets/tabs/activities",["ticket_id"=>$ticket_id]);
+    function tab_activities($ticket_id)
+    {
+        $allActions = $this->Ticket_actions_model->get_all_where(array("ticket_id" => $ticket_id))->getResult();
+        return $this->template->view("tickets/tabs/activities", ["ticket_id" => $ticket_id, "allActions" => $allActions]);
     }
-    function modal_add_corrective_action($ticket_id){
-        return $this->template->view("tickets/modals/modal_add_corrective_action",["ticket_id"=>$ticket_id]);
+    function modal_add_corrective_action($ticket_id)
+    {
+        return $this->template->view("tickets/modals/modal_add_corrective_action", ["ticket_id" => $ticket_id]);
     }
-    function modal_connect_requisition($ticket_id){
-        $action_id=$this->request->getPost("id");
-        $action_info=$this->Ticket_actions_model->get_one($action_id);
-        return $this->template->view("tickets/modals/modal_connect_requisition",["ticket_id"=>$ticket_id,"action_info"=>$action_info]);
+    function modal_connect_requisition($ticket_id)
+    {
+        $action_id = $this->request->getPost("id");
+        $action_info = $this->Ticket_actions_model->get_one($action_id);
+        return $this->template->view("tickets/modals/modal_connect_requisition", ["ticket_id" => $ticket_id, "action_info" => $action_info]);
     }
-    function modal_add_schedule($ticket_id){
-        $action_id=$this->request->getPost("id");
-        $action_info=$this->Ticket_actions_model->get_one($action_id);
-        return $this->template->view("tickets/modals/modal_add_schedule",["ticket_id"=>$ticket_id,"action_info"=>$action_info]);
+    function modal_add_schedule($ticket_id)
+    {
+        $action_id = $this->request->getPost("id");
+        $action_info = $this->Ticket_actions_model->get_one($action_id);
+        return $this->template->view("tickets/modals/modal_add_schedule", ["ticket_id" => $ticket_id, "action_info" => $action_info]);
     }
-    function modal_add_task($ticket_id){
-        $action_id=$this->request->getPost("id");
-        $action_info=$this->Ticket_actions_model->get_one($action_id);
-        return $this->template->view("tickets/modals/modal_add_task",["ticket_id"=>$ticket_id,"action_info"=>$action_info]);
+    function modal_add_task($ticket_id)
+    {
+        $action_id = $this->request->getPost("id");
+        $action_info = $this->Ticket_actions_model->get_one($action_id);
+        return $this->template->view("tickets/modals/modal_add_task", ["ticket_id" => $ticket_id, "action_info" => $action_info]);
     }
-    function save_corrective_action(){
-        $id=$this->request->getPost("id");
-        $ticket_id=$this->request->getPost("ticket_id");
-        $corrective_action=$this->request->getPost("corrective_action");
-        $new_data=array(
-            "ticket_id"=>$ticket_id,
-            "corrective_action"=>$corrective_action,
-            "task_start_date"=>date('Y-m-d'),
-            "task_deadline"=>date('Y-m-d'),
-            "schedule_eta"=>date('Y-m-d'),
-            "schedule_etd"=>date('Y-m-d'),
+    function save_corrective_action()
+    {
+        $id = $this->request->getPost("id");
+        $ticket_id = $this->request->getPost("ticket_id");
+        $corrective_action = $this->request->getPost("corrective_action");
+        $new_data = array(
+            "ticket_id" => $ticket_id,
+            "corrective_action" => $corrective_action,
+            "task_start_date" => date('Y-m-d'),
+            "task_deadline" => date('Y-m-d'),
+            "schedule_eta" => date('Y-m-d'),
+            "schedule_etd" => date('Y-m-d'),
         );
-        $saved_id=$this->Ticket_actions_model->ci_save($new_data,$id);
-        return json_encode(array("success"=>true, "saved_id"=>$saved_id));
+        $saved_id = $this->Ticket_actions_model->ci_save($new_data, $id);
+        return json_encode(array("success" => true, "saved_id" => $saved_id));
     }
-    function save_task(){
-        $id=$this->request->getPost("id");
-        $title=$this->request->getPost("title");
-        $description=$this->request->getPost("description");
-        $start_date=$this->request->getPost("start_date");
-        $deadline=$this->request->getPost("deadline");
-        $new_data=array();
-        $new_data["id"]=$id;
-        $new_data["task_title"]=$title;
-        $new_data["task_description"]=$description;
-        $new_data["task_start_date"]=date('Y-m-d', strtotime($this->request->getPost("start_date")));
-        $new_data["task_deadline"]=date('Y-m-d', strtotime($this->request->getPost("deadline")));
-        $saved_id=$this->Ticket_actions_model->ci_save($new_data,$id);
-        return json_encode(array("success"=>true, "saved_id"=>$saved_id));
-    }
-
-    function save_requisition(){
-        $id=$this->request->getPost("id");
-        $title=$this->request->getPost("title");
-        $number=$this->request->getPost("number");
-        $remarks=$this->request->getPost("remarks");
-        $new_data=array();
-        $new_data["id"]=$id;
-        $new_data["requisition_title"]=$title;
-        $new_data["requisition_number"]=$number;
-        $new_data["requisition_remarks"]=$remarks;
-        $saved_id=$this->Ticket_actions_model->ci_save($new_data,$id);
-        return json_encode(array("success"=>true, "saved_id"=>$saved_id));
+    function save_task()
+    {
+        $id = $this->request->getPost("id");
+        $title = $this->request->getPost("title");
+        $description = $this->request->getPost("description");
+        $start_date = $this->request->getPost("start_date");
+        $deadline = $this->request->getPost("deadline");
+        $new_data = array();
+        $new_data["id"] = $id;
+        $new_data["task_title"] = $title;
+        $new_data["task_description"] = $description;
+        $new_data["task_start_date"] = date('Y-m-d', strtotime($this->request->getPost("start_date")));
+        $new_data["task_deadline"] = date('Y-m-d', strtotime($this->request->getPost("deadline")));
+        $saved_id = $this->Ticket_actions_model->ci_save($new_data, $id);
+        return json_encode(array("success" => true, "saved_id" => $saved_id));
     }
 
-    function save_schedule(){
-        $id=$this->request->getPost("id");
-        $port=$this->request->getPost("port");
-        $eta=$this->request->getPost("eta");
-        $etd=$this->request->getPost("etd");
-        $agent=$this->request->getPost("agent");
-        $remarks=$this->request->getPost("remarks");
-        $new_data=array();
-        $new_data["id"]=$id;
-        $new_data["schedule_port"]=$port;
-        $new_data["schedule_eta"]=date('Y-m-d', strtotime($this->request->getPost("eta")));
-        $new_data["schedule_etd"]=date('Y-m-d', strtotime($this->request->getPost("etd")));
-        $new_data["schedule_agent"]=$agent;
-        $new_data["schedule_remarks"]=$remarks;
-        $saved_id=$this->Ticket_actions_model->ci_save($new_data,$id);
-        return json_encode(array("success"=>true, "saved_id"=>$saved_id));
+    function save_requisition()
+    {
+        $id = $this->request->getPost("id");
+        $title = $this->request->getPost("title");
+        $number = $this->request->getPost("number");
+        $remarks = $this->request->getPost("remarks");
+        $new_data = array();
+        $new_data["id"] = $id;
+        $new_data["requisition_title"] = $title;
+        $new_data["requisition_number"] = $number;
+        $new_data["requisition_remarks"] = $remarks;
+        $saved_id = $this->Ticket_actions_model->ci_save($new_data, $id);
+        return json_encode(array("success" => true, "saved_id" => $saved_id));
     }
 
-    function modal_corrective_action($id){
-        $action_info=$this->Ticket_actions_model->get_one($id);
-        return $this->template->view("tickets/modals/modal_add_corrective_action",["ticket_id"=>$action_info->ticket_id,"action_info"=>$action_info]);
+    function save_schedule()
+    {
+        $id = $this->request->getPost("id");
+        $port = $this->request->getPost("port");
+        $eta = $this->request->getPost("eta");
+        $etd = $this->request->getPost("etd");
+        $agent = $this->request->getPost("agent");
+        $remarks = $this->request->getPost("remarks");
+        $new_data = array();
+        $new_data["id"] = $id;
+        $new_data["schedule_port"] = $port;
+        $new_data["schedule_eta"] = date('Y-m-d', strtotime($this->request->getPost("eta")));
+        $new_data["schedule_etd"] = date('Y-m-d', strtotime($this->request->getPost("etd")));
+        $new_data["schedule_agent"] = $agent;
+        $new_data["schedule_remarks"] = $remarks;
+        $saved_id = $this->Ticket_actions_model->ci_save($new_data, $id);
+        return json_encode(array("success" => true, "saved_id" => $saved_id));
     }
 
-    function delete_action_task(){
-        $action_id=$this->request->getPost("id");
-        $action_info=$this->Ticket_actions_model->get_one($action_id);
-        $action_info->task_title="";
-        $action_info->task_description="";
-        $action_info->task_assigned_to="";
-        $action_info->task_collaborators="";
-        $action_info->task_status_id="";
-        $action_info->task_priority_id="";
-        $action_info->task_labels_id="";
-        $action_info->task_start_date="";
-        $action_info->task_deadline="";
-        $this->Ticket_actions_model->ci_save($action_info,$action_id);
-        return json_encode(array("success"=>true, "message"=>"Successfully deleted!"));
-    }
-
-    function delete_action_requisition($action_id){
-        $action_id=$this->request->getPost("id");
-        $action_info=$this->Ticket_actions_model->get_one($action_id);
-        $action_info->task_title="";
-        $action_info->task_description="";
-        $action_info->task_assigned_to="";
-        $action_info->task_collaborators="";
-        $action_info->task_status_id="";
-        $action_info->task_priority_id="";
-        $action_info->task_labels_id="";
-        $action_info->task_start_date="";
-        $action_info->task_deadline="";
-        $this->Ticket_actions_model->ci_save($action_info,$action_id);
-        return json_encode(array("success"=>true, "message"=>"Successfully deleted!"));
-    }
-
-    function delete_action_port($action_id){
-        
+    function modal_corrective_action($id)
+    {
+        $action_info = $this->Ticket_actions_model->get_one($id);
+        return $this->template->view("tickets/modals/modal_add_corrective_action", ["ticket_id" => $action_info->ticket_id, "action_info" => $action_info]);
     }
 
 

@@ -561,6 +561,92 @@ class Tasks extends Security_Controller {
         return array("context_options" => $context_options);
     }
 
+    function modal_form_simple() {
+        $id = $this->request->getPost('id');
+        $add_type = $this->request->getPost('add_type');
+        $last_id = $this->request->getPost('last_id');
+
+        $model_info = $this->Tasks_model->get_one($id);
+
+        $contexts = $this->_get_accessible_contexts();
+        $selected_context = get_array_value($contexts, 0);
+        $view_data["show_contexts_dropdown"] = count($contexts) > 1 ? true : false; //don't show context if there is only one context
+
+        $selected_context_id = 0;
+
+        foreach ($this->get_context_id_pairs() as $obj) {
+            $context_id_key = get_array_value($obj, "id_key");
+
+            $value = $this->request->getPost($context_id_key) ? $this->request->getPost($context_id_key) : $model_info->{$context_id_key};
+            $view_data[$context_id_key] = $value ? $value : ""; // prepare project_id, client_id, etc variables
+
+            if ($value) {
+                $selected_context = get_array_value($obj, "context");
+                $selected_context_id = $value;
+                $view_data["show_contexts_dropdown"] = false; //don't show context dropdown if any context is selected. 
+            }
+        }
+
+
+        if ($add_type == "multiple" && $last_id) {
+            //we've to show the lastly added information if it's the operation of adding multiple tasks
+            $model_info = $this->Tasks_model->get_one($last_id);
+        }
+
+        if ($model_info->context) {
+            $selected_context = $model_info->context; //has highest priority 
+            $context_id_key = $model_info->context."_id";
+            $selected_context_id = $model_info->{$context_id_key};
+        }
+
+        $dropdowns = $this->_get_task_related_dropdowns($selected_context, $selected_context_id, $selected_context_id ? true : false);
+
+        $view_data = array_merge($view_data, $dropdowns);
+
+        if ($id) {
+            if (!$this->can_edit_tasks($model_info)) {
+                app_redirect("forbidden");
+            }
+            $contexts = array($model_info->context); //context can't be edited dureing edit. So, pass only the saved context
+            $view_data["show_contexts_dropdown"] = false; //don't show context when editing 
+        } else {
+            //Going to create new task. Check if the user has access in any context
+            if (!$this->can_create_tasks()) {
+                app_redirect("forbidden");
+            }
+        }
+
+        $view_data['selected_context'] = $selected_context;
+        $view_data['contexts'] = $contexts;
+        $view_data['model_info'] = $model_info;
+        $view_data["add_type"] = $add_type;
+        $view_data['is_clone'] = $this->request->getPost('is_clone');
+        $view_data['view_type'] = $this->request->getPost("view_type");
+
+        $view_data['show_assign_to_dropdown'] = true;
+        if ($this->login_user->user_type == "client") {
+            if (!get_setting("client_can_assign_tasks")) {
+                $view_data['show_assign_to_dropdown'] = false;
+            }
+        } else {
+            //set default assigne to for new tasks
+            if (!$id && !$view_data['model_info']->assigned_to) {
+                $view_data['model_info']->assigned_to = $this->login_user->id;
+            }
+        }
+
+        $view_data["custom_fields"] = $this->Custom_fields_model->get_combined_details("tasks", $view_data['model_info']->id, $this->login_user->is_admin, $this->login_user->user_type)->getResult();
+
+        $view_data['has_checklist'] = $this->Checklist_items_model->get_details(array("task_id" => $id))->resultID->num_rows;
+        $view_data['has_sub_task'] = count($this->Tasks_model->get_all_where(array("parent_task_id" => $id, "deleted" => 0))->getResult());
+
+        $view_data["project_deadline"] = $this->_get_project_deadline_for_task(get_array_value($view_data, "project_id"));
+        $view_data["show_time_with_task"] = (get_setting("show_time_with_task_start_date_and_deadline")) ? true : false;
+        $view_data['time_format_24_hours'] = get_setting("time_format") == "24_hours" ? true : false;
+
+        return $this->template->view('tasks/modal_form_simple', $view_data);
+    }
+
     function modal_form() {
         $id = $this->request->getPost('id');
         $add_type = $this->request->getPost('add_type');
@@ -963,6 +1049,329 @@ class Tasks extends Security_Controller {
     }
 
     /* insert/upadate/clone a task */
+
+    function save_simple() {
+
+        $project_id = $this->request->getPost('project_id');
+        $id = $this->request->getPost('id');
+        $add_type = $this->request->getPost('add_type');
+        $now = get_current_utc_time();
+
+        $is_clone = $this->request->getPost('is_clone');
+        $main_task_id = "";
+        if ($is_clone && $id) {
+            $main_task_id = $id; //store main task id to get items later
+            $id = ""; //on cloning task, save as new
+        }
+
+        $client_id = $this->request->getPost('client_id');
+        $lead_id = $this->request->getPost('lead_id');
+        $invoice_id = $this->request->getPost('invoice_id');
+        $estimate_id = $this->request->getPost('estimate_id');
+        $order_id = $this->request->getPost('order_id');
+        $contract_id = $this->request->getPost('contract_id');
+        $proposal_id = $this->request->getPost('proposal_id');
+        $subscription_id = $this->request->getPost('subscription_id');
+        $expense_id = $this->request->getPost('expense_id');
+        $ticket_id = $this->request->getPost('ticket_id');
+        $supplier = $this->request->getPost('supplier');
+
+        $context_data = $this->get_context_and_id();
+        $context = $context_data["context"] ? $context_data["context"] : "project";
+
+        if ($id) {
+            $task_info = $this->Tasks_model->get_one($id);
+            if (!$this->can_edit_tasks($task_info)) {
+                app_redirect("forbidden");
+            }
+        } else {
+            if (!$this->can_create_tasks($context)) {
+                app_redirect("forbidden");
+            }
+        }
+
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "supplier" => "numeric",
+            "title" => "required|max_length[60]",
+            // "project_id" => "required",
+            // "labels" => "required",
+            "dock_list_number" => "max_length[15]",
+            "reference_drawing" => "max_length[30]",
+            "location" => "max_length[300]",
+            "specification" => "max_length[300]",
+            "requisition_number" => "max_length[30]",
+            "budget" => "max_length[30]",
+            "maker" => "max_length[30]",
+            "type" => "max_length[30]",
+            "serial_number" => "max_length[30]",
+            "pms_scs_number" => "max_length[30]"
+        ));
+
+        $points = $this->request->getPost('points') ?? 1;
+        $milestone_id = $this->request->getPost('milestone_id') ?? 0;
+        $start_date = $this->request->getPost('start_date');
+        $assigned_to = $this->request->getPost('assigned_to');
+        $collaborators = $this->request->getPost('collaborators');
+        $recurring = $this->request->getPost('recurring') ? 1 : 0;
+        $repeat_every = $this->request->getPost('repeat_every');
+        $repeat_type = $this->request->getPost('repeat_type');
+        $no_of_cycles = $this->request->getPost('no_of_cycles');
+        $status_id = $this->request->getPost('status_id');
+        $priority_id = $this->request->getPost('priority_id') ?? 0;
+
+        //////////////////////////
+        $owner_supply=$this->request->getPost('owner_supply')??0;
+        ///////////////////////////
+
+        $data = array(
+            "title" => $this->request->getPost('title'),
+            "description" => $this->request->getPost('description'),
+            "project_id" => $project_id ? $project_id : 0,
+            "milestone_id" => $milestone_id ? $milestone_id : 0,
+            "points" => $points,
+            "status_id" => $status_id,
+            "priority_id" => $priority_id,
+            "supplier" => $supplier,
+            "labels" => $this->request->getPost('labels'),
+            "start_date" => $start_date,
+            "deadline" => $this->request->getPost('deadline'),
+            "recurring" => $recurring,
+            "repeat_every" => $repeat_every ? $repeat_every : 0,
+            "repeat_type" => $repeat_type ? $repeat_type : NULL,
+            "no_of_cycles" => $no_of_cycles ? $no_of_cycles : 0,
+            "dock_list_number" => $this->request->getPost("dock_list_number"),
+            "reference_drawing" => $this->request->getPost("reference_drawing"),
+            "location" => $this->request->getPost("location"),
+            "specification" => $this->request->getPost("specification"),
+            "requisition_number" => $this->request->getPost("requisition_number"),
+            "budget" => $this->request->getPost("budget"),
+            "gas_free_certificate" => $this->request->getPost("gas_free_certificate"),
+            "light" => $this->request->getPost("light"),
+            "ventilation" => $this->request->getPost("ventilation"),
+            "crane_assistance" => $this->request->getPost("crane_assistance"),
+            "cleaning_before" => $this->request->getPost("cleaning_before"),
+            "cleaning_after" => $this->request->getPost("cleaning_after"),
+            "work_permit" => $this->request->getPost("work_permit"),
+            "painting_after_completion" => $this->request->getPost("painting_after_completion"),
+            "parts_on_board" => $this->request->getPost("parts_on_board"),
+            "transport_to_yard_workshop" => $this->request->getPost("transport_to_yard_workshop")?$this->request->getPost("transport_to_yard_workshop"):0,
+            "transport_outside_yard" => $this->request->getPost("transport_outside_yard")?$this->request->getPost("transport_outside_yard"):0,
+            "material_yards_supply" => $this->request->getPost("material_yards_supply")?$this->request->getPost("material_yards_supply"):0,
+            "material_owners_supply" => $this->request->getPost("material_owners_supply")?$this->request->getPost("material_owners_supply"):0,
+            "risk_assessment" => $this->request->getPost("risk_assessment"),
+            "maker" => $this->request->getPost("maker"),
+            "type" => $this->request->getPost("type"),
+            "serial_number" => $this->request->getPost("serial_number"),
+            "pms_scs_number" => $this->request->getPost("pms_scs_number"),
+            "cost_type" => $this->request->getPost("cost_type"),
+            "est_quantity" => $this->request->getPost("est_quantity"),
+            "measurement_unit" => $this->request->getPost("measurement"),
+            "unit_price" => $this->request->getPost("unit_price"),
+            "unit_price_currency" => $this->request->getPost("unit_price_currency"),
+            "quote" => $this->request->getPost("quote"),
+            "discount" => $this->request->getPost("discount"),
+            "remarks" => $this->request->getPost("remarks"),
+            "owner_supply"=>$owner_supply
+        );
+
+        if (!$id) {
+            $data["created_date"] = $now;
+            $data["context"] = $context;
+            $data["sort"] = $this->Tasks_model->get_next_sort_value($project_id, $status_id);
+        }
+
+        if ($ticket_id) {
+            $data["ticket_id"] = $ticket_id;
+        }
+
+        //clint can't save the assign to and collaborators
+        if ($this->login_user->user_type == "client") {
+            if (get_setting("client_can_assign_tasks")) {
+                $data["assigned_to"] = $assigned_to;
+            } else if (!$id) { //it's new data to save
+                $data["assigned_to"] = 0;
+            }
+
+            $data["collaborators"] = "";
+        } else {
+            $data["assigned_to"] = $assigned_to;
+            $data["collaborators"] = $collaborators;
+        }
+
+        $data = clean_data($data);
+
+        //set null value after cleaning the data
+        if (!$data["start_date"]) {
+            $data["start_date"] = NULL;
+        }
+
+        if (!$data["deadline"]) {
+            $data["deadline"] = NULL;
+        }
+
+        //deadline must be greater or equal to start date
+        if ($data["start_date"] && $data["deadline"] && $data["deadline"] < $data["start_date"]) {
+            echo json_encode(array("success" => false, 'message' => app_lang('deadline_must_be_equal_or_greater_than_start_date')));
+            return false;
+        }
+
+        $copy_checklist = $this->request->getPost("copy_checklist");
+
+        $next_recurring_date = "";
+
+        if ($recurring && get_setting("enable_recurring_option_for_tasks")) {
+            //set next recurring date for recurring tasks
+
+            if ($id) {
+                //update
+                if ($this->request->getPost('next_recurring_date')) { //submitted any recurring date? set it.
+                    $next_recurring_date = $this->request->getPost('next_recurring_date');
+                } else {
+                    //re-calculate the next recurring date, if any recurring fields has changed.
+                    if ($task_info->recurring != $data['recurring'] || $task_info->repeat_every != $data['repeat_every'] || $task_info->repeat_type != $data['repeat_type'] || $task_info->start_date != $data['start_date']) {
+                        $recurring_start_date = $start_date ? $start_date : $task_info->created_date;
+                        $next_recurring_date = add_period_to_date($recurring_start_date, $repeat_every, $repeat_type);
+                    }
+                }
+            } else {
+                //insert new
+                $recurring_start_date = $start_date ? $start_date : get_array_value($data, "created_date");
+                $next_recurring_date = add_period_to_date($recurring_start_date, $repeat_every, $repeat_type);
+            }
+
+
+            //recurring date must have to set a future date
+            if ($next_recurring_date && get_today_date() >= $next_recurring_date) {
+                echo json_encode(array("success" => false, 'message' => app_lang('past_recurring_date_error_message_title_for_tasks'), 'next_recurring_date_error' => app_lang('past_recurring_date_error_message'), "next_recurring_date_value" => $next_recurring_date));
+                return false;
+            }
+        }
+
+        //save status changing time for edit mode
+        if ($id) {
+            if ($task_info->status_id !== $status_id) {
+                $data["status_changed_at"] = $now;
+            }
+
+            $this->check_sub_tasks_statuses($status_id, $id);
+        }
+
+        $save_id = $this->Tasks_model->ci_save($data, $id);
+        if ($save_id) {
+
+            if ($is_clone && $main_task_id) {
+                //clone task checklist
+                if ($copy_checklist) {
+                    $checklist_items = $this->Checklist_items_model->get_all_where(array("task_id" => $main_task_id, "deleted" => 0))->getResult();
+                    foreach ($checklist_items as $checklist_item) {
+                        //prepare new checklist data
+                        $checklist_item_data = (array) $checklist_item;
+                        unset($checklist_item_data["id"]);
+                        $checklist_item_data['task_id'] = $save_id;
+
+                        $checklist_item = $this->Checklist_items_model->ci_save($checklist_item_data);
+                    }
+                }
+
+                //clone sub tasks
+                if ($this->request->getPost("copy_sub_tasks")) {
+                    $sub_tasks = $this->Tasks_model->get_all_where(array("parent_task_id" => $main_task_id, "deleted" => 0))->getResult();
+                    foreach ($sub_tasks as $sub_task) {
+                        //prepare new sub task data
+                        $sub_task_data = (array) $sub_task;
+
+                        unset($sub_task_data["id"]);
+                        unset($sub_task_data["blocked_by"]);
+                        unset($sub_task_data["blocking"]);
+
+                        $sub_task_data['status_id'] = 1;
+                        $sub_task_data['parent_task_id'] = $save_id;
+                        $sub_task_data['created_date'] = $now;
+
+                        $sub_task_data["sort"] = $this->Tasks_model->get_next_sort_value($sub_task_data["project_id"], $sub_task_data['status_id']);
+
+                        $sub_task_save_id = $this->Tasks_model->ci_save($sub_task_data);
+
+                        //clone sub task checklist
+                        if ($copy_checklist) {
+                            $checklist_items = $this->Checklist_items_model->get_all_where(array("task_id" => $sub_task->id, "deleted" => 0))->getResult();
+                            foreach ($checklist_items as $checklist_item) {
+                                //prepare new checklist data
+                                $checklist_item_data = (array) $checklist_item;
+                                unset($checklist_item_data["id"]);
+                                $checklist_item_data['task_id'] = $sub_task_save_id;
+
+                                $this->Checklist_items_model->ci_save($checklist_item_data);
+                            }
+                        }
+                    }
+                }
+            }
+
+            //save next recurring date 
+            if ($next_recurring_date) {
+                $recurring_task_data = array(
+                    "next_recurring_date" => $next_recurring_date
+                );
+                $this->Tasks_model->save_reminder_date($recurring_task_data, $save_id);
+            }
+            // if created from ticket then save the task id
+            if ($ticket_id) {
+                $data = array("task_id" => $save_id);
+                $this->Tickets_model->ci_save($data, $ticket_id);
+            }
+
+            $activity_log_id = get_array_value($data, "activity_log_id");
+
+            $new_activity_log_id = save_custom_fields("tasks", $save_id, $this->login_user->is_admin, $this->login_user->user_type, $activity_log_id);
+
+            if ($id) {
+                //updated
+                if ($task_info->context === "project") {
+                    log_notification("project_task_updated", array("project_id" => $project_id, "task_id" => $save_id, "activity_log_id" => $new_activity_log_id ? $new_activity_log_id : $activity_log_id));
+                } else {
+                    $context_id_key = $task_info->context . "_id";
+                    $context_id_value = ${$task_info->context . "_id"};
+
+                    log_notification("general_task_updated", array("$context_id_key" => $context_id_value, "task_id" => $save_id, "activity_log_id" => $new_activity_log_id ? $new_activity_log_id : $activity_log_id));
+                }
+            } else {
+                //created
+                if ($context === "project") {
+                    log_notification("project_task_created", array("project_id" => $project_id, "task_id" => $save_id));
+                } else {
+                    $context_id_key = $context . "_id";
+                    $context_id_value = ${$context . "_id"};
+
+                    log_notification("general_task_created", array("$context_id_key" => $context_id_value, "task_id" => $save_id));
+                }
+
+                //save uploaded files as comment
+                $target_path = get_setting("timeline_file_path");
+                $files_data = move_files_from_temp_dir_to_permanent_dir($target_path, "project_comment");
+
+                if ($files_data && $files_data != "a:0:{}") {
+                    $comment_data = array(
+                        "created_by" => $this->login_user->id,
+                        "created_at" => $now,
+                        "project_id" => $project_id,
+                        "task_id" => $save_id
+                    );
+
+                    $comment_data = clean_data($comment_data);
+
+                    $comment_data["files"] = $files_data; //don't clean serilized data
+
+                    $this->Project_comments_model->save_comment($comment_data);
+                }
+            }
+
+            echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id, 'message' => app_lang('record_saved'), "add_type" => $add_type));
+        } else {
+            echo json_encode(array("success" => false, 'message' => app_lang('error_occurred')));
+        }
+    }
 
     function save() {
 

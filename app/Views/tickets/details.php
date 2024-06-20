@@ -10,13 +10,18 @@
                 <div class="clearfix p20">
                     <div class="row">
                         <div class="col-md-12 mb15">
-                            <strong>Title : </strong><?php echo $ticket_info->title;?>
+                            <strong>Title : </strong><?php echo $ticket_info->title; ?>
                         </div>
                         <div class="col-md-12 mb15">
-                            <strong>Equipment : </strong><?php echo $ticket_info->equipment;?>
+                            <strong>Vessel :
+                            </strong><?php if (isset($vessel_info))
+                                echo $vessel_info->charter_name; ?>
                         </div>
                         <div class="col-md-12 mb15">
-                            <strong>Manufacturer : </strong><?php if(isset($vessel_info)) echo $vessel_info->charter_name;?>
+                            <strong>Equipment : </strong><?php echo $ticket_info->equipment; ?>
+                        </div>
+                        <div class="col-md-12 mb15">
+                            <strong>manufacturer : </strong><?php echo $ticket_info->manufacturer; ?>
                         </div>
                         <div class="col-md-12 mb15">
                             <strong><?php echo app_lang('status') . ": "; ?></strong>
@@ -53,27 +58,27 @@
 
                         <div class="col-md-12 mb15">
                             <strong><?php echo app_lang("created") . ": "; ?></strong>
-                            <?php echo format_to_relative_time($ticket_info->created_at); ?> 
+                            <?php echo format_to_relative_time($ticket_info->created_at); ?>
                         </div>
 
                         <?php if ($ticket_info->closed_at && $ticket_info->status == "closed") { ?>
                             <div class="col-md-12 mb15">
                                 <strong><?php echo app_lang("closed") . ": "; ?></strong>
-                                <?php echo format_to_relative_time($ticket_info->closed_at); ?> 
+                                <?php echo format_to_relative_time($ticket_info->closed_at); ?>
                             </div>
                         <?php } ?>
 
                         <?php if ($ticket_info->ticket_type) { ?>
                             <div class="col-md-12 mb15">
                                 <strong><?php echo app_lang("ticket_type") . ": "; ?></strong>
-                                <?php echo $ticket_info->ticket_type; ?> 
+                                <?php echo $ticket_info->ticket_type; ?>
                             </div>
                         <?php } ?>
 
                         <?php
                         if ($ticket_info->assigned_to && $login_user->user_type == "staff") {
                             //show assign to field to team members only
-
+                        
                             $image_url = get_avatar($ticket_info->assigned_to_avatar);
                             $assigned_to_user = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt='...'></span> $ticket_info->assigned_to_user";
                             ?>
@@ -115,7 +120,10 @@
 
                         <?php if (can_access_reminders_module()) { ?>
                             <div class="col-md-12 mb15" id="ticket-reminders">
-                                <div class="mb15"><strong><?php echo app_lang("reminders") . " (" . app_lang('private') . ")" . ": "; ?> </strong></div>
+                                <div class="mb15">
+                                    <strong><?php echo app_lang("reminders") . " (" . app_lang('private') . ")" . ": "; ?>
+                                    </strong>
+                                </div>
                                 <?php echo view("reminders/reminders_view_data", array("ticket_id" => $ticket_info->id, "hide_form" => true, "reminder_view_type" => "ticket")); ?>
                             </div>
                         <?php } ?>

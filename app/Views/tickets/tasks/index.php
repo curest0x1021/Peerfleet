@@ -2,7 +2,11 @@
     <div class="tab-title clearfix">
         <h4><?php echo app_lang('tasks'); ?></h4>
         <div class="title-button-group">
+<<<<<<< HEAD
             <?php echo modal_anchor(get_uri("tasks/modal_form"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_task'), array("class" => "btn btn-default mb0", "data-post-ticket_id" => $ticket_id, "title" => app_lang('add_task'))); ?>
+=======
+            <?php echo modal_anchor(get_uri("tasks/modal_form_simple"), "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_task'), array("class" => "btn btn-default mb0", "data-post-ticket_id" => $ticket_id, "title" => app_lang('add_task'))); ?>
+>>>>>>> d1c9620768f386677ac1d351c2c7dcec4ee00ee3
         </div>
     </div>
 
