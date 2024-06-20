@@ -1437,6 +1437,42 @@ class Tickets extends Security_Controller {
         return $this->template->view("tickets/modals/modal_add_corrective_action",["ticket_id"=>$action_info->ticket_id,"action_info"=>$action_info]);
     }
 
+    function delete_action_task(){
+        $action_id=$this->request->getPost("id");
+        $action_info=$this->Ticket_actions_model->get_one($action_id);
+        $action_info->task_title="";
+        $action_info->task_description="";
+        $action_info->task_assigned_to="";
+        $action_info->task_collaborators="";
+        $action_info->task_status_id="";
+        $action_info->task_priority_id="";
+        $action_info->task_labels_id="";
+        $action_info->task_start_date="";
+        $action_info->task_deadline="";
+        $this->Ticket_actions_model->ci_save($action_info,$action_id);
+        return json_encode(array("success"=>true, "message"=>"Successfully deleted!"));
+    }
+
+    function delete_action_requisition($action_id){
+        $action_id=$this->request->getPost("id");
+        $action_info=$this->Ticket_actions_model->get_one($action_id);
+        $action_info->task_title="";
+        $action_info->task_description="";
+        $action_info->task_assigned_to="";
+        $action_info->task_collaborators="";
+        $action_info->task_status_id="";
+        $action_info->task_priority_id="";
+        $action_info->task_labels_id="";
+        $action_info->task_start_date="";
+        $action_info->task_deadline="";
+        $this->Ticket_actions_model->ci_save($action_info,$action_id);
+        return json_encode(array("success"=>true, "message"=>"Successfully deleted!"));
+    }
+
+    function delete_action_port($action_id){
+        
+    }
+
 
 }
 
