@@ -121,7 +121,9 @@
                 </div>
             </div>
 
-            <?php if (!$model_info->id) { ?>
+            <?php 
+            //if (!$model_info->id) { 
+                ?>
                 <!-- description can't be changed during editing -->
                 <div class="form-group">
                     <div class="row">
@@ -135,13 +137,16 @@
                                 "placeholder" => app_lang('description'),
                                 "data-rule-required" => true,
                                 "data-msg-required" => app_lang("field_required"),
-                                "data-rich-text-editor" => true
+                                "data-rich-text-editor" => true,
+                                "value"=>property_exists($model_info,"description")?$model_info->description:""
                             ));
                             ?>
                         </div>
                     </div>
                 </div>
-            <?php } ?>
+             <?php
+              //} 
+              ?>
 
             <!-- Assign to only visible to team members -->
             <?php if ($login_user->user_type == "staff") { ?>
