@@ -362,14 +362,17 @@ class Tickets extends Security_Controller
                 $ticket_comment_id = $this->Ticket_comments_model->ci_save($comment_data);
 
                 if ($ticket_comment_id) {
+                    // parent::init_activity_log("ticket_created", "description", "project", "project_id");
                     log_notification("ticket_created", array("ticket_id" => $ticket_id, "ticket_comment_id" => $ticket_comment_id));
                 }
+                // parent::init_activity_log("project_comment", "description", "project", "project_id");
 
                 if ($this->login_user->user_type !== "staff") {
                     //don't add auto reply if it's created by team members
                     add_auto_reply_to_ticket($ticket_id);
                 }
             } else if ($assigned_to) {
+                // parent::init_activity_log("ticket_assigned", "description", "project", "project_id");
                 log_notification("ticket_assigned", array("ticket_id" => $ticket_id, "to_user_id" => $assigned_to));
             }
 
