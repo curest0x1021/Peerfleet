@@ -18,7 +18,7 @@
                         </div>
                         <div class="col-md-4" >
                             <p>
-                                Number : <?php echo $action->requisition_number;?>
+                                Requisition Number : <?php echo $action->requisition_number;?>
                             </p>
                         </div>
                     </div>

@@ -10,7 +10,7 @@
         <?php
         $corrective_action_dropdown=array(
             array("id"=>"Arrange service","text"=>"Arrange service"),
-            array("id"=>"Guatantee claim","text"=>"Guatantee claim"),
+            array("id"=>"Warrenty claim","text"=>"Warrenty claim"),
             array("id"=>"Reconditioning / Redelivery","text"=>"Reconditioning / Redelivery"),
             array("id"=>"Repair by crew","text"=>"Repair by crew"),
             array("id"=>"Repair on dry dock","text"=>"Repair on dry dock"),
@@ -20,7 +20,7 @@
         );
         ?>
         <div class="row" >
-            <div class="col-md-10" >
+            <div class="" >
                 <input
                 class="form-control corrective-action"
                 name="corrective_action"
@@ -28,9 +28,9 @@
                 value="<?php if(isset($action_info)) echo $action_info->corrective_action;?>"
                 />
             </div>
-            <div class="col-md-2" >
+            <!-- <div class="col-md-2" >
                 <button class="btn btn-default btn-save-corrective-action"   ><i data-feather="check"  class="icon-16" ></i>Save</button>
-            </div>
+            </div> -->
         </div>
     </div>
     <p>The following processes can be linked to this corrective action.</p>
@@ -136,7 +136,7 @@
         $(".corrective-action").select2({
             data: <?php echo (json_encode($corrective_action_dropdown)); ?>
         });
-        $(".btn-save-corrective-action").on("click",function(){
+        $(".corrective-action").on("click",function(){
             $(".btn-add-task").prop("disabled",false);
             $(".btn-add-requisition").prop("disabled",false);
             $(".btn-add-schedule").prop("disabled",false);
