@@ -11,12 +11,12 @@ class Ports_model extends Crud_model {
         parent::__construct($this->table);
     }
 
-    function get_all_ids() {
+    function get_all_names() {
         $port_table = $this->db->prefixTable("ports");
 
-        $sql = "SELECT id FROM $port_table";
+        $sql = "SELECT name FROM $port_table";
         $result = $this->db->query($sql)->getResult();
-        $ids = array_map(function($x) { return $x->id; }, $result);
-        return $ids;
+        $names = array_map(function($x) { return $x->name; }, $result);
+        return $names;
     }
 }

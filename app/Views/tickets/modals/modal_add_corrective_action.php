@@ -13,7 +13,7 @@
             array("id"=>"Warrenty claim","text"=>"Warrenty claim"),
             array("id"=>"Reconditioning / Redelivery","text"=>"Reconditioning / Redelivery"),
             array("id"=>"Repair by crew","text"=>"Repair by crew"),
-            array("id"=>"Repair on dry dock","text"=>"Repair on dry dock"),
+            array("id"=>"Repair on dry git dock","text"=>"Repair on dry dock"),
             array("id"=>"Request maker information","text"=>"Request maker information"),
             array("id"=>"Supply spare","text"=>"Supply spare"),
             array("id"=>"Support","text"=>"Support"),

@@ -1433,7 +1433,7 @@ class Tickets extends Security_Controller
     function tab_activities($ticket_id)
     {
         $allActions = $this->Ticket_actions_model->get_all_where(array("ticket_id" => $ticket_id))->getResult();
-        return $this->template->view("tickets/tabs/activities", ["ticket_id" => $ticket_id, "allActions" => $allActions]);
+        return $this->template->view("tickets/tabs/activities", ["ticket_id" => $ticket_id]);
     }
     function modal_add_corrective_action($ticket_id)
     {
@@ -1448,8 +1448,16 @@ class Tickets extends Security_Controller
     function modal_add_schedule($ticket_id)
     {
         $action_id = $this->request->getPost("id");
-        $action_info = $this->Ticket_actions_model->get_one($action_id);
-        return $this->template->view("tickets/modals/modal_add_schedule", ["ticket_id" => $ticket_id, "action_info" => $action_info]);
+        $view_data['action_info'] = $this->Ticket_actions_model->get_one($action_id);
+        // $ports_dropdown = $this->Ports_model->get_all_names();
+        $view_data['ports_dropdown'] = array("" => "-") + $this->Ports_model->get_dropdown_list(array("name"), "id");
+        $view_data['ticket_id'] = $ticket_id;
+        // $suggestion = array(array("id" => "", "text" => "-"));
+        // foreach ($ports as $key => $value) {
+        //     $suggestion[] = array("id" => $key, "text" => $value);
+        // }
+        // $ports_dropdown = $suggestion;
+        return $this->template->view("tickets/modals/modal_add_schedule", $view_data);
     }
     function modal_add_task($ticket_id)
     {

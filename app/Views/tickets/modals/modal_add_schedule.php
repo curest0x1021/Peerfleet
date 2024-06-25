@@ -9,13 +9,25 @@
     <input hidden class='input-id' value="<?php if(isset($action_info)) echo $action_info->id;?>" />
     <div class="form-group" >
         <label for="schedule_port" >Port : </label>
-        <input 
+        <!-- <input 
         name="schedule_port"
         id="schedule_port"
         class="form-control input-port"
         placeholder="Start typing to get suggestions"
         value="<?php if(isset($action_info)) echo $action_info->schedule_port;?>"
-        />
+        /> -->
+        <div class="col-md-9">
+            <?php
+            // echo form_dropdown("schedule_port", $ports_dropdown, $action_info->schedule_port, "class='select2'");
+            echo form_input(array(
+                "id" => "schedule_port",
+                "name" => "schedule_port",
+                "value" = <?php if(isset($action_info)) echo $action_info->schedule_port;?>,
+                "class" => "form-control",
+                "placeholder" => "Start typing to get suggestions"
+            ));
+            ?>
+        </div>
     </div>
     <div class="row" >
         <div class="col-md-6" >
@@ -74,6 +86,9 @@
             // $taskViewLink.attr("data-title", taskShowText + " #" + JSON.parse(response).saved_id);
             $newViewLink.attr("data-post-id", <?php echo $ticket_id;?>);
             $newViewLink.trigger("click");
+        })
+        $('#schedule_port').select2({
+            tags: <?php echo json_encode($ports_dropdown); ?>
         })
         $(".btn-save-schedule").on("click",function(){
             var rise_csrf_token = $('[name="rise_csrf_token"]').val();
