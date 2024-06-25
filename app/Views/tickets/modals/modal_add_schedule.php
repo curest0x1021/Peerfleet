@@ -1,6 +1,6 @@
+<?php echo form_open(get_uri("tickets/save_schedule"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix" >
-    <?php echo form_open(get_uri("tickets/save_schedule"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
-    <?php echo form_close();?>
+    
     <div id="link-of-new-view" class="hide">
         <?php
         echo modal_anchor(get_uri("tasks/view"), "", array("data-modal-lg" => "1"));
@@ -12,22 +12,13 @@
         <!-- <input 
         name="schedule_port"
         id="schedule_port"
-        class="form-control input-port"
+        class="form-control schedule_port"
         placeholder="Start typing to get suggestions"
-        value="<?php if(isset($action_info)) echo $action_info->schedule_port;?>"
+        value="<?php //if(isset($action_info)) echo $action_info->schedule_port;?>"
         /> -->
-        <div class="col-md-9">
-            <?php
-            // echo form_dropdown("schedule_port", $ports_dropdown, $action_info->schedule_port, "class='select2'");
-            echo form_input(array(
-                "id" => "schedule_port",
-                "name" => "schedule_port",
-                "value" = <?php if(isset($action_info)) echo $action_info->schedule_port;?>,
-                "class" => "form-control",
-                "placeholder" => "Start typing to get suggestions"
-            ));
-            ?>
-        </div>
+        <?php
+        echo form_dropdown("schedule_port", $ports_dropdown, $action_info->schedule_port, "class='select2' id='schedule_port'");
+        ?>
     </div>
     <div class="row" >
         <div class="col-md-6" >
@@ -76,8 +67,10 @@
     <button class="btn btn-default btn-cancel-schedule "  ><i data-feather="x" class="icon-16" ></i>Close</button>
     <button class="btn btn-primary btn-save-schedule"  ><i data-feather="check" class="icon-16" ></i>Save</button>
 </div>
+<?php echo form_close(); ?>
 <script>
     $(document).ready(function(){
+        var portsDropdown = <?php echo json_encode($ports_dropdown); ?>;
         setDatePicker("#schedule_eta");
         setDatePicker("#schedule_etd");
         $(".btn-cancel-schedule").on("click",function(){
@@ -87,13 +80,11 @@
             $newViewLink.attr("data-post-id", <?php echo $ticket_id;?>);
             $newViewLink.trigger("click");
         })
-        $('#schedule_port').select2({
-            tags: <?php echo json_encode($ports_dropdown); ?>
-        })
-        $(".btn-save-schedule").on("click",function(){
+        $(".btn-save-schedule").on("click",function(e){
+            e.preventDefault()
             var rise_csrf_token = $('[name="rise_csrf_token"]').val();
             const id="<?php echo $action_info->id;?>";
-            const port=$(".input-port")[0].value;
+            const port = $("#schedule_port")[0].value;
             const eta=$(".input-eta")[0].value;
             const etd=$(".input-etd")[0].value;
             const agent=$(".input-agent")[0].value;
@@ -101,7 +92,7 @@
             var myForm=new FormData();
             myForm.append("rise_csrf_token",rise_csrf_token);
             myForm.append("id",id);
-            myForm.append("port",port);
+            myForm.append("port",portsDropdown[port]);
             myForm.append("eta",eta);
             myForm.append("etd",etd);
             myForm.append("agent",agent);
@@ -124,5 +115,9 @@
                 }
             })
         })
+        // $(".schedule_port").select2({
+        //     data: <?php //echo (json_encode($ports_dropdown)); ?>
+        // })
+        $("#schedule_port").select2();
     })
 </script>
