@@ -108,6 +108,8 @@ class Mailbox extends Security_Controller {
         if (!$mailbox_id) {
             $mailbox_id = $parent_email_info->mailbox_id ? $parent_email_info->mailbox_id : $draft_email_info->mailbox_id;
         }
+        $ticket_id = $this->request->getGet("ticket_id");
+        $ticket_title = $this->request->getGet("ticket_title");
 
         // $this->can_access_this_mailbox($mailbox_id);
         $mailbox_info = $this->Mailboxes_model->get_one($mailbox_id);
@@ -130,6 +132,7 @@ class Mailbox extends Security_Controller {
 
             echo json_encode(array("success" => true, "data" => $this->template->view('Mailbox\Views\mailbox\compose', $view_data)));
         } else {
+                $view_data['email_info']->subject = "Ticket #" . $ticket_id . " - " . $ticket_title;
             return $this->template->view('Mailbox\Views\mailbox\compose', $view_data);
         }
     }
