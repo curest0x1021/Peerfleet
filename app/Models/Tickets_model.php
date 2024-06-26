@@ -9,7 +9,7 @@ class Tickets_model extends Crud_model {
     function __construct() {
         $this->table = 'tickets';
         parent::__construct($this->table);
-        parent::init_activity_log("ticket", "title", "client", "client_id", "project", "project_id", "ticket_type", "ticket_type_id");
+        parent::init_activity_log("ticket", "title", "ticket", "id", "client", "client_id", "project", "project_id");
     }
 
     function get_details($options = array()) {

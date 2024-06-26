@@ -1,6 +1,5 @@
+<?php echo form_open(get_uri("tickets/save_requisition"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix" >
-    <?php echo form_open(get_uri("tickets/save_requisition"), array("id" => "task-form", "class" => "general-form", "role" => "form")); ?>
-    <?php echo form_close();?>
     <div id="link-of-new-view" class="hide">
         <?php
         echo modal_anchor(get_uri("tasks/view"), "", array("data-modal-lg" => "1"));
@@ -14,6 +13,7 @@
         id="requisition_title"
         class="form-control input-title"
         value="<?php if(isset($action_info)) echo $action_info->requisition_title;?>"
+        required
         />
     </div>
     <div class="form-group" >
@@ -23,6 +23,7 @@
         id="requisition_number"
         class="form-control input-number"
         value="<?php if(isset($action_info)) echo $action_info->requisition_number;?>"
+        required
         />
     </div>
     <div class="form-group" >
@@ -38,9 +39,10 @@
     </div>
 </div>
 <div class="modal-footer" >
-<button class="btn btn-default btn-cancel-requisition"  ><i data-feather="x" class="icon-16" ></i>Close</button>
-<button class="btn btn-primary btn-save-requisition"  ><i data-feather="check" class="icon-16" ></i>Save</button>
+    <button class="btn btn-default btn-cancel-requisition"  ><i data-feather="x" class="icon-16" ></i>Close</button>
+    <button class="btn btn-primary btn-save-requisition"  ><i data-feather="check" class="icon-16" ></i>Save</button>
 </div>
+<?php echo form_close();?>
 <script>
     $(document).ready(function(){
         $(".btn-cancel-requisition").on("click",function(){
@@ -51,12 +53,14 @@
             $newViewLink.trigger("click");
         })
     })
-    $(".btn-save-requisition").on("click",function(){
+    $(".btn-save-requisition").on("click",function(e){
+        e.preventDefault();
         var rise_csrf_token = $('[name="rise_csrf_token"]').val();
         const id="<?php echo $action_info->id;?>";
         const title=$(".input-title")[0].value;
         const number=$(".input-number")[0].value;
         const remarks=$(".input-remarks")[0].value;
+        console.log(id);
         var myForm=new FormData();
         myForm.append("rise_csrf_token",rise_csrf_token);
         myForm.append("id",id);

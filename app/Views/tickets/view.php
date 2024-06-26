@@ -289,7 +289,6 @@
             var loaded = false;
 
             var repeat = setInterval(() => {
-                console.log("kkk")
                 if ($("#email_to").length == 0) return;
                 $("#email_to")[0].value = <?php echo $vessel_info->owner_id; ?>;
                 $("#email_to").select2({

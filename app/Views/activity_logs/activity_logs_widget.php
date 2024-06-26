@@ -64,6 +64,8 @@ foreach ($activity_logs as $log) {
                         } else if ($log->action != "bitbucket_notification_received" && $log->action != "github_notification_received") {
                             if ($log->log_type === "task") {
                                 echo app_lang($log->log_type) . ": " . modal_anchor(get_uri("tasks/view"), " #" . $log->log_type_id . " - " . convert_mentions(convert_comment_link(process_images_from_content($log->log_type_title))), array("title" => app_lang('task_info') . " #$log->log_type_id", "class" => "dark", "id" => "task-modal-view-link", "data-post-id" => $log->log_type_id, "data-modal-lg" => "1"));
+                            } else if (strpos($log->log_type, 'ticket') !== false) {
+                                echo $log->log_type . ": " . convert_mentions(convert_comment_link(process_images_from_content($log->log_type_title)));
                             } else {
                                 echo app_lang($log->log_type) . ": " . convert_mentions(convert_comment_link(process_images_from_content($log->log_type_title)));
                             }
@@ -113,7 +115,9 @@ foreach ($activity_logs as $log) {
 $log_for = $log_for ? $log_for : 0;
 $log_for_id = $log_for_id ? $log_for_id : 0;
 
-$log_type = $log_type ? $log_type : 0;
+// $log_type = $log_type ? $log_type : 0;
+$log_type = isset($log_type) ? (is_array($log_type) ? implode(",", $log_type) : $log_type) : 0;
+
 $log_type_id = $log_type_id ? $log_type_id : 0;
 
 $next_container_id = "loadproject" . $next_page_offset . $log_for . $log_type; //create unique id

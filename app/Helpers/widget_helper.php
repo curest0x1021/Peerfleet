@@ -50,8 +50,12 @@ if (!function_exists('activity_logs_widget')) {
 
         $view_data["log_for"] = get_array_value($params, "log_for");
         $view_data["log_for_id"] = get_array_value($params, "log_for_id");
-        $view_data["log_type"] = get_array_value($params, "log_type");
         $view_data["log_type_id"] = get_array_value($params, "log_type_id");
+        // $log_type = get_array_value($params, "log_type");
+        // if (!is_array($log_type)) {
+        //     $log_type = [$log_type];
+        // }
+        $view_data["log_type"] = get_array_value($params, "log_type");
 
         echo $view_data["result_remaining"] = view("activity_logs/activity_logs_widget", $view_data);
     }

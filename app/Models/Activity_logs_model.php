@@ -62,26 +62,35 @@ class Activity_logs_model extends Model {
         $log_for = $this->_get_clean_value($options, "log_for");
         if ($log_for) {
             $where .= " AND $activity_logs_table.log_for='$log_for'";
+        }
 
-            $log_for_id = $this->_get_clean_value($options, "log_for_id");
-            if ($log_for_id) {
-                $where .= " AND $activity_logs_table.log_for_id=$log_for_id";
-            } else {
-                //link with the parent
-                if ($log_for === "project") {
-                    $link_with_table = $this->db->prefixTable('projects');
-                    $extra_join_info = " LEFT JOIN $link_with_table ON $activity_logs_table.log_for_id=$link_with_table.id ";
-                    $extra_select = " , $link_with_table.title as log_for_title";
-                }
+        $log_for_id = $this->_get_clean_value($options, "log_for_id");
+        if ($log_for_id) {
+            $where .= " AND $activity_logs_table.log_for_id=$log_for_id";
+        } else {
+            //link with the parent
+            if ($log_for === "project") {
+                $link_with_table = $this->db->prefixTable('projects');
+                $extra_join_info = " LEFT JOIN $link_with_table ON $activity_logs_table.log_for_id=$link_with_table.id ";
+                $extra_select = " , $link_with_table.title as log_for_title";
             }
         }
 
         $log_type = $this->_get_clean_value($options, "log_type");
-        $log_type_id = $this->_get_clean_value($options, "log_type_id");
-        if ($log_type && $log_type_id) {
-            $where .= " AND $activity_logs_table.log_type='$log_type' AND $activity_logs_table.log_type_id=$log_type_id";
+        if ($log_type) {
+            if (is_array($log_type)) {
+                $log_type = implode("','", $log_type);
+                $where .= " AND $activity_logs_table.log_type IN ('$log_type')";
+            } else {
+                $where .= " AND $activity_logs_table.log_type='$log_type'";
+            }
         }
 
+        $log_type_id = $this->_get_clean_value($options, "log_type_id");
+        if ($log_type_id) {
+            $where .= " AND $activity_logs_table.log_type_id=$log_type_id";
+        }
+        
         //don't show all project's log for none admin users
         $project_join = "";
         $project_where = "";

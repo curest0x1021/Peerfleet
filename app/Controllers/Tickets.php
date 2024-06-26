@@ -1504,6 +1504,11 @@ class Tickets extends Security_Controller
 
     function save_requisition()
     {
+        $this->validate_submitted_data(array(
+            "id" => "numeric",
+            "title" => "required",
+            "number" => "required",
+        ));
         $id = $this->request->getPost("id");
         $title = $this->request->getPost("title");
         $number = $this->request->getPost("number");
@@ -1536,7 +1541,7 @@ class Tickets extends Security_Controller
         echo json_encode(array("success" => true, "saved_id" => $saved_id));
     }
 
-    function modal_corrective_action($id)
+    function modal_corrective_action($id = 0)
     {
         $action_info = $this->Ticket_actions_model->get_one($id);
         return $this->template->view("tickets/modals/modal_add_corrective_action", ["ticket_id" => $action_info->ticket_id, "action_info" => $action_info]);
