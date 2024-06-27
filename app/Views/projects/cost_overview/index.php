@@ -370,8 +370,8 @@ $totalPrice=0;
                         foreach ($oneTaskSupplies as $oneSupply) {
                             $oneTaskTotalSupplies+=$oneSupply->cost;
                         }
-                        // $categoryOwnerSupply+=$oneTaskTotalSupplies;
-                        $categoryOwnerSupply+=$oneTask->owner_supply;
+                        $categoryOwnerSupply+=$oneTaskTotalSupplies;    
+                        // $categoryOwnerSupply+=$oneTask->owner_supply;
 
                         $oneTaskTotalCostItems=0;
                         foreach ($oneTaskCostItems as $oneItem) {
@@ -400,8 +400,8 @@ $totalPrice=0;
                         $categoryEstimatedCost+=($oneTask->estimated_cost?$oneTask->estimated_cost:0);
 
                         
-                        // $totalOwnerSupplies+=$oneTaskTotalSupplies;
-                        $totalOwnerSupplies+=$oneTask->owner_supply;
+                        $totalOwnerSupplies+=$oneTaskTotalSupplies;
+                        // $totalOwnerSupplies+=$oneTask->owner_supply;
                         $totalCostItems+=$oneTaskTotalCostItems;
                         $totalShipyardCostItems+=$oneTaskTotalShipyardCostItems;
                         $totalVariationOrders+=$oneTaskTotalVariationOrders;
