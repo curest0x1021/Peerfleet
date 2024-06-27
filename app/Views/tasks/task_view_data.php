@@ -9,51 +9,50 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
 <!---->
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"> -->
 <style>
-      /* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
-
-.item-group .col-md-2{
-    text-align:center;
-    /* border:1px solid lightgray; */
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 40px 0 rgba(0, 0, 0, 0.19);
-    border-radius:10px;
-    margin:5px;
-}
-.item-group .col-md-12{
-    display:flex;
-    /* border:1px solid lightgray; */
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 40px 0 rgba(0, 0, 0, 0.19);
-    border-radius:10px;
-    margin:5px;
-    align-items:center;
-}
-.item-image{
-    
-}
-.item-group .col-md-2 .item-image{
-   height:20vh;
-   max-width:80%;
-}
-.item-group .col-md-2 .btn-download-item{
-   float:right;
-}
-.item-group .col-md-12 .item-image{
-    width:5vw;
-    max-height:5vw;
-    min-height:5vw;
-    
-}
-.item-group .col-md-12 .item-title{
-    margin-left:4vw;
-    flex-grow:1;
-}
-.item-group .col-md-2 .item-title{
-    width:90%;
-    white-space: nowrap; /* Prevent text from wrapping */
-    overflow: hidden; /* Hide any overflowed text */
-    text-overflow: ellipsis; /* Display an ellipsis (...) to indicate text overflow */
-}
+    .item-group .col-md-2{
+        text-align:center;
+        /* border:1px solid lightgray; */
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 40px 0 rgba(0, 0, 0, 0.19);
+        border-radius:10px;
+        margin:5px;
+    }
+    .item-group .col-md-12{
+        display:flex;
+        /* border:1px solid lightgray; */
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 40px 0 rgba(0, 0, 0, 0.19);
+        border-radius:10px;
+        margin:5px;
+        align-items:center;
+    }
+    .item-image{
+        
+    }
+    .item-group .col-md-2 .item-image{
+    height:20vh;
+    max-width:80%;
+    }
+    .item-group .col-md-2 .btn-download-item{
+    float:right;
+    }
+    .item-group .col-md-12 .item-image{
+        width:5vw;
+        max-height:5vw;
+        min-height:5vw;
+        
+    }
+    .item-group .col-md-12 .item-title{
+        margin-left:4vw;
+        flex-grow:1;
+    }
+    .item-group .col-md-2 .item-title{
+        width:90%;
+        white-space: nowrap; /* Prevent text from wrapping */
+        overflow: hidden; /* Hide any overflowed text */
+        text-overflow: ellipsis; /* Display an ellipsis (...) to indicate text overflow */
+    }
 </style>
 <!---->
+<div>
 <div>
     <ul class="nav nav-pills">
         <li class="nav-item">
