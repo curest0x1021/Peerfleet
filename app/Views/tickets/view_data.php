@@ -47,9 +47,9 @@ if (!$sort_as_decending) {
                     }
                     ?>
 
-                        <?php
-                        if(isset($emailbox)) echo modal_anchor(get_uri("mailbox/compose/$emailbox->id?ticket_id=$ticket_info->id&ticket_title=$ticket_info->title"),'<button class="btn btn-default upload-file-button float-start me-auto btn-sm round mt-1 btn-compose-mailbox" type="button" style="color:#7988a2"><i data-feather="plus-circle" class="icon-16"></i> Add email</button>',array("id"=>"email modal"));
-                        ?>
+                    <?php
+                    if(isset($emailbox)) echo modal_anchor(get_uri("mailbox/compose/$emailbox->id?ticket_id=$ticket_info->id&ticket_title=$ticket_info->title"),'<button class="btn btn-default upload-file-button float-start me-auto btn-sm round mt-1 btn-compose-mailbox" type="button" style="color:#7988a2"><i data-feather="plus-circle" class="icon-16"></i> Add email</button>',array("id"=>"email modal"));
+                    ?>
 
                     <div class="float-end">
                         <?php if ($login_user->user_type === "staff") { ?>
