@@ -3079,7 +3079,7 @@ if (!function_exists('get_first_letter')) {
 }
 /////////////////////////////////////////////
 function encode_img_base64( $img_path = false, $type = 'png' ){
-    if($img_path){
+    if($img_path && file_exists($img_path)){
         $path = $img_path;
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $data = file_get_contents($path);
