@@ -160,7 +160,7 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                             <div class="col-md-12 mb15">
                                 <strong>Budget group: </strong>
                                 <?php
-                                echo isset($budgetGroup)?$budgetGroup->number . " - " . $budgetGroup->title:"";
+                                echo isset($budgetGroup) && $budgetGroup->number?$budgetGroup->number . " - " . $budgetGroup->title:"";
                                 ?>
                             </div>
 
