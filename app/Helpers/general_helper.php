@@ -3078,11 +3078,14 @@ if (!function_exists('get_first_letter')) {
     }
 }
 /////////////////////////////////////////////
-function encode_img_base64( $img_path = false, $type = 'png' ){
+function encode_img_base64( $img_path = false, $type = 'png', $default_img_path = 'assets/images/pdf.png' ){
     if($img_path && file_exists($img_path)){
-        $path = $img_path;
-        $type = pathinfo($path, PATHINFO_EXTENSION);
-        $data = file_get_contents($path);
+        $type = pathinfo($img_path, PATHINFO_EXTENSION);
+        $data = file_get_contents($img_path);
+        return 'data:image/' . $type . ';base64,' . base64_encode($data);
+    } else if (file_exists($default_img_path)) {
+        $type = pathinfo($default_img_path, PATHINFO_EXTENSION);
+        $data = file_get_contents($default_img_path);
         return 'data:image/' . $type . ';base64,' . base64_encode($data);
     }
     return '';
