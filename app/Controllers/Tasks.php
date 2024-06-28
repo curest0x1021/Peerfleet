@@ -2311,6 +2311,8 @@ class Tasks extends Security_Controller {
         $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("task_files", $this->login_user->is_admin, $this->login_user->user_type);
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("task_files", $this->login_user->is_admin, $this->login_user->user_type);
 
+        $view_data["gotTask"] = $this->Tasks_model->get_one($task_id);
+        $view_data["budgetGroup"] = $this->Budget_groups_model->get_one($view_data["gotTask"]->budget_group);
         
         if ($view_type == "details") {
             $view_data['modal_opened']=0;

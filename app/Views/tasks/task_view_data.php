@@ -158,6 +158,40 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                             </div>
 
                             <div class="col-md-12 mb15">
+                                <strong>Budget group: </strong>
+                                <?php
+                                echo isset($budgetGroup)?$budgetGroup->number . " - " . $budgetGroup->title:"";
+                                ?>
+                            </div>
+
+                            <div class="col-md-12 mb15">
+                                <strong><?php echo app_lang('supplier') . ": " ?></strong>
+                                <?php echo isset($gotTask)&& $gotTask->supplier?$gotTask->supplier:"Yard"; ?>
+                            </div>
+
+                            <div class="col-md-12 mb15">
+                                <strong>Class relevant: </strong>
+                                <?php 
+                                echo isset($gotTask) && property_exists($gotTask, "class_relevant") 
+                                    ? ($gotTask->class_relevant == 1 ? "Yes" : "No") 
+                                    : "Yes";
+                                ?>
+                            </div>
+
+                            <div class="col-md-12 mb15">
+                                <strong>PMS/SCS number: </strong>
+                                <?php
+                                echo isset($gotTask)&&$gotTask->pms_scs_number?$gotTask->pms_scs_number:"";
+                                ?>
+                            </div>
+
+                            <?php if ($model_info->dock_list_number) { ?>
+                                <div class="col-md-12 mb15 mb15">
+                                    <strong><a data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Dock List Number" >DLN : </a></strong> <?php echo $model_info->dock_list_number; ?>
+                                </div>
+                            <?php } ?>
+
+                            <div class="col-md-12 mb15">
                                 <strong><?php echo app_lang('collaborators') . ": "; ?> </strong>
                                 <div class="mt5">
                                     <?php 
@@ -294,12 +328,6 @@ $no_icon = '<i data-feather="square" class="icon-16"></i>';
                             </div>
                             <?php } ?>
                             <?php if ($model_info->parent_task_id == 0) { ?>
-                                <?php if ($model_info->dock_list_number) { ?>
-                                    <div class="col-md-12 mb15 mb15">
-                                        <strong><a data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Dock List Number" >DLN : </a></strong> <?php echo $model_info->dock_list_number; ?>
-                                    </div>
-                                <?php } ?>
-
                                 <?php if ($model_info->reference_drawing) { ?>
                                     <div class="col-md-12 mb15">
                                         <strong><?php echo app_lang('reference_drawing') . ": "; ?></strong> <?php echo $model_info->reference_drawing; ?>
