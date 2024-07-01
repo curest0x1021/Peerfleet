@@ -7,6 +7,11 @@ use Dompdf\Options;
 use CodeIgniter\I18n\Time;
 
 
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+
+
 class Projects extends Security_Controller
 {
 
@@ -4644,6 +4649,225 @@ class Projects extends Security_Controller
         // Return the response object
         return $response;
     }
+
+    function download_cost_overview_xlsx_new($project_id)
+    {
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $project_info = $this->Projects_model->get_one($project_id);
+        $allCostItems = $this->Task_cost_items_model->get_all_with_costs_where(array("project_id" => $project_id))->getResult();
+        $allShipyardCostItems = [];
+        if ($project_info->status_id == 4) {
+            $selected_yards = $this->Project_yards_model->get_all_where(array("project_id" => $project_id))->getResult();
+            if (count($selected_yards) > 0)
+                $allShipyardCostItems = $this->Shipyard_cost_items_model->get_all_with_costs_where(array("shipyard_id" => $selected_yards[0]->id))->getResult();
+        }
+        $allTasks = $this->Tasks_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allVariationOrders = $this->Task_variation_orders_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allOwnerSupplies = $this->Task_owner_supplies_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allComments = $this->Task_comments_model->get_all_where(array("project_id" => $project_id))->getResult();
+
+        // Add data to the first worksheet
+        $sheet1 = $spreadsheet->getActiveSheet();
+        // Data from your provided image
+        $data = [
+            // Header
+            ['FS SONNE', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Werft Liegezeit 2024'],
+            ['Singapur'],
+            ['Stand:', '', '4/2/2024'],
+            [],
+            ['TERMINE'],
+            ['ETA', 'Beginn WLZ', 'Eindocken', 'Ausdocken', 'Ende WLZ', 'ETD'],
+            ['5/22/2024', '5/24/2024', 't.b.d.', 't.b.d.', '7/14/2024', '7/16/2024'],
+            [],
+            ['BUDGET-/ KOSTENÜBERSICHT'],
+            ['Bereich / Untersetzung gem. Einzelpositionen WiPl 2024', 'Budget', 'Kosten (Hochrechnung)', 'Differenz (Reserve)'],
+            ['Reparatur u. Wartung Schiff (R+W_S)'],
+            ['11 = Allg. Instandhaltung Schiff (60% des Stellpostens)'],
+            ['13 = Generalüberholung Pumpjet'],
+            ['14 = Instandsetzung Hauptmaschinen'],
+            ['15 = Generalüberholung Flossenstabilisatoren'],
+            ['16 = Generalüberholung Ruderpropeller'],
+            ['17 = Überholung Rudermaschinen'],
+            ['Reparatur u. Wartung Wissenschaft (R+W_W)'],
+            ['21 = Allg. Instandhaltung Wiss (60% des Stellpostens)'],
+            ['22 = Einbaubegleitung SONARDYNE Ranger 2'],
+            ['24 = Erneuerung EM122 Tiefseefächerecholot Rx-Schwinger'],
+            ['Werftkosten (Werft)'],
+            ['31 = Dockung, allgemeine Werftarbeiten und -Infrastruktur'],
+            ['32 = Zuarbeit/ Nebenarbeiten/ Hilfeleistungen Werft'],
+            ['33 = Konservierungsarbeiten'],
+            ['34 = Stahl-, Rohr- und Maschinenbauarbeiten'],
+            ['35 = Arbeiten Elektro- und Klimatechnik'],
+            ['36 = Decksmaschinen und Hydraulikarbeiten'],
+            ['37 = Inneneinrichtungsarbeiten'],
+            ['Summe:', '', ' - €', ' - €', ' - €'],
+            [],
+            ['DRINGLICHKEITSSTATUS'],
+            ['Priorität', 'Bedeutung', '', 'Kosten (Hochrechnung)', 'Anteil an Gesamtkosten'],
+            ['1', 'zwingend erforderlich', '', '2 €', '3%'],
+            ['2', 'technisch notwendig', '', '4 €', '4%'],
+            ['3', 'empfehlenswert', '', '2 €', '2%'],
+            ['4', 'wünschenswert', '', '23 €', ''],
+            ['Summe:', '', '', '31 €', '9%'],
+            [],
+            ['AUFTRAGSSTATUS'],
+            ['open', 'requested', 'offered', 'approved', 'completed', 'invoiced'],
+            ['#REF!', '#REF!', '#REF!', '#REF!', '#REF!', '#REF!', 'Summen in EUR'],
+            ['#REF!', '#REF!', '#REF!', '#REF!', '#REF!', '#REF!', 'Anteil des Status am Gesamtumfang'],
+            ['Reine Schätzkosten', '', 'Angebotspreise + evtl. Schätzkosten', '', 'Rechnungssummen'],
+            [],
+            ['KOSTENVERTEILUNG'],
+            ['Bereich', '', '', 'Kosten (Hochrechnung)'],
+            ['A', 'Allgemeine Werftarbeiten und -gestellungen', '', ''],
+            ['B-01', 'Schiffskörper, Stahlarbeiten und Konservierung', '', ''],
+            ['B-02', 'Tanks und Leerzellen', '', ''],
+            ['B-03', 'Winden, Decksmaschinen und Hebezeuge', '', ''],
+            ['B-04', 'Brückenausrüstung', '', ''],
+            ['B-05', 'Brandschutzausrüstung', '', ''],
+            ['B-06', 'Rettungsmittel', '', ''],
+            ['B-07', 'Inneneinrichtung', '', ''],
+            ['B-08', 'Hospital und Medizin', '', ''],
+            ['B-09', 'Küche und Wirtschaft', '', '234 €'],
+            ['B-10', 'Sonstiges Deck', '', ''],
+            ['C-01', 'Wissenschaftliche Geräte und Sensoren', '', '3 €'],
+            ['C-02', 'Netzwerk und Rechner', '', '3 €'],
+            ['C-03', 'Hydroakustik', '', '2 €'],
+            ['C-04', 'Kommunikationsanlagen', '', '4 €'],
+            ['C-05', 'Reinseewassersystem', '', ''],
+            ['C-06', 'Sonstiges WTD', '', ''],
+            ['E-01', 'Antriebs- und Ruderanlagen', '', ''],
+            ['E-02', 'Dieselgeneratoren', '', ''],
+            ['E-03', 'Elektrik', '', ''],
+            ['E-04', 'Automation', '', ''],
+            ['E-05', 'Hydraulikanlagen', '', ''],
+            ['E-06', 'Frisch- undSeekühlwassersysteme', '', ''],
+            ['E-07', 'Brennstoff und Schmierölsysteme', '', ''],
+            ['E-08', 'Druckluftsysteme', '', ''],
+            ['E-09', 'Heiz- und Heißwassersysteme', '', ''],
+            ['E-10', 'Kälte- Klima und Lüftungsanlagen', '', ''],
+            ['E-11', 'Bilgen- Ballast und Lenzsysteme', '', ''],
+            ['E-12', 'Schwarz- und Grauwassersysteme', '', ''],
+            ['E-13', 'Trinkwasser und Destillat', '', ''],
+            ['E-14', 'Müllbehandlungsanlagen', '', ''],
+            ['E-15', 'Sonstiges Maschine', '', ''],
+            ['Summe:', '', '', '246 €'],
+        ];
+
+        // Fill worksheet from array
+        $sheet1->fromArray($data, null, 'A1');
+
+        // Merge cells for the title and sections
+        $sheet1->mergeCells('A1:P1');
+        $sheet1->mergeCells('A2:B2');
+        $sheet1->mergeCells('A3:C3');
+        $sheet1->mergeCells('A4:P4');
+        $sheet1->mergeCells('A8:D8');
+        $sheet1->mergeCells('A17:D17');
+        $sheet1->mergeCells('A28:D28');
+        $sheet1->mergeCells('A31:F31');
+        $sheet1->mergeCells('A37:G37');
+
+        // Apply styles
+        $headerStyle = [
+            'font' => [
+                'bold' => true,
+                'size' => 16,
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+            ],
+        ];
+
+        $subHeaderStyle = [
+            'font' => [
+                'bold' => true,
+                'size' => 14,
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+            ],
+        ];
+
+        $sectionHeaderStyle = [
+            'font' => [
+                'bold' => true,
+                'size' => 12,
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_LEFT,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => 'FF000000'],
+                ],
+            ],
+        ];
+
+        $tableHeaderStyle = [
+            'font' => [
+                'bold' => true,
+                'color' => ['argb' => 'FFFFFFFF'],
+            ],
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'FF000000'],
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => 'FF000000'],
+                ],
+            ],
+        ];
+
+        // Apply header style
+        $sheet1->getStyle('A1:P1')->applyFromArray($headerStyle);
+        $sheet1->getStyle('A2:B2')->applyFromArray($subHeaderStyle);
+        $sheet1->getStyle('A4:P4')->applyFromArray($sectionHeaderStyle);
+        $sheet1->getStyle('A8:D8')->applyFromArray($sectionHeaderStyle);
+        $sheet1->getStyle('A17:D17')->applyFromArray($sectionHeaderStyle);
+        $sheet1->getStyle('A28:D28')->applyFromArray($sectionHeaderStyle);
+        $sheet1->getStyle('A31:F31')->applyFromArray($sectionHeaderStyle);
+        $sheet1->getStyle('A37:G37')->applyFromArray($sectionHeaderStyle);
+
+        // Apply table header style
+        $sheet1->getStyle('A5:F5')->applyFromArray($tableHeaderStyle);
+        $sheet1->getStyle('A9:D9')->applyFromArray($tableHeaderStyle);
+        $sheet1->getStyle('A32:G32')->applyFromArray($tableHeaderStyle);
+        $sheet1->getStyle('A38:H38')->applyFromArray($tableHeaderStyle);
+
+        // Set column widths
+        foreach (range('A', 'P') as $columnID) {
+            $sheet1->getColumnDimension($columnID)->setAutoSize(true);
+        }
+
+        // Save the file
+        // $writer = new Xlsx($spreadsheet);
+        // $writer->save('FS_SONNE_Werft_Liegezeit_2024.xlsx');
+
+
+        // echo "File created successfully!";
+
+        
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        
+        $response = service('response');
+
+        // Set response headers for file download
+        $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->setHeader('Content-Disposition', 'attachment;filename="' . $project_info->title . '_cost_overview.xlsx"');
+        $response->setHeader('Cache-Control', 'max-age=0');
+
+        $writer->save('php://output');
+
+        return $response;
+    }
+
     function download_cost_overview_xlsx($project_id)
     {
         require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
