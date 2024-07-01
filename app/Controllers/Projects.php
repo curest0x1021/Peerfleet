@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Controllers;
+
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use CodeIgniter\I18n\Time;
 
 
-class Projects extends Security_Controller {
+class Projects extends Security_Controller
+{
 
     protected $Project_settings_model;
     protected $Checklist_items_model;
@@ -15,7 +17,8 @@ class Projects extends Security_Controller {
     protected $File_category_model;
     protected $Task_priority_model;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         if ($this->has_all_projects_restricted_role()) {
             app_redirect("forbidden");
@@ -36,15 +39,16 @@ class Projects extends Security_Controller {
         $this->Project_currency_rates_model = model("App\Models\Project_currency_rates_model");
         $this->Task_comments_model = model("App\Models\Task_comments_model");
         $this->Clients_model = model('App\Models\Clients_model');
-        $this->Vessel_types_model=model('App\Models\Vessel_types_model');
-        $this->Report_documents_model=model('App\Models\Report_documents_model');
-        $this->Report_templates_model=model('App\Models\Report_templates_model');
-        $this->Text_templates_model=model('App\Models\Text_templates_model');
+        $this->Vessel_types_model = model('App\Models\Vessel_types_model');
+        $this->Report_documents_model = model('App\Models\Report_documents_model');
+        $this->Report_templates_model = model('App\Models\Report_templates_model');
+        $this->Text_templates_model = model('App\Models\Text_templates_model');
         $this->Projects_model->auto_update();
 
     }
 
-    private function can_delete_projects($project_id = 0) {
+    private function can_delete_projects($project_id = 0)
+    {
         if ($this->login_user->user_type == "staff") {
             if ($this->can_manage_all_projects()) {
                 return true;
@@ -68,7 +72,8 @@ class Projects extends Security_Controller {
         }
     }
 
-    private function can_add_remove_project_members() {
+    private function can_add_remove_project_members()
+    {
         if ($this->login_user->user_type == "staff") {
             if ($this->login_user->is_admin) {
                 return true;
@@ -84,7 +89,8 @@ class Projects extends Security_Controller {
         }
     }
 
-    private function can_create_milestones() {
+    private function can_create_milestones()
+    {
         if ($this->login_user->user_type == "staff") {
             if ($this->can_manage_all_projects()) {
                 return true;
@@ -95,7 +101,8 @@ class Projects extends Security_Controller {
         }
     }
 
-    private function can_edit_milestones() {
+    private function can_edit_milestones()
+    {
         if ($this->login_user->user_type == "staff") {
             if ($this->can_manage_all_projects()) {
                 return true;
@@ -106,7 +113,8 @@ class Projects extends Security_Controller {
         }
     }
 
-    private function can_delete_milestones() {
+    private function can_delete_milestones()
+    {
         if ($this->login_user->user_type == "staff") {
             if ($this->can_manage_all_projects()) {
                 return true;
@@ -117,7 +125,8 @@ class Projects extends Security_Controller {
         }
     }
 
-    private function can_delete_files($uploaded_by = 0) {
+    private function can_delete_files($uploaded_by = 0)
+    {
         if ($this->login_user->user_type == "staff") {
             if ($this->can_manage_all_projects()) {
                 return true;
@@ -132,7 +141,8 @@ class Projects extends Security_Controller {
         }
     }
 
-    private function can_view_files() {
+    private function can_view_files()
+    {
         if ($this->login_user->user_type == "staff") {
             if ($this->can_manage_all_projects()) {
                 return true;
@@ -148,7 +158,8 @@ class Projects extends Security_Controller {
         }
     }
 
-    private function can_add_files() {
+    private function can_add_files()
+    {
         if ($this->login_user->user_type == "staff") {
             if ($this->can_manage_all_projects()) {
                 return true;
@@ -164,7 +175,8 @@ class Projects extends Security_Controller {
         }
     }
 
-    private function can_comment_on_files() {
+    private function can_comment_on_files()
+    {
         if ($this->login_user->user_type == "staff") {
             if ($this->can_manage_all_projects()) {
                 return true;
@@ -181,7 +193,8 @@ class Projects extends Security_Controller {
         }
     }
 
-    private function can_view_gantt() {
+    private function can_view_gantt()
+    {
         //check gantt module
         if (get_setting("module_gantt")) {
             if ($this->login_user->user_type == "staff") {
@@ -203,11 +216,13 @@ class Projects extends Security_Controller {
 
     /* load project view */
 
-    function index() {
+    function index()
+    {
         app_redirect("projects/all_projects");
     }
 
-    function all_projects($status_id = 0) {
+    function all_projects($status_id = 0)
+    {
         validate_numeric_value($status_id);
         $view_data['project_labels_dropdown'] = json_encode($this->make_labels_dropdown("project", "", true));
 
@@ -236,7 +251,8 @@ class Projects extends Security_Controller {
 
     /* load project  add/edit modal */
 
-    function modal_form() {
+    function modal_form()
+    {
         $project_id = $this->request->getPost('id');
         $client_id = $this->request->getPost('client_id');
 
@@ -285,14 +301,15 @@ class Projects extends Security_Controller {
         $view_data['statuses'] = $this->Project_status_model->get_details()->getResult();
         $view_data["can_edit_projects"] = $this->can_edit_projects();
         /////////////////////////////
-        $view_data['categories']=$this->Labels_model->get_details(array("context"=>"project"))->getResult();
+        $view_data['categories'] = $this->Labels_model->get_details(array("context" => "project"))->getResult();
         /////////////////////////////
 
         return $this->template->view('projects/modal_form', $view_data);
     }
 
     //get clients dropdown
-    private function _get_clients_dropdown_with_permission() {
+    private function _get_clients_dropdown_with_permission()
+    {
         $clients_dropdown = array();
 
         if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "client")) {
@@ -308,7 +325,8 @@ class Projects extends Security_Controller {
 
     /* insert or update a project */
 
-    function save() {
+    function save()
+    {
 
         $id = $this->request->getPost('id');
 
@@ -322,9 +340,11 @@ class Projects extends Security_Controller {
             }
         }
 
-        $this->validate_submitted_data(array(
-            "title" => "required"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "title" => "required"
+            )
+        );
 
         $estimate_id = $this->request->getPost('estimate_id');
         $status_id = $this->request->getPost('status_id');
@@ -343,12 +363,13 @@ class Projects extends Security_Controller {
             "status_id" => $status_id ? $status_id : 1,
             "estimate_id" => $estimate_id,
             "order_id" => $order_id,
-            "category"=>$this->request->getPost('category'),
-            "currency"=>$this->request->getPost('currency'),
+            "category" => $this->request->getPost('category'),
+            "currency" => $this->request->getPost('currency'),
         );
         $now = get_my_local_time("Y-m-d");
-        if(strtotime($now)<strtotime($data['deadline'])) $data['status_id']=1;
-        
+        if (strtotime($now) < strtotime($data['deadline']))
+            $data['status_id'] = 1;
+
 
         if (!$id) {
             $data["created_date"] = get_current_utc_time();
@@ -418,7 +439,8 @@ class Projects extends Security_Controller {
 
     /* Show a modal to clone a project */
 
-    function clone_project_modal_form() {
+    function clone_project_modal_form()
+    {
 
         $project_id = $this->request->getPost('id');
 
@@ -440,7 +462,8 @@ class Projects extends Security_Controller {
 
     /* create a new project from another project */
 
-    function save_cloned_project() {
+    function save_cloned_project()
+    {
 
         ini_set('max_execution_time', 300); //300 seconds 
 
@@ -451,9 +474,11 @@ class Projects extends Security_Controller {
             app_redirect("forbidden");
         }
 
-        $this->validate_submitted_data(array(
-            "title" => "required"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "title" => "required"
+            )
+        );
 
         $copy_same_assignee_and_collaborators = $this->request->getPost("copy_same_assignee_and_collaborators");
         $copy_milestones = $this->request->getPost("copy_milestones");
@@ -670,7 +695,8 @@ class Projects extends Security_Controller {
         }
     }
 
-    private function _prepare_new_task_data_on_cloning_project($new_project_id, $milestones_array, $task, $copy_same_assignee_and_collaborators, $copy_tasks_start_date_and_deadline, $move_all_tasks_to_to_do, $change_the_tasks_start_date_and_deadline_based_on_project_start_date, $old_project_info, $project_start_date) {
+    private function _prepare_new_task_data_on_cloning_project($new_project_id, $milestones_array, $task, $copy_same_assignee_and_collaborators, $copy_tasks_start_date_and_deadline, $move_all_tasks_to_to_do, $change_the_tasks_start_date_and_deadline_based_on_project_start_date, $old_project_info, $project_start_date)
+    {
         //prepare new task data. 
         $task->project_id = $new_project_id;
         $milestone_id = get_array_value($milestones_array, $task->milestone_id);
@@ -716,7 +742,8 @@ class Projects extends Security_Controller {
         return $task_data;
     }
 
-    private function _save_custom_fields_on_cloning_project($task, $new_taks_id) {
+    private function _save_custom_fields_on_cloning_project($task, $new_taks_id)
+    {
         $old_custom_fields = $this->Custom_field_values_model->get_all_where(array("related_to_type" => "tasks", "related_to_id" => $task->id, "deleted" => 0))->getResult();
 
         //prepare new custom fields data
@@ -732,7 +759,8 @@ class Projects extends Security_Controller {
 
     /* delete a project */
 
-    function delete() {
+    function delete()
+    {
         $id = $this->request->getPost('id');
 
         if (!$this->can_delete_projects($id)) {
@@ -747,7 +775,8 @@ class Projects extends Security_Controller {
                     "id" => $id,
                     "table" => get_db_prefix() . "projects",
                     "table_without_prefix" => "projects",
-                ));
+                )
+                );
             } catch (\Exception $ex) {
                 log_message('error', '[ERROR] {exception}', ['exception' => $ex]);
             }
@@ -760,7 +789,8 @@ class Projects extends Security_Controller {
 
     /* list of projcts, prepared for datatable  */
 
-    function list_data() {
+    function list_data()
+    {
         $this->access_only_team_members();
 
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("projects", $this->login_user->is_admin, $this->login_user->user_type);
@@ -792,7 +822,8 @@ class Projects extends Security_Controller {
 
     /* list of projcts, prepared for datatable  */
 
-    function projects_list_data_of_team_member($team_member_id = 0) {
+    function projects_list_data_of_team_member($team_member_id = 0)
+    {
         validate_numeric_value($team_member_id);
         $this->access_only_team_members();
 
@@ -821,7 +852,8 @@ class Projects extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
 
-    function projects_list_data_of_client($client_id = 0) {
+    function projects_list_data_of_client($client_id = 0)
+    {
         validate_numeric_value($client_id);
         /////////////////
         // $this->access_only_team_members_or_client_contact($client_id);
@@ -840,16 +872,16 @@ class Projects extends Security_Controller {
 
         /////////////////////////////////////////
         //$list_data = $this->Projects_model->get_details($options)->getResult();
-        $list_data=array();
-        $vessels=$this->Clients_model->get_all_where(array("owner_id"=>$this->login_user->id))->getResult();
+        $list_data = array();
+        $vessels = $this->Clients_model->get_all_where(array("owner_id" => $this->login_user->id))->getResult();
         foreach ($vessels as $key => $one_vessel) {
             # code...
-            $new_option=$options;
-            $new_option["client_id"]=$one_vessel->id;
-            $list_data=array_merge($list_data, $this->Projects_model->get_details($new_option)->getResult());
+            $new_option = $options;
+            $new_option["client_id"] = $one_vessel->id;
+            $list_data = array_merge($list_data, $this->Projects_model->get_details($new_option)->getResult());
         }
 
-        
+
 
 
 
@@ -863,7 +895,8 @@ class Projects extends Security_Controller {
 
     /* return a row of project list  table */
 
-    private function _row_data($id) {
+    private function _row_data($id)
+    {
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("projects", $this->login_user->is_admin, $this->login_user->user_type);
 
         $options = array(
@@ -877,7 +910,8 @@ class Projects extends Security_Controller {
 
     /* prepare a row of project list table */
 
-    private function _make_row($data, $custom_fields) {
+    private function _make_row($data, $custom_fields)
+    {
 
         $progress = $data->total_points ? round(($data->completed_points / $data->total_points) * 100) : 0;
 
@@ -953,7 +987,8 @@ class Projects extends Security_Controller {
 
     /* load project details view */
 
-    function view($project_id = 0, $tab = "") {
+    function view($project_id = 0, $tab = "")
+    {
         validate_numeric_value($project_id);
         $this->init_project_permission_checker($project_id);
 
@@ -1011,7 +1046,8 @@ class Projects extends Security_Controller {
         return $this->template->rander("projects/details_view", $view_data);
     }
 
-    private function _make_checklist_item_row($data = array(), $flag_add, $task_title) {
+    private function _make_checklist_item_row($data = array(), $flag_add, $task_title)
+    {
         $checkbox_class = "checkbox-blank";
         $title_class = "";
         $is_checked_value = 1;
@@ -1025,11 +1061,11 @@ class Projects extends Security_Controller {
         }
 
         $status = js_anchor("<span class='$checkbox_class mr15 float-start'></span>", array('title' => "", "data-id" => $data->id, "data-value" => $is_checked_value, "data-act" => "update-checklist-item-status-checkbox"));
-        
+
         $title = "<span class='font-13 $title_class'>" . $title_value . "</span>";
 
         $delete = ajax_anchor(get_uri("tasks/delete_checklist_item/$data->id"), "<div class='float-end'><i data-feather='x' class='icon-16'></i></div>", array("class" => "delete-checklist-item", "title" => app_lang("delete_checklist_item"), "data-fade-out-on-success" => "#checklist-item-row-$data->id"));
-        
+
         $row_data = "<div id='checklist-item-row-$data->id' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='$data->id'>" . $status . $delete . $title . "</div>";
         if ($flag_add) {
             $row_data = "<div class='task-item mt10'>" . $task_title . "</div>" . $row_data;
@@ -1038,14 +1074,16 @@ class Projects extends Security_Controller {
         return $row_data;
     }
 
-    private function can_edit_timesheet_settings($project_id) {
+    private function can_edit_timesheet_settings($project_id)
+    {
         $this->init_project_permission_checker($project_id);
         if ($project_id && $this->login_user->user_type === "staff" && $this->can_view_timesheet($project_id)) {
             return true;
         }
     }
 
-    private function can_edit_slack_settings() {
+    private function can_edit_slack_settings()
+    {
         if ($this->login_user->user_type === "staff" && $this->can_create_projects()) {
             return true;
         }
@@ -1053,7 +1091,8 @@ class Projects extends Security_Controller {
 
     /* prepare project info data for reuse */
 
-    private function _get_project_info_data($project_id) {
+    private function _get_project_info_data($project_id)
+    {
         $options = array(
             "id" => $project_id,
             // "client_id" => $this->login_user->client_id,
@@ -1092,14 +1131,16 @@ class Projects extends Security_Controller {
         }
     }
 
-    function show_my_starred_projects() {
+    function show_my_starred_projects()
+    {
         $view_data["projects"] = $this->Projects_model->get_starred_projects($this->login_user->id)->getResult();
         return $this->template->view('projects/star/projects_list', $view_data);
     }
 
     /* load project overview section */
 
-    function overview($project_id) {
+    function overview($project_id)
+    {
         validate_numeric_value($project_id);
         $this->access_only_team_members();
         $this->init_project_permission_checker($project_id);
@@ -1109,7 +1150,7 @@ class Projects extends Security_Controller {
 
         $view_data['project_id'] = $project_id;
         ///////
-        $view_data['status_info']=$this->Project_status_model->get_one($view_data['project_info']->status_id);
+        $view_data['status_info'] = $this->Project_status_model->get_one($view_data['project_info']->status_id);
         /////
         $offset = 0;
         $view_data['offset'] = $offset;
@@ -1148,9 +1189,9 @@ class Projects extends Security_Controller {
             $checklist_items_array[] = $this->_make_checklist_item_row($checklist_item, $flag_add, $task_title);
         }
         $view_data["checklist_items"] = json_encode($checklist_items_array);
-        $today=date("Y-m-d");
+        $today = date("Y-m-d");
         // return $today;
-        $view_data['upcoming_milestone']=$this->Milestones_model->upcoming(array("date"=>$today,"project_id"=>$project_id))->getRow();
+        $view_data['upcoming_milestone'] = $this->Milestones_model->upcoming(array("date" => $today, "project_id" => $project_id))->getRow();
         // return json_encode($view_data);
         // $tasks = $this->Tasks_model->get_all_where(array("project_id" => $project_id, "deleted" => 0, "parent_task_id" => 0))->getResult();
         // $view_data["tasks"] = json_encode($tasks);
@@ -1160,7 +1201,8 @@ class Projects extends Security_Controller {
 
     /* add-remove start mark from project */
 
-    function add_remove_star($project_id, $type = "add") {
+    function add_remove_star($project_id, $type = "add")
+    {
         if ($project_id) {
             validate_numeric_value($project_id);
 
@@ -1182,7 +1224,8 @@ class Projects extends Security_Controller {
 
     /* load project overview section */
 
-    function overview_for_client($project_id) {
+    function overview_for_client($project_id)
+    {
         validate_numeric_value($project_id);
         if ($this->login_user->user_type === "client") {
             $view_data = $this->_get_project_info_data($project_id);
@@ -1196,7 +1239,7 @@ class Projects extends Security_Controller {
             $view_data['activity_logs_params'] = array();
             /////
             ///////
-            $view_data['status_info']=$this->Project_status_model->get_one($view_data['project_info']->status_id);
+            $view_data['status_info'] = $this->Project_status_model->get_one($view_data['project_info']->status_id);
             /////
 
             $this->init_project_permission_checker($project_id);
@@ -1225,7 +1268,8 @@ class Projects extends Security_Controller {
 
     /* load project members add/edit modal */
 
-    function project_member_modal_form() {
+    function project_member_modal_form()
+    {
         $view_data['model_info'] = $this->Project_members_model->get_one($this->request->getPost('id'));
         $project_id = $this->request->getPost('project_id') ? $this->request->getPost('project_id') : $view_data['model_info']->project_id;
         $this->init_project_permission_checker($project_id);
@@ -1265,7 +1309,8 @@ class Projects extends Security_Controller {
 
     /* add a project members  */
 
-    function save_project_member() {
+    function save_project_member()
+    {
         $project_id = $this->request->getPost('project_id');
 
         $this->init_project_permission_checker($project_id);
@@ -1274,9 +1319,11 @@ class Projects extends Security_Controller {
             app_redirect("forbidden");
         }
 
-        $this->validate_submitted_data(array(
-            "user_id.*" => "required"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "user_id.*" => "required"
+            )
+        );
 
         $user_ids = $this->request->getPost('user_id');
 
@@ -1319,7 +1366,8 @@ class Projects extends Security_Controller {
 
     /* delete/undo a project members  */
 
-    function delete_project_member() {
+    function delete_project_member()
+    {
         $id = $this->request->getPost('id');
         $project_member_info = $this->Project_members_model->get_one($id);
 
@@ -1350,7 +1398,8 @@ class Projects extends Security_Controller {
 
     /* list of project members, prepared for datatable  */
 
-    function project_member_list_data($project_id = 0, $user_type = "") {
+    function project_member_list_data($project_id = 0, $user_type = "")
+    {
         validate_numeric_value($project_id);
         $this->access_only_team_members();
         $this->init_project_permission_checker($project_id);
@@ -1375,7 +1424,8 @@ class Projects extends Security_Controller {
 
     /* return a row of project member list */
 
-    private function _project_member_row_data($id) {
+    private function _project_member_row_data($id)
+    {
         $options = array("id" => $id);
         $data = $this->Project_members_model->get_details($options)->getRow();
         return $this->_make_project_member_row($data);
@@ -1383,7 +1433,8 @@ class Projects extends Security_Controller {
 
     /* prepare a row of project member list */
 
-    private function _make_project_member_row($data, $can_send_message_to_client = false) {
+    private function _make_project_member_row($data, $can_send_message_to_client = false)
+    {
         $member_image = "<span class='avatar avatar-sm'><img src='" . get_avatar($data->member_image) . "' alt='...'></span> ";
 
         if ($data->user_type == "staff") {
@@ -1422,7 +1473,8 @@ class Projects extends Security_Controller {
     }
 
     //stop timer note modal
-    function stop_timer_modal_form($project_id) {
+    function stop_timer_modal_form($project_id)
+    {
         validate_numeric_value($project_id);
         $this->access_only_team_members();
 
@@ -1454,7 +1506,8 @@ class Projects extends Security_Controller {
         }
     }
 
-    private function _get_timesheet_tasks_dropdown($project_id, $return_json = false) {
+    private function _get_timesheet_tasks_dropdown($project_id, $return_json = false)
+    {
         $tasks_dropdown = array("" => "-");
         $tasks_dropdown_json = array(array("id" => "", "text" => "- " . app_lang("task") . " -"));
 
@@ -1488,7 +1541,8 @@ class Projects extends Security_Controller {
 
     /* start/stop project timer */
 
-    function timer($project_id, $timer_status = "start") {
+    function timer($project_id, $timer_status = "start")
+    {
         validate_numeric_value($project_id);
         $this->access_only_team_members();
         $note = $this->request->getPost("note");
@@ -1531,7 +1585,8 @@ class Projects extends Security_Controller {
 
     /* load timesheets view for a project */
 
-    function timesheets($project_id) {
+    function timesheets($project_id)
+    {
         validate_numeric_value($project_id);
 
         $this->init_project_permission_checker($project_id);
@@ -1570,7 +1625,8 @@ class Projects extends Security_Controller {
 
     /* prepare project members dropdown */
 
-    private function _get_project_members_dropdown_list_for_filter($project_id) {
+    private function _get_project_members_dropdown_list_for_filter($project_id)
+    {
 
         $project_members = $this->Project_members_model->get_project_members_dropdown_list($project_id)->getResult();
         $project_members_dropdown = array(array("id" => "", "text" => "- " . app_lang("member") . " -"));
@@ -1582,7 +1638,8 @@ class Projects extends Security_Controller {
 
     /* load timelog add/edit modal */
 
-    function timelog_modal_form() {
+    function timelog_modal_form()
+    {
         $this->access_only_team_members();
         $view_data['time_format_24_hours'] = get_setting("time_format") == "24_hours" ? true : false;
         $model_info = $this->Timesheets_model->get_one($this->request->getPost('id'));
@@ -1614,7 +1671,8 @@ class Projects extends Security_Controller {
         return $this->template->view('projects/timesheets/modal_form', $view_data);
     }
 
-    private function _prepare_all_related_data_for_timelog($project_id = 0) {
+    private function _prepare_all_related_data_for_timelog($project_id = 0)
+    {
         //we have to check if any defined project exists, then go through with the project id
         $show_porject_members_dropdown = false;
         if ($project_id) {
@@ -1655,21 +1713,25 @@ class Projects extends Security_Controller {
         );
     }
 
-    function get_all_related_data_of_selected_project_for_timelog($project_id = "") {
+    function get_all_related_data_of_selected_project_for_timelog($project_id = "")
+    {
         validate_numeric_value($project_id);
         if ($project_id) {
             $related_data = $this->_prepare_all_related_data_for_timelog($project_id);
 
-            echo json_encode(array(
-                "project_members_dropdown" => get_array_value($related_data, "project_members_dropdown"),
-                "tasks_dropdown" => json_decode(get_array_value($related_data, "tasks_dropdown"))
-            ));
+            echo json_encode(
+                array(
+                    "project_members_dropdown" => get_array_value($related_data, "project_members_dropdown"),
+                    "tasks_dropdown" => json_decode(get_array_value($related_data, "tasks_dropdown"))
+                )
+            );
         }
     }
 
     /* insert/update a timelog */
 
-    function save_timelog() {
+    function save_timelog()
+    {
         $this->access_only_team_members();
         $id = $this->request->getPost('id');
 
@@ -1742,7 +1804,8 @@ class Projects extends Security_Controller {
 
     /* delete/undo a timelog */
 
-    function delete_timelog() {
+    function delete_timelog()
+    {
         $this->access_only_team_members();
 
         $id = $this->request->getPost('id');
@@ -1764,7 +1827,8 @@ class Projects extends Security_Controller {
         }
     }
 
-    private function check_timelog_update_permission($log_id = null, $project_id = null, $user_id = null) {
+    private function check_timelog_update_permission($log_id = null, $project_id = null, $user_id = null)
+    {
         if ($log_id) {
             $info = $this->Timesheets_model->get_one($log_id);
             $user_id = $info->user_id;
@@ -1813,7 +1877,8 @@ class Projects extends Security_Controller {
 
     /* list of timesheets, prepared for datatable  */
 
-    function timesheet_list_data() {
+    function timesheet_list_data()
+    {
 
         $project_id = $this->request->getPost("project_id");
 
@@ -1871,7 +1936,8 @@ class Projects extends Security_Controller {
 
     /* return a row of timesheet list  table */
 
-    private function _timesheet_row_data($id) {
+    private function _timesheet_row_data($id)
+    {
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("timesheets", $this->login_user->is_admin, $this->login_user->user_type);
 
         $options = array("id" => $id, "custom_fields" => $custom_fields);
@@ -1881,7 +1947,8 @@ class Projects extends Security_Controller {
 
     /* prepare a row of timesheet list table */
 
-    private function _make_timesheet_row($data, $custom_fields) {
+    private function _make_timesheet_row($data, $custom_fields)
+    {
         $image_url = get_avatar($data->logged_by_avatar);
         $user = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt=''></span> $data->logged_by_user";
 
@@ -1917,7 +1984,7 @@ class Projects extends Security_Controller {
         }
 
         $options = modal_anchor(get_uri("projects/timelog_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_timelog'), "data-post-id" => $data->id))
-                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_timelog'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("projects/delete_timelog"), "data-action" => "delete"));
+            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_timelog'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("projects/delete_timelog"), "data-action" => "delete"));
 
         $timesheet_manage_permission = get_array_value($this->login_user->permissions, "timesheet_manage_permission");
         if ($data->user_id === $this->login_user->id && ($timesheet_manage_permission === "own_project_members_excluding_own" || $timesheet_manage_permission === "specific_excluding_own")) {
@@ -1931,7 +1998,8 @@ class Projects extends Security_Controller {
 
     /* load timesheets summary view for a project */
 
-    function timesheet_summary($project_id) {
+    function timesheet_summary($project_id)
+    {
         validate_numeric_value($project_id);
 
         $this->init_project_permission_checker($project_id);
@@ -1946,11 +2014,12 @@ class Projects extends Security_Controller {
         $view_data['project_id'] = $project_id;
 
         $view_data['group_by_dropdown'] = json_encode(
-                array(
-                    array("id" => "", "text" => "- " . app_lang("group_by") . " -"),
-                    array("id" => "member", "text" => app_lang("member")),
-                    array("id" => "task", "text" => app_lang("task"))
-        ));
+            array(
+                array("id" => "", "text" => "- " . app_lang("group_by") . " -"),
+                array("id" => "member", "text" => app_lang("member")),
+                array("id" => "task", "text" => app_lang("task"))
+            )
+        );
 
         $view_data['project_members_dropdown'] = json_encode($this->_get_project_members_dropdown_list_for_filter($project_id));
         $view_data['tasks_dropdown'] = $this->_get_timesheet_tasks_dropdown($project_id, true);
@@ -1969,7 +2038,8 @@ class Projects extends Security_Controller {
 
     /* list of timesheets summary, prepared for datatable  */
 
-    function timesheet_summary_list_data() {
+    function timesheet_summary_list_data()
+    {
 
         $project_id = $this->request->getPost("project_id");
 
@@ -2057,7 +2127,8 @@ class Projects extends Security_Controller {
 
     /* get all projects list */
 
-    private function _get_all_projects_dropdown_list() {
+    private function _get_all_projects_dropdown_list()
+    {
         $projects = $this->Projects_model->get_dropdown_list(array("title"));
 
         $projects_dropdown = array(array("id" => "", "text" => "- " . app_lang("project") . " -"));
@@ -2069,7 +2140,8 @@ class Projects extends Security_Controller {
 
     /* get all projects list according to the login user */
 
-    private function _get_all_projects_dropdown_list_for_timesheets_filter() {
+    private function _get_all_projects_dropdown_list_for_timesheets_filter()
+    {
         $options = array();
 
         if (!$this->can_manage_all_projects()) {
@@ -2088,7 +2160,8 @@ class Projects extends Security_Controller {
 
     /* prepare dropdown list */
 
-    private function _prepare_members_dropdown_for_timesheet_filter($members) {
+    private function _prepare_members_dropdown_for_timesheet_filter($members)
+    {
         $where = array("user_type" => "staff");
 
         if ($members != "all" && is_array($members) && count($members)) {
@@ -2106,7 +2179,8 @@ class Projects extends Security_Controller {
 
     /* load all time sheets view  */
 
-    function all_timesheets() {
+    function all_timesheets()
+    {
         $this->access_only_team_members();
         $members = $this->_get_members_to_manage_timesheet();
 
@@ -2122,18 +2196,20 @@ class Projects extends Security_Controller {
 
     /* load all timesheets summary view */
 
-    function all_timesheet_summary() {
+    function all_timesheet_summary()
+    {
         $this->access_only_team_members();
 
         $members = $this->_get_members_to_manage_timesheet();
 
         $view_data['group_by_dropdown'] = json_encode(
-                array(
-                    array("id" => "", "text" => "- " . app_lang("group_by") . " -"),
-                    array("id" => "member", "text" => app_lang("member")),
-                    array("id" => "project", "text" => app_lang("project")),
-                    array("id" => "task", "text" => app_lang("task"))
-        ));
+            array(
+                array("id" => "", "text" => "- " . app_lang("group_by") . " -"),
+                array("id" => "member", "text" => app_lang("member")),
+                array("id" => "project", "text" => app_lang("project")),
+                array("id" => "task", "text" => app_lang("task"))
+            )
+        );
 
         $view_data['members_dropdown'] = json_encode($this->_prepare_members_dropdown_for_timesheet_filter($members));
         $view_data['projects_dropdown'] = json_encode($this->_get_all_projects_dropdown_list_for_timesheets_filter());
@@ -2145,7 +2221,8 @@ class Projects extends Security_Controller {
 
     /* load milestones view */
 
-    function milestones($project_id) {
+    function milestones($project_id)
+    {
         validate_numeric_value($project_id);
         $this->init_project_permission_checker($project_id);
 
@@ -2164,7 +2241,8 @@ class Projects extends Security_Controller {
 
     /* load milestone add/edit modal */
 
-    function milestone_modal_form() {
+    function milestone_modal_form()
+    {
         $id = $this->request->getPost('id');
         $view_data['model_info'] = $this->Milestones_model->get_one($this->request->getPost('id'));
         $project_id = $this->request->getPost('project_id') ? $this->request->getPost('project_id') : $view_data['model_info']->project_id;
@@ -2188,7 +2266,8 @@ class Projects extends Security_Controller {
 
     /* insert/update a milestone */
 
-    function save_milestone() {
+    function save_milestone()
+    {
 
         $id = $this->request->getPost('id');
         $project_id = $this->request->getPost('project_id');
@@ -2221,7 +2300,8 @@ class Projects extends Security_Controller {
 
     /* delete/undo a milestone */
 
-    function delete_milestone() {
+    function delete_milestone()
+    {
 
         $id = $this->request->getPost('id');
         $info = $this->Milestones_model->get_one($id);
@@ -2248,7 +2328,8 @@ class Projects extends Security_Controller {
 
     /* list of milestones, prepared for datatable  */
 
-    function milestones_list_data($project_id = 0) {
+    function milestones_list_data($project_id = 0)
+    {
         validate_numeric_value($project_id);
         $this->init_project_permission_checker($project_id);
 
@@ -2263,7 +2344,8 @@ class Projects extends Security_Controller {
 
     /* return a row of milestone list  table */
 
-    private function _milestone_row_data($id) {
+    private function _milestone_row_data($id)
+    {
         $options = array("id" => $id);
         $data = $this->Milestones_model->get_details($options)->getRow();
         $this->init_project_permission_checker($data->project_id);
@@ -2273,7 +2355,8 @@ class Projects extends Security_Controller {
 
     /* prepare a row of milestone list table */
 
-    private function _make_milestone_row($data) {
+    private function _make_milestone_row($data)
+    {
 
         //calculate milestone progress
         $progress = $data->total_points ? round(($data->completed_points / $data->total_points) * 100) : 0;
@@ -2346,11 +2429,12 @@ class Projects extends Security_Controller {
 
     /* load comments view */
 
-    function comments($project_id) {
+    function comments($project_id)
+    {
         validate_numeric_value($project_id);
         $this->access_only_team_members();
 
-        $options = array("project_id" => $project_id, "task_id" => 0 , "login_user_id" => $this->login_user->id);
+        $options = array("project_id" => $project_id, "task_id" => 0, "login_user_id" => $this->login_user->id);
         $view_data['comments'] = $this->Project_comments_model->get_details($options)->getResult();
         $view_data['project_id'] = $project_id;
         return $this->template->view("projects/comments/index", $view_data);
@@ -2358,7 +2442,8 @@ class Projects extends Security_Controller {
 
     /* load comments view */
 
-    function customer_feedback($project_id) {
+    function customer_feedback($project_id)
+    {
         if ($this->login_user->user_type == "staff") {
             if (!$this->has_client_feedback_access_permission()) {
                 app_redirect("forbidden");
@@ -2375,7 +2460,8 @@ class Projects extends Security_Controller {
 
     /* save project comments */
 
-    function save_comment() {
+    function save_comment()
+    {
         $id = $this->request->getPost('id');
 
         $target_path = get_setting("timeline_file_path");
@@ -2444,7 +2530,8 @@ class Projects extends Security_Controller {
         }
     }
 
-    function delete_comment($id = 0) {
+    function delete_comment($id = 0)
+    {
 
         if (!$id) {
             exit();
@@ -2473,7 +2560,8 @@ class Projects extends Security_Controller {
 
     /* load all replies of a comment */
 
-    function view_comment_replies($comment_id) {
+    function view_comment_replies($comment_id)
+    {
         validate_numeric_value($comment_id);
         $view_data['reply_list'] = $this->Project_comments_model->get_details(array("comment_id" => $comment_id))->getResult();
         return $this->template->view("projects/comments/reply_list", $view_data);
@@ -2481,7 +2569,8 @@ class Projects extends Security_Controller {
 
     /* show comment reply form */
 
-    function comment_reply_form($comment_id, $type = "project", $type_id = 0) {
+    function comment_reply_form($comment_id, $type = "project", $type_id = 0)
+    {
         validate_numeric_value($comment_id);
         validate_numeric_value($type_id);
 
@@ -2501,7 +2590,8 @@ class Projects extends Security_Controller {
 
     /* load checklist view */
 
-    function checklist($project_id) {
+    function checklist($project_id)
+    {
         validate_numeric_value($project_id);
 
         $this->init_project_permission_checker($project_id);
@@ -2533,7 +2623,8 @@ class Projects extends Security_Controller {
     }
     /* load files view */
 
-    function files($project_id) {
+    function files($project_id)
+    {
         validate_numeric_value($project_id);
 
         $this->init_project_permission_checker($project_id);
@@ -2564,7 +2655,8 @@ class Projects extends Security_Controller {
         return $this->template->view("projects/files/index", $view_data);
     }
 
-    function view_file($file_id = 0) {
+    function view_file($file_id = 0)
+    {
         validate_numeric_value($file_id);
         $file_info = $this->Project_files_model->get_details(array("id" => $file_id))->getRow();
 
@@ -2601,7 +2693,8 @@ class Projects extends Security_Controller {
 
     /* file upload modal */
 
-    function file_modal_form() {
+    function file_modal_form()
+    {
         $view_data['model_info'] = $this->Project_files_model->get_one($this->request->getPost('id'));
         $project_id = $this->request->getPost('project_id') ? $this->request->getPost('project_id') : $view_data['model_info']->project_id;
 
@@ -2631,7 +2724,8 @@ class Projects extends Security_Controller {
 
     /* save project file data and move temp file to parmanent file directory */
 
-    function save_file() {
+    function save_file()
+    {
 
         $project_id = $this->request->getPost('project_id');
         $category_id = $this->request->getPost('category_id');
@@ -2727,19 +2821,22 @@ class Projects extends Security_Controller {
 
     /* upload a post file */
 
-    function upload_file() {
+    function upload_file()
+    {
         upload_file_to_temp();
     }
 
     /* check valid file for project */
 
-    function validate_project_file() {
+    function validate_project_file()
+    {
         return validate_post_file($this->request->getPost("file_name"));
     }
 
     /* delete a file */
 
-    function delete_file() {
+    function delete_file()
+    {
 
         $id = $this->request->getPost('id');
         $info = $this->Project_files_model->get_one($id);
@@ -2764,7 +2861,8 @@ class Projects extends Security_Controller {
     }
 
     /* download all project files */
-    function download_project_file($project_id) {
+    function download_project_file($project_id)
+    {
         $files_info = $this->Project_files_model->get_all_where(array("project_id" => $project_id, "deleted" => 0))->getResult();
 
         if (count($files_info) > 0) {
@@ -2773,22 +2871,22 @@ class Projects extends Security_Controller {
             foreach ($files_info as $file_info) {
                 //we have to check the permission for each file
                 //initialize the permission check only if the project id is different
-    
+
                 if ($project_id != $file_info->project_id) {
                     $this->init_project_permission_checker($file_info->project_id);
                     $project_id = $file_info->project_id;
                 }
-    
+
                 if (!$this->can_view_files()) {
                     app_redirect("forbidden");
                 }
-    
+
                 $file_path_array[] = array("file_name" => $file_info->project_id . "/" . $file_info->file_name, "file_id" => $file_info->file_id, "service_type" => $file_info->service_type);
-    
+
             }
-            
+
             $serialized_file_data = serialize($file_path_array);
-    
+
             return $this->download_app_files(get_setting("project_file_path"), $serialized_file_data);
         }
         return '<script>window.close();</script>';
@@ -2796,7 +2894,8 @@ class Projects extends Security_Controller {
     }
     /* download a file */
 
-    function download_file($id) {
+    function download_file($id)
+    {
 
         $file_info = $this->Project_files_model->get_one($id);
 
@@ -2814,7 +2913,8 @@ class Projects extends Security_Controller {
 
     /* download multiple files as zip */
 
-    function download_multiple_files($files_ids = "") {
+    function download_multiple_files($files_ids = "")
+    {
 
         if ($files_ids) {
 
@@ -2853,7 +2953,8 @@ class Projects extends Security_Controller {
 
     /* download files by zip */
 
-    function download_comment_files($id) {
+    function download_comment_files($id)
+    {
 
         $info = $this->Project_comments_model->get_one($id);
 
@@ -2869,7 +2970,8 @@ class Projects extends Security_Controller {
 
     /* list of files, prepared for datatable  */
 
-    function files_list_data($project_id = 0) {
+    function files_list_data($project_id = 0)
+    {
         validate_numeric_value($project_id);
         $this->init_project_permission_checker($project_id);
 
@@ -2896,7 +2998,8 @@ class Projects extends Security_Controller {
 
     /* prepare a row of file list table */
 
-    private function _make_file_row($data, $custom_fields) {
+    private function _make_file_row($data, $custom_fields)
+    {
         $file_icon = get_file_icon(strtolower(pathinfo($data->file_name, PATHINFO_EXTENSION)));
 
         $image_url = get_avatar($data->uploaded_by_user_image);
@@ -2909,7 +3012,7 @@ class Projects extends Security_Controller {
         }
 
         $description = "<div class='float-start text-wrap'>" .
-                js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "1", "data-url" => get_uri("projects/view_file/" . $data->id)));
+            js_anchor(remove_file_prefix($data->file_name), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "1", "data-url" => get_uri("projects/view_file/" . $data->id)));
 
         if ($data->description) {
             $description .= "<br /><span class='text-wrap'>" . $data->description . "</span></div>";
@@ -2949,7 +3052,8 @@ class Projects extends Security_Controller {
 
     /* load notes view */
 
-    function notes($project_id) {
+    function notes($project_id)
+    {
         validate_numeric_value($project_id);
         $this->access_only_team_members();
         $view_data['project_id'] = $project_id;
@@ -2958,7 +3062,8 @@ class Projects extends Security_Controller {
 
     /* load history view */
 
-    function history($offset = 0, $log_for = "", $log_for_id = "", $log_type = "", $log_type_id = "") {
+    function history($offset = 0, $log_for = "", $log_for_id = "", $log_type = "", $log_type_id = "")
+    {
         if ($this->login_user->user_type !== "staff" && ($this->login_user->user_type == "client" && get_setting("client_can_view_activity") !== "1")) {
             app_redirect("forbidden");
         }
@@ -2970,7 +3075,8 @@ class Projects extends Security_Controller {
 
     /* load project members view */
 
-    function members($project_id = 0) {
+    function members($project_id = 0)
+    {
         validate_numeric_value($project_id);
         $this->access_only_team_members();
         $view_data['project_id'] = $project_id;
@@ -2979,7 +3085,8 @@ class Projects extends Security_Controller {
 
     /* load payments tab  */
 
-    function payments($project_id) {
+    function payments($project_id)
+    {
         validate_numeric_value($project_id);
         $this->access_only_team_members();
         if ($project_id) {
@@ -2991,7 +3098,8 @@ class Projects extends Security_Controller {
 
     /* load invoices tab  */
 
-    function invoices($project_id, $client_id = 0) {
+    function invoices($project_id, $client_id = 0)
+    {
         $this->access_only_team_members_or_client_contact($client_id);
         validate_numeric_value($project_id);
         if ($project_id) {
@@ -3009,7 +3117,8 @@ class Projects extends Security_Controller {
 
     /* load expenses tab  */
 
-    function expenses($project_id) {
+    function expenses($project_id)
+    {
         validate_numeric_value($project_id);
         $this->access_only_team_members();
         if ($project_id) {
@@ -3023,7 +3132,8 @@ class Projects extends Security_Controller {
     }
 
     //save project status
-    function change_status($project_id, $status_id) {
+    function change_status($project_id, $status_id)
+    {
         if ($project_id && $this->can_edit_projects() && $status_id) {
             validate_numeric_value($project_id);
             validate_numeric_value($status_id);
@@ -3039,7 +3149,8 @@ class Projects extends Security_Controller {
 
     /* load project settings modal */
 
-    function settings_modal_form() {
+    function settings_modal_form()
+    {
         $project_id = $this->request->getPost('project_id');
 
         $can_edit_timesheet_settings = $this->can_edit_timesheet_settings($project_id);
@@ -3072,7 +3183,8 @@ class Projects extends Security_Controller {
 
     /* save project settings */
 
-    function save_settings() {
+    function save_settings()
+    {
         $project_id = $this->request->getPost('project_id');
 
         $can_edit_timesheet_settings = $this->can_edit_timesheet_settings($project_id);
@@ -3083,9 +3195,11 @@ class Projects extends Security_Controller {
             app_redirect("forbidden");
         }
 
-        $this->validate_submitted_data(array(
-            "project_id" => "required|numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "project_id" => "required|numeric"
+            )
+        );
 
         $settings = array();
         if ($can_edit_timesheet_settings) {
@@ -3125,11 +3239,14 @@ class Projects extends Security_Controller {
 
     /* get member suggestion with start typing '@' */
 
-    function get_member_suggestion_to_mention() {
+    function get_member_suggestion_to_mention()
+    {
 
-        $this->validate_submitted_data(array(
-            "project_id" => "required|numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "project_id" => "required|numeric"
+            )
+        );
 
         $project_id = $this->request->getPost("project_id");
 
@@ -3147,7 +3264,8 @@ class Projects extends Security_Controller {
     }
 
     //reset projects dropdown on changing of client 
-    function get_projects_of_selected_client_for_filter() {
+    function get_projects_of_selected_client_for_filter()
+    {
         $this->access_only_team_members();
         $client_id = $this->request->getPost("client_id");
         if ($client_id) {
@@ -3164,7 +3282,8 @@ class Projects extends Security_Controller {
     }
 
     //get clients dropdown
-    private function _get_clients_dropdown() {
+    private function _get_clients_dropdown()
+    {
         $clients_dropdown = array(array("id" => "", "text" => "- " . app_lang("client") . " -"));
         $clients = $this->Clients_model->get_dropdown_list(array("charter_name"), "id", array("is_lead" => 0));
         foreach ($clients as $key => $value) {
@@ -3174,7 +3293,8 @@ class Projects extends Security_Controller {
     }
 
     //show timesheets chart
-    function timesheet_chart($project_id = 0) {
+    function timesheet_chart($project_id = 0)
+    {
         validate_numeric_value($project_id);
         $members = $this->_get_members_to_manage_timesheet();
 
@@ -3186,7 +3306,8 @@ class Projects extends Security_Controller {
     }
 
     //timesheets chart data
-    function timesheet_chart_data($project_id = 0) {
+    function timesheet_chart_data($project_id = 0)
+    {
         if (!$project_id) {
             $project_id = $this->request->getPost("project_id");
         }
@@ -3227,7 +3348,7 @@ class Projects extends Security_Controller {
         $timesheet_users_result = $this->Timesheets_model->get_timesheet_statistics($options)->timesheet_users_data;
 
         $user_result = array();
-        foreach ($timesheet_users_result AS $user) {
+        foreach ($timesheet_users_result as $user) {
             $time = convert_seconds_to_time_format($user->total_sec);
             $user_result[] = "<div class='user-avatar avatar-30 avatar-circle' data-bs-toggle='tooltip' title='" . $user->user_name . " - " . $time . "'><img alt='' src='" . get_avatar($user->user_avatar) . "'></div>";
         }
@@ -3253,7 +3374,8 @@ class Projects extends Security_Controller {
         echo json_encode(array("timesheets" => $timesheets_array, "ticks" => $ticks, "timesheet_users_result" => $user_result));
     }
 
-    function like_comment($comment_id = 0) {
+    function like_comment($comment_id = 0)
+    {
         if ($comment_id) {
             validate_numeric_value($comment_id);
             $data = array(
@@ -3280,7 +3402,8 @@ class Projects extends Security_Controller {
 
     /* load contracts tab  */
 
-    function contracts($project_id) {
+    function contracts($project_id)
+    {
         $this->access_only_team_members();
         if ($project_id) {
             $view_data['project_id'] = $project_id;
@@ -3294,7 +3417,8 @@ class Projects extends Security_Controller {
     }
 
     // pin/unpin comments
-    function pin_comment($comment_id = 0) {
+    function pin_comment($comment_id = 0)
+    {
         if ($comment_id) {
             $data = array(
                 "project_comment_id" => $comment_id,
@@ -3329,7 +3453,8 @@ class Projects extends Security_Controller {
 
     /* load tickets tab  */
 
-    function tickets($project_id) {
+    function tickets($project_id)
+    {
         $this->access_only_team_members();
         if ($project_id) {
             validate_numeric_value($project_id);
@@ -3341,7 +3466,8 @@ class Projects extends Security_Controller {
         }
     }
 
-    function file_category($project_id = 0) {
+    function file_category($project_id = 0)
+    {
         $this->access_only_team_members();
         validate_numeric_value($project_id);
         $this->init_project_permission_checker($project_id);
@@ -3354,7 +3480,8 @@ class Projects extends Security_Controller {
         return $this->template->view("projects/files/category/index", $view_data);
     }
 
-    function file_category_list_data($project_id = 0) {
+    function file_category_list_data($project_id = 0)
+    {
         $this->access_only_team_members();
         validate_numeric_value($project_id);
         $this->init_project_permission_checker($project_id);
@@ -3372,14 +3499,16 @@ class Projects extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
 
-    private function _file_category_row_data($id, $project_id = 0) {
+    private function _file_category_row_data($id, $project_id = 0)
+    {
         $options = array("id" => $id);
         $data = $this->File_category_model->get_details($options)->getRow();
 
         return $this->_make_file_category_row($data, $project_id);
     }
 
-    private function _make_file_category_row($data, $project_id = 0) {
+    private function _make_file_category_row($data, $project_id = 0)
+    {
         $options = "";
         if ($this->can_add_files()) {
             $options .= modal_anchor(get_uri("projects/file_category_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_category'), "data-post-id" => $data->id, "data-post-project_id" => $project_id));
@@ -3395,7 +3524,8 @@ class Projects extends Security_Controller {
         );
     }
 
-    function file_category_modal_form() {
+    function file_category_modal_form()
+    {
         $this->access_only_team_members();
         $project_id = $this->request->getPost('project_id');
         $this->init_project_permission_checker($project_id);
@@ -3408,7 +3538,8 @@ class Projects extends Security_Controller {
         return $this->template->view('projects/files/category/modal_form', $view_data);
     }
 
-    function save_file_category() {
+    function save_file_category()
+    {
         $this->access_only_team_members();
         $project_id = $this->request->getPost('project_id');
         $this->init_project_permission_checker($project_id);
@@ -3433,7 +3564,8 @@ class Projects extends Security_Controller {
         }
     }
 
-    function delete_file_category() {
+    function delete_file_category()
+    {
         $this->access_only_team_members();
         $project_id = $this->request->getPost('project_id');
         $this->init_project_permission_checker($project_id);
@@ -3460,7 +3592,8 @@ class Projects extends Security_Controller {
 
     /* delete multiple files */
 
-    function delete_multiple_files($files_ids = "") {
+    function delete_multiple_files($files_ids = "")
+    {
 
         if ($files_ids) {
 
@@ -3502,7 +3635,8 @@ class Projects extends Security_Controller {
         }
     }
 
-    private function has_client_feedback_access_permission() {
+    private function has_client_feedback_access_permission()
+    {
         if ($this->login_user->user_type != "client") {
             if ($this->login_user->is_admin || get_array_value($this->login_user->permissions, "client_feedback_access_permission") || $this->can_manage_all_projects()) {
                 return true;
@@ -3510,13 +3644,15 @@ class Projects extends Security_Controller {
         }
     }
 
-    function show_my_open_timers() {
+    function show_my_open_timers()
+    {
         $timers = $this->Timesheets_model->get_open_timers($this->login_user->id);
         $view_data["timers"] = $timers->getResult();
         return $this->template->view("projects/open_timers", $view_data);
     }
 
-    function task_timesheet($task_id, $project_id) {
+    function task_timesheet($task_id, $project_id)
+    {
         validate_numeric_value($task_id);
         validate_numeric_value($project_id);
 
@@ -3546,13 +3682,15 @@ class Projects extends Security_Controller {
 
     //for old notifications, redirect to tasks/view
 
-    function task_view($task_id = 0) {
+    function task_view($task_id = 0)
+    {
         if ($task_id) {
             app_redirect("tasks/view/" . $task_id);
         }
     }
 
-    function team_members_summary() {
+    function team_members_summary()
+    {
         if (!$this->can_manage_all_projects()) {
             app_redirect("forbidden");
         }
@@ -3563,7 +3701,8 @@ class Projects extends Security_Controller {
         return $this->template->rander("projects/reports/team_members_summary", $view_data);
     }
 
-    function team_members_summary_data() {
+    function team_members_summary_data()
+    {
         if (!$this->can_manage_all_projects()) {
             app_redirect("forbidden");
         }
@@ -3580,7 +3719,8 @@ class Projects extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
 
-    private function _make_team_members_summary_row($data) {
+    private function _make_team_members_summary_row($data)
+    {
         $image_url = get_avatar($data->image);
         $member = "<span class='avatar avatar-xs mr10'><img src='$image_url' alt=''></span> $data->team_member_name";
 
@@ -3600,7 +3740,8 @@ class Projects extends Security_Controller {
         return $row_data;
     }
 
-    function clients_summary() {
+    function clients_summary()
+    {
         if (!$this->can_manage_all_projects()) {
             app_redirect("forbidden");
         }
@@ -3610,7 +3751,8 @@ class Projects extends Security_Controller {
         return $this->template->view("projects/reports/clints_summary", $view_data);
     }
 
-    function clients_summary_data() {
+    function clients_summary_data()
+    {
         if (!$this->can_manage_all_projects()) {
             app_redirect("forbidden");
         }
@@ -3627,7 +3769,8 @@ class Projects extends Security_Controller {
         echo json_encode(array("data" => $result));
     }
 
-    private function _make_clients_summary_row($data) {
+    private function _make_clients_summary_row($data)
+    {
 
 
         $client_name = anchor(get_uri("clients/view/" . $data->client_id), $data->client_name);
@@ -3648,7 +3791,8 @@ class Projects extends Security_Controller {
         return $row_data;
     }
 
-    private function client_can_view_tasks() {
+    private function client_can_view_tasks()
+    {
         if ($this->login_user->user_type != "staff") {
             //check settings for client's project permission
             if (get_setting("client_can_view_tasks")) {
@@ -3662,7 +3806,8 @@ class Projects extends Security_Controller {
     /** project supplier */
     /* load project members add/edit modal */
 
-    function project_supplier_modal_form() {
+    function project_supplier_modal_form()
+    {
         $view_data['model_info'] = $this->Project_supplier_model->get_one($this->request->getPost('id'));
         $project_id = $this->request->getPost('project_id') ? $this->request->getPost('project_id') : $view_data['model_info']->project_id;
         $this->init_project_permission_checker($project_id);
@@ -3674,7 +3819,8 @@ class Projects extends Security_Controller {
 
     /* add a project members  */
 
-    function save_project_supplier() {
+    function save_project_supplier()
+    {
         $project_id = $this->request->getPost('project_id');
 
         $this->init_project_permission_checker($project_id);
@@ -3683,10 +3829,12 @@ class Projects extends Security_Controller {
             app_redirect("forbidden");
         }
 
-        $this->validate_submitted_data(array(
-            "supplier" => "required",
-            "contact_person" => "required",
-        ));
+        $this->validate_submitted_data(
+            array(
+                "supplier" => "required",
+                "contact_person" => "required",
+            )
+        );
 
         $id = $this->request->getPost('id');
         $data = array(
@@ -3700,7 +3848,7 @@ class Projects extends Security_Controller {
         );
 
         $save_id = $this->Project_supplier_model->ci_save($data, $id);
-        
+
         if ($save_id) {
             echo json_encode(array("success" => true, 'id' => $save_id, 'message' => app_lang('record_saved')));
         } else {
@@ -3710,7 +3858,8 @@ class Projects extends Security_Controller {
 
     /* delete/undo a project members  */
 
-    function delete_project_supplier() {
+    function delete_project_supplier()
+    {
         $id = $this->request->getPost('id');
         $project_supplier_info = $this->Project_supplier_model->get_one($id);
 
@@ -3740,7 +3889,8 @@ class Projects extends Security_Controller {
 
     /* list of project members, prepared for datatable  */
 
-    function project_supplier_list_data($project_id = 0) {
+    function project_supplier_list_data($project_id = 0)
+    {
         validate_numeric_value($project_id);
         $this->access_only_team_members();
         $this->init_project_permission_checker($project_id);
@@ -3756,7 +3906,8 @@ class Projects extends Security_Controller {
 
     /* return a row of project supplier list */
 
-    private function _project_supplier_row_data($id) {
+    private function _project_supplier_row_data($id)
+    {
         $options = array("id" => $id);
         $data = $this->Project_supplier_model->get_details($options)->getRow();
         return $this->_make_project_supplier_row($data);
@@ -3764,11 +3915,12 @@ class Projects extends Security_Controller {
 
     /* prepare a row of project supplier list */
 
-    private function _make_project_supplier_row($data) {
+    private function _make_project_supplier_row($data)
+    {
         $link = '';
         if ($this->can_add_remove_project_members()) {
-            $delete_link = modal_anchor(get_uri("projects/project_supplier_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_supplier_contact'), "data-post-id" => $data->id)) 
-            . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_member'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("projects/delete_project_supplier"), "data-action" => "delete"));
+            $delete_link = modal_anchor(get_uri("projects/project_supplier_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_supplier_contact'), "data-post-id" => $data->id))
+                . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_member'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("projects/delete_project_supplier"), "data-action" => "delete"));
 
             $link .= $delete_link;
         }
@@ -3779,104 +3931,114 @@ class Projects extends Security_Controller {
     }
     //////////////////////////
     //////////////////////////
-    function add_yard($project_id){
-        $allYardTitles=$this->Shipyards_model->get_dropdown_list(['name']);
-        $allYardIds=$this->Shipyards_model->get_dropdown_list(['id']);
-        return $this->template->rander('projects/comparison/add-yard',['project_id'=>$project_id,'allYardTitles'=>$allYardTitles,'allYardIds'=>$allYardIds]);
+    function add_yard($project_id)
+    {
+        $allYardTitles = $this->Shipyards_model->get_dropdown_list(['name']);
+        $allYardIds = $this->Shipyards_model->get_dropdown_list(['id']);
+        return $this->template->rander('projects/comparison/add-yard', ['project_id' => $project_id, 'allYardTitles' => $allYardTitles, 'allYardIds' => $allYardIds]);
     }
-    function yard_settings($yard_id){
+    function yard_settings($yard_id)
+    {
         return $this->template->rander('projects/comparison/settings.php');
     }
-    function save_yard(){
-        $id=$this->request->getPost('id');
-        $selectedYard=$this->Shipyards_model->get_one($this->request->getPost('shipyard_id'))->id;
-        $yardcounts=$this->Project_yards_model->getCount("project_id",$this->request->getPost('project_id'));
-        $project_info=$this->Projects_model->get_one($this->request->getPost('project_id'));
+    function save_yard()
+    {
+        $id = $this->request->getPost('id');
+        $selectedYard = $this->Shipyards_model->get_one($this->request->getPost('shipyard_id'))->id;
+        $yardcounts = $this->Project_yards_model->getCount("project_id", $this->request->getPost('project_id'));
+        $project_info = $this->Projects_model->get_one($this->request->getPost('project_id'));
         // if($yardcounts==0){
-            $project_info->status_id=3;
-            $this->Projects_model->ci_save($project_info,$project_info->id);
+        $project_info->status_id = 3;
+        $this->Projects_model->ci_save($project_info, $project_info->id);
         // }
-        $save_data=array(
-            "project_id"=>$this->request->getPost('project_id'),
-            'shipyard_id'=>$this->request->getPost('shipyard_id'),
-            'work_orders'=>'',
-            'title'=>$this->request->getPost('title')
+        $save_data = array(
+            "project_id" => $this->request->getPost('project_id'),
+            'shipyard_id' => $this->request->getPost('shipyard_id'),
+            'work_orders' => '',
+            'title' => $this->request->getPost('title')
         );
-        $save_id=$this->Project_yards_model->ci_save($save_data,$id);
-        $allCostItemCurrencies=$this->Task_cost_items_model->get_dropdown_list(array("currency"), "currency", array("project_id"=>$this->request->getPost('project_id')));
-        if(!isset($project_info->currency)) $project_info->currency="USD";
-        foreach($allCostItemCurrencies as $oneCurrency){
-            if($oneCurrency==$project_info->currency) continue;
-            $newRateData=array(
-                "from"=>$oneCurrency,
-                "to"=>$project_info->currency,
-                "rate"=>1,
-                "project_id"=>$project_info->id
+        $save_id = $this->Project_yards_model->ci_save($save_data, $id);
+        $allCostItemCurrencies = $this->Task_cost_items_model->get_dropdown_list(array("currency"), "currency", array("project_id" => $this->request->getPost('project_id')));
+        if (!isset($project_info->currency))
+            $project_info->currency = "USD";
+        foreach ($allCostItemCurrencies as $oneCurrency) {
+            if ($oneCurrency == $project_info->currency)
+                continue;
+            $newRateData = array(
+                "from" => $oneCurrency,
+                "to" => $project_info->currency,
+                "rate" => 1,
+                "project_id" => $project_info->id
             );
             $this->Project_currency_rates_model->ci_save($newRateData);
         }
-        if($save_id)
-            return json_encode(array("success"=>true,"save_id"=>$save_id));
-        else return json_encode(array("success"=>false));
+        if ($save_id)
+            return json_encode(array("success" => true, "save_id" => $save_id));
+        else
+            return json_encode(array("success" => false));
 
     }
-    function comparison_tab($project_id){
-        $project_info=$this->Projects_model->get_one($project_id);
-        $allProjectTasks=$this->Tasks_model->get_all_where(array('project_id'=>$project_id,"deleted"=>0))->getResult();
-        
-        $allYards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        if($project_info->status_id==4||$project_info->status_id==5){
-            $allYards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id,"selected"=>1))->getResult();
+    function comparison_tab($project_id)
+    {
+        $project_info = $this->Projects_model->get_one($project_id);
+        $allProjectTasks = $this->Tasks_model->get_all_where(array('project_id' => $project_id, "deleted" => 0))->getResult();
+
+        $allYards = $this->Project_yards_model->get_all_where(array("project_id" => $project_id))->getResult();
+        if ($project_info->status_id == 4 || $project_info->status_id == 5) {
+            $allYards = $this->Project_yards_model->get_all_where(array("project_id" => $project_id, "selected" => 1))->getResult();
         }
         // $selectedYards=array_filter($allYards,function($oneYard){
         //     return $oneYard->selected==1;
         // });
         // if(count($selectedYards)>0) $allYards=$selectedYards;
-        $allCostItems=$this->Task_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
-        $allCurrencyRates=$this->Project_currency_rates_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allYardCostItems=$this->Shipyard_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
-        return $this->template->view("projects/comparison/comparison_view",["allCostItems"=>$allCostItems,"allCurrencyRates"=>$allCurrencyRates,"allYardCostItems"=>$allYardCostItems,"allProjectTasks"=>$allProjectTasks,"project_info"=>$project_info,"allYards"=>$allYards]);
+        $allCostItems = $this->Task_cost_items_model->get_all_with_costs_where(array("project_id" => $project_id))->getResult();
+        $allCurrencyRates = $this->Project_currency_rates_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allYardCostItems = $this->Shipyard_cost_items_model->get_all_with_costs_where(array("project_id" => $project_id))->getResult();
+        return $this->template->view("projects/comparison/comparison_view", ["allCostItems" => $allCostItems, "allCurrencyRates" => $allCurrencyRates, "allYardCostItems" => $allYardCostItems, "allProjectTasks" => $allProjectTasks, "project_info" => $project_info, "allYards" => $allYards]);
     }
-    function modal_yard_cost_items($task_id){
-        $project_id=$this->Tasks_model->get_one($task_id)->project_id;
-        $project_info=$this->Projects_model->get_one($project_id);
-        $allProjectYards=$this->Project_yards_model->get_all_where(array('project_id'=>$project_id))->getResult();
-        $allYardCostItems=$this->Shipyard_cost_items_model->get_all_with_costs_where(array('task_id'=>$task_id))->getResult();
-        return $this->template->view("projects/comparison/modal_yard_cost_items",["project_info"=>$project_info,'project_id'=>$project_id,'task_id'=>$task_id,'allProjectYards'=>$allProjectYards,'allYardCostItems'=>$allYardCostItems]);
+    function modal_yard_cost_items($task_id)
+    {
+        $project_id = $this->Tasks_model->get_one($task_id)->project_id;
+        $project_info = $this->Projects_model->get_one($project_id);
+        $allProjectYards = $this->Project_yards_model->get_all_where(array('project_id' => $project_id))->getResult();
+        $allYardCostItems = $this->Shipyard_cost_items_model->get_all_with_costs_where(array('task_id' => $task_id))->getResult();
+        return $this->template->view("projects/comparison/modal_yard_cost_items", ["project_info" => $project_info, 'project_id' => $project_id, 'task_id' => $task_id, 'allProjectYards' => $allProjectYards, 'allYardCostItems' => $allYardCostItems]);
     }
-    function save_yard_cost_item(){
-        $id=$this->request->getPost('id');
-        $task_id=$this->request->getPost('task_id');
-        $project_info=$this->Projects_model->get_one($this->request->getPost('project_id'));
-        $saveData=array(
-            "task_id"=>$this->request->getPost('task_id'),
-            "shipyard_id"=>$this->request->getPost('shipyard_id'),
-            "project_id"=>$this->request->getPost('project_id'),
-            "name"=>$this->request->getPost('name'),
-            "description"=>$this->request->getPost('description'),
-            "quantity"=>$this->request->getPost('quantity'),
-            "measurement"=>$this->request->getPost("measurement"),
-            "unit_price"=>$this->request->getPost('unit_price'),
-            "currency"=>$project_info->currency,
-            "discount"=>$this->request->getPost('discount'),
-            "yard_remarks"=>$this->request->getPost('yard_remarks'),
+    function save_yard_cost_item()
+    {
+        $id = $this->request->getPost('id');
+        $task_id = $this->request->getPost('task_id');
+        $project_info = $this->Projects_model->get_one($this->request->getPost('project_id'));
+        $saveData = array(
+            "task_id" => $this->request->getPost('task_id'),
+            "shipyard_id" => $this->request->getPost('shipyard_id'),
+            "project_id" => $this->request->getPost('project_id'),
+            "name" => $this->request->getPost('name'),
+            "description" => $this->request->getPost('description'),
+            "quantity" => $this->request->getPost('quantity'),
+            "measurement" => $this->request->getPost("measurement"),
+            "unit_price" => $this->request->getPost('unit_price'),
+            "currency" => $project_info->currency,
+            "discount" => $this->request->getPost('discount'),
+            "yard_remarks" => $this->request->getPost('yard_remarks'),
         );
-        $saved_id=$this->Shipyard_cost_items_model->ci_save($saveData,$id);
-        return json_encode(array("success"=>true,"saved_id"=>$saved_id));
+        $saved_id = $this->Shipyard_cost_items_model->ci_save($saveData, $id);
+        return json_encode(array("success" => true, "saved_id" => $saved_id));
     }
-    function download_yard_xlsx($shipyard_id){
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+    function download_yard_xlsx($shipyard_id)
+    {
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        $project_yard=$this->Project_yards_model->get_one($shipyard_id);
-        $project_info=$this->Projects_model->get_one($project_yard->project_id);
-        $allYardCostItems=$this->Shipyard_cost_items_model->get_all_where(array("shipyard_id"=>$shipyard_id))->getResult();
+        $project_yard = $this->Project_yards_model->get_one($shipyard_id);
+        $project_info = $this->Projects_model->get_one($project_yard->project_id);
+        $allYardCostItems = $this->Shipyard_cost_items_model->get_all_where(array("shipyard_id" => $shipyard_id))->getResult();
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
         $sheet1->setTitle('Read me');
         $sheet1->setCellValue('A1', 'About the quotation form');
         $sheet1->setCellValue('A3', 'General');
-        $sheet1->setCellValue('A4', 'This quotation form is generated via Peerfleet ('.get_uri("").').');
+        $sheet1->setCellValue('A4', 'This quotation form is generated via Peerfleet (' . get_uri("") . ').');
         $sheet1->setCellValue('A5', 'It contains all the necessary functionality required by the shipyard providing a quotation.');
         $sheet1->setCellValue('A7', 'The shipyard understands that this quotation form must be read and understood in connection with the project specification PDF sent along with it.');
         $sheet1->setCellValue('A8', 'The project specification PDF contains all the detailed specifications about the work scope.');
@@ -3907,25 +4069,25 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('N1', 'Yard remarks');
         $sheet1->setCellValue('O1', 'Cost ID');
         $sheet1->setCellValue('P1', 'WO ID');
-        $rowNumber=2;
+        $rowNumber = 2;
         foreach ($allYardCostItems as $oneItem) {
-            $task_info=$this->Tasks_model->get_one($oneItem->task_id);
-            $sheet1->setCellValue('A'.$rowNumber, '');
-            $sheet1->setCellValue('B'.$rowNumber, $task_info->title);
-            $sheet1->setCellValue('C'.$rowNumber, $task_info->category);
-            $sheet1->setCellValue('D'.$rowNumber, $oneItem->name);
-            $sheet1->setCellValue('E'.$rowNumber, $oneItem->description);
-            $sheet1->setCellValue('F'.$rowNumber, $oneItem->quote_type);
-            $sheet1->setCellValue('G'.$rowNumber, $oneItem->quantity);
-            $sheet1->setCellValue('H'.$rowNumber, $oneItem->measurement);
-            $sheet1->setCellValue('I'.$rowNumber, $oneItem->unit_price);
-            $sheet1->setCellValue('J'.$rowNumber, $oneItem->currency);
-            $sheet1->setCellValue('K'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity);
-            $sheet1->setCellValue('L'.$rowNumber, $oneItem->discount);
-            $sheet1->setCellValue('M'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity*(float)$oneItem->discount/100);
-            $sheet1->setCellValue('N'.$rowNumber, $oneItem->yard_remarks);
-            $sheet1->setCellValue('O'.$rowNumber, '');
-            $sheet1->setCellValue('P'.$rowNumber, '');
+            $task_info = $this->Tasks_model->get_one($oneItem->task_id);
+            $sheet1->setCellValue('A' . $rowNumber, '');
+            $sheet1->setCellValue('B' . $rowNumber, $task_info->title);
+            $sheet1->setCellValue('C' . $rowNumber, $task_info->category);
+            $sheet1->setCellValue('D' . $rowNumber, $oneItem->name);
+            $sheet1->setCellValue('E' . $rowNumber, $oneItem->description);
+            $sheet1->setCellValue('F' . $rowNumber, $oneItem->quote_type);
+            $sheet1->setCellValue('G' . $rowNumber, $oneItem->quantity);
+            $sheet1->setCellValue('H' . $rowNumber, $oneItem->measurement);
+            $sheet1->setCellValue('I' . $rowNumber, $oneItem->unit_price);
+            $sheet1->setCellValue('J' . $rowNumber, $oneItem->currency);
+            $sheet1->setCellValue('K' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity);
+            $sheet1->setCellValue('L' . $rowNumber, $oneItem->discount);
+            $sheet1->setCellValue('M' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) $oneItem->discount / 100);
+            $sheet1->setCellValue('N' . $rowNumber, $oneItem->yard_remarks);
+            $sheet1->setCellValue('O' . $rowNumber, '');
+            $sheet1->setCellValue('P' . $rowNumber, '');
             $rowNumber++;
         }
 
@@ -3934,9 +4096,9 @@ class Projects extends Security_Controller {
 
         $response = service('response');
 
-// Set response headers for file download
+        // Set response headers for file download
         $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $response->setHeader('Content-Disposition', 'attachment;filename="'.$project_info->title.'_cost_sheet_for_'.$project_yard->title.'.xlsx"');
+        $response->setHeader('Content-Disposition', 'attachment;filename="' . $project_info->title . '_cost_sheet_for_' . $project_yard->title . '.xlsx"');
         $response->setHeader('Cache-Control', 'max-age=0');
 
         // Write the Excel file content to the response body
@@ -3945,24 +4107,26 @@ class Projects extends Security_Controller {
         // Return the response object
         return $response;
     }
-    function modal_import_yard_xlsx($shipyard_id){
-        return $this->template->view('projects/comparison/modal_import_shipyard_items',['shipyard_id'=>$shipyard_id]);
+    function modal_import_yard_xlsx($shipyard_id)
+    {
+        return $this->template->view('projects/comparison/modal_import_shipyard_items', ['shipyard_id' => $shipyard_id]);
     }
-    function import_yard_xlsx(){
+    function import_yard_xlsx()
+    {
         upload_file_to_temp(true);
         $file = get_array_value($_FILES, "file");
 
         // if (!$file) {
         //     die("Invalid file");
         // }
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $temp_file = get_array_value($file, "tmp_name");
         $file_name = get_array_value($file, "name");
         $file_size = get_array_value($file, "size");
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
         $excel_file->setActiveSheetIndex(1);
-        $worksheet=$excel_file->getActiveSheet();
+        $worksheet = $excel_file->getActiveSheet();
         $highestRow = $worksheet->getHighestRow(); // e.g., 10
         $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
 
@@ -3981,112 +4145,119 @@ class Projects extends Security_Controller {
             }
             $data[] = $rowData;
         }
-        $shipyard_id=$this->request->getPost('shipyard_id');
-        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
-        $this->Shipyard_cost_items_model->delete_where(array("shipyard_id"=>$shipyard_id));
-        for($count=1;$count<count($data);$count++){
-            $task_info=$this->Tasks_model->get_all_where(array("title"=>$data[$count][1]))->getResult()[0];
-            $saveData=array(
-                "shipyard_id"=>$shipyard_id,
-                "task_id"=>$task_info->id,
-                "project_id"=>$shipyard_info->project_id,
-                "name"=>$data[$count][3],
-                "description"=>$data[$count][4],
-                "quantity"=>$data[$count][6],
-                "measurement"=>$data[$count][7],
-                "unit_price"=>$data[$count][8],
-                "currency"=>$data[$count][9],
-                "discount"=>$data[$count][11],
-                "yard_remarks"=>$data[$count][13],
+        $shipyard_id = $this->request->getPost('shipyard_id');
+        $shipyard_info = $this->Project_yards_model->get_one($shipyard_id);
+        $this->Shipyard_cost_items_model->delete_where(array("shipyard_id" => $shipyard_id));
+        for ($count = 1; $count < count($data); $count++) {
+            $task_info = $this->Tasks_model->get_all_where(array("title" => $data[$count][1]))->getResult()[0];
+            $saveData = array(
+                "shipyard_id" => $shipyard_id,
+                "task_id" => $task_info->id,
+                "project_id" => $shipyard_info->project_id,
+                "name" => $data[$count][3],
+                "description" => $data[$count][4],
+                "quantity" => $data[$count][6],
+                "measurement" => $data[$count][7],
+                "unit_price" => $data[$count][8],
+                "currency" => $data[$count][9],
+                "discount" => $data[$count][11],
+                "yard_remarks" => $data[$count][13],
             );
-            $this->Shipyard_cost_items_model->ci_save($saveData,null);
+            $this->Shipyard_cost_items_model->ci_save($saveData, null);
         }
-        echo json_encode(array("success"=>true));
+        echo json_encode(array("success" => true));
     }
-    function modal_select_yard($shipyard_id){
-        $project_yard_info=$this->Project_yards_model->get_one($shipyard_id);
-        $shipyard_info=$this->Shipyards_model->get_one($project_yard_info->shipyard_id);
-        return $this->template->view("projects/comparison/modal_select_yard",["shipyard_info"=>$shipyard_info,"project_yard_info"=>$project_yard_info]);
+    function modal_select_yard($shipyard_id)
+    {
+        $project_yard_info = $this->Project_yards_model->get_one($shipyard_id);
+        $shipyard_info = $this->Shipyards_model->get_one($project_yard_info->shipyard_id);
+        return $this->template->view("projects/comparison/modal_select_yard", ["shipyard_info" => $shipyard_info, "project_yard_info" => $project_yard_info]);
     }
-    function select_yard($shipyard_id){
-        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
-        $shipyard_info->selected=1;
-        $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
+    function select_yard($shipyard_id)
+    {
+        $shipyard_info = $this->Project_yards_model->get_one($shipyard_id);
+        $shipyard_info->selected = 1;
+        $this->Project_yards_model->ci_save($shipyard_info, $shipyard_id);
         // $this->Project_yards_model->delete_where(array("project_id"=>$shipyard_info->project_id,"selected"=>0));
         // $shipyard_info->selected=0;
         // $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
-        $project_info=$this->Projects_model->get_one($shipyard_info->project_id);
-        $project_info->status_id=4;
-        $this->Projects_model->ci_save($project_info,$project_info->id);
-        $allShipyardCostItems=$this->Shipyard_cost_items_model->get_all_where(array("shipyard_id"=>$shipyard_id))->getResult();
-        $this->Task_cost_items_model->delete_where(array("project_id"=>$shipyard_info->project_id));
+        $project_info = $this->Projects_model->get_one($shipyard_info->project_id);
+        $project_info->status_id = 4;
+        $this->Projects_model->ci_save($project_info, $project_info->id);
+        $allShipyardCostItems = $this->Shipyard_cost_items_model->get_all_where(array("shipyard_id" => $shipyard_id))->getResult();
+        $this->Task_cost_items_model->delete_where(array("project_id" => $shipyard_info->project_id));
         foreach ($allShipyardCostItems as $oneItem) {
             # code...
-            
-            $newTaskItem=array(
-                "task_id"=>$oneItem->task_id,
-                "project_id"=>$oneItem->project_id,
-                "name"=>$oneItem->name,
-                "description"=>$oneItem->description?$oneItem->description:"",
-                "quantity"=>$oneItem->quantity,
-                "measurement"=>$oneItem->measurement,
-                "quote_type"=>$oneItem->quote_type?$oneItem->quote_type:"",
-                "unit_price"=>$oneItem->unit_price,
-                "currency"=>$oneItem->currency,
-                "discount"=>$oneItem->discount?$oneItem->discount:"",
-                "yard_remarks"=>$oneItem->yard_remarks?$oneItem->yard_remarks:"",
+
+            $newTaskItem = array(
+                "task_id" => $oneItem->task_id,
+                "project_id" => $oneItem->project_id,
+                "name" => $oneItem->name,
+                "description" => $oneItem->description ? $oneItem->description : "",
+                "quantity" => $oneItem->quantity,
+                "measurement" => $oneItem->measurement,
+                "quote_type" => $oneItem->quote_type ? $oneItem->quote_type : "",
+                "unit_price" => $oneItem->unit_price,
+                "currency" => $oneItem->currency,
+                "discount" => $oneItem->discount ? $oneItem->discount : "",
+                "yard_remarks" => $oneItem->yard_remarks ? $oneItem->yard_remarks : "",
             );
-            $this->Task_cost_items_model->ci_save($newTaskItem,null);
+            $this->Task_cost_items_model->ci_save($newTaskItem, null);
         }
-        
-        echo json_encode(array("success"=>true));
+
+        echo json_encode(array("success" => true));
     }
-    function modal_yard_add_files($shipyard_id){
-        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
-        return $this->template->view("projects/comparison/modal_yard_add_files",["shipyard_info"=>$shipyard_info]);
+    function modal_yard_add_files($shipyard_id)
+    {
+        $shipyard_info = $this->Project_yards_model->get_one($shipyard_id);
+        return $this->template->view("projects/comparison/modal_yard_add_files", ["shipyard_info" => $shipyard_info]);
     }
-    function modal_edit_yards_general($shipyard_id){
-        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
-        return $this->template->view('projects/comparison/modal_edit_yards_general',["shipyard_info"=>$shipyard_info]);
+    function modal_edit_yards_general($shipyard_id)
+    {
+        $shipyard_info = $this->Project_yards_model->get_one($shipyard_id);
+        return $this->template->view('projects/comparison/modal_edit_yards_general', ["shipyard_info" => $shipyard_info]);
     }
-    function save_edit_yards_general(){
-        $shipyard_info=$this->Project_yards_model->get_one($this->request->getPost('shipyard_id'));
-        $shipyard_info->general=json_encode($this->request->getPost('data'));
-        $shipyard_info->deviation_cost=$this->request->getPost('deviation_cost');
-        $shipyard_info->loss_of_earnings=$this->request->getPost('loss_of_earnings');
-        $shipyard_info->bunker_cost=$this->request->getPost('bunker_cost');
-        $shipyard_info->additional_expenditures=$this->request->getPost('other_additional_expenditures');
-        $shipyard_info->total_offhire_period=$this->request->getPost('total_offhire_period');
-        $shipyard_info->total_repair_period=$this->request->getPost('total_repair_period');
-        $shipyard_info->days_in_dry_dock=$this->request->getPost('days_in_dry_dock');
-        $shipyard_info->days_at_berth=$this->request->getPost('days_at_berth');
-        $save_id=$this->Project_yards_model->ci_save($shipyard_info,$shipyard_info->id);
-        return json_encode(array("success"=>true,"save_id"=>$save_id));
+    function save_edit_yards_general()
+    {
+        $shipyard_info = $this->Project_yards_model->get_one($this->request->getPost('shipyard_id'));
+        $shipyard_info->general = json_encode($this->request->getPost('data'));
+        $shipyard_info->deviation_cost = $this->request->getPost('deviation_cost');
+        $shipyard_info->loss_of_earnings = $this->request->getPost('loss_of_earnings');
+        $shipyard_info->bunker_cost = $this->request->getPost('bunker_cost');
+        $shipyard_info->additional_expenditures = $this->request->getPost('other_additional_expenditures');
+        $shipyard_info->total_offhire_period = $this->request->getPost('total_offhire_period');
+        $shipyard_info->total_repair_period = $this->request->getPost('total_repair_period');
+        $shipyard_info->days_in_dry_dock = $this->request->getPost('days_in_dry_dock');
+        $shipyard_info->days_at_berth = $this->request->getPost('days_at_berth');
+        $save_id = $this->Project_yards_model->ci_save($shipyard_info, $shipyard_info->id);
+        return json_encode(array("success" => true, "save_id" => $save_id));
     }
-    function modal_import_task_cost_items($shipyard_id){
-        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
-        return $this->template->view("projects/comparison/modal_import_task_cost_items",["shipyard_id"=>$shipyard_id,"shipyard_info"=>$shipyard_info]);
+    function modal_import_task_cost_items($shipyard_id)
+    {
+        $shipyard_info = $this->Project_yards_model->get_one($shipyard_id);
+        return $this->template->view("projects/comparison/modal_import_task_cost_items", ["shipyard_id" => $shipyard_id, "shipyard_info" => $shipyard_info]);
 
     }
-    function import_task_cost_items(){
+    function import_task_cost_items()
+    {
         upload_file_to_temp(true);
         $file = get_array_value($_FILES, "file");
 
         // if (!$file) {
         //     die("Invalid file");
         // }
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $temp_file = get_array_value($file, "tmp_name");
         $file_name = get_array_value($file, "name");
         $file_size = get_array_value($file, "size");
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
 
-        $shipyard_id=$this->request->getPost('shipyard_id');
-        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
+        $shipyard_id = $this->request->getPost('shipyard_id');
+        $shipyard_info = $this->Project_yards_model->get_one($shipyard_id);
 
         $excel_file->setActiveSheetIndex(0);
-        $worksheet=$excel_file->getActiveSheet();
+        $worksheet = $excel_file->getActiveSheet();
         $highestRow = $worksheet->getHighestRow(); // e.g., 10
         $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
         $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
@@ -4102,13 +4273,14 @@ class Projects extends Security_Controller {
             $info_data[] = $rowData;
         }
         // return json_encode($info_data);
-        $task_id=$info_data[1][1];
-        
-        $project_id=$info_data[3][1];
-        if((string)$shipyard_info->project_id!=(string)$project_id) return json_encode(array("success"=>false));
+        $task_id = $info_data[1][1];
+
+        $project_id = $info_data[3][1];
+        if ((string) $shipyard_info->project_id != (string) $project_id)
+            return json_encode(array("success" => false));
 
         $excel_file->setActiveSheetIndex(0);
-        $worksheet=$excel_file->getActiveSheet();
+        $worksheet = $excel_file->getActiveSheet();
         $highestRow = $worksheet->getHighestRow(); // e.g., 10
         $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
 
@@ -4128,113 +4300,124 @@ class Projects extends Security_Controller {
             $data[] = $rowData;
         }
         // return json_encode($data);
-        for($count=1;$count<count($data);$count++){
+        for ($count = 1; $count < count($data); $count++) {
             // $task_info=$this->Tasks_model->get_one($task_id);
-            $saveData=array(
-                "shipyard_id"=>$shipyard_id,
-                "task_id"=>$task_id,
-                "project_id"=>$project_id,
-                "name"=>$data[$count][0],
-                "description"=>$data[$count][1],
-                "quantity"=>$data[$count][3],
-                "measurement"=>$data[$count][4],
-                "unit_price"=>$data[$count][5],
-                "currency"=>$data[$count][6],
-                "discount"=>$data[$count][7],
-                "yard_remarks"=>$data[$count][8],
+            $saveData = array(
+                "shipyard_id" => $shipyard_id,
+                "task_id" => $task_id,
+                "project_id" => $project_id,
+                "name" => $data[$count][0],
+                "description" => $data[$count][1],
+                "quantity" => $data[$count][3],
+                "measurement" => $data[$count][4],
+                "unit_price" => $data[$count][5],
+                "currency" => $data[$count][6],
+                "discount" => $data[$count][7],
+                "yard_remarks" => $data[$count][8],
             );
-            $this->Shipyard_cost_items_model->ci_save($saveData,null);
+            $this->Shipyard_cost_items_model->ci_save($saveData, null);
         }
-        echo json_encode(array("success"=>true));
+        echo json_encode(array("success" => true));
     }
-    function delete_yard_cost_item($item_id){
+    function delete_yard_cost_item($item_id)
+    {
         $this->Shipyard_cost_items_model->delete_permanently($item_id);
-        return json_encode(array("success"=>true));
+        return json_encode(array("success" => true));
     }
-    function modal_edit_payment_terms($shipyard_id){
-        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
-        $project_info=$this->Projects_model->get_one($shipyard_info->project_id);
-        return $this->template->view('projects/comparison/modal_edit_payment_terms',["project_info"=>$project_info,"shipyard_info"=>$shipyard_info]);
+    function modal_edit_payment_terms($shipyard_id)
+    {
+        $shipyard_info = $this->Project_yards_model->get_one($shipyard_id);
+        $project_info = $this->Projects_model->get_one($shipyard_info->project_id);
+        return $this->template->view('projects/comparison/modal_edit_payment_terms', ["project_info" => $project_info, "shipyard_info" => $shipyard_info]);
     }
-    function modal_edit_penalties($shipyard_id){
-        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
-        $project_info=$this->Projects_model->get_one($shipyard_info->project_id);
-        return $this->template->view('projects/comparison/modal_edit_penalties',["project_info"=>$project_info,"shipyard_info"=>$shipyard_info]);
+    function modal_edit_penalties($shipyard_id)
+    {
+        $shipyard_info = $this->Project_yards_model->get_one($shipyard_id);
+        $project_info = $this->Projects_model->get_one($shipyard_info->project_id);
+        return $this->template->view('projects/comparison/modal_edit_penalties', ["project_info" => $project_info, "shipyard_info" => $shipyard_info]);
     }
-    function save_penalty(){
-        $shipyard_id=$this->request->getPost("shipyard_id");
-        $price=$this->request->getPost("price");
-        $limit=$this->request->getPost("limit");
-        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
-        $shipyard_info->penalty_per_day=$price;
-        $shipyard_info->penalty_limit=$limit;
-        $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
-        return json_encode(array("success"=>true));
+    function save_penalty()
+    {
+        $shipyard_id = $this->request->getPost("shipyard_id");
+        $price = $this->request->getPost("price");
+        $limit = $this->request->getPost("limit");
+        $shipyard_info = $this->Project_yards_model->get_one($shipyard_id);
+        $shipyard_info->penalty_per_day = $price;
+        $shipyard_info->penalty_limit = $limit;
+        $this->Project_yards_model->ci_save($shipyard_info, $shipyard_id);
+        return json_encode(array("success" => true));
     }
-    function save_payment_terms(){
-        $shipyard_id=$this->request->getPost("shipyard_id");
-        $payment_before_departure=$this->request->getPost("payment_before_departure");
-        $payment_within_30=$this->request->getPost("payment_within_30");
-        $payment_within_60=$this->request->getPost("payment_within_60");
-        $payment_within_90=$this->request->getPost("payment_within_90");
-        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
-        $shipyard_info->payment_before_departure=$payment_before_departure;
-        $shipyard_info->payment_within_30=$payment_within_30;
-        $shipyard_info->payment_within_60=$payment_within_60;
-        $shipyard_info->payment_within_90=$payment_within_90;
-        $this->Project_yards_model->ci_save($shipyard_info,$shipyard_id);
-        return json_encode(array("success"=>true));
+    function save_payment_terms()
+    {
+        $shipyard_id = $this->request->getPost("shipyard_id");
+        $payment_before_departure = $this->request->getPost("payment_before_departure");
+        $payment_within_30 = $this->request->getPost("payment_within_30");
+        $payment_within_60 = $this->request->getPost("payment_within_60");
+        $payment_within_90 = $this->request->getPost("payment_within_90");
+        $shipyard_info = $this->Project_yards_model->get_one($shipyard_id);
+        $shipyard_info->payment_before_departure = $payment_before_departure;
+        $shipyard_info->payment_within_30 = $payment_within_30;
+        $shipyard_info->payment_within_60 = $payment_within_60;
+        $shipyard_info->payment_within_90 = $payment_within_90;
+        $this->Project_yards_model->ci_save($shipyard_info, $shipyard_id);
+        return json_encode(array("success" => true));
 
     }
     ///////////////////////////
     /////////////////////////////
-    function cost_overview($project_id){
-        $project_info=$this->Projects_model->get_one($project_id);
+    function cost_overview($project_id)
+    {
+        $project_info = $this->Projects_model->get_one($project_id);
         // $allCostItems=$this->Task_cost_items_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allCostItems=$this->Task_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
-        $allShipyardCostItems=[];
-        $selected_yards=[];
-        if($project_info->status_id==4){
-            $selected_yards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id))->getResult();
-            if(count($selected_yards)>0)
-                $allShipyardCostItems=$this->Shipyard_cost_items_model->get_all_with_costs_where(array("shipyard_id"=>$selected_yards[0]->id))->getResult();
+        $allCostItems = $this->Task_cost_items_model->get_all_with_costs_where(array("project_id" => $project_id))->getResult();
+        $allShipyardCostItems = [];
+        $selected_yards = [];
+        if ($project_info->status_id == 4) {
+            $selected_yards = $this->Project_yards_model->get_all_where(array("project_id" => $project_id))->getResult();
+            if (count($selected_yards) > 0)
+                $allShipyardCostItems = $this->Shipyard_cost_items_model->get_all_with_costs_where(array("shipyard_id" => $selected_yards[0]->id))->getResult();
         }
-            
-        $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allVariationOrders=$this->Task_variation_orders_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allComments=$this->Task_comments_model->get_all_where(array("project_id"=>$project_id))->getResult();
+
+        $allTasks = $this->Tasks_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allVariationOrders = $this->Task_variation_orders_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allOwnerSupplies = $this->Task_owner_supplies_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allComments = $this->Task_comments_model->get_all_where(array("project_id" => $project_id))->getResult();
 
         // echo "<pre>";
         // print_r($allTasks);
         // echo "</pre>";
-        
-        return $this->template->view('projects/cost_overview/index',["selectedYards"=>$selected_yards,"project_id"=>$project_id,"project_info"=>$project_info,"allComments"=>$allComments,"allShipyardCostItems"=>$allShipyardCostItems,"allOwnerSupplies"=>$allOwnerSupplies,"allVariationOrders"=>$allVariationOrders,"allTasks"=>$allTasks,'allCostItems'=>$allCostItems]);
+
+        return $this->template->view('projects/cost_overview/index', ["selectedYards" => $selected_yards, "project_id" => $project_id, "project_info" => $project_info, "allComments" => $allComments, "allShipyardCostItems" => $allShipyardCostItems, "allOwnerSupplies" => $allOwnerSupplies, "allVariationOrders" => $allVariationOrders, "allTasks" => $allTasks, 'allCostItems' => $allCostItems]);
     }
 
-    function modal_import_cost_overview($project_id){
-        $project_info=$this->Projects_model->get_one($project_id);
-        return $this->template->view("projects/comparison/modal_import_items",array("project_info"=>$project_info,"project_id"=>$project_id));
+    function modal_import_cost_overview($project_id)
+    {
+        $project_info = $this->Projects_model->get_one($project_id);
+        return $this->template->view("projects/comparison/modal_import_items", array("project_info" => $project_info, "project_id" => $project_id));
     }
-    function modal_export_cost_overview($project_id){
-        $project_info=$this->Projects_model->get_one($project_id);
-        return $this->template->view("projects/cost_overview/modal_export_items",["project_info"=>$project_info,"project_id"=>$project_id]);
+    function modal_export_cost_overview($project_id)
+    {
+        $project_info = $this->Projects_model->get_one($project_id);
+        return $this->template->view("projects/cost_overview/modal_export_items", ["project_info" => $project_info, "project_id" => $project_id]);
     }
-    function modal_comments($project_id){
+    function modal_comments($project_id)
+    {
         $options = array("project_id" => $project_id, "login_user_id" => $this->login_user->id);
-        $comments=$this->Project_comments_model->get_details($options)->getResult();
+        $comments = $this->Project_comments_model->get_details($options)->getResult();
         // return json_encode($comments);
-        return $this->template->view("projects/cost_overview/modal_comments",["project_id"=>$project_id,"comments"=>$comments,"can_comment_on_tasks"=>true]);
+        return $this->template->view("projects/cost_overview/modal_comments", ["project_id" => $project_id, "comments" => $comments, "can_comment_on_tasks" => true]);
     }
-    function modal_task_comments($task_id){
-        $task_info=$this->Tasks_model->get_one($task_id);
+    function modal_task_comments($task_id)
+    {
+        $task_info = $this->Tasks_model->get_one($task_id);
         $options = array("task_id" => $task_id, "login_user_id" => $this->login_user->id);
-        $comments=$this->Project_comments_model->get_details($options)->getResult();
+        $comments = $this->Project_comments_model->get_details($options)->getResult();
         // return json_encode($comments);
-        return $this->template->view("projects/cost_overview/modal_comments",["project_id"=>$task_info->project_id,"task_id"=>$task_id,"comments"=>$comments,"can_comment_on_tasks"=>true]);
+        return $this->template->view("projects/cost_overview/modal_comments", ["project_id" => $task_info->project_id, "task_id" => $task_id, "comments" => $comments, "can_comment_on_tasks" => true]);
     }
 
-    function task_files_list_data($task_id = 0) {
+    function task_files_list_data($task_id = 0)
+    {
         validate_numeric_value($task_id);
         // $this->init_project_permission_checker($project_id);
 
@@ -4246,7 +4429,7 @@ class Projects extends Security_Controller {
 
         $options = array(
             "task_id" => $task_id,
-            "description"=>""
+            "description" => ""
             // "category_id" => $this->request->getPost("category_id"),
             // "custom_fields" => $custom_fields,
             // "custom_field_filter" => $this->prepare_custom_field_filter_values("task_files", $this->login_user->is_admin, $this->login_user->user_type)
@@ -4259,56 +4442,73 @@ class Projects extends Security_Controller {
         }
         echo json_encode(array("data" => $result));
     }
-    function currency_rates($project_id){
-        $project_info=$this->Projects_model->get_one($project_id);
-        $allCurrencyRates=$this->Project_currency_rates_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allCostItemCurrencies=$this->Task_cost_items_model->get_dropdown_list(array("currency"), "currency", array("project_id"=>$project_id));
-        return $this->template->rander("projects/comparison/currency_rates",["project_info"=>$project_info,"allCostItemCurrencies"=>$allCostItemCurrencies,"project_id"=>$project_id,"allCurrencyRates"=>$allCurrencyRates]);
+    function currency_rates($project_id)
+    {
+        $project_info = $this->Projects_model->get_one($project_id);
+        $allCurrencyRates = $this->Project_currency_rates_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allCostItemCurrencies = $this->Task_cost_items_model->get_dropdown_list(array("currency"), "currency", array("project_id" => $project_id));
+        return $this->template->rander("projects/comparison/currency_rates", ["project_info" => $project_info, "allCostItemCurrencies" => $allCostItemCurrencies, "project_id" => $project_id, "allCurrencyRates" => $allCurrencyRates]);
     }
-    function modal_add_currency_rate($project_id){
-        $project_info=$this->Projects_model->get_one($project_id);
-        return $this->template->view("projects/comparison/modal_add_currency_rate",["project_id"=>$project_id,"project_info"=>$project_info]);
+    function modal_add_currency_rate($project_id)
+    {
+        $project_info = $this->Projects_model->get_one($project_id);
+        return $this->template->view("projects/comparison/modal_add_currency_rate", ["project_id" => $project_id, "project_info" => $project_info]);
     }
-    function modal_edit_currency_rate($rate_id){
-        $rate_info=$this->Project_currency_rates_model->get_one($rate_id);
-        return $this->template->view("projects/comparison/modal_edit_currency_rate",["rate_info"=>$rate_info]);
+    function modal_edit_currency_rate($rate_id)
+    {
+        $rate_info = $this->Project_currency_rates_model->get_one($rate_id);
+        return $this->template->view("projects/comparison/modal_edit_currency_rate", ["rate_info" => $rate_info]);
     }
-    function save_currency_rate(){
-        $newRateData=array(
-            "project_id"=>$this->request->getPost("project_id"),
-            "from"=>$this->request->getPost("from"),
-            "to"=>$this->request->getPost("to"),
-            "rate"=>$this->request->getPost("rate"),
+    function save_currency_rate()
+    {
+        $newRateData = array(
+            "project_id" => $this->request->getPost("project_id"),
+            "from" => $this->request->getPost("from"),
+            "to" => $this->request->getPost("to"),
+            "rate" => $this->request->getPost("rate"),
         );
-        $save_id=$this->Project_currency_rates_model->ci_save($newRateData);
-        return json_encode(array("success"=>true,"save_id"=>$save_id));
+        $save_id = $this->Project_currency_rates_model->ci_save($newRateData);
+        return json_encode(array("success" => true, "save_id" => $save_id));
     }
-    function edit_currency_rate(){
-        $rate_info=$this->Project_currency_rates_model->get_one($this->request->getPost("id"));
-        $rate_info->rate=$this->request->getPost("rate");
-        $save_id=$this->Project_currency_rates_model->ci_save($rate_info,$this->request->getPost("id"));
-        return json_encode(array("success"=>true,"save_id"=>$save_id));
+    function edit_currency_rate()
+    {
+        $rate_info = $this->Project_currency_rates_model->get_one($this->request->getPost("id"));
+        $rate_info->rate = $this->request->getPost("rate");
+        $save_id = $this->Project_currency_rates_model->ci_save($rate_info, $this->request->getPost("id"));
+        return json_encode(array("success" => true, "save_id" => $save_id));
     }
-    function modal_currency_rates($project_id){
-        $allRates=$this->Project_currency_rates_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        return $this->template->view('projects/comparison/modal_currency_rates',["project_id"=>$project_id,"allRates"=>$allRates]);
+    function modal_currency_rates($project_id)
+    {
+        $allRates = $this->Project_currency_rates_model->get_all_where(array("project_id" => $project_id))->getResult();
+        return $this->template->view('projects/comparison/modal_currency_rates', ["project_id" => $project_id, "allRates" => $allRates]);
     }
-    function task_list_headers(){
-        $headers=array(
-            "data"=>array(
+    function task_list_headers()
+    {
+        $headers = array(
+            "data" => array(
                 array(
-                    "","","","","","","","","",""
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    ""
                 )
             )
         );
         return json_encode($headers);
     }
 
-    function download_quotation_form_xlsx($project_id){
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+    function download_quotation_form_xlsx($project_id)
+    {
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        $project_info=$this->Projects_model->get_one($project_id);
-        $allProjectCostItems=$this->Task_cost_items_model->get_all_where(array("project_id"=>$project_id,"deleted"=>0))->getResult();
+        $project_info = $this->Projects_model->get_one($project_id);
+        $allProjectCostItems = $this->Task_cost_items_model->get_all_where(array("project_id" => $project_id, "deleted" => 0))->getResult();
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
@@ -4331,27 +4531,27 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('P1', 'Discounted quote');
         $sheet1->setCellValue('Q1', 'Yard remarks');
         $sheet1->setCellValue('R1', 'Link to Task');
-        $rowNumber=2;
+        $rowNumber = 2;
         foreach ($allProjectCostItems as $oneItem) {
-            $task_info=$this->Tasks_model->get_one($oneItem->task_id);
-            $sheet1->setCellValue('A'.$rowNumber, $project_id);
-            $sheet1->setCellValue('B'.$rowNumber, $project_info->title);
-            $sheet1->setCellValue('C'.$rowNumber, $task_info->id);
-            $sheet1->setCellValue('D'.$rowNumber, $task_info->title);
-            $sheet1->setCellValue('E'.$rowNumber, $task_info->category);
-            $sheet1->setCellValue('F'.$rowNumber, $task_info->dock_list_number);
-            $sheet1->setCellValue('G'.$rowNumber, $oneItem->name);
-            $sheet1->setCellValue('H'.$rowNumber, $oneItem->description);
-            $sheet1->setCellValue('I'.$rowNumber, $oneItem->quote_type);
-            $sheet1->setCellValue('J'.$rowNumber, $oneItem->quantity);
-            $sheet1->setCellValue('K'.$rowNumber, $oneItem->measurement);
-            $sheet1->setCellValue('L'.$rowNumber, $oneItem->unit_price);
-            $sheet1->setCellValue('M'.$rowNumber, $oneItem->currency);
-            $sheet1->setCellValue('N'.$rowNumber, $oneItem->currency." ".(float)$oneItem->unit_price*(float)$oneItem->quantity);
-            $sheet1->setCellValue('O'.$rowNumber, $oneItem->discount." %");
-            $sheet1->setCellValue('P'.$rowNumber, $oneItem->currency." ".(float)$oneItem->unit_price*(float)$oneItem->quantity*(float)(100-$oneItem->discount)/100);
-            $sheet1->setCellValue('Q'.$rowNumber, $oneItem->yard_remarks);
-            $sheet1->setCellValue('R'.$rowNumber, get_uri("task_view/view/").$oneItem->task_id);
+            $task_info = $this->Tasks_model->get_one($oneItem->task_id);
+            $sheet1->setCellValue('A' . $rowNumber, $project_id);
+            $sheet1->setCellValue('B' . $rowNumber, $project_info->title);
+            $sheet1->setCellValue('C' . $rowNumber, $task_info->id);
+            $sheet1->setCellValue('D' . $rowNumber, $task_info->title);
+            $sheet1->setCellValue('E' . $rowNumber, $task_info->category);
+            $sheet1->setCellValue('F' . $rowNumber, $task_info->dock_list_number);
+            $sheet1->setCellValue('G' . $rowNumber, $oneItem->name);
+            $sheet1->setCellValue('H' . $rowNumber, $oneItem->description);
+            $sheet1->setCellValue('I' . $rowNumber, $oneItem->quote_type);
+            $sheet1->setCellValue('J' . $rowNumber, $oneItem->quantity);
+            $sheet1->setCellValue('K' . $rowNumber, $oneItem->measurement);
+            $sheet1->setCellValue('L' . $rowNumber, $oneItem->unit_price);
+            $sheet1->setCellValue('M' . $rowNumber, $oneItem->currency);
+            $sheet1->setCellValue('N' . $rowNumber, $oneItem->currency . " " . (float) $oneItem->unit_price * (float) $oneItem->quantity);
+            $sheet1->setCellValue('O' . $rowNumber, $oneItem->discount . " %");
+            $sheet1->setCellValue('P' . $rowNumber, $oneItem->currency . " " . (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) (100 - $oneItem->discount) / 100);
+            $sheet1->setCellValue('Q' . $rowNumber, $oneItem->yard_remarks);
+            $sheet1->setCellValue('R' . $rowNumber, get_uri("task_view/view/") . $oneItem->task_id);
             $rowNumber++;
         }
 
@@ -4360,9 +4560,9 @@ class Projects extends Security_Controller {
 
         $response = service('response');
 
-// Set response headers for file download
+        // Set response headers for file download
         $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $response->setHeader('Content-Disposition', 'attachment;filename="'.$project_info->title.'_quotation_form.xlsx"');
+        $response->setHeader('Content-Disposition', 'attachment;filename="' . $project_info->title . '_quotation_form.xlsx"');
         $response->setHeader('Cache-Control', 'max-age=0');
 
         // Write the Excel file content to the response body
@@ -4371,11 +4571,12 @@ class Projects extends Security_Controller {
         // Return the response object
         return $response;
     }
-    function download_project_form_xlsx($project_id){
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+    function download_project_form_xlsx($project_id)
+    {
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        $project_info=$this->Projects_model->get_one($project_id);
-        $allProjectCostItems=$this->Task_cost_items_model->get_all_where(array("project_id"=>$project_id,"deleted"=>0))->getResult();
+        $project_info = $this->Projects_model->get_one($project_id);
+        $allProjectCostItems = $this->Task_cost_items_model->get_all_where(array("project_id" => $project_id, "deleted" => 0))->getResult();
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
@@ -4406,24 +4607,24 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('N1', 'Discount (0-100%)');
         $sheet1->setCellValue('O1', 'Discounted quote');
         $sheet1->setCellValue('P1', 'Yard remarks');
-        $rowNumber=2;
+        $rowNumber = 2;
         foreach ($allProjectCostItems as $oneItem) {
-            $task_info=$this->Tasks_model->get_one($oneItem->task_id);
-            $sheet1->setCellValue('A'.$rowNumber, $project_id);
-            $sheet1->setCellValue('B'.$rowNumber, $project_info->title);
-            $sheet1->setCellValue('C'.$rowNumber, $task_info->id);
-            $sheet1->setCellValue('D'.$rowNumber, $task_info->title);
-            $sheet1->setCellValue('F'.$rowNumber, $task_info->category);
-            $sheet1->setCellValue('F'.$rowNumber, $oneItem->name);
-            $sheet1->setCellValue('G'.$rowNumber, $oneItem->description);
-            $sheet1->setCellValue('I'.$rowNumber, $oneItem->quantity);
-            $sheet1->setCellValue('J'.$rowNumber, $oneItem->measurement);
-            $sheet1->setCellValue('K'.$rowNumber, $oneItem->unit_price);
-            $sheet1->setCellValue('L'.$rowNumber, $oneItem->currency);
-            $sheet1->setCellValue('M'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity);
-            $sheet1->setCellValue('N'.$rowNumber, $oneItem->discount);
-            $sheet1->setCellValue('O'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity*(float)$oneItem->discount/100);
-            $sheet1->setCellValue('P'.$rowNumber, $oneItem->yard_remarks);
+            $task_info = $this->Tasks_model->get_one($oneItem->task_id);
+            $sheet1->setCellValue('A' . $rowNumber, $project_id);
+            $sheet1->setCellValue('B' . $rowNumber, $project_info->title);
+            $sheet1->setCellValue('C' . $rowNumber, $task_info->id);
+            $sheet1->setCellValue('D' . $rowNumber, $task_info->title);
+            $sheet1->setCellValue('F' . $rowNumber, $task_info->category);
+            $sheet1->setCellValue('F' . $rowNumber, $oneItem->name);
+            $sheet1->setCellValue('G' . $rowNumber, $oneItem->description);
+            $sheet1->setCellValue('I' . $rowNumber, $oneItem->quantity);
+            $sheet1->setCellValue('J' . $rowNumber, $oneItem->measurement);
+            $sheet1->setCellValue('K' . $rowNumber, $oneItem->unit_price);
+            $sheet1->setCellValue('L' . $rowNumber, $oneItem->currency);
+            $sheet1->setCellValue('M' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity);
+            $sheet1->setCellValue('N' . $rowNumber, $oneItem->discount);
+            $sheet1->setCellValue('O' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) $oneItem->discount / 100);
+            $sheet1->setCellValue('P' . $rowNumber, $oneItem->yard_remarks);
             $rowNumber++;
         }
 
@@ -4432,9 +4633,9 @@ class Projects extends Security_Controller {
 
         $response = service('response');
 
-// Set response headers for file download
+        // Set response headers for file download
         $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $response->setHeader('Content-Disposition', 'attachment;filename="'.$project_info->title.'_quotation_form.xlsx"');
+        $response->setHeader('Content-Disposition', 'attachment;filename="' . $project_info->title . '_quotation_form.xlsx"');
         $response->setHeader('Cache-Control', 'max-age=0');
 
         // Write the Excel file content to the response body
@@ -4443,21 +4644,22 @@ class Projects extends Security_Controller {
         // Return the response object
         return $response;
     }
-    function download_cost_overview_xlsx($project_id){
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+    function download_cost_overview_xlsx($project_id)
+    {
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        $project_info=$this->Projects_model->get_one($project_id);
-        $allCostItems=$this->Task_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
-        $allShipyardCostItems=[];
-        if($project_info->status_id==4){
-            $selected_yards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id))->getResult();
-            if(count($selected_yards)>0)
-                $allShipyardCostItems=$this->Shipyard_cost_items_model->get_all_with_costs_where(array("shipyard_id"=>$selected_yards[0]->id))->getResult();
+        $project_info = $this->Projects_model->get_one($project_id);
+        $allCostItems = $this->Task_cost_items_model->get_all_with_costs_where(array("project_id" => $project_id))->getResult();
+        $allShipyardCostItems = [];
+        if ($project_info->status_id == 4) {
+            $selected_yards = $this->Project_yards_model->get_all_where(array("project_id" => $project_id))->getResult();
+            if (count($selected_yards) > 0)
+                $allShipyardCostItems = $this->Shipyard_cost_items_model->get_all_with_costs_where(array("shipyard_id" => $selected_yards[0]->id))->getResult();
         }
-        $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allVariationOrders=$this->Task_variation_orders_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allComments=$this->Task_comments_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        $allTasks = $this->Tasks_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allVariationOrders = $this->Task_variation_orders_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allOwnerSupplies = $this->Task_owner_supplies_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allComments = $this->Task_comments_model->get_all_where(array("project_id" => $project_id))->getResult();
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
@@ -4473,137 +4675,143 @@ class Projects extends Security_Controller {
         // $sheet1 = $spreadsheet->createSheet();
         $sheet1->setTitle('Cost Overview');
 
-        $categorizedTasks=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedTasks = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        $categorizedOwnerSupplies=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedOwnerSupplies = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        $categorizedCostItems=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedCostItems = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        $categorizedShipyardCostItems=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedShipyardCostItems = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        $categorizedVariationOrders=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedVariationOrders = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        
-        $categorizedComments=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+
+        $categorizedComments = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        $categorizedStats=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedStats = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        
+
         foreach ($allTasks as $index => $oneTask) {
-            if(isset($categorizedTasks[$oneTask->category]))
-                $categorizedTasks[$oneTask->category][]=$oneTask;
-            else $categorizedTasks["Others"][]=$oneTask;
-        
-            if(isset($categorizedOwnerSupplies[$oneTask->category]))
-                $categorizedOwnerSupplies[$oneTask->category]+=array_filter($allOwnerSupplies,function($oneSupply)use($oneTask){
-                    return $oneTask->id==$oneSupply->task_id;
+            if (isset($categorizedTasks[$oneTask->category]))
+                $categorizedTasks[$oneTask->category][] = $oneTask;
+            else
+                $categorizedTasks["Others"][] = $oneTask;
+
+            if (isset($categorizedOwnerSupplies[$oneTask->category]))
+                $categorizedOwnerSupplies[$oneTask->category] += array_filter($allOwnerSupplies, function ($oneSupply) use ($oneTask) {
+                    return $oneTask->id == $oneSupply->task_id;
                 });
-            else $categorizedOwnerSupplies["Others"]+=array_filter($allOwnerSupplies,function($oneSupply)use($oneTask){
-                return $oneTask->id==$oneSupply->task_id;
-            });
-        
-            if(isset($categorizedCostItems[$oneTask->category]))
-                $categorizedCostItems[$oneTask->category]+=array_filter($allCostItems,function($oneItem)use($oneTask){
-                    return $oneTask->id==$oneItem->task_id;
+            else
+                $categorizedOwnerSupplies["Others"] += array_filter($allOwnerSupplies, function ($oneSupply) use ($oneTask) {
+                    return $oneTask->id == $oneSupply->task_id;
                 });
-            else $categorizedCostItems["Others"]+=array_filter($allCostItems,function($oneItem)use($oneTask){
-                return $oneTask->id==$oneItem->task_id;
-            });
-        
-            if(isset($categorizedShipyardCostItems[$oneTask->category]))
-                $categorizedShipyardCostItems[$oneTask->category]+=array_filter($allShipyardCostItems,function($oneItem)use($oneTask){
-                    return $oneTask->id==$oneItem->task_id;
+
+            if (isset($categorizedCostItems[$oneTask->category]))
+                $categorizedCostItems[$oneTask->category] += array_filter($allCostItems, function ($oneItem) use ($oneTask) {
+                    return $oneTask->id == $oneItem->task_id;
                 });
-            else $categorizedShipyardCostItems["Others"]+=array_filter($allShipyardCostItems,function($oneItem)use($oneTask){
-                return $oneTask->id==$oneItem->task_id;
-            });
-        
-            if(isset($categorizedVariationOrders[$oneTask->category]))
-                $categorizedVariationOrders[$oneTask->category]+=array_filter($allVariationOrders,function($oneOrder)use($oneTask){
-                    return $oneTask->id==$oneOrder->task_id;
+            else
+                $categorizedCostItems["Others"] += array_filter($allCostItems, function ($oneItem) use ($oneTask) {
+                    return $oneTask->id == $oneItem->task_id;
                 });
-            else $categorizedVariationOrders["Others"]+=array_filter($allVariationOrders,function($oneOrder)use($oneTask){
-                return $oneTask->id==$oneOrder->task_id;
-            });
-        
-            if(isset($categorizedComments[$oneTask->category]))
-                $categorizedComments[$oneTask->category]+=array_filter($allComments,function($oneComment)use($oneTask){
-                    return $oneTask->id==$oneComment->task_id;
+
+            if (isset($categorizedShipyardCostItems[$oneTask->category]))
+                $categorizedShipyardCostItems[$oneTask->category] += array_filter($allShipyardCostItems, function ($oneItem) use ($oneTask) {
+                    return $oneTask->id == $oneItem->task_id;
                 });
-            else $categorizedComments["Others"]+=array_filter($allComments,function($oneComment)use($oneTask){
-                return $oneTask->id==$oneComment->task_id;
-            });
+            else
+                $categorizedShipyardCostItems["Others"] += array_filter($allShipyardCostItems, function ($oneItem) use ($oneTask) {
+                    return $oneTask->id == $oneItem->task_id;
+                });
+
+            if (isset($categorizedVariationOrders[$oneTask->category]))
+                $categorizedVariationOrders[$oneTask->category] += array_filter($allVariationOrders, function ($oneOrder) use ($oneTask) {
+                    return $oneTask->id == $oneOrder->task_id;
+                });
+            else
+                $categorizedVariationOrders["Others"] += array_filter($allVariationOrders, function ($oneOrder) use ($oneTask) {
+                    return $oneTask->id == $oneOrder->task_id;
+                });
+
+            if (isset($categorizedComments[$oneTask->category]))
+                $categorizedComments[$oneTask->category] += array_filter($allComments, function ($oneComment) use ($oneTask) {
+                    return $oneTask->id == $oneComment->task_id;
+                });
+            else
+                $categorizedComments["Others"] += array_filter($allComments, function ($oneComment) use ($oneTask) {
+                    return $oneTask->id == $oneComment->task_id;
+                });
         }
-        
-        $totalOwnerSupplies=0;
-        $totalVariationOrders=0;
-        $totalCostItems=0;
-        $totalCosts=0;
-        $totalShipyardCostItems=0;
-        $totalComments=0;
+
+        $totalOwnerSupplies = 0;
+        $totalVariationOrders = 0;
+        $totalCostItems = 0;
+        $totalCosts = 0;
+        $totalShipyardCostItems = 0;
+        $totalComments = 0;
         $sheet1->setCellValue('A1', "Category");
         $sheet1->setCellValue('B1', "Task");
         $sheet1->setCellValue('C1', "Owner's supply");
@@ -4625,105 +4833,105 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('I2', 0);
         $sheet1->setCellValue('J2', 0);
 
-        $rowIndex=3;
-        foreach ($categorizedTasks as $category=>$oneList) {
-            $categoryOwnerSupply=0;
-            $categoryCostItems=0;
-            $categoryTotalCosts=0;
-            $categoryShipyardCostItems=0;
-            $categoryVariationOrder=0;
-            $categoryComments=0;
-            $sheet1->setCellValue('A'.$rowIndex, $category);
-            $sheet1->setCellValue('B'.$rowIndex, 0);
-            $sheet1->setCellValue('C'.$rowIndex, 0);
-            $sheet1->setCellValue('D'.$rowIndex, 0);
-            $sheet1->setCellValue('E'.$rowIndex, 0);
-            $sheet1->setCellValue('F'.$rowIndex, 0);
-            $sheet1->setCellValue('G'.$rowIndex, 0);
-            $sheet1->setCellValue('H'.$rowIndex, 0);
-            $sheet1->setCellValue('I'.$rowIndex, 0);
-            $sheet1->setCellValue('J'.$rowIndex, 0);
-            $category_row=$rowIndex;
+        $rowIndex = 3;
+        foreach ($categorizedTasks as $category => $oneList) {
+            $categoryOwnerSupply = 0;
+            $categoryCostItems = 0;
+            $categoryTotalCosts = 0;
+            $categoryShipyardCostItems = 0;
+            $categoryVariationOrder = 0;
+            $categoryComments = 0;
+            $sheet1->setCellValue('A' . $rowIndex, $category);
+            $sheet1->setCellValue('B' . $rowIndex, 0);
+            $sheet1->setCellValue('C' . $rowIndex, 0);
+            $sheet1->setCellValue('D' . $rowIndex, 0);
+            $sheet1->setCellValue('E' . $rowIndex, 0);
+            $sheet1->setCellValue('F' . $rowIndex, 0);
+            $sheet1->setCellValue('G' . $rowIndex, 0);
+            $sheet1->setCellValue('H' . $rowIndex, 0);
+            $sheet1->setCellValue('I' . $rowIndex, 0);
+            $sheet1->setCellValue('J' . $rowIndex, 0);
+            $category_row = $rowIndex;
             $rowIndex++;
             foreach ($oneList as $key => $oneTask) {
-                
-                $oneTaskSupplies=array_filter($categorizedOwnerSupplies[$category],function($oneSupply)use($oneTask){
-                    return $oneSupply->task_id==$oneTask->id;
+
+                $oneTaskSupplies = array_filter($categorizedOwnerSupplies[$category], function ($oneSupply) use ($oneTask) {
+                    return $oneSupply->task_id == $oneTask->id;
                 });
-                $oneTaskCostItems=array_filter($categorizedCostItems[$category],function($oneItem)use($oneTask){
-                    return $oneItem->task_id==$oneTask->id;
+                $oneTaskCostItems = array_filter($categorizedCostItems[$category], function ($oneItem) use ($oneTask) {
+                    return $oneItem->task_id == $oneTask->id;
                 });
-                $oneTaskShipyardCostItems=array_filter($categorizedShipyardCostItems[$category],function($oneItem)use($oneTask){
-                    return $oneItem->task_id==$oneTask->id;
+                $oneTaskShipyardCostItems = array_filter($categorizedShipyardCostItems[$category], function ($oneItem) use ($oneTask) {
+                    return $oneItem->task_id == $oneTask->id;
                 });
-                $oneTaskVariationOrders=array_filter($categorizedVariationOrders[$category],function($oneOrder)use($oneTask){
-                    return $oneOrder->task_id==$oneTask->id;
+                $oneTaskVariationOrders = array_filter($categorizedVariationOrders[$category], function ($oneOrder) use ($oneTask) {
+                    return $oneOrder->task_id == $oneTask->id;
                 });
-                $oneTaskComments=array_filter($categorizedComments[$category],function($oneComment)use($oneTask){
-                    return $oneComment->task_id==$oneTask->id;
+                $oneTaskComments = array_filter($categorizedComments[$category], function ($oneComment) use ($oneTask) {
+                    return $oneComment->task_id == $oneTask->id;
                 });
-                $oneTaskTotalSupplies=0;
+                $oneTaskTotalSupplies = 0;
                 foreach ($oneTaskSupplies as $oneSupply) {
-                    $oneTaskTotalSupplies+=$oneSupply->cost;
+                    $oneTaskTotalSupplies += $oneSupply->cost;
                 }
-                $categoryOwnerSupply+=$oneTaskTotalSupplies;
+                $categoryOwnerSupply += $oneTaskTotalSupplies;
 
-                $oneTaskTotalCostItems=0;
+                $oneTaskTotalCostItems = 0;
                 foreach ($oneTaskCostItems as $oneItem) {
-                    $oneTaskTotalCostItems+=$oneItem->total_cost;
+                    $oneTaskTotalCostItems += $oneItem->total_cost;
                 }
-                $categoryCostItems+=$oneTaskTotalCostItems;
+                $categoryCostItems += $oneTaskTotalCostItems;
 
-                $oneTaskTotalCosts=$oneTaskTotalSupplies+$oneTaskTotalCostItems;
-                $categoryTotalCosts+=$oneTaskTotalCosts;
+                $oneTaskTotalCosts = $oneTaskTotalSupplies + $oneTaskTotalCostItems;
+                $categoryTotalCosts += $oneTaskTotalCosts;
 
-                $oneTaskTotalShipyardCostItems=0;
+                $oneTaskTotalShipyardCostItems = 0;
                 foreach ($oneTaskShipyardCostItems as $oneItem) {
-                    $oneTaskTotalShipyardCostItems+=$oneItem->total_cost;
+                    $oneTaskTotalShipyardCostItems += $oneItem->total_cost;
                 }
-                $categoryShipyardCostItems+=$oneTaskTotalShipyardCostItems;
+                $categoryShipyardCostItems += $oneTaskTotalShipyardCostItems;
 
-                $oneTaskTotalVariationOrders=0;
+                $oneTaskTotalVariationOrders = 0;
                 foreach ($oneTaskVariationOrders as $oneOrder) {
-                    $oneTaskTotalVariationOrders+=$oneOrder->cost;
+                    $oneTaskTotalVariationOrders += $oneOrder->cost;
                 }
-                $categoryVariationOrder+=$oneTaskTotalVariationOrders;
+                $categoryVariationOrder += $oneTaskTotalVariationOrders;
 
-                $oneTaskTotalComments=count($oneTaskComments);
-                $categoryComments+=$oneTaskTotalComments;
+                $oneTaskTotalComments = count($oneTaskComments);
+                $categoryComments += $oneTaskTotalComments;
 
-                
-                $totalOwnerSupplies+=$oneTaskTotalSupplies;
-                $totalCostItems+=$oneTaskTotalCostItems;
-                $totalShipyardCostItems+=$oneTaskTotalShipyardCostItems;
-                $totalVariationOrders+=$oneTaskTotalVariationOrders;
-                $totalComments+=$oneTaskTotalComments;
-                $totalCosts+=($oneTaskTotalSupplies+$oneTaskTotalCostItems);
 
-                $sheet1->setCellValue('B'.$rowIndex, $oneTask->title);
-                $sheet1->setCellValue('C'.$rowIndex, $oneTaskTotalSupplies);
-                $sheet1->setCellValue('D'.$rowIndex, $oneTaskTotalCostItems);
-                $sheet1->setCellValue('E'.$rowIndex, $oneTaskTotalVariationOrders);
-                $sheet1->setCellValue('F'.$rowIndex, $oneTaskTotalCosts);
-                $sheet1->setCellValue('G'.$rowIndex, $oneTaskTotalShipyardCostItems);
-                $sheet1->setCellValue('H'.$rowIndex, 0);
-                $sheet1->setCellValue('I'.$rowIndex, 0);
-                $sheet1->setCellValue('J'.$rowIndex, $oneTaskTotalComments);
+                $totalOwnerSupplies += $oneTaskTotalSupplies;
+                $totalCostItems += $oneTaskTotalCostItems;
+                $totalShipyardCostItems += $oneTaskTotalShipyardCostItems;
+                $totalVariationOrders += $oneTaskTotalVariationOrders;
+                $totalComments += $oneTaskTotalComments;
+                $totalCosts += ($oneTaskTotalSupplies + $oneTaskTotalCostItems);
+
+                $sheet1->setCellValue('B' . $rowIndex, $oneTask->title);
+                $sheet1->setCellValue('C' . $rowIndex, $oneTaskTotalSupplies);
+                $sheet1->setCellValue('D' . $rowIndex, $oneTaskTotalCostItems);
+                $sheet1->setCellValue('E' . $rowIndex, $oneTaskTotalVariationOrders);
+                $sheet1->setCellValue('F' . $rowIndex, $oneTaskTotalCosts);
+                $sheet1->setCellValue('G' . $rowIndex, $oneTaskTotalShipyardCostItems);
+                $sheet1->setCellValue('H' . $rowIndex, 0);
+                $sheet1->setCellValue('I' . $rowIndex, 0);
+                $sheet1->setCellValue('J' . $rowIndex, $oneTaskTotalComments);
                 $rowIndex++;
             }
-            $categorizedStats[$category]["owner_supplies"]=$categoryOwnerSupply;
-            $categorizedStats[$category]["cost_items"]=$categoryCostItems;
-            $categorizedStats[$category]["variation_orders"]=$categoryVariationOrder;
-            $categorizedStats[$category]["shipyard_cost_items"]=$categoryShipyardCostItems;
-            $categorizedStats[$category]["comments"]=$categoryComments;
-            $sheet1->setCellValue('B'.$category_row, "");
-            $sheet1->setCellValue('C'.$category_row, $categoryOwnerSupply);
-            $sheet1->setCellValue('D'.$category_row, $categoryCostItems);
-            $sheet1->setCellValue('E'.$category_row, $categoryVariationOrder);
-            $sheet1->setCellValue('F'.$category_row, $categoryTotalCosts);
-            $sheet1->setCellValue('G'.$category_row, $categoryShipyardCostItems);
-            $sheet1->setCellValue('H'.$category_row, 0);
-            $sheet1->setCellValue('I'.$category_row, $categoryComments);
+            $categorizedStats[$category]["owner_supplies"] = $categoryOwnerSupply;
+            $categorizedStats[$category]["cost_items"] = $categoryCostItems;
+            $categorizedStats[$category]["variation_orders"] = $categoryVariationOrder;
+            $categorizedStats[$category]["shipyard_cost_items"] = $categoryShipyardCostItems;
+            $categorizedStats[$category]["comments"] = $categoryComments;
+            $sheet1->setCellValue('B' . $category_row, "");
+            $sheet1->setCellValue('C' . $category_row, $categoryOwnerSupply);
+            $sheet1->setCellValue('D' . $category_row, $categoryCostItems);
+            $sheet1->setCellValue('E' . $category_row, $categoryVariationOrder);
+            $sheet1->setCellValue('F' . $category_row, $categoryTotalCosts);
+            $sheet1->setCellValue('G' . $category_row, $categoryShipyardCostItems);
+            $sheet1->setCellValue('H' . $category_row, 0);
+            $sheet1->setCellValue('I' . $category_row, $categoryComments);
         }
         $sheet1->setCellValue('C2', $totalOwnerSupplies);
         $sheet1->setCellValue('D2', $totalCostItems);
@@ -4738,9 +4946,9 @@ class Projects extends Security_Controller {
 
         $response = service('response');
 
-// Set response headers for file download
+        // Set response headers for file download
         $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $response->setHeader('Content-Disposition', 'attachment;filename="'.$project_info->title.'_cost_overview.xlsx"');
+        $response->setHeader('Content-Disposition', 'attachment;filename="' . $project_info->title . '_cost_overview.xlsx"');
         $response->setHeader('Cache-Control', 'max-age=0');
 
         // Write the Excel file content to the response body
@@ -4749,11 +4957,12 @@ class Projects extends Security_Controller {
         // Return the response object
         return $response;
     }
-    function download_all_zip($project_id){
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+    function download_all_zip($project_id)
+    {
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        $project_info=$this->Projects_model->get_one($project_id);
-        $allProjectCostItems=$this->Task_cost_items_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        $project_info = $this->Projects_model->get_one($project_id);
+        $allProjectCostItems = $this->Task_cost_items_model->get_all_where(array("project_id" => $project_id))->getResult();
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
@@ -4774,24 +4983,24 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('N1', 'Discount (0-100%)');
         $sheet1->setCellValue('O1', 'Discounted quote');
         $sheet1->setCellValue('P1', 'Yard remarks');
-        $rowNumber=2;
+        $rowNumber = 2;
         foreach ($allProjectCostItems as $oneItem) {
-            $task_info=$this->Tasks_model->get_one($oneItem->task_id);
-            $sheet1->setCellValue('A'.$rowNumber, $project_id);
-            $sheet1->setCellValue('B'.$rowNumber, $project_info->title);
-            $sheet1->setCellValue('C'.$rowNumber, $task_info->id);
-            $sheet1->setCellValue('D'.$rowNumber, $task_info->title);
-            $sheet1->setCellValue('F'.$rowNumber, $task_info->category);
-            $sheet1->setCellValue('F'.$rowNumber, $oneItem->name);
-            $sheet1->setCellValue('G'.$rowNumber, $oneItem->description);
-            $sheet1->setCellValue('I'.$rowNumber, $oneItem->quantity);
-            $sheet1->setCellValue('J'.$rowNumber, $oneItem->measurement);
-            $sheet1->setCellValue('K'.$rowNumber, $oneItem->unit_price);
-            $sheet1->setCellValue('L'.$rowNumber, $oneItem->currency);
-            $sheet1->setCellValue('M'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity);
-            $sheet1->setCellValue('N'.$rowNumber, $oneItem->discount);
-            $sheet1->setCellValue('O'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity*(float)$oneItem->discount/100);
-            $sheet1->setCellValue('P'.$rowNumber, $oneItem->yard_remarks);
+            $task_info = $this->Tasks_model->get_one($oneItem->task_id);
+            $sheet1->setCellValue('A' . $rowNumber, $project_id);
+            $sheet1->setCellValue('B' . $rowNumber, $project_info->title);
+            $sheet1->setCellValue('C' . $rowNumber, $task_info->id);
+            $sheet1->setCellValue('D' . $rowNumber, $task_info->title);
+            $sheet1->setCellValue('F' . $rowNumber, $task_info->category);
+            $sheet1->setCellValue('F' . $rowNumber, $oneItem->name);
+            $sheet1->setCellValue('G' . $rowNumber, $oneItem->description);
+            $sheet1->setCellValue('I' . $rowNumber, $oneItem->quantity);
+            $sheet1->setCellValue('J' . $rowNumber, $oneItem->measurement);
+            $sheet1->setCellValue('K' . $rowNumber, $oneItem->unit_price);
+            $sheet1->setCellValue('L' . $rowNumber, $oneItem->currency);
+            $sheet1->setCellValue('M' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity);
+            $sheet1->setCellValue('N' . $rowNumber, $oneItem->discount);
+            $sheet1->setCellValue('O' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) $oneItem->discount / 100);
+            $sheet1->setCellValue('P' . $rowNumber, $oneItem->yard_remarks);
             $rowNumber++;
         }
 
@@ -4799,9 +5008,9 @@ class Projects extends Security_Controller {
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 
         // Write the Excel file content to the response body
-        $first_temp_file_path = getcwd() . '/' . get_setting("temp_file_path").'/'.$project_id."-quotation-form.xlsx";
+        $first_temp_file_path = getcwd() . '/' . get_setting("temp_file_path") . '/' . $project_id . "-quotation-form.xlsx";
         $writer->save($first_temp_file_path);
-        $allProjectCostItems=$this->Task_cost_items_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        $allProjectCostItems = $this->Task_cost_items_model->get_all_where(array("project_id" => $project_id))->getResult();
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
@@ -4832,24 +5041,24 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('N1', 'Discount (0-100%)');
         $sheet1->setCellValue('O1', 'Discounted quote');
         $sheet1->setCellValue('P1', 'Yard remarks');
-        $rowNumber=2;
+        $rowNumber = 2;
         foreach ($allProjectCostItems as $oneItem) {
-            $task_info=$this->Tasks_model->get_one($oneItem->task_id);
-            $sheet1->setCellValue('A'.$rowNumber, $project_id);
-            $sheet1->setCellValue('B'.$rowNumber, $project_info->title);
-            $sheet1->setCellValue('C'.$rowNumber, $task_info->id);
-            $sheet1->setCellValue('D'.$rowNumber, $task_info->title);
-            $sheet1->setCellValue('F'.$rowNumber, $task_info->category);
-            $sheet1->setCellValue('F'.$rowNumber, $oneItem->name);
-            $sheet1->setCellValue('G'.$rowNumber, $oneItem->description);
-            $sheet1->setCellValue('I'.$rowNumber, $oneItem->quantity);
-            $sheet1->setCellValue('J'.$rowNumber, $oneItem->measurement);
-            $sheet1->setCellValue('K'.$rowNumber, $oneItem->unit_price);
-            $sheet1->setCellValue('L'.$rowNumber, $oneItem->currency);
-            $sheet1->setCellValue('M'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity);
-            $sheet1->setCellValue('N'.$rowNumber, $oneItem->discount);
-            $sheet1->setCellValue('O'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity*(float)$oneItem->discount/100);
-            $sheet1->setCellValue('P'.$rowNumber, $oneItem->yard_remarks);
+            $task_info = $this->Tasks_model->get_one($oneItem->task_id);
+            $sheet1->setCellValue('A' . $rowNumber, $project_id);
+            $sheet1->setCellValue('B' . $rowNumber, $project_info->title);
+            $sheet1->setCellValue('C' . $rowNumber, $task_info->id);
+            $sheet1->setCellValue('D' . $rowNumber, $task_info->title);
+            $sheet1->setCellValue('F' . $rowNumber, $task_info->category);
+            $sheet1->setCellValue('F' . $rowNumber, $oneItem->name);
+            $sheet1->setCellValue('G' . $rowNumber, $oneItem->description);
+            $sheet1->setCellValue('I' . $rowNumber, $oneItem->quantity);
+            $sheet1->setCellValue('J' . $rowNumber, $oneItem->measurement);
+            $sheet1->setCellValue('K' . $rowNumber, $oneItem->unit_price);
+            $sheet1->setCellValue('L' . $rowNumber, $oneItem->currency);
+            $sheet1->setCellValue('M' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity);
+            $sheet1->setCellValue('N' . $rowNumber, $oneItem->discount);
+            $sheet1->setCellValue('O' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) $oneItem->discount / 100);
+            $sheet1->setCellValue('P' . $rowNumber, $oneItem->yard_remarks);
             $rowNumber++;
         }
 
@@ -4857,18 +5066,18 @@ class Projects extends Security_Controller {
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 
 
-        $second_temp_file_path = getcwd() . '/' . get_setting("temp_file_path").'/'.$project_id."-project-form.xlsx";
+        $second_temp_file_path = getcwd() . '/' . get_setting("temp_file_path") . '/' . $project_id . "-project-form.xlsx";
         $writer->save($second_temp_file_path);
 
         // Write the Excel file content to the response body
 
         // Return the response object
-        $allCostItems=$this->Task_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
-        $allShipyardCostItems=$this->Shipyard_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
-        $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allVariationOrders=$this->Task_variation_orders_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allComments=$this->Project_comments_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        $allCostItems = $this->Task_cost_items_model->get_all_with_costs_where(array("project_id" => $project_id))->getResult();
+        $allShipyardCostItems = $this->Shipyard_cost_items_model->get_all_with_costs_where(array("project_id" => $project_id))->getResult();
+        $allTasks = $this->Tasks_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allVariationOrders = $this->Task_variation_orders_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allOwnerSupplies = $this->Task_owner_supplies_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allComments = $this->Project_comments_model->get_all_where(array("project_id" => $project_id))->getResult();
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
@@ -4884,136 +5093,142 @@ class Projects extends Security_Controller {
         $sheet1 = $spreadsheet->createSheet();
         $sheet1->setTitle('Cost overview');
 
-        $categorizedTasks=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedTasks = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        $categorizedOwnerSupplies=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedOwnerSupplies = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        $categorizedCostItems=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedCostItems = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        $categorizedShipyardCostItems=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedShipyardCostItems = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        $categorizedVariationOrders=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedVariationOrders = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        
-        $categorizedComments=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+
+        $categorizedComments = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        $categorizedStats=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedStats = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        
+
         foreach ($allTasks as $index => $oneTask) {
-            if(isset($categorizedTasks[$oneTask->category]))
-                $categorizedTasks[$oneTask->category][]=$oneTask;
-            else $categorizedTasks["Others"][]=$oneTask;
-        
-            if(isset($categorizedOwnerSupplies[$oneTask->category]))
-                $categorizedOwnerSupplies[$oneTask->category]+=array_filter($allOwnerSupplies,function($oneSupply)use($oneTask){
-                    return $oneTask->id==$oneSupply->task_id;
+            if (isset($categorizedTasks[$oneTask->category]))
+                $categorizedTasks[$oneTask->category][] = $oneTask;
+            else
+                $categorizedTasks["Others"][] = $oneTask;
+
+            if (isset($categorizedOwnerSupplies[$oneTask->category]))
+                $categorizedOwnerSupplies[$oneTask->category] += array_filter($allOwnerSupplies, function ($oneSupply) use ($oneTask) {
+                    return $oneTask->id == $oneSupply->task_id;
                 });
-            else $categorizedOwnerSupplies["Others"]+=array_filter($allOwnerSupplies,function($oneSupply)use($oneTask){
-                return $oneTask->id==$oneSupply->task_id;
-            });
-        
-            if(isset($categorizedCostItems[$oneTask->category]))
-                $categorizedCostItems[$oneTask->category]+=array_filter($allCostItems,function($oneItem)use($oneTask){
-                    return $oneTask->id==$oneItem->task_id;
+            else
+                $categorizedOwnerSupplies["Others"] += array_filter($allOwnerSupplies, function ($oneSupply) use ($oneTask) {
+                    return $oneTask->id == $oneSupply->task_id;
                 });
-            else $categorizedCostItems["Others"]+=array_filter($allCostItems,function($oneItem)use($oneTask){
-                return $oneTask->id==$oneItem->task_id;
-            });
-        
-            if(isset($categorizedShipyardCostItems[$oneTask->category]))
-                $categorizedShipyardCostItems[$oneTask->category]+=array_filter($allShipyardCostItems,function($oneItem)use($oneTask){
-                    return $oneTask->id==$oneItem->task_id;
+
+            if (isset($categorizedCostItems[$oneTask->category]))
+                $categorizedCostItems[$oneTask->category] += array_filter($allCostItems, function ($oneItem) use ($oneTask) {
+                    return $oneTask->id == $oneItem->task_id;
                 });
-            else $categorizedShipyardCostItems["Others"]+=array_filter($allShipyardCostItems,function($oneItem)use($oneTask){
-                return $oneTask->id==$oneItem->task_id;
-            });
-        
-            if(isset($categorizedVariationOrders[$oneTask->category]))
-                $categorizedVariationOrders[$oneTask->category]+=array_filter($allVariationOrders,function($oneOrder)use($oneTask){
-                    return $oneTask->id==$oneOrder->task_id;
+            else
+                $categorizedCostItems["Others"] += array_filter($allCostItems, function ($oneItem) use ($oneTask) {
+                    return $oneTask->id == $oneItem->task_id;
                 });
-            else $categorizedVariationOrders["Others"]+=array_filter($allVariationOrders,function($oneOrder)use($oneTask){
-                return $oneTask->id==$oneOrder->task_id;
-            });
-        
-            if(isset($categorizedComments[$oneTask->category]))
-                $categorizedComments[$oneTask->category]+=array_filter($allComments,function($oneComment)use($oneTask){
-                    return $oneTask->id==$oneComment->task_id;
+
+            if (isset($categorizedShipyardCostItems[$oneTask->category]))
+                $categorizedShipyardCostItems[$oneTask->category] += array_filter($allShipyardCostItems, function ($oneItem) use ($oneTask) {
+                    return $oneTask->id == $oneItem->task_id;
                 });
-            else $categorizedComments["Others"]+=array_filter($allComments,function($oneComment)use($oneTask){
-                return $oneTask->id==$oneComment->task_id;
-            });
+            else
+                $categorizedShipyardCostItems["Others"] += array_filter($allShipyardCostItems, function ($oneItem) use ($oneTask) {
+                    return $oneTask->id == $oneItem->task_id;
+                });
+
+            if (isset($categorizedVariationOrders[$oneTask->category]))
+                $categorizedVariationOrders[$oneTask->category] += array_filter($allVariationOrders, function ($oneOrder) use ($oneTask) {
+                    return $oneTask->id == $oneOrder->task_id;
+                });
+            else
+                $categorizedVariationOrders["Others"] += array_filter($allVariationOrders, function ($oneOrder) use ($oneTask) {
+                    return $oneTask->id == $oneOrder->task_id;
+                });
+
+            if (isset($categorizedComments[$oneTask->category]))
+                $categorizedComments[$oneTask->category] += array_filter($allComments, function ($oneComment) use ($oneTask) {
+                    return $oneTask->id == $oneComment->task_id;
+                });
+            else
+                $categorizedComments["Others"] += array_filter($allComments, function ($oneComment) use ($oneTask) {
+                    return $oneTask->id == $oneComment->task_id;
+                });
         }
-        
-        $totalOwnerSupplies=0;
-        $totalVariationOrders=0;
-        $totalCostItems=0;
-        $totalShipyardCostItems=0;
-        $totalComments=0;
+
+        $totalOwnerSupplies = 0;
+        $totalVariationOrders = 0;
+        $totalCostItems = 0;
+        $totalShipyardCostItems = 0;
+        $totalComments = 0;
 
         $sheet1->setCellValue('B1', "Name");
         $sheet1->setCellValue('C1', "Owner's supply");
@@ -5033,98 +5248,98 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('H2', 0);
         $sheet1->setCellValue('I2', 0);
 
-        $rowIndex=3;
-        foreach ($categorizedTasks as $category=>$oneList) {
-            $categoryOwnerSupply=0;
-            $categoryCostItems=0;
-            $categoryShipyardCostItems=0;
-            $categoryVariationOrder=0;
-            $categoryComments=0;
-            $sheet1->setCellValue('A'.$rowIndex, $category);
-            $sheet1->setCellValue('B'.$rowIndex, 0);
-            $sheet1->setCellValue('C'.$rowIndex, 0);
-            $sheet1->setCellValue('D'.$rowIndex, 0);
-            $sheet1->setCellValue('E'.$rowIndex, 0);
-            $sheet1->setCellValue('F'.$rowIndex, 0);
-            $sheet1->setCellValue('G'.$rowIndex, 0);
-            $sheet1->setCellValue('H'.$rowIndex, 0);
-            $sheet1->setCellValue('I'.$rowIndex, 0);
-            $category_row=$rowIndex;
+        $rowIndex = 3;
+        foreach ($categorizedTasks as $category => $oneList) {
+            $categoryOwnerSupply = 0;
+            $categoryCostItems = 0;
+            $categoryShipyardCostItems = 0;
+            $categoryVariationOrder = 0;
+            $categoryComments = 0;
+            $sheet1->setCellValue('A' . $rowIndex, $category);
+            $sheet1->setCellValue('B' . $rowIndex, 0);
+            $sheet1->setCellValue('C' . $rowIndex, 0);
+            $sheet1->setCellValue('D' . $rowIndex, 0);
+            $sheet1->setCellValue('E' . $rowIndex, 0);
+            $sheet1->setCellValue('F' . $rowIndex, 0);
+            $sheet1->setCellValue('G' . $rowIndex, 0);
+            $sheet1->setCellValue('H' . $rowIndex, 0);
+            $sheet1->setCellValue('I' . $rowIndex, 0);
+            $category_row = $rowIndex;
             $rowIndex++;
             foreach ($oneList as $key => $oneTask) {
-                
-                $oneTaskSupplies=array_filter($categorizedOwnerSupplies[$category],function($oneSupply)use($oneTask){
-                    return $oneSupply->task_id==$oneTask->id;
+
+                $oneTaskSupplies = array_filter($categorizedOwnerSupplies[$category], function ($oneSupply) use ($oneTask) {
+                    return $oneSupply->task_id == $oneTask->id;
                 });
-                $oneTaskCostItems=array_filter($categorizedCostItems[$category],function($oneItem)use($oneTask){
-                    return $oneItem->task_id==$oneTask->id;
+                $oneTaskCostItems = array_filter($categorizedCostItems[$category], function ($oneItem) use ($oneTask) {
+                    return $oneItem->task_id == $oneTask->id;
                 });
-                $oneTaskShipyardCostItems=array_filter($categorizedShipyardCostItems[$category],function($oneItem)use($oneTask){
-                    return $oneItem->task_id==$oneTask->id;
+                $oneTaskShipyardCostItems = array_filter($categorizedShipyardCostItems[$category], function ($oneItem) use ($oneTask) {
+                    return $oneItem->task_id == $oneTask->id;
                 });
-                $oneTaskVariationOrders=array_filter($categorizedVariationOrders[$category],function($oneOrder)use($oneTask){
-                    return $oneOrder->task_id==$oneTask->id;
+                $oneTaskVariationOrders = array_filter($categorizedVariationOrders[$category], function ($oneOrder) use ($oneTask) {
+                    return $oneOrder->task_id == $oneTask->id;
                 });
-                $oneTaskComments=array_filter($categorizedComments[$category],function($oneComment)use($oneTask){
-                    return $oneComment->task_id==$oneTask->id;
+                $oneTaskComments = array_filter($categorizedComments[$category], function ($oneComment) use ($oneTask) {
+                    return $oneComment->task_id == $oneTask->id;
                 });
-                $oneTaskTotalSupplies=0;
+                $oneTaskTotalSupplies = 0;
                 foreach ($oneTaskSupplies as $oneSupply) {
-                    $oneTaskTotalSupplies+=$oneSupply->cost;
+                    $oneTaskTotalSupplies += $oneSupply->cost;
                 }
-                $categoryOwnerSupply+=$oneTaskTotalSupplies;
+                $categoryOwnerSupply += $oneTaskTotalSupplies;
 
-                $oneTaskTotalCostItems=0;
+                $oneTaskTotalCostItems = 0;
                 foreach ($oneTaskCostItems as $oneItem) {
-                    $oneTaskTotalCostItems+=$oneItem->total_cost;
+                    $oneTaskTotalCostItems += $oneItem->total_cost;
                 }
-                $categoryCostItems+=$oneTaskTotalCostItems;
+                $categoryCostItems += $oneTaskTotalCostItems;
 
-                $oneTaskTotalShipyardCostItems=0;
+                $oneTaskTotalShipyardCostItems = 0;
                 foreach ($oneTaskShipyardCostItems as $oneItem) {
-                    $oneTaskTotalShipyardCostItems+=$oneItem->total_cost;
+                    $oneTaskTotalShipyardCostItems += $oneItem->total_cost;
                 }
-                $categoryShipyardCostItems+=$oneTaskTotalShipyardCostItems;
+                $categoryShipyardCostItems += $oneTaskTotalShipyardCostItems;
 
-                $oneTaskTotalVariationOrders=0;
+                $oneTaskTotalVariationOrders = 0;
                 foreach ($oneTaskVariationOrders as $oneOrder) {
-                    $oneTaskTotalVariationOrders+=$oneOrder->cost;
+                    $oneTaskTotalVariationOrders += $oneOrder->cost;
                 }
-                $categoryVariationOrder+=$oneTaskTotalVariationOrders;
+                $categoryVariationOrder += $oneTaskTotalVariationOrders;
 
-                $oneTaskTotalComments=count($oneTaskComments);
-                $categoryComments+=$oneTaskTotalComments;
+                $oneTaskTotalComments = count($oneTaskComments);
+                $categoryComments += $oneTaskTotalComments;
 
-                
-                $totalOwnerSupplies+=$oneTaskTotalSupplies;
-                $totalCostItems+=$oneTaskTotalCostItems;
-                $totalShipyardCostItems+=$oneTaskTotalShipyardCostItems;
-                $totalVariationOrders+=$oneTaskTotalVariationOrders;
-                $totalComments+=$oneTaskTotalComments;
 
-                $sheet1->setCellValue('B'.$rowIndex, $oneTask->title);
-                $sheet1->setCellValue('C'.$rowIndex, $oneTaskTotalSupplies);
-                $sheet1->setCellValue('D'.$rowIndex, $oneTaskTotalCostItems);
-                $sheet1->setCellValue('E'.$rowIndex, $oneTaskTotalVariationOrders);
-                $sheet1->setCellValue('F'.$rowIndex, 0);
-                $sheet1->setCellValue('G'.$rowIndex, $oneTaskTotalShipyardCostItems);
-                $sheet1->setCellValue('H'.$rowIndex, 0);
-                $sheet1->setCellValue('I'.$rowIndex, 0);
+                $totalOwnerSupplies += $oneTaskTotalSupplies;
+                $totalCostItems += $oneTaskTotalCostItems;
+                $totalShipyardCostItems += $oneTaskTotalShipyardCostItems;
+                $totalVariationOrders += $oneTaskTotalVariationOrders;
+                $totalComments += $oneTaskTotalComments;
+
+                $sheet1->setCellValue('B' . $rowIndex, $oneTask->title);
+                $sheet1->setCellValue('C' . $rowIndex, $oneTaskTotalSupplies);
+                $sheet1->setCellValue('D' . $rowIndex, $oneTaskTotalCostItems);
+                $sheet1->setCellValue('E' . $rowIndex, $oneTaskTotalVariationOrders);
+                $sheet1->setCellValue('F' . $rowIndex, 0);
+                $sheet1->setCellValue('G' . $rowIndex, $oneTaskTotalShipyardCostItems);
+                $sheet1->setCellValue('H' . $rowIndex, 0);
+                $sheet1->setCellValue('I' . $rowIndex, 0);
                 $rowIndex++;
             }
-            $categorizedStats[$category]["owner_supplies"]=$categoryOwnerSupply;
-            $categorizedStats[$category]["cost_items"]=$categoryCostItems;
-            $categorizedStats[$category]["variation_orders"]=$categoryVariationOrder;
-            $categorizedStats[$category]["shipyard_cost_items"]=$categoryShipyardCostItems;
-            $categorizedStats[$category]["comments"]=$categoryComments;
-            $sheet1->setCellValue('B'.$category_row, "");
-            $sheet1->setCellValue('C'.$category_row, $categoryOwnerSupply);
-            $sheet1->setCellValue('D'.$category_row, $categoryCostItems);
-            $sheet1->setCellValue('E'.$category_row, $categoryVariationOrder);
-            $sheet1->setCellValue('F'.$category_row, 0);
-            $sheet1->setCellValue('G'.$category_row, $categoryShipyardCostItems);
-            $sheet1->setCellValue('H'.$category_row, 0);
-            $sheet1->setCellValue('I'.$category_row, 0);
+            $categorizedStats[$category]["owner_supplies"] = $categoryOwnerSupply;
+            $categorizedStats[$category]["cost_items"] = $categoryCostItems;
+            $categorizedStats[$category]["variation_orders"] = $categoryVariationOrder;
+            $categorizedStats[$category]["shipyard_cost_items"] = $categoryShipyardCostItems;
+            $categorizedStats[$category]["comments"] = $categoryComments;
+            $sheet1->setCellValue('B' . $category_row, "");
+            $sheet1->setCellValue('C' . $category_row, $categoryOwnerSupply);
+            $sheet1->setCellValue('D' . $category_row, $categoryCostItems);
+            $sheet1->setCellValue('E' . $category_row, $categoryVariationOrder);
+            $sheet1->setCellValue('F' . $category_row, 0);
+            $sheet1->setCellValue('G' . $category_row, $categoryShipyardCostItems);
+            $sheet1->setCellValue('H' . $category_row, 0);
+            $sheet1->setCellValue('I' . $category_row, 0);
         }
         $sheet1->setCellValue('C2', $totalOwnerSupplies);
         $sheet1->setCellValue('D2', $totalCostItems);
@@ -5133,40 +5348,42 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('G2', $totalShipyardCostItems);
         $sheet1->setCellValue('H2', 0);
         $sheet1->setCellValue('I2', 0);
-        
-        
+
+
 
         // Create a writer object
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        $third_temp_file_path = getcwd() . '/' . get_setting("temp_file_path").'/'.$project_id."-cost-overview.xlsx";
+        $third_temp_file_path = getcwd() . '/' . get_setting("temp_file_path") . '/' . $project_id . "-cost-overview.xlsx";
         $writer->save($third_temp_file_path);
         // Write the Excel file content to the response body
         // return json_encode(array("success"=>true));
-        $file_path_array=array();
-        $file_path_array[]=array("file_name" => $project_id."-quotation-form.xlsx");
-        $file_path_array[]=array("file_name" => $project_id."-project-form.xlsx");
-        $file_path_array[]=array("file_name" => $project_id."-cost-overview.xlsx");
+        $file_path_array = array();
+        $file_path_array[] = array("file_name" => $project_id . "-quotation-form.xlsx");
+        $file_path_array[] = array("file_name" => $project_id . "-project-form.xlsx");
+        $file_path_array[] = array("file_name" => $project_id . "-cost-overview.xlsx");
         $serialized_file_data = serialize($file_path_array);
 
         return $this->download_app_files(get_setting("temp_file_path"), $serialized_file_data);
     }
-    function modal_import_quotation_file($project_id){
-        $project_info=$this->Projects_model->get_one($project_id);
-        return $this->template->view("projects/comparison/modal_import_items",["project_info"=>$project_info,"project_id"=>$project_id]);
+    function modal_import_quotation_file($project_id)
+    {
+        $project_info = $this->Projects_model->get_one($project_id);
+        return $this->template->view("projects/comparison/modal_import_items", ["project_info" => $project_info, "project_id" => $project_id]);
     }
-    function import_quotation_file(){
-        $project_id=$this->request->getPost("project_id");
-        $project_info=$this->Projects_model->get_one($project_id);
-        $allShipyards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $project_info->status_id=5;
-        $this->Projects_model->ci_save($project_info,$project_id);
+    function import_quotation_file()
+    {
+        $project_id = $this->request->getPost("project_id");
+        $project_info = $this->Projects_model->get_one($project_id);
+        $allShipyards = $this->Project_yards_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $project_info->status_id = 5;
+        $this->Projects_model->ci_save($project_info, $project_id);
         upload_file_to_temp(true);
         $file = get_array_value($_FILES, "file");
 
         // if (!$file) {
         //     die("Invalid file");
         // }
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $temp_file = get_array_value($file, "tmp_name");
         $file_name = get_array_value($file, "name");
         $file_size = get_array_value($file, "size");
@@ -5174,7 +5391,7 @@ class Projects extends Security_Controller {
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
 
         $excel_file->setActiveSheetIndex(0);
-        $worksheet=$excel_file->getActiveSheet();
+        $worksheet = $excel_file->getActiveSheet();
         $highestRow = $worksheet->getHighestRow(); // e.g., 10
         $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
 
@@ -5194,48 +5411,49 @@ class Projects extends Security_Controller {
             $data[] = $rowData;
         }
         // return json_encode($data);
-        $this->Shipyard_cost_items_model->delete_where(array("project_id"=>$project_id));
-        $this->Task_cost_items_model->delete_where(array("project_id"=>$project_id));
-        for($count=1;$count<count($data);$count++){
+        $this->Shipyard_cost_items_model->delete_where(array("project_id" => $project_id));
+        $this->Task_cost_items_model->delete_where(array("project_id" => $project_id));
+        for ($count = 1; $count < count($data); $count++) {
             // $task_info=$this->Tasks_model->get_one($task_id);
             foreach ($allShipyards as $oneYard) {
                 # code...
-                $saveData=array(
-                    "shipyard_id"=>$oneYard->id,
-                    "task_id"=>$data[$count][2],
-                    "project_id"=>$project_id,
-                    "name"=>$data[$count][6],
-                    "description"=>$data[$count][7],
-                    "quantity"=>$data[$count][9],
-                    "measurement"=>$data[$count][10],
-                    "unit_price"=>$data[$count][11],
-                    "currency"=>$project_info->currency,
-                    "discount"=>$data[$count][14],
-                    "yard_remarks"=>$data[$count][16],
+                $saveData = array(
+                    "shipyard_id" => $oneYard->id,
+                    "task_id" => $data[$count][2],
+                    "project_id" => $project_id,
+                    "name" => $data[$count][6],
+                    "description" => $data[$count][7],
+                    "quantity" => $data[$count][9],
+                    "measurement" => $data[$count][10],
+                    "unit_price" => $data[$count][11],
+                    "currency" => $project_info->currency,
+                    "discount" => $data[$count][14],
+                    "yard_remarks" => $data[$count][16],
                 );
-                $this->Shipyard_cost_items_model->ci_save($saveData,null);
+                $this->Shipyard_cost_items_model->ci_save($saveData, null);
             }
-            
-            $saveCostItem=array(
-                "task_id"=>$data[$count][2],
-                "project_id"=>$project_id,
-                "name"=>$data[$count][6],
-                "description"=>$data[$count][7],
-                "quantity"=>$data[$count][9],
-                "measurement"=>$data[$count][10],
-                "unit_price"=>$data[$count][11],
-                "currency"=>$project_info->currency,
-                "discount"=>$data[$count][14],
-                "yard_remarks"=>$data[$count][16],
+
+            $saveCostItem = array(
+                "task_id" => $data[$count][2],
+                "project_id" => $project_id,
+                "name" => $data[$count][6],
+                "description" => $data[$count][7],
+                "quantity" => $data[$count][9],
+                "measurement" => $data[$count][10],
+                "unit_price" => $data[$count][11],
+                "currency" => $project_info->currency,
+                "discount" => $data[$count][14],
+                "yard_remarks" => $data[$count][16],
             );
-            $this->Task_cost_items_model->ci_save($saveCostItem,null);
-            
+            $this->Task_cost_items_model->ci_save($saveCostItem, null);
+
         }
-        echo json_encode(array("success"=>true));
+        echo json_encode(array("success" => true));
     }
-    function download_project_specification_pdf($project_id){
-        $project_info=$this->Projects_model->get_one($project_id);
-        $project_detail=$this->Projects_model->get_details(array("id"=>$project_id))->getResult()[0];
+    function download_project_specification_pdf($project_id)
+    {
+        $project_info = $this->Projects_model->get_one($project_id);
+        $project_detail = $this->Projects_model->get_details(array("id" => $project_id))->getResult()[0];
         // return json_encode($project_detail);
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
@@ -5248,22 +5466,22 @@ class Projects extends Security_Controller {
         $dompdf->setPaper('A4', 'portrait');
 
         // Load HTML content (replace 'sample_html_content' with your HTML content)
-        
-        $client_info=$this->Clients_model->get_one($project_info->client_id);
-        $vessel_info=$this->Vessel_types_model->get_one($client_info->type);
-        $members=$this->Project_members_model->get_details(array("project_id"=>$project_id))->getResult();
-        $tasks=$this->Tasks_model->get_details(array("project_id"=>$project_id))->getResult();
-        $cost_items=$this->Task_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
+
+        $client_info = $this->Clients_model->get_one($project_info->client_id);
+        $vessel_info = $this->Vessel_types_model->get_one($client_info->type);
+        $members = $this->Project_members_model->get_details(array("project_id" => $project_id))->getResult();
+        $tasks = $this->Tasks_model->get_details(array("project_id" => $project_id))->getResult();
+        $cost_items = $this->Task_cost_items_model->get_all_with_costs_where(array("project_id" => $project_id))->getResult();
         // return json_encode($tasks);
-        $view_data=[
-            "tasks"=>$tasks,
-            "members"=>$members,
-            "vessel_info"=>$vessel_info,
-            "project_info"=>$project_detail,
-            "client_info"=>$client_info,
-            "cost_items"=>$cost_items
+        $view_data = [
+            "tasks" => $tasks,
+            "members" => $members,
+            "vessel_info" => $vessel_info,
+            "project_info" => $project_detail,
+            "client_info" => $client_info,
+            "cost_items" => $cost_items
         ];
-        $first_page = $this->template->view('projects/export_pdf/pages/first_page',$view_data); // Load HTML view file
+        $first_page = $this->template->view('projects/export_pdf/pages/first_page', $view_data); // Load HTML view file
         // return $first_page;
         $dompdf->loadHtml($first_page);
 
@@ -5273,11 +5491,12 @@ class Projects extends Security_Controller {
         $this->response->setHeader('Content-Type', 'application/pdf');
         $dompdf->stream('my_pdf.pdf', array('Attachment' => 0));
     }
-    function export_project_form($project_id){
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+    function export_project_form($project_id)
+    {
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        $project_info=$this->Projects_model->get_one($project_id);
-        $allTasks=$this->Tasks_model->get_details(array("project_id"=>$project_id,"deleted"=>0))->getResult();
+        $project_info = $this->Projects_model->get_one($project_id);
+        $allTasks = $this->Tasks_model->get_details(array("project_id" => $project_id, "deleted" => 0))->getResult();
         // return json_encode($allTasks);
 
         // Add data to the first worksheet
@@ -5299,32 +5518,34 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('N1', 'Marker');
         $sheet1->setCellValue('O1', 'Type');
         $sheet1->setCellValue('P1', 'Refernece');
-        $rowNumber=2;
+        $rowNumber = 2;
         foreach ($allTasks as $oneTask) {
             // $task_info=$this->Tasks_model->get_one($oneTask->id);
-            $sheet1->setCellValue('A'.$rowNumber, $oneTask->title);
-            $sheet1->setCellValue('B'.$rowNumber, $oneTask->category);
-            $sheet1->setCellValue('C'.$rowNumber, $oneTask->dock_list_number);
-            $sheet1->setCellValue('D'.$rowNumber, $oneTask->start_date);
-            $sheet1->setCellValue('E'.$rowNumber, $oneTask->deadline);
-            $sheet1->setCellValue('F'.$rowNumber, $oneTask->description?$oneTask->description:"");
-            $sheet1->setCellValue('G'.$rowNumber, $oneTask->milestone_title);
-            $sheet1->setCellValue('h'.$rowNumber, $oneTask->assigned_to_user);
-            $collaborators=explode(",",$oneTask->collaborator_list);
-            $collaborators_names="";
-            foreach($collaborators as $counter=>$oneCol){
-                $oneColData=explode("--::--",$oneCol);
-                if(array_key_exists(1,$oneColData)) $collaborators_names.=$oneColData[1];
-                if($counter<count($collaborators)-1) $collaborators_names.=",";
+            $sheet1->setCellValue('A' . $rowNumber, $oneTask->title);
+            $sheet1->setCellValue('B' . $rowNumber, $oneTask->category);
+            $sheet1->setCellValue('C' . $rowNumber, $oneTask->dock_list_number);
+            $sheet1->setCellValue('D' . $rowNumber, $oneTask->start_date);
+            $sheet1->setCellValue('E' . $rowNumber, $oneTask->deadline);
+            $sheet1->setCellValue('F' . $rowNumber, $oneTask->description ? $oneTask->description : "");
+            $sheet1->setCellValue('G' . $rowNumber, $oneTask->milestone_title);
+            $sheet1->setCellValue('h' . $rowNumber, $oneTask->assigned_to_user);
+            $collaborators = explode(",", $oneTask->collaborator_list);
+            $collaborators_names = "";
+            foreach ($collaborators as $counter => $oneCol) {
+                $oneColData = explode("--::--", $oneCol);
+                if (array_key_exists(1, $oneColData))
+                    $collaborators_names .= $oneColData[1];
+                if ($counter < count($collaborators) - 1)
+                    $collaborators_names .= ",";
 
             }
-            $sheet1->setCellValue('I'.$rowNumber, $collaborators_names);
-            $sheet1->setCellValue('J'.$rowNumber, $oneTask->status_title);
-            $sheet1->setCellValue('K'.$rowNumber, get_uri("task_view/view/").$oneTask->id);
-            $sheet1->setCellValue('L'.$rowNumber, $oneTask->location);
-            $sheet1->setCellValue('M'.$rowNumber, $oneTask->specification);
-            $sheet1->setCellValue('N'.$rowNumber, $oneTask->maker);
-            $sheet1->setCellValue('O'.$rowNumber, $oneTask->type);
+            $sheet1->setCellValue('I' . $rowNumber, $collaborators_names);
+            $sheet1->setCellValue('J' . $rowNumber, $oneTask->status_title);
+            $sheet1->setCellValue('K' . $rowNumber, get_uri("task_view/view/") . $oneTask->id);
+            $sheet1->setCellValue('L' . $rowNumber, $oneTask->location);
+            $sheet1->setCellValue('M' . $rowNumber, $oneTask->specification);
+            $sheet1->setCellValue('N' . $rowNumber, $oneTask->maker);
+            $sheet1->setCellValue('O' . $rowNumber, $oneTask->type);
             // $sheet1->setCellValue('P'.$rowNumber, $oneTask->reference);
             $rowNumber++;
         }
@@ -5334,9 +5555,9 @@ class Projects extends Security_Controller {
 
         $response = service('response');
 
-// Set response headers for file download
+        // Set response headers for file download
         $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $response->setHeader('Content-Disposition', 'attachment;filename="'.$project_info->title.'_project_form.xlsx"');
+        $response->setHeader('Content-Disposition', 'attachment;filename="' . $project_info->title . '_project_form.xlsx"');
         $response->setHeader('Cache-Control', 'max-age=0');
 
         // Write the Excel file content to the response body
@@ -5345,11 +5566,12 @@ class Projects extends Security_Controller {
         // Return the response object
         return $response;
     }
-    function all_in_one($project_id){
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+    function all_in_one($project_id)
+    {
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        $project_info=$this->Projects_model->get_one($project_id);
-        $allTasks=$this->Tasks_model->get_details(array("project_id"=>$project_id,"deleted"=>0))->getResult();
+        $project_info = $this->Projects_model->get_one($project_id);
+        $allTasks = $this->Tasks_model->get_details(array("project_id" => $project_id, "deleted" => 0))->getResult();
         // return json_encode($allTasks);
 
         // Add data to the first worksheet
@@ -5371,32 +5593,34 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('N1', 'Marker');
         $sheet1->setCellValue('O1', 'Type');
         $sheet1->setCellValue('P1', 'Refernece');
-        $rowNumber=2;
+        $rowNumber = 2;
         foreach ($allTasks as $oneTask) {
             // $task_info=$this->Tasks_model->get_one($oneTask->id);
-            $sheet1->setCellValue('A'.$rowNumber, $oneTask->title);
-            $sheet1->setCellValue('B'.$rowNumber, $oneTask->category);
-            $sheet1->setCellValue('C'.$rowNumber, $oneTask->dock_list_number);
-            $sheet1->setCellValue('D'.$rowNumber, $oneTask->start_date);
-            $sheet1->setCellValue('E'.$rowNumber, $oneTask->deadline);
-            $sheet1->setCellValue('F'.$rowNumber, $oneTask->description?$oneTask->description:"");
-            $sheet1->setCellValue('G'.$rowNumber, $oneTask->milestone_title);
-            $sheet1->setCellValue('h'.$rowNumber, $oneTask->assigned_to_user);
-            $collaborators=explode(",",$oneTask->collaborator_list);
-            $collaborators_names="";
-            foreach($collaborators as $counter=>$oneCol){
-                $oneColData=explode("--::--",$oneCol);
-                if(array_key_exists(1,$oneColData)) $collaborators_names.=$oneColData[1];
-                if($counter<count($collaborators)-1) $collaborators_names.=",";
+            $sheet1->setCellValue('A' . $rowNumber, $oneTask->title);
+            $sheet1->setCellValue('B' . $rowNumber, $oneTask->category);
+            $sheet1->setCellValue('C' . $rowNumber, $oneTask->dock_list_number);
+            $sheet1->setCellValue('D' . $rowNumber, $oneTask->start_date);
+            $sheet1->setCellValue('E' . $rowNumber, $oneTask->deadline);
+            $sheet1->setCellValue('F' . $rowNumber, $oneTask->description ? $oneTask->description : "");
+            $sheet1->setCellValue('G' . $rowNumber, $oneTask->milestone_title);
+            $sheet1->setCellValue('h' . $rowNumber, $oneTask->assigned_to_user);
+            $collaborators = explode(",", $oneTask->collaborator_list);
+            $collaborators_names = "";
+            foreach ($collaborators as $counter => $oneCol) {
+                $oneColData = explode("--::--", $oneCol);
+                if (array_key_exists(1, $oneColData))
+                    $collaborators_names .= $oneColData[1];
+                if ($counter < count($collaborators) - 1)
+                    $collaborators_names .= ",";
 
             }
-            $sheet1->setCellValue('I'.$rowNumber, $collaborators_names);
-            $sheet1->setCellValue('J'.$rowNumber, $oneTask->status_title);
-            $sheet1->setCellValue('K'.$rowNumber, get_uri("task_view/view/").$oneTask->id);
-            $sheet1->setCellValue('L'.$rowNumber, $oneTask->location);
-            $sheet1->setCellValue('M'.$rowNumber, $oneTask->specification);
-            $sheet1->setCellValue('N'.$rowNumber, $oneTask->maker);
-            $sheet1->setCellValue('O'.$rowNumber, $oneTask->type);
+            $sheet1->setCellValue('I' . $rowNumber, $collaborators_names);
+            $sheet1->setCellValue('J' . $rowNumber, $oneTask->status_title);
+            $sheet1->setCellValue('K' . $rowNumber, get_uri("task_view/view/") . $oneTask->id);
+            $sheet1->setCellValue('L' . $rowNumber, $oneTask->location);
+            $sheet1->setCellValue('M' . $rowNumber, $oneTask->specification);
+            $sheet1->setCellValue('N' . $rowNumber, $oneTask->maker);
+            $sheet1->setCellValue('O' . $rowNumber, $oneTask->type);
             // $sheet1->setCellValue('P'.$rowNumber, $oneTask->reference);
             $rowNumber++;
         }
@@ -5404,12 +5628,13 @@ class Projects extends Security_Controller {
         // Create a writer object
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 
-        $project_form_file_path = getcwd() . '/' . get_setting("project_file_path").'/'.$project_id."/project_form.xlsx";
-        if(file_exists($project_form_file_path)) unlink($project_form_file_path);
+        $project_form_file_path = getcwd() . '/' . get_setting("project_file_path") . '/' . $project_id . "/project_form.xlsx";
+        if (file_exists($project_form_file_path))
+            unlink($project_form_file_path);
         $writer->save($project_form_file_path);
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         ////////////
-        $allProjectCostItems=$this->Task_cost_items_model->get_all_where(array("project_id"=>$project_id,"deleted"=>0))->getResult();
+        $allProjectCostItems = $this->Task_cost_items_model->get_all_where(array("project_id" => $project_id, "deleted" => 0))->getResult();
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
@@ -5431,25 +5656,25 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('O1', 'Discounted quote');
         $sheet1->setCellValue('P1', 'Yard remarks');
         $sheet1->setCellValue('Q1', 'Link to Task');
-        $rowNumber=2;
+        $rowNumber = 2;
         foreach ($allProjectCostItems as $oneItem) {
-            $task_info=$this->Tasks_model->get_one($oneItem->task_id);
-            $sheet1->setCellValue('A'.$rowNumber, $project_id);
-            $sheet1->setCellValue('B'.$rowNumber, $project_info->title);
-            $sheet1->setCellValue('C'.$rowNumber, $task_info->id);
-            $sheet1->setCellValue('D'.$rowNumber, $task_info->title);
-            $sheet1->setCellValue('E'.$rowNumber, $task_info->category);
-            $sheet1->setCellValue('F'.$rowNumber, $oneItem->name);
-            $sheet1->setCellValue('G'.$rowNumber, $oneItem->description);
-            $sheet1->setCellValue('I'.$rowNumber, $oneItem->quantity);
-            $sheet1->setCellValue('J'.$rowNumber, $oneItem->measurement);
-            $sheet1->setCellValue('K'.$rowNumber, $oneItem->unit_price);
-            $sheet1->setCellValue('L'.$rowNumber, $oneItem->currency);
-            $sheet1->setCellValue('M'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity);
-            $sheet1->setCellValue('N'.$rowNumber, $oneItem->discount);
-            $sheet1->setCellValue('O'.$rowNumber, (float)$oneItem->unit_price*(float)$oneItem->quantity*(float)$oneItem->discount/100);
-            $sheet1->setCellValue('P'.$rowNumber, $oneItem->yard_remarks);
-            $sheet1->setCellValue('Q'.$rowNumber, get_uri("task_view/view/").$oneItem->task_id);
+            $task_info = $this->Tasks_model->get_one($oneItem->task_id);
+            $sheet1->setCellValue('A' . $rowNumber, $project_id);
+            $sheet1->setCellValue('B' . $rowNumber, $project_info->title);
+            $sheet1->setCellValue('C' . $rowNumber, $task_info->id);
+            $sheet1->setCellValue('D' . $rowNumber, $task_info->title);
+            $sheet1->setCellValue('E' . $rowNumber, $task_info->category);
+            $sheet1->setCellValue('F' . $rowNumber, $oneItem->name);
+            $sheet1->setCellValue('G' . $rowNumber, $oneItem->description);
+            $sheet1->setCellValue('I' . $rowNumber, $oneItem->quantity);
+            $sheet1->setCellValue('J' . $rowNumber, $oneItem->measurement);
+            $sheet1->setCellValue('K' . $rowNumber, $oneItem->unit_price);
+            $sheet1->setCellValue('L' . $rowNumber, $oneItem->currency);
+            $sheet1->setCellValue('M' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity);
+            $sheet1->setCellValue('N' . $rowNumber, $oneItem->discount);
+            $sheet1->setCellValue('O' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) $oneItem->discount / 100);
+            $sheet1->setCellValue('P' . $rowNumber, $oneItem->yard_remarks);
+            $sheet1->setCellValue('Q' . $rowNumber, get_uri("task_view/view/") . $oneItem->task_id);
             $rowNumber++;
         }
 
@@ -5457,161 +5682,168 @@ class Projects extends Security_Controller {
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 
         // Write the Excel file content to the response body
-        $quotation_form_file_path = getcwd() . '/' . get_setting("project_file_path").'/'.$project_id."/quotation_form.xlsx";
-        if(file_exists($quotation_form_file_path)) unlink($quotation_form_file_path);
+        $quotation_form_file_path = getcwd() . '/' . get_setting("project_file_path") . '/' . $project_id . "/quotation_form.xlsx";
+        if (file_exists($quotation_form_file_path))
+            unlink($quotation_form_file_path);
         $writer->save($quotation_form_file_path);
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         // Return the response object
         // return $response;
         ////////////////////////////////
 
-        $allCostItems=$this->Task_cost_items_model->get_all_with_costs_where(array("project_id"=>$project_id))->getResult();
-        $allShipyardCostItems=[];
-        if($project_info->status_id==4){
-            $selected_yards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id))->getResult();
-            if(count($selected_yards)>0)
-                $allShipyardCostItems=$this->Shipyard_cost_items_model->get_all_with_costs_where(array("shipyard_id"=>$selected_yards[0]->id))->getResult();
+        $allCostItems = $this->Task_cost_items_model->get_all_with_costs_where(array("project_id" => $project_id))->getResult();
+        $allShipyardCostItems = [];
+        if ($project_info->status_id == 4) {
+            $selected_yards = $this->Project_yards_model->get_all_where(array("project_id" => $project_id))->getResult();
+            if (count($selected_yards) > 0)
+                $allShipyardCostItems = $this->Shipyard_cost_items_model->get_all_with_costs_where(array("shipyard_id" => $selected_yards[0]->id))->getResult();
         }
-        $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allVariationOrders=$this->Task_variation_orders_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allComments=$this->Task_comments_model->get_all_where(array("project_id"=>$project_id))->getResult();
+        $allTasks = $this->Tasks_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allVariationOrders = $this->Task_variation_orders_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allOwnerSupplies = $this->Task_owner_supplies_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allComments = $this->Task_comments_model->get_all_where(array("project_id" => $project_id))->getResult();
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
         $sheet1->setTitle('Cost Overview');
 
-        $categorizedTasks=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedTasks = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        $categorizedOwnerSupplies=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedOwnerSupplies = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        $categorizedCostItems=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedCostItems = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        $categorizedShipyardCostItems=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedShipyardCostItems = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        $categorizedVariationOrders=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedVariationOrders = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        
-        $categorizedComments=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+
+        $categorizedComments = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        $categorizedStats=array(
-            "General & Docking"=>array(),
-            "Hull"=>array(),
-            "Equipment for Cargo"=>array(),
-            "Ship Equipment"=>array(),
-            "Safety & Crew Equipment"=>array(),
-            "Machinery Main Components"=>array(),
-            "System Machinery Main Components"=>array(),
-            "Common systems"=>array(),
-            "Others"=>array(),
+        $categorizedStats = array(
+            "General & Docking" => array(),
+            "Hull" => array(),
+            "Equipment for Cargo" => array(),
+            "Ship Equipment" => array(),
+            "Safety & Crew Equipment" => array(),
+            "Machinery Main Components" => array(),
+            "System Machinery Main Components" => array(),
+            "Common systems" => array(),
+            "Others" => array(),
         );
-        
+
         foreach ($allTasks as $index => $oneTask) {
-            if(isset($categorizedTasks[$oneTask->category]))
-                $categorizedTasks[$oneTask->category][]=$oneTask;
-            else $categorizedTasks["Others"][]=$oneTask;
-        
-            if(isset($categorizedOwnerSupplies[$oneTask->category]))
-                $categorizedOwnerSupplies[$oneTask->category]+=array_filter($allOwnerSupplies,function($oneSupply)use($oneTask){
-                    return $oneTask->id==$oneSupply->task_id;
+            if (isset($categorizedTasks[$oneTask->category]))
+                $categorizedTasks[$oneTask->category][] = $oneTask;
+            else
+                $categorizedTasks["Others"][] = $oneTask;
+
+            if (isset($categorizedOwnerSupplies[$oneTask->category]))
+                $categorizedOwnerSupplies[$oneTask->category] += array_filter($allOwnerSupplies, function ($oneSupply) use ($oneTask) {
+                    return $oneTask->id == $oneSupply->task_id;
                 });
-            else $categorizedOwnerSupplies["Others"]+=array_filter($allOwnerSupplies,function($oneSupply)use($oneTask){
-                return $oneTask->id==$oneSupply->task_id;
-            });
-        
-            if(isset($categorizedCostItems[$oneTask->category]))
-                $categorizedCostItems[$oneTask->category]+=array_filter($allCostItems,function($oneItem)use($oneTask){
-                    return $oneTask->id==$oneItem->task_id;
+            else
+                $categorizedOwnerSupplies["Others"] += array_filter($allOwnerSupplies, function ($oneSupply) use ($oneTask) {
+                    return $oneTask->id == $oneSupply->task_id;
                 });
-            else $categorizedCostItems["Others"]+=array_filter($allCostItems,function($oneItem)use($oneTask){
-                return $oneTask->id==$oneItem->task_id;
-            });
-        
-            if(isset($categorizedShipyardCostItems[$oneTask->category]))
-                $categorizedShipyardCostItems[$oneTask->category]+=array_filter($allShipyardCostItems,function($oneItem)use($oneTask){
-                    return $oneTask->id==$oneItem->task_id;
+
+            if (isset($categorizedCostItems[$oneTask->category]))
+                $categorizedCostItems[$oneTask->category] += array_filter($allCostItems, function ($oneItem) use ($oneTask) {
+                    return $oneTask->id == $oneItem->task_id;
                 });
-            else $categorizedShipyardCostItems["Others"]+=array_filter($allShipyardCostItems,function($oneItem)use($oneTask){
-                return $oneTask->id==$oneItem->task_id;
-            });
-        
-            if(isset($categorizedVariationOrders[$oneTask->category]))
-                $categorizedVariationOrders[$oneTask->category]+=array_filter($allVariationOrders,function($oneOrder)use($oneTask){
-                    return $oneTask->id==$oneOrder->task_id;
+            else
+                $categorizedCostItems["Others"] += array_filter($allCostItems, function ($oneItem) use ($oneTask) {
+                    return $oneTask->id == $oneItem->task_id;
                 });
-            else $categorizedVariationOrders["Others"]+=array_filter($allVariationOrders,function($oneOrder)use($oneTask){
-                return $oneTask->id==$oneOrder->task_id;
-            });
-        
-            if(isset($categorizedComments[$oneTask->category]))
-                $categorizedComments[$oneTask->category]+=array_filter($allComments,function($oneComment)use($oneTask){
-                    return $oneTask->id==$oneComment->task_id;
+
+            if (isset($categorizedShipyardCostItems[$oneTask->category]))
+                $categorizedShipyardCostItems[$oneTask->category] += array_filter($allShipyardCostItems, function ($oneItem) use ($oneTask) {
+                    return $oneTask->id == $oneItem->task_id;
                 });
-            else $categorizedComments["Others"]+=array_filter($allComments,function($oneComment)use($oneTask){
-                return $oneTask->id==$oneComment->task_id;
-            });
+            else
+                $categorizedShipyardCostItems["Others"] += array_filter($allShipyardCostItems, function ($oneItem) use ($oneTask) {
+                    return $oneTask->id == $oneItem->task_id;
+                });
+
+            if (isset($categorizedVariationOrders[$oneTask->category]))
+                $categorizedVariationOrders[$oneTask->category] += array_filter($allVariationOrders, function ($oneOrder) use ($oneTask) {
+                    return $oneTask->id == $oneOrder->task_id;
+                });
+            else
+                $categorizedVariationOrders["Others"] += array_filter($allVariationOrders, function ($oneOrder) use ($oneTask) {
+                    return $oneTask->id == $oneOrder->task_id;
+                });
+
+            if (isset($categorizedComments[$oneTask->category]))
+                $categorizedComments[$oneTask->category] += array_filter($allComments, function ($oneComment) use ($oneTask) {
+                    return $oneTask->id == $oneComment->task_id;
+                });
+            else
+                $categorizedComments["Others"] += array_filter($allComments, function ($oneComment) use ($oneTask) {
+                    return $oneTask->id == $oneComment->task_id;
+                });
         }
-        
-        $totalOwnerSupplies=0;
-        $totalVariationOrders=0;
-        $totalCostItems=0;
-        $totalCosts=0;
-        $totalShipyardCostItems=0;
-        $totalComments=0;
+
+        $totalOwnerSupplies = 0;
+        $totalVariationOrders = 0;
+        $totalCostItems = 0;
+        $totalCosts = 0;
+        $totalShipyardCostItems = 0;
+        $totalComments = 0;
         $sheet1->setCellValue('A1', "Category");
         $sheet1->setCellValue('B1', "Task");
         $sheet1->setCellValue('C1', "Owner's supply");
@@ -5633,105 +5865,105 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('I2', 0);
         $sheet1->setCellValue('J2', 0);
 
-        $rowIndex=3;
-        foreach ($categorizedTasks as $category=>$oneList) {
-            $categoryOwnerSupply=0;
-            $categoryCostItems=0;
-            $categoryTotalCosts=0;
-            $categoryShipyardCostItems=0;
-            $categoryVariationOrder=0;
-            $categoryComments=0;
-            $sheet1->setCellValue('A'.$rowIndex, $category);
-            $sheet1->setCellValue('B'.$rowIndex, 0);
-            $sheet1->setCellValue('C'.$rowIndex, 0);
-            $sheet1->setCellValue('D'.$rowIndex, 0);
-            $sheet1->setCellValue('E'.$rowIndex, 0);
-            $sheet1->setCellValue('F'.$rowIndex, 0);
-            $sheet1->setCellValue('G'.$rowIndex, 0);
-            $sheet1->setCellValue('H'.$rowIndex, 0);
-            $sheet1->setCellValue('I'.$rowIndex, 0);
-            $sheet1->setCellValue('J'.$rowIndex, 0);
-            $category_row=$rowIndex;
+        $rowIndex = 3;
+        foreach ($categorizedTasks as $category => $oneList) {
+            $categoryOwnerSupply = 0;
+            $categoryCostItems = 0;
+            $categoryTotalCosts = 0;
+            $categoryShipyardCostItems = 0;
+            $categoryVariationOrder = 0;
+            $categoryComments = 0;
+            $sheet1->setCellValue('A' . $rowIndex, $category);
+            $sheet1->setCellValue('B' . $rowIndex, 0);
+            $sheet1->setCellValue('C' . $rowIndex, 0);
+            $sheet1->setCellValue('D' . $rowIndex, 0);
+            $sheet1->setCellValue('E' . $rowIndex, 0);
+            $sheet1->setCellValue('F' . $rowIndex, 0);
+            $sheet1->setCellValue('G' . $rowIndex, 0);
+            $sheet1->setCellValue('H' . $rowIndex, 0);
+            $sheet1->setCellValue('I' . $rowIndex, 0);
+            $sheet1->setCellValue('J' . $rowIndex, 0);
+            $category_row = $rowIndex;
             $rowIndex++;
             foreach ($oneList as $key => $oneTask) {
-                
-                $oneTaskSupplies=array_filter($categorizedOwnerSupplies[$category],function($oneSupply)use($oneTask){
-                    return $oneSupply->task_id==$oneTask->id;
+
+                $oneTaskSupplies = array_filter($categorizedOwnerSupplies[$category], function ($oneSupply) use ($oneTask) {
+                    return $oneSupply->task_id == $oneTask->id;
                 });
-                $oneTaskCostItems=array_filter($categorizedCostItems[$category],function($oneItem)use($oneTask){
-                    return $oneItem->task_id==$oneTask->id;
+                $oneTaskCostItems = array_filter($categorizedCostItems[$category], function ($oneItem) use ($oneTask) {
+                    return $oneItem->task_id == $oneTask->id;
                 });
-                $oneTaskShipyardCostItems=array_filter($categorizedShipyardCostItems[$category],function($oneItem)use($oneTask){
-                    return $oneItem->task_id==$oneTask->id;
+                $oneTaskShipyardCostItems = array_filter($categorizedShipyardCostItems[$category], function ($oneItem) use ($oneTask) {
+                    return $oneItem->task_id == $oneTask->id;
                 });
-                $oneTaskVariationOrders=array_filter($categorizedVariationOrders[$category],function($oneOrder)use($oneTask){
-                    return $oneOrder->task_id==$oneTask->id;
+                $oneTaskVariationOrders = array_filter($categorizedVariationOrders[$category], function ($oneOrder) use ($oneTask) {
+                    return $oneOrder->task_id == $oneTask->id;
                 });
-                $oneTaskComments=array_filter($categorizedComments[$category],function($oneComment)use($oneTask){
-                    return $oneComment->task_id==$oneTask->id;
+                $oneTaskComments = array_filter($categorizedComments[$category], function ($oneComment) use ($oneTask) {
+                    return $oneComment->task_id == $oneTask->id;
                 });
-                $oneTaskTotalSupplies=0;
+                $oneTaskTotalSupplies = 0;
                 foreach ($oneTaskSupplies as $oneSupply) {
-                    $oneTaskTotalSupplies+=$oneSupply->cost;
+                    $oneTaskTotalSupplies += $oneSupply->cost;
                 }
-                $categoryOwnerSupply+=$oneTaskTotalSupplies;
+                $categoryOwnerSupply += $oneTaskTotalSupplies;
 
-                $oneTaskTotalCostItems=0;
+                $oneTaskTotalCostItems = 0;
                 foreach ($oneTaskCostItems as $oneItem) {
-                    $oneTaskTotalCostItems+=$oneItem->total_cost;
+                    $oneTaskTotalCostItems += $oneItem->total_cost;
                 }
-                $categoryCostItems+=$oneTaskTotalCostItems;
+                $categoryCostItems += $oneTaskTotalCostItems;
 
-                $oneTaskTotalCosts=$oneTaskTotalSupplies+$oneTaskTotalCostItems;
-                $categoryTotalCosts+=$oneTaskTotalCosts;
+                $oneTaskTotalCosts = $oneTaskTotalSupplies + $oneTaskTotalCostItems;
+                $categoryTotalCosts += $oneTaskTotalCosts;
 
-                $oneTaskTotalShipyardCostItems=0;
+                $oneTaskTotalShipyardCostItems = 0;
                 foreach ($oneTaskShipyardCostItems as $oneItem) {
-                    $oneTaskTotalShipyardCostItems+=$oneItem->total_cost;
+                    $oneTaskTotalShipyardCostItems += $oneItem->total_cost;
                 }
-                $categoryShipyardCostItems+=$oneTaskTotalShipyardCostItems;
+                $categoryShipyardCostItems += $oneTaskTotalShipyardCostItems;
 
-                $oneTaskTotalVariationOrders=0;
+                $oneTaskTotalVariationOrders = 0;
                 foreach ($oneTaskVariationOrders as $oneOrder) {
-                    $oneTaskTotalVariationOrders+=$oneOrder->cost;
+                    $oneTaskTotalVariationOrders += $oneOrder->cost;
                 }
-                $categoryVariationOrder+=$oneTaskTotalVariationOrders;
+                $categoryVariationOrder += $oneTaskTotalVariationOrders;
 
-                $oneTaskTotalComments=count($oneTaskComments);
-                $categoryComments+=$oneTaskTotalComments;
+                $oneTaskTotalComments = count($oneTaskComments);
+                $categoryComments += $oneTaskTotalComments;
 
-                
-                $totalOwnerSupplies+=$oneTaskTotalSupplies;
-                $totalCostItems+=$oneTaskTotalCostItems;
-                $totalShipyardCostItems+=$oneTaskTotalShipyardCostItems;
-                $totalVariationOrders+=$oneTaskTotalVariationOrders;
-                $totalComments+=$oneTaskTotalComments;
-                $totalCosts+=($oneTaskTotalSupplies+$oneTaskTotalCostItems);
 
-                $sheet1->setCellValue('B'.$rowIndex, $oneTask->title);
-                $sheet1->setCellValue('C'.$rowIndex, $oneTaskTotalSupplies);
-                $sheet1->setCellValue('D'.$rowIndex, $oneTaskTotalCostItems);
-                $sheet1->setCellValue('E'.$rowIndex, $oneTaskTotalVariationOrders);
-                $sheet1->setCellValue('F'.$rowIndex, $oneTaskTotalCosts);
-                $sheet1->setCellValue('G'.$rowIndex, $oneTaskTotalShipyardCostItems);
-                $sheet1->setCellValue('H'.$rowIndex, 0);
-                $sheet1->setCellValue('I'.$rowIndex, 0);
-                $sheet1->setCellValue('J'.$rowIndex, $oneTaskTotalComments);
+                $totalOwnerSupplies += $oneTaskTotalSupplies;
+                $totalCostItems += $oneTaskTotalCostItems;
+                $totalShipyardCostItems += $oneTaskTotalShipyardCostItems;
+                $totalVariationOrders += $oneTaskTotalVariationOrders;
+                $totalComments += $oneTaskTotalComments;
+                $totalCosts += ($oneTaskTotalSupplies + $oneTaskTotalCostItems);
+
+                $sheet1->setCellValue('B' . $rowIndex, $oneTask->title);
+                $sheet1->setCellValue('C' . $rowIndex, $oneTaskTotalSupplies);
+                $sheet1->setCellValue('D' . $rowIndex, $oneTaskTotalCostItems);
+                $sheet1->setCellValue('E' . $rowIndex, $oneTaskTotalVariationOrders);
+                $sheet1->setCellValue('F' . $rowIndex, $oneTaskTotalCosts);
+                $sheet1->setCellValue('G' . $rowIndex, $oneTaskTotalShipyardCostItems);
+                $sheet1->setCellValue('H' . $rowIndex, 0);
+                $sheet1->setCellValue('I' . $rowIndex, 0);
+                $sheet1->setCellValue('J' . $rowIndex, $oneTaskTotalComments);
                 $rowIndex++;
             }
-            $categorizedStats[$category]["owner_supplies"]=$categoryOwnerSupply;
-            $categorizedStats[$category]["cost_items"]=$categoryCostItems;
-            $categorizedStats[$category]["variation_orders"]=$categoryVariationOrder;
-            $categorizedStats[$category]["shipyard_cost_items"]=$categoryShipyardCostItems;
-            $categorizedStats[$category]["comments"]=$categoryComments;
-            $sheet1->setCellValue('B'.$category_row, "");
-            $sheet1->setCellValue('C'.$category_row, $categoryOwnerSupply);
-            $sheet1->setCellValue('D'.$category_row, $categoryCostItems);
-            $sheet1->setCellValue('E'.$category_row, $categoryVariationOrder);
-            $sheet1->setCellValue('F'.$category_row, $categoryTotalCosts);
-            $sheet1->setCellValue('G'.$category_row, $categoryShipyardCostItems);
-            $sheet1->setCellValue('H'.$category_row, 0);
-            $sheet1->setCellValue('I'.$category_row, $categoryComments);
+            $categorizedStats[$category]["owner_supplies"] = $categoryOwnerSupply;
+            $categorizedStats[$category]["cost_items"] = $categoryCostItems;
+            $categorizedStats[$category]["variation_orders"] = $categoryVariationOrder;
+            $categorizedStats[$category]["shipyard_cost_items"] = $categoryShipyardCostItems;
+            $categorizedStats[$category]["comments"] = $categoryComments;
+            $sheet1->setCellValue('B' . $category_row, "");
+            $sheet1->setCellValue('C' . $category_row, $categoryOwnerSupply);
+            $sheet1->setCellValue('D' . $category_row, $categoryCostItems);
+            $sheet1->setCellValue('E' . $category_row, $categoryVariationOrder);
+            $sheet1->setCellValue('F' . $category_row, $categoryTotalCosts);
+            $sheet1->setCellValue('G' . $category_row, $categoryShipyardCostItems);
+            $sheet1->setCellValue('H' . $category_row, 0);
+            $sheet1->setCellValue('I' . $category_row, $categoryComments);
         }
         $sheet1->setCellValue('C2', $totalOwnerSupplies);
         $sheet1->setCellValue('D2', $totalCostItems);
@@ -5743,50 +5975,52 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('J2', $totalComments);
         // Create a writer object
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        $cost_form_file_path=getcwd() . '/' . get_setting("project_file_path").'/'.$project_id."/cost_form.xlsx";
+        $cost_form_file_path = getcwd() . '/' . get_setting("project_file_path") . '/' . $project_id . "/cost_form.xlsx";
 
         // Write the Excel file content to the response body
-        if(file_exists($cost_form_file_path)) unlink($cost_form_file_path);
-        
+        if (file_exists($cost_form_file_path))
+            unlink($cost_form_file_path);
+
         $writer->save($cost_form_file_path);
         ////////////////////////////////
         $files_info = $this->Project_files_model->get_all_where(array("project_id" => $project_id, "deleted" => 0))->getResult();
 
         // if (count($files_info) > 0) {
-            $project_id = 0;
-            $file_path_array = array();
-            foreach ($files_info as $file_info) {
-                //we have to check the permission for each file
-                //initialize the permission check only if the project id is different
-    
-                if ($project_id != $file_info->project_id) {
-                    $this->init_project_permission_checker($file_info->project_id);
-                    $project_id = $file_info->project_id;
-                }
-    
-                if (!$this->can_view_files()) {
-                    app_redirect("forbidden");
-                }
-    
-                $file_path_array[] = array("file_name" => $file_info->project_id . "/" . $file_info->file_name, "file_id" => $file_info->file_id, "service_type" => $file_info->service_type);
-    
-            }
-            
-            $file_path_array[]=array("file_name" => $file_info->project_id . "/" ."project_form.xlsx","file_id" =>"", "service_type" =>"");
-            $file_path_array[]=array("file_name" =>$file_info->project_id . "/" ."quotation_form.xlsx","file_id" =>"", "service_type" =>"");
-            $file_path_array[]=array("file_name" =>$file_info->project_id . "/" ."cost_form.xlsx","file_id" =>"", "service_type" =>"");
-            
-            $serialized_file_data = serialize($file_path_array);
+        $project_id = 0;
+        $file_path_array = array();
+        foreach ($files_info as $file_info) {
+            //we have to check the permission for each file
+            //initialize the permission check only if the project id is different
 
-            // return json_encode($serialized_file_data);
-            return $this->download_app_files(get_setting("project_file_path"), $serialized_file_data);
+            if ($project_id != $file_info->project_id) {
+                $this->init_project_permission_checker($file_info->project_id);
+                $project_id = $file_info->project_id;
+            }
+
+            if (!$this->can_view_files()) {
+                app_redirect("forbidden");
+            }
+
+            $file_path_array[] = array("file_name" => $file_info->project_id . "/" . $file_info->file_name, "file_id" => $file_info->file_id, "service_type" => $file_info->service_type);
+
+        }
+
+        $file_path_array[] = array("file_name" => $file_info->project_id . "/" . "project_form.xlsx", "file_id" => "", "service_type" => "");
+        $file_path_array[] = array("file_name" => $file_info->project_id . "/" . "quotation_form.xlsx", "file_id" => "", "service_type" => "");
+        $file_path_array[] = array("file_name" => $file_info->project_id . "/" . "cost_form.xlsx", "file_id" => "", "service_type" => "");
+
+        $serialized_file_data = serialize($file_path_array);
+
+        // return json_encode($serialized_file_data);
+        return $this->download_app_files(get_setting("project_file_path"), $serialized_file_data);
         // }
         // return '<script>window.close();</script>';
     }
-    function import_yard_quotation_file(){
-        $shipyard_id=$this->request->getPost("shipyard_id");
-        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
-        $project_info=$this->Projects_model->get_one($shipyard_info->project_id);
+    function import_yard_quotation_file()
+    {
+        $shipyard_id = $this->request->getPost("shipyard_id");
+        $shipyard_info = $this->Project_yards_model->get_one($shipyard_id);
+        $project_info = $this->Projects_model->get_one($shipyard_info->project_id);
         // $allShipyards=$this->Project_yards_model->get_all_where(array("project_id"=>$project_id))->getResult();
 
         upload_file_to_temp(true);
@@ -5795,7 +6029,7 @@ class Projects extends Security_Controller {
         // if (!$file) {
         //     die("Invalid file");
         // }
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $temp_file = get_array_value($file, "tmp_name");
         $file_name = get_array_value($file, "name");
         $file_size = get_array_value($file, "size");
@@ -5803,7 +6037,7 @@ class Projects extends Security_Controller {
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
 
         $excel_file->setActiveSheetIndex(0);
-        $worksheet=$excel_file->getActiveSheet();
+        $worksheet = $excel_file->getActiveSheet();
         $highestRow = $worksheet->getHighestRow(); // e.g., 10
         $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
 
@@ -5823,36 +6057,37 @@ class Projects extends Security_Controller {
             $data[] = $rowData;
         }
         // return json_encode($data);
-        $this->Shipyard_cost_items_model->delete_where(array("shipyard_id"=>$shipyard_id));
-        for($count=1;$count<count($data);$count++){
+        $this->Shipyard_cost_items_model->delete_where(array("shipyard_id" => $shipyard_id));
+        for ($count = 1; $count < count($data); $count++) {
             // $task_info=$this->Tasks_model->get_one($task_id);
             // foreach ($allShipyards as $oneYard) {
-                # code...
-                $saveData=array(
-                    "shipyard_id"=>$shipyard_id,
-                    "task_id"=>$data[$count][2],
-                    "project_id"=>$shipyard_info->project_id,
-                    "name"=>$data[$count][6],
-                    "description"=>$data[$count][7],
-                    "quantity"=>$data[$count][9],
-                    "measurement"=>$data[$count][10],
-                    "unit_price"=>$data[$count][11],
-                    "currency"=>$project_info->currency,
-                    "discount"=>$data[$count][14],
-                    "yard_remarks"=>$data[$count][16],
-                );
-                $this->Shipyard_cost_items_model->ci_save($saveData,null);
+            # code...
+            $saveData = array(
+                "shipyard_id" => $shipyard_id,
+                "task_id" => $data[$count][2],
+                "project_id" => $shipyard_info->project_id,
+                "name" => $data[$count][6],
+                "description" => $data[$count][7],
+                "quantity" => $data[$count][9],
+                "measurement" => $data[$count][10],
+                "unit_price" => $data[$count][11],
+                "currency" => $project_info->currency,
+                "discount" => $data[$count][14],
+                "yard_remarks" => $data[$count][16],
+            );
+            $this->Shipyard_cost_items_model->ci_save($saveData, null);
             // }
-            
+
         }
-        echo json_encode(array("success"=>true));
+        echo json_encode(array("success" => true));
     }
-    function export_yard_quotation($shipyard_id){
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+    function export_yard_quotation($shipyard_id)
+    {
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        $shipyard_info=$this->Project_yards_model->get_one($shipyard_id);
-        $project_info=$this->Projects_model->get_one($shipyard_info->project_id);
-        $allShipyardCostItems=$this->Shipyard_cost_items_model->get_all_with_costs_where(array("shipyard_id"=>$shipyard_id))->getResult();
+        $shipyard_info = $this->Project_yards_model->get_one($shipyard_id);
+        $project_info = $this->Projects_model->get_one($shipyard_info->project_id);
+        $allShipyardCostItems = $this->Shipyard_cost_items_model->get_all_with_costs_where(array("shipyard_id" => $shipyard_id))->getResult();
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
@@ -5875,27 +6110,27 @@ class Projects extends Security_Controller {
         $sheet1->setCellValue('P1', 'Discounted quote');
         $sheet1->setCellValue('Q1', 'Yard remarks');
         $sheet1->setCellValue('R1', 'Link to Task');
-        $rowNumber=2;
+        $rowNumber = 2;
         foreach ($allShipyardCostItems as $oneItem) {
-            $task_info=$this->Tasks_model->get_one($oneItem->task_id);
-            $sheet1->setCellValue('A'.$rowNumber, $project_info->id);
-            $sheet1->setCellValue('B'.$rowNumber, $project_info->title);
-            $sheet1->setCellValue('C'.$rowNumber, $task_info->id);
-            $sheet1->setCellValue('D'.$rowNumber, $task_info->title);
-            $sheet1->setCellValue('E'.$rowNumber, $task_info->category);
-            $sheet1->setCellValue('F'.$rowNumber, $task_info->dock_list_number);
-            $sheet1->setCellValue('G'.$rowNumber, $oneItem->name);
-            $sheet1->setCellValue('H'.$rowNumber, $oneItem->description);
-            $sheet1->setCellValue('I'.$rowNumber, $oneItem->quote_type);
-            $sheet1->setCellValue('J'.$rowNumber, $oneItem->quantity);
-            $sheet1->setCellValue('K'.$rowNumber, $oneItem->measurement);
-            $sheet1->setCellValue('L'.$rowNumber, $oneItem->unit_price);
-            $sheet1->setCellValue('M'.$rowNumber, $oneItem->currency);
-            $sheet1->setCellValue('N'.$rowNumber, $oneItem->currency." ".(float)$oneItem->unit_price*(float)$oneItem->quantity);
-            $sheet1->setCellValue('O'.$rowNumber, $oneItem->discount." %");
-            $sheet1->setCellValue('P'.$rowNumber, $oneItem->currency." ".$oneItem->total_cost);
-            $sheet1->setCellValue('Q'.$rowNumber, $oneItem->yard_remarks);
-            $sheet1->setCellValue('R'.$rowNumber, get_uri("task_view/view/").$oneItem->task_id);
+            $task_info = $this->Tasks_model->get_one($oneItem->task_id);
+            $sheet1->setCellValue('A' . $rowNumber, $project_info->id);
+            $sheet1->setCellValue('B' . $rowNumber, $project_info->title);
+            $sheet1->setCellValue('C' . $rowNumber, $task_info->id);
+            $sheet1->setCellValue('D' . $rowNumber, $task_info->title);
+            $sheet1->setCellValue('E' . $rowNumber, $task_info->category);
+            $sheet1->setCellValue('F' . $rowNumber, $task_info->dock_list_number);
+            $sheet1->setCellValue('G' . $rowNumber, $oneItem->name);
+            $sheet1->setCellValue('H' . $rowNumber, $oneItem->description);
+            $sheet1->setCellValue('I' . $rowNumber, $oneItem->quote_type);
+            $sheet1->setCellValue('J' . $rowNumber, $oneItem->quantity);
+            $sheet1->setCellValue('K' . $rowNumber, $oneItem->measurement);
+            $sheet1->setCellValue('L' . $rowNumber, $oneItem->unit_price);
+            $sheet1->setCellValue('M' . $rowNumber, $oneItem->currency);
+            $sheet1->setCellValue('N' . $rowNumber, $oneItem->currency . " " . (float) $oneItem->unit_price * (float) $oneItem->quantity);
+            $sheet1->setCellValue('O' . $rowNumber, $oneItem->discount . " %");
+            $sheet1->setCellValue('P' . $rowNumber, '=M' . $rowNumber . '&" "&J' . $rowNumber . '*L' . $rowNumber . '*(1-VALUE(SUBSTITUTE(O' . $rowNumber . '," %",""))/100)');
+            $sheet1->setCellValue('Q' . $rowNumber, $oneItem->yard_remarks);
+            $sheet1->setCellValue('R' . $rowNumber, get_uri("task_view/view/") . $oneItem->task_id);
             $rowNumber++;
         }
 
@@ -5904,9 +6139,9 @@ class Projects extends Security_Controller {
 
         $response = service('response');
 
-// Set response headers for file download
+        // Set response headers for file download
         $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $response->setHeader('Content-Disposition', 'attachment;filename="'.$shipyard_info->title.'_yard_quotation_form.xlsx"');
+        $response->setHeader('Content-Disposition', 'attachment;filename="' . $shipyard_info->title . '_yard_quotation_form.xlsx"');
         $response->setHeader('Cache-Control', 'max-age=0');
 
         // Write the Excel file content to the response body
@@ -5915,48 +6150,53 @@ class Projects extends Security_Controller {
         // Return the response object
         return $response;
     }
-    function save_report_document(){
+    function save_report_document()
+    {
         ini_set('upload_max_filesize', '100M');
         ini_set('post_max_size', '100M');
-        $title=$this->request->getPost('title');
-        $description=$this->request->getPost('description');
-        $content=$this->request->getPost('content');
-        $id=$this->request->getPost('id');
-        $project_id=$this->request->getPost("project_id");
-        $new_data=array(
-            "title"=>$title,
-            "description"=>$description,
-            "content"=>$content,
-            "project_id"=>$project_id
+        $title = $this->request->getPost('title');
+        $description = $this->request->getPost('description');
+        $content = $this->request->getPost('content');
+        $id = $this->request->getPost('id');
+        $project_id = $this->request->getPost("project_id");
+        $new_data = array(
+            "title" => $title,
+            "description" => $description,
+            "content" => $content,
+            "project_id" => $project_id
         );
-        $saved_id=$this->Report_documents_model->ci_save($new_data,$id);
-        return json_encode(array("success"=>true,"saved_id"=>$saved_id));
+        $saved_id = $this->Report_documents_model->ci_save($new_data, $id);
+        return json_encode(array("success" => true, "saved_id" => $saved_id));
     }
-    function delete_report_document(){
-        $report_id=$this->request->getPost('id');
+    function delete_report_document()
+    {
+        $report_id = $this->request->getPost('id');
         $this->Report_documents_model->delete_permanently($report_id);
-        return json_encode(array("success"=>true));
+        return json_encode(array("success" => true));
     }
-    
-    function tab_report_documents($project_id){
-        $project_info=$this->Projects_model->get_one($project_id);
-        $allTemplates=$this->Report_templates_model->get_all()->getResult();
-        return $this->template->view("projects/report_documents/index",["project_info"=>$project_info,"allTemplates"=>$allTemplates]);
+
+    function tab_report_documents($project_id)
+    {
+        $project_info = $this->Projects_model->get_one($project_id);
+        $allTemplates = $this->Report_templates_model->get_all()->getResult();
+        return $this->template->view("projects/report_documents/index", ["project_info" => $project_info, "allTemplates" => $allTemplates]);
     }
-    function report_documents_list_data($project_id){
-        $allDocuments=$this->Report_documents_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $data=array();
+    function report_documents_list_data($project_id)
+    {
+        $allDocuments = $this->Report_documents_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $data = array();
         foreach ($allDocuments as $key => $oneDocument) {
-            $data[]=array(
+            $data[] = array(
                 $oneDocument->id,
-                '<a href="'.get_uri('projects/report_documents/'.$oneDocument->id).'" >'.$oneDocument->title.'</a>',
-                '<a target="_blank" href="'.get_uri("projects/export_report_document/".$oneDocument->id).'" ><i data-feather="download" class="icon-16" ></i></a>',
+                '<a href="' . get_uri('projects/report_documents/' . $oneDocument->id) . '" >' . $oneDocument->title . '</a>',
+                '<a target="_blank" href="' . get_uri("projects/export_report_document/" . $oneDocument->id) . '" ><i data-feather="download" class="icon-16" ></i></a>',
                 js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_note'), "class" => "delete", "data-id" => $oneDocument->id, "data-action-url" => get_uri("projects/delete_report_document"), "data-action" => "delete-confirmation"))
             );
         }
-        return json_encode(array("data"=>$data));
+        return json_encode(array("data" => $data));
     }
-    function export_report_document($document_id){
+    function export_report_document($document_id)
+    {
         // return json_encode($project_detail);
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
@@ -5967,7 +6207,7 @@ class Projects extends Security_Controller {
 
         // Set document properties
         $dompdf->setPaper('A4', 'portrait');
-        $document_info=$this->Report_documents_model->get_one($document_id);
+        $document_info = $this->Report_documents_model->get_one($document_id);
         // return $first_page;
         $dompdf->loadHtml($document_info->content);
 
@@ -5977,49 +6217,59 @@ class Projects extends Security_Controller {
         $this->response->setHeader('Content-Type', 'application/pdf');
         $dompdf->stream('my_pdf.pdf', array('Attachment' => 0));
     }
-    function report_documents($id){
-        $document_info=$this->Report_documents_model->get_one($id);
-        $project_detail=$this->Projects_model->get_details(array("id"=>$document_info->project_id))->getResult()[0];
-        return $this->template->rander("projects/report_documents/edit",["document_info"=>$document_info,"project_detail"=>$project_detail]);
+    function report_documents($id)
+    {
+        $document_info = $this->Report_documents_model->get_one($id);
+        $project_detail = $this->Projects_model->get_details(array("id" => $document_info->project_id))->getResult()[0];
+        return $this->template->rander("projects/report_documents/edit", ["document_info" => $document_info, "project_detail" => $project_detail]);
     }
-    function report_templates($project_id,$template_id){
-        $project_info=$this->Projects_model->get_one($project_id);
-        $members=$this->Project_members_model->get_details(array("project_id"=>$project_id))->getResult();
-        $project_detail=$this->Projects_model->get_details(array("id"=>$project_id))->getResult()[0];
-        $client_info=$this->Clients_model->get_details(array("id"=>$project_info->client_id))->getResult()[0];
-        $template_info=$this->Report_templates_model->get_one($template_id);
-        return $this->template->rander("projects/report_documents/template",["members"=>$members,"client_info"=>$client_info,"project_detail"=>$project_detail,"template_info"=>$template_info]);
+    function report_templates($project_id, $template_id)
+    {
+        $project_info = $this->Projects_model->get_one($project_id);
+        $members = $this->Project_members_model->get_details(array("project_id" => $project_id))->getResult();
+        $project_detail = $this->Projects_model->get_details(array("id" => $project_id))->getResult()[0];
+        $client_info = $this->Clients_model->get_details(array("id" => $project_info->client_id))->getResult()[0];
+        $template_info = $this->Report_templates_model->get_one($template_id);
+        return $this->template->rander("projects/report_documents/template", ["members" => $members, "client_info" => $client_info, "project_detail" => $project_detail, "template_info" => $template_info]);
     }
-    function modal_report_edit(){
+    function modal_report_edit()
+    {
         return $this->template->view("projects/report_documents/editor");
     }
-    function modal_table_templates($project_id){
-        return $this->template->view("projects/report_documents/modal_table_templates",array("project_id"=>$project_id));
+    function modal_table_templates($project_id)
+    {
+        return $this->template->view("projects/report_documents/modal_table_templates", array("project_id" => $project_id));
     }
-    function modal_chart_templates($project_id){
-        return $this->template->view("projects/report_documents/modal_chart_templates",array("project_id"=>$project_id));
+    function modal_chart_templates($project_id)
+    {
+        return $this->template->view("projects/report_documents/modal_chart_templates", array("project_id" => $project_id));
     }
-    function modal_project_images($project_id){
-        $project_files=$this->Project_files_model->get_details(array("project_id"=>$project_id))->getResult();
-        return $this->template->view("projects/report_documents/modal_project_images",array("project_id"=>$project_id,"project_files"=>$project_files));
+    function modal_project_images($project_id)
+    {
+        $project_files = $this->Project_files_model->get_details(array("project_id" => $project_id))->getResult();
+        return $this->template->view("projects/report_documents/modal_project_images", array("project_id" => $project_id, "project_files" => $project_files));
     }
-    function modal_text_templates($project_id){
-        $text_templates=$this->Text_templates_model->get_all_where(array("deleted"=>0))->getResult();
-        return $this->template->view("projects/report_documents/modal_text_templates",array("project_id"=>$project_id,"text_templates"=>$text_templates));
+    function modal_text_templates($project_id)
+    {
+        $text_templates = $this->Text_templates_model->get_all_where(array("deleted" => 0))->getResult();
+        return $this->template->view("projects/report_documents/modal_text_templates", array("project_id" => $project_id, "text_templates" => $text_templates));
     }
-    function chart_task_status($project_id){
-        $task_statuses= $this->Tasks_model->get_task_statistics(array("project_id" => $project_id))->task_statuses;
-        return $this->template->view("projects/report_documents/chart_task_status.php",array("task_statuses"=>$task_statuses));
+    function chart_task_status($project_id)
+    {
+        $task_statuses = $this->Tasks_model->get_task_statistics(array("project_id" => $project_id))->task_statuses;
+        return $this->template->view("projects/report_documents/chart_task_status.php", array("task_statuses" => $task_statuses));
     }
-    function chart_project_progress($project_id){
-        $project_info = $this->Projects_model->get_details(array("id"=>$project_id))->getRow();
-        $project_progress=$project_info->total_points ? round(($project_info->completed_points / $project_info->total_points) * 100) : 0;
-        return $this->template->view("projects/report_documents/chart_project_progress.php",array("project_progress"=>$project_progress));
+    function chart_project_progress($project_id)
+    {
+        $project_info = $this->Projects_model->get_details(array("id" => $project_id))->getRow();
+        $project_progress = $project_info->total_points ? round(($project_info->completed_points / $project_info->total_points) * 100) : 0;
+        return $this->template->view("projects/report_documents/chart_project_progress.php", array("project_progress" => $project_progress));
     }
-    function tasks_overview_chart($type=""){
+    function tasks_overview_chart($type = "")
+    {
         // $ci = new Security_Controller(false);
         $permissions = $this->login_user->permissions;
-        $option=array();
+        $option = array();
         if ($type == "all_tasks_overview") {
             if ($this->login_user->is_admin || get_array_value($permissions, "can_manage_all_projects") == "1") {
                 $options = array();
@@ -6039,75 +6289,84 @@ class Projects extends Security_Controller {
         // $template = new Template();
         return $this->template->view("projects/report_documents/tasks_overview_widget.php", $view_data);
     }
-    function completion_dates($project_id){
-        $project_info=$this->Projects_model->get_one($project_id);
-        return $this->template->view("projects/completion_dates/index",["project_info"=>$project_info]);
+    function completion_dates($project_id)
+    {
+        $project_info = $this->Projects_model->get_one($project_id);
+        return $this->template->view("projects/completion_dates/index", ["project_info" => $project_info]);
     }
-    function save_completion_dates(){
-        $project_id=$this->request->getPost("project_id");
-        $contractual_delivery_date=$this->request->getPost("contractual_delivery_date")?$this->request->getPost("contractual_delivery_date"):null;
-        $yard_estimated_completion_date=$this->request->getPost("yard_estimated_completion_date")?$this->request->getPost("yard_estimated_completion_date"):null;
-        $own_estimated_completion_date=$this->request->getPost("own_estimated_completion_date")?$this->request->getPost("own_estimated_completion_date"):null;
-        $actual_completion_date=$this->request->getPost("actual_completion_date")?$this->request->getPost("actual_completion_date"):null;
-        $project_info=$this->Projects_model->get_one($project_id);
-        $project_info->contractual_delivery_date=$contractual_delivery_date;
-        $project_info->yard_estimated_completion_date=$yard_estimated_completion_date;
+    function save_completion_dates()
+    {
+        $project_id = $this->request->getPost("project_id");
+        $contractual_delivery_date = $this->request->getPost("contractual_delivery_date") ? $this->request->getPost("contractual_delivery_date") : null;
+        $yard_estimated_completion_date = $this->request->getPost("yard_estimated_completion_date") ? $this->request->getPost("yard_estimated_completion_date") : null;
+        $own_estimated_completion_date = $this->request->getPost("own_estimated_completion_date") ? $this->request->getPost("own_estimated_completion_date") : null;
+        $actual_completion_date = $this->request->getPost("actual_completion_date") ? $this->request->getPost("actual_completion_date") : null;
+        $project_info = $this->Projects_model->get_one($project_id);
+        $project_info->contractual_delivery_date = $contractual_delivery_date;
+        $project_info->yard_estimated_completion_date = $yard_estimated_completion_date;
         /////
-        $project_info->deadline=$own_estimated_completion_date;
+        $project_info->deadline = $own_estimated_completion_date;
         /////
-        $project_info->actual_completion_date=$actual_completion_date;
-        $this->Projects_model->ci_save($project_info,$project_id);
-        return json_encode(array("success"=>true));
+        $project_info->actual_completion_date = $actual_completion_date;
+        $this->Projects_model->ci_save($project_info, $project_id);
+        return json_encode(array("success" => true));
 
     }
-    function get_project_info($project_id){
-        $project_info=$this->Projects_model->get_one($project_id);
-        $project_info->success=true;
-        
-        
+    function get_project_info($project_id)
+    {
+        $project_info = $this->Projects_model->get_one($project_id);
+        $project_info->success = true;
+
+
         return json_encode($project_info);
     }
-    function tasks_list($project_id){
-        $tasks_list=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        return json_encode(array("success"=>true,"tasks"=>$tasks_list));
+    function tasks_list($project_id)
+    {
+        $tasks_list = $this->Tasks_model->get_all_where(array("project_id" => $project_id))->getResult();
+        return json_encode(array("success" => true, "tasks" => $tasks_list));
     }
-    function modal_yard_owner_supply($project_yard_id){
-        $project_yard_info=$this->Project_yards_model->get_one($project_yard_id);
+    function modal_yard_owner_supply($project_yard_id)
+    {
+        $project_yard_info = $this->Project_yards_model->get_one($project_yard_id);
     }
-    function save_yard_owner_supply(){
-        $project_yard_id=$this->request->getPost("project_yard_id");
-        $owner_supply=$this->request->getPost("owner_supply");
-        $project_yard_info=$this->Project_yards_model->get_one($project_yard_id);
-        $project_yard_info->owner_supply=$owner_supply;
-        $this->Project_yards_model->ci_save($project_yard_info,$project_yard_id);
-        return json_encode(array("success"=>true));
+    function save_yard_owner_supply()
+    {
+        $project_yard_id = $this->request->getPost("project_yard_id");
+        $owner_supply = $this->request->getPost("owner_supply");
+        $project_yard_info = $this->Project_yards_model->get_one($project_yard_id);
+        $project_yard_info->owner_supply = $owner_supply;
+        $this->Project_yards_model->ci_save($project_yard_info, $project_yard_id);
+        return json_encode(array("success" => true));
     }
-    function modal_yard_estimated_cost($project_yard_id){
-        $project_yard_info=$this->Project_yards_model->get_one($project_yard_id);
-        
+    function modal_yard_estimated_cost($project_yard_id)
+    {
+        $project_yard_info = $this->Project_yards_model->get_one($project_yard_id);
+
     }
-    function save_yard_estimated_cost(){
-        $project_yard_id=$this->request->getPost("project_yard_id");
-        $estimated_cost=$this->request->getPost("estimated_cost");
-        $project_yard_info=$this->Project_yards_model->get_one($project_yard_id);
-        $project_yard_info->estimated_cost=$estimated_cost;
-        $this->Project_yards_model->ci_save($project_yard_info,$project_yard_id);
-        return json_encode(array("success"=>true));
+    function save_yard_estimated_cost()
+    {
+        $project_yard_id = $this->request->getPost("project_yard_id");
+        $estimated_cost = $this->request->getPost("estimated_cost");
+        $project_yard_info = $this->Project_yards_model->get_one($project_yard_id);
+        $project_yard_info->estimated_cost = $estimated_cost;
+        $this->Project_yards_model->ci_save($project_yard_info, $project_yard_id);
+        return json_encode(array("success" => true));
     }
 
-    function save_general_costs(){
-        $project_id=$this->request->getPost('project_id');
-        $deviation_costs=$this->request->getPost('deviation_costs');
-        $loss_of_earnings=$this->request->getPost('loss_of_earnings');
-        $bunker_costs=$this->request->getPost('bunker_costs');
-        $additional_expenditures=$this->request->getPost('additional_expenditures');
-        $project_info=$this->Projects_model->get_one($project_id);
-        $project_info->deviation_costs=$deviation_costs;
-        $project_info->loss_of_earnings=$loss_of_earnings;
-        $project_info->bunker_costs=$bunker_costs;
-        $project_info->additional_expenditures=$additional_expenditures;
-        $this->Projects_model->ci_save($project_info,$project_id);
-        return json_encode(array("success"=>true));
+    function save_general_costs()
+    {
+        $project_id = $this->request->getPost('project_id');
+        $deviation_costs = $this->request->getPost('deviation_costs');
+        $loss_of_earnings = $this->request->getPost('loss_of_earnings');
+        $bunker_costs = $this->request->getPost('bunker_costs');
+        $additional_expenditures = $this->request->getPost('additional_expenditures');
+        $project_info = $this->Projects_model->get_one($project_id);
+        $project_info->deviation_costs = $deviation_costs;
+        $project_info->loss_of_earnings = $loss_of_earnings;
+        $project_info->bunker_costs = $bunker_costs;
+        $project_info->additional_expenditures = $additional_expenditures;
+        $this->Projects_model->ci_save($project_info, $project_id);
+        return json_encode(array("success" => true));
     }
 
 }
