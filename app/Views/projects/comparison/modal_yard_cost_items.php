@@ -42,9 +42,9 @@ foreach ($allProjectYards as $oneYard) {
                             ?>
                             <tr>
                                 <td><?php echo $oneItem->name;?></td>
-                                <td><?php echo $oneItem->quantity;?> <?php echo $oneItem->measurement;?> X <?php echo $project_info->currency." ".$oneItem->unit_price;?> (Per unit) </td>
+                                <td><?php echo $oneItem->quantity;?> <?php echo $oneItem->measurement;?> X <?php echo $oneItem->currency." ".$oneItem->unit_price;?> (Per unit) </td>
                                 <td><?php echo $oneItem->discount;?> %</td>
-                                <td><?php echo $project_info->currency." ".(double)$oneItem->total_cost;?> </td>
+                                <td><?php echo $oneItem->currency." ".(double)$oneItem->total_cost;?> </td>
                                 <td><input hidden value='<?php echo $oneItem->id;?>' /><button class="btn btn-sm delete-cost-item"><i data-feather="trash" class="icon-16" ></i></button></td>
                             </tr>
                             <?php
@@ -58,7 +58,23 @@ foreach ($allProjectYards as $oneYard) {
                         <input hidden value="<?php echo $project_id;?>" name="project_id" id="project_id" />
                         <input hidden value=<?php echo $oneYard->id;?> name="shipyard_id" id="shipyard_id" />
                         <input hidden name="item_id" id="item_id" value="" />
-                        
+                        <div class="form-group" >
+                            <label>Name:</label>
+                            <input
+                            id="name"
+                            name="name"
+                            class="form-control"
+                            />
+                        </div>
+                        <div class="form-group" >
+                            <label>Description:</label>
+                            <textarea
+                            id="description"
+                            name="description"
+                            class="form-control"
+                            >
+                            </textarea>
+                        </div>
                         <div class="row" >
                             <div class="col-md-3" >
                                 <div class="form-group" >
@@ -96,25 +112,16 @@ foreach ($allProjectYards as $oneYard) {
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" >
-                            <label>Name:</label>
-                            <input
-                            id="name"
-                            name="name"
-                            class="form-control"
-                            required
-                            />
-                        </div>
-                        <div class="form-group" >
-                            <label>Description:</label>
-                            <textarea
-                            id="description"
-                            name="description"
-                            class="form-control"
-                            >
-                            </textarea>
-                        </div>
                         <div class="row" >
+                            <div class="col-md-4" >
+                                <div class="form-group" >
+                                    <label>Quote Type:</label>
+                                    <select id="quote_type" name="quote_type" class="form-control" >
+                                        <option value="Per unit">Per unit</option>
+                                        <option value="Lump sum" >Lump sum</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-md-2" >
                                 <div class="form-group" >
                                     <label>discount:</label>
@@ -127,16 +134,6 @@ foreach ($allProjectYards as $oneYard) {
                                     />
                                 </div>
                             </div>
-                            <div class="col-md-4" >
-                                <div class="form-group" >
-                                    <label>Quote Type:</label>
-                                    <select id="quote_type" name="quote_type" class="form-control" >
-                                        <option value="Per unit">Per unit</option>
-                                        <option value="Lump sum" >Lump sum</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
                             <div class="col-md-6" >
                                 <div class="form-group" >
                                     <label>Yard Remarks:</label>
@@ -225,9 +222,9 @@ $(document).ready(function(){
                 var newRow = $(`
                 <tr>
                 <td>${editPanelEl.find("#name")[0].value}</td>
-                <td>${editPanelEl.find("#quantity")[0].value} ${editPanelEl.find("#measurement")[0].value} X<?php echo " ".$project_info->currency." ";?> ${editPanelEl.find("#unit_price")[0].value} (per unit)</td>
+                <td>${editPanelEl.find("#quantity")[0].value} ${editPanelEl.find("#measurement")[0].value} X<?php echo " ".$oneItem->currency." ";?> ${editPanelEl.find("#unit_price")[0].value} (per unit)</td>
                 <td>${editPanelEl.find("#discount")[0].value} %</td>
-                <td><?php echo " ".$project_info->currency." ";?>${parseFloat(editPanelEl.find("#quantity")[0].value)*parseFloat(editPanelEl.find("#unit_price")[0].value)*(100-parseFloat(editPanelEl.find("#discount")[0].value))/100}</td>
+                <td><?php echo " ".$oneItem->currency." ";?>${parseFloat(editPanelEl.find("#quantity")[0].value)*parseFloat(editPanelEl.find("#unit_price")[0].value)*(100-parseFloat(editPanelEl.find("#discount")[0].value))/100}</td>
                 <td><input hidden value="" /><button onclick="delete_cost_item(event)" class="btn btn-sm delete-cost-item" ><i data-feather="trash" class="icon-16"></i></button></td>
                 </tr>`);
                 tbodyEl.append(newRow);
@@ -243,12 +240,12 @@ $(document).ready(function(){
 
     })
 })
+function start_edit_cost_item(e){
+    e.target.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('.edit-panel').hidden=false;
+}
 function delete_cost_item(e){
     var tr=e.target.parentNode.parentNode;
     e.target.parentNode.parentNode.parentNode.removeChild(tr);
-}
-function start_edit_cost_item(e){
-    e.target.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('.edit-panel').hidden=false;
 }
 var all_cost_items=[];
 <?php if(isset($allYardCostItems)) echo 'all_cost_items='.json_encode($allYardCostItems).';'; ?>
