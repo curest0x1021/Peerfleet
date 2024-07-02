@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
-class Tickets_model extends Crud_model {
+class Tickets_model extends Crud_model
+{
 
     protected $table = null;
 
-    function __construct() {
+    function __construct()
+    {
         $this->table = 'tickets';
         parent::__construct($this->table);
-        parent::init_activity_log("ticket", "title", "ticket", "id", "client", "client_id", "project", "project_id");
+        parent::init_activity_log("ticket", "title", "client", "client_id", "project", "project_id");
     }
 
-    function get_details($options = array()) {
+    function get_details($options = array())
+    {
         $tickets_table = $this->db->prefixTable('tickets');
         $ticket_types_table = $this->db->prefixTable('ticket_types');
         $clients_table = $this->db->prefixTable('clients');
@@ -41,7 +44,8 @@ class Tickets_model extends Crud_model {
         $status = $this->_get_clean_value($options, "status");
         if ($status === "closed") {
             $where .= " AND $tickets_table.status='$status'";
-        } if ($status === "open") {
+        }
+        if ($status === "open") {
             $where .= " AND FIND_IN_SET($tickets_table.status, 'new,open,client_replied')";
         }
 
@@ -179,7 +183,8 @@ class Tickets_model extends Crud_model {
         }
     }
 
-    function count_new_tickets($ticket_types = "", $show_assigned_tickets_only_user_id = 0) {
+    function count_new_tickets($ticket_types = "", $show_assigned_tickets_only_user_id = 0)
+    {
         $tickets_table = $this->db->prefixTable('tickets');
         $where = "";
         if ($ticket_types) {
@@ -196,7 +201,8 @@ class Tickets_model extends Crud_model {
         return $this->db->query($sql)->getRow()->total;
     }
 
-    function get_label_suggestions() {
+    function get_label_suggestions()
+    {
         $tickets_table = $this->db->prefixTable('tickets');
         $sql = "SELECT GROUP_CONCAT(labels) as label_groups
         FROM $tickets_table
@@ -204,7 +210,8 @@ class Tickets_model extends Crud_model {
         return $this->db->query($sql)->getRow()->label_groups;
     }
 
-    function delete_ticket_and_sub_items($ticket_id) {
+    function delete_ticket_and_sub_items($ticket_id)
+    {
         $tickets_table = $this->db->prefixTable('tickets');
         $ticket_comments_table = $this->db->prefixTable('ticket_comments');
 
@@ -234,7 +241,8 @@ class Tickets_model extends Crud_model {
         return true;
     }
 
-    function count_tickets($options = array()) {
+    function count_tickets($options = array())
+    {
         $tickets_table = $this->db->prefixTable('tickets');
 
         $where = "";
@@ -267,7 +275,8 @@ class Tickets_model extends Crud_model {
         return $this->db->query($sql)->getRow()->total;
     }
 
-    function get_ticket_statistics($options = array()) {
+    function get_ticket_statistics($options = array())
+    {
         $tickets_table = $this->db->prefixTable('tickets');
         $ticket_types_table = $this->db->prefixTable('ticket_types');
 
@@ -285,7 +294,8 @@ class Tickets_model extends Crud_model {
         $status = $this->_get_clean_value($options, "status");
         if ($status === "closed") {
             $where .= " AND $tickets_table.status='$status'";
-        } if ($status === "open") {
+        }
+        if ($status === "open") {
             $where .= " AND FIND_IN_SET($tickets_table.status, 'new,open,client_replied')";
         }
 

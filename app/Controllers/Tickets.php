@@ -1480,7 +1480,7 @@ class Tickets extends Security_Controller
             "schedule_eta" => date('Y-m-d'),
             "schedule_etd" => date('Y-m-d')
         );
-        if ($ticket_id){
+        if ($ticket_id) {
             $saved_id = $this->Ticket_actions_model->ci_save($new_data, $id);
         }
         return json_encode(array("success" => true, "saved_id" => $saved_id));
@@ -1504,11 +1504,13 @@ class Tickets extends Security_Controller
 
     function save_requisition()
     {
-        $this->validate_submitted_data(array(
-            "id" => "numeric",
-            "title" => "required",
-            "number" => "required",
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric",
+                "title" => "required",
+                "number" => "required",
+            )
+        );
         $id = $this->request->getPost("id");
         $title = $this->request->getPost("title");
         $number = $this->request->getPost("number");
