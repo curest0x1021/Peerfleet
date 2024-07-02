@@ -4672,44 +4672,43 @@ class Projects extends Security_Controller
         // Data from your provided image
         $data = [
             // Header
-            ['FS SONNE', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Werft Liegezeit 2024'],
+            ['FS SONNE'],
+            ['Werft Liegezeit 2024'],
             ['Singapur'],
-            ['Stand:', '', '4/2/2024'],
-            [],
+            ['Stand:', '', '', '4/2/2024'],
             ['TERMINE'],
             ['ETA', 'Beginn WLZ', 'Eindocken', 'Ausdocken', 'Ende WLZ', 'ETD'],
             ['5/22/2024', '5/24/2024', 't.b.d.', 't.b.d.', '7/14/2024', '7/16/2024'],
-            [],
             ['BUDGET-/ KOSTENÜBERSICHT'],
-            ['Bereich / Untersetzung gem. Einzelpositionen WiPl 2024', 'Budget', 'Kosten (Hochrechnung)', 'Differenz (Reserve)'],
-            ['Reparatur u. Wartung Schiff (R+W_S)'],
-            ['11 = Allg. Instandhaltung Schiff (60% des Stellpostens)'],
-            ['13 = Generalüberholung Pumpjet'],
-            ['14 = Instandsetzung Hauptmaschinen'],
-            ['15 = Generalüberholung Flossenstabilisatoren'],
-            ['16 = Generalüberholung Ruderpropeller'],
-            ['17 = Überholung Rudermaschinen'],
-            ['Reparatur u. Wartung Wissenschaft (R+W_W)'],
-            ['21 = Allg. Instandhaltung Wiss (60% des Stellpostens)'],
-            ['22 = Einbaubegleitung SONARDYNE Ranger 2'],
-            ['24 = Erneuerung EM122 Tiefseefächerecholot Rx-Schwinger'],
-            ['Werftkosten (Werft)'],
-            ['31 = Dockung, allgemeine Werftarbeiten und -Infrastruktur'],
-            ['32 = Zuarbeit/ Nebenarbeiten/ Hilfeleistungen Werft'],
-            ['33 = Konservierungsarbeiten'],
-            ['34 = Stahl-, Rohr- und Maschinenbauarbeiten'],
-            ['35 = Arbeiten Elektro- und Klimatechnik'],
-            ['36 = Decksmaschinen und Hydraulikarbeiten'],
-            ['37 = Inneneinrichtungsarbeiten'],
-            ['Summe:', '', ' - €', ' - €', ' - €'],
+            ['Bereich / Untersetzung gem. Einzelpositionen WiPl 2024', '', '', 'Budget', 'Kosten (Hochrechnung)', 'Differenz (Reserve)'],
+            ['Reparatur u. Wartung Schiff (R+W_S)', '', ''],
+            ['11 = Allg. Instandhaltung Schiff (60% des Stellpostens)', '', ''],
+            ['13 = Generalüberholung Pumpjet', '', ''],
+            ['14 = Instandsetzung Hauptmaschinen', '', ''],
+            ['15 = Generalüberholung Flossenstabilisatoren', '', ''],
+            ['16 = Generalüberholung Ruderpropeller', '', ''],
+            ['17 = Überholung Rudermaschinen', '', ''],
+            ['Reparatur u. Wartung Wissenschaft (R+W_W)', '', ''],
+            ['21 = Allg. Instandhaltung Wiss (60% des Stellpostens)', '', ''],
+            ['22 = Einbaubegleitung SONARDYNE Ranger 2', '', ''],
+            ['24 = Erneuerung EM122 Tiefseefächerecholot Rx-Schwinger', '', ''],
+            ['Werftkosten (Werft)', '', ''],
+            ['31 = Dockung, allgemeine Werftarbeiten und -Infrastruktur', '', ''],
+            ['32 = Zuarbeit/ Nebenarbeiten/ Hilfeleistungen Werft', '', ''],
+            ['33 = Konservierungsarbeiten', '', ''],
+            ['34 = Stahl-, Rohr- und Maschinenbauarbeiten', '', ''],
+            ['35 = Arbeiten Elektro- und Klimatechnik', '', ''],
+            ['36 = Decksmaschinen und Hydraulikarbeiten', '', ''],
+            ['37 = Inneneinrichtungsarbeiten', '', ''],
+            ['Summe:', '', '', 0, 0, 0],
             [],
             ['DRINGLICHKEITSSTATUS'],
-            ['Priorität', 'Bedeutung', '', 'Kosten (Hochrechnung)', 'Anteil an Gesamtkosten'],
-            ['1', 'zwingend erforderlich', '', '2 €', '3%'],
-            ['2', 'technisch notwendig', '', '4 €', '4%'],
-            ['3', 'empfehlenswert', '', '2 €', '2%'],
-            ['4', 'wünschenswert', '', '23 €', ''],
-            ['Summe:', '', '', '31 €', '9%'],
+            ['Priorität', 'Bedeutung', '', '', 'Kosten (Hochrechnung)', 'Anteil an Gesamtkosten'],
+            ['1', 'zwingend erforderlich', '', '', '2 €', '3%'],
+            ['2', 'technisch notwendig', '', '', '4 €', '4%'],
+            ['3', 'empfehlenswert', '', '', '2 €', '2%'],
+            ['4', 'wünschenswert', '', '', '23 €', ''],
+            ['Summe:', '', '', '', 0, 0],
             [],
             ['AUFTRAGSSTATUS'],
             ['open', 'requested', 'offered', 'approved', 'completed', 'invoiced'],
@@ -4718,58 +4717,99 @@ class Projects extends Security_Controller
             ['Reine Schätzkosten', '', 'Angebotspreise + evtl. Schätzkosten', '', 'Rechnungssummen'],
             [],
             ['KOSTENVERTEILUNG'],
-            ['Bereich', '', '', 'Kosten (Hochrechnung)'],
-            ['A', 'Allgemeine Werftarbeiten und -gestellungen', '', ''],
-            ['B-01', 'Schiffskörper, Stahlarbeiten und Konservierung', '', ''],
-            ['B-02', 'Tanks und Leerzellen', '', ''],
-            ['B-03', 'Winden, Decksmaschinen und Hebezeuge', '', ''],
-            ['B-04', 'Brückenausrüstung', '', ''],
-            ['B-05', 'Brandschutzausrüstung', '', ''],
-            ['B-06', 'Rettungsmittel', '', ''],
-            ['B-07', 'Inneneinrichtung', '', ''],
-            ['B-08', 'Hospital und Medizin', '', ''],
-            ['B-09', 'Küche und Wirtschaft', '', '234 €'],
-            ['B-10', 'Sonstiges Deck', '', ''],
-            ['C-01', 'Wissenschaftliche Geräte und Sensoren', '', '3 €'],
-            ['C-02', 'Netzwerk und Rechner', '', '3 €'],
-            ['C-03', 'Hydroakustik', '', '2 €'],
-            ['C-04', 'Kommunikationsanlagen', '', '4 €'],
-            ['C-05', 'Reinseewassersystem', '', ''],
-            ['C-06', 'Sonstiges WTD', '', ''],
-            ['E-01', 'Antriebs- und Ruderanlagen', '', ''],
-            ['E-02', 'Dieselgeneratoren', '', ''],
-            ['E-03', 'Elektrik', '', ''],
-            ['E-04', 'Automation', '', ''],
-            ['E-05', 'Hydraulikanlagen', '', ''],
-            ['E-06', 'Frisch- undSeekühlwassersysteme', '', ''],
-            ['E-07', 'Brennstoff und Schmierölsysteme', '', ''],
-            ['E-08', 'Druckluftsysteme', '', ''],
-            ['E-09', 'Heiz- und Heißwassersysteme', '', ''],
-            ['E-10', 'Kälte- Klima und Lüftungsanlagen', '', ''],
-            ['E-11', 'Bilgen- Ballast und Lenzsysteme', '', ''],
-            ['E-12', 'Schwarz- und Grauwassersysteme', '', ''],
-            ['E-13', 'Trinkwasser und Destillat', '', ''],
-            ['E-14', 'Müllbehandlungsanlagen', '', ''],
-            ['E-15', 'Sonstiges Maschine', '', ''],
-            ['Summe:', '', '', '246 €'],
+            ['Bereich', '', '', '', '', 'Kosten (Hochrechnung)'],
+            ['A', 'Allgemeine Werftarbeiten und -gestellungen', '', '', ''],
+            ['B-01', 'Schiffskörper, Stahlarbeiten und Konservierung', '', '', ''],
+            ['B-02', 'Tanks und Leerzellen', '', '', ''],
+            ['B-03', 'Winden, Decksmaschinen und Hebezeuge', '', '', ''],
+            ['B-04', 'Brückenausrüstung', '', '', ''],
+            ['B-05', 'Brandschutzausrüstung', '', '', ''],
+            ['B-06', 'Rettungsmittel', '', '', ''],
+            ['B-07', 'Inneneinrichtung', '', '', ''],
+            ['B-08', 'Hospital und Medizin', '', '', ''],
+            ['B-09', 'Küche und Wirtschaft', '', '', '234 €'],
+            ['B-10', 'Sonstiges Deck', '', '', ''],
+            ['C-01', 'Wissenschaftliche Geräte und Sensoren', '', '', '3 €'],
+            ['C-02', 'Netzwerk und Rechner', '', '', '3 €'],
+            ['C-03', 'Hydroakustik', '', '', '2 €'],
+            ['C-04', 'Kommunikationsanlagen', '', '', '4 €'],
+            ['C-05', 'Reinseewassersystem', '', '', ''],
+            ['C-06', 'Sonstiges WTD', '', '', ''],
+            ['E-01', 'Antriebs- und Ruderanlagen', '', '', ''],
+            ['E-02', 'Dieselgeneratoren', '', '', ''],
+            ['E-03', 'Elektrik', '', '', ''],
+            ['E-04', 'Automation', '', '', ''],
+            ['E-05', 'Hydraulikanlagen', '', '', ''],
+            ['E-06', 'Frisch- undSeekühlwassersysteme', '', '', ''],
+            ['E-07', 'Brennstoff und Schmierölsysteme', '', '', ''],
+            ['E-08', 'Druckluftsysteme', '', '', ''],
+            ['E-09', 'Heiz- und Heißwassersysteme', '', '', ''],
+            ['E-10', 'Kälte- Klima und Lüftungsanlagen', '', '', ''],
+            ['E-11', 'Bilgen- Ballast und Lenzsysteme', '', '', ''],
+            ['E-12', 'Schwarz- und Grauwassersysteme', '', '', ''],
+            ['E-13', 'Trinkwasser und Destillat', '', '', ''],
+            ['E-14', 'Müllbehandlungsanlagen', '', '', ''],
+            ['E-15', 'Sonstiges Maschine', '', '', ''],
+            ['Summe:', '', '', '', '', '246 €'],
         ];
 
         // Fill worksheet from array
-        $sheet1->fromArray($data, null, 'A1');
+        $sheet1->fromArray($data, null, 'B2');
 
         // Merge cells for the title and sections
-        $sheet1->mergeCells('A1:P1');
-        $sheet1->mergeCells('A2:B2');
-        $sheet1->mergeCells('A3:C3');
-        $sheet1->mergeCells('A4:P4');
-        $sheet1->mergeCells('A8:D8');
-        $sheet1->mergeCells('A17:D17');
-        $sheet1->mergeCells('A28:D28');
-        $sheet1->mergeCells('A31:F31');
-        $sheet1->mergeCells('A37:G37');
+        $sheet1->mergeCells('B2:G2');
+        $sheet1->mergeCells('B3:G3');
+        $sheet1->mergeCells('B4:G4');
+        $sheet1->mergeCells('B5:D5');
+        $sheet1->mergeCells('E5:G5');
+        $sheet1->mergeCells('B6:G6');
+        $sheet1->mergeCells('B9:G9');
+        $sheet1->mergeCells('B9:E9');
+
+        for ($i = 10; $i <= 30; $i++) {
+            $sheet1->mergeCells("B" . $i . ":D" . $i);
+        }
+        
+        $sheet1->mergeCells('B31:G31');
+        $sheet1->mergeCells('B32:G32');
+
+        for ($i = 33; $i <= 37; $i++) {
+            $sheet1->mergeCells("C" . $i . ":E" . $i);
+        }
+        
+        $sheet1->mergeCells('B38:E38');
+        $sheet1->mergeCells('B39:G39');
+        $sheet1->mergeCells('B40:G40');
+        $sheet1->mergeCells('D44:F44');
+        $sheet1->mergeCells('B44:C44');
+        $sheet1->mergeCells('B45:G45');
+        $sheet1->mergeCells('B46:G46');
+        $sheet1->mergeCells('B47:F47');
+        
+        for ($i = 48; $i <= 79; $i++) {
+            $sheet1->mergeCells("C" . $i . ":F" . $i);
+        }
+        
+        $sheet1->mergeCells('B80:F80');
 
         // Apply styles
+        // FS SONNE
         $headerStyle = [
+            'font' => [
+                'bold' => true,
+                'size' => 18,
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+            ],
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'D9D9D9FF'],
+            ],
+        ];
+
+        // Werft Liegezeit 2024
+        $subHeaderStyle = [
             'font' => [
                 'bold' => true,
                 'size' => 16,
@@ -4777,9 +4817,15 @@ class Projects extends Security_Controller
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
             ],
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'FFDDDDFF'],
+            ],
+            
         ];
 
-        $subHeaderStyle = [
+        // Singapur
+        $subHeaderStyle2 = [
             'font' => [
                 'bold' => true,
                 'size' => 14,
@@ -4787,20 +4833,64 @@ class Projects extends Security_Controller
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
             ],
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'FFFFEFFF'],
+            ],
         ];
 
-        $sectionHeaderStyle = [
+        // Stand:
+        $customHeaderStyle = [
             'font' => [
                 'bold' => true,
                 'size' => 12,
+                'color' => ['argb'=>'FF0000FF']
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_RIGHT,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_MEDIUM,
+                    'color' => ['argb' => '00000000'],
+                ],
+            ],
+        ];
+        
+        // 4/2/2024
+        $customHeaderStyle2 = [
+            'font' => [
+                'bold' => true,
+                'size' => 12,
+                'color' => ['argb'=>'FF0000FF']
             ],
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_LEFT,
             ],
             'borders' => [
                 'allBorders' => [
-                    'borderStyle' => Border::BORDER_THIN,
-                    'color' => ['argb' => 'FF000000'],
+                    'borderStyle' => Border::BORDER_MEDIUM,
+                    'color' => ['argb' => '00000000'],
+                ],
+            ],
+        ];
+
+        $sectionHeaderStyle = [
+            'font' => [
+                'bold' => true,
+                'color' => ['argb' => 'FFFFFFFF'],
+            ],
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => '00000000'],
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_MEDIUM,
+                    'color' => ['argb' => '00000000'],
                 ],
             ],
         ];
@@ -4808,11 +4898,6 @@ class Projects extends Security_Controller
         $tableHeaderStyle = [
             'font' => [
                 'bold' => true,
-                'color' => ['argb' => 'FFFFFFFF'],
-            ],
-            'fill' => [
-                'fillType' => Fill::FILL_SOLID,
-                'startColor' => ['argb' => 'FF000000'],
             ],
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
@@ -4820,31 +4905,116 @@ class Projects extends Security_Controller
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN,
-                    'color' => ['argb' => 'FF000000'],
+                    'color' => ['argb' => '00000000'],
                 ],
             ],
         ];
 
-        // Apply header style
-        $sheet1->getStyle('A1:P1')->applyFromArray($headerStyle);
-        $sheet1->getStyle('A2:B2')->applyFromArray($subHeaderStyle);
-        $sheet1->getStyle('A4:P4')->applyFromArray($sectionHeaderStyle);
-        $sheet1->getStyle('A8:D8')->applyFromArray($sectionHeaderStyle);
-        $sheet1->getStyle('A17:D17')->applyFromArray($sectionHeaderStyle);
-        $sheet1->getStyle('A28:D28')->applyFromArray($sectionHeaderStyle);
-        $sheet1->getStyle('A31:F31')->applyFromArray($sectionHeaderStyle);
-        $sheet1->getStyle('A37:G37')->applyFromArray($sectionHeaderStyle);
+        $sideBarStyle = [
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_LEFT,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => '00000000'],
+                ],
+            ],
+        ];
+        
+        $sideBarBoldStyle = [
+            'font' => [
+                'bold' => true,
+                'color' => ['argb' => '00000000'],
+            ],
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => '1FFFFFFF'],
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_LEFT,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => '00000000'],
+                ],
+            ],
+        ];
+        
+        $mainContentStyle = [
+            'font' => [
+                'bold' => false,
+                'color' => ['argb' => '00000000'],
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => '00000000'],
+                ],
+            ],
+        ];
 
-        // Apply table header style
-        $sheet1->getStyle('A5:F5')->applyFromArray($tableHeaderStyle);
-        $sheet1->getStyle('A9:D9')->applyFromArray($tableHeaderStyle);
-        $sheet1->getStyle('A32:G32')->applyFromArray($tableHeaderStyle);
-        $sheet1->getStyle('A38:H38')->applyFromArray($tableHeaderStyle);
+        $statisticsStyle = [
+            'font' => [
+                'bold' => true,
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_RIGHT,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                ],
+            ],
+        ];
+        
+        $sheet1->mergeCells('B32:G32');
+
+
+        // Apply header style
+        $sheet1->getStyle('B2:G2')->applyFromArray($headerStyle);
+        $sheet1->getStyle('B3:G3')->applyFromArray($subHeaderStyle);
+        $sheet1->getStyle('B4:G4')->applyFromArray($subHeaderStyle2);
+        $sheet1->getStyle('B5:D5')->applyFromArray($customHeaderStyle);
+        $sheet1->getStyle('E5:G5')->applyFromArray($customHeaderStyle2);
+
+        $sheet1->getStyle('B6:G6')->applyFromArray($sectionHeaderStyle);
+        $sheet1->getStyle('B7:G7')->applyFromArray($tableHeaderStyle);
+        $sheet1->getStyle('B8:G8')->applyFromArray($mainContentStyle);
+
+        $sheet1->getStyle('B9:G9')->applyFromArray($sectionHeaderStyle);
+        $sheet1->getStyle('B10:G10')->applyFromArray($tableHeaderStyle);
+        $sheet1->getStyle('B11:D29')->applyFromArray($sideBarStyle);
+        $sheet1->getStyle('B11:D11')->applyFromArray($sideBarBoldStyle);
+        $sheet1->getStyle('B18:D18')->applyFromArray($sideBarBoldStyle);
+        $sheet1->getStyle('B22:D22')->applyFromArray($sideBarBoldStyle);
+        $sheet1->getStyle('E11:G29')->applyFromArray($mainContentStyle);
+        $sheet1->getStyle('B30:G30')->applyFromArray($statisticsStyle);
+
+        $sheet1->getStyle('B32:G32')->applyFromArray($sectionHeaderStyle);
+        $sheet1->getStyle('B33:G33')->applyFromArray($tableHeaderStyle);
+        $sheet1->getStyle('B34:G37')->applyFromArray($mainContentStyle);
+        $sheet1->getStyle('B38:G38')->applyFromArray($statisticsStyle);
+        
+        $sheet1->getStyle('B40:G40')->applyFromArray($sectionHeaderStyle);
+        $sheet1->getStyle('B41:G41')->applyFromArray($tableHeaderStyle);
+        $sheet1->getStyle('B42:G44')->applyFromArray($mainContentStyle);
+
+        $sheet1->getStyle('B46:G46')->applyFromArray($sectionHeaderStyle);
+        $sheet1->getStyle('B47:G47')->applyFromArray($tableHeaderStyle);
+        $sheet1->getStyle('B48:G79')->applyFromArray($mainContentStyle);
+        $sheet1->getStyle('B80:G80')->applyFromArray($statisticsStyle);
 
         // Set column widths
-        foreach (range('A', 'P') as $columnID) {
-            $sheet1->getColumnDimension($columnID)->setAutoSize(true);
+        foreach (range('B', 'G') as $columnID) {
+            $sheet1->getColumnDimension($columnID)->setWidth(20);
         }
+        $sheet1->getColumnDimension('A')->setWidth(1);
+        $sheet1->getRowDimension('1')->setRowHeight(1);
 
         // Save the file
         // $writer = new Xlsx($spreadsheet);
