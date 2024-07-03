@@ -6,10 +6,11 @@ use CodeIgniter\Model;
 use stdClass;
 
 //extend from this model to execute basic db operations
-class Crud_model extends Model {
+class Crud_model extends Model
+{
 
     protected $table;
-    protected $table_without_prefix;    
+    protected $table_without_prefix;
     protected $db;
     protected $db_builder = null;
     private $log_activity = false;
@@ -21,26 +22,30 @@ class Crud_model extends Model {
     private $log_for_key2 = "";
     protected $allowedFields = array();
     private $Activity_logs_model;
-    
-    function __construct($table = null, $db = null) {
+
+    function __construct($table = null, $db = null)
+    {
         $this->Activity_logs_model = model("App\Models\Activity_logs_model");
         $this->db = $db ? $db : db_connect('default');
         $this->db->query("SET sql_mode = ''");
         $this->use_table($table);
     }
 
-    protected function use_table($table) {
+    protected function use_table($table)
+    {
         $db_prefix = $this->db->getPrefix();
         $this->table = $db_prefix . $table;
         $this->table_without_prefix = $table;
         $this->db_builder = $this->db->table($this->table);
     }
 
-    protected function disable_log_activity() {
+    protected function disable_log_activity()
+    {
         $this->log_activity = false;
     }
 
-    protected function init_activity_log($log_type = "", $log_type_title_key = "", $log_for = "", $log_for_key = 0, $log_for2 = "", $log_for_key2 = 0) {
+    protected function init_activity_log($log_type = "", $log_type_title_key = "", $log_for = "", $log_for_key = 0, $log_for2 = "", $log_for_key2 = 0)
+    {
         if ($log_type) {
             $this->log_activity = true;
             $this->log_type = $log_type;
@@ -52,11 +57,13 @@ class Crud_model extends Model {
         }
     }
 
-    function get_one($id = 0) {
+    function get_one($id = 0)
+    {
         return $this->get_one_where(array('id' => $id));
     }
 
-    function get_one_where($where = array()) {
+    function get_one_where($where = array())
+    {
         $where = $this->escape_array($where);
         $result = $this->db_builder->getWhere($where, 1);
 
@@ -73,7 +80,8 @@ class Crud_model extends Model {
         }
     }
 
-    function get_all($include_deleted = false) {
+    function get_all($include_deleted = false)
+    {
         $where = array("deleted" => 0);
         if ($include_deleted) {
             $where = array();
@@ -81,7 +89,8 @@ class Crud_model extends Model {
         return $this->get_all_where($where);
     }
 
-    function escape_array($values = array()) {
+    function escape_array($values = array())
+    {
         if ($values && is_array($values)) {
             foreach ($values as $key => $value) {
                 $values[$key] = ($value && !is_array($value)) ? $this->db->escapeString($value) : $value;
@@ -91,7 +100,8 @@ class Crud_model extends Model {
         return $values;
     }
 
-    function get_all_where($where = array(), $limit = 1000000, $offset = 0, $sort_by_field = null) {
+    function get_all_where($where = array(), $limit = 1000000, $offset = 0, $sort_by_field = null)
+    {
         $where = $this->escape_array($where);
         $where_in = get_array_value($where, "where_in");
         if ($where_in) {
@@ -108,7 +118,8 @@ class Crud_model extends Model {
         return $this->db_builder->getWhere($where, $limit, $offset);
     }
 
-    function ci_save(&$data = array(), $id = 0) {
+    function ci_save(&$data = array(), $id = 0)
+    {
         //allowed fields should be assigned
         $db_fields = $this->db->getFieldNames($this->table);
         foreach ($db_fields as $field) {
@@ -192,12 +203,15 @@ class Crud_model extends Model {
             }
 
             try {
-                app_hooks()->do_action("app_hook_data_update", array(
-                    "id" => $id,
-                    "table" => $this->table,
-                    "table_without_prefix" => $this->table_without_prefix,
-                    "data" => $data
-                ));
+                app_hooks()->do_action(
+                    "app_hook_data_update",
+                    array(
+                        "id" => $id,
+                        "table" => $this->table,
+                        "table_without_prefix" => $this->table_without_prefix,
+                        "data" => $data
+                    )
+                );
             } catch (\Exception $ex) {
                 log_message('error', '[ERROR] {exception}', ['exception' => $ex]);
             }
@@ -242,12 +256,15 @@ class Crud_model extends Model {
                 }
 
                 try {
-                    app_hooks()->do_action("app_hook_data_insert", array(
-                        "id" => $insert_id,
-                        "table" => $this->table,
-                        "table_without_prefix" => $this->table_without_prefix,
-                        "data" => $data
-                    ));
+                    app_hooks()->do_action(
+                        "app_hook_data_insert",
+                        array(
+                            "id" => $insert_id,
+                            "table" => $this->table,
+                            "table_without_prefix" => $this->table_without_prefix,
+                            "data" => $data
+                        )
+                    );
                 } catch (\Exception $ex) {
                     log_message('error', '[ERROR] {exception}', ['exception' => $ex]);
                 }
@@ -257,7 +274,8 @@ class Crud_model extends Model {
         }
     }
 
-    function update_where($data = array(), $where = array()) {
+    function update_where($data = array(), $where = array())
+    {
         if (count($where)) {
             if ($this->db_builder->update($data, $where)) {
                 $id = get_array_value($where, "id");
@@ -270,7 +288,8 @@ class Crud_model extends Model {
         }
     }
 
-    function delete($id = 0, $undo = false) {
+    function delete($id = 0, $undo = false)
+    {
         validate_numeric_value($id);
         $data = array('deleted' => 1);
         if ($undo === true) {
@@ -307,11 +326,14 @@ class Crud_model extends Model {
         }
 
         try {
-            app_hooks()->do_action("app_hook_data_delete", array(
-                "id" => $id,
-                "table" => $this->table,
-                "table_without_prefix" => $this->table_without_prefix,
-            ));
+            app_hooks()->do_action(
+                "app_hook_data_delete",
+                array(
+                    "id" => $id,
+                    "table" => $this->table,
+                    "table_without_prefix" => $this->table_without_prefix,
+                )
+            );
         } catch (\Exception $ex) {
             log_message('error', '[ERROR] {exception}', ['exception' => $ex]);
         }
@@ -319,7 +341,8 @@ class Crud_model extends Model {
         return $success;
     }
 
-    function get_dropdown_list($option_fields = array(), $key = "id", $where = array()) {
+    function get_dropdown_list($option_fields = array(), $key = "id", $where = array())
+    {
         $where["deleted"] = 0;
         $list_data = $this->get_all_where($where, 0, 0, $option_fields[0])->getResult();
         $result = array();
@@ -334,7 +357,8 @@ class Crud_model extends Model {
     }
 
     //prepare a query string to get custom fields like as a normal field
-    protected function prepare_custom_field_query_string($related_to, $custom_fields, $related_to_table, $custom_field_filter = array()) {
+    protected function prepare_custom_field_query_string($related_to, $custom_fields, $related_to_table, $custom_field_filter = array())
+    {
 
         $join_string = "";
         $select_string = "";
@@ -371,7 +395,8 @@ class Crud_model extends Model {
     }
 
     //get query of clients data according to to currency
-    protected function _get_clients_of_currency_query($currency, $invoices_table, $clients_table) {
+    protected function _get_clients_of_currency_query($currency, $invoices_table, $clients_table)
+    {
         $default_currency = get_setting("default_currency");
         $currency = $currency ? $currency : $default_currency;
         $currency = $currency ? $this->db->escapeString($currency) : $currency;
@@ -381,13 +406,15 @@ class Crud_model extends Model {
         return " AND $invoices_table.client_id IN(SELECT $clients_table.id FROM $clients_table WHERE $clients_table.deleted=0 $client_where)";
     }
 
-    protected function get_labels_data_query() {
+    protected function get_labels_data_query()
+    {
         $labels_table = $this->db->prefixTable("labels");
 
         return "(SELECT GROUP_CONCAT($labels_table.id, '--::--', $labels_table.title, '--::--', $labels_table.color, ':--::--:') FROM $labels_table WHERE FIND_IN_SET($labels_table.id, $this->table.labels)) AS labels_list";
     }
 
-    function delete_permanently($id = 0) {
+    function delete_permanently($id = 0)
+    {
         if ($id) {
             validate_numeric_value($id);
             $this->db_builder->where('id', $id);
@@ -395,7 +422,8 @@ class Crud_model extends Model {
         }
     }
 
-    protected function prepare_allowed_client_groups_query($clients_table, $client_groups = array()) {
+    protected function prepare_allowed_client_groups_query($clients_table, $client_groups = array())
+    {
         $where = "";
 
         if ($client_groups && count($client_groups)) {
@@ -416,7 +444,8 @@ class Crud_model extends Model {
         return $where;
     }
 
-    protected function _get_clean_value($options, $key) {
+    protected function _get_clean_value($options, $key)
+    {
 
         $value = get_array_value($options, $key);
         if ($value) {
@@ -426,12 +455,14 @@ class Crud_model extends Model {
         }
     }
 
-    protected function get_custom_field_search_query($table, $related_to_type, $search_by) {
+    protected function get_custom_field_search_query($table, $related_to_type, $search_by)
+    {
         $custom_field_values_table = $this->db->prefixTable('custom_field_values');
         return " OR $table.id IN( SELECT $custom_field_values_table.related_to_id FROM $custom_field_values_table WHERE $custom_field_values_table.deleted=0 AND $custom_field_values_table.related_to_type='$related_to_type' AND $custom_field_values_table.value LIKE '%$search_by%' ESCAPE '!' ) ";
     }
 
-    protected function get_sales_total_meta($id, $main_table, $items_table) {
+    protected function get_sales_total_meta($id, $main_table, $items_table)
+    {
 
         //$main_table like as invoices table
         //$items_table like as invoice_items_table
@@ -526,7 +557,8 @@ class Crud_model extends Model {
         $info->discount_type = $invoice_info->discount_type;
         return $info;
     }
-    function delete_where($where = array()) {
+    function delete_where($where = array())
+    {
         if (count($where)) {
             return $this->db_builder->delete($where);
         }

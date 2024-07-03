@@ -1463,9 +1463,11 @@ class Tickets extends Security_Controller
     }
     function modal_add_task($ticket_id)
     {
-        $action_id = $this->request->getGet("id");
-        $action_info = $this->Ticket_actions_model->get_one($action_id);
-        return $this->template->view("tickets/modals/modal_add_task", ["ticket_id" => $ticket_id, "action_info" => $action_info]);
+        $action_id = $this->request->getPost("id");
+        $view_data['action_info'] = $this->Ticket_actions_model->get_one($action_id);
+        $view_data['ticket_id'] = $ticket_id;
+        // return $this->template->view("tickets/modals/modal_add_task", ["ticket_id" => $ticket_id, "action_info" => $action_info]);
+        return $this->template->view("tickets/modals/modal_add_task", $view_data);
     }
     function save_corrective_action()
     {
@@ -1496,8 +1498,10 @@ class Tickets extends Security_Controller
         $new_data["id"] = $id;
         $new_data["task_title"] = $title;
         $new_data["task_description"] = $description;
-        $new_data["task_start_date"] = date('Y-m-d', strtotime($this->request->getPost("start_date")));
-        $new_data["task_deadline"] = date('Y-m-d', strtotime($this->request->getPost("deadline")));
+        $new_data["task_assigned_to"] = $this->request->getPost("assigned_to");
+        $new_data["task_collaborators"] = $this->request->getPost("collaborators");
+        $new_data["task_start_date"] = date('Y-m-d', strtotime($start_date));
+        $new_data["task_deadline"] = date('Y-m-d', strtotime($deadline));
         $saved_id = $this->Ticket_actions_model->ci_save($new_data, $id);
         return json_encode(array("success" => true, "saved_id" => $saved_id));
     }
@@ -1526,6 +1530,14 @@ class Tickets extends Security_Controller
 
     function save_schedule()
     {
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric",
+                "port" => "required",
+                "eta" => "required",
+                "etd" => "required",
+            )
+        );
         $id = $this->request->getPost("id");
         $port = $this->request->getPost("port");
         $eta = $this->request->getPost("eta");
@@ -1535,8 +1547,8 @@ class Tickets extends Security_Controller
         $new_data = array();
         $new_data["id"] = $id;
         $new_data["schedule_port"] = $port;
-        $new_data["schedule_eta"] = date('Y-m-d', strtotime($this->request->getPost("eta")));
-        $new_data["schedule_etd"] = date('Y-m-d', strtotime($this->request->getPost("etd")));
+        $new_data["schedule_eta"] = date('Y-m-d', strtotime($eta));
+        $new_data["schedule_etd"] = date('Y-m-d', strtotime($etd));
         $new_data["schedule_agent"] = $agent;
         $new_data["schedule_remarks"] = $remarks;
         $saved_id = $this->Ticket_actions_model->ci_save($new_data, $id);

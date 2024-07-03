@@ -59,7 +59,7 @@
                     array(
                         "id" => "assigned_to",
                         "name" => "assigned_to",
-                        "value" => "",
+                        "value" => isset($action_info) ? $action_info->task_assigned_to : "",
                         "class" => "form-control  input-task-assigned-to",
                         "placeholder" => app_lang('assigned_to'),
                         "autofocus" => true,
@@ -80,7 +80,7 @@
                     array(
                         "id" => "collaborators",
                         "name" => "collaborators",
-                        "value" => "",
+                        "value" => isset($action_info) ? $action_info->task_collaborators : "",
                         "class" => "form-control  input-task-collaborators",
                         "placeholder" => app_lang('collaborators'),
                         "autofocus" => true,
@@ -107,7 +107,7 @@
                         "data-msg-required" => app_lang("field_required"),
                         "placeholder" => "YYYY-MM-DD",
                         "autocomplete" => true,
-                        // "value" => isset($action_info) ? (date('d.m.Y', strtotime($action_info->task_start_date))) : "",
+                        "value" => isset($action_info) ? (date('d.m.Y', strtotime($action_info->task_start_date))) : "",
                         // "placeholder" => app_lang('start_date'),
                     )
                 );
@@ -130,7 +130,7 @@
                         "data-msg-required" => app_lang("field_required"),
                         "placeholder" => "YYYY-MM-DD",
                         "autocomplete" => true,
-                        // "value" => isset($action_info) ? (date('d.m.Y', strtotime($action_info->task_deadline))) : "",
+                        "value" => isset($action_info) ? (date('d.m.Y', strtotime($action_info->task_deadline))) : "",
                         // "placeholder" => app_lang('deadline'),
                     )
                 );
@@ -140,14 +140,20 @@
     </div>
 </div>
 <div class="modal-footer">
-    <!-- <button  class="btn btn-default" data-bs-dismiss="modal" >Close</button> -->
-    <?php echo modal_anchor(get_uri("tickets/modal_add_corrective_action/" . $ticket_id), '<button  class="btn btn-default btn-cancel-task"  ><i data-feather="x" class="icon-16" ></i>Cancel</button>', array("title" => "Add corrective action")); ?>
+    <button class="btn btn-default btn-cancel-schedule"><i data-feather="x" class="icon-16"></i>Close</button>
     <button class="btn btn-primary btn-save-task"><i data-feather="check" class="icon-16"></i>Save</button>
 </div>
 <script>
     $(document).ready(function () {
         setDatePicker(".input-task-start-date");
         setDatePicker(".input-task-deadline");
+        $(".btn-cancel-schedule").on("click", function () {
+            var $newViewLink = $("#link-of-new-view").find("a");
+            $newViewLink.attr("data-action-url", "<?php echo get_uri("tickets/modal_corrective_action/" . $action_info->id); ?>");
+            // $taskViewLink.attr("data-title", taskShowText + " #" + JSON.parse(response).saved_id);
+            $newViewLink.attr("data-post-id", <?php echo $ticket_id; ?>);
+            $newViewLink.trigger("click");
+        })
         $(".btn-save-task").on("click", function () {
             var rise_csrf_token = $('[name="rise_csrf_token"]').val();
             const id = "<?php echo $action_info->id; ?>";
