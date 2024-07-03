@@ -1463,7 +1463,7 @@ class Tickets extends Security_Controller
     }
     function modal_add_task($ticket_id)
     {
-        $action_id = $this->request->getPost("id");
+        $action_id = $this->request->getGet("id");
         $action_info = $this->Ticket_actions_model->get_one($action_id);
         return $this->template->view("tickets/modals/modal_add_task", ["ticket_id" => $ticket_id, "action_info" => $action_info]);
     }
