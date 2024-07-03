@@ -116,7 +116,7 @@
                             <li><a role="presentation" data-bs-toggle="tab"
                                     href="<?php echo_uri("tickets/tab_requisitions/" . $ticket_info->id); ?>"
                                     data-bs-target="#ticket-requisitions-section"><?php echo "Requisitions"; ?></a></li>
-                                    
+
                             <li><a role="presentation" data-bs-toggle="tab"
                                     href="<?php echo_uri("tickets/tab_activities/" . $ticket_info->id); ?>"
                                     data-bs-target="#ticket-activities-section"><?php echo "Activities"; ?></a></li>
@@ -285,22 +285,22 @@
         });
 
         $('[data-bs-toggle="tooltip"]').tooltip();
-        $('#ajaxModal').on('show.bs.modal', function (event) {
-            var loaded = false;
+        // $('#ajaxModal').on('show.bs.modal', function (event) {
+        //     var loaded = false;
 
-            var repeat = setInterval(() => {
-                if ($("#email_to").length == 0) return;
-                $("#email_to")[0].value = <?php echo $vessel_info->owner_id; ?>;
-                $("#email_to").select2({
-                    data: [{
-                        id: <?php echo $vessel_info->owner_id; ?>,
-                        text: "<?php echo $vessel_info->charter_name . " - " . $vessel_info->owner_name; ?>"
-                    }]
-                })
-                clearInterval(repeat);
-            }, 500);
+        //     var repeat = setInterval(() => {
+        //         if ($("#email_to").length == 0) return;
+        //         $("#email_to")[0].value = <?php echo $vessel_info->owner_id; ?>;
+        //         $("#email_to").select2({
+        //             data: [{
+        //                 id: <?php echo $vessel_info->owner_id; ?>,
+        //                 text: "<?php echo $vessel_info->charter_name . " - " . $vessel_info->owner_name; ?>"
+        //             }]
+        //         })
+        //         clearInterval(repeat);
+        //     }, 500);
 
-            // Additional code to execute when the modal is opening
-        });
+        //     // Additional code to execute when the modal is opening
+        // });
     });
 </script>
