@@ -138,37 +138,37 @@
     
     adjustViewHeightWidth = function () {
 
-        if (!$("#kanban-list-container").length) {
-            return false;
-        }
+        // if (!$("#kanban-list-container").length) {
+        //     return false;
+        // }
 
 
-        var totalColumns = "<?php echo count($columns); ?>";
-        var columnWidth = (335 * totalColumns) + 5;
+        // var totalColumns = "<?php echo count($columns); ?>";
+        // var columnWidth = (335 * totalColumns) + 5;
 
-        $("#kanban-list-container").css({width: "100%"});
-
-
-        //set wrapper scroll
-        if ($("#kanban-wrapper")[0].offsetWidth < $("#kanban-wrapper")[0].scrollWidth) {
-            $("#kanban-wrapper").css("overflow-x", "scroll");
-        } else {
-            $("#kanban-wrapper").css("overflow-x", "hidden");
-        }
+        // $("#kanban-list-container").css({width: "100%"});
 
 
-        //set column scroll
+        // //set wrapper scroll
+        // if ($("#kanban-wrapper")[0].offsetWidth < $("#kanban-wrapper")[0].scrollWidth) {
+        //     $("#kanban-wrapper").css("overflow-x", "scroll");
+        // } else {
+        //     $("#kanban-wrapper").css("overflow-x", "hidden");
+        // }
 
-        $(".kanban-list-items").each(function (index) {
 
-            //set scrollbar on column... if requred
-            if ($(this)[0].offsetHeight < $(this)[0].scrollHeight) {
-                $(this).css("overflow-y", "scroll");
-            } else {
-                $(this).css("overflow-y", "hidden");
-            }
+        // //set column scroll
 
-        });
+        // $(".kanban-list-items").each(function (index) {
+
+        //     //set scrollbar on column... if requred
+        //     if ($(this)[0].offsetHeight < $(this)[0].scrollHeight) {
+        //         $(this).css("overflow-y", "scroll");
+        //     } else {
+        //         $(this).css("overflow-y", "hidden");
+        //     }
+
+        // });
     };
 
 
