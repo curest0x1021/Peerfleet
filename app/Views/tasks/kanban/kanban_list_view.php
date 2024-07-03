@@ -255,52 +255,52 @@
 
 
 <?php if ($login_user->user_type == "staff" || ($login_user->user_type == "client" && $can_edit_project_tasks)) { ?>
-            $(".kanban-list-items").each(function (index) {
-                var id = this.id;
+            // $(".kanban-list-items").each(function (index) {
+            //     var id = this.id;
 
-                var options = {
-                    animation: 150,
-                    group: "kanban-list-items",
-                    filter: ".disable-dragging",
-                    cancel: ".disable-dragging",
-                    onAdd: function (e, x) {
-                        //moved to another column. update bothe sort and status
-                        var status_id = $(e.item).closest(".kanban-list-items").attr("data-status_id");
-                        saveStatusAndSort($(e.item), status_id);
+            //     var options = {
+            //         animation: 150,
+            //         group: "kanban-list-items",
+            //         filter: ".disable-dragging",
+            //         cancel: ".disable-dragging",
+            //         onAdd: function (e, x) {
+            //             //moved to another column. update bothe sort and status
+            //             var status_id = $(e.item).closest(".kanban-list-items").attr("data-status_id");
+            //             saveStatusAndSort($(e.item), status_id);
 
-                        var $countContainer = $("." + status_id + "-task-count");
-                        $countContainer.html($countContainer.html().trim() * 1 + 1);
-                        var $item = $(e.item);
-                        setTimeout(function () {
-                            $item.attr("data-status_id", status_id); //update status id in data.
-                        });
-                    },
-                    onRemove: function (e, x) {
-                        var status_id = $(e.item)[0].dataset.status_id;
-                        var $countContainer = $("." + status_id + "-task-count");
-                        $countContainer.html($countContainer.html().trim() * 1 - 1);
-                    },
-                    onUpdate: function (e) {
-                        //updated sort
-                        saveStatusAndSort($(e.item));
-                    }
-                };
+            //             var $countContainer = $("." + status_id + "-task-count");
+            //             $countContainer.html($countContainer.html().trim() * 1 + 1);
+            //             var $item = $(e.item);
+            //             setTimeout(function () {
+            //                 $item.attr("data-status_id", status_id); //update status id in data.
+            //             });
+            //         },
+            //         onRemove: function (e, x) {
+            //             var status_id = $(e.item)[0].dataset.status_id;
+            //             var $countContainer = $("." + status_id + "-task-count");
+            //             $countContainer.html($countContainer.html().trim() * 1 - 1);
+            //         },
+            //         onUpdate: function (e) {
+            //             //updated sort
+            //             saveStatusAndSort($(e.item));
+            //         }
+            //     };
 
-                //apply only on chrome because this feature is not working perfectly in other browsers.
-                if (isChrome) {
-                    options.setData = function (dataTransfer, dragEl) {
-                        var img = document.createElement("img");
-                        img.src = $("#move-icon").attr("src");
-                        img.style.opacity = 1;
-                        dataTransfer.setDragImage(img, 5, 10);
-                    };
+            //     //apply only on chrome because this feature is not working perfectly in other browsers.
+            //     if (isChrome) {
+            //         options.setData = function (dataTransfer, dragEl) {
+            //             var img = document.createElement("img");
+            //             img.src = $("#move-icon").attr("src");
+            //             img.style.opacity = 1;
+            //             dataTransfer.setDragImage(img, 5, 10);
+            //         };
 
-                    options.ghostClass = "kanban-sortable-ghost";
-                    options.chosenClass = "kanban-sortable-chosen";
-                }
+            //         options.ghostClass = "kanban-sortable-ghost";
+            //         options.chosenClass = "kanban-sortable-chosen";
+            //     }
 
-                Sortable.create($("#" + id)[0], options);
-            });
+            //     Sortable.create($("#" + id)[0], options);
+            // });
 <?php } ?>
 
         //add activated sub task filter class
