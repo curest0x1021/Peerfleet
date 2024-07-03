@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Controllers;
+
 use DateTime;
-class Tasks extends Security_Controller {
+
+class Tasks extends Security_Controller
+{
 
     protected $Task_priority_model;
     protected $Checklist_items_model;
@@ -17,7 +20,8 @@ class Tasks extends Security_Controller {
     private $can_edit_ticket_memory = array(); //array([client_id]=>true/false, [any_tickets]=>true/false)
     private $sort_by = 'category';
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->Task_priority_model = model("App\Models\Task_priority_model");
         $this->Checklist_items_model = model('App\Models\Checklist_items_model');
@@ -25,23 +29,24 @@ class Tasks extends Security_Controller {
         $this->Project_settings_model = model('App\Models\Project_settings_model');
 
         $this->Task_libraries_model = model("App\Models\Task_libraries_model");
-        $this->Task_library_checklist_items_model= model("App\Models\Task_library_checklist_items_model");
-        $this->Shipyard_cost_items_model= model("App\Models\Shipyard_cost_items_model");
-        $this->Project_yards_model=model("App\Models\Project_yards_model");
-        $this->Task_cost_items_model=model("App\Models\Task_cost_items_model");
-        $this->Task_variation_orders_model=model("App\Models\Task_variation_orders_model");
-        $this->Task_owner_supplies_model=model("App\Models\Task_owner_supplies_model");
-        $this->File_category_model=model("App\Models\File_category_model");
-        $this->Task_files_model=model("App\Models\Task_files_model");
-        $this->Project_members_model=model("App\Models\Project_members_model");
+        $this->Task_library_checklist_items_model = model("App\Models\Task_library_checklist_items_model");
+        $this->Shipyard_cost_items_model = model("App\Models\Shipyard_cost_items_model");
+        $this->Project_yards_model = model("App\Models\Project_yards_model");
+        $this->Task_cost_items_model = model("App\Models\Task_cost_items_model");
+        $this->Task_variation_orders_model = model("App\Models\Task_variation_orders_model");
+        $this->Task_owner_supplies_model = model("App\Models\Task_owner_supplies_model");
+        $this->File_category_model = model("App\Models\File_category_model");
+        $this->Task_files_model = model("App\Models\Task_files_model");
+        $this->Project_members_model = model("App\Models\Project_members_model");
 
-        $this->File_category_model=model('App\Models\File_category_model');
-        $this->Budget_groups_model=model('App\Models\Budget_groups_model');
-        $this->Shipyard_cost_items_model=model('App\Models\Shipyard_cost_items_model');
+        $this->File_category_model = model('App\Models\File_category_model');
+        $this->Budget_groups_model = model('App\Models\Budget_groups_model');
+        $this->Shipyard_cost_items_model = model('App\Models\Shipyard_cost_items_model');
 
     }
 
-    private function get_context_id_pairs() {
+    private function get_context_id_pairs()
+    {
         return array(
             array("context" => "project", "id_key" => "project_id", "id" => null), //keep the 1st item as project since it'll be used maximum times
             array("context" => "client", "id_key" => "client_id", "id" => null),
@@ -57,7 +62,8 @@ class Tasks extends Security_Controller {
         );
     }
 
-    private function get_context_and_id($model_info = null) {
+    private function get_context_and_id($model_info = null)
+    {
         $context_id_pairs = $this->get_context_id_pairs();
 
         foreach ($context_id_pairs as $pair) {
@@ -80,7 +86,8 @@ class Tasks extends Security_Controller {
         return array("context" => "project", "id" => null);
     }
 
-    private function _client_can_create_tasks($context, $project_id) {
+    private function _client_can_create_tasks($context, $project_id)
+    {
         //check settings for client's project permission. Client can cteate task only in own projects. 
         if ($context == "project" && get_setting("client_can_create_tasks")) {
             if ($project_id) {
@@ -95,7 +102,8 @@ class Tasks extends Security_Controller {
         return false; //client can't create tasks in any other context except the project
     }
 
-    protected function _can_edit_clients($context_id) {
+    protected function _can_edit_clients($context_id)
+    {
 
         $memory_index = $context_id ? $context_id : "any_clients";
 
@@ -110,7 +118,8 @@ class Tasks extends Security_Controller {
         return $can_edit;
     }
 
-    private function _can_access_this_lead($context_id) {
+    private function _can_access_this_lead($context_id)
+    {
 
         $memory_index = $context_id ? $context_id : "any_leads";
 
@@ -125,7 +134,8 @@ class Tasks extends Security_Controller {
         return $can_edit;
     }
 
-    private function _can_access_this_estimate($context_id) {
+    private function _can_access_this_estimate($context_id)
+    {
 
         $memory_index = $context_id ? $context_id : "any_estimates";
 
@@ -140,7 +150,8 @@ class Tasks extends Security_Controller {
         return $can_edit;
     }
 
-    private function _can_edit_subscriptions($context_id) {
+    private function _can_edit_subscriptions($context_id)
+    {
 
         $memory_index = $context_id ? $context_id : "any_subscriptions";
 
@@ -155,7 +166,8 @@ class Tasks extends Security_Controller {
         return $can_edit;
     }
 
-    private function _can_edit_tickets($context_id) {
+    private function _can_edit_tickets($context_id)
+    {
 
         if ($this->login_user->user_type === "staff") {
             $memory_index = $context_id ? $context_id : "any_tickets";
@@ -174,7 +186,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    protected function can_create_tasks($_context = null) {
+    protected function can_create_tasks($_context = null)
+    {
         //check both with or without $context_id for all contexts
 
         $context_data = $this->get_context_and_id();
@@ -222,7 +235,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _is_clients_project($project_id) {
+    private function _is_clients_project($project_id)
+    {
         //this method will be used a lot in loop. To reduce db call, save the value in memory. 
         $is_client_project = get_array_value($this->project_client_memory, $project_id);
         if (is_null($is_client_project)) {
@@ -235,7 +249,8 @@ class Tasks extends Security_Controller {
         return $is_client_project;
     }
 
-    private function _is_user_a_project_member($project_id) {
+    private function _is_user_a_project_member($project_id)
+    {
 
         //this method will be used a lot in loop. To reduce db call, save the value in memory. 
         $is_member = get_array_value($this->project_member_memory, $project_id);
@@ -247,7 +262,8 @@ class Tasks extends Security_Controller {
         return $is_member;
     }
 
-    private function _can_edit_project_tasks($project_id) {
+    private function _can_edit_project_tasks($project_id)
+    {
         //check if the user has permission to edit tasks of this project
 
         if ($this->login_user->user_type != "staff") {
@@ -266,7 +282,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _can_comment_on_tasks($task_info) {
+    private function _can_comment_on_tasks($task_info)
+    {
         //check if the user has permission to comment on tasks
 
         $project_id = $task_info->project_id;
@@ -289,7 +306,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    protected function can_edit_tasks($_task = null) {
+    protected function can_edit_tasks($_task = null)
+    {
         $task_info = is_object($_task) ? $_task : $this->Tasks_model->get_one($_task); //the $_task is either task id or task info
         $permissions = $this->login_user->permissions;
 
@@ -326,7 +344,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _can_edit_task_status($task_info) {
+    private function _can_edit_task_status($task_info)
+    {
         if ($task_info->project_id && get_array_value($this->login_user->permissions, "can_update_only_assigned_tasks_status") == "1") {
             //task is specified and user has permission to edit only assigned tasks
             $collaborators_array = explode(',', $task_info->collaborators);
@@ -338,7 +357,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function can_view_tasks($context = "", $context_id = 0, $task_info = null) {
+    private function can_view_tasks($context = "", $context_id = 0, $task_info = null)
+    {
         if ($task_info) {
             $context_data = $this->get_context_and_id($task_info);
             $context = $context_data["context"];
@@ -404,7 +424,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _can_delete_project_tasks($project_id) {
+    private function _can_delete_project_tasks($project_id)
+    {
         //check if the user has permission to edit tasks of this project
 
         if ($this->login_user->user_type != "staff") {
@@ -423,7 +444,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function can_delete_tasks($_task = null) {
+    private function can_delete_tasks($_task = null)
+    {
         $task_info = is_object($_task) ? $_task : $this->Tasks_model->get_one($_task); //the $_task is either task id or task info
         $permissions = $this->login_user->permissions;
 
@@ -460,29 +482,35 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _user_has_project_task_creation_permission() {
+    private function _user_has_project_task_creation_permission()
+    {
         return get_array_value($this->login_user->permissions, "can_create_tasks") == "1";
     }
 
-    private function _user_has_project_task_edit_permission() {
+    private function _user_has_project_task_edit_permission()
+    {
         return get_array_value($this->login_user->permissions, "can_edit_tasks") == "1";
     }
 
-    private function _user_has_project_task_delete_permission() {
+    private function _user_has_project_task_delete_permission()
+    {
         return get_array_value($this->login_user->permissions, "can_delete_tasks") == "1";
     }
 
-    private function _user_has_project_task_comment_permission() {
+    private function _user_has_project_task_comment_permission()
+    {
         return get_array_value($this->login_user->permissions, "can_comment_on_tasks") == "1";
     }
 
-    private function _is_active_module($module_name) {
+    private function _is_active_module($module_name)
+    {
         if (get_setting($module_name) == "1") {
             return true;
         }
     }
 
-    private function _get_accessible_contexts($type = "create", $task_info = null) {
+    private function _get_accessible_contexts($type = "create", $task_info = null)
+    {
 
         $context_id_pairs = $this->get_context_id_pairs();
 
@@ -515,7 +543,8 @@ class Tasks extends Security_Controller {
     }
 
     //this will be applied to staff users only except project context
-    private function _prepare_query_parameters_for_accessible_contexts($contexts) {
+    private function _prepare_query_parameters_for_accessible_contexts($contexts)
+    {
         $context_options = array();
 
         if ($this->login_user->is_admin) {
@@ -561,7 +590,8 @@ class Tasks extends Security_Controller {
         return array("context_options" => $context_options);
     }
 
-    function modal_form_simple() {
+    function modal_form_simple()
+    {
         $id = $this->request->getPost('id');
         $add_type = $this->request->getPost('add_type');
         $last_id = $this->request->getPost('last_id');
@@ -595,7 +625,7 @@ class Tasks extends Security_Controller {
 
         if ($model_info->context) {
             $selected_context = $model_info->context; //has highest priority 
-            $context_id_key = $model_info->context."_id";
+            $context_id_key = $model_info->context . "_id";
             $selected_context_id = $model_info->{$context_id_key};
         }
 
@@ -647,7 +677,8 @@ class Tasks extends Security_Controller {
         return $this->template->view('tasks/modal_form_simple', $view_data);
     }
 
-    function modal_form() {
+    function modal_form()
+    {
         $id = $this->request->getPost('id');
         $add_type = $this->request->getPost('add_type');
         $last_id = $this->request->getPost('last_id');
@@ -681,7 +712,7 @@ class Tasks extends Security_Controller {
 
         if ($model_info->context) {
             $selected_context = $model_info->context; //has highest priority 
-            $context_id_key = $model_info->context."_id";
+            $context_id_key = $model_info->context . "_id";
             $selected_context_id = $model_info->{$context_id_key};
         }
 
@@ -734,7 +765,8 @@ class Tasks extends Security_Controller {
     }
     /*----*/
     //new-modal-form
-    function modal_form_new($project_id){
+    function modal_form_new($project_id)
+    {
         // if ($id) {
         //     if (!$this->can_edit_tasks($model_info)) {
         //         app_redirect("forbidden");
@@ -742,31 +774,32 @@ class Tasks extends Security_Controller {
         //     $contexts = array($model_info->context); //context can't be edited dureing edit. So, pass only the saved context
         //     $view_data["show_contexts_dropdown"] = false; //don't show context when editing 
         // } else {
-            //Going to create new task. Check if the user has access in any context
-            if (!$this->can_create_tasks()) {
-                app_redirect("forbidden");
-            }
+        //Going to create new task. Check if the user has access in any context
+        if (!$this->can_create_tasks()) {
+            app_redirect("forbidden");
+        }
         // }
-        $allStatus=$this->Task_status_model->get_all()->getResultArray();
-        $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
-        $allMilestones=$this->Milestones_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $gotProject=$this->Projects_model->get_one($project_id);
-        $allMembers=$this->Project_members_model->get_details(array("project_id"=>$project_id))->getResult();
-        $allBudgetGroups=$this->Budget_groups_model->get_all()->getResult();
+        $allStatus = $this->Task_status_model->get_all()->getResultArray();
+        $allPriorities = $this->Task_priority_model->get_all()->getResultArray();
+        $allMilestones = $this->Milestones_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allTasks = $this->Tasks_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $gotProject = $this->Projects_model->get_one($project_id);
+        $allMembers = $this->Project_members_model->get_details(array("project_id" => $project_id))->getResult();
+        $allBudgetGroups = $this->Budget_groups_model->get_all()->getResult();
         // $allVariationOrders=$this->Task_variation_orders_model->get_all()->getResult();
-        return $this->template->view('tasks/modal_form_id',["allBudgetGroups"=>$allBudgetGroups,"allMembers"=>$allMembers,"gotProject"=>$gotProject,"allTasks"=>$allTasks,"project_id"=>$project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        return $this->template->view('tasks/modal_form_id', ["allBudgetGroups" => $allBudgetGroups, "allMembers" => $allMembers, "gotProject" => $gotProject, "allTasks" => $allTasks, "project_id" => $project_id, "allMilestones" => $allMilestones, "allStatus" => $allStatus, "allPriorities" => $allPriorities]);
     }
     /*----*/
     /*----*/
     //new-modal-form
-    function modal_form_edit($task_id){
-        
-        $allStatus=$this->Task_status_model->get_all()->getResultArray();
-        $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
-        
+    function modal_form_edit($task_id)
+    {
+
+        $allStatus = $this->Task_status_model->get_all()->getResultArray();
+        $allPriorities = $this->Task_priority_model->get_all()->getResultArray();
+
         // $allTasklibraries=$this->Task_libraries_model->get_all()->getResultArray();
-        $gotTask=$this->Tasks_model->get_one($task_id);
+        $gotTask = $this->Tasks_model->get_one($task_id);
         if ($task_id) {
             if (!$this->can_edit_tasks($gotTask)) {
                 app_redirect("forbidden");
@@ -779,25 +812,27 @@ class Tasks extends Security_Controller {
                 app_redirect("forbidden");
             }
         }
-        $allMilestones=$this->Milestones_model->get_all_where(array("project_id"=>$gotTask->project_id))->getResult();
-        $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_id"=>$task_id,"deleted"=>0))->getResult();
-        $gotProject=$this->Projects_model->get_one($gotTask->project_id);
-        $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$gotTask->project_id))->getResult();
-        $allVariationOrders=$this->Task_variation_orders_model->get_all()->getResultArray();
-        $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_id"=>$task_id,"deleted"=>0))->getResult();
-        $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("task_id"=>$task_id))->getResult();
-        $allCostItems=$this->Task_cost_items_model->get_all_where(array("task_id"=>$task_id))->getResult();
-        $allMembers=$this->Project_members_model->get_details(array("project_id"=>$gotProject->id))->getResult();
-        $allBudgetGroups=$this->Budget_groups_model->get_all()->getResult();
-        return $this->template->view('tasks/modal_form_id',["allBudgetGroups"=>$allBudgetGroups,"allMembers"=>$allMembers,"allCostItems"=>$allCostItems,"allOwnerSupplies"=>$allOwnerSupplies,"allTasks"=>$allTasks,"gotChecklistItems"=>$gotChecklistItems,"gotTask"=>$gotTask,"task_id"=>$task_id,"gotProject"=>$gotProject,"project_id"=>$gotTask->project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        $allMilestones = $this->Milestones_model->get_all_where(array("project_id" => $gotTask->project_id))->getResult();
+        $gotChecklistItems = $this->Checklist_items_model->get_all_where(array("task_id" => $task_id, "deleted" => 0))->getResult();
+        $gotProject = $this->Projects_model->get_one($gotTask->project_id);
+        $allTasks = $this->Tasks_model->get_all_where(array("project_id" => $gotTask->project_id))->getResult();
+        $allVariationOrders = $this->Task_variation_orders_model->get_all()->getResultArray();
+        $gotChecklistItems = $this->Checklist_items_model->get_all_where(array("task_id" => $task_id, "deleted" => 0))->getResult();
+        $allOwnerSupplies = $this->Task_owner_supplies_model->get_all_where(array("task_id" => $task_id))->getResult();
+        $allCostItems = $this->Task_cost_items_model->get_all_where(array("task_id" => $task_id))->getResult();
+        $allMembers = $this->Project_members_model->get_details(array("project_id" => $gotProject->id))->getResult();
+        $allBudgetGroups = $this->Budget_groups_model->get_all()->getResult();
+        return $this->template->view('tasks/modal_form_id', ["allBudgetGroups" => $allBudgetGroups, "allMembers" => $allMembers, "allCostItems" => $allCostItems, "allOwnerSupplies" => $allOwnerSupplies, "allTasks" => $allTasks, "gotChecklistItems" => $gotChecklistItems, "gotTask" => $gotTask, "task_id" => $task_id, "gotProject" => $gotProject, "project_id" => $gotTask->project_id, "allMilestones" => $allMilestones, "allStatus" => $allStatus, "allPriorities" => $allPriorities]);
     }
-    function members($project_id){
-        $allMembers=$this->Project_members_model->get_details(array("project_id"=>$project_id))->getResult();
+    function members($project_id)
+    {
+        $allMembers = $this->Project_members_model->get_details(array("project_id" => $project_id))->getResult();
         return json_encode($allMembers);
     }
     /*----*/
 
-    private function get_removed_task_status_ids($project_id = 0) {
+    private function get_removed_task_status_ids($project_id = 0)
+    {
         if (!$project_id) {
             return "";
         }
@@ -806,7 +841,8 @@ class Tasks extends Security_Controller {
         return get_setting("remove_task_statuses");
     }
 
-    private function _get_task_related_dropdowns($context = "", $context_id = 0, $return_empty_context = false) {
+    private function _get_task_related_dropdowns($context = "", $context_id = 0, $return_empty_context = false)
+    {
 
         //get milestone dropdown
         $milestones_dropdown = array(array("id" => "", "text" => "-"));
@@ -1034,7 +1070,8 @@ class Tasks extends Security_Controller {
         );
     }
 
-    private function _get_project_deadline_for_task($project_id = 0) {
+    private function _get_project_deadline_for_task($project_id = 0)
+    {
         if (!$project_id) {
             return "";
         }
@@ -1050,7 +1087,8 @@ class Tasks extends Security_Controller {
 
     /* insert/upadate/clone a task */
 
-    function save_simple() {
+    function save_simple()
+    {
 
         $project_id = $this->request->getPost('project_id');
         $id = $this->request->getPost('id');
@@ -1090,23 +1128,25 @@ class Tasks extends Security_Controller {
             }
         }
 
-        $this->validate_submitted_data(array(
-            "id" => "numeric",
-            "supplier" => "numeric",
-            "title" => "required|max_length[60]",
-            // "project_id" => "required",
-            // "labels" => "required",
-            "dock_list_number" => "max_length[15]",
-            "reference_drawing" => "max_length[30]",
-            "location" => "max_length[300]",
-            "specification" => "max_length[300]",
-            "requisition_number" => "max_length[30]",
-            "budget" => "max_length[30]",
-            "maker" => "max_length[30]",
-            "type" => "max_length[30]",
-            "serial_number" => "max_length[30]",
-            "pms_scs_number" => "max_length[30]"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric",
+                "supplier" => "numeric",
+                "title" => "required|max_length[60]",
+                // "project_id" => "required",
+                // "labels" => "required",
+                "dock_list_number" => "max_length[15]",
+                "reference_drawing" => "max_length[30]",
+                "location" => "max_length[300]",
+                "specification" => "max_length[300]",
+                "requisition_number" => "max_length[30]",
+                "budget" => "max_length[30]",
+                "maker" => "max_length[30]",
+                "type" => "max_length[30]",
+                "serial_number" => "max_length[30]",
+                "pms_scs_number" => "max_length[30]"
+            )
+        );
 
         $points = $this->request->getPost('points') ?? 1;
         $milestone_id = $this->request->getPost('milestone_id') ?? 0;
@@ -1121,7 +1161,7 @@ class Tasks extends Security_Controller {
         $priority_id = $this->request->getPost('priority_id') ?? 0;
 
         //////////////////////////
-        $owner_supply=$this->request->getPost('owner_supply')??0;
+        $owner_supply = $this->request->getPost('owner_supply') ?? 0;
         ///////////////////////////
 
         $data = array(
@@ -1155,10 +1195,10 @@ class Tasks extends Security_Controller {
             "work_permit" => $this->request->getPost("work_permit"),
             "painting_after_completion" => $this->request->getPost("painting_after_completion"),
             "parts_on_board" => $this->request->getPost("parts_on_board"),
-            "transport_to_yard_workshop" => $this->request->getPost("transport_to_yard_workshop")?$this->request->getPost("transport_to_yard_workshop"):0,
-            "transport_outside_yard" => $this->request->getPost("transport_outside_yard")?$this->request->getPost("transport_outside_yard"):0,
-            "material_yards_supply" => $this->request->getPost("material_yards_supply")?$this->request->getPost("material_yards_supply"):0,
-            "material_owners_supply" => $this->request->getPost("material_owners_supply")?$this->request->getPost("material_owners_supply"):0,
+            "transport_to_yard_workshop" => $this->request->getPost("transport_to_yard_workshop") ? $this->request->getPost("transport_to_yard_workshop") : 0,
+            "transport_outside_yard" => $this->request->getPost("transport_outside_yard") ? $this->request->getPost("transport_outside_yard") : 0,
+            "material_yards_supply" => $this->request->getPost("material_yards_supply") ? $this->request->getPost("material_yards_supply") : 0,
+            "material_owners_supply" => $this->request->getPost("material_owners_supply") ? $this->request->getPost("material_owners_supply") : 0,
             "risk_assessment" => $this->request->getPost("risk_assessment"),
             "maker" => $this->request->getPost("maker"),
             "type" => $this->request->getPost("type"),
@@ -1172,7 +1212,7 @@ class Tasks extends Security_Controller {
             "quote" => $this->request->getPost("quote"),
             "discount" => $this->request->getPost("discount"),
             "remarks" => $this->request->getPost("remarks"),
-            "owner_supply"=>$owner_supply
+            "owner_supply" => $owner_supply
         );
 
         if (!$id) {
@@ -1373,7 +1413,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    function save() {
+    function save()
+    {
 
         $project_id = $this->request->getPost('project_id');
         $id = $this->request->getPost('id');
@@ -1413,23 +1454,25 @@ class Tasks extends Security_Controller {
             }
         }
 
-        $this->validate_submitted_data(array(
-            "id" => "numeric",
-            "supplier" => "numeric",
-            "title" => "required|max_length[60]",
-            "project_id" => "required",
-            "labels" => "required",
-            "dock_list_number" => "max_length[15]",
-            "reference_drawing" => "max_length[30]",
-            "location" => "max_length[300]",
-            "specification" => "max_length[300]",
-            "requisition_number" => "max_length[30]",
-            "budget" => "max_length[30]",
-            "maker" => "max_length[30]",
-            "type" => "max_length[30]",
-            "serial_number" => "max_length[30]",
-            "pms_scs_number" => "max_length[30]"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric",
+                "supplier" => "numeric",
+                "title" => "required|max_length[60]",
+                "project_id" => "required",
+                "labels" => "required",
+                "dock_list_number" => "max_length[15]",
+                "reference_drawing" => "max_length[30]",
+                "location" => "max_length[300]",
+                "specification" => "max_length[300]",
+                "requisition_number" => "max_length[30]",
+                "budget" => "max_length[30]",
+                "maker" => "max_length[30]",
+                "type" => "max_length[30]",
+                "serial_number" => "max_length[30]",
+                "pms_scs_number" => "max_length[30]"
+            )
+        );
 
         $points = $this->request->getPost('points') ?? 1;
         $milestone_id = $this->request->getPost('milestone_id') ?? 0;
@@ -1444,7 +1487,7 @@ class Tasks extends Security_Controller {
         $priority_id = $this->request->getPost('priority_id') ?? 0;
 
         //////////////////////////
-        $owner_supply=$this->request->getPost('owner_supply')??0;
+        $owner_supply = $this->request->getPost('owner_supply') ?? 0;
         ///////////////////////////
 
         $data = array(
@@ -1478,10 +1521,10 @@ class Tasks extends Security_Controller {
             "work_permit" => $this->request->getPost("work_permit"),
             "painting_after_completion" => $this->request->getPost("painting_after_completion"),
             "parts_on_board" => $this->request->getPost("parts_on_board"),
-            "transport_to_yard_workshop" => $this->request->getPost("transport_to_yard_workshop")?$this->request->getPost("transport_to_yard_workshop"):0,
-            "transport_outside_yard" => $this->request->getPost("transport_outside_yard")?$this->request->getPost("transport_outside_yard"):0,
-            "material_yards_supply" => $this->request->getPost("material_yards_supply")?$this->request->getPost("material_yards_supply"):0,
-            "material_owners_supply" => $this->request->getPost("material_owners_supply")?$this->request->getPost("material_owners_supply"):0,
+            "transport_to_yard_workshop" => $this->request->getPost("transport_to_yard_workshop") ? $this->request->getPost("transport_to_yard_workshop") : 0,
+            "transport_outside_yard" => $this->request->getPost("transport_outside_yard") ? $this->request->getPost("transport_outside_yard") : 0,
+            "material_yards_supply" => $this->request->getPost("material_yards_supply") ? $this->request->getPost("material_yards_supply") : 0,
+            "material_owners_supply" => $this->request->getPost("material_owners_supply") ? $this->request->getPost("material_owners_supply") : 0,
             "risk_assessment" => $this->request->getPost("risk_assessment"),
             "maker" => $this->request->getPost("maker"),
             "type" => $this->request->getPost("type"),
@@ -1495,7 +1538,7 @@ class Tasks extends Security_Controller {
             "quote" => $this->request->getPost("quote"),
             "discount" => $this->request->getPost("discount"),
             "remarks" => $this->request->getPost("remarks"),
-            "owner_supply"=>$owner_supply
+            "owner_supply" => $owner_supply
         );
 
         if (!$id) {
@@ -1702,7 +1745,8 @@ class Tasks extends Security_Controller {
      * @param int $id. client_id/lead_id etc.
      */
 
-    function list_data($context = "", $context_id = 0) {
+    function list_data($context = "", $context_id = 0)
+    {
         validate_numeric_value($context_id);
         if (!$this->can_view_tasks($context, $context_id)) {
             app_redirect("forbidden");
@@ -1771,7 +1815,8 @@ class Tasks extends Security_Controller {
 
     /* return a row of task list table */
 
-    private function _row_data($id) {
+    private function _row_data($id)
+    {
         $custom_fields = $this->Custom_fields_model->get_available_fields_for_table("tasks", $this->login_user->is_admin, $this->login_user->user_type);
 
         $options = array("id" => $id, "custom_fields" => $custom_fields);
@@ -1787,7 +1832,8 @@ class Tasks extends Security_Controller {
 
     /* prepare a row of task list table */
 
-    private function _make_row($data, $custom_fields, $show_time_with_task, $tasks_edit_permissions, $tasks_status_edit_permissions) {
+    private function _make_row($data, $custom_fields, $show_time_with_task, $tasks_edit_permissions, $tasks_status_edit_permissions)
+    {
         $unread_comments_class = "";
         $icon = "";
         if (isset($data->unread) && $data->unread && $data->unread != "0") {
@@ -1862,8 +1908,8 @@ class Tasks extends Security_Controller {
         $assigned_to = "-";
 
         if ($data->assigned_to) {
-            
-           
+
+
             $image_url = get_avatar($data->assigned_to_avatar);
             //////////////////////
             // $user_info=$this->Users_model->get_one($this->Project_members_model->get_one($data->assigned_to)->user_id);
@@ -1889,16 +1935,17 @@ class Tasks extends Security_Controller {
             $collaborators = "-";
         }
 
-        
-        
+
+
 
 
         $checkbox_class = "checkbox-blank";
-        $newGotStatus=$this->Task_status_model->get_one($data->status_id);
+        $newGotStatus = $this->Task_status_model->get_one($data->status_id);
         if ($data->status_key_name === "done") {
             $checkbox_class = "checkbox-checked";
         }
-        if($newGotStatus->key_name=="done") $checkbox_class = "checkbox-checked";
+        if ($newGotStatus->key_name == "done")
+            $checkbox_class = "checkbox-checked";
         if (get_array_value($tasks_status_edit_permissions, $data->id)) {
             //show changeable status checkbox and link to team members
             $check_status = js_anchor("<span class='$checkbox_class mr15 float-start'></span>", array('title' => "", "class" => "js-task", "data-id" => $data->id, "data-value" => $data->status_key_name === "done" ? "1" : "3", "data-act" => "update-task-status-checkbox")) . $data->id;
@@ -1987,32 +2034,35 @@ class Tasks extends Security_Controller {
         }
 
         $row_data[] = $options;
-        $row_data[]= $newGotStatus->key_name;
+        $row_data[] = $newGotStatus->key_name;
 
-        
+
         return $row_data;
     }
 
     /* upload a post file */
 
-    function upload_file() {
+    function upload_file()
+    {
         upload_file_to_temp();
     }
 
     /* check valid file for project */
 
-    function validate_task_file() {
+    function validate_task_file()
+    {
         return validate_post_file($this->request->getPost("file_name"));
     }
 
     /* delete or undo a task */
 
-    function delete() {
+    function delete()
+    {
 
         $id = $this->request->getPost('id');
         $info = $this->Tasks_model->get_one($id);
-        $this->Task_cost_items_model->delete_where(array("task_id"=>$id));
-        $this->Shipyard_cost_items_model->delete_where(array("task_id"=>$id));
+        $this->Task_cost_items_model->delete_where(array("task_id" => $id));
+        $this->Shipyard_cost_items_model->delete_where(array("task_id" => $id));
         // if (!$this->can_delete_tasks($info)) {
         //     app_redirect("forbidden");
         // }
@@ -2032,11 +2082,14 @@ class Tasks extends Security_Controller {
             }
 
             try {
-                app_hooks()->do_action("app_hook_data_delete", array(
-                    "id" => $id,
-                    "table" => get_db_prefix() . "tasks",
-                    "table_without_prefix" => "tasks",
-                ));
+                app_hooks()->do_action(
+                    "app_hook_data_delete",
+                    array(
+                        "id" => $id,
+                        "table" => get_db_prefix() . "tasks",
+                        "table_without_prefix" => "tasks",
+                    )
+                );
             } catch (\Exception $ex) {
                 log_message('error', '[ERROR] {exception}', ['exception' => $ex]);
             }
@@ -2045,7 +2098,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _get_collaborators($collaborator_list, $clickable = true) {
+    private function _get_collaborators($collaborator_list, $clickable = true)
+    {
         $collaborators = "";
         if ($collaborator_list) {
 
@@ -2076,7 +2130,8 @@ class Tasks extends Security_Controller {
     }
 
     //parent task can't be marked as done if there is any sub task which is not done yet
-    private function check_sub_tasks_statuses($status_id = 0, $parent_task_id = 0) {
+    private function check_sub_tasks_statuses($status_id = 0, $parent_task_id = 0)
+    {
         if ($status_id !== "3") {
             //parent task isn't marking as done
             return true;
@@ -2093,7 +2148,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _make_checklist_item_row($data = array(), $return_type = "row") {
+    private function _make_checklist_item_row($data = array(), $return_type = "row")
+    {
         $checkbox_class = "checkbox-blank";
         $title_class = "";
         $is_checked_value = 1;
@@ -2113,7 +2169,7 @@ class Tasks extends Security_Controller {
 
         $title = "<span class='font-13 $title_class'>" . $title_value . "</span>";
 
-        $delete = ajax_anchor(get_uri("tasks/delete_checklist_item/$data->id"), "<div class='float-end'><i data-feather='x' class='icon-16'></i></div>", array("onclick"=>"delete_task(this)","class" => "delete-checklist-item", "title" => app_lang("delete_checklist_item"), "data-fade-out-on-success" => "#checklist-item-row-$data->id"));
+        $delete = ajax_anchor(get_uri("tasks/delete_checklist_item/$data->id"), "<div class='float-end'><i data-feather='x' class='icon-16'></i></div>", array("onclick" => "delete_task(this)", "class" => "delete-checklist-item", "title" => app_lang("delete_checklist_item"), "data-fade-out-on-success" => "#checklist-item-row-$data->id"));
         if (!$this->can_edit_tasks($data->task_id)) {
             $delete = "";
         }
@@ -2125,7 +2181,8 @@ class Tasks extends Security_Controller {
         return "<div id='checklist-item-row-$data->id' class='list-group-item mb5 checklist-item-row b-a rounded text-break' data-id='$data->id'>" . $status . $delete . $title . "</div>";
     }
 
-    private function _make_sub_task_row($data, $return_type = "row") {
+    private function _make_sub_task_row($data, $return_type = "row")
+    {
 
         $checkbox_class = "checkbox-blank";
         $title_class = "";
@@ -2151,7 +2208,8 @@ class Tasks extends Security_Controller {
         return "<div class='list-group-item mb5 b-a rounded sub-task-row' data-id='$data->id'>" . $status . $title . $status_label . "</div>";
     }
 
-    function view($task_id = 0) {
+    function view($task_id = 0)
+    {
         validate_numeric_value($task_id);
         $view_type = "";
 
@@ -2272,20 +2330,20 @@ class Tasks extends Security_Controller {
 
         $view_data['contexts'] = $this->_get_accessible_contexts();
         ////////////////////////////
-        $view_data['allYardCostItems']=$this->Shipyard_cost_items_model->get_details_grouped_yards(array("task_id"=>$task_id))->getResult();
-        $view_data['allYards']=$this->Project_yards_model->get_all_where(array("project_id"=>$model_info->project_id))->getResult();
-        $allCostItems=$this->Task_cost_items_model->get_all_with_costs_where(array("task_id"=>$task_id))->getResult();
-        $view_data['allCostItems']=$allCostItems;
-        $project_info=$this->Projects_model->get_one($model_info->project_id);
-        $view_data['project_info']=$project_info;
-        $view_data['model_info']->cost_items=json_encode($allCostItems);
-        $allVariationOrders=$this->Task_variation_orders_model->get_all_where(array("task_id"=>$task_id))->getResult();
-        $view_data['variation_orders']=$allVariationOrders;
-        $allOwnerSupplies=$this->Task_owner_supplies_model->get_all_where(array("task_id"=>$task_id))->getResult();
-        $view_data['owner_supplies']=$allOwnerSupplies;
+        $view_data['allYardCostItems'] = $this->Shipyard_cost_items_model->get_details_grouped_yards(array("task_id" => $task_id))->getResult();
+        $view_data['allYards'] = $this->Project_yards_model->get_all_where(array("project_id" => $model_info->project_id))->getResult();
+        $allCostItems = $this->Task_cost_items_model->get_all_with_costs_where(array("task_id" => $task_id))->getResult();
+        $view_data['allCostItems'] = $allCostItems;
+        $project_info = $this->Projects_model->get_one($model_info->project_id);
+        $view_data['project_info'] = $project_info;
+        $view_data['model_info']->cost_items = json_encode($allCostItems);
+        $allVariationOrders = $this->Task_variation_orders_model->get_all_where(array("task_id" => $task_id))->getResult();
+        $view_data['variation_orders'] = $allVariationOrders;
+        $allOwnerSupplies = $this->Task_owner_supplies_model->get_all_where(array("task_id" => $task_id))->getResult();
+        $view_data['owner_supplies'] = $allOwnerSupplies;
         $file_categories = $this->File_category_model->get_details()->getResult();
         $file_categories_dropdown = array("" => "-");
-        $allYardCostItems=$this->Shipyard_cost_items_model->get_details(array("task_id"=>$task_id))->getResult();
+        $allYardCostItems = $this->Shipyard_cost_items_model->get_details(array("task_id" => $task_id))->getResult();
 
         if ($file_categories) {
             foreach ($file_categories as $file_category) {
@@ -2294,36 +2352,39 @@ class Tasks extends Security_Controller {
         }
         $view_data["file_categories_dropdown"] = json_encode($file_categories_dropdown);
 
-        $collaborators=explode(",",$model_info->collaborators);
-        $collaborators_data="";
+        $collaborators = explode(",", $model_info->collaborators);
+        $collaborators_data = "";
         foreach ($collaborators as $oneCol) {
             # code...
-            if($oneCol=="") continue;
-            $oneCol_info=$this->Users_model->get_one($oneCol);
-            if(unserialize($oneCol_info->image))
-                $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
-            else $avatar_file=base_url("assets/images/avatar.jpg");
-            $oneCol_name=$oneCol_info->first_name." ".$oneCol_info->last_name;
-            $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." />'.$oneCol_name.'</span></a><br/>';
+            if ($oneCol == "")
+                continue;
+            $oneCol_info = $this->Users_model->get_one($oneCol);
+            if (unserialize($oneCol_info->image))
+                $avatar_file = base_url("files/profile_images/" . unserialize($oneCol_info->image)['file_name']);
+            else
+                $avatar_file = base_url("assets/images/avatar.jpg");
+            $oneCol_name = $oneCol_info->first_name . " " . $oneCol_info->last_name;
+            $collaborators_data .= '<a href="' . get_uri("/team_members/view/" . $oneCol) . '" ><span class="avatar avatar-xs mr-10" ><img src=' . $avatar_file . ' alt="..." />' . $oneCol_name . '</span></a><br/>';
         }
-        $model_info->collaborators_data=$collaborators_data;
+        $model_info->collaborators_data = $collaborators_data;
         ///////////////////////////////////////
         $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("task_files", $this->login_user->is_admin, $this->login_user->user_type);
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("task_files", $this->login_user->is_admin, $this->login_user->user_type);
 
         $view_data["gotTask"] = $this->Tasks_model->get_one($task_id);
         $view_data["budgetGroup"] = $this->Budget_groups_model->get_one($view_data["gotTask"]->budget_group);
-        
+
         if ($view_type == "details") {
-            $view_data['modal_opened']=0;
+            $view_data['modal_opened'] = 0;
             return $this->template->rander('tasks/view', $view_data);
         } else {
-            $view_data['modal_opened']=1;
+            $view_data['modal_opened'] = 1;
             return $this->template->view('tasks/view', $view_data);
         }
     }
 
-    private function _make_dependency_tasks_view_data($task_ids = "", $task_id = 0, $type = "") {
+    private function _make_dependency_tasks_view_data($task_ids = "", $task_id = 0, $type = "")
+    {
         if ($task_ids) {
             $tasks = "";
 
@@ -2337,7 +2398,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _make_dependency_tasks_row_data($task_info, $task_id, $type) {
+    private function _make_dependency_tasks_row_data($task_info, $task_id, $type)
+    {
         $tasks = "";
 
         $tasks .= "<div id='dependency-task-row-$task_info->id' class='list-group-item mb5 dependency-task-row b-a rounded' style='border-left: 5px solid $task_info->status_color !important;'>";
@@ -2353,7 +2415,8 @@ class Tasks extends Security_Controller {
         return $tasks;
     }
 
-    private function _get_all_dependency_for_this_task_specific($task_ids = "", $task_id = 0, $type = "") {
+    private function _get_all_dependency_for_this_task_specific($task_ids = "", $task_id = 0, $type = "")
+    {
         if ($task_id && $type) {
             //find the other tasks dependency with this task
             $dependency_tasks = $this->Tasks_model->get_all_dependency_for_this_task($task_id, $type);
@@ -2370,7 +2433,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    function delete_dependency_task($dependency_task_id, $task_id, $type) {
+    function delete_dependency_task($dependency_task_id, $task_id, $type)
+    {
         validate_numeric_value($dependency_task_id);
         validate_numeric_value($task_id);
         $task_info = $this->Tasks_model->get_one($task_id);
@@ -2418,14 +2482,17 @@ class Tasks extends Security_Controller {
 
     /* checklist */
 
-    function save_checklist_item() {
+    function save_checklist_item()
+    {
 
         $task_id = $this->request->getPost("task_id");
         $is_checklist_group = $this->request->getPost("is_checklist_group");
 
-        $this->validate_submitted_data(array(
-            "task_id" => "required|numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "task_id" => "required|numeric"
+            )
+        );
 
         $task_info = $this->Tasks_model->get_one($task_id);
 
@@ -2469,7 +2536,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    function save_checklist_item_status($id = 0) {
+    function save_checklist_item_status($id = 0)
+    {
         $task_id = $this->Checklist_items_model->get_one($id)->task_id;
 
         $task_info = $this->Tasks_model->get_one($task_id);
@@ -2492,7 +2560,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    function save_checklist_items_sort() {
+    function save_checklist_items_sort()
+    {
         $sort_values = $this->request->getPost("sort_values");
         if ($sort_values) {
             //extract the values from the comma separated string
@@ -2513,7 +2582,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    function delete_checklist_item($id) {
+    function delete_checklist_item($id)
+    {
 
         $task_id = $this->Checklist_items_model->get_one($id)->task_id;
 
@@ -2531,7 +2601,8 @@ class Tasks extends Security_Controller {
     }
 
     /////////
-    function delete_checklist_item_permanently($id) {
+    function delete_checklist_item_permanently($id)
+    {
 
         // $task_id = $this->Checklist_items_model->get_one($id)->task_id;
 
@@ -2550,7 +2621,8 @@ class Tasks extends Security_Controller {
     /////////
 
     //load global gantt view
-    function all_gantt() {
+    function all_gantt()
+    {
         $this->access_only_team_members();
 
         if ($this->has_all_projects_restricted_role()) {
@@ -2600,7 +2672,8 @@ class Tasks extends Security_Controller {
         return $this->template->rander("projects/gantt/index", $view_data);
     }
 
-    function save_dependency_tasks() {
+    function save_dependency_tasks()
+    {
         $task_id = $this->request->getPost("task_id");
         if (!$task_id) {
             return false;
@@ -2639,7 +2712,8 @@ class Tasks extends Security_Controller {
         echo json_encode(array("success" => true, "data" => $this->_make_dependency_tasks_row_data($dependency_task_info, $task_id, $dependency_type), 'message' => app_lang('record_saved')));
     }
 
-    private function _get_all_dependency_for_this_task($task_id) {
+    private function _get_all_dependency_for_this_task($task_id)
+    {
         $task_info = $this->Tasks_model->get_one($task_id);
         $blocked_by = $this->_get_all_dependency_for_this_task_specific($task_info->blocked_by, $task_id, "blocked_by");
         $blocking = $this->_get_all_dependency_for_this_task_specific($task_info->blocking, $task_id, "blocking");
@@ -2656,7 +2730,8 @@ class Tasks extends Security_Controller {
         return $all_tasks;
     }
 
-    function get_existing_dependency_tasks($task_id = 0) {
+    function get_existing_dependency_tasks($task_id = 0)
+    {
         if ($task_id) {
             validate_numeric_value($task_id);
             $model_info = $this->Tasks_model->get_details(array("id" => $task_id))->getRow();
@@ -2695,7 +2770,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    function save_gantt_task_date() {
+    function save_gantt_task_date()
+    {
         $task_id = $this->request->getPost("task_id");
         if (!$task_id) {
             show_404();
@@ -2730,7 +2806,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    function import_tasks_modal_form() {
+    function import_tasks_modal_form()
+    {
         $this->access_only_team_members();
         if (!$this->can_create_tasks()) {
             app_redirect("forbidden");
@@ -2739,7 +2816,8 @@ class Tasks extends Security_Controller {
         return $this->template->view("tasks/import_tasks_modal_form", $view_data);
     }
 
-    function export_project_modal_form() {
+    function export_project_modal_form()
+    {
         $this->access_only_team_members();
         if (!$this->can_create_tasks()) {
             app_redirect("forbidden");
@@ -2748,15 +2826,18 @@ class Tasks extends Security_Controller {
         return $this->template->view("tasks/export_project_modal_form", $view_data);
     }
 
-    function upload_excel_file() {
+    function upload_excel_file()
+    {
         upload_file_to_temp(true);
     }
 
-    function download_sample_excel_file() {
+    function download_sample_excel_file()
+    {
         return $this->download_app_files(get_setting("system_file_path"), serialize(array(array("file_name" => "import-tasks-sample.xlsx"))));
     }
 
-    function validate_import_tasks_file() {
+    function validate_import_tasks_file()
+    {
         $file_name = $this->request->getPost("file_name");
         $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
         if (!is_valid_file_to_upload($file_name)) {
@@ -2771,7 +2852,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _prepare_task_data($data_row, $allowed_headers) {
+    private function _prepare_task_data($data_row, $allowed_headers)
+    {
         //prepare task data
         $task_data = array();
         $custom_field_values_array = array();
@@ -2824,7 +2906,8 @@ class Tasks extends Security_Controller {
         );
     }
 
-    private function _get_existing_custom_field_id($title = "") {
+    private function _get_existing_custom_field_id($title = "")
+    {
         if (!$title) {
             return false;
         }
@@ -2840,7 +2923,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _prepare_headers_for_submit($headers_row, $headers) {
+    private function _prepare_headers_for_submit($headers_row, $headers)
+    {
         foreach ($headers_row as $key => $header) {
             if (!((count($headers) - 1) < $key)) { //skip default headers
                 continue;
@@ -2858,7 +2942,8 @@ class Tasks extends Security_Controller {
         return $headers;
     }
 
-    function save_task_from_excel_file() {
+    function save_task_from_excel_file()
+    {
         $this->access_only_team_members();
         if (!$this->can_create_tasks()) {
             app_redirect("forbidden");
@@ -2869,7 +2954,7 @@ class Tasks extends Security_Controller {
         }
 
         $file_name = $this->request->getPost('file_name');
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
 
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
@@ -2914,7 +2999,8 @@ class Tasks extends Security_Controller {
         echo json_encode(array('success' => true, 'message' => app_lang("record_saved")));
     }
 
-    private function _save_custom_fields_of_task($task_id, $custom_field_values_array) {
+    private function _save_custom_fields_of_task($task_id, $custom_field_values_array)
+    {
         if (!$custom_field_values_array) {
             return false;
         }
@@ -2933,7 +3019,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _get_project_id($project = "") {
+    private function _get_project_id($project = "")
+    {
         if (!$project) {
             return false;
         }
@@ -2949,7 +3036,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _get_milestone_id($milestone = "") {
+    private function _get_milestone_id($milestone = "")
+    {
         if (!$milestone) {
             return false;
         }
@@ -2963,7 +3051,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _get_priority_id($priority = "") {
+    private function _get_priority_id($priority = "")
+    {
         if (!$priority) {
             return false;
         }
@@ -2977,7 +3066,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _get_assigned_to_id($assigned_to = "") {
+    private function _get_assigned_to_id($assigned_to = "")
+    {
         $assigned_to = trim($assigned_to);
         if (!$assigned_to) {
             return false;
@@ -2991,7 +3081,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _check_task_points($points = "") {
+    private function _check_task_points($points = "")
+    {
         if (!$points) {
             return false;
         }
@@ -3003,7 +3094,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _get_collaborators_ids($collaborators_data) {
+    private function _get_collaborators_ids($collaborators_data)
+    {
         $explode_collaborators = explode(", ", $collaborators_data);
         if (!($explode_collaborators && count($explode_collaborators))) {
             return false;
@@ -3032,7 +3124,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _get_status_id($status = "") {
+    private function _get_status_id($status = "")
+    {
         if (!$status) {
             return false;
         }
@@ -3046,7 +3139,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _get_label_ids($labels = "") {
+    private function _get_label_ids($labels = "")
+    {
         $explode_labels = explode(", ", $labels);
         if (!($explode_labels && count($explode_labels))) {
             return false;
@@ -3077,7 +3171,8 @@ class Tasks extends Security_Controller {
         return $labels_ids;
     }
 
-    private function _get_allowed_headers() {
+    private function _get_allowed_headers()
+    {
         return array(
             "title",
             "category",
@@ -3116,7 +3211,8 @@ class Tasks extends Security_Controller {
         );
     }
 
-    private function _store_headers_position($headers_row = array()) {
+    private function _store_headers_position($headers_row = array())
+    {
         $allowed_headers = $this->_get_allowed_headers();
 
         //check if all headers are correct and on the right position
@@ -3157,7 +3253,8 @@ class Tasks extends Security_Controller {
         return $final_headers;
     }
 
-    function validate_import_tasks_file_data($check_on_submit = false) {
+    function validate_import_tasks_file_data($check_on_submit = false)
+    {
         $table_data = "";
         $error_message = "";
         $headers = array();
@@ -3166,7 +3263,7 @@ class Tasks extends Security_Controller {
 
         $file_name = $this->request->getPost("file_name");
 
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
 
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
@@ -3280,7 +3377,8 @@ class Tasks extends Security_Controller {
         echo json_encode(array("success" => true, 'table_data' => $table_data, 'got_error' => ($got_error_header || $got_error_table_data) ? true : false));
     }
 
-    private function _row_data_validation_and_get_error_message($key, $data, $headers = array()) {
+    private function _row_data_validation_and_get_error_message($key, $data, $headers = array())
+    {
         $allowed_headers = $this->_get_allowed_headers();
         $header_value = get_array_value($allowed_headers, $key);
 
@@ -3295,13 +3393,15 @@ class Tasks extends Security_Controller {
         }
 
         //existance required on this fields
-        if ($data && (
+        if (
+            $data && (
                 ($header_value == "status" && !$this->_get_status_id($data)) ||
                 ($header_value == "priority" && !$this->_get_priority_id($data)) ||
                 ($header_value == "milestone" && !$this->_get_milestone_id($data)) ||
                 ($header_value == "assigned_to" && !$this->_get_assigned_to_id($data)) ||
                 ($header_value == "collaborators" && !$this->_get_collaborators_ids($data))
-                )) {
+            )
+        ) {
             if ($header_value == "assigned_to" || $header_value == "collaborators") {
                 return sprintf(app_lang("import_not_exists_error_message"), app_lang("user"));
             } else {
@@ -3322,7 +3422,8 @@ class Tasks extends Security_Controller {
 
     /* load task list view tab */
 
-    function project_tasks($project_id) {
+    function project_tasks($project_id)
+    {
         validate_numeric_value($project_id);
 
         if (!$this->can_view_tasks("project", $project_id)) {
@@ -3354,7 +3455,8 @@ class Tasks extends Security_Controller {
         return $this->template->view("projects/tasks/index", $view_data);
     }
 
-    function export_project_tasks_data() {
+    function export_project_tasks_data()
+    {
         $this->access_only_team_members();
 
         $project_id = $this->request->getPost('project_id');
@@ -3379,7 +3481,8 @@ class Tasks extends Security_Controller {
         echo json_encode($result_data);
     }
 
-    function export_quotation_project_data() {
+    function export_quotation_project_data()
+    {
         $this->access_only_team_members();
 
         $project_id = $this->request->getPost('project_id');
@@ -3429,7 +3532,8 @@ class Tasks extends Security_Controller {
         echo json_encode($result_data);
     }
 
-    private function _make_quoation_export($data, $show_time_with_task) {
+    private function _make_quoation_export($data, $show_time_with_task)
+    {
 
         $task_labels = make_labels_export_data($data->labels_list, true);
 
@@ -3509,7 +3613,8 @@ class Tasks extends Security_Controller {
         return $row_data;
     }
 
-    private function _make_export($data, $show_time_with_task) {
+    private function _make_export($data, $show_time_with_task)
+    {
 
         $task_labels = make_labels_export_data($data->labels_list, true);
 
@@ -3590,7 +3695,8 @@ class Tasks extends Security_Controller {
 
     /* load task kanban view of view tab */
 
-    function project_tasks_kanban($project_id) {
+    function project_tasks_kanban($project_id)
+    {
         validate_numeric_value($project_id);
 
         if (!$this->can_view_tasks("project", $project_id)) {
@@ -3605,7 +3711,8 @@ class Tasks extends Security_Controller {
         return $this->template->view("projects/tasks/kanban/project_tasks", $view_data);
     }
 
-    function project_tasks_kanban_kanban($project_id) {
+    function project_tasks_kanban_kanban($project_id)
+    {
         validate_numeric_value($project_id);
 
         if (!$this->can_view_tasks("project", $project_id)) {
@@ -3617,7 +3724,8 @@ class Tasks extends Security_Controller {
         $view_data['project_id'] = $project_id;
 
         $view_data['can_create_tasks'] = $this->can_create_tasks("project");
-        if($this->login_user->user_type=="client") $view_data['can_create_tasks']=false;
+        if ($this->login_user->user_type == "client")
+            $view_data['can_create_tasks'] = false;
         $view_data["show_milestone_info"] = $this->can_view_milestones();
 
         $view_data['milestone_dropdown'] = $this->_get_milestones_dropdown_list($project_id);
@@ -3633,7 +3741,8 @@ class Tasks extends Security_Controller {
         return $this->template->view("projects/tasks/kanban/kanban_tasks", $view_data);
     }
 
-    function project_tasks_kanban_list($project_id) {
+    function project_tasks_kanban_list($project_id)
+    {
         validate_numeric_value($project_id);
 
         if (!$this->can_view_tasks("project", $project_id)) {
@@ -3646,7 +3755,8 @@ class Tasks extends Security_Controller {
         $view_data['sort_by'] = 'category';
 
         $view_data['can_create_tasks'] = $this->can_create_tasks("project");
-        if($this->login_user->user_type=="client") $view_data['can_create_tasks']=false;
+        if ($this->login_user->user_type == "client")
+            $view_data['can_create_tasks'] = false;
         $view_data["show_milestone_info"] = $this->can_view_milestones();
 
         $view_data['milestone_dropdown'] = $this->_get_milestones_dropdown_list($project_id);
@@ -3656,14 +3766,16 @@ class Tasks extends Security_Controller {
         $exclude_status_ids = $this->get_removed_task_status_ids($project_id);
         $view_data['task_statuses'] = $this->Task_status_model->get_details(array("exclude_status_ids" => $exclude_status_ids))->getResult();
         $view_data['can_edit_tasks'] = $this->_can_edit_project_tasks($project_id);
-        if($this->login_user->user_type=="client") $view_data['can_edit_tasks']=false;
+        if ($this->login_user->user_type == "client")
+            $view_data['can_edit_tasks'] = false;
         $view_data["custom_field_filters"] = $this->Custom_fields_model->get_custom_field_filters("tasks", $this->login_user->is_admin, $this->login_user->user_type);
         $view_data['labels_dropdown'] = json_encode($this->make_labels_dropdown("task", "", true));
 
         return $this->template->view("projects/tasks/kanban/list_tasks", $view_data);
     }
 
-    private function _get_milestones_dropdown_list($project_id = 0) {
+    private function _get_milestones_dropdown_list($project_id = 0)
+    {
         $milestones = $this->Milestones_model->get_details(array("project_id" => $project_id, "deleted" => 0))->getResult();
         $milestone_dropdown = array(array("id" => "", "text" => "- " . app_lang("milestone") . " -"));
 
@@ -3673,7 +3785,8 @@ class Tasks extends Security_Controller {
         return json_encode($milestone_dropdown);
     }
 
-    private function _get_priorities_dropdown_list($priority_id = 0) {
+    private function _get_priorities_dropdown_list($priority_id = 0)
+    {
         $priorities = $this->Task_priority_model->get_details()->getResult();
         $priorities_dropdown = array(array("id" => "", "text" => "- " . app_lang("priority") . " -"));
 
@@ -3693,7 +3806,8 @@ class Tasks extends Security_Controller {
         return json_encode($priorities_dropdown);
     }
 
-    private function _get_project_members_dropdown_list($project_id = 0) {
+    private function _get_project_members_dropdown_list($project_id = 0)
+    {
         if ($this->login_user->user_type === "staff") {
             $assigned_to_dropdown = array(array("id" => "", "text" => "- " . app_lang("assigned_to") . " -"));
             $assigned_to_list = $this->Project_members_model->get_project_members_dropdown_list($project_id, array(), true, true)->getResult();
@@ -3710,7 +3824,8 @@ class Tasks extends Security_Controller {
         return json_encode($assigned_to_dropdown);
     }
 
-    function all_tasks($tab = "", $status_id = 0, $priority_id = 0, $type = "") {
+    function all_tasks($tab = "", $status_id = 0, $priority_id = 0, $type = "")
+    {
         $this->access_only_team_members();
         $view_data['project_id'] = 0;
         $projects = $this->Tasks_model->get_my_projects_dropdown_list($this->login_user->id)->getResult();
@@ -3756,7 +3871,8 @@ class Tasks extends Security_Controller {
         return $this->template->rander("tasks/all_tasks", $view_data);
     }
 
-    function _get_accessible_contexts_dropdown($type = "view") {
+    function _get_accessible_contexts_dropdown($type = "view")
+    {
         $contexts = $this->_get_accessible_contexts($type);
 
         $contexts_dropdown = array(array("id" => "", "text" => "- " . app_lang("related_to") . " -"));
@@ -3769,7 +3885,8 @@ class Tasks extends Security_Controller {
         return $contexts_dropdown;
     }
 
-    function all_tasks_kanban() {
+    function all_tasks_kanban()
+    {
 
         $projects = $this->Tasks_model->get_my_projects_dropdown_list($this->login_user->id)->getResult();
         $projects_dropdown = array(array("id" => "", "text" => "- " . app_lang("project") . " -"));
@@ -3806,7 +3923,8 @@ class Tasks extends Security_Controller {
     }
 
     //check user's task editting permission on changing of project
-    function can_edit_task_of_the_project($project_id = 0) {
+    function can_edit_task_of_the_project($project_id = 0)
+    {
         validate_numeric_value($project_id);
         if ($project_id) {
 
@@ -3818,7 +3936,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    function all_tasks_kanban_data() {
+    function all_tasks_kanban_data()
+    {
 
         $this->access_only_team_members();
 
@@ -3911,7 +4030,8 @@ class Tasks extends Security_Controller {
     }
 
     // task/list
-    function all_tasks_kanban_list_data() {
+    function all_tasks_kanban_list_data()
+    {
 
         $this->access_only_team_members();
 
@@ -3937,10 +4057,11 @@ class Tasks extends Security_Controller {
 
         $view_data['can_edit_project_tasks'] = $this->_can_edit_project_tasks($project_id);
         $view_data['project_id'] = $project_id;
-        
+
         $sort_by = $this->request->getPost('sort_by');
-        if (!$sort_by)  $sort_by = 'category';
-        
+        if (!$sort_by)
+            $sort_by = 'category';
+
         $tasks = $this->Tasks_model->get_kanban_details($options)->getResult();
         $tasks_list = array();
         $tasks_edit_permissions_list = array();
@@ -3954,43 +4075,68 @@ class Tasks extends Security_Controller {
 
         $columns[] = $temp;
         //////////////////
-        $categories=array(
-            array("id"=>"General","text"=>"General & Docking","color"=>"#489ad9"),
-            array("id"=>"Hull","text"=>"Hull","color"=>"#3270b8"),
-            array("id"=>"Equipment","text"=>"Equipment for Cargo","color"=>"#4bc0c1"),
-            array("id"=>"Ship","text"=>"Ship Equipment","color"=>"#87c245"),
-            array("id"=>"Safety","text"=>"Safety & Crew Equipment","color"=>"#36b293"),
-            array("id"=>"Machinery","text"=>"Machinery Main Components","color"=>"#de5341"),
-            array("id"=>"Systems","text"=>"System Machinery Main Components","color"=>"#da8d19"),
-            array("id"=>"Common","text"=>"Common systems","color"=>"#ebc626"),
-            array("id"=>"Others","text"=>"Others","color"=>"#37485d"),
+        
+        $categories = array(
+            array("id" => "General", "text" => "General & Docking", "color" => "#489ad9", "DLN" => "G"),
+            array("id" => "Hull", "text" => "Hull", "color" => "#3270b8", "DLN" => "H"),
+            array("id" => "Equipment", "text" => "Equipment for Cargo", "color" => "#4bc0c1", "DLN" => "C"),
+            array("id" => "Ship", "text" => "Ship Equipment", "color" => "#87c245", "DLN" => "SE"),
+            array("id" => "Safety", "text" => "Safety & Crew Equipment", "color" => "#36b293", "DLN" => "SC"),
+            array("id" => "Machinery", "text" => "Machinery Main Components", "color" => "#de5341", "DLN" => "MM"),
+            array("id" => "Systems", "text" => "System Machinery Main Components", "color" => "#da8d19", "DLN" => "SM"),
+            array("id" => "Common", "text" => "Common systems", "color" => "#ebc626", "DLN" => "CS"),
+            array("id" => "Others", "text" => "Others", "color" => "#37485d", "DLN" => "O"),
         );
-        $tasks_list=array();
+
+        if (is_array($tasks)) {
+            foreach ($tasks as $task) {
+                $dockListNumber = $task->dock_list_number;  // Access the property
+
+                // Extract using string functions (more readable for simple formats)
+                $numericPart = substr($dockListNumber, 1);  // Assuming the first char is always a letter
+
+                $index = array_search(explode(" ", $task->category)[0], array_column($categories, "id"));
+
+                if ($index) {
+                    $task->dock_list_number = $categories[$index]["DLN"] . $numericPart;
+                } else {
+                    $task->dock_list_number = end($categories)["DLN"] . $numericPart;
+                }
+                // if (is_numeric($numericPart)) {
+                //     $numbers[] = (int) $numericPart;  // Convert to integer and add to array
+                // }
+            }
+        }
+        
+        $tasks_list = array();
         foreach ($categories as $key => $category) {
             # code...
-            $tasks_list[$category['id']]=[];
+            $tasks_list[$category['id']] = [];
         }
         //////////////
         foreach ($tasks as $task) {
-            $collaborators=explode(",",$task->collaborators);
-            $collaborators_data="";
+            $collaborators = explode(",", $task->collaborators);
+            $collaborators_data = "";
             foreach ($collaborators as $oneCol) {
                 # code...
-                if($oneCol=="") continue;
-                $oneCol_info=$this->Users_model->get_one($oneCol);
-                if(unserialize($oneCol_info->image))
-                    $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
-                else $avatar_file=base_url("assets/images/avatar.jpg");
-                $oneCol_name=$oneCol_info->first_name." ".$oneCol_info->last_name;
-                $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span></a>';
+                if ($oneCol == "")
+                    continue;
+                $oneCol_info = $this->Users_model->get_one($oneCol);
+                if (unserialize($oneCol_info->image))
+                    $avatar_file = base_url("files/profile_images/" . unserialize($oneCol_info->image)['file_name']);
+                else
+                    $avatar_file = base_url("assets/images/avatar.jpg");
+                $oneCol_name = $oneCol_info->first_name . " " . $oneCol_info->last_name;
+                $collaborators_data .= '<a href="' . get_uri("/team_members/view/" . $oneCol) . '" ><span class="avatar avatar-xs mr-10" ><img src=' . $avatar_file . ' alt="..." /></span></a>';
             }
-            $task->collaborators_data=$collaborators_data;
-                
+            $task->collaborators_data = $collaborators_data;
+
             if ($sort_by == 'category') {
                 ////////////////
-                if(array_key_exists(explode(" ",$task->category)[0],$tasks_list))
-                    $tasks_list[explode(" ",$task->category)[0]][]=$task;
-                else $tasks_list["Others"][]=$task;
+                if (array_key_exists(explode(" ", $task->category)[0], $tasks_list))
+                    $tasks_list[explode(" ", $task->category)[0]][] = $task;
+                else
+                    $tasks_list["Others"][] = $task;
                 /////////////
                 // $ids = $task->labels;
                 // if ($ids) {
@@ -3999,22 +4145,22 @@ class Tasks extends Security_Controller {
                 //     if (!get_array_value($tasks_list, $id)) {
                 //         $tasks_list[$id] = array();
                 //         $label = $this->Labels_model->get_one(intval($id));
-        
+
                 //         $temp = new \stdClass();
                 //         $temp->id = $id;
                 //         $temp->color = $label->color;
                 //         $temp->title = $label->title;
-        
+
                 //         $columns[] = $temp;
                 //     }
                 //     $tasks_list[$id][] = $task;
                 //     $tasks_edit_permissions_list[$id] = $this->_get_tasks_status_edit_permissions($tasks);
-    
+
                 // } else {
                 //     $tasks_list['-1'][] = $task;
                 //     $tasks_edit_permissions_list['-1'] = $this->_get_tasks_status_edit_permissions($tasks);
                 // }
-    
+
             } else {
                 if ($task->dock_list_number) {
                     if (!get_array_value($tasks_list, $task->dock_list_number)) {
@@ -4023,12 +4169,12 @@ class Tasks extends Security_Controller {
                         $temp->id = $task->dock_list_number;
                         $temp->color = '#2e4053';
                         $temp->title = $task->dock_list_number;
-        
+
                         $columns[] = $temp;
                     }
                     $tasks_list[$task->dock_list_number][] = $task;
                     $tasks_edit_permissions_list[$task->dock_list_number] = $this->_get_tasks_status_edit_permissions($tasks);
-    
+
                 } else {
                     $tasks_list['-1'][] = $task;
                     $tasks_edit_permissions_list['-1'] = $this->_get_tasks_status_edit_permissions($tasks);
@@ -4055,7 +4201,7 @@ class Tasks extends Security_Controller {
         $view_data["tasks_edit_permissions_list"] = $tasks_edit_permissions_list;
         //////////////////////////
         //////////////////////////
-        $allStatus=$this->Task_status_model->get_all()->getResult();
+        $allStatus = $this->Task_status_model->get_all()->getResult();
         $view_data["allStatus"] = $allStatus;
         $view_data['columns'] = $categories;
         /////////////////////////////
@@ -4065,7 +4211,8 @@ class Tasks extends Security_Controller {
 
     }
 
-    private function _get_tasks_edit_permissions($tasks = array()) {
+    private function _get_tasks_edit_permissions($tasks = array())
+    {
 
         $permissions = array();
         foreach ($tasks as $task_info) {
@@ -4074,7 +4221,8 @@ class Tasks extends Security_Controller {
         return $permissions;
     }
 
-    private function _get_tasks_status_edit_permissions($tasks = array(), $tasks_edit_permissions = array()) {
+    private function _get_tasks_status_edit_permissions($tasks = array(), $tasks_edit_permissions = array())
+    {
         $permissions = array();
         foreach ($tasks as $task_info) {
             if (get_array_value($tasks_edit_permissions, $task_info->id)) {
@@ -4088,7 +4236,8 @@ class Tasks extends Security_Controller {
 
     /* prepare data for the project view's kanban tab  */
 
-    function project_tasks_kanban_data($project_id = 0) {
+    function project_tasks_kanban_data($project_id = 0)
+    {
         validate_numeric_value($project_id);
 
         if (!$this->can_view_tasks("project", $project_id)) {
@@ -4163,7 +4312,7 @@ class Tasks extends Security_Controller {
             $view_data['column_tasks_count'] = $column_tasks_count;
             $view_data['tasks_list'] = $tasks_list;
             //////////////////////////
-            $allStatus=$this->Task_status_model->get_all()->getResult();
+            $allStatus = $this->Task_status_model->get_all()->getResult();
             $view_data["allStatus"] = $allStatus;
             /////////////////////////////
             return $this->template->view('tasks/kanban/kanban_view', $view_data);
@@ -4171,7 +4320,8 @@ class Tasks extends Security_Controller {
     }
 
     // project/task/list
-    function project_tasks_kanban_list_data($project_id = 0) {
+    function project_tasks_kanban_list_data($project_id = 0)
+    {
         validate_numeric_value($project_id);
 
         if (!$this->can_view_tasks("project", $project_id)) {
@@ -4199,7 +4349,8 @@ class Tasks extends Security_Controller {
         $view_data['project_id'] = $project_id;
 
         $sort_by = $this->request->getPost('sort_by');
-        if (!$sort_by)  $sort_by = 'category';
+        if (!$sort_by)
+            $sort_by = 'category';
 
         $tasks = $this->Tasks_model->get_kanban_details($options)->getResult();
         $tasks_list = array();
@@ -4214,52 +4365,73 @@ class Tasks extends Security_Controller {
 
         $columns[] = $temp;
         //////////////////
-        $categories=array(
-            array("id"=>"General","text"=>"General & Docking","color"=>"#489ad9"),
-            array("id"=>"Hull","text"=>"Hull","color"=>"#3270b8"),
-            array("id"=>"Equipment","text"=>"Equipment for Cargo","color"=>"#4bc0c1"),
-            array("id"=>"Ship","text"=>"Ship Equipment","color"=>"#87c245"),
-            array("id"=>"Safety","text"=>"Safety & Crew Equipment","color"=>"#36b293"),
-            array("id"=>"Machinery","text"=>"Machinery Main Components","color"=>"#de5341"),
-            array("id"=>"Systems","text"=>"System Machinery Main Components","color"=>"#da8d19"),
-            array("id"=>"Common","text"=>"Common systems","color"=>"#ebc626"),
-            array("id"=>"Others","text"=>"Others","color"=>"#37485d"),
+        $categories = array(
+            array("id" => "General", "text" => "General & Docking", "color" => "#489ad9", "DLN" => "G"),
+            array("id" => "Hull", "text" => "Hull", "color" => "#3270b8", "DLN" => "H"),
+            array("id" => "Equipment", "text" => "Equipment for Cargo", "color" => "#4bc0c1", "DLN" => "C"),
+            array("id" => "Ship", "text" => "Ship Equipment", "color" => "#87c245", "DLN" => "SE"),
+            array("id" => "Safety", "text" => "Safety & Crew Equipment", "color" => "#36b293", "DLN" => "SC"),
+            array("id" => "Machinery", "text" => "Machinery Main Components", "color" => "#de5341", "DLN" => "MM"),
+            array("id" => "Systems", "text" => "System Machinery Main Components", "color" => "#da8d19", "DLN" => "SM"),
+            array("id" => "Common", "text" => "Common systems", "color" => "#ebc626", "DLN" => "CS"),
+            array("id" => "Others", "text" => "Others", "color" => "#37485d", "DLN" => "O"),
         );
-        $tasks_list=array();
+
+        if (is_array($tasks)) {
+            foreach ($tasks as $task) {
+                $dockListNumber = $task->dock_list_number;  // Access the property
+
+                // Extract using string functions (more readable for simple formats)
+                $numericPart = substr($dockListNumber, 1);  // Assuming the first char is always a letter
+
+                $index = array_search(explode(" ", $task->category)[0], array_column($categories, "id"));
+
+                if ($index) {
+                    $task->dock_list_number = $categories[$index]["DLN"] . $numericPart;
+                } else {
+                    $task->dock_list_number = end($categories)["DLN"] . $numericPart;
+                }
+                // if (is_numeric($numericPart)) {
+                //     $numbers[] = (int) $numericPart;  // Convert to integer and add to array
+                // }
+            }
+        }
+
+        $tasks_list = array();
         foreach ($categories as $key => $category) {
             # code...
-            $tasks_list[$category['id']]=[];
+            $tasks_list[$category['id']] = [];
         }
         //////////////
         foreach ($tasks as $task) {
-            $collaborators=explode(",",$task->collaborators);
-            $collaborators_data="";
+            $collaborators = explode(",", $task->collaborators);
+            $collaborators_data = "";
             foreach ($collaborators as $oneCol) {
                 # code...
-                if($oneCol=="") continue;
-                $oneCol_info=$this->Users_model->get_one($oneCol);
-                if(unserialize($oneCol_info->image))
-                    $avatar_file=base_url("files/profile_images/".unserialize($oneCol_info->image)['file_name']);
-                else $avatar_file=base_url("assets/images/avatar.jpg");
-                $oneCol_name=$oneCol_info->first_name." ".$oneCol_info->last_name;
-                $collaborators_data.='<a href="'.get_uri("/team_members/view/".$oneCol).'" ><span class="avatar avatar-xs mr-10" ><img src='.$avatar_file.' alt="..." /></span></a>';
+                if ($oneCol == "")
+                    continue;
+                $oneCol_info = $this->Users_model->get_one($oneCol);
+                if (unserialize($oneCol_info->image))
+                    $avatar_file = base_url("files/profile_images/" . unserialize($oneCol_info->image)['file_name']);
+                else
+                    $avatar_file = base_url("assets/images/avatar.jpg");
+                $oneCol_name = $oneCol_info->first_name . " " . $oneCol_info->last_name;
+                $collaborators_data .= '<a href="' . get_uri("/team_members/view/" . $oneCol) . '" ><span class="avatar avatar-xs mr-10" ><img src=' . $avatar_file . ' alt="..." /></span></a>';
             }
-            $task->collaborators_data=$collaborators_data;
+            $task->collaborators_data = $collaborators_data;
             // $tasks_edit_permissions_list[$task->id] = true;
             if ($sort_by == 'category') {
                 ////////////////////////////////////
                 // if(!array_key_exists($tasks_list[explode(" ",$task->category)[0]])){
                 //     $tasks_list[explode(" ",$task->category)[0]]=array();
                 // }
-                
-                if(array_key_exists(explode(" ",$task->category)[0],$tasks_list)){
-                    $tasks_list[explode(" ",$task->category)[0]][]=$task;
+
+                if (array_key_exists(explode(" ", $task->category)[0], $tasks_list)) {
+                    $tasks_list[explode(" ", $task->category)[0]][] = $task;
+                } else {
+                    $tasks_list["Others"][] = $task;
                 }
-                    
-                else{
-                    $tasks_list["Others"][]=$task;
-                }
-                
+
                 //////////////////////////
                 // $ids = $task->labels;
                 // if ($ids) {
@@ -4268,26 +4440,29 @@ class Tasks extends Security_Controller {
                 //     if (!get_array_value($tasks_list, $id)) {
                 //         $tasks_list[$id] = array();
                 //         $label = $this->Labels_model->get_one(intval($id));
-        
+
                 //         $temp = new \stdClass();
                 //         $temp->id = $id;
                 //         $temp->color = $label->color;
                 //         $temp->title = $label->title;
-        
+
                 //         $columns[] = $temp;
                 //     }
                 //     $tasks_list[$id][] = $task;
-                    // $tasks_edit_permissions_list[$id] = $this->_get_tasks_status_edit_permissions($tasks);
-    
+                // $tasks_edit_permissions_list[$id] = $this->_get_tasks_status_edit_permissions($tasks);
+
                 // } else {
                 //     $tasks_list['-1'][] = $task;
-                    // $tasks_edit_permissions_list['-1'] = $this->_get_tasks_status_edit_permissions($tasks);
+                // $tasks_edit_permissions_list['-1'] = $this->_get_tasks_status_edit_permissions($tasks);
                 // }
-                $category_can=array_filter($categories,function($oneCategory)use($task){return $oneCategory['text']==$task->category;});
-                if(count($category_can)<1) $category_can[]=$categories[8];
-                $tasks_edit_permissions_list[end($category_can)['id']][$task->id]=true;
-                
-    
+                $category_can = array_filter($categories, function ($oneCategory) use ($task) {
+                    return $oneCategory['text'] == $task->category;
+                });
+                if (count($category_can) < 1)
+                    $category_can[] = $categories[8];
+                $tasks_edit_permissions_list[end($category_can)['id']][$task->id] = true;
+
+
             } else {
                 if ($task->dock_list_number) {
                     if (!get_array_value($tasks_list, $task->dock_list_number)) {
@@ -4296,12 +4471,12 @@ class Tasks extends Security_Controller {
                         $temp->id = $task->dock_list_number;
                         $temp->color = '#2e4053';
                         $temp->title = $task->dock_list_number;
-        
+
                         $columns[] = $temp;
                     }
                     $tasks_list[$task->dock_list_number][] = $task;
                     $tasks_edit_permissions_list[$task->dock_list_number] = $this->_get_tasks_status_edit_permissions($tasks);
-    
+
                 } else {
                     $tasks_list['-1'][] = $task;
                     $tasks_edit_permissions_list['-1'] = $this->_get_tasks_status_edit_permissions($tasks);
@@ -4315,7 +4490,7 @@ class Tasks extends Security_Controller {
         $view_data['columns'] = $columns;
         $view_data["tasks_edit_permissions_list"] = $tasks_edit_permissions_list;
         //////////////////////////
-        $allStatus=$this->Task_status_model->get_all()->getResult();
+        $allStatus = $this->Task_status_model->get_all()->getResult();
         $view_data["allStatus"] = $allStatus;
         $view_data['columns'] = $categories;
         /////////////////////////////
@@ -4324,7 +4499,8 @@ class Tasks extends Security_Controller {
 
     }
 
-    function set_task_comments_as_read($task_id = 0) {
+    function set_task_comments_as_read($task_id = 0)
+    {
         if ($task_id) {
             validate_numeric_value($task_id);
             $this->Tasks_model->set_task_comments_as_read($task_id, $this->login_user->id);
@@ -4333,12 +4509,14 @@ class Tasks extends Security_Controller {
 
     /* get all related data of selected project */
 
-    function get_dropdowns($context = "", $context_id = 0, $return_empty_context = false) {
+    function get_dropdowns($context = "", $context_id = 0, $return_empty_context = false)
+    {
         $dropdowns = $this->_get_task_related_dropdowns($context, $context_id, $return_empty_context);
         echo json_encode($dropdowns);
     }
 
-    function save_sub_task() {
+    function save_sub_task()
+    {
         $client_id = $this->request->getPost('client_id');
         $lead_id = $this->request->getPost('lead_id');
         $invoice_id = $this->request->getPost('invoice_id');
@@ -4352,9 +4530,11 @@ class Tasks extends Security_Controller {
         $ticket_id = $this->request->getPost('ticket_id');
         $context = $this->request->getPost('context');
 
-        $this->validate_submitted_data(array(
-            "parent_task_id" => "required|numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "parent_task_id" => "required|numeric"
+            )
+        );
 
         if (!$this->can_create_tasks($context)) {
             app_redirect("forbidden");
@@ -4413,7 +4593,8 @@ class Tasks extends Security_Controller {
 
     /* upadate a task status */
 
-    function save_task_status($id = 0) {
+    function save_task_status($id = 0)
+    {
         validate_numeric_value($id);
         $status_id = $this->request->getPost('value');
         $data = array(
@@ -4436,15 +4617,15 @@ class Tasks extends Security_Controller {
 
 
         if ($save_id) {
-        //     //////////////////////
-        //     echo "kkkkk";
-        //     if($status_id==3){
-                // $allTasks=$this->Tasks_model->get_unfinished("project_id",$task_info->project_id)->getResult();
-                // $project_info=$this->Projects_model->get_one($task_info->project_id);
-                // if(count($allTasks)==0) {
-                //     $project_info->status_id=5;
-                //     $this->Projects_model->ci_save($project_info,$project_info->id);
-                // } 
+            //     //////////////////////
+            //     echo "kkkkk";
+            //     if($status_id==3){
+            // $allTasks=$this->Tasks_model->get_unfinished("project_id",$task_info->project_id)->getResult();
+            // $project_info=$this->Projects_model->get_one($task_info->project_id);
+            // if(count($allTasks)==0) {
+            //     $project_info->status_id=5;
+            //     $this->Projects_model->ci_save($project_info,$project_info->id);
+            // } 
             // }
             //////////////////////
             $task_info = $this->Tasks_model->get_details(array("id" => $id))->getRow();
@@ -4463,7 +4644,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    function update_task_info($id = 0, $data_field = "") {
+    function update_task_info($id = 0, $data_field = "")
+    {
         if (!$id) {
             return false;
         }
@@ -4509,19 +4691,19 @@ class Tasks extends Security_Controller {
 
             if ($data_field == "start_time") {
 
-                if ($end_time && $end_time!="00:00:00" && ($start_date . " " . $value) > $task_info->deadline) {
+                if ($end_time && $end_time != "00:00:00" && ($start_date . " " . $value) > $task_info->deadline) {
                     echo json_encode(array("success" => false, 'message' => app_lang('deadline_must_be_equal_or_greater_than_start_date')));
                     return false;
                 }
 
                 $data["start_date"] = $start_date . " " . $value;
             } else if ($data_field == "end_time") {
-                
-                 if ($task_info->start_date > ($deadline . " " . $value) ) {
+
+                if ($task_info->start_date > ($deadline . " " . $value)) {
                     echo json_encode(array("success" => false, 'message' => app_lang('deadline_must_be_equal_or_greater_than_start_date')));
                     return false;
                 }
-                
+
                 $data["deadline"] = $deadline . " " . $value;
             }
         } else {
@@ -4622,11 +4804,14 @@ class Tasks extends Security_Controller {
 
     /* upadate a task status */
 
-    function save_task_sort_and_status() {
+    function save_task_sort_and_status()
+    {
 
-        $this->validate_submitted_data(array(
-            "id" => "required|numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "required|numeric"
+            )
+        );
 
         $id = $this->request->getPost('id');
         $task_info = $this->Tasks_model->get_one($id);
@@ -4669,7 +4854,8 @@ class Tasks extends Security_Controller {
 
     /* list of tasks, prepared for datatable  */
 
-    function all_tasks_list_data($is_widget = 0) {
+    function all_tasks_list_data($is_widget = 0)
+    {
         $this->access_only_team_members();
 
         $project_id = $this->request->getPost('project_id');
@@ -4732,7 +4918,7 @@ class Tasks extends Security_Controller {
             $list_data = $result->getResult();
             $result = array();
         }
-        
+
 
 
         $tasks_edit_permissions = $this->_get_tasks_edit_permissions($list_data);
@@ -4740,8 +4926,8 @@ class Tasks extends Security_Controller {
 
         $result_data = array();
         foreach ($list_data as $data) {
-            
-                # code...
+
+            # code...
             $result_data[] = $this->_make_row($data, $custom_fields, $show_time_with_task, $tasks_edit_permissions, $tasks_status_edit_permissions);
         }
         // foreach ($result_data as $data) {
@@ -4759,13 +4945,14 @@ class Tasks extends Security_Controller {
         // }
 
         $result["data"] = $result_data;
-        
+
 
         echo json_encode($result);
     }
 
     //load gantt tab
-    function gantt($project_id = 0) {
+    function gantt($project_id = 0)
+    {
 
         if ($project_id) {
             validate_numeric_value($project_id);
@@ -4794,7 +4981,7 @@ class Tasks extends Security_Controller {
             $status_dropdown = array();
 
             foreach ($statuses as $status) {
-                $status_dropdown[] = array("id" => $status->id, "text" => ( $status->key_name ? app_lang($status->key_name) : $status->title));
+                $status_dropdown[] = array("id" => $status->id, "text" => ($status->key_name ? app_lang($status->key_name) : $status->title));
             }
 
             $view_data['status_dropdown'] = $this->_get_task_statuses_dropdown($project_id);
@@ -4804,7 +4991,8 @@ class Tasks extends Security_Controller {
     }
 
     //prepare gantt data for gantt chart
-    function gantt_data($project_id = 0, $group_by = "milestones", $milestone_id = 0, $user_id = 0, $status = "") {
+    function gantt_data($project_id = 0, $group_by = "milestones", $milestone_id = 0, $user_id = 0, $status = "")
+    {
         validate_numeric_value($project_id);
         validate_numeric_value($milestone_id);
         validate_numeric_value($user_id);
@@ -4928,7 +5116,7 @@ class Tasks extends Security_Controller {
             //add task data under a group
             $gantt_array_data = array(
                 "id" => $data->task_id,
-                "name" =>$data->task_dock_list_number." ". $data->task_title,
+                "name" => $data->task_dock_list_number . " " . $data->task_title,
                 "start" => $start_date,
                 "end" => $end_date,
                 "bg_color" => $color,
@@ -4956,7 +5144,8 @@ class Tasks extends Security_Controller {
         echo json_encode($gantt);
     }
 
-    private function invalid_date_of_gantt($start_date, $end_date) {
+    private function invalid_date_of_gantt($start_date, $end_date)
+    {
         $start_year = explode('-', $start_date);
         $start_year = get_array_value($start_year, 0);
 
@@ -4974,7 +5163,8 @@ class Tasks extends Security_Controller {
 
     /* get list of milestones for filter */
 
-    function get_milestones_for_filter() {
+    function get_milestones_for_filter()
+    {
 
         $this->access_only_team_members();
         $project_id = $this->request->getPost("project_id");
@@ -4985,7 +5175,8 @@ class Tasks extends Security_Controller {
 
     /* batch update modal form */
 
-    function batch_update_modal_form($task_ids = "") {
+    function batch_update_modal_form($task_ids = "")
+    {
         $this->access_only_team_members();
         $project_id = $this->request->getPost("project_id");
 
@@ -5002,12 +5193,15 @@ class Tasks extends Security_Controller {
 
     /* save batch tasks */
 
-    function save_batch_update() {
+    function save_batch_update()
+    {
         $this->access_only_team_members();
 
-        $this->validate_submitted_data(array(
-            "project_id" => "required|numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "project_id" => "required|numeric"
+            )
+        );
 
         $project_id = $this->request->getPost('project_id');
 
@@ -5072,7 +5266,8 @@ class Tasks extends Security_Controller {
         echo json_encode(array("success" => true, 'message' => app_lang('record_saved')));
     }
 
-    function get_checklist_group_suggestion() {
+    function get_checklist_group_suggestion()
+    {
         $task_id = $this->request->getPost("task_id");
         $task_info = $this->Tasks_model->get_one($task_id);
         if (!$this->can_edit_tasks($task_info)) {
@@ -5093,7 +5288,8 @@ class Tasks extends Security_Controller {
     }
 
     //prepare suggestion of checklist template
-    function get_checklist_template_suggestion() {
+    function get_checklist_template_suggestion()
+    {
         $task_id = $this->request->getPost("task_id");
         $task_info = $this->Tasks_model->get_one($task_id);
         if (!$this->can_edit_tasks($task_info)) {
@@ -5114,7 +5310,8 @@ class Tasks extends Security_Controller {
 
     /* save task comments */
 
-    function save_comment() {
+    function save_comment()
+    {
         $id = $this->request->getPost('id');
 
         $target_path = get_setting("timeline_file_path");
@@ -5173,7 +5370,8 @@ class Tasks extends Security_Controller {
 
     /* download task files by zip */
 
-    function download_comment_files($id) {
+    function download_comment_files($id)
+    {
 
         $info = $this->Project_comments_model->get_one($id);
         $task_info = $this->Tasks_model->get_one($info->task_id);
@@ -5185,29 +5383,32 @@ class Tasks extends Security_Controller {
         return $this->download_app_files(get_setting("timeline_file_path"), $info->files);
     }
 
-    function download_task_files($id){
-        $comments_with_files=$this->Project_comments_model->get_all_where(array("task_id"=>$id))->getResult();
-        $all_files=array();
+    function download_task_files($id)
+    {
+        $comments_with_files = $this->Project_comments_model->get_all_where(array("task_id" => $id))->getResult();
+        $all_files = array();
         foreach ($comments_with_files as $oneComment) {
             # code...
-            if($oneComment->files!="")
-            foreach(unserialize($oneComment->files) as $oneFile){
-                $all_files[]=$oneFile;
-            }
+            if ($oneComment->files != "")
+                foreach (unserialize($oneComment->files) as $oneFile) {
+                    $all_files[] = $oneFile;
+                }
         }
         // return json_encode($all_files);
-        
+
         // return unserialize(json_encode($all_files));
         return $this->download_app_files(get_setting("timeline_file_path"), serialize($all_files));
     }
     //////////
     ///download_one_file///
-    function download_one_file($file_name){
-        return $this->download_app_files(get_setting("timeline_file_path"), serialize(array(array("file_name"=>$file_name))));
+    function download_one_file($file_name)
+    {
+        return $this->download_app_files(get_setting("timeline_file_path"), serialize(array(array("file_name" => $file_name))));
     }
     //////////
 
-    function get_task_labels_dropdown_for_filter() {
+    function get_task_labels_dropdown_for_filter()
+    {
         $labels_dropdown = array(array("id" => "", "text" => "- " . app_lang("label") . " -"));
 
         $options = array(
@@ -5224,7 +5425,8 @@ class Tasks extends Security_Controller {
 
     /* get member suggestion with start typing '@' */
 
-    function get_member_suggestion_to_mention() {
+    function get_member_suggestion_to_mention()
+    {
         $options = array("status" => "active", "user_type" => "staff");
         $members = $this->Users_model->get_details($options)->getResult();
         $members_dropdown = array();
@@ -5239,7 +5441,8 @@ class Tasks extends Security_Controller {
         }
     }
 
-    private function _get_task_statuses_dropdown($project_id = 0) {
+    private function _get_task_statuses_dropdown($project_id = 0)
+    {
         $exclude_status_ids = $this->get_removed_task_status_ids($project_id);
         $task_status_options = array("exclude_status_ids" => $exclude_status_ids);
         if (!$project_id) {
@@ -5250,18 +5453,20 @@ class Tasks extends Security_Controller {
         $status_dropdown = array();
 
         foreach ($statuses as $status) {
-            $status_dropdown[] = array("id" => $status->id, "text" => ( $status->key_name ? app_lang($status->key_name) : $status->title));
+            $status_dropdown[] = array("id" => $status->id, "text" => ($status->key_name ? app_lang($status->key_name) : $status->title));
         }
 
         return json_encode($status_dropdown);
     }
 
-    function get_task_statuses_dropdown($project_id = 0) {
+    function get_task_statuses_dropdown($project_id = 0)
+    {
         echo $this->_get_task_statuses_dropdown($project_id);
     }
 
     /////////////////////
-    function upload_comment_file(){
+    function upload_comment_file()
+    {
         if (!empty($_FILES)) {
             $file = get_array_value($_FILES, "file");
 
@@ -5290,7 +5495,7 @@ class Tasks extends Security_Controller {
             }
             $target_file = $target_path . $file_name;
             copy($temp_file, $target_file);
-            $new_target_path = getcwd() . '/' .get_setting("timeline_file_path");
+            $new_target_path = getcwd() . '/' . get_setting("timeline_file_path");
             // $files_data = move_files_from_temp_dir_to_permanent_dir($new_target_path, "project_comment");
             $files_data = array();
             $temp_file_new = $temp_file;
@@ -5315,26 +5520,27 @@ class Tasks extends Security_Controller {
 
                 $comment_data["files"] = serialize($files_data); //don't clean serilized data
 
-                $save_id=$this->Project_comments_model->save_comment($comment_data);
-                $oneFile=array();
-                $oneFile['id']=$save_id;
-                $oneFile['file_name']=get_array_value($file_data, "file_name");
-                $oneFile['file_size']=$file_size;
-                $oneFile['uploaded_by_user_name']=$this->login_user->first_name.$this->login_user->last_name;
-                $oneFile['created_at']=$now;
+                $save_id = $this->Project_comments_model->save_comment($comment_data);
+                $oneFile = array();
+                $oneFile['id'] = $save_id;
+                $oneFile['file_name'] = get_array_value($file_data, "file_name");
+                $oneFile['file_size'] = $file_size;
+                $oneFile['uploaded_by_user_name'] = $this->login_user->first_name . $this->login_user->last_name;
+                $oneFile['created_at'] = $now;
                 // $view_data['files'][]=$oneFile;
                 // echo json_encode($oneFile);
-                $result[]=$this->_make_file_row($oneFile,array());
-                return json_encode(array("success"=>true,"newRow"=>$result[0],"rowId"=>$save_id));
+                $result[] = $this->_make_file_row($oneFile, array());
+                return json_encode(array("success" => true, "newRow" => $result[0], "rowId" => $save_id));
             }
-            return json_encode(array("success"=>false));
-            
+            return json_encode(array("success" => false));
+
         }
     }
     /////////////////////
-    function save_ajax(){
+    function save_ajax()
+    {
         $id = $this->request->getPost('id');
-        $project_id=$this->request->getPost("project_id");
+        $project_id = $this->request->getPost("project_id");
 
         $data = array(
             "title" => $this->request->getPost('title'),
@@ -5350,55 +5556,56 @@ class Tasks extends Security_Controller {
             "description" => $this->request->getPost('description'),
             "location" => $this->request->getPost('location'),
             "specification" => $this->request->getPost('specification'),
-            "checklists" => $this->request->getPost('checklists')?$this->request->getPost('checklists'):"",
-            "dependencies" => $this->request->getPost('dependencies')?$this->request->getPost('dependencies'):"",
-            "gas_free_certificate"=>$this->request->getPost("gas_free_certificate"),
-            "painting_after_completion"=>$this->request->getPost("painting_after_completion"),
-            "light"=>$this->request->getPost("light"),
-            "parts_on_board"=>$this->request->getPost("parts_on_board"),
-            "ventilation"=>$this->request->getPost("ventilation"),
-            "transport_to_yard_workshop"=>$this->request->getPost("transport_to_yard_workshop")?$this->request->getPost("transport_to_yard_workshop"):0,
-            "crane_assistance"=>$this->request->getPost("crane_assistance"),
-            "transport_outside_yard"=>$this->request->getPost("transport_outside_yard")?$this->request->getPost("transport_outside_yard"):0,
-            "cleaning_before"=>$this->request->getPost("cleaning_before"),
-            "material_yards_supply"=>$this->request->getPost("material_yards_supply")?$this->request->getPost("material_yards_supply"):0,
-            "cleaning_after"=>$this->request->getPost("cleaning_after"),
-            "work_permit"=>$this->request->getPost("work_permit"),
-            "risk_assessment"=>$this->request->getPost("risk_assessment"),
-            "type"=>$this->request->getPost("type"),
-            "serial_number"=>$this->request->getPost("serial_number"),
-            "pms_scs_number"=>$this->request->getPost("pms_scs_number"),
-            "class_relevant"=>$this->request->getPost("class_relevant"),
-            "estimated_cost"=>$this->request->getPost("estimated_cost"),
-            "budget_group"=>$this->request->getPost("budget_group"),
-            "owner_supply"=>$this->request->getPost("owner_supply"),
+            "checklists" => $this->request->getPost('checklists') ? $this->request->getPost('checklists') : "",
+            "dependencies" => $this->request->getPost('dependencies') ? $this->request->getPost('dependencies') : "",
+            "gas_free_certificate" => $this->request->getPost("gas_free_certificate"),
+            "painting_after_completion" => $this->request->getPost("painting_after_completion"),
+            "light" => $this->request->getPost("light"),
+            "parts_on_board" => $this->request->getPost("parts_on_board"),
+            "ventilation" => $this->request->getPost("ventilation"),
+            "transport_to_yard_workshop" => $this->request->getPost("transport_to_yard_workshop") ? $this->request->getPost("transport_to_yard_workshop") : 0,
+            "crane_assistance" => $this->request->getPost("crane_assistance"),
+            "transport_outside_yard" => $this->request->getPost("transport_outside_yard") ? $this->request->getPost("transport_outside_yard") : 0,
+            "cleaning_before" => $this->request->getPost("cleaning_before"),
+            "material_yards_supply" => $this->request->getPost("material_yards_supply") ? $this->request->getPost("material_yards_supply") : 0,
+            "cleaning_after" => $this->request->getPost("cleaning_after"),
+            "work_permit" => $this->request->getPost("work_permit"),
+            "risk_assessment" => $this->request->getPost("risk_assessment"),
+            "type" => $this->request->getPost("type"),
+            "serial_number" => $this->request->getPost("serial_number"),
+            "pms_scs_number" => $this->request->getPost("pms_scs_number"),
+            "class_relevant" => $this->request->getPost("class_relevant"),
+            "estimated_cost" => $this->request->getPost("estimated_cost"),
+            "budget_group" => $this->request->getPost("budget_group"),
+            "owner_supply" => $this->request->getPost("owner_supply"),
             // "cost_items"=>$this->request->getPost("cost_items"),
-            "start_date"=>date('Y-m-d', strtotime($this->request->getPost("start_date"))),
-            "deadline"=>date('Y-m-d', strtotime($this->request->getPost("deadline"))),
+            "start_date" => date('Y-m-d', strtotime($this->request->getPost("start_date"))),
+            "deadline" => date('Y-m-d', strtotime($this->request->getPost("deadline"))),
         );
         $save_id = $this->Tasks_model->save_gantt_task_date($data, $id);
-        $checklist_items=json_decode($this->request->getPost("checklist_items"));
-        if($id) $this->Checklist_items_model->delete_where(array("task_id"=>$id));
+        $checklist_items = json_decode($this->request->getPost("checklist_items"));
+        if ($id)
+            $this->Checklist_items_model->delete_where(array("task_id" => $id));
         foreach ($checklist_items as $oneItem) {
-             $newItem=array(
-                "task_id"=>$save_id,
-                "title"=>$oneItem->title,
-                "is_checked"=>$oneItem->is_checked,
-                "deleted"=>0
-             );
-             $this->Checklist_items_model->ci_save($newItem);
+            $newItem = array(
+                "task_id" => $save_id,
+                "title" => $oneItem->title,
+                "is_checked" => $oneItem->is_checked,
+                "deleted" => 0
+            );
+            $this->Checklist_items_model->ci_save($newItem);
         }
-        
-        $files_data=array();
+
+        $files_data = array();
         $now = get_current_utc_time();
         if (!empty($_FILES)) {
             $files = isset($_FILES) ? $_FILES : array();
             if ($files && count($files) > 0) {
                 foreach ($files as $key => $file) {
-                    $new_target_path = getcwd() . '/' .get_setting("timeline_file_path");
+                    $new_target_path = getcwd() . '/' . get_setting("timeline_file_path");
                     // $files_data = move_files_from_temp_dir_to_permanent_dir($new_target_path, "project_comment");
                     $temp_file_new = $file['tmp_name'];
-                    $file_name=$key;
+                    $file_name = $key;
                     // $file_name = $files["name"][$key];
                     // $file_size = $files["size"][$key];
                     $file_data = move_temp_file($file_name, $new_target_path, "project_comment", $temp_file_new, "", "", false, $file['size']);
@@ -5424,137 +5631,145 @@ class Tasks extends Security_Controller {
                     $this->Project_comments_model->save_comment($comment_data);
                 }
             }
-            
+
         }
-        $this->Task_cost_items_model->delete_where(array("task_id"=>$save_id));
-        $cost_items=json_decode($this->request->getPost('cost_items'));
-        $allShipyards=$this->Project_yards_model->get_all_where(array("project_id"=>$this->request->getPost('project_id')))->getResult();
-        foreach ($cost_items as  $oneItem) {
-            $newItem=array(
-                "task_id"=>$save_id,
-                "project_id"=>$this->request->getPost('project_id'),
-                "name"=>$oneItem->name?$oneItem->name:"",
-                "description"=>$oneItem->description?$oneItem->description:"",
-                "quantity"=>$oneItem->quantity?$oneItem->quantity:"",
-                "quote_type"=>$oneItem->quote_type?$oneItem->quote_type:"",
-                "measurement"=>$oneItem->measurement?$oneItem->measurement:"",
-                "unit_price"=>$oneItem->unit_price?$oneItem->unit_price:"",
-                "currency"=>$oneItem->currency?$oneItem->currency:"",
-                "discount"=>$oneItem->discount?$oneItem->discount:"",
-                "yard_remarks"=>$oneItem->yard_remarks?$oneItem->yard_remarks:"",
-             );
-             $this->Task_cost_items_model->ci_save($newItem,null);
-             foreach ($allShipyards as $oneYard) {
-                $newYardCostItem=array(
-                    'task_id'=>$save_id,
-                    "project_id"=>$this->request->getPost('project_id'),
-                    "shipyard_id"=>$oneYard->id,
-                    "name"=>$oneItem->name?$oneItem->name:"",
-                    "description"=>$oneItem->description?$oneItem->description:"",
-                    "quantity"=>$oneItem->quantity?$oneItem->quantity:"",
-                    "quote_type"=>$oneItem->quote_type?$oneItem->quote_type:"",
-                    "measurement"=>$oneItem->measurement?$oneItem->measurement:"",
-                    "unit_price"=>$oneItem->unit_price?$oneItem->unit_price:"",
-                    "currency"=>$oneItem->currency?$oneItem->currency:"",
-                    "discount"=>$oneItem->discount?$oneItem->discount:"",
-                    "yard_remarks"=>$oneItem->yard_remarks?$oneItem->yard_remarks:"",
+        $this->Task_cost_items_model->delete_where(array("task_id" => $save_id));
+        $cost_items = json_decode($this->request->getPost('cost_items'));
+        $allShipyards = $this->Project_yards_model->get_all_where(array("project_id" => $this->request->getPost('project_id')))->getResult();
+        foreach ($cost_items as $oneItem) {
+            $newItem = array(
+                "task_id" => $save_id,
+                "project_id" => $this->request->getPost('project_id'),
+                "name" => $oneItem->name ? $oneItem->name : "",
+                "description" => $oneItem->description ? $oneItem->description : "",
+                "quantity" => $oneItem->quantity ? $oneItem->quantity : "",
+                "quote_type" => $oneItem->quote_type ? $oneItem->quote_type : "",
+                "measurement" => $oneItem->measurement ? $oneItem->measurement : "",
+                "unit_price" => $oneItem->unit_price ? $oneItem->unit_price : "",
+                "currency" => $oneItem->currency ? $oneItem->currency : "",
+                "discount" => $oneItem->discount ? $oneItem->discount : "",
+                "yard_remarks" => $oneItem->yard_remarks ? $oneItem->yard_remarks : "",
+            );
+            $this->Task_cost_items_model->ci_save($newItem, null);
+            foreach ($allShipyards as $oneYard) {
+                $newYardCostItem = array(
+                    'task_id' => $save_id,
+                    "project_id" => $this->request->getPost('project_id'),
+                    "shipyard_id" => $oneYard->id,
+                    "name" => $oneItem->name ? $oneItem->name : "",
+                    "description" => $oneItem->description ? $oneItem->description : "",
+                    "quantity" => $oneItem->quantity ? $oneItem->quantity : "",
+                    "quote_type" => $oneItem->quote_type ? $oneItem->quote_type : "",
+                    "measurement" => $oneItem->measurement ? $oneItem->measurement : "",
+                    "unit_price" => $oneItem->unit_price ? $oneItem->unit_price : "",
+                    "currency" => $oneItem->currency ? $oneItem->currency : "",
+                    "discount" => $oneItem->discount ? $oneItem->discount : "",
+                    "yard_remarks" => $oneItem->yard_remarks ? $oneItem->yard_remarks : "",
                 );
                 $this->Shipyard_cost_items_model->ci_save($newYardCostItem);
-             }
+            }
         }
-        
-        return json_encode(array("success"=>true,'saved_id'=>$save_id,"filenames"=>$_FILES));
+
+        return json_encode(array("success" => true, 'saved_id' => $save_id, "filenames" => $_FILES));
     }
-    function get_count_category($category){
-        echo $this->Tasks_model->getCount("category",$category);
+    function get_count_category($category)
+    {
+        echo $this->Tasks_model->getCount("category", $category);
     }
     /*----*/
     //basic-modal-form
-    function modal_form_basic(){
-        $allStatus=$this->Task_status_model->get_all()->getResultArray();
-        $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
-        $allMilestones=$this->Milestones_model->get_all()->getResultArray();
-        $allProjects=$this->Projects_model->get_all()->getResultArray();
-        $allTasks=$this->Tasks_model->get_all()->getResultArray();
-        $allBudgetGroups=$this->Budget_groups_model->get_all()->getResult();
+    function modal_form_basic()
+    {
+        $allStatus = $this->Task_status_model->get_all()->getResultArray();
+        $allPriorities = $this->Task_priority_model->get_all()->getResultArray();
+        $allMilestones = $this->Milestones_model->get_all()->getResultArray();
+        $allProjects = $this->Projects_model->get_all()->getResultArray();
+        $allTasks = $this->Tasks_model->get_all()->getResultArray();
+        $allBudgetGroups = $this->Budget_groups_model->get_all()->getResult();
         // $gotChecklistItems=$this->Checklist_items_model->get_all_where(array("task_library"=>$id,"deleted"=>0))->getResult();
-        return $this->template->view('tasks/modal_form_basic',["allBudgetGroups"=>$allBudgetGroups,"allTasks"=>$allTasks,"allProjects"=>$allProjects,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        return $this->template->view('tasks/modal_form_basic', ["allBudgetGroups" => $allBudgetGroups, "allTasks" => $allTasks, "allProjects" => $allProjects, "allMilestones" => $allMilestones, "allStatus" => $allStatus, "allPriorities" => $allPriorities]);
     }
-    function get_project_tasks($project_id){
-        $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
+    function get_project_tasks($project_id)
+    {
+        $allTasks = $this->Tasks_model->get_all_where(array("project_id" => $project_id))->getResult();
         return json_encode($allTasks);
     }
-    function get_project_milestones($project_id){
-        $allMilestones=$this->Milestones_model->get_all_where(array("project_id"=>$project_id))->getResult();
+    function get_project_milestones($project_id)
+    {
+        $allMilestones = $this->Milestones_model->get_all_where(array("project_id" => $project_id))->getResult();
         return json_encode($allMilestones);
     }
-    function delete_task_dependency($task_id,$dependency_id){
-        $gotTask=$this->Tasks_model->get_one($task_id);
-        $gotDependencies=json_decode($gotTask->dependencies);
-        foreach($gotDependencies as $key=>$oneDependency){
-            if($oneDependency->id==$dependency_id){
+    function delete_task_dependency($task_id, $dependency_id)
+    {
+        $gotTask = $this->Tasks_model->get_one($task_id);
+        $gotDependencies = json_decode($gotTask->dependencies);
+        foreach ($gotDependencies as $key => $oneDependency) {
+            if ($oneDependency->id == $dependency_id) {
                 unset($gotDependencies[$key]);
                 break;
             }
         }
-        return json_encode(array("success"=>true));
+        return json_encode(array("success" => true));
     }
-    function save_task_cost_items(){
-        $task_id=$this->request->getPost("task_id");
-        $task_info=$this->Tasks_model->get_one($task_id);
-       
+    function save_task_cost_items()
+    {
+        $task_id = $this->request->getPost("task_id");
+        $task_info = $this->Tasks_model->get_one($task_id);
+
         // $newSaveData=(array)$task_info;
         // $newSaveData['cost_items']=$this->request->getPost('cost_items');
         // $save_id=$this->Tasks_model->ci_save($newSaveData,$task_info->id);
 
-        $this->Task_cost_items_model->delete_where(array("task_id"=>$task_id));
-        $cost_items=json_decode($this->request->getPost('cost_items'));
-        $allShipyards=$this->Project_yards_model->get_all_where(array("project_id"=>$task_info->project_id))->getResult();
-        foreach ($cost_items as  $oneItem) {
-            $newItem=array(
-                "task_id"=>$task_id,
-                "project_id"=>$task_info->project_id,
-                "name"=>$oneItem->name?$oneItem->name:"",
-                "description"=>$oneItem->description?$oneItem->description:"",
-                "quantity"=>$oneItem->quantity?$oneItem->quantity:"",
-                "quote_type"=>$oneItem->quote_type?$oneItem->quote_type:"",
-                "measurement"=>$oneItem->measurement?$oneItem->measurement:"",
-                "unit_price"=>$oneItem->unit_price?$oneItem->unit_price:"",
-                "currency"=>$oneItem->currency?$oneItem->currency:"",
-                "discount"=>$oneItem->discount?$oneItem->discount:"",
-                "yard_remarks"=>$oneItem->yard_remarks?$oneItem->yard_remarks:"",
-             );
-             $this->Task_cost_items_model->ci_save($newItem,null);
-             foreach ($allShipyards as $oneYard) {
-                $newYardData=array(
-                    "task_id"=>$task_id,
-                    "project_id"=>$task_info->project_id,
-                    "shipyard_id"=>$oneYard->id,
-                    "name"=>$oneItem->name?$oneItem->name:"",
-                    "description"=>$oneItem->description?$oneItem->description:"",
-                    "quantity"=>$oneItem->quantity?$oneItem->quantity:"",
-                    "quote_type"=>$oneItem->quote_type?$oneItem->quote_type:"",
-                    "measurement"=>$oneItem->measurement?$oneItem->measurement:"",
-                    "unit_price"=>$oneItem->unit_price?$oneItem->unit_price:"",
-                    "currency"=>$oneItem->currency?$oneItem->currency:"",
-                    "discount"=>$oneItem->discount?$oneItem->discount:"",
-                    "yard_remarks"=>$oneItem->yard_remarks?$oneItem->yard_remarks:"",
+        $this->Task_cost_items_model->delete_where(array("task_id" => $task_id));
+        $cost_items = json_decode($this->request->getPost('cost_items'));
+        $allShipyards = $this->Project_yards_model->get_all_where(array("project_id" => $task_info->project_id))->getResult();
+        foreach ($cost_items as $oneItem) {
+            $newItem = array(
+                "task_id" => $task_id,
+                "project_id" => $task_info->project_id,
+                "name" => $oneItem->name ? $oneItem->name : "",
+                "description" => $oneItem->description ? $oneItem->description : "",
+                "quantity" => $oneItem->quantity ? $oneItem->quantity : "",
+                "quote_type" => $oneItem->quote_type ? $oneItem->quote_type : "",
+                "measurement" => $oneItem->measurement ? $oneItem->measurement : "",
+                "unit_price" => $oneItem->unit_price ? $oneItem->unit_price : "",
+                "currency" => $oneItem->currency ? $oneItem->currency : "",
+                "discount" => $oneItem->discount ? $oneItem->discount : "",
+                "yard_remarks" => $oneItem->yard_remarks ? $oneItem->yard_remarks : "",
+            );
+            $this->Task_cost_items_model->ci_save($newItem, null);
+            foreach ($allShipyards as $oneYard) {
+                $newYardData = array(
+                    "task_id" => $task_id,
+                    "project_id" => $task_info->project_id,
+                    "shipyard_id" => $oneYard->id,
+                    "name" => $oneItem->name ? $oneItem->name : "",
+                    "description" => $oneItem->description ? $oneItem->description : "",
+                    "quantity" => $oneItem->quantity ? $oneItem->quantity : "",
+                    "quote_type" => $oneItem->quote_type ? $oneItem->quote_type : "",
+                    "measurement" => $oneItem->measurement ? $oneItem->measurement : "",
+                    "unit_price" => $oneItem->unit_price ? $oneItem->unit_price : "",
+                    "currency" => $oneItem->currency ? $oneItem->currency : "",
+                    "discount" => $oneItem->discount ? $oneItem->discount : "",
+                    "yard_remarks" => $oneItem->yard_remarks ? $oneItem->yard_remarks : "",
                 );
                 $this->Shipyard_cost_items_model->ci_save($newYardData);
-             }
+            }
         }
-        
 
-        return json_encode(array("success"=>true));
+
+        return json_encode(array("success" => true));
 
     }
-    function download_task_cost_items($task_id){
-        $task_info=$this->Tasks_model->get_one($task_id);
-        $project_info=$this->Projects_model->get_one($task_info->project_id);
+    function download_task_cost_items($task_id)
+    {
+        $task_info = $this->Tasks_model->get_one($task_id);
+        $project_info = $this->Projects_model->get_one($task_info->project_id);
         // $allCostItems=json_decode($task_info->cost_items);
-        $allCostItems=$this->Task_cost_items_model->get_all_where(array("task_id"=>$task_id))->getResult();
-        if(!$allCostItems) return json_encode(array("success"=>false));
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $allCostItems = $this->Task_cost_items_model->get_all_where(array("task_id" => $task_id))->getResult();
+        if (!$allCostItems)
+            return json_encode(array("success" => false));
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet1 = $spreadsheet->getActiveSheet();
         $sheet1->setTitle('task info');
@@ -5578,18 +5793,21 @@ class Tasks extends Security_Controller {
         $sheet2->setCellValue('H1', 'Discount');
         $sheet2->setCellValue('I1', 'Yard remarks');
         $sheet2->setCellValue('J1', 'Cost');
-        $row_number=2;
+        $row_number = 2;
         foreach ($allCostItems as $oneItem) {
-            $sheet2->setCellValue('A'.$row_number, $oneItem->name);
-            if(isset($oneItem->description)) $sheet2->setCellValue('B'.$row_number, $oneItem->description);
-            $sheet2->setCellValue('C'.$row_number, $oneItem->quote_type);
-            $sheet2->setCellValue('D'.$row_number, $oneItem->quantity);
-            $sheet2->setCellValue('E'.$row_number, $oneItem->measurement);
-            $sheet2->setCellValue('F'.$row_number, $oneItem->unit_price);
-            $sheet2->setCellValue('G'.$row_number, $oneItem->currency);
-            if(isset($oneItem->discount)) $sheet2->setCellValue('H'.$row_number, $oneItem->discount);
-            if(isset($oneItem->yard_remarks)) $sheet2->setCellValue('I'.$row_number, $oneItem->yard_remarks);
-            $sheet2->setCellValue('J'.$row_number, (float)$oneItem->unit_price*(float)$oneItem->quantity);
+            $sheet2->setCellValue('A' . $row_number, $oneItem->name);
+            if (isset($oneItem->description))
+                $sheet2->setCellValue('B' . $row_number, $oneItem->description);
+            $sheet2->setCellValue('C' . $row_number, $oneItem->quote_type);
+            $sheet2->setCellValue('D' . $row_number, $oneItem->quantity);
+            $sheet2->setCellValue('E' . $row_number, $oneItem->measurement);
+            $sheet2->setCellValue('F' . $row_number, $oneItem->unit_price);
+            $sheet2->setCellValue('G' . $row_number, $oneItem->currency);
+            if (isset($oneItem->discount))
+                $sheet2->setCellValue('H' . $row_number, $oneItem->discount);
+            if (isset($oneItem->yard_remarks))
+                $sheet2->setCellValue('I' . $row_number, $oneItem->yard_remarks);
+            $sheet2->setCellValue('J' . $row_number, (float) $oneItem->unit_price * (float) $oneItem->quantity);
             $row_number++;
         }
         // Create a writer object
@@ -5599,7 +5817,7 @@ class Tasks extends Security_Controller {
 
         // Set response headers for file download
         $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $response->setHeader('Content-Disposition', 'attachment;filename="'.$task_info->title.'_cost_items.xlsx"');
+        $response->setHeader('Content-Disposition', 'attachment;filename="' . $task_info->title . '_cost_items.xlsx"');
         $response->setHeader('Cache-Control', 'max-age=0');
 
         // Write the Excel file content to the response body
@@ -5609,131 +5827,145 @@ class Tasks extends Security_Controller {
         return $response;
     }
     /*----*/
-    function delete_task_cost_item($item_id){
+    function delete_task_cost_item($item_id)
+    {
         $this->Task_cost_items_model->delete_permanently($item_id);
-        return json_encode(array("success"=>true));
+        return json_encode(array("success" => true));
     }
-    function modal_add_order($task_id){
-        $task_info=$this->Tasks_model->get_one($task_id);
-        $project_info=$this->Projects_model->get_one($task_info->project_id);
-        return $this->template->view("tasks/variation_orders/modal_add_order",["project_info"=>$project_info,"task_info"=>$task_info,"task_id"=>$task_id]);
+    function modal_add_order($task_id)
+    {
+        $task_info = $this->Tasks_model->get_one($task_id);
+        $project_info = $this->Projects_model->get_one($task_info->project_id);
+        return $this->template->view("tasks/variation_orders/modal_add_order", ["project_info" => $project_info, "task_info" => $task_info, "task_id" => $task_id]);
     }
-    function save_variation_order(){
-        $task_info=$this->Tasks_model->get_one($this->request->getPost('task_id'));
-        $newSaveData=array(
-            "task_id"=>$this->request->getPost('task_id'),
-            "project_id"=>$task_info->project_id,
-            "name"=>$this->request->getPost('name'),
-            "cost"=>$this->request->getPost('cost'),
-            "start_date"=>date('Y-m-d', strtotime($this->request->getPost("start_date"))),
-            "finish_date"=>date('Y-m-d', strtotime($this->request->getPost("finish_date"))),
-            "notes"=>$this->request->getPost('notes'),
+    function save_variation_order()
+    {
+        $task_info = $this->Tasks_model->get_one($this->request->getPost('task_id'));
+        $newSaveData = array(
+            "task_id" => $this->request->getPost('task_id'),
+            "project_id" => $task_info->project_id,
+            "name" => $this->request->getPost('name'),
+            "cost" => $this->request->getPost('cost'),
+            "start_date" => date('Y-m-d', strtotime($this->request->getPost("start_date"))),
+            "finish_date" => date('Y-m-d', strtotime($this->request->getPost("finish_date"))),
+            "notes" => $this->request->getPost('notes'),
         );
-        $save_id=$this->Task_variation_orders_model->ci_save($newSaveData);
-        return json_encode(array("success"=>true,"save_id"=>$save_id));
+        $save_id = $this->Task_variation_orders_model->ci_save($newSaveData);
+        return json_encode(array("success" => true, "save_id" => $save_id));
     }
-    function delete_variation_order($order_id){
-        
-        $save_id=$this->Task_variation_orders_model->delete_permanently($order_id);
-        return json_encode(array("success"=>true));
+    function delete_variation_order($order_id)
+    {
+
+        $save_id = $this->Task_variation_orders_model->delete_permanently($order_id);
+        return json_encode(array("success" => true));
     }
 
-    function save_owner_supply(){
-        $task_info=$this->Tasks_model->get_one($this->request->getPost('task_id'));
-        $newSaveData=array(
-            "task_id"=>$this->request->getPost('task_id'),
-            "project_id"=>$task_info->project_id,
-            "name"=>$this->request->getPost('name'),
-            "description"=>$this->request->getPost('description'),
-            "cost"=>$this->request->getPost('cost'),
-            'order_number'=>$this->request->getPost('order_number')
+    function save_owner_supply()
+    {
+        $task_info = $this->Tasks_model->get_one($this->request->getPost('task_id'));
+        $newSaveData = array(
+            "task_id" => $this->request->getPost('task_id'),
+            "project_id" => $task_info->project_id,
+            "name" => $this->request->getPost('name'),
+            "description" => $this->request->getPost('description'),
+            "cost" => $this->request->getPost('cost'),
+            'order_number' => $this->request->getPost('order_number')
         );
-        $save_id=$this->Task_owner_supplies_model->ci_save($newSaveData);
-        return json_encode(array("success"=>true,"save_id"=>$save_id));
+        $save_id = $this->Task_owner_supplies_model->ci_save($newSaveData);
+        return json_encode(array("success" => true, "save_id" => $save_id));
     }
-    function delete_owner_supply($id){
+    function delete_owner_supply($id)
+    {
         $this->Task_owner_supplies_model->delete_permanently($id);
-        return json_encode(array("succees"=>true));
+        return json_encode(array("succees" => true));
     }
-    function modal_import_task_library($project_id){
-        $allTaskLibraries=$this->Task_libraries_model->get_all()->getResult();
-        $allStatus=$this->Task_status_model->get_all()->getResultArray();
-        $allPriorities=$this->Task_priority_model->get_all()->getResultArray();
-        $allMilestones=$this->Milestones_model->get_all_where(array("project_id"=>$project_id))->getResult();
-        $allTasks=$this->Tasks_model->get_all_where(array("project_id"=>$project_id))->getResult();
+    function modal_import_task_library($project_id)
+    {
+        $allTaskLibraries = $this->Task_libraries_model->get_all()->getResult();
+        $allStatus = $this->Task_status_model->get_all()->getResultArray();
+        $allPriorities = $this->Task_priority_model->get_all()->getResultArray();
+        $allMilestones = $this->Milestones_model->get_all_where(array("project_id" => $project_id))->getResult();
+        $allTasks = $this->Tasks_model->get_all_where(array("project_id" => $project_id))->getResult();
         // $allVariationOrders=$this->Task_variation_orders_model->get_all()->getResult();
-        return $this->template->view('tasks/modal_import_task_library',["allTaskLibraries"=>$allTaskLibraries,"allTasks"=>$allTasks,"project_id"=>$project_id,"allMilestones"=>$allMilestones,"allStatus"=>$allStatus,"allPriorities"=>$allPriorities]);
+        return $this->template->view('tasks/modal_import_task_library', ["allTaskLibraries" => $allTaskLibraries, "allTasks" => $allTasks, "project_id" => $project_id, "allMilestones" => $allMilestones, "allStatus" => $allStatus, "allPriorities" => $allPriorities]);
     }
-    function get_task_library($id){
-        $library_info=$this->Task_libraries_model->get_one($id);
+    function get_task_library($id)
+    {
+        $library_info = $this->Task_libraries_model->get_one($id);
         return json_encode($library_info);
     }
-    function save_task_one_cost_item(){
-        $id=$this->request->getPost("id");
-        $task_id=$this->request->getPost("task_id");
-        $task_info=$this->Tasks_model->get_one($task_id);
-        $newData=array(
-            "task_id"=>$this->request->getPost("task_id"),
-            "project_id"=>$task_info->project_id,
-            "name"=>$this->request->getPost("name"),
-            "description"=>$this->request->getPost("description"),
-            "quantity"=>$this->request->getPost("quantity"),
-            "measurement"=>$this->request->getPost("measurement"),
-            "unit_price"=>$this->request->getPost("unit_price"),
-            "currency"=>$this->request->getPost("currency"),
-            "discount"=>$this->request->getPost("discount"),
-            "quote_type"=>$this->request->getPost("quote_type"),
-            "yard_remarks"=>$this->request->getPost("yard_remarks"),
+    function save_task_one_cost_item()
+    {
+        $id = $this->request->getPost("id");
+        $task_id = $this->request->getPost("task_id");
+        $task_info = $this->Tasks_model->get_one($task_id);
+        $newData = array(
+            "task_id" => $this->request->getPost("task_id"),
+            "project_id" => $task_info->project_id,
+            "name" => $this->request->getPost("name"),
+            "description" => $this->request->getPost("description"),
+            "quantity" => $this->request->getPost("quantity"),
+            "measurement" => $this->request->getPost("measurement"),
+            "unit_price" => $this->request->getPost("unit_price"),
+            "currency" => $this->request->getPost("currency"),
+            "discount" => $this->request->getPost("discount"),
+            "quote_type" => $this->request->getPost("quote_type"),
+            "yard_remarks" => $this->request->getPost("yard_remarks"),
         );
-        $save_id=$this->Task_cost_items_model->ci_save($newData,$id);
-        return json_encode(array("success"=>true,"save_id"=>$save_id));
+        $save_id = $this->Task_cost_items_model->ci_save($newData, $id);
+        return json_encode(array("success" => true, "save_id" => $save_id));
     }
-    function get_task_cost_item($item_id){
-        $item_info=$this->Task_cost_items_model->get_one($item_id);
-        return json_encode(array("success"=>true,"item_info"=>$item_info));
+    function get_task_cost_item($item_id)
+    {
+        $item_info = $this->Task_cost_items_model->get_one($item_id);
+        return json_encode(array("success" => true, "item_info" => $item_info));
     }
-    function currency_rates($project_id){
+    function currency_rates($project_id)
+    {
 
     }
 
-    function upload_task_file(){
+    function upload_task_file()
+    {
         upload_file_to_temp(true);
-        $task_id=$this->request->getPost('task_id');
-        $task_info=$this->Tasks_model->get_one('task_id');
+        $task_id = $this->request->getPost('task_id');
+        $task_info = $this->Tasks_model->get_one('task_id');
         if (!empty($_FILES)) {
             $files = isset($_FILES) ? $_FILES : array();
             if ($files && count($files) > 0) {
                 foreach ($files as $key => $file) {
-                    $new_target_path = getcwd() . '/' .get_setting("timeline_file_path");
+                    $new_target_path = getcwd() . '/' . get_setting("timeline_file_path");
                     // $files_data = move_files_from_temp_dir_to_permanent_dir($new_target_path, "project_comment");
                     $temp_file_new = $file['tmp_name'];
-                    $file_name=$key;
+                    $file_name = $key;
                     // $file_name = $files["name"][$key];
                     // $file_size = $files["size"][$key];
                     $file_data = move_temp_file($file_name, $new_target_path, "task_file", $temp_file_new, "", "", false, $file['size']);
                     $task_file_data = array(
-                        "task_id"=>$task_id,
-                        "project_id"=>$task_info->project_id,
+                        "task_id" => $task_id,
+                        "project_id" => $task_info->project_id,
                         "file_name" => get_array_value($file_data, "file_name"),
                         "file_size" => $file['size'],
                         "file_id" => get_array_value($file_data, "file_id"),
                         "service_type" => get_array_value($file_data, "service_type"),
-                        "uploaded_by"=>$this->login_user->id,
-                        
+                        "uploaded_by" => $this->login_user->id,
+
                     );
                     $this->Task_files_model->ci_save($task_file_data);
                 }
-                
+
             }
-            
+
         }
-        return json_encode(array("success"=>true));
+        return json_encode(array("success" => true));
     }
-    function list_files($task_id){
-        $allFiles=$this->Task_files_model->get_all_where(array("task_id"=>$task_id))->getResult();
+    function list_files($task_id)
+    {
+        $allFiles = $this->Task_files_model->get_all_where(array("task_id" => $task_id))->getResult();
         return json_encode($allFiles);
     }
-    function task_files($task_id) {
+    function task_files($task_id)
+    {
         // validate_numeric_value($project_id);
 
         // $this->init_project_permission_checker($project_id);
@@ -5743,15 +5975,15 @@ class Tasks extends Security_Controller {
         // }
 
         // $view_data['can_add_files'] = $this->can_add_files();
-        $task_info=$this->Tasks_model->get_one($task_id);
-        $options = array("task_id" => $task_id,"description"=>"");
+        $task_info = $this->Tasks_model->get_one($task_id);
+        $options = array("task_id" => $task_id, "description" => "");
         $allComments = $this->Project_comments_model->get_details($options)->getResult();
-        $view_data['files'] =array();
+        $view_data['files'] = array();
         foreach ($allComments as $oneComment) {
             # code...
-            $oneFiles=unserialize($oneComment->files);
+            $oneFiles = unserialize($oneComment->files);
             foreach ($oneFiles as $oneFile) {
-                $view_data['files'][]=$oneFile;
+                $view_data['files'][] = $oneFile;
             }
         }
         $view_data['project_id'] = $task_info->project_id;
@@ -5773,7 +6005,8 @@ class Tasks extends Security_Controller {
 
         return $this->template->view("tasks/files/index", $view_data);
     }
-    function file_modal_form($task_id) {
+    function file_modal_form($task_id)
+    {
         $view_data['model_info'] = $this->Project_files_model->get_one($this->request->getPost('id'));
         $project_id = $this->request->getPost('project_id') ? $this->request->getPost('project_id') : $view_data['model_info']->project_id;
 
@@ -5786,7 +6019,7 @@ class Tasks extends Security_Controller {
         // }
 
         $view_data['project_id'] = $project_id;
-        $view_data['task_id']=$task_id;
+        $view_data['task_id'] = $task_id;
 
         $file_categories = $this->File_category_model->get_details()->getResult();
         $file_categories_dropdown = array("" => "-");
@@ -5801,47 +6034,49 @@ class Tasks extends Security_Controller {
 
         return $this->template->view('tasks/files/modal_form', $view_data);
     }
-    function files_list_data($project_id = 0) {
+    function files_list_data($project_id = 0)
+    {
 
         $options = array(
             "task_id" => $project_id,
-            "description"=>""
+            "description" => ""
         );
 
-        
+
 
         $allComments = $this->Project_comments_model->get_details($options)->getResult();
-        $view_data['files'] =array();
-        $result=array();
+        $view_data['files'] = array();
+        $result = array();
         foreach ($allComments as $oneComment) {
             # code...
-            $user_info=$this->Users_model->get_one($oneComment->created_by);
-            $oneFiles=unserialize($oneComment->files);
+            $user_info = $this->Users_model->get_one($oneComment->created_by);
+            $oneFiles = unserialize($oneComment->files);
             foreach ($oneFiles as $oneFile) {
-                $oneFile['uploaded_by_user_name']=$user_info->first_name.$user_info->last_name;
-                $oneFile['created_at']=$oneComment->created_at;
-                $oneFile['id']=$oneComment->id;
-                $view_data['files'][]=$oneFile;
+                $oneFile['uploaded_by_user_name'] = $user_info->first_name . $user_info->last_name;
+                $oneFile['created_at'] = $oneComment->created_at;
+                $oneFile['id'] = $oneComment->id;
+                $view_data['files'][] = $oneFile;
                 // echo json_encode($oneFile);
-                $result[]=$this->_make_file_row($oneFile,array());
+                $result[] = $this->_make_file_row($oneFile, array());
             }
         }
 
         echo json_encode(array("data" => $result));
     }
-    private function _make_file_row($data, $custom_fields) {
+    private function _make_file_row($data, $custom_fields)
+    {
         $file_icon = get_file_icon(strtolower(pathinfo($data['file_name'], PATHINFO_EXTENSION)));
 
-        $uploaded_by =  $data['uploaded_by_user_name'];
+        $uploaded_by = $data['uploaded_by_user_name'];
 
 
         $row_data = array(
-            js_anchor(remove_file_prefix($data['file_name']),array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "1", "data-url" => get_uri("tasks/view_file/" . $data['id']))),
+            js_anchor(remove_file_prefix($data['file_name']), array('title' => "", "data-toggle" => "app-modal", "data-sidebar" => "1", "data-url" => get_uri("tasks/view_file/" . $data['id']))),
 
             convert_file_size($data['file_size']),
             $uploaded_by,
             format_to_datetime($data['created_at']),
-            "<a target='_blank' href='".get_uri("tasks/download_one_file/").$data["file_name"]."' ><i data-feather='download' class='icon-16' ></i></a>"
+            "<a target='_blank' href='" . get_uri("tasks/download_one_file/") . $data["file_name"] . "' ><i data-feather='download' class='icon-16' ></i></a>"
         );
 
         foreach ($custom_fields as $field) {
@@ -5849,16 +6084,17 @@ class Tasks extends Security_Controller {
             $row_data[] = $this->template->view("custom_fields/output_" . $field->field_type, array("value" => $data->$cf_id));
         }
 
-     
+
 
 
         return $row_data;
     }
-    function view_file($comment_id = 0) {
+    function view_file($comment_id = 0)
+    {
         validate_numeric_value($comment_id);
-        $comment_info=$this->Project_comments_model->get_details(array("id" => $comment_id))->getRow();
+        $comment_info = $this->Project_comments_model->get_details(array("id" => $comment_id))->getRow();
         $file_info_serialized = $comment_info->files;
-        $file_info=(object)unserialize($file_info_serialized)[0];
+        $file_info = (object) unserialize($file_info_serialized)[0];
         if ($file_info) {
 
             //$this->init_project_permission_checker($file_info->project_id);
@@ -5868,8 +6104,8 @@ class Tasks extends Security_Controller {
             // }
 
             // $view_data['can_comment_on_files'] = $this->can_comment_on_files();
-            $view_data['can_comment_on_files']=false;
-            $file_url = get_source_url_of_file(make_array_of_file($file_info), get_setting("timeline_file_path") );
+            $view_data['can_comment_on_files'] = false;
+            $file_url = get_source_url_of_file(make_array_of_file($file_info), get_setting("timeline_file_path"));
 
             $view_data["file_url"] = $file_url;
             $view_data["is_image_file"] = is_image_file($file_info->file_name);
@@ -5877,10 +6113,10 @@ class Tasks extends Security_Controller {
             $view_data["is_google_preview_available"] = is_google_preview_available($file_info->file_name);
             $view_data["is_viewable_video_file"] = is_viewable_video_file($file_info->file_name);
             $view_data["is_google_drive_file"] = ($file_info->file_id && $file_info->service_type == "google") ? true : false;
-            $comment_info->uploaded_by_user_image=$comment_info->created_by_avatar;
-            $comment_info->uploaded_by_user_type=$comment_info->user_type;
-            $comment_info->uploaded_by=$comment_info->created_by;
-            $comment_info->uploaded_by_user_name=$comment_info->created_by_user;
+            $comment_info->uploaded_by_user_image = $comment_info->created_by_avatar;
+            $comment_info->uploaded_by_user_type = $comment_info->user_type;
+            $comment_info->uploaded_by = $comment_info->created_by;
+            $comment_info->uploaded_by_user_name = $comment_info->created_by_user;
             $view_data["file_info"] = $comment_info;
             $options = array("file_id" => $comment_id, "login_user_id" => $this->login_user->id);
             $view_data['comments'] = $this->Project_comments_model->get_details($options)->getResult();
@@ -5893,95 +6129,110 @@ class Tasks extends Security_Controller {
             show_404();
         }
     }
-    function task_list_headers($task_id){
-        $headers=array(
-            "data"=>array(
+    function task_list_headers($task_id)
+    {
+        $headers = array(
+            "data" => array(
                 array(
-                    "","","","","","","","","",""
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    ""
                 )
             )
         );
         return json_encode($headers);
     }
-    function modal_apply($project_id){
-        $allTaskLibraries=$this->Task_libraries_model->get_all_where(array("deleted"=>0))->getResult();
-        return $this->template->view("tasks/libraries/modal_apply",['project_id'=>$project_id,'allTaskLibraries'=>$allTaskLibraries]);
+    function modal_apply($project_id)
+    {
+        $allTaskLibraries = $this->Task_libraries_model->get_all_where(array("deleted" => 0))->getResult();
+        return $this->template->view("tasks/libraries/modal_apply", ['project_id' => $project_id, 'allTaskLibraries' => $allTaskLibraries]);
     }
-    function apply_libraries(){
-        $selected_libraries=$this->request->getPost("selected_libraries");
-        $project_info=$this->Projects_model->get_one($this->request->getPost("project_id"));
-        foreach($selected_libraries as $oneId){
-            $oneLibrary=$this->Task_libraries_model->get_one($oneId);
-            $count_of_dock_lists=$this->Tasks_model->getCount("category",$oneLibrary->category);
-            $new_dock_list_number=strtoupper(substr($oneLibrary->category, 0, 1)).sprintf("%02d", $count_of_dock_lists+1);
-            $newTaskData=array(
-                "title"=>$oneLibrary->title,
-                "status_id"=>$oneLibrary->status_id,
-                "milestone_id"=>0,
-                "dock_list_number"=>$new_dock_list_number,
-                "project_id"=>$this->request->getPost("project_id"),
-                "description"=>$oneLibrary->description,
-                "category"=>$oneLibrary->category,
-                "supplier"=>$oneLibrary->supplier,
-                "location"=>$oneLibrary->location,
-                "specification"=>$oneLibrary->specification,
-                "start_date"=>$project_info->start_date,
-                "deadline"=>$project_info->deadline,
-                "class_relevant"=>$oneLibrary->class_relevant?$oneLibrary->class_relevant:0,
-                "estimated_cost"=>$oneLibrary->estimated_cost?$oneLibrary->estimated_cost:0,
-                "priority_id"=>1
+    function apply_libraries()
+    {
+        $selected_libraries = $this->request->getPost("selected_libraries");
+        $project_info = $this->Projects_model->get_one($this->request->getPost("project_id"));
+        foreach ($selected_libraries as $oneId) {
+            $oneLibrary = $this->Task_libraries_model->get_one($oneId);
+            $count_of_dock_lists = $this->Tasks_model->getCount("category", $oneLibrary->category);
+            $new_dock_list_number = strtoupper(substr($oneLibrary->category, 0, 1)) . sprintf("%02d", $count_of_dock_lists + 1);
+            $newTaskData = array(
+                "title" => $oneLibrary->title,
+                "status_id" => $oneLibrary->status_id,
+                "milestone_id" => 0,
+                "dock_list_number" => $new_dock_list_number,
+                "project_id" => $this->request->getPost("project_id"),
+                "description" => $oneLibrary->description,
+                "category" => $oneLibrary->category,
+                "supplier" => $oneLibrary->supplier,
+                "location" => $oneLibrary->location,
+                "specification" => $oneLibrary->specification,
+                "start_date" => $project_info->start_date,
+                "deadline" => $project_info->deadline,
+                "class_relevant" => $oneLibrary->class_relevant ? $oneLibrary->class_relevant : 0,
+                "estimated_cost" => $oneLibrary->estimated_cost ? $oneLibrary->estimated_cost : 0,
+                "priority_id" => 1
                 // "budget_group"=>$oneLibrary->budget_group?$oneLibrary->budget_group:0
             );
-            $saved_id=$this->Tasks_model->save_gantt_task_date($newTaskData,null);
-            $costItems=json_decode($oneLibrary->reference_drawing);
-            if(isset($costItems)) foreach ($costItems as $oneItem) {
-                $newItem=array(
-                    "name"=>$oneItem->name,
-                    "description"=>$oneItem->description,
-                    "quantity"=>$oneItem->quantity,
-                    "unit_price"=>$oneItem->unit_price,
-                    "currency"=>$oneItem->currency,
-                    "quote_type"=>$oneItem->quote_type,
-                    "discount"=>$oneItem->discount,
-                    "yard_remarks"=>$oneItem->yard_remarks,
-                    "measurement"=>$oneItem->measurement,
-                    "task_id"=>$saved_id,
-                    "project_id"=>$this->request->getPost("project_id"),
-                );
-                $this->Task_cost_items_model->ci_save($newItem);
-            }
-            $checklist_items=$this->Task_library_checklist_items_model->get_all_where(array("task_library"=>$oneId))->getResult();
+            $saved_id = $this->Tasks_model->save_gantt_task_date($newTaskData, null);
+            $costItems = json_decode($oneLibrary->reference_drawing);
+            if (isset($costItems))
+                foreach ($costItems as $oneItem) {
+                    $newItem = array(
+                        "name" => $oneItem->name,
+                        "description" => $oneItem->description,
+                        "quantity" => $oneItem->quantity,
+                        "unit_price" => $oneItem->unit_price,
+                        "currency" => $oneItem->currency,
+                        "quote_type" => $oneItem->quote_type,
+                        "discount" => $oneItem->discount,
+                        "yard_remarks" => $oneItem->yard_remarks,
+                        "measurement" => $oneItem->measurement,
+                        "task_id" => $saved_id,
+                        "project_id" => $this->request->getPost("project_id"),
+                    );
+                    $this->Task_cost_items_model->ci_save($newItem);
+                }
+            $checklist_items = $this->Task_library_checklist_items_model->get_all_where(array("task_library" => $oneId))->getResult();
             foreach ($checklist_items as $key => $oneItem) {
                 # code...
-                $newItem=array(
-                    "title"=>$oneItem->title,
-                    "is_checked"=>$oneItem->checked,
-                    "task_id"=>$saved_id
+                $newItem = array(
+                    "title" => $oneItem->title,
+                    "is_checked" => $oneItem->checked,
+                    "task_id" => $saved_id
                 );
                 $this->Checklist_items_model->ci_save($newItem);
             }
         }
-        return json_encode(array("success"=>true,"save_id"=>$saved_id));
+        return json_encode(array("success" => true, "save_id" => $saved_id));
     }
-    function modal_import_from_gl_shipmanager($project_id){
-        return $this->template->view("tasks/modal_import_from_shipmanager",array("project_id"=>$project_id));
+    function modal_import_from_gl_shipmanager($project_id)
+    {
+        return $this->template->view("tasks/modal_import_from_shipmanager", array("project_id" => $project_id));
     }
-    function import_from_gl_shipmanager(){
-        $project_id=$this->request->getPost();
+    function import_from_gl_shipmanager()
+    {
+        $project_id = $this->request->getPost();
         upload_file_to_temp(true);
         $file = get_array_value($_FILES, "file");
 
         // if (!$file) {
         //     die("Invalid file");
         // }
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $temp_file = get_array_value($file, "tmp_name");
         $file_name = get_array_value($file, "name");
         $file_size = get_array_value($file, "size");
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
         $excel_file->setActiveSheetIndex(0);
-        $worksheet=$excel_file->getActiveSheet();
+        $worksheet = $excel_file->getActiveSheet();
         $highestRow = $worksheet->getHighestRow(); // e.g., 10
         $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
 
@@ -6001,40 +6252,46 @@ class Tasks extends Security_Controller {
             $data[] = $rowData;
         }
         foreach ($data as $key => $row) {
-            if($key==0) continue;
+            if ($key == 0)
+                continue;
 
-            
-            
+
+
             # code...
-            $description=$row[8]."\n". $row[14]."\n".$row[26];
-            $deadline=$row[10];
+            $description = $row[8] . "\n" . $row[14] . "\n" . $row[26];
+            $deadline = $row[10];
             // $deadline = $row[10];
             // $start_date=strtotime("-30 days",$deadline);
-            $deadline= date('Y-m-d', strtotime('1899-12-30 +' . ($row[10] - 1) . ' days'));
+            $deadline = date('Y-m-d', strtotime('1899-12-30 +' . ($row[10] - 1) . ' days'));
             $start_date = date('Y-m-d', strtotime($deadline . ' -30 days'));
-            $new_task_data=array(
-                "project_id"=>$project_id,
-                "title"=>$row[5],
-                "pms_scs_number"=>$row[7],
-                "start_date"=>$start_date,
-                "deadline"=>$deadline,
-                "description"=>$description,
-                "status_id"=>1,
-                "category"=>"Others",
-                "priority_id"=>1
+            $new_task_data = array(
+                "project_id" => $project_id,
+                "title" => $row[5],
+                "pms_scs_number" => $row[7],
+                "start_date" => $start_date,
+                "deadline" => $deadline,
+                "description" => $description,
+                "status_id" => 1,
+                "category" => "Others",
+                "priority_id" => 1
 
             );
 
-            $category_counts=count($this->Tasks_model->get_all_where(array("category"=>"Others"))->getResult());
-            if($category_counts<100) $new_task_data["dock_list_number"]=strtoupper(substr($new_task_data['category'], 0, 1)). sprintf('%02d', $category_counts+1);
-            else $new_task_data["dock_list_number"]=strtoupper(substr($new_task_data['category'], 0, 1)).($category_counts+1);
+            $category_counts = count($this->Tasks_model->get_all_where(array("category" => "Others"))->getResult());
+            if ($category_counts < 100)
+                $new_task_data["dock_list_number"] = strtoupper(substr($new_task_data['category'], 0, 1)) . sprintf('%02d', $category_counts + 1);
+            else
+                $new_task_data["dock_list_number"] = strtoupper(substr($new_task_data['category'], 0, 1)) . ($category_counts + 1);
 
-            if($row[15]!="crew") $new_task_data["supplier"]="Vessel(Crew)";
-            else if($row[15]!="") $new_task_data["supplier"]="Specialist";
-            else  $new_task_data["supplier"]="";
+            if ($row[15] != "crew")
+                $new_task_data["supplier"] = "Vessel(Crew)";
+            else if ($row[15] != "")
+                $new_task_data["supplier"] = "Specialist";
+            else
+                $new_task_data["supplier"] = "";
 
-            $saved_id=$this->Tasks_model->ci_save($new_task_data);
+            $saved_id = $this->Tasks_model->ci_save($new_task_data);
         }
-        return json_encode(array("success"=>true));
+        return json_encode(array("success" => true));
     }
 }

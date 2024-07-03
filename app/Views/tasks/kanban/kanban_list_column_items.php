@@ -2,10 +2,10 @@
 
 $show_in_kanban = get_setting("show_in_kanban");
 $show_in_kanban_items = explode(',', $show_in_kanban);
-$status_colors=array();
+$status_colors = array();
 foreach ($allStatus as $oneStatus) {
     # code...
-    $status_colors[$oneStatus->title]=$oneStatus->color;
+    $status_colors[$oneStatus->title] = $oneStatus->color;
 }
 
 foreach ($tasks as $data) {
@@ -32,19 +32,19 @@ foreach ($tasks as $data) {
         $toggle_sub_task_icon = "<span class='filter-sub-task-button clickable ml5' title='" . app_lang("show_sub_tasks") . "' main-task-id= '$main_task_id'><i data-feather='filter' class='icon-16'></i></span>";
     }
 
-    $title .=("<div style='flex-grow:1;max-width:10vw;word-wrap:break-word;' >". modal_anchor(get_uri("tasks/view"), $data->title . $icon, array("title" => app_lang('task_info') . " #$data->id", "data-post-id" => $data->id, "data-search" => $sub_task_search_column, "class" => $unread_comments_class, "data-modal-lg" => "1"))."</div>");
+    $title .= ("<div style='flex-grow:1;max-width:10vw;word-wrap:break-word;' >" . modal_anchor(get_uri("tasks/view"), $data->title . $icon, array("title" => app_lang('task_info') . " #$data->id", "data-post-id" => $data->id, "data-search" => $sub_task_search_column, "class" => $unread_comments_class, "data-modal-lg" => "1")) . "</div>");
 
     // $task_point = "";
     // if ($data->points > 1) {
     //     $task_point .= "<span class='badge badge-light clickable mt0' title='" . app_lang('points') . "'>" . $data->points . "</span> ";
     // }
     // $title .= "<span class='float-end ml5'>" . $task_point . "</span>";
-$priorityMark="";
+    $priorityMark = "";
     if ($data->priority_id) {
         // $title .= "<span class='float-end' title='" . app_lang('priority') . ": " . $data->priority_title . "'>
         //                 <span class='sub-task-icon priority-badge' style='background: $data->priority_color'><i data-feather='$data->priority_icon' class='icon-14'></i></span> $toggle_sub_task_icon
         //             </span>";
-        $priorityMark="<span class='float-end' title='" . app_lang('priority') . ": " . $data->priority_title . "'>
+        $priorityMark = "<span class='float-end' title='" . app_lang('priority') . ": " . $data->priority_title . "'>
             <span class='sub-task-icon priority-badge' style='background: $data->priority_color'><i data-feather='$data->priority_icon' class='icon-14'></i></span> $toggle_sub_task_icon
         </span>";
     }
@@ -95,9 +95,9 @@ $priorityMark="";
         // }
     }
 
-    $collaborators="-";
-    if(isset($data->collaborators_data)){
-        $collaborators=$data->collaborators_data;
+    $collaborators = "-";
+    if (isset($data->collaborators_data)) {
+        $collaborators = $data->collaborators_data;
     }
     // $collaborators = $this->_get_collaborators($data->collaborator_list);
 
@@ -112,9 +112,9 @@ $priorityMark="";
     }
 
     // if (get_array_value($tasks_status_edit_permissions, $data->id)) {
-        //show changeable status checkbox and link to team members
-        $check_status = js_anchor("<span class='$checkbox_class mr15 float-start'></span>", array('title' => "", "class" => "js-task", "data-id" => $data->id, "data-value" => $data->status_key_name === "done" ? "1" : "3", "data-act" => "update-task-status-checkbox"));
-        $status = js_anchor($data->status_key_name ? app_lang($data->status_key_name) : $data->status_title, array('title' => "", "class" => "", "data-id" => $data->id, "data-value" => $data->status_id, "data-act" => "update-task-status"));
+    //show changeable status checkbox and link to team members
+    $check_status = js_anchor("<span class='$checkbox_class mr15 float-start'></span>", array('title' => "", "class" => "js-task", "data-id" => $data->id, "data-value" => $data->status_key_name === "done" ? "1" : "3", "data-act" => "update-task-status-checkbox"));
+    $status = js_anchor($data->status_key_name ? app_lang($data->status_key_name) : $data->status_title, array('title' => "", "class" => "", "data-id" => $data->id, "data-value" => $data->status_id, "data-act" => "update-task-status"));
     // } else {
     //     //don't show clickable checkboxes/status to client
     //     if ($checkbox_class == "checkbox-blank") {
@@ -130,11 +130,11 @@ $priorityMark="";
     if ($data->deadline && is_date_exists($data->deadline)) {
 
         // if ($show_time_with_task) {
-            if (date("H:i:s", strtotime($data->deadline)) == "00:00:00") {
-                $deadline_text = format_to_date($data->deadline, false);
-            } else {
-                $deadline_text = format_to_relative_time($data->deadline, false, false, true);
-            }
+        if (date("H:i:s", strtotime($data->deadline)) == "00:00:00") {
+            $deadline_text = format_to_date($data->deadline, false);
+        } else {
+            $deadline_text = format_to_relative_time($data->deadline, false, false, true);
+        }
         // } else {
         //     $deadline_text = format_to_date($data->deadline, false);
         // }
@@ -150,11 +150,11 @@ $priorityMark="";
     $start_date = "-";
     if (is_date_exists($data->start_date)) {
         // if ($show_time_with_task) {
-            if (date("H:i:s", strtotime($data->start_date)) == "00:00:00") {
-                $start_date = format_to_date($data->start_date, false);
-            } else {
-                $start_date = format_to_relative_time($data->start_date, false, false, true);
-            }
+        if (date("H:i:s", strtotime($data->start_date)) == "00:00:00") {
+            $start_date = format_to_date($data->start_date, false);
+        } else {
+            $start_date = format_to_relative_time($data->start_date, false, false, true);
+        }
         // } else {
         //     $start_date = format_to_date($data->start_date, false);
         // }
@@ -163,11 +163,11 @@ $priorityMark="";
     $options = "";
 
     if (get_array_value($tasks_edit_permissions, $data->id)) {
-        $options .= modal_anchor(get_uri("tasks/modal_form_edit/".$data->id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_task'), "data-post-id" => $data->id));
-        $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_task'), "onclick"=>'delete_task('.$data->id.')',"class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("tasks/delete"), "data-action" => "delete-confirmation"));
+        $options .= modal_anchor(get_uri("tasks/modal_form_edit/" . $data->id), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_task'), "data-post-id" => $data->id));
+        $options .= js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_task'), "onclick" => 'delete_task(' . $data->id . ')', "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("tasks/delete"), "data-action" => "delete-confirmation"));
     }
     // if (can_delete_tasks($data)) {
-        
+
     // }
     // echo '<tr style="border-style:none none none none solid;" ><td class="" style="border-left:5px solid '.$status_colors[$data->status_title].';" >' . 
     // $check_status . '</td><td>' . 
@@ -189,32 +189,32 @@ $priorityMark="";
     // "</td></tr>";
 
 
-///////////////////////
-echo '<tr style="border-style:none none none none solid;" ><td class="" style="border-left:5px solid '.$status_colors[$data->status_title].';" >' . 
-$check_status . '</td><td>' . 
-$data->dock_list_number . 
-"</td><td  ><div class='d-flex align-items-center' >" . 
-$title . 
-"</div></td><td>" .  
-'<span class="">' . $start_date . '</span>' . 
-"</td><td>" . 
-'<span class="text-danger">' . $deadline_text . '</span>' . 
-"</td><td>".
-$milestone_title.
-"</td><td>
+    ///////////////////////
+    echo '<tr style="border-style:none none none none solid;" ><td class="" style="border-left:5px solid ' . $status_colors[$data->status_title] . ';" >' .
+        $check_status . '</td><td>' .
+        $data->dock_list_number .
+        "</td><td  ><div class='d-flex align-items-center' >" .
+        $title .
+        "</div></td><td>" .
+        '<span class="">' . $start_date . '</span>' .
+        "</td><td>" .
+        '<span class="text-danger">' . $deadline_text . '</span>' .
+        "</td><td>" .
+        $milestone_title .
+        "</td><td>
 "
-.$data->supplier.
-"</td><td>" . 
-$assigned_to . 
-"</td><td>
-".$collaborators.
-"</div></td><td>" . 
-$status . $priorityMark.
-"</td><td class='text-center option '>" . 
-$options . 
-"</td></tr>";
+        . $data->supplier .
+        "</td><td>" .
+        $assigned_to .
+        "</td><td>
+" . $collaborators .
+        "</div></td><td>" .
+        $status . $priorityMark .
+        "</td><td class='text-center option '>" .
+        $options .
+        "</td></tr>";
 
-////////////////////////
+    ////////////////////////
 
 
     // echo modal_anchor(get_uri("tasks/view"), "<div class='d-flex'>
