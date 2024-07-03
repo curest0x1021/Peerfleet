@@ -15,7 +15,8 @@ use App\Libraries\Outlook_smtp;
  */
 if (!function_exists('echo_uri')) {
 
-    function echo_uri($uri = "") {
+    function echo_uri($uri = "")
+    {
         echo get_uri($uri);
     }
 
@@ -29,7 +30,8 @@ if (!function_exists('echo_uri')) {
  */
 if (!function_exists('get_uri')) {
 
-    function get_uri($uri = "") {
+    function get_uri($uri = "")
+    {
         $index_page = config("App")->indexPage;
         $base_url = base_url($index_page);
         $last_chr_on_url = substr($base_url, -1);
@@ -50,7 +52,8 @@ if (!function_exists('get_uri')) {
  */
 if (!function_exists('get_file_uri')) {
 
-    function get_file_uri($uri = "") {
+    function get_file_uri($uri = "")
+    {
         return base_url($uri);
     }
 
@@ -64,7 +67,8 @@ if (!function_exists('get_file_uri')) {
  */
 if (!function_exists('get_avatar')) {
 
-    function get_avatar($image = "") {
+    function get_avatar($image = "")
+    {
         if ($image === "system_bot") {
             return base_url("assets/images/avatar-bot.jpg");
         } else if ($image === "bitbucket") {
@@ -93,7 +97,8 @@ if (!function_exists('get_avatar')) {
  */
 if (!function_exists('load_css')) {
 
-    function load_css(array $array) {
+    function load_css(array $array)
+    {
         $version = get_setting("app_version");
 
         foreach ($array as $uri) {
@@ -112,7 +117,8 @@ if (!function_exists('load_css')) {
  */
 if (!function_exists('load_js')) {
 
-    function load_js(array $array) {
+    function load_js(array $array)
+    {
         $version = get_setting("app_version");
 
         foreach ($array as $uri) {
@@ -130,7 +136,8 @@ if (!function_exists('load_js')) {
  */
 if (!function_exists('get_array_value')) {
 
-    function get_array_value($array, $key) {
+    function get_array_value($array, $key)
+    {
         if (is_array($array) && array_key_exists($key, $array)) {
             return $array[$key];
         }
@@ -147,7 +154,8 @@ if (!function_exists('get_array_value')) {
  */
 if (!function_exists('js_anchor')) {
 
-    function js_anchor($title = '', $attributes = '') {
+    function js_anchor($title = '', $attributes = '')
+    {
         $title = (string) $title;
         $html_attributes = "";
 
@@ -173,7 +181,8 @@ if (!function_exists('js_anchor')) {
  */
 if (!function_exists('modal_anchor')) {
 
-    function modal_anchor($url, $title = '', $attributes = '') {
+    function modal_anchor($url, $title = '', $attributes = '')
+    {
         $attributes["data-act"] = "ajax-modal";
         if (get_array_value($attributes, "data-modal-title")) {
             $attributes["data-title"] = get_array_value($attributes, "data-modal-title");
@@ -197,7 +206,8 @@ if (!function_exists('modal_anchor')) {
  */
 if (!function_exists('ajax_anchor')) {
 
-    function ajax_anchor($url, $title = '', $attributes = '') {
+    function ajax_anchor($url, $title = '', $attributes = '')
+    {
         $attributes["data-act"] = "ajax-request";
         $attributes["data-action-url"] = $url;
         return js_anchor($title, $attributes);
@@ -207,7 +217,8 @@ if (!function_exists('ajax_anchor')) {
 
 if (!function_exists('get_actual_controller_name')) {
 
-    function get_actual_controller_name($router) {
+    function get_actual_controller_name($router)
+    {
         $controller_name = $router->controllerName();
         $controller_name = explode("\\", $controller_name);
         return end($controller_name);
@@ -223,7 +234,8 @@ if (!function_exists('get_actual_controller_name')) {
  */
 if (!function_exists('active_menu')) {
 
-    function get_active_menu($sidebar_menu = array()) {
+    function get_active_menu($sidebar_menu = array())
+    {
         $router = service('router');
         $controller_name = strtolower(get_actual_controller_name($router));
         $uri_string = uri_string();
@@ -315,7 +327,8 @@ if (!function_exists('active_menu')) {
  */
 if (!function_exists('active_submenu')) {
 
-    function active_submenu($submenu = "", $is_controller = false) {
+    function active_submenu($submenu = "", $is_controller = false)
+    {
         $router = service('router');
         //if submenu is a controller then compare with controller name, otherwise compare with method name
         if ($is_controller && $submenu === strtolower(get_actual_controller_name($router))) {
@@ -334,7 +347,8 @@ if (!function_exists('active_submenu')) {
  */
 if (!function_exists('get_setting')) {
 
-    function get_setting($key = "") {
+    function get_setting($key = "")
+    {
         $setting_value = get_array_value(config('Rise')->app_settings_array, $key);
         if ($setting_value !== NULL) {
             return $setting_value;
@@ -362,7 +376,8 @@ if (!function_exists('get_setting')) {
  */
 if (!function_exists('starts_with')) {
 
-    function starts_with($string, $needle) {
+    function starts_with($string, $needle)
+    {
         $string = $string;
         return $needle === "" || strrpos($string, $needle, -strlen($string)) !== false;
     }
@@ -378,7 +393,8 @@ if (!function_exists('starts_with')) {
  */
 if (!function_exists('ends_with')) {
 
-    function ends_with($string, $needle) {
+    function ends_with($string, $needle)
+    {
         return $needle === "" || (($temp = strlen($string) - strlen($string)) >= 0 && strpos($string, $needle, $temp) !== false);
     }
 
@@ -393,7 +409,8 @@ if (!function_exists('ends_with')) {
  */
 if (!function_exists('encode_id')) {
 
-    function encode_id($id, $salt) {
+    function encode_id($id, $salt)
+    {
         $encrypter = get_encrypter();
         $id = bin2hex($encrypter->encrypt($id . $salt));
         $id = str_replace("=", "~", $id);
@@ -406,7 +423,8 @@ if (!function_exists('encode_id')) {
 
 if (!function_exists('get_encrypter')) {
 
-    function get_encrypter() {
+    function get_encrypter()
+    {
         $config = new \Config\Encryption();
         $config->key = config('App')->encryption_key;
         $config->driver = 'OpenSSL';
@@ -425,7 +443,8 @@ if (!function_exists('get_encrypter')) {
  */
 if (!function_exists('decode_id')) {
 
-    function decode_id($id, $salt) {
+    function decode_id($id, $salt)
+    {
         $encrypter = get_encrypter();
         if ($id) {
             $id = str_replace("_", "+", $id);
@@ -457,7 +476,8 @@ if (!function_exists('decode_id')) {
  */
 if (!function_exists('decode_ajax_post_data')) {
 
-    function decode_ajax_post_data($html) {
+    function decode_ajax_post_data($html)
+    {
         $html = str_replace("~", "=", $html);
         $html = str_replace("^", "&", $html);
         return $html;
@@ -473,7 +493,8 @@ if (!function_exists('decode_ajax_post_data')) {
  */
 if (!function_exists('check_required_hidden_fields')) {
 
-    function check_required_hidden_fields($fields = array()) {
+    function check_required_hidden_fields($fields = array())
+    {
         $has_error = false;
         foreach ($fields as $field) {
             if (!$field) {
@@ -495,7 +516,8 @@ if (!function_exists('check_required_hidden_fields')) {
  */
 if (!function_exists('link_it')) {
 
-    function link_it($text) {
+    function link_it($text)
+    {
         if ($text != strip_tags($text)) {
             //contains HTML, return the actual text
             return $text;
@@ -514,7 +536,8 @@ if (!function_exists('link_it')) {
  */
 if (!function_exists('convert_mentions')) {
 
-    function convert_mentions($text, $convert_links = true) {
+    function convert_mentions($text, $convert_links = true)
+    {
 
         preg_match_all('#\@\[(.*?)\]#', $text, $matches);
 
@@ -555,7 +578,8 @@ if (!function_exists('convert_mentions')) {
  */
 if (!function_exists('get_members_from_mention')) {
 
-    function get_members_from_mention($text) {
+    function get_members_from_mention($text)
+    {
 
         preg_match_all('#\@\[(.*?)\]#', $text, $matchs);
 
@@ -589,7 +613,8 @@ if (!function_exists('get_members_from_mention')) {
  */
 if (!function_exists('send_app_mail')) {
 
-    function send_app_mail($to, $subject, $message, $optoins = array(), $convert_message_to_html = true) {
+    function send_app_mail($to, $subject, $message, $optoins = array(), $convert_message_to_html = true)
+    {
 
         if (config('Logger')->threshold >= 6) {
             log_message('notice', 'Email: ' . $to . ' Subject: ' . $subject);
@@ -600,7 +625,7 @@ if (!function_exists('send_app_mail')) {
             $Outlook_smtp = new Outlook_smtp();
             return $Outlook_smtp->send_app_mail($to, $subject, $message, $optoins, $convert_message_to_html);
         } else {
-            $email_config = Array(
+            $email_config = array(
                 'charset' => 'utf-8',
                 'mailType' => 'html'
             );
@@ -691,7 +716,8 @@ if (!function_exists('send_app_mail')) {
  */
 if (!function_exists('get_real_ip')) {
 
-    function get_real_ip() {
+    function get_real_ip()
+    {
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
             $ip = $_SERVER['HTTP_CLIENT_IP'];
         } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
@@ -711,7 +737,8 @@ if (!function_exists('get_real_ip')) {
  */
 if (!function_exists('is_localhost')) {
 
-    function is_localhost() {
+    function is_localhost()
+    {
         $known_localhost_ip = array(
             '127.0.0.1',
             '::1'
@@ -732,7 +759,8 @@ if (!function_exists('is_localhost')) {
  */
 if (!function_exists('to_url')) {
 
-    function to_url($address = "") {
+    function to_url($address = "")
+    {
         if (strpos($address, 'http://') === false && strpos($address, 'https://') === false) {
             $address = "http://" . $address;
         }
@@ -749,7 +777,8 @@ if (!function_exists('to_url')) {
  */
 if (!function_exists('validate_numeric_value')) {
 
-    function validate_numeric_value($value = 0) {
+    function validate_numeric_value($value = 0)
+    {
         if ($value && !is_numeric($value)) {
             die("Invalid value");
         }
@@ -768,7 +797,8 @@ if (!function_exists('validate_numeric_value')) {
  */
 if (!function_exists('get_team_member_profile_link')) {
 
-    function get_team_member_profile_link($id = 0, $name = "", $attributes = array()) {
+    function get_team_member_profile_link($id = 0, $name = "", $attributes = array())
+    {
         $ci = new Security_Controller(false);
         if ($ci->login_user->user_type === "staff") {
             return anchor("team_members/view/" . $id, $name ? $name : "", $attributes);
@@ -791,7 +821,8 @@ if (!function_exists('get_team_member_profile_link')) {
  */
 if (!function_exists('get_client_contact_profile_link')) {
 
-    function get_client_contact_profile_link($id = 0, $name = "", $attributes = array()) {
+    function get_client_contact_profile_link($id = 0, $name = "", $attributes = array())
+    {
         return anchor("clients/contact_profile/" . $id, $name ? $name : "", $attributes);
     }
 
@@ -806,7 +837,8 @@ if (!function_exists('get_client_contact_profile_link')) {
  */
 if (!function_exists('get_invoice_status_label')) {
 
-    function get_invoice_status_label($invoice_info, $return_html = true) {
+    function get_invoice_status_label($invoice_info, $return_html = true)
+    {
         $invoice_status_class = "bg-secondary";
         $status = "not_paid";
         $now = get_my_local_time("Y-m-d");
@@ -858,7 +890,8 @@ if (!function_exists('get_invoice_status_label')) {
  */
 if (!function_exists('get_invoice_making_data')) {
 
-    function get_invoice_making_data($invoice_id) {
+    function get_invoice_making_data($invoice_id)
+    {
         $ci = new App_Controller();
         $invoice_info = $ci->Invoices_model->get_details(array("id" => $invoice_id))->getRow();
         if ($invoice_info) {
@@ -883,7 +916,8 @@ if (!function_exists('get_invoice_making_data')) {
  */
 if (!function_exists('prepare_invoice_pdf')) {
 
-    function prepare_invoice_pdf($invoice_data, $mode = "download") {
+    function prepare_invoice_pdf($invoice_data, $mode = "download")
+    {
         $pdf = new Pdf();
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
@@ -932,7 +966,8 @@ if (!function_exists('prepare_invoice_pdf')) {
  */
 if (!function_exists('prepare_estimate_pdf')) {
 
-    function prepare_estimate_pdf($estimate_data, $mode = "download") {
+    function prepare_estimate_pdf($estimate_data, $mode = "download")
+    {
         $pdf = new Pdf();
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
@@ -978,7 +1013,8 @@ if (!function_exists('prepare_estimate_pdf')) {
  */
 if (!function_exists('prepare_order_pdf')) {
 
-    function prepare_order_pdf($order_data, $mode = "download") {
+    function prepare_order_pdf($order_data, $mode = "download")
+    {
         $pdf = new Pdf();
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
@@ -1024,7 +1060,8 @@ if (!function_exists('prepare_order_pdf')) {
  */
 if (!function_exists('get_invoice_id')) {
 
-    function get_invoice_id($invoice_id) {
+    function get_invoice_id($invoice_id)
+    {
         $prefix = get_setting("invoice_prefix");
         $prefix = $prefix ? $prefix : strtoupper(app_lang("invoice")) . " #";
         return $prefix . $invoice_id;
@@ -1040,7 +1077,8 @@ if (!function_exists('get_invoice_id')) {
  */
 if (!function_exists('get_estimate_id')) {
 
-    function get_estimate_id($estimate_id) {
+    function get_estimate_id($estimate_id)
+    {
         $prefix = get_setting("estimate_prefix");
         $prefix = $prefix ? $prefix : strtoupper(app_lang("estimate")) . " #";
         return $prefix . $estimate_id;
@@ -1056,7 +1094,8 @@ if (!function_exists('get_estimate_id')) {
  */
 if (!function_exists('get_proposal_id')) {
 
-    function get_proposal_id($proposal_id) {
+    function get_proposal_id($proposal_id)
+    {
         $prefix = get_setting("proposal_prefix");
         $prefix = $prefix ? $prefix : strtoupper(app_lang("proposal")) . " #";
         return $prefix . $proposal_id;
@@ -1072,7 +1111,8 @@ if (!function_exists('get_proposal_id')) {
  */
 if (!function_exists('get_order_id')) {
 
-    function get_order_id($order_id) {
+    function get_order_id($order_id)
+    {
         $prefix = get_setting("order_prefix");
         $prefix = $prefix ? $prefix : strtoupper(app_lang("order")) . " #";
         return $prefix . $order_id;
@@ -1088,7 +1128,8 @@ if (!function_exists('get_order_id')) {
  */
 if (!function_exists('get_ticket_id')) {
 
-    function get_ticket_id($ticket_id) {
+    function get_ticket_id($ticket_id)
+    {
         $prefix = get_setting("ticket_prefix");
         $prefix = $prefix ? $prefix : app_lang("ticket") . " #";
         return $prefix . $ticket_id;
@@ -1105,7 +1146,8 @@ if (!function_exists('get_ticket_id')) {
  */
 if (!function_exists('get_estimate_making_data')) {
 
-    function get_estimate_making_data($estimate_id) {
+    function get_estimate_making_data($estimate_id)
+    {
         validate_numeric_value($estimate_id);
         $ci = new App_Controller();
         $estimate_info = $ci->Estimates_model->get_details(array("id" => $estimate_id))->getRow();
@@ -1131,7 +1173,8 @@ if (!function_exists('get_estimate_making_data')) {
  */
 if (!function_exists('get_contract_making_data')) {
 
-    function get_contract_making_data($contract_id) {
+    function get_contract_making_data($contract_id)
+    {
         $ci = new App_Controller(false);
         $contract_info = $ci->Contracts_model->get_details(array("id" => $contract_id))->getRow();
         if ($contract_info) {
@@ -1155,7 +1198,8 @@ if (!function_exists('get_contract_making_data')) {
  */
 if (!function_exists('get_proposal_making_data')) {
 
-    function get_proposal_making_data($proposal_id) {
+    function get_proposal_making_data($proposal_id)
+    {
         $ci = new App_Controller(false);
         $proposal_info = $ci->Proposals_model->get_details(array("id" => $proposal_id))->getRow();
         if ($proposal_info) {
@@ -1179,7 +1223,8 @@ if (!function_exists('get_proposal_making_data')) {
  */
 if (!function_exists('get_order_making_data')) {
 
-    function get_order_making_data($order_id = 0, $cookie_hash = "") {
+    function get_order_making_data($order_id = 0, $cookie_hash = "")
+    {
         $ci = new Security_Controller(false);
         $data = array();
         if ($order_id) {
@@ -1212,7 +1257,8 @@ if (!function_exists('get_order_making_data')) {
  */
 if (!function_exists('get_team_members_and_teams_select2_data_list')) {
 
-    function get_team_members_and_teams_select2_data_list($exclude_inactive_users = false) {
+    function get_team_members_and_teams_select2_data_list($exclude_inactive_users = false)
+    {
         $ci = new App_Controller();
 
         $users_options = array("deleted" => 0, "user_type" => "staff");
@@ -1246,7 +1292,8 @@ if (!function_exists('get_team_members_and_teams_select2_data_list')) {
  */
 if (!function_exists('log_notification')) {
 
-    function log_notification($event, $options = array(), $user_id = 0) {
+    function log_notification($event, $options = array(), $user_id = 0)
+    {
         $ci = new Security_Controller(false);
 
         //send response to notification processor
@@ -1325,7 +1372,8 @@ if (!function_exists('log_notification')) {
  */
 if (!function_exists('save_custom_fields')) {
 
-    function save_custom_fields($related_to_type, $related_to_id, $is_admin = 0, $user_type = "", $activity_log_id = 0, $save_to_related_type = "", $user_id = 0) {
+    function save_custom_fields($related_to_type, $related_to_id, $is_admin = 0, $user_type = "", $activity_log_id = 0, $save_to_related_type = "", $user_id = 0)
+    {
         $ci = new App_Controller();
         $request = \Config\Services::request();
 
@@ -1403,7 +1451,8 @@ if (!function_exists('save_custom_fields')) {
  */
 if (!function_exists('update_custom_fields_changes')) {
 
-    function update_custom_fields_changes($related_to_type, $related_to_id, $changes, $activity_log_id = 0) {
+    function update_custom_fields_changes($related_to_type, $related_to_id, $changes, $activity_log_id = 0)
+    {
         if ($changes && count($changes)) {
             $ci = new App_Controller();
 
@@ -1468,7 +1517,8 @@ if (!function_exists('update_custom_fields_changes')) {
  */
 if (!function_exists("clean_data")) {
 
-    function clean_data($data) {
+    function clean_data($data)
+    {
         $clean_data = new Clean_data();
 
         $data = $clean_data->xss_clean($data);
@@ -1487,7 +1537,8 @@ if (!function_exists("clean_data")) {
 //return site logo
 if (!function_exists("get_logo_url")) {
 
-    function get_logo_url() {
+    function get_logo_url()
+    {
         return get_file_from_setting("site_logo");
     }
 
@@ -1496,7 +1547,8 @@ if (!function_exists("get_logo_url")) {
 //get logo from setting
 if (!function_exists("get_file_from_setting")) {
 
-    function get_file_from_setting($setting_name = "", $only_file_path_with_slash = false, $file_path = "") {
+    function get_file_from_setting($setting_name = "", $only_file_path_with_slash = false, $file_path = "")
+    {
 
         if ($setting_name) {
             $setting_value = get_setting($setting_name);
@@ -1529,7 +1581,8 @@ if (!function_exists("get_file_from_setting")) {
 //get site favicon
 if (!function_exists("get_favicon_url")) {
 
-    function get_favicon_url() {
+    function get_favicon_url()
+    {
         $favicon_from_setting = get_file_from_setting('favicon');
         return $favicon_from_setting ? $favicon_from_setting : get_file_uri("assets/images/favicon.png");
     }
@@ -1540,7 +1593,8 @@ if (!function_exists("get_favicon_url")) {
 //get color plate
 if (!function_exists("get_custom_theme_color_list")) {
 
-    function get_custom_theme_color_list() {
+    function get_custom_theme_color_list()
+    {
         //scan the css files for theme color and show a list
         try {
             $dir = getcwd() . '/assets/css/color/';
@@ -1557,7 +1611,7 @@ if (!function_exists("get_custom_theme_color_list")) {
                 }
             }
         } catch (\Exception $exc) {
-            
+
         }
     }
 
@@ -1565,7 +1619,8 @@ if (!function_exists("get_custom_theme_color_list")) {
 //make random string
 if (!function_exists("make_random_string")) {
 
-    function make_random_string($length = 10) {
+    function make_random_string($length = 10)
+    {
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $characters_length = strlen($characters);
         $random_string = '';
@@ -1582,7 +1637,8 @@ if (!function_exists("make_random_string")) {
 //add custom variable data
 if (!function_exists("get_custom_variables_data")) {
 
-    function get_custom_variables_data($related_to_type = "", $related_to_id = 0, $is_admin = 0) {
+    function get_custom_variables_data($related_to_type = "", $related_to_id = 0, $is_admin = 0)
+    {
         if ($related_to_type && $related_to_id) {
             $variables_array = array();
             $ci = new Security_Controller(false);
@@ -1618,7 +1674,8 @@ if (!function_exists("get_custom_variables_data")) {
 //make labels view data for different contexts
 if (!function_exists("make_labels_view_data")) {
 
-    function make_labels_view_data($labels_list = "", $clickable = false, $large = false) {
+    function make_labels_view_data($labels_list = "", $clickable = false, $large = false)
+    {
         $labels = "";
 
         if ($labels_list) {
@@ -1650,7 +1707,8 @@ if (!function_exists("make_labels_view_data")) {
 //make labels view data for different contexts
 if (!function_exists("make_labels_export_data")) {
 
-    function make_labels_export_data($labels_list = "", $clickable = false, $large = false) {
+    function make_labels_export_data($labels_list = "", $clickable = false, $large = false)
+    {
         $labels = "";
 
         if ($labels_list) {
@@ -1676,7 +1734,8 @@ if (!function_exists("make_labels_export_data")) {
 //get update task info anchor data
 if (!function_exists("get_update_task_info_anchor_data")) {
 
-    function get_update_task_info_anchor_data($model_info, $type = "", $can_edit_tasks = false, $extra_data = "", $extra_condition = false) {
+    function get_update_task_info_anchor_data($model_info, $type = "", $can_edit_tasks = false, $extra_data = "", $extra_condition = false)
+    {
         if ($model_info && $type) {
 
             $start_date = "<span class='text-off'>" . app_lang("add") . " " . app_lang("start_date") . "<span>";
@@ -1757,7 +1816,8 @@ if (!function_exists("get_update_task_info_anchor_data")) {
 
 if (!function_exists('get_lead_contact_profile_link')) {
 
-    function get_lead_contact_profile_link($id = 0, $name = "", $attributes = array()) {
+    function get_lead_contact_profile_link($id = 0, $name = "", $attributes = array())
+    {
         return anchor("leads/contact_profile/" . $id, $name, $attributes);
     }
 
@@ -1765,7 +1825,8 @@ if (!function_exists('get_lead_contact_profile_link')) {
 
 if (!function_exists('decode_password')) {
 
-    function decode_password($data = "", $salt = "") {
+    function decode_password($data = "", $salt = "")
+    {
         if ($data && $salt) {
             if (strlen($data) > 100) {
                 //encoded data with encode_id
@@ -1782,7 +1843,8 @@ if (!function_exists('decode_password')) {
 
 if (!function_exists('validate_invoice_verification_code')) {
 
-    function validate_invoice_verification_code($code = "", $given_invoice_data = array()) {
+    function validate_invoice_verification_code($code = "", $given_invoice_data = array())
+    {
         if ($code) {
             $Verification_model = model("App\Models\Verification_model");
             $options = array("code" => $code, "type" => "invoice_payment");
@@ -1812,7 +1874,8 @@ if (!function_exists('validate_invoice_verification_code')) {
 
 if (!function_exists('can_edit_this_task_status')) {
 
-    function can_edit_this_task_status($assigned_to = 0) {
+    function can_edit_this_task_status($assigned_to = 0)
+    {
         $ci = new Security_Controller(false);
 
         if (get_array_value($ci->login_user->permissions, "can_update_only_assigned_tasks_status")) {
@@ -1829,7 +1892,8 @@ if (!function_exists('can_edit_this_task_status')) {
 
 if (!function_exists('send_message_via_pusher')) {
 
-    function send_message_via_pusher($to_user_id, $message_data, $message_id, $message_type = "message") {
+    function send_message_via_pusher($to_user_id, $message_data, $message_id, $message_type = "message")
+    {
         $ci = new Security_Controller(false);
 
         $pusher_app_id = get_setting("pusher_app_id");
@@ -1841,7 +1905,7 @@ if (!function_exists('send_message_via_pusher')) {
             return false;
         }
 
-        require_once(APPPATH . "ThirdParty/Pusher/vendor/autoload.php");
+        require_once (APPPATH . "ThirdParty/Pusher/vendor/autoload.php");
 
         $options = array(
             'cluster' => $pusher_cluster,
@@ -1849,7 +1913,10 @@ if (!function_exists('send_message_via_pusher')) {
         );
 
         $pusher = new Pusher\Pusher(
-                $pusher_key, $pusher_secret, $pusher_app_id, $options
+            $pusher_key,
+            $pusher_secret,
+            $pusher_app_id,
+            $options
         );
 
         if ($message_type == "message") {
@@ -1890,7 +1957,8 @@ if (!function_exists('send_message_via_pusher')) {
 
 if (!function_exists('can_access_messages_module')) {
 
-    function can_access_messages_module() {
+    function can_access_messages_module()
+    {
         $ci = new Security_Controller(false);
 
         $can_chat = false;
@@ -1909,7 +1977,8 @@ if (!function_exists('can_access_messages_module')) {
 
 if (!function_exists('add_auto_reply_to_ticket')) {
 
-    function add_auto_reply_to_ticket($ticket_id = 0) {
+    function add_auto_reply_to_ticket($ticket_id = 0)
+    {
         $auto_reply_to_tickets = get_setting("auto_reply_to_tickets");
         $auto_reply_to_tickets_message = get_setting('auto_reply_to_tickets_message');
 
@@ -1947,7 +2016,8 @@ if (!function_exists('add_auto_reply_to_ticket')) {
  */
 if (!function_exists('app_redirect')) {
 
-    function app_redirect($url, $global_link = false) {
+    function app_redirect($url, $global_link = false)
+    {
         if ($global_link) {
             header("Location:$url");
         } else {
@@ -1960,7 +2030,8 @@ if (!function_exists('app_redirect')) {
 
 if (!function_exists('app_lang')) {
 
-    function app_lang($lang = "") {
+    function app_lang($lang = "")
+    {
         if (!$lang) {
             return false;
         }
@@ -1984,7 +2055,8 @@ if (!function_exists('app_lang')) {
  */
 if (!function_exists('show_404')) {
 
-    function show_404() {
+    function show_404()
+    {
         echo view("errors/html/error_404");
         exit();
     }
@@ -1999,7 +2071,8 @@ if (!function_exists('show_404')) {
  */
 if (!function_exists('prepare_contract_view')) {
 
-    function prepare_contract_view($contract_data) {
+    function prepare_contract_view($contract_data)
+    {
         if ($contract_data) {
             $contract_info = get_array_value($contract_data, "contract_info");
 
@@ -2128,7 +2201,8 @@ if (!function_exists('prepare_contract_view')) {
 
 if (!function_exists('remove_custom_field_titles_from_variables')) {
 
-    function remove_custom_field_titles_from_variables($content) {
+    function remove_custom_field_titles_from_variables($content)
+    {
         preg_match_all('#\{CF_(.*?)\}#', $content, $matches);
         $custom_fields = get_array_value($matches, 1); //["1_Custom_field_x", "2_Custom_field_y"]
 
@@ -2153,7 +2227,8 @@ if (!function_exists('remove_custom_field_titles_from_variables')) {
 
 if (!function_exists('get_available_contract_variables')) {
 
-    function get_available_contract_variables() {
+    function get_available_contract_variables()
+    {
         $variables = array(
             "CONTRACT_ID",
             "CONTRACT_TITLE",
@@ -2208,7 +2283,8 @@ if (!function_exists('get_available_contract_variables')) {
 
 if (!function_exists('get_db_prefix')) {
 
-    function get_db_prefix() {
+    function get_db_prefix()
+    {
         $db = db_connect('default');
         return $db->getPrefix();
     }
@@ -2223,7 +2299,8 @@ if (!function_exists('get_db_prefix')) {
  */
 if (!function_exists('convert_comment_link')) {
 
-    function convert_comment_link($text = "", $convert_links = true) {
+    function convert_comment_link($text = "", $convert_links = true)
+    {
         preg_match_all('#\#\[(.*?)\]#', $text, $matches);
         $link_codes = get_array_value($matches, 1); //["20-73", "20-72"]
         $link_code_removed_text = preg_replace('#\#\[(.*?)\] #', "#", $text);
@@ -2275,7 +2352,8 @@ if (!function_exists('convert_comment_link')) {
  */
 if (!function_exists('prepare_proposal_view')) {
 
-    function prepare_proposal_view($proposal_data) {
+    function prepare_proposal_view($proposal_data)
+    {
         if ($proposal_data) {
             $proposal_info = get_array_value($proposal_data, "proposal_info");
 
@@ -2350,7 +2428,8 @@ if (!function_exists('prepare_proposal_view')) {
 
 if (!function_exists('get_available_proposal_variables')) {
 
-    function get_available_proposal_variables() {
+    function get_available_proposal_variables()
+    {
         $variables = array(
             "PROPOSAL_ID",
             "PROPOSAL_DATE",
@@ -2394,7 +2473,8 @@ if (!function_exists('get_available_proposal_variables')) {
 
 if (!function_exists('prepare_allowed_members_array')) {
 
-    function prepare_allowed_members_array($permissions, $user_id) {
+    function prepare_allowed_members_array($permissions, $user_id)
+    {
         $allowed_members = array($user_id);
         $allowed_teams = array();
         foreach ($permissions as $vlaue) {
@@ -2434,7 +2514,8 @@ if (!function_exists('prepare_allowed_members_array')) {
  */
 if (!function_exists('get_contract_id')) {
 
-    function get_contract_id($contract_id) {
+    function get_contract_id($contract_id)
+    {
         $prefix = get_setting("contract_prefix");
         $prefix = $prefix ? $prefix : strtoupper(app_lang("contract")) . " #";
         return $prefix . $contract_id;
@@ -2444,7 +2525,8 @@ if (!function_exists('get_contract_id')) {
 
 if (!function_exists('get_default_company_id')) {
 
-    function get_default_company_id() {
+    function get_default_company_id()
+    {
         $Company_model = model('App\Models\Company_model');
         return $Company_model->get_details(array("is_default" => true))->getRow()->id;
     }
@@ -2459,7 +2541,8 @@ if (!function_exists('get_default_company_id')) {
  */
 if (!function_exists('get_subscription_id')) {
 
-    function get_subscription_id($subscription_id) {
+    function get_subscription_id($subscription_id)
+    {
         $prefix = get_setting("subscription_prefix");
         $prefix = $prefix ? $prefix : strtoupper(app_lang("subscription")) . " #";
         return $prefix . $subscription_id;
@@ -2475,7 +2558,8 @@ if (!function_exists('get_subscription_id')) {
  */
 if (!function_exists('get_subscription_making_data')) {
 
-    function get_subscription_making_data($subscription_id) {
+    function get_subscription_making_data($subscription_id)
+    {
         $ci = new App_Controller();
         $subscription_info = $ci->Subscriptions_model->get_details(array("id" => $subscription_id))->getRow();
         if ($subscription_info) {
@@ -2503,7 +2587,8 @@ if (!function_exists('get_subscription_making_data')) {
  */
 if (!function_exists('get_subscription_status_label')) {
 
-    function get_subscription_status_label($subscription_info, $return_html = true) {
+    function get_subscription_status_label($subscription_info, $return_html = true)
+    {
         $ci = new Security_Controller(false);
         $subscription_status_class = "bg-secondary";
         $status = "draft";
@@ -2536,7 +2621,8 @@ if (!function_exists('get_subscription_status_label')) {
 
 if (!function_exists('create_invoice_from_subscription')) {
 
-    function create_invoice_from_subscription($subscription_id) {
+    function create_invoice_from_subscription($subscription_id)
+    {
         $ci = new App_Controller();
         $subscription_info = $ci->Subscriptions_model->get_one($subscription_id);
 
@@ -2607,7 +2693,8 @@ if (!function_exists('create_invoice_from_subscription')) {
 
 if (!function_exists('can_access_reminders_module')) {
 
-    function can_access_reminders_module() {
+    function can_access_reminders_module()
+    {
         $ci = new Security_Controller();
 
         if (get_setting("module_reminder") && ($ci->login_user->user_type === "staff" || ($ci->login_user->user_type === "client" && get_setting("client_can_create_reminders")))) {
@@ -2619,7 +2706,8 @@ if (!function_exists('can_access_reminders_module')) {
 
 if (!function_exists('show_clients_of_this_client_contact')) {
 
-    function show_clients_of_this_client_contact($login_user, $show_icon = false) {
+    function show_clients_of_this_client_contact($login_user, $show_icon = false)
+    {
         $Users_model = model('App\Models\Users_model');
         $Clients_model = model('App\Models\Clients_model');
         $clients = $Users_model->get_other_clients_of_this_client_contact($login_user->email, $login_user->id)->getResult();
@@ -2636,7 +2724,8 @@ if (!function_exists('show_clients_of_this_client_contact')) {
 
 if (!function_exists('append_server_side_filtering_commmon_params')) {
 
-    function append_server_side_filtering_commmon_params($options = array()) {
+    function append_server_side_filtering_commmon_params($options = array())
+    {
 
         $request = \Config\Services::request();
 
@@ -2669,7 +2758,8 @@ if (!function_exists('append_server_side_filtering_commmon_params')) {
 
 if (!function_exists('get_reminder_context_info')) {
 
-    function get_reminder_context_info($reminder_info) {
+    function get_reminder_context_info($reminder_info)
+    {
         $context_url = "";
         $context_icon = "";
 
@@ -2724,7 +2814,8 @@ if (!function_exists('get_reminder_context_info')) {
  */
 if (!function_exists('get_estimate_status_label')) {
 
-    function get_estimate_status_label($estimate_info, $return_html = true) {
+    function get_estimate_status_label($estimate_info, $return_html = true)
+    {
         $ci = new Security_Controller(false);
         $estimate_status_class = "bg-secondary";
 
@@ -2761,7 +2852,8 @@ if (!function_exists('get_estimate_status_label')) {
 
 if (!function_exists('create_invoice_from_order')) {
 
-    function create_invoice_from_order($order_id) {
+    function create_invoice_from_order($order_id)
+    {
         $ci = new Security_Controller(false);
 
         $order_info = $ci->Orders_model->get_one($order_id);
@@ -2812,7 +2904,8 @@ if (!function_exists('create_invoice_from_order')) {
  */
 if (!function_exists('process_images_from_content')) {
 
-    function process_images_from_content($text = "", $add_preview = true) {
+    function process_images_from_content($text = "", $add_preview = true)
+    {
         if (!$text) {
             return "";
         }
@@ -2886,7 +2979,8 @@ if (!function_exists('process_images_from_content')) {
  */
 if (!function_exists('get_subscription_type_label')) {
 
-    function get_subscription_type_label($subscription_info, $return_html = true) {
+    function get_subscription_type_label($subscription_info, $return_html = true)
+    {
 
         if ($subscription_info->type == "app") {
             $subscription_type_class = "bg-warning";
@@ -2913,7 +3007,8 @@ if (!function_exists('get_subscription_type_label')) {
  */
 if (!function_exists('get_company_logo')) {
 
-    function get_company_logo($company_id, $type = "") {
+    function get_company_logo($company_id, $type = "")
+    {
         $Company_model = model('App\Models\Company_model');
         $company_info = $Company_model->get_one($company_id);
         $only_file_path = get_setting('only_file_path');
@@ -2923,8 +3018,8 @@ if (!function_exists('get_company_logo')) {
             if (is_array($file)) {
                 $file = get_array_value($file, 0);
                 ?>
-                <img class="max-logo-size" src="<?php echo get_source_url_of_file($file, get_setting("system_file_path"), "thumbnail", $only_file_path, $only_file_path); ?>" alt="..." />
-                <?php
+                                <img class="max-logo-size" src="<?php echo get_source_url_of_file($file, get_setting("system_file_path"), "thumbnail", $only_file_path, $only_file_path); ?>" alt="..." />
+                                <?php
             }
         } else {
             $logo = $type . "_logo";
@@ -2933,9 +3028,9 @@ if (!function_exists('get_company_logo')) {
             }
             ?>
 
-            <img class="max-logo-size" src="<?php echo get_file_from_setting($logo, $only_file_path); ?>" alt="..." />
+                        <img class="max-logo-size" src="<?php echo get_file_from_setting($logo, $only_file_path); ?>" alt="..." />
 
-            <?php
+                        <?php
         }
     }
 
@@ -2950,7 +3045,8 @@ if (!function_exists('get_company_logo')) {
  */
 if (!function_exists('get_project_status_text_info')) {
 
-    function get_project_status_text_info() {
+    function get_project_status_text_info()
+    {
         $ci = new App_Controller();
 
         $info = new \stdClass();
@@ -2985,7 +3081,8 @@ if (!function_exists('get_project_status_text_info')) {
  * @return string
  */
 if (!function_exists('find_object_by_key')) {
-    function find_object_by_key($arr, $data, $key) {
+    function find_object_by_key($arr, $data, $key)
+    {
         $data = trim($data);
         foreach ($arr as $item) {
             if ($data == $item->$key) {
@@ -3001,7 +3098,8 @@ if (!function_exists('find_object_by_key')) {
  * @return string
  */
 if (!function_exists('get_wire_exchange_reminder_date')) {
-    function get_wire_exchange_reminder_date() {
+    function get_wire_exchange_reminder_date()
+    {
         // The default for the replacement of wires is 8 years
         // 8 months before exchaning ropes
         $reminder_date = date('Y-m-d', strtotime(' - 88 months'));
@@ -3014,7 +3112,8 @@ if (!function_exists('get_wire_exchange_reminder_date')) {
  * @return string
  */
 if (!function_exists('get_loadtest_reminder_date')) {
-    function get_loadtest_reminder_date() {
+    function get_loadtest_reminder_date()
+    {
         // Load Test: 5 years
         // Reminder: 90 days
         $reminder_date = date('Y-m-d', strtotime(' - 57 months'));
@@ -3027,7 +3126,8 @@ if (!function_exists('get_loadtest_reminder_date')) {
  * @return string
  */
 if (!function_exists('get_visual_inspection_reminder_date')) {
-    function get_visual_inspection_reminder_date() {
+    function get_visual_inspection_reminder_date()
+    {
         // Visual inspection: 12 months
         // Reminder: 90 days
         $reminder_date = date('Y-m-d', strtotime(' - 9 months'));
@@ -3040,7 +3140,8 @@ if (!function_exists('get_visual_inspection_reminder_date')) {
  * @return string
  */
 if (!function_exists('get_wires_inspection_reminder_date')) {
-    function get_wires_inspection_reminder_date() {
+    function get_wires_inspection_reminder_date()
+    {
         // Visual inspection: 12 months
         // Reminder: 90 days
         $reminder_date = date('Y-m-d', strtotime(' - 9 months'));
@@ -3050,7 +3151,8 @@ if (!function_exists('get_wires_inspection_reminder_date')) {
 
 if (!function_exists('can_edit_this_todo')) {
 
-    function can_edit_this_todo($created_by = 0) {
+    function can_edit_this_todo($created_by = 0)
+    {
         $ci = new Security_Controller(false);
 
         if ($ci->login_user->id == $created_by) {
@@ -3063,7 +3165,8 @@ if (!function_exists('can_edit_this_todo')) {
 }
 
 if (!function_exists('is_valid_date')) {
-    function is_valid_date($date) {
+    function is_valid_date($date)
+    {
         return (strtotime($date) !== false);
     }
 }
@@ -3078,8 +3181,9 @@ if (!function_exists('get_first_letter')) {
     }
 }
 /////////////////////////////////////////////
-function encode_img_base64( $img_path = false, $type = 'png', $default_img_path = 'assets/images/pdf.png' ){
-    if($img_path && file_exists($img_path)){
+function encode_img_base64($img_path = false, $type = 'png', $default_img_path = 'assets/images/pdf.png')
+{
+    if ($img_path && (preg_match('/^(http|https):\/\//', $img_path) || file_exists($img_path))) {
         $type = pathinfo($img_path, PATHINFO_EXTENSION);
         $data = file_get_contents($img_path);
         return 'data:image/' . $type . ';base64,' . base64_encode($data);
