@@ -6,6 +6,7 @@
 /files/timeline_files/*
 /writable/*/*
 /assets/js/app.all.js
+/utilities/*
 
 !index.html
 !.htaccess

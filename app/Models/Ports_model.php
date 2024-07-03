@@ -14,9 +14,9 @@ class Ports_model extends Crud_model {
     function get_all_names() {
         $port_table = $this->db->prefixTable("ports");
 
-        $sql = "SELECT name FROM $port_table";
+        $sql = "SELECT main_port_name FROM $port_table";
         $result = $this->db->query($sql)->getResult();
-        $names = array_map(function($x) { return $x->name; }, $result);
+        $names = array_map(function($x) { return $x->main_port_name; }, $result);
         return $names;
     }
 }
