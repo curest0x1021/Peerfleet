@@ -4039,60 +4039,60 @@ class Projects extends Security_Controller
         $allYardCostItems = $this->Shipyard_cost_items_model->get_all_where(array("shipyard_id" => $shipyard_id))->getResult();
 
         // Add data to the first worksheet
-        $sheet1 = $spreadsheet->getActiveSheet();
-        $sheet1->setTitle('Read me');
-        $sheet1->setCellValue('A1', 'About the quotation form');
-        $sheet1->setCellValue('A3', 'General');
-        $sheet1->setCellValue('A4', 'This quotation form is generated via Peerfleet (' . get_uri("") . ').');
-        $sheet1->setCellValue('A5', 'It contains all the necessary functionality required by the shipyard providing a quotation.');
-        $sheet1->setCellValue('A7', 'The shipyard understands that this quotation form must be read and understood in connection with the project specification PDF sent along with it.');
-        $sheet1->setCellValue('A8', 'The project specification PDF contains all the detailed specifications about the work scope.');
-        $sheet1->setCellValue('A10', 'The shipyard also accepts that, if selected, billed and/or final costs should be provided to the owner in this same format.');
-        $sheet1->setCellValue('A13', 'How to use');
-        $sheet1->setCellValue('A14', 'For a quick and easy intro, please view this video.(ctrl + click to view)');
-        $sheet1->setCellValue('A16', 'For additional information, please see this article.(ctrl + click to view)');
-        $sheet1->setCellValue('A19', 'Support');
-        $sheet1->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
-        // $sheet1->setCellValue('A21', '+47 91999771');
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Read me');
+        $sheet->setCellValue('A1', 'About the quotation form');
+        $sheet->setCellValue('A3', 'General');
+        $sheet->setCellValue('A4', 'This quotation form is generated via Peerfleet (' . get_uri("") . ').');
+        $sheet->setCellValue('A5', 'It contains all the necessary functionality required by the shipyard providing a quotation.');
+        $sheet->setCellValue('A7', 'The shipyard understands that this quotation form must be read and understood in connection with the project specification PDF sent along with it.');
+        $sheet->setCellValue('A8', 'The project specification PDF contains all the detailed specifications about the work scope.');
+        $sheet->setCellValue('A10', 'The shipyard also accepts that, if selected, billed and/or final costs should be provided to the owner in this same format.');
+        $sheet->setCellValue('A13', 'How to use');
+        $sheet->setCellValue('A14', 'For a quick and easy intro, please view this video.(ctrl + click to view)');
+        $sheet->setCellValue('A16', 'For additional information, please see this article.(ctrl + click to view)');
+        $sheet->setCellValue('A19', 'Support');
+        $sheet->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
+        // $sheet->setCellValue('A21', '+47 91999771');
 
         // Add data to the second worksheet
-        $sheet1 = $spreadsheet->createSheet();
-        $sheet1->setTitle('Cost items');
-        $sheet1->setCellValue('A1', 'SFI Code');
-        $sheet1->setCellValue('B1', 'WO name');
-        $sheet1->setCellValue('C1', 'Group');
-        $sheet1->setCellValue('D1', 'Cost item');
-        $sheet1->setCellValue('E1', 'Description');
-        $sheet1->setCellValue('F1', 'Cost type');
-        $sheet1->setCellValue('G1', 'Est. quantity');
-        $sheet1->setCellValue('H1', 'Measurement unit');
-        $sheet1->setCellValue('I1', 'Unit price');
-        $sheet1->setCellValue('J1', 'Unit price currency');
-        $sheet1->setCellValue('K1', 'Quote');
-        $sheet1->setCellValue('L1', 'Discount (0-100%)');
-        $sheet1->setCellValue('M1', 'Discounted quote');
-        $sheet1->setCellValue('N1', 'Yard remarks');
-        $sheet1->setCellValue('O1', 'Cost ID');
-        $sheet1->setCellValue('P1', 'WO ID');
+        $sheet = $spreadsheet->createSheet();
+        $sheet->setTitle('Cost items');
+        $sheet->setCellValue('A1', 'SFI Code');
+        $sheet->setCellValue('B1', 'WO name');
+        $sheet->setCellValue('C1', 'Group');
+        $sheet->setCellValue('D1', 'Cost item');
+        $sheet->setCellValue('E1', 'Description');
+        $sheet->setCellValue('F1', 'Cost type');
+        $sheet->setCellValue('G1', 'Est. quantity');
+        $sheet->setCellValue('H1', 'Measurement unit');
+        $sheet->setCellValue('I1', 'Unit price');
+        $sheet->setCellValue('J1', 'Unit price currency');
+        $sheet->setCellValue('K1', 'Quote');
+        $sheet->setCellValue('L1', 'Discount (0-100%)');
+        $sheet->setCellValue('M1', 'Discounted quote');
+        $sheet->setCellValue('N1', 'Yard remarks');
+        $sheet->setCellValue('O1', 'Cost ID');
+        $sheet->setCellValue('P1', 'WO ID');
         $rowNumber = 2;
         foreach ($allYardCostItems as $oneItem) {
             $task_info = $this->Tasks_model->get_one($oneItem->task_id);
-            $sheet1->setCellValue('A' . $rowNumber, '');
-            $sheet1->setCellValue('B' . $rowNumber, $task_info->title);
-            $sheet1->setCellValue('C' . $rowNumber, $task_info->category);
-            $sheet1->setCellValue('D' . $rowNumber, $oneItem->name);
-            $sheet1->setCellValue('E' . $rowNumber, $oneItem->description);
-            $sheet1->setCellValue('F' . $rowNumber, $oneItem->quote_type);
-            $sheet1->setCellValue('G' . $rowNumber, $oneItem->quantity);
-            $sheet1->setCellValue('H' . $rowNumber, $oneItem->measurement);
-            $sheet1->setCellValue('I' . $rowNumber, $oneItem->unit_price);
-            $sheet1->setCellValue('J' . $rowNumber, $oneItem->currency);
-            $sheet1->setCellValue('K' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity);
-            $sheet1->setCellValue('L' . $rowNumber, $oneItem->discount);
-            $sheet1->setCellValue('M' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) $oneItem->discount / 100);
-            $sheet1->setCellValue('N' . $rowNumber, $oneItem->yard_remarks);
-            $sheet1->setCellValue('O' . $rowNumber, '');
-            $sheet1->setCellValue('P' . $rowNumber, '');
+            $sheet->setCellValue('A' . $rowNumber, '');
+            $sheet->setCellValue('B' . $rowNumber, $task_info->title);
+            $sheet->setCellValue('C' . $rowNumber, $task_info->category);
+            $sheet->setCellValue('D' . $rowNumber, $oneItem->name);
+            $sheet->setCellValue('E' . $rowNumber, $oneItem->description);
+            $sheet->setCellValue('F' . $rowNumber, $oneItem->quote_type);
+            $sheet->setCellValue('G' . $rowNumber, $oneItem->quantity);
+            $sheet->setCellValue('H' . $rowNumber, $oneItem->measurement);
+            $sheet->setCellValue('I' . $rowNumber, $oneItem->unit_price);
+            $sheet->setCellValue('J' . $rowNumber, $oneItem->currency);
+            $sheet->setCellValue('K' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity);
+            $sheet->setCellValue('L' . $rowNumber, $oneItem->discount);
+            $sheet->setCellValue('M' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) $oneItem->discount / 100);
+            $sheet->setCellValue('N' . $rowNumber, $oneItem->yard_remarks);
+            $sheet->setCellValue('O' . $rowNumber, '');
+            $sheet->setCellValue('P' . $rowNumber, '');
             $rowNumber++;
         }
 
@@ -4517,46 +4517,87 @@ class Projects extends Security_Controller
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
-        $sheet1->setTitle('Cost items');
-        $sheet1->setCellValue('A1', 'Project ID');
-        $sheet1->setCellValue('B1', 'Project Title');
-        $sheet1->setCellValue('C1', 'Task ID');
-        $sheet1->setCellValue('D1', 'Task Title');
-        $sheet1->setCellValue('E1', 'Group');
-        $sheet1->setCellValue('F1', 'Dock List Number');
-        $sheet1->setCellValue('G1', 'Cost item');
-        $sheet1->setCellValue('H1', 'Description');
-        $sheet1->setCellValue('I1', 'Cost type');
-        $sheet1->setCellValue('J1', 'Est. quantity');
-        $sheet1->setCellValue('K1', 'Measurement unit');
-        $sheet1->setCellValue('L1', 'Unit price');
-        $sheet1->setCellValue('M1', 'Unit price currency');
-        $sheet1->setCellValue('N1', 'Quote');
-        $sheet1->setCellValue('O1', 'Discount (0-100%)');
-        $sheet1->setCellValue('P1', 'Discounted quote');
-        $sheet1->setCellValue('Q1', 'Yard remarks');
-        $sheet1->setCellValue('R1', 'Link to Task');
+        $sheet1.setTitle('Instruction');
+        $sheet1->setCellValue('A1','About the quotation form');
+        $sheet1->setCellValue('A3','General');
+        $sheet1->setCellValue('A4','This quotation form is generated via PEERFLEET (www.peerfleet.io).');
+        $sheet1->setCellValue('A5','It contains all the necessary functionality required by the shipyard providing a quotation.');
+        $sheet1->setCellValue('A7','The shipyard understands that this quotation form must be read and understood in connection with the project specification PDF sent along with it.');
+        $sheet1->setCellValue('A8','The project specification PDF contains all the detailed specifications about the work scope.');
+        $sheet1->setCellValue('A10','The shipyard also accepts that, if selected, billed and/or final costs should be provided to the owner in this same format.');
+        $sheet1->setCellValue('A13','How to use');
+        $sheet1->setCellValue('A15','For information on how to use the excel-based quotaton form, please see this toturial.(ctrl + click to view)');
+        $sheet1->setCellValue('A17','Basic rules: ');
+        $sheet1->setCellValue('A20','Quote types:');
+        $sheet1->setCellValue('A21','Please note:');
+        $sheet1->setCellValue('A28','Please note:');
+        $sheet1->setCellValue('A30','Things to keep in mind:');
+        $sheet1->setCellValue('A31','• Add additional lines (cost items) when necessary. If you do, copy the "Task ID" & "Dock list number" for the Task that you are adding an additional line for.');
+        $sheet1->setCellValue('A32','• Do not merge any cells.');
+        $sheet1->setCellValue('A33','• Do add unit price, do not add prices into the total after discount (unit prices and discounts are imported, the rest are calculated on PEERFLEET)');
+        $sheet1->setCellValue('A34',"• For per-unit costs, add an estimated quantity (If it's an estimate, specify this in the remarks).");
+        $sheet1->setCellValue('A35','• Add a unit price for all per unit cost items. For lump sum cost items, the unit price field is where you also add the lump sum price (for lump sum, the quantity is set to 1).');
+        $sheet1->setCellValue('A36','• Do not add additional rows as headlines on the cost sheet. Only the top row is for column headers.');
+        $sheet1->setCellValue('A37',"• Add as many additional sheets as you want, if you want to add more information about your shipyard. This does not interfere with the customer's ability to import the prices to Maindeck later.");
+        $sheet1->setCellValue('A39',"If you don't follow the simple guidelines, you might find yourself in a situation where the customer can't upload your quotation.");
+        $sheet1->setCellValue('A41','Support');
+        $sheet1->setCellValue('A42',"If you have any questions at all, please reach out to PEERFLEET's support team directly.(ctrl + click to view)");
+        $sheet1->setCellValue('B17','All cells that are colored yellow/orange can be filled in by the shipyard.');
+        $sheet1->setCellValue('B18','All cells colored red should not be changed by the shipyard.');
+        $sheet1->setCellValue('B20','Per unit & Lump sump');
+        $sheet1->setCellValue('B21','If you change the quote type, you have to choose between "Per unit" or "Lump sump".');
+        $sheet1->setCellValue('B22','The "Measurement unit" can then also be adjusted as well.');
+        $sheet1->setCellValue('B23','The list with examples of measurement units can be found in the respective sheet of this Excel file. Please note that it is possible to enter custom measurement units as well.');
+        $sheet1->setCellValue('B25','In order to ensure the comparability of the quotations it is recommended not to change the measurement units if no new Cost Item is added by the shipyard.');
+        $sheet1->setCellValue('B26','Please provide an explanation in the Remark field if changes are made to the submitted Cost Item (Quote type or  Measurement unit).');
+        $sheet1->setCellValue('B28','Quote sum & Discount sum are calculated automatically.');
+        
+
+
+        $sheet2 = $spreadsheet->createSheet();
+        $sheet2->setTitle('Measurement unit');
+
+        $sheet = $spreadsheet->createSheet();
+        $sheet->setTitle('Cost items');
+        $sheet->setCellValue('A1', 'Project ID');
+        $sheet->setCellValue('B1', 'Project Title');
+        $sheet->setCellValue('C1', 'Task ID');
+        $sheet->setCellValue('D1', 'Task Title');
+        $sheet->setCellValue('E1', 'Group');
+        $sheet->setCellValue('F1', 'Dock List Number');
+        $sheet->setCellValue('G1', 'Cost item');
+        $sheet->setCellValue('H1', 'Description');
+        $sheet->setCellValue('I1', 'Cost type');
+        $sheet->setCellValue('J1', 'Est. quantity');
+        $sheet->setCellValue('K1', 'Measurement unit');
+        $sheet->setCellValue('L1', 'Unit price');
+        $sheet->setCellValue('M1', 'Unit price currency');
+        $sheet->setCellValue('N1', 'Quote');
+        $sheet->setCellValue('O1', 'Discount (0-100%)');
+        $sheet->setCellValue('P1', 'Discounted quote');
+        $sheet->setCellValue('Q1', 'Yard remarks');
+        $sheet->setCellValue('R1', 'Link to Task');
         $rowNumber = 2;
         foreach ($allProjectCostItems as $oneItem) {
             $task_info = $this->Tasks_model->get_one($oneItem->task_id);
-            $sheet1->setCellValue('A' . $rowNumber, $project_id);
-            $sheet1->setCellValue('B' . $rowNumber, $project_info->title);
-            $sheet1->setCellValue('C' . $rowNumber, $task_info->id);
-            $sheet1->setCellValue('D' . $rowNumber, $task_info->title);
-            $sheet1->setCellValue('E' . $rowNumber, $task_info->category);
-            $sheet1->setCellValue('F' . $rowNumber, $task_info->dock_list_number);
-            $sheet1->setCellValue('G' . $rowNumber, $oneItem->name);
-            $sheet1->setCellValue('H' . $rowNumber, $oneItem->description);
-            $sheet1->setCellValue('I' . $rowNumber, $oneItem->quote_type);
-            $sheet1->setCellValue('J' . $rowNumber, $oneItem->quantity);
-            $sheet1->setCellValue('K' . $rowNumber, $oneItem->measurement);
-            $sheet1->setCellValue('L' . $rowNumber, $oneItem->unit_price);
-            $sheet1->setCellValue('M' . $rowNumber, $oneItem->currency);
-            $sheet1->setCellValue('N' . $rowNumber, $oneItem->currency . " " . (float) $oneItem->unit_price * (float) $oneItem->quantity);
-            $sheet1->setCellValue('O' . $rowNumber, $oneItem->discount . " %");
-            $sheet1->setCellValue('P' . $rowNumber, $oneItem->currency . " " . (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) (100 - $oneItem->discount) / 100);
-            $sheet1->setCellValue('Q' . $rowNumber, $oneItem->yard_remarks);
-            $sheet1->setCellValue('R' . $rowNumber, get_uri("task_view/view/") . $oneItem->task_id);
+            $sheet->setCellValue('A' . $rowNumber, $project_id);
+            $sheet->setCellValue('B' . $rowNumber, $project_info->title);
+            $sheet->setCellValue('C' . $rowNumber, $task_info->id);
+            $sheet->setCellValue('D' . $rowNumber, $task_info->title);
+            $sheet->setCellValue('E' . $rowNumber, $task_info->category);
+            $sheet->setCellValue('F' . $rowNumber, $task_info->dock_list_number);
+            $sheet->setCellValue('G' . $rowNumber, $oneItem->name);
+            $sheet->setCellValue('H' . $rowNumber, $oneItem->description);
+            $sheet->setCellValue('I' . $rowNumber, $oneItem->quote_type);
+            $sheet->setCellValue('J' . $rowNumber, $oneItem->quantity);
+            $sheet->setCellValue('K' . $rowNumber, $oneItem->measurement);
+            $sheet->setCellValue('L' . $rowNumber, $oneItem->unit_price);
+            $sheet->setCellValue('M' . $rowNumber, $oneItem->currency);
+            $sheet->setCellValue('N' . $rowNumber, $oneItem->currency . " " . (float) $oneItem->unit_price * (float) $oneItem->quantity);
+            $sheet->setCellValue('O' . $rowNumber, $oneItem->discount . " %");
+            $sheet->setCellValue('P' . $rowNumber, $oneItem->currency . " " . (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) (100 - $oneItem->discount) / 100);
+            $sheet->setCellValue('Q' . $rowNumber, $oneItem->yard_remarks);
+            $sheet->setCellValue('R' . $rowNumber, get_uri("task_view/view/") . $oneItem->task_id);
             $rowNumber++;
         }
 
@@ -4584,52 +4625,52 @@ class Projects extends Security_Controller
         $allProjectCostItems = $this->Task_cost_items_model->get_all_where(array("project_id" => $project_id, "deleted" => 0))->getResult();
 
         // Add data to the first worksheet
-        $sheet1 = $spreadsheet->getActiveSheet();
-        // $sheet1->setTitle('About project');
-        // $sheet1->setCellValue('A1', $project_info->id);
-        // $sheet1->setCellValue('A3', $project_info->title);
-        // $sheet1->setCellValue('A14', $project_info->start_date);
-        // $sheet1->setCellValue('B14', "~");
-        // $sheet1->setCellValue('C14', $project_info->deadline);
-        // $sheet1->setCellValue('A19', 'Support');
-        // $sheet1->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
-        // $sheet1->setCellValue('A21', '+47 91999771');
-        // $sheet1 = $spreadsheet->createSheet();
-        $sheet1->setTitle('Cost items');
-        $sheet1->setCellValue('A1', 'project_id');
-        $sheet1->setCellValue('B1', 'project_title');
-        $sheet1->setCellValue('C1', 'task_id');
-        $sheet1->setCellValue('D1', 'task_title');
-        $sheet1->setCellValue('E1', 'Group');
-        $sheet1->setCellValue('F1', 'Cost item');
-        $sheet1->setCellValue('G1', 'Description');
-        $sheet1->setCellValue('H1', 'Cost type');
-        $sheet1->setCellValue('I1', 'Est. quantity');
-        $sheet1->setCellValue('J1', 'Measurement unit');
-        $sheet1->setCellValue('K1', 'Unit price');
-        $sheet1->setCellValue('L1', 'Unit price currency');
-        $sheet1->setCellValue('M1', 'Quote');
-        $sheet1->setCellValue('N1', 'Discount (0-100%)');
-        $sheet1->setCellValue('O1', 'Discounted quote');
-        $sheet1->setCellValue('P1', 'Yard remarks');
+        $sheet = $spreadsheet->getActiveSheet();
+        // $sheet->setTitle('About project');
+        // $sheet->setCellValue('A1', $project_info->id);
+        // $sheet->setCellValue('A3', $project_info->title);
+        // $sheet->setCellValue('A14', $project_info->start_date);
+        // $sheet->setCellValue('B14', "~");
+        // $sheet->setCellValue('C14', $project_info->deadline);
+        // $sheet->setCellValue('A19', 'Support');
+        // $sheet->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
+        // $sheet->setCellValue('A21', '+47 91999771');
+        // $sheet = $spreadsheet->createSheet();
+        $sheet->setTitle('Cost items');
+        $sheet->setCellValue('A1', 'project_id');
+        $sheet->setCellValue('B1', 'project_title');
+        $sheet->setCellValue('C1', 'task_id');
+        $sheet->setCellValue('D1', 'task_title');
+        $sheet->setCellValue('E1', 'Group');
+        $sheet->setCellValue('F1', 'Cost item');
+        $sheet->setCellValue('G1', 'Description');
+        $sheet->setCellValue('H1', 'Cost type');
+        $sheet->setCellValue('I1', 'Est. quantity');
+        $sheet->setCellValue('J1', 'Measurement unit');
+        $sheet->setCellValue('K1', 'Unit price');
+        $sheet->setCellValue('L1', 'Unit price currency');
+        $sheet->setCellValue('M1', 'Quote');
+        $sheet->setCellValue('N1', 'Discount (0-100%)');
+        $sheet->setCellValue('O1', 'Discounted quote');
+        $sheet->setCellValue('P1', 'Yard remarks');
         $rowNumber = 2;
         foreach ($allProjectCostItems as $oneItem) {
             $task_info = $this->Tasks_model->get_one($oneItem->task_id);
-            $sheet1->setCellValue('A' . $rowNumber, $project_id);
-            $sheet1->setCellValue('B' . $rowNumber, $project_info->title);
-            $sheet1->setCellValue('C' . $rowNumber, $task_info->id);
-            $sheet1->setCellValue('D' . $rowNumber, $task_info->title);
-            $sheet1->setCellValue('F' . $rowNumber, $task_info->category);
-            $sheet1->setCellValue('F' . $rowNumber, $oneItem->name);
-            $sheet1->setCellValue('G' . $rowNumber, $oneItem->description);
-            $sheet1->setCellValue('I' . $rowNumber, $oneItem->quantity);
-            $sheet1->setCellValue('J' . $rowNumber, $oneItem->measurement);
-            $sheet1->setCellValue('K' . $rowNumber, $oneItem->unit_price);
-            $sheet1->setCellValue('L' . $rowNumber, $oneItem->currency);
-            $sheet1->setCellValue('M' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity);
-            $sheet1->setCellValue('N' . $rowNumber, $oneItem->discount);
-            $sheet1->setCellValue('O' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) $oneItem->discount / 100);
-            $sheet1->setCellValue('P' . $rowNumber, $oneItem->yard_remarks);
+            $sheet->setCellValue('A' . $rowNumber, $project_id);
+            $sheet->setCellValue('B' . $rowNumber, $project_info->title);
+            $sheet->setCellValue('C' . $rowNumber, $task_info->id);
+            $sheet->setCellValue('D' . $rowNumber, $task_info->title);
+            $sheet->setCellValue('F' . $rowNumber, $task_info->category);
+            $sheet->setCellValue('F' . $rowNumber, $oneItem->name);
+            $sheet->setCellValue('G' . $rowNumber, $oneItem->description);
+            $sheet->setCellValue('I' . $rowNumber, $oneItem->quantity);
+            $sheet->setCellValue('J' . $rowNumber, $oneItem->measurement);
+            $sheet->setCellValue('K' . $rowNumber, $oneItem->unit_price);
+            $sheet->setCellValue('L' . $rowNumber, $oneItem->currency);
+            $sheet->setCellValue('M' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity);
+            $sheet->setCellValue('N' . $rowNumber, $oneItem->discount);
+            $sheet->setCellValue('O' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) $oneItem->discount / 100);
+            $sheet->setCellValue('P' . $rowNumber, $oneItem->yard_remarks);
             $rowNumber++;
         }
 
@@ -4668,7 +4709,7 @@ class Projects extends Security_Controller
         $allComments = $this->Task_comments_model->get_all_where(array("project_id" => $project_id))->getResult();
 
         // Add data to the first worksheet
-        $sheet1 = $spreadsheet->getActiveSheet();
+        $sheet = $spreadsheet->getActiveSheet();
         // Data from your provided image
         $data = [
             // Header
@@ -4754,43 +4795,43 @@ class Projects extends Security_Controller
         ];
 
         // Fill worksheet from array
-        $sheet1->fromArray($data, null, 'B2');
+        $sheet->fromArray($data, null, 'B2');
 
         // Merge cells for the title and sections
-        $sheet1->mergeCells('B2:G2');
-        $sheet1->mergeCells('B3:G3');
-        $sheet1->mergeCells('B4:G4');
-        $sheet1->mergeCells('B5:D5');
-        $sheet1->mergeCells('E5:G5');
-        $sheet1->mergeCells('B6:G6');
-        $sheet1->mergeCells('B9:G9');
-        $sheet1->mergeCells('B9:E9');
+        $sheet->mergeCells('B2:G2');
+        $sheet->mergeCells('B3:G3');
+        $sheet->mergeCells('B4:G4');
+        $sheet->mergeCells('B5:D5');
+        $sheet->mergeCells('E5:G5');
+        $sheet->mergeCells('B6:G6');
+        $sheet->mergeCells('B9:G9');
+        $sheet->mergeCells('B9:E9');
 
         for ($i = 10; $i <= 30; $i++) {
-            $sheet1->mergeCells("B" . $i . ":D" . $i);
+            $sheet->mergeCells("B" . $i . ":D" . $i);
         }
         
-        $sheet1->mergeCells('B31:G31');
-        $sheet1->mergeCells('B32:G32');
+        $sheet->mergeCells('B31:G31');
+        $sheet->mergeCells('B32:G32');
 
         for ($i = 33; $i <= 37; $i++) {
-            $sheet1->mergeCells("C" . $i . ":E" . $i);
+            $sheet->mergeCells("C" . $i . ":E" . $i);
         }
         
-        $sheet1->mergeCells('B38:E38');
-        $sheet1->mergeCells('B39:G39');
-        $sheet1->mergeCells('B40:G40');
-        $sheet1->mergeCells('D44:F44');
-        $sheet1->mergeCells('B44:C44');
-        $sheet1->mergeCells('B45:G45');
-        $sheet1->mergeCells('B46:G46');
-        $sheet1->mergeCells('B47:F47');
+        $sheet->mergeCells('B38:E38');
+        $sheet->mergeCells('B39:G39');
+        $sheet->mergeCells('B40:G40');
+        $sheet->mergeCells('D44:F44');
+        $sheet->mergeCells('B44:C44');
+        $sheet->mergeCells('B45:G45');
+        $sheet->mergeCells('B46:G46');
+        $sheet->mergeCells('B47:F47');
         
         for ($i = 48; $i <= 79; $i++) {
-            $sheet1->mergeCells("C" . $i . ":F" . $i);
+            $sheet->mergeCells("C" . $i . ":F" . $i);
         }
         
-        $sheet1->mergeCells('B80:F80');
+        $sheet->mergeCells('B80:F80');
 
         // Apply styles
         // FS SONNE
@@ -4972,49 +5013,49 @@ class Projects extends Security_Controller
             ],
         ];
         
-        $sheet1->mergeCells('B32:G32');
+        $sheet->mergeCells('B32:G32');
 
 
         // Apply header style
-        $sheet1->getStyle('B2:G2')->applyFromArray($headerStyle);
-        $sheet1->getStyle('B3:G3')->applyFromArray($subHeaderStyle);
-        $sheet1->getStyle('B4:G4')->applyFromArray($subHeaderStyle2);
-        $sheet1->getStyle('B5:D5')->applyFromArray($customHeaderStyle);
-        $sheet1->getStyle('E5:G5')->applyFromArray($customHeaderStyle2);
+        $sheet->getStyle('B2:G2')->applyFromArray($headerStyle);
+        $sheet->getStyle('B3:G3')->applyFromArray($subHeaderStyle);
+        $sheet->getStyle('B4:G4')->applyFromArray($subHeaderStyle2);
+        $sheet->getStyle('B5:D5')->applyFromArray($customHeaderStyle);
+        $sheet->getStyle('E5:G5')->applyFromArray($customHeaderStyle2);
 
-        $sheet1->getStyle('B6:G6')->applyFromArray($sectionHeaderStyle);
-        $sheet1->getStyle('B7:G7')->applyFromArray($tableHeaderStyle);
-        $sheet1->getStyle('B8:G8')->applyFromArray($mainContentStyle);
+        $sheet->getStyle('B6:G6')->applyFromArray($sectionHeaderStyle);
+        $sheet->getStyle('B7:G7')->applyFromArray($tableHeaderStyle);
+        $sheet->getStyle('B8:G8')->applyFromArray($mainContentStyle);
 
-        $sheet1->getStyle('B9:G9')->applyFromArray($sectionHeaderStyle);
-        $sheet1->getStyle('B10:G10')->applyFromArray($tableHeaderStyle);
-        $sheet1->getStyle('B11:D29')->applyFromArray($sideBarStyle);
-        $sheet1->getStyle('B11:D11')->applyFromArray($sideBarBoldStyle);
-        $sheet1->getStyle('B18:D18')->applyFromArray($sideBarBoldStyle);
-        $sheet1->getStyle('B22:D22')->applyFromArray($sideBarBoldStyle);
-        $sheet1->getStyle('E11:G29')->applyFromArray($mainContentStyle);
-        $sheet1->getStyle('B30:G30')->applyFromArray($statisticsStyle);
+        $sheet->getStyle('B9:G9')->applyFromArray($sectionHeaderStyle);
+        $sheet->getStyle('B10:G10')->applyFromArray($tableHeaderStyle);
+        $sheet->getStyle('B11:D29')->applyFromArray($sideBarStyle);
+        $sheet->getStyle('B11:D11')->applyFromArray($sideBarBoldStyle);
+        $sheet->getStyle('B18:D18')->applyFromArray($sideBarBoldStyle);
+        $sheet->getStyle('B22:D22')->applyFromArray($sideBarBoldStyle);
+        $sheet->getStyle('E11:G29')->applyFromArray($mainContentStyle);
+        $sheet->getStyle('B30:G30')->applyFromArray($statisticsStyle);
 
-        $sheet1->getStyle('B32:G32')->applyFromArray($sectionHeaderStyle);
-        $sheet1->getStyle('B33:G33')->applyFromArray($tableHeaderStyle);
-        $sheet1->getStyle('B34:G37')->applyFromArray($mainContentStyle);
-        $sheet1->getStyle('B38:G38')->applyFromArray($statisticsStyle);
+        $sheet->getStyle('B32:G32')->applyFromArray($sectionHeaderStyle);
+        $sheet->getStyle('B33:G33')->applyFromArray($tableHeaderStyle);
+        $sheet->getStyle('B34:G37')->applyFromArray($mainContentStyle);
+        $sheet->getStyle('B38:G38')->applyFromArray($statisticsStyle);
         
-        $sheet1->getStyle('B40:G40')->applyFromArray($sectionHeaderStyle);
-        $sheet1->getStyle('B41:G41')->applyFromArray($tableHeaderStyle);
-        $sheet1->getStyle('B42:G44')->applyFromArray($mainContentStyle);
+        $sheet->getStyle('B40:G40')->applyFromArray($sectionHeaderStyle);
+        $sheet->getStyle('B41:G41')->applyFromArray($tableHeaderStyle);
+        $sheet->getStyle('B42:G44')->applyFromArray($mainContentStyle);
 
-        $sheet1->getStyle('B46:G46')->applyFromArray($sectionHeaderStyle);
-        $sheet1->getStyle('B47:G47')->applyFromArray($tableHeaderStyle);
-        $sheet1->getStyle('B48:G79')->applyFromArray($mainContentStyle);
-        $sheet1->getStyle('B80:G80')->applyFromArray($statisticsStyle);
+        $sheet->getStyle('B46:G46')->applyFromArray($sectionHeaderStyle);
+        $sheet->getStyle('B47:G47')->applyFromArray($tableHeaderStyle);
+        $sheet->getStyle('B48:G79')->applyFromArray($mainContentStyle);
+        $sheet->getStyle('B80:G80')->applyFromArray($statisticsStyle);
 
         // Set column widths
         foreach (range('B', 'G') as $columnID) {
-            $sheet1->getColumnDimension($columnID)->setWidth(20);
+            $sheet->getColumnDimension($columnID)->setWidth(20);
         }
-        $sheet1->getColumnDimension('A')->setWidth(1);
-        $sheet1->getRowDimension('1')->setRowHeight(1);
+        $sheet->getColumnDimension('A')->setWidth(1);
+        $sheet->getRowDimension('1')->setRowHeight(1);
 
         // Save the file
         // $writer = new Xlsx($spreadsheet);
@@ -5056,18 +5097,18 @@ class Projects extends Security_Controller
         $allComments = $this->Task_comments_model->get_all_where(array("project_id" => $project_id))->getResult();
 
         // Add data to the first worksheet
-        $sheet1 = $spreadsheet->getActiveSheet();
-        // $sheet1->setTitle('About project');
-        // $sheet1->setCellValue('A1', $project_info->id);
-        // $sheet1->setCellValue('A3', $project_info->title);
-        // $sheet1->setCellValue('A14', $project_info->start_date);
-        // $sheet1->setCellValue('B14', "~");
-        // $sheet1->setCellValue('C14', $project_info->deadline);
-        // $sheet1->setCellValue('A19', 'Support');
-        // $sheet1->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
-        // $sheet1->setCellValue('A21', '+47 91999771');
-        // $sheet1 = $spreadsheet->createSheet();
-        $sheet1->setTitle('Cost Overview');
+        $sheet = $spreadsheet->getActiveSheet();
+        // $sheet->setTitle('About project');
+        // $sheet->setCellValue('A1', $project_info->id);
+        // $sheet->setCellValue('A3', $project_info->title);
+        // $sheet->setCellValue('A14', $project_info->start_date);
+        // $sheet->setCellValue('B14', "~");
+        // $sheet->setCellValue('C14', $project_info->deadline);
+        // $sheet->setCellValue('A19', 'Support');
+        // $sheet->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
+        // $sheet->setCellValue('A21', '+47 91999771');
+        // $sheet = $spreadsheet->createSheet();
+        $sheet->setTitle('Cost Overview');
 
         $categorizedTasks = array(
             "General & Docking" => array(),
@@ -5206,26 +5247,26 @@ class Projects extends Security_Controller
         $totalCosts = 0;
         $totalShipyardCostItems = 0;
         $totalComments = 0;
-        $sheet1->setCellValue('A1', "Category");
-        $sheet1->setCellValue('B1', "Task");
-        $sheet1->setCellValue('C1', "Owner's supply");
-        $sheet1->setCellValue('D1', "Quoted");
-        $sheet1->setCellValue('E1', "Variation orders");
-        $sheet1->setCellValue('F1', "Total");
-        $sheet1->setCellValue('G1', 'Total yard');
-        $sheet1->setCellValue('H1', "Billed yard");
-        $sheet1->setCellValue('I1', "Final yard");
-        $sheet1->setCellValue('J1', 'Comments');
+        $sheet->setCellValue('A1', "Category");
+        $sheet->setCellValue('B1', "Task");
+        $sheet->setCellValue('C1', "Owner's supply");
+        $sheet->setCellValue('D1', "Quoted");
+        $sheet->setCellValue('E1', "Variation orders");
+        $sheet->setCellValue('F1', "Total");
+        $sheet->setCellValue('G1', 'Total yard');
+        $sheet->setCellValue('H1', "Billed yard");
+        $sheet->setCellValue('I1', "Final yard");
+        $sheet->setCellValue('J1', 'Comments');
 
-        $sheet1->setCellValue('B2', "Total:");
-        $sheet1->setCellValue('C2', 0);
-        $sheet1->setCellValue('D2', 0);
-        $sheet1->setCellValue('E2', 0);
-        $sheet1->setCellValue('F2', 0);
-        $sheet1->setCellValue('G2', 0);
-        $sheet1->setCellValue('H2', 0);
-        $sheet1->setCellValue('I2', 0);
-        $sheet1->setCellValue('J2', 0);
+        $sheet->setCellValue('B2', "Total:");
+        $sheet->setCellValue('C2', 0);
+        $sheet->setCellValue('D2', 0);
+        $sheet->setCellValue('E2', 0);
+        $sheet->setCellValue('F2', 0);
+        $sheet->setCellValue('G2', 0);
+        $sheet->setCellValue('H2', 0);
+        $sheet->setCellValue('I2', 0);
+        $sheet->setCellValue('J2', 0);
 
         $rowIndex = 3;
         foreach ($categorizedTasks as $category => $oneList) {
@@ -5235,16 +5276,16 @@ class Projects extends Security_Controller
             $categoryShipyardCostItems = 0;
             $categoryVariationOrder = 0;
             $categoryComments = 0;
-            $sheet1->setCellValue('A' . $rowIndex, $category);
-            $sheet1->setCellValue('B' . $rowIndex, 0);
-            $sheet1->setCellValue('C' . $rowIndex, 0);
-            $sheet1->setCellValue('D' . $rowIndex, 0);
-            $sheet1->setCellValue('E' . $rowIndex, 0);
-            $sheet1->setCellValue('F' . $rowIndex, 0);
-            $sheet1->setCellValue('G' . $rowIndex, 0);
-            $sheet1->setCellValue('H' . $rowIndex, 0);
-            $sheet1->setCellValue('I' . $rowIndex, 0);
-            $sheet1->setCellValue('J' . $rowIndex, 0);
+            $sheet->setCellValue('A' . $rowIndex, $category);
+            $sheet->setCellValue('B' . $rowIndex, 0);
+            $sheet->setCellValue('C' . $rowIndex, 0);
+            $sheet->setCellValue('D' . $rowIndex, 0);
+            $sheet->setCellValue('E' . $rowIndex, 0);
+            $sheet->setCellValue('F' . $rowIndex, 0);
+            $sheet->setCellValue('G' . $rowIndex, 0);
+            $sheet->setCellValue('H' . $rowIndex, 0);
+            $sheet->setCellValue('I' . $rowIndex, 0);
+            $sheet->setCellValue('J' . $rowIndex, 0);
             $category_row = $rowIndex;
             $rowIndex++;
             foreach ($oneList as $key => $oneTask) {
@@ -5302,15 +5343,15 @@ class Projects extends Security_Controller
                 $totalComments += $oneTaskTotalComments;
                 $totalCosts += ($oneTaskTotalSupplies + $oneTaskTotalCostItems);
 
-                $sheet1->setCellValue('B' . $rowIndex, $oneTask->title);
-                $sheet1->setCellValue('C' . $rowIndex, $oneTaskTotalSupplies);
-                $sheet1->setCellValue('D' . $rowIndex, $oneTaskTotalCostItems);
-                $sheet1->setCellValue('E' . $rowIndex, $oneTaskTotalVariationOrders);
-                $sheet1->setCellValue('F' . $rowIndex, $oneTaskTotalCosts);
-                $sheet1->setCellValue('G' . $rowIndex, $oneTaskTotalShipyardCostItems);
-                $sheet1->setCellValue('H' . $rowIndex, 0);
-                $sheet1->setCellValue('I' . $rowIndex, 0);
-                $sheet1->setCellValue('J' . $rowIndex, $oneTaskTotalComments);
+                $sheet->setCellValue('B' . $rowIndex, $oneTask->title);
+                $sheet->setCellValue('C' . $rowIndex, $oneTaskTotalSupplies);
+                $sheet->setCellValue('D' . $rowIndex, $oneTaskTotalCostItems);
+                $sheet->setCellValue('E' . $rowIndex, $oneTaskTotalVariationOrders);
+                $sheet->setCellValue('F' . $rowIndex, $oneTaskTotalCosts);
+                $sheet->setCellValue('G' . $rowIndex, $oneTaskTotalShipyardCostItems);
+                $sheet->setCellValue('H' . $rowIndex, 0);
+                $sheet->setCellValue('I' . $rowIndex, 0);
+                $sheet->setCellValue('J' . $rowIndex, $oneTaskTotalComments);
                 $rowIndex++;
             }
             $categorizedStats[$category]["owner_supplies"] = $categoryOwnerSupply;
@@ -5318,23 +5359,23 @@ class Projects extends Security_Controller
             $categorizedStats[$category]["variation_orders"] = $categoryVariationOrder;
             $categorizedStats[$category]["shipyard_cost_items"] = $categoryShipyardCostItems;
             $categorizedStats[$category]["comments"] = $categoryComments;
-            $sheet1->setCellValue('B' . $category_row, "");
-            $sheet1->setCellValue('C' . $category_row, $categoryOwnerSupply);
-            $sheet1->setCellValue('D' . $category_row, $categoryCostItems);
-            $sheet1->setCellValue('E' . $category_row, $categoryVariationOrder);
-            $sheet1->setCellValue('F' . $category_row, $categoryTotalCosts);
-            $sheet1->setCellValue('G' . $category_row, $categoryShipyardCostItems);
-            $sheet1->setCellValue('H' . $category_row, 0);
-            $sheet1->setCellValue('I' . $category_row, $categoryComments);
+            $sheet->setCellValue('B' . $category_row, "");
+            $sheet->setCellValue('C' . $category_row, $categoryOwnerSupply);
+            $sheet->setCellValue('D' . $category_row, $categoryCostItems);
+            $sheet->setCellValue('E' . $category_row, $categoryVariationOrder);
+            $sheet->setCellValue('F' . $category_row, $categoryTotalCosts);
+            $sheet->setCellValue('G' . $category_row, $categoryShipyardCostItems);
+            $sheet->setCellValue('H' . $category_row, 0);
+            $sheet->setCellValue('I' . $category_row, $categoryComments);
         }
-        $sheet1->setCellValue('C2', $totalOwnerSupplies);
-        $sheet1->setCellValue('D2', $totalCostItems);
-        $sheet1->setCellValue('E2', $totalVariationOrders);
-        $sheet1->setCellValue('F2', $totalCosts);
-        $sheet1->setCellValue('G2', $totalShipyardCostItems);
-        $sheet1->setCellValue('H2', 0);
-        $sheet1->setCellValue('I2', 0);
-        $sheet1->setCellValue('J2', $totalComments);
+        $sheet->setCellValue('C2', $totalOwnerSupplies);
+        $sheet->setCellValue('D2', $totalCostItems);
+        $sheet->setCellValue('E2', $totalVariationOrders);
+        $sheet->setCellValue('F2', $totalCosts);
+        $sheet->setCellValue('G2', $totalShipyardCostItems);
+        $sheet->setCellValue('H2', 0);
+        $sheet->setCellValue('I2', 0);
+        $sheet->setCellValue('J2', $totalComments);
         // Create a writer object
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 
@@ -5359,42 +5400,42 @@ class Projects extends Security_Controller
         $allProjectCostItems = $this->Task_cost_items_model->get_all_where(array("project_id" => $project_id))->getResult();
 
         // Add data to the first worksheet
-        $sheet1 = $spreadsheet->getActiveSheet();
-        $sheet1->setTitle('Cost items');
-        $sheet1->setCellValue('A1', 'project_id');
-        $sheet1->setCellValue('B1', 'project_title');
-        $sheet1->setCellValue('C1', 'task_id');
-        $sheet1->setCellValue('D1', 'task_title');
-        $sheet1->setCellValue('E1', 'Group');
-        $sheet1->setCellValue('F1', 'Cost item');
-        $sheet1->setCellValue('G1', 'Description');
-        $sheet1->setCellValue('H1', 'Cost type');
-        $sheet1->setCellValue('I1', 'Est. quantity');
-        $sheet1->setCellValue('J1', 'Measurement unit');
-        $sheet1->setCellValue('K1', 'Unit price');
-        $sheet1->setCellValue('L1', 'Unit price currency');
-        $sheet1->setCellValue('M1', 'Quote');
-        $sheet1->setCellValue('N1', 'Discount (0-100%)');
-        $sheet1->setCellValue('O1', 'Discounted quote');
-        $sheet1->setCellValue('P1', 'Yard remarks');
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Cost items');
+        $sheet->setCellValue('A1', 'project_id');
+        $sheet->setCellValue('B1', 'project_title');
+        $sheet->setCellValue('C1', 'task_id');
+        $sheet->setCellValue('D1', 'task_title');
+        $sheet->setCellValue('E1', 'Group');
+        $sheet->setCellValue('F1', 'Cost item');
+        $sheet->setCellValue('G1', 'Description');
+        $sheet->setCellValue('H1', 'Cost type');
+        $sheet->setCellValue('I1', 'Est. quantity');
+        $sheet->setCellValue('J1', 'Measurement unit');
+        $sheet->setCellValue('K1', 'Unit price');
+        $sheet->setCellValue('L1', 'Unit price currency');
+        $sheet->setCellValue('M1', 'Quote');
+        $sheet->setCellValue('N1', 'Discount (0-100%)');
+        $sheet->setCellValue('O1', 'Discounted quote');
+        $sheet->setCellValue('P1', 'Yard remarks');
         $rowNumber = 2;
         foreach ($allProjectCostItems as $oneItem) {
             $task_info = $this->Tasks_model->get_one($oneItem->task_id);
-            $sheet1->setCellValue('A' . $rowNumber, $project_id);
-            $sheet1->setCellValue('B' . $rowNumber, $project_info->title);
-            $sheet1->setCellValue('C' . $rowNumber, $task_info->id);
-            $sheet1->setCellValue('D' . $rowNumber, $task_info->title);
-            $sheet1->setCellValue('F' . $rowNumber, $task_info->category);
-            $sheet1->setCellValue('F' . $rowNumber, $oneItem->name);
-            $sheet1->setCellValue('G' . $rowNumber, $oneItem->description);
-            $sheet1->setCellValue('I' . $rowNumber, $oneItem->quantity);
-            $sheet1->setCellValue('J' . $rowNumber, $oneItem->measurement);
-            $sheet1->setCellValue('K' . $rowNumber, $oneItem->unit_price);
-            $sheet1->setCellValue('L' . $rowNumber, $oneItem->currency);
-            $sheet1->setCellValue('M' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity);
-            $sheet1->setCellValue('N' . $rowNumber, $oneItem->discount);
-            $sheet1->setCellValue('O' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) $oneItem->discount / 100);
-            $sheet1->setCellValue('P' . $rowNumber, $oneItem->yard_remarks);
+            $sheet->setCellValue('A' . $rowNumber, $project_id);
+            $sheet->setCellValue('B' . $rowNumber, $project_info->title);
+            $sheet->setCellValue('C' . $rowNumber, $task_info->id);
+            $sheet->setCellValue('D' . $rowNumber, $task_info->title);
+            $sheet->setCellValue('F' . $rowNumber, $task_info->category);
+            $sheet->setCellValue('F' . $rowNumber, $oneItem->name);
+            $sheet->setCellValue('G' . $rowNumber, $oneItem->description);
+            $sheet->setCellValue('I' . $rowNumber, $oneItem->quantity);
+            $sheet->setCellValue('J' . $rowNumber, $oneItem->measurement);
+            $sheet->setCellValue('K' . $rowNumber, $oneItem->unit_price);
+            $sheet->setCellValue('L' . $rowNumber, $oneItem->currency);
+            $sheet->setCellValue('M' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity);
+            $sheet->setCellValue('N' . $rowNumber, $oneItem->discount);
+            $sheet->setCellValue('O' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) $oneItem->discount / 100);
+            $sheet->setCellValue('P' . $rowNumber, $oneItem->yard_remarks);
             $rowNumber++;
         }
 
@@ -5407,52 +5448,52 @@ class Projects extends Security_Controller
         $allProjectCostItems = $this->Task_cost_items_model->get_all_where(array("project_id" => $project_id))->getResult();
 
         // Add data to the first worksheet
-        $sheet1 = $spreadsheet->getActiveSheet();
-        $sheet1->setTitle('About project');
-        $sheet1->setCellValue('A1', $project_info->id);
-        $sheet1->setCellValue('A3', $project_info->title);
-        $sheet1->setCellValue('A14', $project_info->start_date);
-        $sheet1->setCellValue('B14', "~");
-        $sheet1->setCellValue('C14', $project_info->deadline);
-        $sheet1->setCellValue('A19', 'Support');
-        $sheet1->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
-        $sheet1->setCellValue('A21', '+47 91999771');
-        $sheet1 = $spreadsheet->createSheet();
-        $sheet1->setTitle('Cost items');
-        $sheet1->setCellValue('A1', 'project_id');
-        $sheet1->setCellValue('B1', 'project_title');
-        $sheet1->setCellValue('C1', 'task_id');
-        $sheet1->setCellValue('D1', 'task_title');
-        $sheet1->setCellValue('E1', 'Group');
-        $sheet1->setCellValue('F1', 'Cost item');
-        $sheet1->setCellValue('G1', 'Description');
-        $sheet1->setCellValue('H1', 'Cost type');
-        $sheet1->setCellValue('I1', 'Est. quantity');
-        $sheet1->setCellValue('J1', 'Measurement unit');
-        $sheet1->setCellValue('K1', 'Unit price');
-        $sheet1->setCellValue('L1', 'Unit price currency');
-        $sheet1->setCellValue('M1', 'Quote');
-        $sheet1->setCellValue('N1', 'Discount (0-100%)');
-        $sheet1->setCellValue('O1', 'Discounted quote');
-        $sheet1->setCellValue('P1', 'Yard remarks');
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('About project');
+        $sheet->setCellValue('A1', $project_info->id);
+        $sheet->setCellValue('A3', $project_info->title);
+        $sheet->setCellValue('A14', $project_info->start_date);
+        $sheet->setCellValue('B14', "~");
+        $sheet->setCellValue('C14', $project_info->deadline);
+        $sheet->setCellValue('A19', 'Support');
+        $sheet->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
+        $sheet->setCellValue('A21', '+47 91999771');
+        $sheet = $spreadsheet->createSheet();
+        $sheet->setTitle('Cost items');
+        $sheet->setCellValue('A1', 'project_id');
+        $sheet->setCellValue('B1', 'project_title');
+        $sheet->setCellValue('C1', 'task_id');
+        $sheet->setCellValue('D1', 'task_title');
+        $sheet->setCellValue('E1', 'Group');
+        $sheet->setCellValue('F1', 'Cost item');
+        $sheet->setCellValue('G1', 'Description');
+        $sheet->setCellValue('H1', 'Cost type');
+        $sheet->setCellValue('I1', 'Est. quantity');
+        $sheet->setCellValue('J1', 'Measurement unit');
+        $sheet->setCellValue('K1', 'Unit price');
+        $sheet->setCellValue('L1', 'Unit price currency');
+        $sheet->setCellValue('M1', 'Quote');
+        $sheet->setCellValue('N1', 'Discount (0-100%)');
+        $sheet->setCellValue('O1', 'Discounted quote');
+        $sheet->setCellValue('P1', 'Yard remarks');
         $rowNumber = 2;
         foreach ($allProjectCostItems as $oneItem) {
             $task_info = $this->Tasks_model->get_one($oneItem->task_id);
-            $sheet1->setCellValue('A' . $rowNumber, $project_id);
-            $sheet1->setCellValue('B' . $rowNumber, $project_info->title);
-            $sheet1->setCellValue('C' . $rowNumber, $task_info->id);
-            $sheet1->setCellValue('D' . $rowNumber, $task_info->title);
-            $sheet1->setCellValue('F' . $rowNumber, $task_info->category);
-            $sheet1->setCellValue('F' . $rowNumber, $oneItem->name);
-            $sheet1->setCellValue('G' . $rowNumber, $oneItem->description);
-            $sheet1->setCellValue('I' . $rowNumber, $oneItem->quantity);
-            $sheet1->setCellValue('J' . $rowNumber, $oneItem->measurement);
-            $sheet1->setCellValue('K' . $rowNumber, $oneItem->unit_price);
-            $sheet1->setCellValue('L' . $rowNumber, $oneItem->currency);
-            $sheet1->setCellValue('M' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity);
-            $sheet1->setCellValue('N' . $rowNumber, $oneItem->discount);
-            $sheet1->setCellValue('O' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) $oneItem->discount / 100);
-            $sheet1->setCellValue('P' . $rowNumber, $oneItem->yard_remarks);
+            $sheet->setCellValue('A' . $rowNumber, $project_id);
+            $sheet->setCellValue('B' . $rowNumber, $project_info->title);
+            $sheet->setCellValue('C' . $rowNumber, $task_info->id);
+            $sheet->setCellValue('D' . $rowNumber, $task_info->title);
+            $sheet->setCellValue('F' . $rowNumber, $task_info->category);
+            $sheet->setCellValue('F' . $rowNumber, $oneItem->name);
+            $sheet->setCellValue('G' . $rowNumber, $oneItem->description);
+            $sheet->setCellValue('I' . $rowNumber, $oneItem->quantity);
+            $sheet->setCellValue('J' . $rowNumber, $oneItem->measurement);
+            $sheet->setCellValue('K' . $rowNumber, $oneItem->unit_price);
+            $sheet->setCellValue('L' . $rowNumber, $oneItem->currency);
+            $sheet->setCellValue('M' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity);
+            $sheet->setCellValue('N' . $rowNumber, $oneItem->discount);
+            $sheet->setCellValue('O' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) $oneItem->discount / 100);
+            $sheet->setCellValue('P' . $rowNumber, $oneItem->yard_remarks);
             $rowNumber++;
         }
 
@@ -5474,18 +5515,18 @@ class Projects extends Security_Controller
         $allComments = $this->Project_comments_model->get_all_where(array("project_id" => $project_id))->getResult();
 
         // Add data to the first worksheet
-        $sheet1 = $spreadsheet->getActiveSheet();
-        $sheet1->setTitle('About project');
-        $sheet1->setCellValue('A1', $project_info->id);
-        $sheet1->setCellValue('A3', $project_info->title);
-        $sheet1->setCellValue('A14', $project_info->start_date);
-        $sheet1->setCellValue('B14', "~");
-        $sheet1->setCellValue('C14', $project_info->deadline);
-        $sheet1->setCellValue('A19', 'Support');
-        $sheet1->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
-        $sheet1->setCellValue('A21', '+47 91999771');
-        $sheet1 = $spreadsheet->createSheet();
-        $sheet1->setTitle('Cost overview');
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('About project');
+        $sheet->setCellValue('A1', $project_info->id);
+        $sheet->setCellValue('A3', $project_info->title);
+        $sheet->setCellValue('A14', $project_info->start_date);
+        $sheet->setCellValue('B14', "~");
+        $sheet->setCellValue('C14', $project_info->deadline);
+        $sheet->setCellValue('A19', 'Support');
+        $sheet->setCellValue('A20', "If you have any questions at all, please reach out to Maindeck's support team directly.(ctrl + click to view)");
+        $sheet->setCellValue('A21', '+47 91999771');
+        $sheet = $spreadsheet->createSheet();
+        $sheet->setTitle('Cost overview');
 
         $categorizedTasks = array(
             "General & Docking" => array(),
@@ -5624,23 +5665,23 @@ class Projects extends Security_Controller
         $totalShipyardCostItems = 0;
         $totalComments = 0;
 
-        $sheet1->setCellValue('B1', "Name");
-        $sheet1->setCellValue('C1', "Owner's supply");
-        $sheet1->setCellValue('D1', "Quoted");
-        $sheet1->setCellValue('E1', "Variation orders");
-        $sheet1->setCellValue('F1', "Total");
-        $sheet1->setCellValue('G1', 'Total yard');
-        $sheet1->setCellValue('H1', "Billed yard");
-        $sheet1->setCellValue('I1', 'Comment');
+        $sheet->setCellValue('B1', "Name");
+        $sheet->setCellValue('C1', "Owner's supply");
+        $sheet->setCellValue('D1', "Quoted");
+        $sheet->setCellValue('E1', "Variation orders");
+        $sheet->setCellValue('F1', "Total");
+        $sheet->setCellValue('G1', 'Total yard');
+        $sheet->setCellValue('H1', "Billed yard");
+        $sheet->setCellValue('I1', 'Comment');
 
-        $sheet1->setCellValue('B2', "Total:");
-        $sheet1->setCellValue('C2', 0);
-        $sheet1->setCellValue('D2', 0);
-        $sheet1->setCellValue('E2', 0);
-        $sheet1->setCellValue('F2', 0);
-        $sheet1->setCellValue('G2', 0);
-        $sheet1->setCellValue('H2', 0);
-        $sheet1->setCellValue('I2', 0);
+        $sheet->setCellValue('B2', "Total:");
+        $sheet->setCellValue('C2', 0);
+        $sheet->setCellValue('D2', 0);
+        $sheet->setCellValue('E2', 0);
+        $sheet->setCellValue('F2', 0);
+        $sheet->setCellValue('G2', 0);
+        $sheet->setCellValue('H2', 0);
+        $sheet->setCellValue('I2', 0);
 
         $rowIndex = 3;
         foreach ($categorizedTasks as $category => $oneList) {
@@ -5649,15 +5690,15 @@ class Projects extends Security_Controller
             $categoryShipyardCostItems = 0;
             $categoryVariationOrder = 0;
             $categoryComments = 0;
-            $sheet1->setCellValue('A' . $rowIndex, $category);
-            $sheet1->setCellValue('B' . $rowIndex, 0);
-            $sheet1->setCellValue('C' . $rowIndex, 0);
-            $sheet1->setCellValue('D' . $rowIndex, 0);
-            $sheet1->setCellValue('E' . $rowIndex, 0);
-            $sheet1->setCellValue('F' . $rowIndex, 0);
-            $sheet1->setCellValue('G' . $rowIndex, 0);
-            $sheet1->setCellValue('H' . $rowIndex, 0);
-            $sheet1->setCellValue('I' . $rowIndex, 0);
+            $sheet->setCellValue('A' . $rowIndex, $category);
+            $sheet->setCellValue('B' . $rowIndex, 0);
+            $sheet->setCellValue('C' . $rowIndex, 0);
+            $sheet->setCellValue('D' . $rowIndex, 0);
+            $sheet->setCellValue('E' . $rowIndex, 0);
+            $sheet->setCellValue('F' . $rowIndex, 0);
+            $sheet->setCellValue('G' . $rowIndex, 0);
+            $sheet->setCellValue('H' . $rowIndex, 0);
+            $sheet->setCellValue('I' . $rowIndex, 0);
             $category_row = $rowIndex;
             $rowIndex++;
             foreach ($oneList as $key => $oneTask) {
@@ -5711,14 +5752,14 @@ class Projects extends Security_Controller
                 $totalVariationOrders += $oneTaskTotalVariationOrders;
                 $totalComments += $oneTaskTotalComments;
 
-                $sheet1->setCellValue('B' . $rowIndex, $oneTask->title);
-                $sheet1->setCellValue('C' . $rowIndex, $oneTaskTotalSupplies);
-                $sheet1->setCellValue('D' . $rowIndex, $oneTaskTotalCostItems);
-                $sheet1->setCellValue('E' . $rowIndex, $oneTaskTotalVariationOrders);
-                $sheet1->setCellValue('F' . $rowIndex, 0);
-                $sheet1->setCellValue('G' . $rowIndex, $oneTaskTotalShipyardCostItems);
-                $sheet1->setCellValue('H' . $rowIndex, 0);
-                $sheet1->setCellValue('I' . $rowIndex, 0);
+                $sheet->setCellValue('B' . $rowIndex, $oneTask->title);
+                $sheet->setCellValue('C' . $rowIndex, $oneTaskTotalSupplies);
+                $sheet->setCellValue('D' . $rowIndex, $oneTaskTotalCostItems);
+                $sheet->setCellValue('E' . $rowIndex, $oneTaskTotalVariationOrders);
+                $sheet->setCellValue('F' . $rowIndex, 0);
+                $sheet->setCellValue('G' . $rowIndex, $oneTaskTotalShipyardCostItems);
+                $sheet->setCellValue('H' . $rowIndex, 0);
+                $sheet->setCellValue('I' . $rowIndex, 0);
                 $rowIndex++;
             }
             $categorizedStats[$category]["owner_supplies"] = $categoryOwnerSupply;
@@ -5726,22 +5767,22 @@ class Projects extends Security_Controller
             $categorizedStats[$category]["variation_orders"] = $categoryVariationOrder;
             $categorizedStats[$category]["shipyard_cost_items"] = $categoryShipyardCostItems;
             $categorizedStats[$category]["comments"] = $categoryComments;
-            $sheet1->setCellValue('B' . $category_row, "");
-            $sheet1->setCellValue('C' . $category_row, $categoryOwnerSupply);
-            $sheet1->setCellValue('D' . $category_row, $categoryCostItems);
-            $sheet1->setCellValue('E' . $category_row, $categoryVariationOrder);
-            $sheet1->setCellValue('F' . $category_row, 0);
-            $sheet1->setCellValue('G' . $category_row, $categoryShipyardCostItems);
-            $sheet1->setCellValue('H' . $category_row, 0);
-            $sheet1->setCellValue('I' . $category_row, 0);
+            $sheet->setCellValue('B' . $category_row, "");
+            $sheet->setCellValue('C' . $category_row, $categoryOwnerSupply);
+            $sheet->setCellValue('D' . $category_row, $categoryCostItems);
+            $sheet->setCellValue('E' . $category_row, $categoryVariationOrder);
+            $sheet->setCellValue('F' . $category_row, 0);
+            $sheet->setCellValue('G' . $category_row, $categoryShipyardCostItems);
+            $sheet->setCellValue('H' . $category_row, 0);
+            $sheet->setCellValue('I' . $category_row, 0);
         }
-        $sheet1->setCellValue('C2', $totalOwnerSupplies);
-        $sheet1->setCellValue('D2', $totalCostItems);
-        $sheet1->setCellValue('E2', $totalVariationOrders);
-        $sheet1->setCellValue('F2', 0);
-        $sheet1->setCellValue('G2', $totalShipyardCostItems);
-        $sheet1->setCellValue('H2', 0);
-        $sheet1->setCellValue('I2', 0);
+        $sheet->setCellValue('C2', $totalOwnerSupplies);
+        $sheet->setCellValue('D2', $totalCostItems);
+        $sheet->setCellValue('E2', $totalVariationOrders);
+        $sheet->setCellValue('F2', 0);
+        $sheet->setCellValue('G2', $totalShipyardCostItems);
+        $sheet->setCellValue('H2', 0);
+        $sheet->setCellValue('I2', 0);
 
 
 
@@ -5896,35 +5937,35 @@ class Projects extends Security_Controller
         // return json_encode($allTasks);
 
         // Add data to the first worksheet
-        $sheet1 = $spreadsheet->getActiveSheet();
-        $sheet1->setTitle('Tasks');
-        $sheet1->setCellValue('A1', 'Title');
-        $sheet1->setCellValue('B1', 'Category');
-        $sheet1->setCellValue('C1', 'Dock List Number');
-        $sheet1->setCellValue('D1', 'Start Date');
-        $sheet1->setCellValue('E1', 'Deadline');
-        $sheet1->setCellValue('F1', 'Description');
-        $sheet1->setCellValue('G1', 'Milestone');
-        $sheet1->setCellValue('H1', 'Assigned To');
-        $sheet1->setCellValue('I1', 'Collaborators');
-        $sheet1->setCellValue('J1', 'Status');
-        $sheet1->setCellValue('K1', 'Link to Task');
-        $sheet1->setCellValue('L1', 'Location');
-        $sheet1->setCellValue('M1', 'Specification');
-        $sheet1->setCellValue('N1', 'Marker');
-        $sheet1->setCellValue('O1', 'Type');
-        $sheet1->setCellValue('P1', 'Refernece');
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Tasks');
+        $sheet->setCellValue('A1', 'Title');
+        $sheet->setCellValue('B1', 'Category');
+        $sheet->setCellValue('C1', 'Dock List Number');
+        $sheet->setCellValue('D1', 'Start Date');
+        $sheet->setCellValue('E1', 'Deadline');
+        $sheet->setCellValue('F1', 'Description');
+        $sheet->setCellValue('G1', 'Milestone');
+        $sheet->setCellValue('H1', 'Assigned To');
+        $sheet->setCellValue('I1', 'Collaborators');
+        $sheet->setCellValue('J1', 'Status');
+        $sheet->setCellValue('K1', 'Link to Task');
+        $sheet->setCellValue('L1', 'Location');
+        $sheet->setCellValue('M1', 'Specification');
+        $sheet->setCellValue('N1', 'Marker');
+        $sheet->setCellValue('O1', 'Type');
+        $sheet->setCellValue('P1', 'Refernece');
         $rowNumber = 2;
         foreach ($allTasks as $oneTask) {
             // $task_info=$this->Tasks_model->get_one($oneTask->id);
-            $sheet1->setCellValue('A' . $rowNumber, $oneTask->title);
-            $sheet1->setCellValue('B' . $rowNumber, $oneTask->category);
-            $sheet1->setCellValue('C' . $rowNumber, $oneTask->dock_list_number);
-            $sheet1->setCellValue('D' . $rowNumber, $oneTask->start_date);
-            $sheet1->setCellValue('E' . $rowNumber, $oneTask->deadline);
-            $sheet1->setCellValue('F' . $rowNumber, $oneTask->description ? $oneTask->description : "");
-            $sheet1->setCellValue('G' . $rowNumber, $oneTask->milestone_title);
-            $sheet1->setCellValue('h' . $rowNumber, $oneTask->assigned_to_user);
+            $sheet->setCellValue('A' . $rowNumber, $oneTask->title);
+            $sheet->setCellValue('B' . $rowNumber, $oneTask->category);
+            $sheet->setCellValue('C' . $rowNumber, $oneTask->dock_list_number);
+            $sheet->setCellValue('D' . $rowNumber, $oneTask->start_date);
+            $sheet->setCellValue('E' . $rowNumber, $oneTask->deadline);
+            $sheet->setCellValue('F' . $rowNumber, $oneTask->description ? $oneTask->description : "");
+            $sheet->setCellValue('G' . $rowNumber, $oneTask->milestone_title);
+            $sheet->setCellValue('h' . $rowNumber, $oneTask->assigned_to_user);
             $collaborators = explode(",", $oneTask->collaborator_list);
             $collaborators_names = "";
             foreach ($collaborators as $counter => $oneCol) {
@@ -5935,14 +5976,14 @@ class Projects extends Security_Controller
                     $collaborators_names .= ",";
 
             }
-            $sheet1->setCellValue('I' . $rowNumber, $collaborators_names);
-            $sheet1->setCellValue('J' . $rowNumber, $oneTask->status_title);
-            $sheet1->setCellValue('K' . $rowNumber, get_uri("task_view/view/") . $oneTask->id);
-            $sheet1->setCellValue('L' . $rowNumber, $oneTask->location);
-            $sheet1->setCellValue('M' . $rowNumber, $oneTask->specification);
-            $sheet1->setCellValue('N' . $rowNumber, $oneTask->maker);
-            $sheet1->setCellValue('O' . $rowNumber, $oneTask->type);
-            // $sheet1->setCellValue('P'.$rowNumber, $oneTask->reference);
+            $sheet->setCellValue('I' . $rowNumber, $collaborators_names);
+            $sheet->setCellValue('J' . $rowNumber, $oneTask->status_title);
+            $sheet->setCellValue('K' . $rowNumber, get_uri("task_view/view/") . $oneTask->id);
+            $sheet->setCellValue('L' . $rowNumber, $oneTask->location);
+            $sheet->setCellValue('M' . $rowNumber, $oneTask->specification);
+            $sheet->setCellValue('N' . $rowNumber, $oneTask->maker);
+            $sheet->setCellValue('O' . $rowNumber, $oneTask->type);
+            // $sheet->setCellValue('P'.$rowNumber, $oneTask->reference);
             $rowNumber++;
         }
 
@@ -5971,35 +6012,35 @@ class Projects extends Security_Controller
         // return json_encode($allTasks);
 
         // Add data to the first worksheet
-        $sheet1 = $spreadsheet->getActiveSheet();
-        $sheet1->setTitle('Tasks');
-        $sheet1->setCellValue('A1', 'Title');
-        $sheet1->setCellValue('B1', 'Category');
-        $sheet1->setCellValue('C1', 'Dock List Number');
-        $sheet1->setCellValue('D1', 'Start Date');
-        $sheet1->setCellValue('E1', 'Deadline');
-        $sheet1->setCellValue('F1', 'Description');
-        $sheet1->setCellValue('G1', 'Milestone');
-        $sheet1->setCellValue('H1', 'Assigned To');
-        $sheet1->setCellValue('I1', 'Collaborators');
-        $sheet1->setCellValue('J1', 'Status');
-        $sheet1->setCellValue('K1', 'Link to Task');
-        $sheet1->setCellValue('L1', 'Location');
-        $sheet1->setCellValue('M1', 'Specification');
-        $sheet1->setCellValue('N1', 'Marker');
-        $sheet1->setCellValue('O1', 'Type');
-        $sheet1->setCellValue('P1', 'Refernece');
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Tasks');
+        $sheet->setCellValue('A1', 'Title');
+        $sheet->setCellValue('B1', 'Category');
+        $sheet->setCellValue('C1', 'Dock List Number');
+        $sheet->setCellValue('D1', 'Start Date');
+        $sheet->setCellValue('E1', 'Deadline');
+        $sheet->setCellValue('F1', 'Description');
+        $sheet->setCellValue('G1', 'Milestone');
+        $sheet->setCellValue('H1', 'Assigned To');
+        $sheet->setCellValue('I1', 'Collaborators');
+        $sheet->setCellValue('J1', 'Status');
+        $sheet->setCellValue('K1', 'Link to Task');
+        $sheet->setCellValue('L1', 'Location');
+        $sheet->setCellValue('M1', 'Specification');
+        $sheet->setCellValue('N1', 'Marker');
+        $sheet->setCellValue('O1', 'Type');
+        $sheet->setCellValue('P1', 'Refernece');
         $rowNumber = 2;
         foreach ($allTasks as $oneTask) {
             // $task_info=$this->Tasks_model->get_one($oneTask->id);
-            $sheet1->setCellValue('A' . $rowNumber, $oneTask->title);
-            $sheet1->setCellValue('B' . $rowNumber, $oneTask->category);
-            $sheet1->setCellValue('C' . $rowNumber, $oneTask->dock_list_number);
-            $sheet1->setCellValue('D' . $rowNumber, $oneTask->start_date);
-            $sheet1->setCellValue('E' . $rowNumber, $oneTask->deadline);
-            $sheet1->setCellValue('F' . $rowNumber, $oneTask->description ? $oneTask->description : "");
-            $sheet1->setCellValue('G' . $rowNumber, $oneTask->milestone_title);
-            $sheet1->setCellValue('h' . $rowNumber, $oneTask->assigned_to_user);
+            $sheet->setCellValue('A' . $rowNumber, $oneTask->title);
+            $sheet->setCellValue('B' . $rowNumber, $oneTask->category);
+            $sheet->setCellValue('C' . $rowNumber, $oneTask->dock_list_number);
+            $sheet->setCellValue('D' . $rowNumber, $oneTask->start_date);
+            $sheet->setCellValue('E' . $rowNumber, $oneTask->deadline);
+            $sheet->setCellValue('F' . $rowNumber, $oneTask->description ? $oneTask->description : "");
+            $sheet->setCellValue('G' . $rowNumber, $oneTask->milestone_title);
+            $sheet->setCellValue('h' . $rowNumber, $oneTask->assigned_to_user);
             $collaborators = explode(",", $oneTask->collaborator_list);
             $collaborators_names = "";
             foreach ($collaborators as $counter => $oneCol) {
@@ -6010,14 +6051,14 @@ class Projects extends Security_Controller
                     $collaborators_names .= ",";
 
             }
-            $sheet1->setCellValue('I' . $rowNumber, $collaborators_names);
-            $sheet1->setCellValue('J' . $rowNumber, $oneTask->status_title);
-            $sheet1->setCellValue('K' . $rowNumber, get_uri("task_view/view/") . $oneTask->id);
-            $sheet1->setCellValue('L' . $rowNumber, $oneTask->location);
-            $sheet1->setCellValue('M' . $rowNumber, $oneTask->specification);
-            $sheet1->setCellValue('N' . $rowNumber, $oneTask->maker);
-            $sheet1->setCellValue('O' . $rowNumber, $oneTask->type);
-            // $sheet1->setCellValue('P'.$rowNumber, $oneTask->reference);
+            $sheet->setCellValue('I' . $rowNumber, $collaborators_names);
+            $sheet->setCellValue('J' . $rowNumber, $oneTask->status_title);
+            $sheet->setCellValue('K' . $rowNumber, get_uri("task_view/view/") . $oneTask->id);
+            $sheet->setCellValue('L' . $rowNumber, $oneTask->location);
+            $sheet->setCellValue('M' . $rowNumber, $oneTask->specification);
+            $sheet->setCellValue('N' . $rowNumber, $oneTask->maker);
+            $sheet->setCellValue('O' . $rowNumber, $oneTask->type);
+            // $sheet->setCellValue('P'.$rowNumber, $oneTask->reference);
             $rowNumber++;
         }
 
@@ -6033,44 +6074,44 @@ class Projects extends Security_Controller
         $allProjectCostItems = $this->Task_cost_items_model->get_all_where(array("project_id" => $project_id, "deleted" => 0))->getResult();
 
         // Add data to the first worksheet
-        $sheet1 = $spreadsheet->getActiveSheet();
-        $sheet1->setTitle('Cost items');
-        $sheet1->setCellValue('A1', 'project_id');
-        $sheet1->setCellValue('B1', 'project_title');
-        $sheet1->setCellValue('C1', 'task_id');
-        $sheet1->setCellValue('D1', 'task_title');
-        $sheet1->setCellValue('E1', 'Group');
-        $sheet1->setCellValue('F1', 'Cost item');
-        $sheet1->setCellValue('G1', 'Description');
-        $sheet1->setCellValue('H1', 'Cost type');
-        $sheet1->setCellValue('I1', 'Est. quantity');
-        $sheet1->setCellValue('J1', 'Measurement unit');
-        $sheet1->setCellValue('K1', 'Unit price');
-        $sheet1->setCellValue('L1', 'Unit price currency');
-        $sheet1->setCellValue('M1', 'Quote');
-        $sheet1->setCellValue('N1', 'Discount (0-100%)');
-        $sheet1->setCellValue('O1', 'Discounted quote');
-        $sheet1->setCellValue('P1', 'Yard remarks');
-        $sheet1->setCellValue('Q1', 'Link to Task');
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Cost items');
+        $sheet->setCellValue('A1', 'project_id');
+        $sheet->setCellValue('B1', 'project_title');
+        $sheet->setCellValue('C1', 'task_id');
+        $sheet->setCellValue('D1', 'task_title');
+        $sheet->setCellValue('E1', 'Group');
+        $sheet->setCellValue('F1', 'Cost item');
+        $sheet->setCellValue('G1', 'Description');
+        $sheet->setCellValue('H1', 'Cost type');
+        $sheet->setCellValue('I1', 'Est. quantity');
+        $sheet->setCellValue('J1', 'Measurement unit');
+        $sheet->setCellValue('K1', 'Unit price');
+        $sheet->setCellValue('L1', 'Unit price currency');
+        $sheet->setCellValue('M1', 'Quote');
+        $sheet->setCellValue('N1', 'Discount (0-100%)');
+        $sheet->setCellValue('O1', 'Discounted quote');
+        $sheet->setCellValue('P1', 'Yard remarks');
+        $sheet->setCellValue('Q1', 'Link to Task');
         $rowNumber = 2;
         foreach ($allProjectCostItems as $oneItem) {
             $task_info = $this->Tasks_model->get_one($oneItem->task_id);
-            $sheet1->setCellValue('A' . $rowNumber, $project_id);
-            $sheet1->setCellValue('B' . $rowNumber, $project_info->title);
-            $sheet1->setCellValue('C' . $rowNumber, $task_info->id);
-            $sheet1->setCellValue('D' . $rowNumber, $task_info->title);
-            $sheet1->setCellValue('E' . $rowNumber, $task_info->category);
-            $sheet1->setCellValue('F' . $rowNumber, $oneItem->name);
-            $sheet1->setCellValue('G' . $rowNumber, $oneItem->description);
-            $sheet1->setCellValue('I' . $rowNumber, $oneItem->quantity);
-            $sheet1->setCellValue('J' . $rowNumber, $oneItem->measurement);
-            $sheet1->setCellValue('K' . $rowNumber, $oneItem->unit_price);
-            $sheet1->setCellValue('L' . $rowNumber, $oneItem->currency);
-            $sheet1->setCellValue('M' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity);
-            $sheet1->setCellValue('N' . $rowNumber, $oneItem->discount);
-            $sheet1->setCellValue('O' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) $oneItem->discount / 100);
-            $sheet1->setCellValue('P' . $rowNumber, $oneItem->yard_remarks);
-            $sheet1->setCellValue('Q' . $rowNumber, get_uri("task_view/view/") . $oneItem->task_id);
+            $sheet->setCellValue('A' . $rowNumber, $project_id);
+            $sheet->setCellValue('B' . $rowNumber, $project_info->title);
+            $sheet->setCellValue('C' . $rowNumber, $task_info->id);
+            $sheet->setCellValue('D' . $rowNumber, $task_info->title);
+            $sheet->setCellValue('E' . $rowNumber, $task_info->category);
+            $sheet->setCellValue('F' . $rowNumber, $oneItem->name);
+            $sheet->setCellValue('G' . $rowNumber, $oneItem->description);
+            $sheet->setCellValue('I' . $rowNumber, $oneItem->quantity);
+            $sheet->setCellValue('J' . $rowNumber, $oneItem->measurement);
+            $sheet->setCellValue('K' . $rowNumber, $oneItem->unit_price);
+            $sheet->setCellValue('L' . $rowNumber, $oneItem->currency);
+            $sheet->setCellValue('M' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity);
+            $sheet->setCellValue('N' . $rowNumber, $oneItem->discount);
+            $sheet->setCellValue('O' . $rowNumber, (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) $oneItem->discount / 100);
+            $sheet->setCellValue('P' . $rowNumber, $oneItem->yard_remarks);
+            $sheet->setCellValue('Q' . $rowNumber, get_uri("task_view/view/") . $oneItem->task_id);
             $rowNumber++;
         }
 
@@ -6100,8 +6141,8 @@ class Projects extends Security_Controller
         $allComments = $this->Task_comments_model->get_all_where(array("project_id" => $project_id))->getResult();
 
         // Add data to the first worksheet
-        $sheet1 = $spreadsheet->getActiveSheet();
-        $sheet1->setTitle('Cost Overview');
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Cost Overview');
 
         $categorizedTasks = array(
             "General & Docking" => array(),
@@ -6240,26 +6281,26 @@ class Projects extends Security_Controller
         $totalCosts = 0;
         $totalShipyardCostItems = 0;
         $totalComments = 0;
-        $sheet1->setCellValue('A1', "Category");
-        $sheet1->setCellValue('B1', "Task");
-        $sheet1->setCellValue('C1', "Owner's supply");
-        $sheet1->setCellValue('D1', "Quoted");
-        $sheet1->setCellValue('E1', "Variation orders");
-        $sheet1->setCellValue('F1', "Total");
-        $sheet1->setCellValue('G1', 'Total yard');
-        $sheet1->setCellValue('H1', "Billed yard");
-        $sheet1->setCellValue('I1', "Final yard");
-        $sheet1->setCellValue('J1', 'Comments');
+        $sheet->setCellValue('A1', "Category");
+        $sheet->setCellValue('B1', "Task");
+        $sheet->setCellValue('C1', "Owner's supply");
+        $sheet->setCellValue('D1', "Quoted");
+        $sheet->setCellValue('E1', "Variation orders");
+        $sheet->setCellValue('F1', "Total");
+        $sheet->setCellValue('G1', 'Total yard');
+        $sheet->setCellValue('H1', "Billed yard");
+        $sheet->setCellValue('I1', "Final yard");
+        $sheet->setCellValue('J1', 'Comments');
 
-        $sheet1->setCellValue('B2', "Total:");
-        $sheet1->setCellValue('C2', 0);
-        $sheet1->setCellValue('D2', 0);
-        $sheet1->setCellValue('E2', 0);
-        $sheet1->setCellValue('F2', 0);
-        $sheet1->setCellValue('G2', 0);
-        $sheet1->setCellValue('H2', 0);
-        $sheet1->setCellValue('I2', 0);
-        $sheet1->setCellValue('J2', 0);
+        $sheet->setCellValue('B2', "Total:");
+        $sheet->setCellValue('C2', 0);
+        $sheet->setCellValue('D2', 0);
+        $sheet->setCellValue('E2', 0);
+        $sheet->setCellValue('F2', 0);
+        $sheet->setCellValue('G2', 0);
+        $sheet->setCellValue('H2', 0);
+        $sheet->setCellValue('I2', 0);
+        $sheet->setCellValue('J2', 0);
 
         $rowIndex = 3;
         foreach ($categorizedTasks as $category => $oneList) {
@@ -6269,16 +6310,16 @@ class Projects extends Security_Controller
             $categoryShipyardCostItems = 0;
             $categoryVariationOrder = 0;
             $categoryComments = 0;
-            $sheet1->setCellValue('A' . $rowIndex, $category);
-            $sheet1->setCellValue('B' . $rowIndex, 0);
-            $sheet1->setCellValue('C' . $rowIndex, 0);
-            $sheet1->setCellValue('D' . $rowIndex, 0);
-            $sheet1->setCellValue('E' . $rowIndex, 0);
-            $sheet1->setCellValue('F' . $rowIndex, 0);
-            $sheet1->setCellValue('G' . $rowIndex, 0);
-            $sheet1->setCellValue('H' . $rowIndex, 0);
-            $sheet1->setCellValue('I' . $rowIndex, 0);
-            $sheet1->setCellValue('J' . $rowIndex, 0);
+            $sheet->setCellValue('A' . $rowIndex, $category);
+            $sheet->setCellValue('B' . $rowIndex, 0);
+            $sheet->setCellValue('C' . $rowIndex, 0);
+            $sheet->setCellValue('D' . $rowIndex, 0);
+            $sheet->setCellValue('E' . $rowIndex, 0);
+            $sheet->setCellValue('F' . $rowIndex, 0);
+            $sheet->setCellValue('G' . $rowIndex, 0);
+            $sheet->setCellValue('H' . $rowIndex, 0);
+            $sheet->setCellValue('I' . $rowIndex, 0);
+            $sheet->setCellValue('J' . $rowIndex, 0);
             $category_row = $rowIndex;
             $rowIndex++;
             foreach ($oneList as $key => $oneTask) {
@@ -6336,15 +6377,15 @@ class Projects extends Security_Controller
                 $totalComments += $oneTaskTotalComments;
                 $totalCosts += ($oneTaskTotalSupplies + $oneTaskTotalCostItems);
 
-                $sheet1->setCellValue('B' . $rowIndex, $oneTask->title);
-                $sheet1->setCellValue('C' . $rowIndex, $oneTaskTotalSupplies);
-                $sheet1->setCellValue('D' . $rowIndex, $oneTaskTotalCostItems);
-                $sheet1->setCellValue('E' . $rowIndex, $oneTaskTotalVariationOrders);
-                $sheet1->setCellValue('F' . $rowIndex, $oneTaskTotalCosts);
-                $sheet1->setCellValue('G' . $rowIndex, $oneTaskTotalShipyardCostItems);
-                $sheet1->setCellValue('H' . $rowIndex, 0);
-                $sheet1->setCellValue('I' . $rowIndex, 0);
-                $sheet1->setCellValue('J' . $rowIndex, $oneTaskTotalComments);
+                $sheet->setCellValue('B' . $rowIndex, $oneTask->title);
+                $sheet->setCellValue('C' . $rowIndex, $oneTaskTotalSupplies);
+                $sheet->setCellValue('D' . $rowIndex, $oneTaskTotalCostItems);
+                $sheet->setCellValue('E' . $rowIndex, $oneTaskTotalVariationOrders);
+                $sheet->setCellValue('F' . $rowIndex, $oneTaskTotalCosts);
+                $sheet->setCellValue('G' . $rowIndex, $oneTaskTotalShipyardCostItems);
+                $sheet->setCellValue('H' . $rowIndex, 0);
+                $sheet->setCellValue('I' . $rowIndex, 0);
+                $sheet->setCellValue('J' . $rowIndex, $oneTaskTotalComments);
                 $rowIndex++;
             }
             $categorizedStats[$category]["owner_supplies"] = $categoryOwnerSupply;
@@ -6352,23 +6393,23 @@ class Projects extends Security_Controller
             $categorizedStats[$category]["variation_orders"] = $categoryVariationOrder;
             $categorizedStats[$category]["shipyard_cost_items"] = $categoryShipyardCostItems;
             $categorizedStats[$category]["comments"] = $categoryComments;
-            $sheet1->setCellValue('B' . $category_row, "");
-            $sheet1->setCellValue('C' . $category_row, $categoryOwnerSupply);
-            $sheet1->setCellValue('D' . $category_row, $categoryCostItems);
-            $sheet1->setCellValue('E' . $category_row, $categoryVariationOrder);
-            $sheet1->setCellValue('F' . $category_row, $categoryTotalCosts);
-            $sheet1->setCellValue('G' . $category_row, $categoryShipyardCostItems);
-            $sheet1->setCellValue('H' . $category_row, 0);
-            $sheet1->setCellValue('I' . $category_row, $categoryComments);
+            $sheet->setCellValue('B' . $category_row, "");
+            $sheet->setCellValue('C' . $category_row, $categoryOwnerSupply);
+            $sheet->setCellValue('D' . $category_row, $categoryCostItems);
+            $sheet->setCellValue('E' . $category_row, $categoryVariationOrder);
+            $sheet->setCellValue('F' . $category_row, $categoryTotalCosts);
+            $sheet->setCellValue('G' . $category_row, $categoryShipyardCostItems);
+            $sheet->setCellValue('H' . $category_row, 0);
+            $sheet->setCellValue('I' . $category_row, $categoryComments);
         }
-        $sheet1->setCellValue('C2', $totalOwnerSupplies);
-        $sheet1->setCellValue('D2', $totalCostItems);
-        $sheet1->setCellValue('E2', $totalVariationOrders);
-        $sheet1->setCellValue('F2', $totalCosts);
-        $sheet1->setCellValue('G2', $totalShipyardCostItems);
-        $sheet1->setCellValue('H2', 0);
-        $sheet1->setCellValue('I2', 0);
-        $sheet1->setCellValue('J2', $totalComments);
+        $sheet->setCellValue('C2', $totalOwnerSupplies);
+        $sheet->setCellValue('D2', $totalCostItems);
+        $sheet->setCellValue('E2', $totalVariationOrders);
+        $sheet->setCellValue('F2', $totalCosts);
+        $sheet->setCellValue('G2', $totalShipyardCostItems);
+        $sheet->setCellValue('H2', 0);
+        $sheet->setCellValue('I2', 0);
+        $sheet->setCellValue('J2', $totalComments);
         // Create a writer object
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
         $cost_form_file_path = getcwd() . '/' . get_setting("project_file_path") . '/' . $project_id . "/cost_form.xlsx";
@@ -6486,47 +6527,47 @@ class Projects extends Security_Controller
         $allShipyardCostItems = $this->Shipyard_cost_items_model->get_all_with_costs_where(array("shipyard_id" => $shipyard_id))->getResult();
 
         // Add data to the first worksheet
-        $sheet1 = $spreadsheet->getActiveSheet();
-        $sheet1->setTitle('Cost items');
-        $sheet1->setCellValue('A1', 'Project ID');
-        $sheet1->setCellValue('B1', 'Project Title');
-        $sheet1->setCellValue('C1', 'Task ID');
-        $sheet1->setCellValue('D1', 'Task Title');
-        $sheet1->setCellValue('E1', 'Group');
-        $sheet1->setCellValue('F1', 'Dock List Number');
-        $sheet1->setCellValue('G1', 'Cost item');
-        $sheet1->setCellValue('H1', 'Description');
-        $sheet1->setCellValue('I1', 'Cost type');
-        $sheet1->setCellValue('J1', 'Est. quantity');
-        $sheet1->setCellValue('K1', 'Measurement unit');
-        $sheet1->setCellValue('L1', 'Unit price');
-        $sheet1->setCellValue('M1', 'Unit price currency');
-        $sheet1->setCellValue('N1', 'Quote');
-        $sheet1->setCellValue('O1', 'Discount (0-100%)');
-        $sheet1->setCellValue('P1', 'Discounted quote');
-        $sheet1->setCellValue('Q1', 'Yard remarks');
-        $sheet1->setCellValue('R1', 'Link to Task');
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Cost items');
+        $sheet->setCellValue('A1', 'Project ID');
+        $sheet->setCellValue('B1', 'Project Title');
+        $sheet->setCellValue('C1', 'Task ID');
+        $sheet->setCellValue('D1', 'Task Title');
+        $sheet->setCellValue('E1', 'Group');
+        $sheet->setCellValue('F1', 'Dock List Number');
+        $sheet->setCellValue('G1', 'Cost item');
+        $sheet->setCellValue('H1', 'Description');
+        $sheet->setCellValue('I1', 'Cost type');
+        $sheet->setCellValue('J1', 'Est. quantity');
+        $sheet->setCellValue('K1', 'Measurement unit');
+        $sheet->setCellValue('L1', 'Unit price');
+        $sheet->setCellValue('M1', 'Unit price currency');
+        $sheet->setCellValue('N1', 'Quote');
+        $sheet->setCellValue('O1', 'Discount (0-100%)');
+        $sheet->setCellValue('P1', 'Discounted quote');
+        $sheet->setCellValue('Q1', 'Yard remarks');
+        $sheet->setCellValue('R1', 'Link to Task');
         $rowNumber = 2;
         foreach ($allShipyardCostItems as $oneItem) {
             $task_info = $this->Tasks_model->get_one($oneItem->task_id);
-            $sheet1->setCellValue('A' . $rowNumber, $project_info->id);
-            $sheet1->setCellValue('B' . $rowNumber, $project_info->title);
-            $sheet1->setCellValue('C' . $rowNumber, $task_info->id);
-            $sheet1->setCellValue('D' . $rowNumber, $task_info->title);
-            $sheet1->setCellValue('E' . $rowNumber, $task_info->category);
-            $sheet1->setCellValue('F' . $rowNumber, $task_info->dock_list_number);
-            $sheet1->setCellValue('G' . $rowNumber, $oneItem->name);
-            $sheet1->setCellValue('H' . $rowNumber, $oneItem->description);
-            $sheet1->setCellValue('I' . $rowNumber, $oneItem->quote_type);
-            $sheet1->setCellValue('J' . $rowNumber, $oneItem->quantity);
-            $sheet1->setCellValue('K' . $rowNumber, $oneItem->measurement);
-            $sheet1->setCellValue('L' . $rowNumber, $oneItem->unit_price);
-            $sheet1->setCellValue('M' . $rowNumber, $oneItem->currency);
-            $sheet1->setCellValue('N' . $rowNumber, $oneItem->currency . " " . (float) $oneItem->unit_price * (float) $oneItem->quantity);
-            $sheet1->setCellValue('O' . $rowNumber, $oneItem->discount . " %");
-            $sheet1->setCellValue('P' . $rowNumber, '=M' . $rowNumber . '&" "&J' . $rowNumber . '*L' . $rowNumber . '*(1-VALUE(SUBSTITUTE(O' . $rowNumber . '," %",""))/100)');
-            $sheet1->setCellValue('Q' . $rowNumber, $oneItem->yard_remarks);
-            $sheet1->setCellValue('R' . $rowNumber, get_uri("task_view/view/") . $oneItem->task_id);
+            $sheet->setCellValue('A' . $rowNumber, $project_info->id);
+            $sheet->setCellValue('B' . $rowNumber, $project_info->title);
+            $sheet->setCellValue('C' . $rowNumber, $task_info->id);
+            $sheet->setCellValue('D' . $rowNumber, $task_info->title);
+            $sheet->setCellValue('E' . $rowNumber, $task_info->category);
+            $sheet->setCellValue('F' . $rowNumber, $task_info->dock_list_number);
+            $sheet->setCellValue('G' . $rowNumber, $oneItem->name);
+            $sheet->setCellValue('H' . $rowNumber, $oneItem->description);
+            $sheet->setCellValue('I' . $rowNumber, $oneItem->quote_type);
+            $sheet->setCellValue('J' . $rowNumber, $oneItem->quantity);
+            $sheet->setCellValue('K' . $rowNumber, $oneItem->measurement);
+            $sheet->setCellValue('L' . $rowNumber, $oneItem->unit_price);
+            $sheet->setCellValue('M' . $rowNumber, $oneItem->currency);
+            $sheet->setCellValue('N' . $rowNumber, $oneItem->currency . " " . (float) $oneItem->unit_price * (float) $oneItem->quantity);
+            $sheet->setCellValue('O' . $rowNumber, $oneItem->discount . " %");
+            $sheet->setCellValue('P' . $rowNumber, '=M' . $rowNumber . '&" "&J' . $rowNumber . '*L' . $rowNumber . '*(1-VALUE(SUBSTITUTE(O' . $rowNumber . '," %",""))/100)');
+            $sheet->setCellValue('Q' . $rowNumber, $oneItem->yard_remarks);
+            $sheet->setCellValue('R' . $rowNumber, get_uri("task_view/view/") . $oneItem->task_id);
             $rowNumber++;
         }
 
