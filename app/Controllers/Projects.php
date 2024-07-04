@@ -776,11 +776,13 @@ class Projects extends Security_Controller
             log_notification("project_deleted", array("project_id" => $id));
 
             try {
-                app_hooks()->do_action("app_hook_data_delete", array(
-                    "id" => $id,
-                    "table" => get_db_prefix() . "projects",
-                    "table_without_prefix" => "projects",
-                )
+                app_hooks()->do_action(
+                    "app_hook_data_delete",
+                    array(
+                        "id" => $id,
+                        "table" => get_db_prefix() . "projects",
+                        "table_without_prefix" => "projects",
+                    )
                 );
             } catch (\Exception $ex) {
                 log_message('error', '[ERROR] {exception}', ['exception' => $ex]);
@@ -4517,45 +4519,149 @@ class Projects extends Security_Controller
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
-        $sheet1.setTitle('Instruction');
-        $sheet1->setCellValue('A1','About the quotation form');
-        $sheet1->setCellValue('A3','General');
-        $sheet1->setCellValue('A4','This quotation form is generated via PEERFLEET (www.peerfleet.io).');
-        $sheet1->setCellValue('A5','It contains all the necessary functionality required by the shipyard providing a quotation.');
-        $sheet1->setCellValue('A7','The shipyard understands that this quotation form must be read and understood in connection with the project specification PDF sent along with it.');
-        $sheet1->setCellValue('A8','The project specification PDF contains all the detailed specifications about the work scope.');
-        $sheet1->setCellValue('A10','The shipyard also accepts that, if selected, billed and/or final costs should be provided to the owner in this same format.');
-        $sheet1->setCellValue('A13','How to use');
-        $sheet1->setCellValue('A15','For information on how to use the excel-based quotaton form, please see this toturial.(ctrl + click to view)');
-        $sheet1->setCellValue('A17','Basic rules: ');
-        $sheet1->setCellValue('A20','Quote types:');
-        $sheet1->setCellValue('A21','Please note:');
-        $sheet1->setCellValue('A28','Please note:');
-        $sheet1->setCellValue('A30','Things to keep in mind:');
-        $sheet1->setCellValue('A31','• Add additional lines (cost items) when necessary. If you do, copy the "Task ID" & "Dock list number" for the Task that you are adding an additional line for.');
-        $sheet1->setCellValue('A32','• Do not merge any cells.');
-        $sheet1->setCellValue('A33','• Do add unit price, do not add prices into the total after discount (unit prices and discounts are imported, the rest are calculated on PEERFLEET)');
-        $sheet1->setCellValue('A34',"• For per-unit costs, add an estimated quantity (If it's an estimate, specify this in the remarks).");
-        $sheet1->setCellValue('A35','• Add a unit price for all per unit cost items. For lump sum cost items, the unit price field is where you also add the lump sum price (for lump sum, the quantity is set to 1).');
-        $sheet1->setCellValue('A36','• Do not add additional rows as headlines on the cost sheet. Only the top row is for column headers.');
-        $sheet1->setCellValue('A37',"• Add as many additional sheets as you want, if you want to add more information about your shipyard. This does not interfere with the customer's ability to import the prices to Maindeck later.");
-        $sheet1->setCellValue('A39',"If you don't follow the simple guidelines, you might find yourself in a situation where the customer can't upload your quotation.");
-        $sheet1->setCellValue('A41','Support');
-        $sheet1->setCellValue('A42',"If you have any questions at all, please reach out to PEERFLEET's support team directly.(ctrl + click to view)");
-        $sheet1->setCellValue('B17','All cells that are colored yellow/orange can be filled in by the shipyard.');
-        $sheet1->setCellValue('B18','All cells colored red should not be changed by the shipyard.');
-        $sheet1->setCellValue('B20','Per unit & Lump sump');
-        $sheet1->setCellValue('B21','If you change the quote type, you have to choose between "Per unit" or "Lump sump".');
-        $sheet1->setCellValue('B22','The "Measurement unit" can then also be adjusted as well.');
-        $sheet1->setCellValue('B23','The list with examples of measurement units can be found in the respective sheet of this Excel file. Please note that it is possible to enter custom measurement units as well.');
-        $sheet1->setCellValue('B25','In order to ensure the comparability of the quotations it is recommended not to change the measurement units if no new Cost Item is added by the shipyard.');
-        $sheet1->setCellValue('B26','Please provide an explanation in the Remark field if changes are made to the submitted Cost Item (Quote type or  Measurement unit).');
-        $sheet1->setCellValue('B28','Quote sum & Discount sum are calculated automatically.');
-        
+        $sheet1->$spreadsheet - getActiveSheet()->setShowGridlines(false);
+        $sheet1->setTitle('Instruction');
+        $sheet1->setCellValue('A1', 'About the quotation form');
+        $sheet1->setCellValue('A3', 'General');
+        $sheet1->setCellValue('A4', 'This quotation form is generated via PEERFLEET (www.peerfleet.io).');
+        $sheet1->setCellValue('A5', 'It contains all the necessary functionality required by the shipyard providing a quotation.');
+        $sheet1->setCellValue('A7', 'The shipyard understands that this quotation form must be read and understood in connection with the project specification PDF sent along with it.');
+        $sheet1->setCellValue('A8', 'The project specification PDF contains all the detailed specifications about the work scope.');
+        $sheet1->setCellValue('A10', 'The shipyard also accepts that, if selected, billed and/or final costs should be provided to the owner in this same format.');
+        $sheet1->setCellValue('A13', 'How to use');
+        $sheet1->setCellValue('A15', 'For information on how to use the excel-based quotaton form, please see this toturial.(ctrl + click to view)');
+        $sheet1->setCellValue('A17', 'Basic rules: ');
+        $sheet1->setCellValue('A20', 'Quote types:');
+        $sheet1->setCellValue('A21', 'Please note:');
+        $sheet1->setCellValue('A28', 'Please note:');
+        $sheet1->setCellValue('A30', 'Things to keep in mind:');
+        $sheet1->setCellValue('A31', '• Add additional lines (cost items) when necessary. If you do, copy the "Task ID" & "Dock list number" for the Task that you are adding an additional line for.');
+        $sheet1->setCellValue('A32', '• Do not merge any cells.');
+        $sheet1->setCellValue('A33', '• Do add unit price, do not add prices into the total after discount (unit prices and discounts are imported, the rest are calculated on PEERFLEET)');
+        $sheet1->setCellValue('A34', "• For per-unit costs, add an estimated quantity (If it's an estimate, specify this in the remarks).");
+        $sheet1->setCellValue('A35', '• Add a unit price for all per unit cost items. For lump sum cost items, the unit price field is where you also add the lump sum price (for lump sum, the quantity is set to 1).');
+        $sheet1->setCellValue('A36', '• Do not add additional rows as headlines on the cost sheet. Only the top row is for column headers.');
+        $sheet1->setCellValue('A37', "• Add as many additional sheets as you want, if you want to add more information about your shipyard. This does not interfere with the customer's ability to import the prices to Maindeck later.");
+        $sheet1->setCellValue('A39', "If you don't follow the simple guidelines, you might find yourself in a situation where the customer can't upload your quotation.");
+        $sheet1->setCellValue('A41', 'Support');
+        $sheet1->setCellValue('A42', "If you have any questions at all, please reach out to PEERFLEET's support team directly.(ctrl + click to view)");
+        $sheet1->setCellValue('B17', 'All cells that are colored yellow/orange can be filled in by the shipyard.');
+        $sheet1->setCellValue('B18', 'All cells colored red should not be changed by the shipyard.');
+        $sheet1->setCellValue('B20', 'Per unit & Lump sump');
+        $sheet1->setCellValue('B21', 'If you change the quote type, you have to choose between "Per unit" or "Lump sump".');
+        $sheet1->setCellValue('B22', 'The "Measurement unit" can then also be adjusted as well.');
+        $sheet1->setCellValue('B23', 'The list with examples of measurement units can be found in the respective sheet of this Excel file. Please note that it is possible to enter custom measurement units as well.');
+        $sheet1->setCellValue('B25', 'In order to ensure the comparability of the quotations it is recommended not to change the measurement units if no new Cost Item is added by the shipyard.');
+        $sheet1->setCellValue('B26', 'Please provide an explanation in the Remark field if changes are made to the submitted Cost Item (Quote type or  Measurement unit).');
+        $sheet1->setCellValue('B28', 'Quote sum & Discount sum are calculated automatically.');
 
+        $headerStyle = [
+            'font' => [
+                'bold' => true,
+                'size' => 18,
+            ],
+        ];
+        $subHeaderStyle = [
+            'font' => [
+                'bold' => true,
+                'size' => 16,
+            ],
+        ];
+        $coloredStyle = [
+            'font' => [
+                'color' => ['argb' => 'F9C5700'],
+            ]
+        ];
+        $coloredStyle2 = [
+            'font' => [
+                'color' => ['argb' => 'FF9C0006'],
+            ],
+        ];
+        $boldStyle = [
+            'font' => [
+                'bold' => true,
+            ],
+        ];
+
+        $sheet1->getStyle('A1:A1')->applyFromArray($headerStyle);
+        $sheet1->getStyle('A3:A3')->applyFromArray($subHeaderStyle);
+        $sheet1->getStyle('A13:A13')->applyFromArray($subHeaderStyle);
+        $sheet1->getStyle('A41:A41')->applyFromArray($subHeaderStyle);
+        $sheet1->getStyle('A30:A30')->applyFromArray($boldStyle);
+        $sheet1->getStyle('A39:A39')->applyFromArray($boldStyle);
+        $sheet1->getStyle('B17:B17')->applyFromArray($coloredStyle);
+        $sheet1->getStyle('B18:B18')->applyFromArray($coloredStyle2);
 
         $sheet2 = $spreadsheet->createSheet();
         $sheet2->setTitle('Measurement unit');
+
+        $unit_list = [
+            "air receivers",
+            "certificate",
+            "circuit breakers",
+            "covers",
+            "cylinders",
+            "davit",
+            "davits",
+            "days",
+            "fan",
+            "fan days",
+            "fans",
+            "fuel pumps",
+            "hours",
+            "kWh",
+            "ladders",
+            "lamp days",
+            "lamps",
+            "lifeboat",
+            "lifeboats",
+            "line",
+            "line days",
+            "lines",
+            "lockers",
+            "m2",
+            "m3",
+            "man hours",
+            "manhole",
+            "manholes",
+            "moves",
+            'pcs',
+            "propellers",
+            "rescue boat",
+            "rudders",
+            'shots',
+            "skip days",
+            "spots",
+            "switchboard",
+            "tank",
+            "tanks",
+            'time',
+            "tonnes",
+            "turbochargers",
+            "unit",
+            "units",
+            "valves",
+            "visit",
+            "visits",
+        ];
+        foreach ($unit_list as $index => $unit) {
+            $sheet2->setCellValue('B' . ($index + 2), $unit);
+        }
+        $sheet2->setCellValue('B1', 'Measurement units');
+
+        $tableHeaderStyle = [
+            "font" => [
+                "bold" => true,
+
+            ],
+            "fill" => [
+                "fillType" => Fill::FILL_SOLID,
+                "startColor" => ["argb" => "FFBFBFBF"],
+            ]
+        ];
+
+        $sheet2->getStyle('B1:B1')->applyFromArray($tableHeaderStyle);
+
 
         $sheet = $spreadsheet->createSheet();
         $sheet->setTitle('Cost items');
@@ -4593,13 +4699,40 @@ class Projects extends Security_Controller
             $sheet->setCellValue('K' . $rowNumber, $oneItem->measurement);
             $sheet->setCellValue('L' . $rowNumber, $oneItem->unit_price);
             $sheet->setCellValue('M' . $rowNumber, $oneItem->currency);
-            $sheet->setCellValue('N' . $rowNumber, $oneItem->currency . " " . (float) $oneItem->unit_price * (float) $oneItem->quantity);
+            $sheet->setCellValue('N' . $rowNumber, '=J' . $rowNumber . '*L' . $rowNumber);
             $sheet->setCellValue('O' . $rowNumber, $oneItem->discount . " %");
-            $sheet->setCellValue('P' . $rowNumber, $oneItem->currency . " " . (float) $oneItem->unit_price * (float) $oneItem->quantity * (float) (100 - $oneItem->discount) / 100);
+            $sheet->setCellValue('P' . $rowNumber, '=N' . $rowNumber . '-N' . $rowNumber . '*O' . $rowNumber . '*(1-VALUE(SUBSTITUTE(O' . $rowNumber . '," %",""))/100)');
             $sheet->setCellValue('Q' . $rowNumber, $oneItem->yard_remarks);
             $sheet->setCellValue('R' . $rowNumber, get_uri("task_view/view/") . $oneItem->task_id);
             $rowNumber++;
         }
+
+        $redContentStyle = [
+            "font" => [
+                "color" => ["argb" => "FF9C0006"],
+            ],
+            "fill" => [
+                "fillType" => Fill::FILL_SOLID,
+                "startColor" => ["argb" => "FFFFC7CE"],
+            ]
+        ];
+        $orangeContentStyle = [
+            "font" => [
+                "color" => ["argb" => "FF9C0006"],
+            ],
+            "fill" => [
+                "fillType" => Fill::FILL_SOLID,
+                "startColor" => ["argb" => "FFFFC7CE"],
+            ]
+        ];
+
+        $sheet->getStyle('A1:R1')->applyFromArray($tableHeaderStyle);
+        $sheet->getStyle('A2:H3')->applyFromArray($redContentStyle);
+        $sheet->getStyle('I2:L3')->applyFromArray($orangeContentStyle);
+        $sheet->getStyle('M2:M3')->applyFromArray($redContentStyle);
+        $sheet->getStyle('O2:O3')->applyFromArray($orangeContentStyle);
+        $sheet->getStyle('Q2:Q3')->applyFromArray($orangeContentStyle);
+
 
         // Create a writer object
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
@@ -4810,14 +4943,14 @@ class Projects extends Security_Controller
         for ($i = 10; $i <= 30; $i++) {
             $sheet->mergeCells("B" . $i . ":D" . $i);
         }
-        
+
         $sheet->mergeCells('B31:G31');
         $sheet->mergeCells('B32:G32');
 
         for ($i = 33; $i <= 37; $i++) {
             $sheet->mergeCells("C" . $i . ":E" . $i);
         }
-        
+
         $sheet->mergeCells('B38:E38');
         $sheet->mergeCells('B39:G39');
         $sheet->mergeCells('B40:G40');
@@ -4826,11 +4959,11 @@ class Projects extends Security_Controller
         $sheet->mergeCells('B45:G45');
         $sheet->mergeCells('B46:G46');
         $sheet->mergeCells('B47:F47');
-        
+
         for ($i = 48; $i <= 79; $i++) {
             $sheet->mergeCells("C" . $i . ":F" . $i);
         }
-        
+
         $sheet->mergeCells('B80:F80');
 
         // Apply styles
@@ -4862,7 +4995,7 @@ class Projects extends Security_Controller
                 'fillType' => Fill::FILL_SOLID,
                 'startColor' => ['argb' => 'FFDDDDFF'],
             ],
-            
+
         ];
 
         // Singapur
@@ -4885,7 +5018,7 @@ class Projects extends Security_Controller
             'font' => [
                 'bold' => true,
                 'size' => 12,
-                'color' => ['argb'=>'FF0000FF']
+                'color' => ['argb' => 'FF0000FF']
             ],
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_RIGHT,
@@ -4897,13 +5030,13 @@ class Projects extends Security_Controller
                 ],
             ],
         ];
-        
+
         // 4/2/2024
         $customHeaderStyle2 = [
             'font' => [
                 'bold' => true,
                 'size' => 12,
-                'color' => ['argb'=>'FF0000FF']
+                'color' => ['argb' => 'FF0000FF']
             ],
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_LEFT,
@@ -4962,7 +5095,7 @@ class Projects extends Security_Controller
                 ],
             ],
         ];
-        
+
         $sideBarBoldStyle = [
             'font' => [
                 'bold' => true,
@@ -4982,7 +5115,7 @@ class Projects extends Security_Controller
                 ],
             ],
         ];
-        
+
         $mainContentStyle = [
             'font' => [
                 'bold' => false,
@@ -5012,7 +5145,7 @@ class Projects extends Security_Controller
                 ],
             ],
         ];
-        
+
         $sheet->mergeCells('B32:G32');
 
 
@@ -5040,7 +5173,7 @@ class Projects extends Security_Controller
         $sheet->getStyle('B33:G33')->applyFromArray($tableHeaderStyle);
         $sheet->getStyle('B34:G37')->applyFromArray($mainContentStyle);
         $sheet->getStyle('B38:G38')->applyFromArray($statisticsStyle);
-        
+
         $sheet->getStyle('B40:G40')->applyFromArray($sectionHeaderStyle);
         $sheet->getStyle('B41:G41')->applyFromArray($tableHeaderStyle);
         $sheet->getStyle('B42:G44')->applyFromArray($mainContentStyle);
@@ -5064,9 +5197,9 @@ class Projects extends Security_Controller
 
         // echo "File created successfully!";
 
-        
+
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        
+
         $response = service('response');
 
         // Set response headers for file download
@@ -5918,7 +6051,7 @@ class Projects extends Security_Controller
         ];
         $first_page = $this->template->view('projects/export_pdf/pages/first_page', $view_data); // Load HTML view file
         // return $first_page;
-        
+
         // return $first_page;
         $dompdf->loadHtml($first_page);
 
@@ -6565,7 +6698,7 @@ class Projects extends Security_Controller
             $sheet->setCellValue('M' . $rowNumber, $oneItem->currency);
             $sheet->setCellValue('N' . $rowNumber, $oneItem->currency . " " . (float) $oneItem->unit_price * (float) $oneItem->quantity);
             $sheet->setCellValue('O' . $rowNumber, $oneItem->discount . " %");
-            $sheet->setCellValue('P' . $rowNumber, '=M' . $rowNumber . '&" "&J' . $rowNumber . '*L' . $rowNumber . '*(1-VALUE(SUBSTITUTE(O' . $rowNumber . '," %",""))/100)');
+            $sheet->setCellValue('P' . $rowNumber, '=M' . $rowNumber . '&" "&J' . $rowNumber . '*O' . $rowNumber . '*(1-VALUE(SUBSTITUTE(O' . $rowNumber . '," %",""))/100)');
             $sheet->setCellValue('Q' . $rowNumber, $oneItem->yard_remarks);
             $sheet->setCellValue('R' . $rowNumber, get_uri("task_view/view/") . $oneItem->task_id);
             $rowNumber++;
