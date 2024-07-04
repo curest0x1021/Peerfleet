@@ -4519,7 +4519,7 @@ class Projects extends Security_Controller
 
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
-        $sheet1->$spreadsheet - getActiveSheet()->setShowGridlines(false);
+        $sheet1->setShowGridlines(false);
         $sheet1->setTitle('Instruction');
         $sheet1->setCellValue('A1', 'About the quotation form');
         $sheet1->setCellValue('A3', 'General');
@@ -4569,7 +4569,7 @@ class Projects extends Security_Controller
         ];
         $coloredStyle = [
             'font' => [
-                'color' => ['argb' => 'F9C5700'],
+                'color' => ['argb' => 'FF9C5700'],
             ]
         ];
         $coloredStyle2 = [
@@ -4652,7 +4652,6 @@ class Projects extends Security_Controller
         $tableHeaderStyle = [
             "font" => [
                 "bold" => true,
-
             ],
             "fill" => [
                 "fillType" => Fill::FILL_SOLID,
@@ -4661,10 +4660,33 @@ class Projects extends Security_Controller
         ];
 
         $sheet2->getStyle('B1:B1')->applyFromArray($tableHeaderStyle);
+        $sheet2->getColumnDimension('B')->setWidth(20);
 
 
         $sheet = $spreadsheet->createSheet();
         $sheet->setTitle('Cost items');
+
+        $redContentStyle = [
+            "font" => [
+                "color" => ["argb" => "FF9C0006"],
+            ],
+            "fill" => [
+                "fillType" => Fill::FILL_SOLID,
+                "startColor" => ["argb" => "FFFFC7CE"],
+            ]
+        ];
+        $orangeContentStyle = [
+            "font" => [
+                "color" => ["argb" => "FF9C5700"],
+            ],
+            "fill" => [
+                "fillType" => Fill::FILL_SOLID,
+                "startColor" => ["argb" => "FFFFEB9C"],
+            ]
+        ];
+
+        $sheet->getStyle('A1:R1')->applyFromArray($tableHeaderStyle);
+
         $sheet->setCellValue('A1', 'Project ID');
         $sheet->setCellValue('B1', 'Project Title');
         $sheet->setCellValue('C1', 'Task ID');
@@ -4701,37 +4723,20 @@ class Projects extends Security_Controller
             $sheet->setCellValue('M' . $rowNumber, $oneItem->currency);
             $sheet->setCellValue('N' . $rowNumber, '=J' . $rowNumber . '*L' . $rowNumber);
             $sheet->setCellValue('O' . $rowNumber, $oneItem->discount . " %");
-            $sheet->setCellValue('P' . $rowNumber, '=N' . $rowNumber . '-N' . $rowNumber . '*O' . $rowNumber . '*(1-VALUE(SUBSTITUTE(O' . $rowNumber . '," %",""))/100)');
+            $sheet->setCellValue('P' . $rowNumber, '=N' . $rowNumber . '*(1-VALUE(SUBSTITUTE(O' . $rowNumber . '," %","")))');
             $sheet->setCellValue('Q' . $rowNumber, $oneItem->yard_remarks);
             $sheet->setCellValue('R' . $rowNumber, get_uri("task_view/view/") . $oneItem->task_id);
+
+            $sheet->getStyle('A' . $rowNumber . ':H' . $rowNumber)->applyFromArray($redContentStyle);
+            $sheet->getStyle('I' . $rowNumber . ':L' . $rowNumber)->applyFromArray($orangeContentStyle);
+            $sheet->getStyle('M' . $rowNumber . ':M' . $rowNumber)->applyFromArray($redContentStyle);
+            $sheet->getStyle('O' . $rowNumber . ':O' . $rowNumber)->applyFromArray($orangeContentStyle);
+            $sheet->getStyle('Q' . $rowNumber . ':Q' . $rowNumber)->applyFromArray($orangeContentStyle);
+
             $rowNumber++;
         }
 
-        $redContentStyle = [
-            "font" => [
-                "color" => ["argb" => "FF9C0006"],
-            ],
-            "fill" => [
-                "fillType" => Fill::FILL_SOLID,
-                "startColor" => ["argb" => "FFFFC7CE"],
-            ]
-        ];
-        $orangeContentStyle = [
-            "font" => [
-                "color" => ["argb" => "FF9C0006"],
-            ],
-            "fill" => [
-                "fillType" => Fill::FILL_SOLID,
-                "startColor" => ["argb" => "FFFFC7CE"],
-            ]
-        ];
 
-        $sheet->getStyle('A1:R1')->applyFromArray($tableHeaderStyle);
-        $sheet->getStyle('A2:H3')->applyFromArray($redContentStyle);
-        $sheet->getStyle('I2:L3')->applyFromArray($orangeContentStyle);
-        $sheet->getStyle('M2:M3')->applyFromArray($redContentStyle);
-        $sheet->getStyle('O2:O3')->applyFromArray($orangeContentStyle);
-        $sheet->getStyle('Q2:Q3')->applyFromArray($orangeContentStyle);
 
 
         // Create a writer object
