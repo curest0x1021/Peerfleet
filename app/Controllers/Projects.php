@@ -6055,16 +6055,16 @@ class Projects extends Security_Controller
             "cost_items" => $cost_items
         ];
         $first_page = $this->template->view('projects/export_pdf/pages/first_page', $view_data); // Load HTML view file
-        return $first_page;
+        // return $first_page;
 
         // return $first_page;
         $dompdf->loadHtml($first_page);
 
-        // $dompdf->render();
+        $dompdf->render();
 
-        // // Output the PDF as a file (example: my_pdf.pdf)
-        // $this->response->setHeader('Content-Type', 'application/pdf');
-        // $dompdf->stream('my_pdf.pdf', array('Attachment' => 0));
+        // Output the PDF as a file (example: my_pdf.pdf)
+        $this->response->setHeader('Content-Type', 'application/pdf');
+        $dompdf->stream('my_pdf.pdf', array('Attachment' => 0));
     }
     function export_project_form($project_id)
     {
