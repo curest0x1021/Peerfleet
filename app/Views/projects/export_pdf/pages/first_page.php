@@ -3,14 +3,16 @@ $page = 0;
 ?>
 
 <?php echo view('projects/export_pdf/layouts/header.php', ["project_info" => $project_info]); ?>
-<?php if (unserialize($client_info->image)) { ?>
-    <img style="width:100%;height:auto;"
-        src="<?php echo encode_img_base64(get_setting("profile_image_path") . "/" . unserialize($client_info->image)["file_name"]); ?>"
-        alt="logo" />
-<?php } else { ?>
-    <img style="width:100%;height:auto;" src="<?php echo encode_img_base64(base_url("assets/images/ship_img.jpg")); ?>"
-        alt="logo" />
-<?php } ?>
+<div style="text-align: center;">
+    <?php if (unserialize($client_info->image)) { ?>
+        <img style="height:auto;max-width:1775px;"
+            src="<?php echo encode_img_base64(get_setting("profile_image_path") . "/" . unserialize($client_info->image)["file_name"]); ?>"
+            alt="logo" />
+    <?php } else { ?>
+        <img style="height:auto;max-width:1775px;" src="<?php echo encode_img_base64(base_url("assets/images/ship_img.jpg")); ?>"
+            alt="logo" />
+    <?php } ?>
+</div>
 <h1 style="text-align:center;color:#3270b8;"><?php echo $project_info->title . " - " . $client_info->charter_name; ?></h1>
 <!-- <table style="width:100%" >
     <tbody>
