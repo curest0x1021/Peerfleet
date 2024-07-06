@@ -13,7 +13,7 @@ load_js(array(
                 </div>
             </div>
             <div class="modal-footer clearfix">
-                <button  id="image-zoomout-button" type="button" class="btn btn-default float-start mr10"><i data-feather="minus" class="icon-16"></i></button>
+                <button id="image-zoomout-button" type="button" class="btn btn-default float-start mr10"><i data-feather="minus" class="icon-16"></i></button>
                 <button id="image-zoomin-button" type="button" class="btn btn-default float-start"><i data-feather="plus" class="icon-16"></i></button>
 
                 <button type="button" class="btn btn-default" data-bs-dismiss="modal"> <i data-feather="x" class="icon-16"></i> <?php echo app_lang("close"); ?></button>
@@ -23,23 +23,21 @@ load_js(array(
     </div>
 </div>
 
-
 <script type="text/javascript">
-    var options =
-            {
-                thumbBox: '.thumb-box',
-                spinner: '.spinner',
-                imgSrc: ''
-            };
+    var options = {
+        thumbBox: '.thumb-box',
+        spinner: '.spinner',
+        imgSrc: ''
+    };
     var cropper = $('.crop-box').cropbox(options);
     function showCropBox(element) {
         var $selector = $(element),
-                file = element.files ? element.files[0] : "";
+            file = element.files ? element.files[0] : "";
         if (file) {
             var height = $selector.attr("data-height") || 200,
-                    width = $selector.attr("data-width") || 200,
-                    previewCntainer = $selector.attr('data-preview-container'),
-                    inputField = $selector.attr('data-input-field');
+                width = $selector.attr("data-width") || 200,
+                previewCntainer = $selector.attr('data-preview-container'),
+                inputField = $selector.attr('data-input-field');
             $('#image-crop-button').attr('data-preview-container', previewCntainer);
             $('#image-crop-button').attr('data-input-field', inputField);
             appLoader.show();
@@ -65,23 +63,21 @@ load_js(array(
                 setTimeout(function () {
                     $("#cropModal").modal('toggle');
                     setTimeout(function () {
-                        cropper.zoomIn();
-                        cropper.zoomOut();
                         appLoader.hide();
                     }, 500);
                 }, 500);
                 $selector.val("");
             } else {
-                //FileReader is not supported....
+                // FileReader is not supported....
             }
         }
     }
 
     $(document).ready(function () {
         $('#image-crop-button').on('click', function () {
-            var img = cropper.getDataURL(),
-                    previewCntainer = $(this).attr('data-preview-container'),
-                    inputField = $(this).attr('data-input-field');
+            var img = cropper.getDataURL(2500, 2500),  // Pass the desired size to the method
+                previewCntainer = $(this).attr('data-preview-container'),
+                inputField = $(this).attr('data-input-field');
             $(previewCntainer).attr("src", img);
             $(inputField).val(img).trigger("change");
         });
