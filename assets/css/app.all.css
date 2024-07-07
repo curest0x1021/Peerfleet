@@ -3336,7 +3336,7 @@ td.option a.delete:hover {
 /*crop-box*/
 .crop-box {
   position: relative;
-  height: 400px;
+  height: 600px;
   width: 100%;
   background: #fff;
   overflow: hidden;
@@ -4358,6 +4358,7 @@ label {
 .modal-content {
   border: none;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  width: auto;
 }
 .modal-backdrop.in {
   filter: alpha(opacity=20);
