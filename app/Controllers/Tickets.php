@@ -1489,6 +1489,15 @@ class Tickets extends Security_Controller
     }
     function save_task()
     {
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric",
+                "title" => "required",
+                "description" => "required",
+                "start_date" => "required",
+                "deadline" => "required",
+            )
+        );
         $id = $this->request->getPost("id");
         $title = $this->request->getPost("title");
         $description = $this->request->getPost("description");
@@ -1558,7 +1567,12 @@ class Tickets extends Security_Controller
     function modal_corrective_action($id = 0)
     {
         $action_info = $this->Ticket_actions_model->get_one($id);
-        return $this->template->view("tickets/modals/modal_add_corrective_action", ["ticket_id" => $action_info->ticket_id, "action_info" => $action_info]);
+        $ticket_id = $this->request->getPost("ticket_id");
+        if ($ticket_id) {
+            return json_encode(array("success" => true, "ticket_id" => $ticket_id));
+        } else {
+            return $this->template->view("tickets/modals/modal_add_corrective_action", ["ticket_id" => $action_info->ticket_id, "action_info" => $action_info]);
+        }
     }
 
 

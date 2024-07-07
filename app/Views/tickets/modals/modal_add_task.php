@@ -107,7 +107,7 @@
                         "data-msg-required" => app_lang("field_required"),
                         "placeholder" => "YYYY-MM-DD",
                         "autocomplete" => true,
-                        "value" => isset($action_info) ? (date('d.m.Y', strtotime($action_info->task_start_date))) : "",
+                        "value" => isset($action_info) && is_date_exists($action_info->task_start_date) ? (date('d.m.Y', strtotime($action_info->task_start_date))) : "",
                         // "placeholder" => app_lang('start_date'),
                     )
                 );
@@ -130,7 +130,7 @@
                         "data-msg-required" => app_lang("field_required"),
                         "placeholder" => "YYYY-MM-DD",
                         "autocomplete" => true,
-                        "value" => isset($action_info) ? (date('d.m.Y', strtotime($action_info->task_deadline))) : "",
+                        "value" => isset($action_info) && is_date_exists($action_info->task_start_date) ? (date('d.m.Y', strtotime($action_info->task_deadline))) : "",
                         // "placeholder" => app_lang('deadline'),
                     )
                 );
@@ -148,11 +148,26 @@
         setDatePicker(".input-task-start-date");
         setDatePicker(".input-task-deadline");
         $(".btn-cancel-schedule").on("click", function () {
-            var $newViewLink = $("#link-of-new-view").find("a");
-            $newViewLink.attr("data-action-url", "<?php echo get_uri("tickets/modal_corrective_action/" . $action_info->id); ?>");
-            // $taskViewLink.attr("data-title", taskShowText + " #" + JSON.parse(response).saved_id);
-            $newViewLink.attr("data-post-id", <?php echo $ticket_id; ?>);
-            $newViewLink.trigger("click");
+            var rise_csrf_token = $('[name="rise_csrf_token"]').val();
+            var myForm = new FormData();
+            myForm.append("rise_csrf_token", rise_csrf_token);
+            myForm.append("ticket_id", <?php echo $ticket_id ?>);
+            $.ajax({
+                url: "<?php echo get_uri("tickets/modal_corrective_action/" . $action_info->id); ?>",
+                type: "POST",
+                data: myForm,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (JSON.parse(response).success) {
+                        var $newViewLink = $("#link-of-new-view").find("a");
+                        $newViewLink.attr("data-action-url", "<?php echo get_uri("tickets/modal_corrective_action/" . $action_info->id); ?>");
+                        // $taskViewLink.attr("data-title", taskShowText + " #" + JSON.parse(response).saved_id);
+                        $newViewLink.attr("data-post-id", JSON.parse(response).ticket_id);
+                        $newViewLink.trigger("click");
+                    }
+                }
+            });
         })
         $(".btn-save-task").on("click", function () {
             var rise_csrf_token = $('[name="rise_csrf_token"]').val();
