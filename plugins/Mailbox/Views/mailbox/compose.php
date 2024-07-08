@@ -179,7 +179,7 @@
             }
         });
 
-        $('#send-email-form .select2').select2();
+        // $('#send-email-form .select2').select2();
         $('#email_cc, #email_bcc').select2({
             tags: <?php echo json_encode($users_dropdown); ?>
         });
