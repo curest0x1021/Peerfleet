@@ -461,8 +461,7 @@ class Mailbox extends Security_Controller {
             if (!is_numeric($email_value)) {
                 //inputted an email address
                 $contact_info = $this->Mailbox_emails_model->get_user_of_email($email_value)->getRow();
-                // $final_email_value = isset($contact_info->id) ? $contact_info->id : $email_value;
-                $final_email_value = $email_value;
+                $final_email_value = isset($contact_info->id) ? $contact_info->id : $email_value;
             }
 
             array_push($emails_array, $final_email_value);

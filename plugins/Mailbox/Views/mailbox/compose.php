@@ -5,7 +5,8 @@
         <?php echo $email_info->id ? "" : "<div class='container-fluid'>"; ?>
         <input type="hidden" id="email_id" name="email_id" value="<?php echo $email_id; ?>" />
         <input type="hidden" id="mailbox_id" name="mailbox_id" value="<?php echo $mailbox_info->id; ?>" />
-        <input type="hidden" id="id" name="id" value="<?php echo $email_info->status === "draft" ? $email_info->id : ""; ?>" />
+        <input type="hidden" id="id" name="id"
+            value="<?php echo $email_info->status === "draft" ? $email_info->id : ""; ?>" />
         <input type="hidden" id="save_as_draft" name="save_as_draft" value="" />
 
         <div class="form-group">
@@ -13,15 +14,17 @@
                 <label for="email_to" class=" col-md-2"><?php echo app_lang("to"); ?></label>
                 <div class="col-md-10">
                     <?php
-                    echo form_input(array(
-                        "id" => "email_to",
-                        "name" => "email_to",
-                        "value" => $email_info->to ? $email_info->to : (($email_info->created_by && $email_info->creator_email) ? $email_info->created_by : $email_info->creator_email),
-                        "class" => "form-control",
-                        "placeholder" => app_lang("to"),
-                        "data-rule-required" => true,
-                        "data-msg-required" => app_lang("field_required"),
-                    ));
+                    echo form_input(
+                        array(
+                            "id" => "email_to",
+                            "name" => "email_to",
+                            "value" => $email_info->to ? $email_info->to : (($email_info->created_by && $email_info->creator_email) ? $email_info->created_by : $email_info->creator_email),
+                            "class" => "form-control",
+                            "placeholder" => app_lang("to"),
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        )
+                    );
                     ?>
                 </div>
             </div>
@@ -31,13 +34,15 @@
                 <label for="email_cc" class=" col-md-2">CC</label>
                 <div class="col-md-10">
                     <?php
-                    echo form_input(array(
-                        "id" => "email_cc",
-                        "name" => "email_cc",
-                        "value" => $email_info->cc,
-                        "class" => "form-control",
-                        "placeholder" => "CC"
-                    ));
+                    echo form_input(
+                        array(
+                            "id" => "email_cc",
+                            "name" => "email_cc",
+                            "value" => $email_info->cc,
+                            "class" => "form-control",
+                            "placeholder" => "CC"
+                        )
+                    );
                     ?>
                 </div>
             </div>
@@ -47,13 +52,15 @@
                 <label for="email_bcc" class=" col-md-2">BCC</label>
                 <div class="col-md-10">
                     <?php
-                    echo form_input(array(
-                        "id" => "email_bcc",
-                        "name" => "email_bcc",
-                        "value" => $email_info->bcc,
-                        "class" => "form-control",
-                        "placeholder" => "BCC"
-                    ));
+                    echo form_input(
+                        array(
+                            "id" => "email_bcc",
+                            "name" => "email_bcc",
+                            "value" => $email_info->bcc,
+                            "class" => "form-control",
+                            "placeholder" => "BCC"
+                        )
+                    );
                     ?>
                 </div>
             </div>
@@ -64,15 +71,17 @@
                 <label for="subject" class=" col-md-2"><?php echo app_lang("subject"); ?></label>
                 <div class="col-md-10">
                     <?php
-                    echo form_input(array(
-                        "id" => "subject",
-                        "name" => "subject",
-                        "value" => $email_info->subject,
-                        "class" => "form-control",
-                        "placeholder" => app_lang("subject"),
-                        "data-rule-required" => true,
-                        "data-msg-required" => app_lang("field_required"),
-                    ));
+                    echo form_input(
+                        array(
+                            "id" => "subject",
+                            "name" => "subject",
+                            "value" => $email_info->subject,
+                            "class" => "form-control",
+                            "placeholder" => app_lang("subject"),
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        )
+                    );
                     ?>
                 </div>
             </div>
@@ -88,14 +97,16 @@
                         $message = $mailbox_info->signature;
                     }
 
-                    echo form_textarea(array(
-                        "id" => "message",
-                        "name" => "message",
-                        "value" => $message,
-                        "class" => "form-control",
-                        "data-rule-required" => true,
-                        "data-msg-required" => app_lang("field_required"),
-                    ));
+                    echo form_textarea(
+                        array(
+                            "id" => "message",
+                            "name" => "message",
+                            "value" => $message,
+                            "class" => "form-control",
+                            "data-rule-required" => true,
+                            "data-msg-required" => app_lang("field_required"),
+                        )
+                    );
                     ?>
                 </div>
             </div>
@@ -116,19 +127,28 @@
 
     <?php if ($email_info->id) { //doing this separately since style structure is different for card/modal footer and require lots of coditions ?>
         <div class="card-footer clearfix">
-            <button class="btn btn-default upload-file-button float-start round me-auto mailbox-color-soft-white dz-clickable" type="button"><i data-feather="camera" class="icon-16"></i> <?php echo app_lang("add_attachment"); ?></button>
-            <button type="submit" class="btn btn-primary float-end"><span data-feather="send" class="icon-16"></span> <?php echo app_lang('send'); ?></button>
-            <button type="button" id="save_as_draft_btn" class="btn btn-info mr10 text-white float-end"><span data-feather="file" class="icon-16"></span> <?php echo app_lang('mailbox_save_as_draft'); ?></button>
+            <button
+                class="btn btn-default upload-file-button float-start round me-auto mailbox-color-soft-white dz-clickable"
+                type="button"><i data-feather="camera" class="icon-16"></i>
+                <?php echo app_lang("add_attachment"); ?></button>
+            <button type="submit" class="btn btn-primary float-end"><span data-feather="send" class="icon-16"></span>
+                <?php echo app_lang('send'); ?></button>
+            <button type="button" id="save_as_draft_btn" class="btn btn-info mr10 text-white float-end"><span
+                    data-feather="file" class="icon-16"></span> <?php echo app_lang('mailbox_save_as_draft'); ?></button>
         </div>
     <?php } else { ?>
         <div class="modal-footer">
             <div class="float-start me-auto">
-                <button class="btn btn-default upload-file-button round" type="button"><i data-feather="camera" class="icon-16"></i> <?php echo app_lang("add_attachment"); ?></button>
+                <button class="btn btn-default upload-file-button round" type="button"><i data-feather="camera"
+                        class="icon-16"></i> <?php echo app_lang("add_attachment"); ?></button>
             </div>
 
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x" class="icon-16"></span> <?php echo app_lang('close'); ?></button>
-            <button type="button" id="save_as_draft_btn" class="btn btn-info text-white"><span data-feather="file" class="icon-16"></span> <?php echo app_lang('mailbox_save_as_draft'); ?></button>
-            <button type="submit" class="btn btn-primary"><span data-feather="send" class="icon-16"></span> <?php echo app_lang('send'); ?></button>
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal"><span data-feather="x"
+                    class="icon-16"></span> <?php echo app_lang('close'); ?></button>
+            <button type="button" id="save_as_draft_btn" class="btn btn-info text-white"><span data-feather="file"
+                    class="icon-16"></span> <?php echo app_lang('mailbox_save_as_draft'); ?></button>
+            <button type="submit" class="btn btn-primary"><span data-feather="send" class="icon-16"></span>
+                <?php echo app_lang('send'); ?></button>
         </div>
     <?php } ?>
 </div>
@@ -143,7 +163,7 @@
         attachDropzoneWithForm("#send_email-dropzone", uploadUrl, validationUri);
 
         var $sendEmailForm = $("#send-email-form"),
-                $saveAsDraft = $("#save_as_draft");
+            $saveAsDraft = $("#save_as_draft");
 
         $("#message").summernote({
             height: 300,
@@ -161,33 +181,33 @@
             disableDragAndDrop: true,
             callbacks: {
                 onInit: function () {
-<?php if (count($templates) && $templates) { ?>
+                    <?php if (count($templates) && $templates) { ?>
                         var dom = '<div class="note-btn-group btn-group dropdown">' +
-                                '<button type="button" class="spinning-btn dropdown-toggle note-btn btn btn-default btn-sm" data-bs-toggle="dropdown" aria-expanded="true" ><i data-feather="layout" class="icon-14"></i> <span class="note-icon-caret"></span></button>' +
-                                '<ul class="note-dropdown-menu dropdown-menu note-check dropdown-line-height mailbox-templates-dropdown pl5" role="menu">'
-    <?php foreach ($templates as $template) { ?>
+                            '<button type="button" class="spinning-btn dropdown-toggle note-btn btn btn-default btn-sm" data-bs-toggle="dropdown" aria-expanded="true" ><i data-feather="layout" class="icon-14"></i> <span class="note-icon-caret"></span></button>' +
+                            '<ul class="note-dropdown-menu dropdown-menu note-check dropdown-line-height mailbox-templates-dropdown pl5" role="menu">'
+                        <?php foreach ($templates as $template) { ?>
                             dom += "<li role='presentation' class='dropdown-item'><a href='#' data-id='<?php echo $template->id; ?>' class='insert-template-btn'><?php echo $template->title; ?></a></li>";
-    <?php } ?>
+                        <?php } ?>
 
                         dom += '</ul>';
                         dom += '</div>';
 
                         $(".note-editor").find(".note-toolbar").append(dom);
                         feather.replace();
-<?php } ?>
+                    <?php } ?>
                 }
             }
         });
 
         // $('#send-email-form .select2').select2();
-        $('#email_cc, #email_bcc').select2({
+        $('#email_cc, #email_bcc, #email_to').select2({
             tags: <?php echo json_encode($users_dropdown); ?>
         });
 
         var isModal = true;
-<?php if ($email_info->id) { ?>
+        <?php if ($email_info->id) { ?>
             isModal = false;
-<?php } ?>
+        <?php } ?>
 
         $sendEmailForm.appForm({
             isModal: isModal,
@@ -202,7 +222,7 @@
             },
             onSuccess: function (result) {
                 if (result.success) {
-<?php if ($email_info->id) { ?>
+                    <?php if ($email_info->id) { ?>
                         //viewing email
                         //reply/draft
 
@@ -218,9 +238,9 @@
                         }
 
                         $saveAsDraft.val("");
-<?php } ?>
+                    <?php } ?>
 
-                    appAlert.success(result.message, {duration: 10000});
+                    appAlert.success(result.message, { duration: 10000 });
                 } else {
                     appAlert.error(result.message);
                 }
@@ -269,7 +289,7 @@
 
             $.ajax({
                 url: "<?php echo get_uri("mailbox/getTemplateContent"); ?>",
-                data: {id: $instance.attr("data-id")},
+                data: { id: $instance.attr("data-id") },
                 cache: false,
                 type: 'POST',
                 dataType: "json",
