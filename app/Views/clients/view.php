@@ -6,7 +6,7 @@
                 <a onclick="history.back()" style="cursor: pointer; font-size: 16px;"><i data-feather="arrow-left" class="icon-24"></i><?php echo app_lang("back"); ?></a>
                 <div class="page-title clearfix no-border no-border-top-radius no-bg">
                     <h1 class="pl0">
-                        <?php echo app_lang('client_details') . " - " . $client_info->charter_name ?>
+                        <?php echo "Vessel details - " . $client_info->charter_name ?>
                         <span id="star-mark">
                             <?php
                             if ($is_starred) {
