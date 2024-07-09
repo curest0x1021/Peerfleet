@@ -906,6 +906,8 @@ class Team_members extends Security_Controller
                     $view_data["show_notes"] = true;
                 }
 
+                $view_data['crop_border_radius'] = true;
+
                 return $this->template->rander("team_members/view", $view_data);
             } else {
                 show_404();

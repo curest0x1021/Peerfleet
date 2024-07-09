@@ -1,23 +1,29 @@
 <?php
-load_js(array(
-    "assets/js/cropbox/cropbox-min.js"
-));
+load_js(
+    array(
+        "assets/js/cropbox/cropbox-min.js"
+    )
+);
 ?>
 <div class="modal fade" id="cropModal" tabindex="-1" role="dialog" aria-labelledby="cropModal">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content" style="width: <?php echo isset($crop_border_radius) ?  "400px" : "700px" ?>;">
             <div class="modal-body">
-                <div class="crop-box">
-                    <div class="thumb-box"></div>
+                <div class="crop-box" style="height: <?php echo isset($crop_border_radius) ?  "400px" : "700px" ?>;">
+                    <div class="thumb-box" style="border-radius: <?php echo isset($crop_border_radius) ?  "100%" : "0%" ?>;"></div>
                     <div class="spinner" style="display: none">Loading...</div>
                 </div>
             </div>
             <div class="modal-footer clearfix">
-                <button id="image-zoomout-button" type="button" class="btn btn-default float-start mr10"><i data-feather="minus" class="icon-16"></i></button>
-                <button id="image-zoomin-button" type="button" class="btn btn-default float-start"><i data-feather="plus" class="icon-16"></i></button>
+                <button id="image-zoomout-button" type="button" class="btn btn-default float-start mr10"><i
+                        data-feather="minus" class="icon-16"></i></button>
+                <button id="image-zoomin-button" type="button" class="btn btn-default float-start"><i
+                        data-feather="plus" class="icon-16"></i></button>
 
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal"> <i data-feather="x" class="icon-16"></i> <?php echo app_lang("close"); ?></button>
-                <button id="image-crop-button" type="button" class="btn btn-primary" data-bs-dismiss="modal"> <i data-feather="check-circle" class="icon-16"></i> <?php echo app_lang("crop"); ?></button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal"> <i data-feather="x"
+                        class="icon-16"></i> <?php echo app_lang("close"); ?></button>
+                <button id="image-crop-button" type="button" class="btn btn-primary" data-bs-dismiss="modal"> <i
+                        data-feather="check-circle" class="icon-16"></i> <?php echo app_lang("crop"); ?></button>
             </div>
         </div>
     </div>
@@ -53,7 +59,7 @@ load_js(array(
             }
 
             if (typeof FileReader == 'function') {
-                $(options.thumbBox).css({"width": width + "px", "height": height + "px", "margin-top": (height / 2) * -1 + "px", "margin-left": (width / 2) * -1 + "px"});
+                $(options.thumbBox).css({ "width": width + "px", "height": height + "px", "margin-top": (height / 2) * -1 + "px", "margin-left": (width / 2) * -1 + "px" });
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     options.imgSrc = e.target.result;

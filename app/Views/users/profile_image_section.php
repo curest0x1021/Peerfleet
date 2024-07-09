@@ -1,4 +1,4 @@
-<div class="box" id="profile-image-section">
+<div class="box" id="profile-image-section" style="margin-left: 0px;">
     <div class="box-content w200 text-center profile-image">
         <?php
         $url = "team_members";
@@ -12,37 +12,47 @@
         echo form_open(get_uri($url . "/save_profile_image/" . $user_info->id), array("id" => "profile-image-form", "class" => "general-form", "role" => "form"));
         ?>
         <?php if ($login_user->is_admin || $user_info->id === $login_user->id) { ?>
-            <div class="file-upload btn mt0 p0 profile-image-upload" data-bs-toggle="tooltip" title="<?php echo app_lang("upload_and_crop"); ?>" data-placement="right">
-                <span class="btn color-white"><i data-feather="camera" class="icon-16"></i></span> 
-                <input id="profile_image_file" class="upload" name="profile_image_file" type="file" data-height="200" data-width="200" data-preview-container="#profile-image-preview" data-input-field="#profile_image" />
+            <div style="margin-left: 10px;" class="file-upload btn mt0 p0 profile-image-upload" data-bs-toggle="tooltip"
+                title="<?php echo app_lang("upload_and_crop"); ?>" data-placement="right">
+                <span class="btn color-white" id="showCropboxModal"><i data-feather="camera" class="icon-16"></i></span>
+                <input id="profile_image_file" class="upload" name="profile_image_file" type="file" data-height="200"
+                    data-width="200" data-preview-container="#profile-image-preview" data-input-field="#profile_image" />
             </div>
-            <div class="file-upload btn p0 profile-image-upload profile-image-direct-upload" data-bs-toggle="tooltip" title="<?php echo app_lang("upload"); ?> (200x200 px)" data-placement="right">
+            <div class="file-upload btn p0 profile-image-upload profile-image-direct-upload" data-bs-toggle="tooltip"
+                title="<?php echo app_lang("upload"); ?> (200x200 px)" data-placement="right">
                 <?php
-                echo form_upload(array(
-                    "id" => "profile_image_file_upload",
-                    "name" => "profile_image_file",
-                    "class" => "no-outline hidden-input-file upload"
-                ));
+                echo form_upload(
+                    array(
+                        "id" => "profile_image_file_upload",
+                        "name" => "profile_image_file",
+                        "class" => "no-outline hidden-input-file upload"
+                    )
+                );
                 ?>
                 <label for="profile_image_file_upload" class="clickable">
-                    <span class="btn color-white ml2"><i data-feather="upload" class="icon-16"></i></span>
+                    <span class="btn color-white ml2" style="border-width: 0px;">
+                        <i data-feather="upload" class="icon-16"></i>
+                    </span>
                 </label>
             </div>
-            <input type="hidden" id="profile_image" name="profile_image" value=""  />
+            <input type="hidden" id="profile_image" name="profile_image" value="" />
         <?php } ?>
-        <span class="avatar avatar-lg"><img id="profile-image-preview" src="<?php echo get_avatar($user_info->image); ?>" alt="..."></span> 
+        <span class="avatar avatar-lg"><img id="profile-image-preview"
+                src="<?php echo get_avatar($user_info->image); ?>" alt="..."></span>
         <h4 class=""><?php echo $user_info->first_name . " " . $user_info->last_name; ?></h4>
         <?php echo form_close(); ?>
-    </div> 
+    </div>
 
 
     <div class="box-content pl15">
         <?php if ($user_info->job_title) { ?>
-            <p class="p10 m0"><label class="badge bg-info large"><strong> <?php echo $user_info->job_title; ?> </strong></label></p> 
+            <p class="p10 m0"><label class="badge bg-info large"><strong> <?php echo $user_info->job_title; ?>
+                    </strong></label></p>
         <?php } ?>
 
         <?php if ($show_cotact_info && $user_info->user_type !== "client") { ?>
-            <p class="p10 m0"><i data-feather="mail" class="icon-16"></i> <?php echo $user_info->email ? $user_info->email : "-"; ?></p> 
+            <p class="p10 m0"><i data-feather="mail" class="icon-16"></i>
+                <?php echo $user_info->email ? $user_info->email : "-"; ?></p>
             <?php if ($user_info->phone || $user_info->linkedin) { ?>
                 <p class="p8 m0">
                     <?php if ($user_info->phone) { ?>
@@ -52,7 +62,7 @@
                     ?>
                 </p>
             <?php } ?>
-        <?php } ?> 
+        <?php } ?>
 
         <div class="p10 m0 clearfix">
             <div class="float-start">
@@ -104,5 +114,7 @@
         }
 
         $('[data-bs-toggle="tooltip"]').tooltip();
+        // Bind the show and hide functions to your cropbox open/close events
+        $('#showCropboxButton').on('click', showCropbox);
     });
 </script>

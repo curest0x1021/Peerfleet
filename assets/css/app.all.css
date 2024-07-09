@@ -3336,7 +3336,7 @@ td.option a.delete:hover {
 /*crop-box*/
 .crop-box {
   position: relative;
-  height: 600px;
+  height: 400px;
   width: 100%;
   background: #fff;
   overflow: hidden;
