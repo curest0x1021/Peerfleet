@@ -7,9 +7,11 @@ use Dompdf\Options;
 use CodeIgniter\I18n\Time;
 
 
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 
 class Projects extends Security_Controller
@@ -4684,6 +4686,11 @@ class Projects extends Security_Controller
                 "startColor" => ["argb" => "FFFFEB9C"],
             ]
         ];
+        $rightStyle = [
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_RIGHT,
+            ],
+        ];
 
         $sheet->getStyle('A1:R1')->applyFromArray($tableHeaderStyle);
 
@@ -4722,8 +4729,8 @@ class Projects extends Security_Controller
             $sheet->setCellValue('L' . $rowNumber, $oneItem->unit_price);
             $sheet->setCellValue('M' . $rowNumber, $oneItem->currency);
             $sheet->setCellValue('N' . $rowNumber, '=J' . $rowNumber . '*L' . $rowNumber);
-            $sheet->setCellValue('O' . $rowNumber, $oneItem->discount . " %");
-            $sheet->setCellValue('P' . $rowNumber, '=N' . $rowNumber . '*(1-VALUE(SUBSTITUTE(O' . $rowNumber . '," %","")))');
+            $sheet->setCellValueExplicit('O' . $rowNumber, $oneItem->discount, DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('P' . $rowNumber, '=N' . $rowNumber . '*(1-VALUE(SUBSTITUTE(O' . $rowNumber . ',"%","")))');
             $sheet->setCellValue('Q' . $rowNumber, $oneItem->yard_remarks);
             $sheet->setCellValue('R' . $rowNumber, get_uri("task_view/view/") . $oneItem->task_id);
 
@@ -4732,6 +4739,9 @@ class Projects extends Security_Controller
             $sheet->getStyle('M' . $rowNumber . ':M' . $rowNumber)->applyFromArray($redContentStyle);
             $sheet->getStyle('O' . $rowNumber . ':O' . $rowNumber)->applyFromArray($orangeContentStyle);
             $sheet->getStyle('Q' . $rowNumber . ':Q' . $rowNumber)->applyFromArray($orangeContentStyle);
+            $sheet->getStyle('O' . $rowNumber . ':O' . $rowNumber)->applyFromArray($rightStyle);
+            // Apply percentage format to the cell
+            $sheet->getStyle('O' . $rowNumber)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_PERCENTAGE_00);
 
             $rowNumber++;
         }
@@ -6664,6 +6674,11 @@ class Projects extends Security_Controller
         $project_info = $this->Projects_model->get_one($shipyard_info->project_id);
         $allShipyardCostItems = $this->Shipyard_cost_items_model->get_all_with_costs_where(array("shipyard_id" => $shipyard_id))->getResult();
 
+        $rightStyle = [
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_RIGHT,
+            ],
+        ];
         // Add data to the first worksheet
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Cost items');
@@ -6702,10 +6717,13 @@ class Projects extends Security_Controller
             $sheet->setCellValue('L' . $rowNumber, $oneItem->unit_price);
             $sheet->setCellValue('M' . $rowNumber, $oneItem->currency);
             $sheet->setCellValue('N' . $rowNumber, $oneItem->currency . " " . (float) $oneItem->unit_price * (float) $oneItem->quantity);
-            $sheet->setCellValue('O' . $rowNumber, $oneItem->discount . " %");
-            $sheet->setCellValue('P' . $rowNumber, '=M' . $rowNumber . '&" "&J' . $rowNumber . '*O' . $rowNumber . '*(1-VALUE(SUBSTITUTE(O' . $rowNumber . '," %",""))/100)');
+            $sheet->setCellValueExplicit('O' . $rowNumber, $oneItem->discount, DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('P' . $rowNumber, '=M' . $rowNumber . '&" "&J' . $rowNumber . '*O' . $rowNumber . '*(1-VALUE(SUBSTITUTE(O' . $rowNumber . ',"%",""))/100)');
             $sheet->setCellValue('Q' . $rowNumber, $oneItem->yard_remarks);
             $sheet->setCellValue('R' . $rowNumber, get_uri("task_view/view/") . $oneItem->task_id);
+            $sheet->getStyle('O' . $rowNumber . ':O' . $rowNumber)->applyFromArray($rightStyle);
+            // Apply percentage format to the cell
+            $sheet->getStyle('O' . $rowNumber)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_PERCENTAGE_00);
             $rowNumber++;
         }
 
