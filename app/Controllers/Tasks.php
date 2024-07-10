@@ -4079,11 +4079,11 @@ class Tasks extends Security_Controller
         $categories = array(
             array("id" => "General", "text" => "General & Docking", "color" => "#489ad9", "DLN" => "G", "old_DLN" => "G"),
             array("id" => "Hull", "text" => "Hull", "color" => "#3270b8", "DLN" => "H", "old_DLN" => "H"),
-            array("id" => "Equipment", "text" => "Equipment for Cargo", "color" => "#4bc0c1", "DLN" => "C", "old_DLN" => "C"),
-            array("id" => "Ship", "text" => "Ship Equipment", "color" => "#87c245", "DLN" => "SE", "old_DLN" => "S"),
+            array("id" => "Equipment", "text" => "Equipment for Cargo", "color" => "#4bc0c1", "DLN" => "C", "old_DLN" => "EC"),
+            array("id" => "Ship", "text" => "Ship Equipment", "color" => "#87c245", "DLN" => "SE", "old_DLN" => "SE"),
             array("id" => "Safety", "text" => "Safety & Crew Equipment", "color" => "#36b293", "DLN" => "SC", "old_DLN" => "S"),
-            array("id" => "Machinery", "text" => "Machinery Main Components", "color" => "#de5341", "DLN" => "MM", "old_DLN" => "M"),
-            array("id" => "Systems", "text" => "System Machinery Main Components", "color" => "#da8d19", "DLN" => "SM", "old_DLN" => "S"),
+            array("id" => "Machinery", "text" => "Machinery Main Components", "color" => "#de5341", "DLN" => "MM", "old_DLN" => "MM"),
+            array("id" => "Systems", "text" => "System Machinery Main Components", "color" => "#da8d19", "DLN" => "SM", "old_DLN" => "SM"),
             array("id" => "Common", "text" => "Common systems", "color" => "#ebc626", "DLN" => "CS", "old_DLN" => "C"),
             array("id" => "Others", "text" => "Others", "color" => "#37485d", "DLN" => "O", "old_DLN" => "O"),
         );
@@ -4093,20 +4093,30 @@ class Tasks extends Security_Controller
                 $dockListNumber = $task->dock_list_number;  // Access the property
 
                 // Extract using string functions (more readable for simple formats)
-                $numericPart = substr($dockListNumber, 1);  // Assuming the first char is always a letter
-                $dlnPart = substr($dockListNumber, 0, 1);
+                $pattern = '/^([A-Za-z]+)([0-9]+)$/'; // Matches letters followed by digits
+                preg_match($pattern, $dockListNumber, $matches);
+
+                if (count($matches) === 3) {
+                    $dlnPart = $matches[1];
+                    $numericPart = $matches[2];
+                } else {
+                    $numericPart = substr($dockListNumber, 1);  // Assuming the first char is always a letter
+                    $dlnPart = substr($dockListNumber, 0, 1);
+                }
 
                 $category = explode(" ", $task->category)[0];
                 if (empty($category)) {
-                    $index = array_search($dlnPart, array_column($categories, "old_DLN"));
+                    $index = array_search($dlnPart, array_column($categories, "old_DLN")) ?? -1;
                 } else {
-                    $index = array_search($category, array_column($categories, "id"));
+                    $index = array_search($category, array_column($categories, "id")) ?? -1;
                 }
 
-                if ($index) {
+                if ($index != -1) {
                     $task->dock_list_number = $categories[$index]["DLN"] . $numericPart;
+                    $task->category = $categories[$index]["text"];
                 } else {
                     $task->dock_list_number = end($categories)["DLN"] . $numericPart;
+                    $task->category = end($categories)["text"];
                 }
                 // if (is_numeric($numericPart)) {
                 //     $numbers[] = (int) $numericPart;  // Convert to integer and add to array
@@ -4371,7 +4381,7 @@ class Tasks extends Security_Controller
 
         $columns[] = $temp;
         //////////////////
-        
+
         $categories = array(
             array("id" => "General", "text" => "General & Docking", "color" => "#489ad9", "DLN" => "G", "old_DLN" => "G"),
             array("id" => "Hull", "text" => "Hull", "color" => "#3270b8", "DLN" => "H", "old_DLN" => "H"),
@@ -4389,26 +4399,38 @@ class Tasks extends Security_Controller
                 $dockListNumber = $task->dock_list_number;  // Access the property
 
                 // Extract using string functions (more readable for simple formats)
-                $numericPart = substr($dockListNumber, 1);  // Assuming the first char is always a letter
-                $dlnPart = substr($dockListNumber, 0, 1);
+                $pattern = '/^([A-Za-z]+)([0-9]+)$/'; // Matches letters followed by digits
+                preg_match($pattern, $dockListNumber, $matches);
+
+                if (count($matches) === 3) {
+                    $dlnPart = $matches[1];
+                    $numericPart = $matches[2];
+                } else {
+                    $numericPart = substr($dockListNumber, 1);  // Assuming the first char is always a letter
+                    $dlnPart = substr($dockListNumber, 0, 1);
+                }
 
                 $category = explode(" ", $task->category)[0];
                 if (empty($category)) {
-                    $index = array_search($dlnPart, array_column($categories, "old_DLN"));
+                    $index = array_search($dlnPart, array_column($categories, "old_DLN")) ?? -1;
                 } else {
-                    $index = array_search($category, array_column($categories, "id"));
+                    $index = array_search($category, array_column($categories, "id")) ?? -1;
                 }
 
-                if ($index) {
+                if ($index != -1) {
                     $task->dock_list_number = $categories[$index]["DLN"] . $numericPart;
+                    $task->category = $categories[$index]["text"];
                 } else {
                     $task->dock_list_number = end($categories)["DLN"] . $numericPart;
+                    $task->category = end($categories)["text"];
                 }
+
                 // if (is_numeric($numericPart)) {
                 //     $numbers[] = (int) $numericPart;  // Convert to integer and add to array
                 // }
             }
         }
+        echo "</pre>";
 
         $tasks_list = array();
         foreach ($categories as $key => $category) {
