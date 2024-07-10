@@ -5963,76 +5963,71 @@ class Projects extends Security_Controller
         upload_file_to_temp(true);
         $file = get_array_value($_FILES, "file");
 
-        // if (!$file) {
-        //     die("Invalid file");
-        // }
         require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $temp_file = get_array_value($file, "tmp_name");
         $file_name = get_array_value($file, "name");
-        $file_size = get_array_value($file, "size");
         $temp_file_path = get_setting("temp_file_path");
-        $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
 
-        $excel_file->setActiveSheetIndex(0);
-        $worksheet = $excel_file->getActiveSheet();
-        $highestRow = $worksheet->getHighestRow(); // e.g., 10
-        $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
+        try {
+            $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
+            $excel_file->setActiveSheetIndex(2);
+            $worksheet = $excel_file->getActiveSheet();
+            $highestRow = $worksheet->getHighestRow();
+            $highestColumn = $worksheet->getHighestColumn();
+            $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+        } catch (\Exception $e) {
+            // If any error occurs, return false
+            echo json_encode(array("success" => false, "message" => "Error processing the Excel file."));
+            return false;
+        }
 
-        // Convert the highest column letter to a numeric index (e.g., 'F' => 6)
-        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
-
-        // Initialize an empty array to store the data
         $data = [];
 
-        // Loop through each row and column to read the data
         for ($row = 1; $row <= $highestRow; ++$row) {
             $rowData = [];
             for ($col = 1; $col <= $highestColumnIndex; ++$col) {
-                $cellValue = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+                $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($col);
+                $cellValue = $worksheet->getCell($colLetter . $row)->getValue();
                 $rowData[] = $cellValue;
             }
             $data[] = $rowData;
         }
-        // return json_encode($data);
-        $this->Shipyard_cost_items_model->delete_where(array("project_id" => $project_id));
+
+        // $this->Shipyard_cost_items_model->delete_where(array("project_id" => $project_id));
         $this->Task_cost_items_model->delete_where(array("project_id" => $project_id));
+
         for ($count = 1; $count < count($data); $count++) {
-            // $task_info=$this->Tasks_model->get_one($task_id);
-            foreach ($allShipyards as $oneYard) {
-                # code...
-                $saveData = array(
-                    "shipyard_id" => $oneYard->id,
-                    "task_id" => $data[$count][2],
-                    "project_id" => $project_id,
-                    "name" => $data[$count][6],
-                    "description" => $data[$count][7],
-                    "quantity" => $data[$count][9],
-                    "measurement" => $data[$count][10],
-                    "unit_price" => $data[$count][11],
-                    "currency" => $project_info->currency,
-                    "discount" => $data[$count][14],
-                    "yard_remarks" => $data[$count][16],
-                );
-                $this->Shipyard_cost_items_model->ci_save($saveData, null);
+            $task_id = $data[$count][2];
+            $quantity = $data[$count][9];
+            $unit_price = $data[$count][11];
+            $discount = $data[$count][14];
+
+            // Check if quantity, unit price, and discount are numeric
+            if (!is_numeric($task_id) || !is_numeric($quantity) || !is_numeric($unit_price) || !is_numeric($discount)) {
+                echo json_encode(array("success" => false, "message" => "Invalid data format in row " . ($count + 1)));
+                return false;
             }
 
             $saveCostItem = array(
-                "task_id" => $data[$count][2],
+                "task_id" => $task_id,
                 "project_id" => $project_id,
                 "name" => $data[$count][6],
-                "description" => $data[$count][7],
-                "quantity" => $data[$count][9],
+                "description" => $data[$count][7] ? $data[$count][7] : "",
+                "quantity" => $quantity,
                 "measurement" => $data[$count][10],
-                "unit_price" => $data[$count][11],
-                "currency" => $project_info->currency,
-                "discount" => $data[$count][14],
+                "unit_price" => $unit_price,
+                "currency" => $data[$count][12],
+                "quote_type" => "Per unit",
+                "discount" => $discount,
                 "yard_remarks" => $data[$count][16],
             );
-            $this->Task_cost_items_model->ci_save($saveCostItem, null);
 
+            $this->Task_cost_items_model->ci_save($saveCostItem, null);
         }
+
         echo json_encode(array("success" => true));
     }
+
     function download_project_specification_pdf($project_id)
     {
         $project_info = $this->Projects_model->get_one($project_id);
