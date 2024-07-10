@@ -89,10 +89,10 @@ foreach ($allProjectTasks as $index => $oneTask) {
         <div class="d-flex align-items-center">
             <h4>Comparison View</h4>
             <div class="flex-grow-1"></div>
-            <?php if (($project_info->status_id != 4) && ($project_info->status_id != 2) && ($project_info->status_id != 5)) { ?>
-                <a href="<?php echo get_uri('projects/add_yard/' . $project_info->id, ["project_info" => $project_info]); ?>"
+            <!-- <?php //if (($project_info->status_id != 4) && ($project_info->status_id != 2) && ($project_info->status_id != 5)) { ?>
+                <a href="<?php //echo get_uri('projects/add_yard/' . $project_info->id, ["project_info" => $project_info]); ?>"
                     class="btn btn-default"><i data-feather="plus-circle" class="icon-16"></i>Add Yard Candidate</a>
-            <?php } ?>
+            <?php //} ?> -->
             <a href="<?php echo get_uri('projects/currency_rates/') . $project_info->id; ?>" class="btn btn-default"
                 style="margin-left:10px;"><i data-feather="dollar-sign" class="icon-16"></i>Exchange rates</a>
             <?php echo modal_anchor(get_uri('projects/modal_import_quotation_file/' . $project_info->id), '<button style="margin-left:10px" class="btn btn-default" ><i data-feather="upload" class="icon-16" ></i> Import quotation</button>', array()); ?>
