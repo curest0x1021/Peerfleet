@@ -11,7 +11,10 @@ use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Font;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\RichText\RichText;
+use PhpOffice\PhpSpreadsheet\RichText\TextElement;
 
 
 class Projects extends Security_Controller
@@ -4531,22 +4534,51 @@ class Projects extends Security_Controller
         $sheet1->setCellValue('A8', 'The project specification PDF contains all the detailed specifications about the work scope.');
         $sheet1->setCellValue('A10', 'The shipyard also accepts that, if selected, billed and/or final costs should be provided to the owner in this same format.');
         $sheet1->setCellValue('A13', 'How to use');
+
         $sheet1->setCellValue('A15', 'For information on how to use the excel-based quotaton form, please see this toturial.(ctrl + click to view)');
+        $sheet1->getCell('A15')->getHyperlink()->setUrl('https://peerfleet.io/tutorial-excel-based-quotation-form/');
+
         $sheet1->setCellValue('A17', 'Basic rules: ');
         $sheet1->setCellValue('A20', 'Quote types:');
         $sheet1->setCellValue('A21', 'Please note:');
         $sheet1->setCellValue('A28', 'Please note:');
         $sheet1->setCellValue('A30', 'Things to keep in mind:');
         $sheet1->setCellValue('A31', '• Add additional lines (cost items) when necessary. If you do, copy the "Task ID" & "Dock list number" for the Task that you are adding an additional line for.');
-        $sheet1->setCellValue('A32', '• Do not merge any cells.');
-        $sheet1->setCellValue('A33', '• Do add unit price, do not add prices into the total after discount (unit prices and discounts are imported, the rest are calculated on PEERFLEET)');
+
+        $richText = new RichText();
+        $richText->createText('• Do ');
+        $notAllowed = $richText->createTextRun('not');
+        $notAllowed->getFont()->setBold(true);
+        $richText->createText(' merge any cells.');
+        $sheet1->getCell('A32')->setValue($richText);
+
+        $richText = new RichText();
+        $richText->createText('• ');
+        $notAllowed = $richText->createTextRun('Do');
+        $notAllowed->getFont()->setBold(true);
+        $richText->createText(' add unit price, do ');
+        $notAllowed = $richText->createTextRun('not');
+        $notAllowed->getFont()->setBold(true);
+        $richText->createText(' add prices into the total after discount (unit prices and discounts are imported, the rest are calculated on PEERFLEET)');
+        $sheet1->getCell('A33')->setValue($richText);
         $sheet1->setCellValue('A34', "• For per-unit costs, add an estimated quantity (If it's an estimate, specify this in the remarks).");
         $sheet1->setCellValue('A35', '• Add a unit price for all per unit cost items. For lump sum cost items, the unit price field is where you also add the lump sum price (for lump sum, the quantity is set to 1).');
-        $sheet1->setCellValue('A36', '• Do not add additional rows as headlines on the cost sheet. Only the top row is for column headers.');
+
+
+        $richText = new RichText();
+        $richText->createText('• Do ');
+        $notAllowed = $richText->createTextRun('not');
+        $notAllowed->getFont()->setBold(true);
+        $richText->createText(' add additional rows as headlines on the cost sheet. Only the top row is for column headers.');
+        $sheet1->getCell('A36')->setValue($richText);
+
         $sheet1->setCellValue('A37', "• Add as many additional sheets as you want, if you want to add more information about your shipyard. This does not interfere with the customer's ability to import the prices to Maindeck later.");
         $sheet1->setCellValue('A39', "If you don't follow the simple guidelines, you might find yourself in a situation where the customer can't upload your quotation.");
         $sheet1->setCellValue('A41', 'Support');
+
         $sheet1->setCellValue('A42', "If you have any questions at all, please reach out to PEERFLEET's support team directly.(ctrl + click to view)");
+        $sheet1->getCell('A42')->getHyperlink()->setUrl('mailto:support@peerfeet.io');
+
         $sheet1->setCellValue('B17', 'All cells that are colored yellow/orange can be filled in by the shipyard.');
         $sheet1->setCellValue('B18', 'All cells colored red should not be changed by the shipyard.');
         $sheet1->setCellValue('B20', 'Per unit & Lump sump');
@@ -4572,12 +4604,20 @@ class Projects extends Security_Controller
         $coloredStyle = [
             'font' => [
                 'color' => ['argb' => 'FF9C5700'],
+            ],
+            "fill" => [
+                "fillType" => Fill::FILL_SOLID,
+                "startColor" => ["argb" => "FFFFEB9C"],
             ]
         ];
         $coloredStyle2 = [
             'font' => [
                 'color' => ['argb' => 'FF9C0006'],
             ],
+            "fill" => [
+                "fillType" => Fill::FILL_SOLID,
+                "startColor" => ["argb" => "FFFFC7CE"],
+            ]
         ];
         $boldStyle = [
             'font' => [
@@ -4695,12 +4735,24 @@ class Projects extends Security_Controller
         $sheet->getStyle('A1:R1')->applyFromArray($tableHeaderStyle);
 
         $sheet->setCellValue('A1', 'Project ID');
+
         $sheet->setCellValue('B1', 'Project Title');
+        $sheet->getColumnDimension('B')->setWidth(20);
+
+
         $sheet->setCellValue('C1', 'Task ID');
+
         $sheet->setCellValue('D1', 'Task Title');
+        $sheet->getColumnDimension('D')->setWidth(20);
+
         $sheet->setCellValue('E1', 'Group');
+        $sheet->getColumnDimension('E')->setWidth(20);
+
         $sheet->setCellValue('F1', 'Dock List Number');
+
         $sheet->setCellValue('G1', 'Cost item');
+        $sheet->getColumnDimension('G')->setWidth(30);
+
         $sheet->setCellValue('H1', 'Description');
         $sheet->setCellValue('I1', 'Cost type');
         $sheet->setCellValue('J1', 'Est. quantity');
@@ -4712,6 +4764,8 @@ class Projects extends Security_Controller
         $sheet->setCellValue('P1', 'Discounted quote');
         $sheet->setCellValue('Q1', 'Yard remarks');
         $sheet->setCellValue('R1', 'Link to Task');
+        $sheet->getColumnDimension('R')->setWidth(60);
+
         $rowNumber = 2;
         foreach ($allProjectCostItems as $oneItem) {
             $task_info = $this->Tasks_model->get_one($oneItem->task_id);
@@ -4723,7 +4777,18 @@ class Projects extends Security_Controller
             $sheet->setCellValue('F' . $rowNumber, $task_info->dock_list_number);
             $sheet->setCellValue('G' . $rowNumber, $oneItem->name);
             $sheet->setCellValue('H' . $rowNumber, $oneItem->description);
+
             $sheet->setCellValue('I' . $rowNumber, $oneItem->quote_type);
+            $allowedValues = ['Lump sum', 'Per unit'];
+            $dataValidation = $sheet->getDataValidation('I' . $rowNumber);
+            $dataValidation->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST)
+                ->setAllowBlank(false)
+                ->setShowDropDown(true)
+                ->setPrompt("Choose the value from the dropdown")
+                ->setFormula1('"Lump sum,Per unit"');
+            $sheet->setDataValidation('I' . $rowNumber, $dataValidation);
+
+
             $sheet->setCellValue('J' . $rowNumber, $oneItem->quantity);
             $sheet->setCellValue('K' . $rowNumber, $oneItem->measurement);
             $sheet->setCellValue('L' . $rowNumber, $oneItem->unit_price);
@@ -4732,7 +4797,10 @@ class Projects extends Security_Controller
             $sheet->setCellValueExplicit('O' . $rowNumber, $oneItem->discount, DataType::TYPE_NUMERIC);
             $sheet->setCellValue('P' . $rowNumber, '=N' . $rowNumber . '*(1-VALUE(SUBSTITUTE(O' . $rowNumber . ',"%","")))');
             $sheet->setCellValue('Q' . $rowNumber, $oneItem->yard_remarks);
-            $sheet->setCellValue('R' . $rowNumber, get_uri("task_view/view/") . $oneItem->task_id);
+
+            $task_url = get_uri("task_view/view/") . $oneItem->task_id;
+            $sheet->setCellValue('R' . $rowNumber, $task_url);
+            $sheet->getCell('R' . $rowNumber)->getHyperlink()->setUrl($task_url);
 
             $sheet->getStyle('A' . $rowNumber . ':H' . $rowNumber)->applyFromArray($redContentStyle);
             $sheet->getStyle('I' . $rowNumber . ':L' . $rowNumber)->applyFromArray($orangeContentStyle);
