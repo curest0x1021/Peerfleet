@@ -4385,11 +4385,11 @@ class Tasks extends Security_Controller
         $categories = array(
             array("id" => "General", "text" => "General & Docking", "color" => "#489ad9", "DLN" => "G", "old_DLN" => "G"),
             array("id" => "Hull", "text" => "Hull", "color" => "#3270b8", "DLN" => "H", "old_DLN" => "H"),
-            array("id" => "Equipment", "text" => "Equipment for Cargo", "color" => "#4bc0c1", "DLN" => "C", "old_DLN" => "C"),
-            array("id" => "Ship", "text" => "Ship Equipment", "color" => "#87c245", "DLN" => "SE", "old_DLN" => "S"),
+            array("id" => "Equipment", "text" => "Equipment for Cargo", "color" => "#4bc0c1", "DLN" => "C", "old_DLN" => "EC"),
+            array("id" => "Ship", "text" => "Ship Equipment", "color" => "#87c245", "DLN" => "SE", "old_DLN" => "SE"),
             array("id" => "Safety", "text" => "Safety & Crew Equipment", "color" => "#36b293", "DLN" => "SC", "old_DLN" => "S"),
-            array("id" => "Machinery", "text" => "Machinery Main Components", "color" => "#de5341", "DLN" => "MM", "old_DLN" => "M"),
-            array("id" => "Systems", "text" => "System Machinery Main Components", "color" => "#da8d19", "DLN" => "SM", "old_DLN" => "S"),
+            array("id" => "Machinery", "text" => "Machinery Main Components", "color" => "#de5341", "DLN" => "MM", "old_DLN" => "MM"),
+            array("id" => "System", "text" => "System Machinery Main Components", "color" => "#da8d19", "DLN" => "SM", "old_DLN" => "SM"),
             array("id" => "Common", "text" => "Common systems", "color" => "#ebc626", "DLN" => "CS", "old_DLN" => "C"),
             array("id" => "Others", "text" => "Others", "color" => "#37485d", "DLN" => "O", "old_DLN" => "O"),
         );
