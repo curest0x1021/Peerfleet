@@ -4371,16 +4371,17 @@ class Tasks extends Security_Controller
 
         $columns[] = $temp;
         //////////////////
+        
         $categories = array(
-            array("id" => "General", "text" => "General & Docking", "color" => "#489ad9", "DLN" => "G"),
-            array("id" => "Hull", "text" => "Hull", "color" => "#3270b8", "DLN" => "H"),
-            array("id" => "Equipment", "text" => "Equipment for Cargo", "color" => "#4bc0c1", "DLN" => "C"),
-            array("id" => "Ship", "text" => "Ship Equipment", "color" => "#87c245", "DLN" => "SE"),
-            array("id" => "Safety", "text" => "Safety & Crew Equipment", "color" => "#36b293", "DLN" => "SC"),
-            array("id" => "Machinery", "text" => "Machinery Main Components", "color" => "#de5341", "DLN" => "MM"),
-            array("id" => "Systems", "text" => "System Machinery Main Components", "color" => "#da8d19", "DLN" => "SM"),
-            array("id" => "Common", "text" => "Common systems", "color" => "#ebc626", "DLN" => "CS"),
-            array("id" => "Others", "text" => "Others", "color" => "#37485d", "DLN" => "O"),
+            array("id" => "General", "text" => "General & Docking", "color" => "#489ad9", "DLN" => "G", "old_DLN" => "G"),
+            array("id" => "Hull", "text" => "Hull", "color" => "#3270b8", "DLN" => "H", "old_DLN" => "H"),
+            array("id" => "Equipment", "text" => "Equipment for Cargo", "color" => "#4bc0c1", "DLN" => "C", "old_DLN" => "C"),
+            array("id" => "Ship", "text" => "Ship Equipment", "color" => "#87c245", "DLN" => "SE", "old_DLN" => "S"),
+            array("id" => "Safety", "text" => "Safety & Crew Equipment", "color" => "#36b293", "DLN" => "SC", "old_DLN" => "S"),
+            array("id" => "Machinery", "text" => "Machinery Main Components", "color" => "#de5341", "DLN" => "MM", "old_DLN" => "M"),
+            array("id" => "Systems", "text" => "System Machinery Main Components", "color" => "#da8d19", "DLN" => "SM", "old_DLN" => "S"),
+            array("id" => "Common", "text" => "Common systems", "color" => "#ebc626", "DLN" => "CS", "old_DLN" => "C"),
+            array("id" => "Others", "text" => "Others", "color" => "#37485d", "DLN" => "O", "old_DLN" => "O"),
         );
 
         if (is_array($tasks)) {
@@ -4389,8 +4390,14 @@ class Tasks extends Security_Controller
 
                 // Extract using string functions (more readable for simple formats)
                 $numericPart = substr($dockListNumber, 1);  // Assuming the first char is always a letter
+                $dlnPart = substr($dockListNumber, 0, 1);
 
-                $index = array_search(explode(" ", $task->category)[0], array_column($categories, "id"));
+                $category = explode(" ", $task->category)[0];
+                if (empty($category)) {
+                    $index = array_search($dlnPart, array_column($categories, "old_DLN"));
+                } else {
+                    $index = array_search($category, array_column($categories, "id"));
+                }
 
                 if ($index) {
                     $task->dock_list_number = $categories[$index]["DLN"] . $numericPart;
