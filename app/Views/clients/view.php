@@ -1,5 +1,8 @@
 
 <?php echo view("includes/cropbox"); ?>
+<?php
+$show_project_info = false;
+?>
 <div id="page-content" class="clearfix page-content">
     <div class="container-fluid  full-width-button">
         <div class="row clients-view-button">
