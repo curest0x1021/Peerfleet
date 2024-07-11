@@ -4522,6 +4522,11 @@ class Projects extends Security_Controller
         $project_info = $this->Projects_model->get_one($project_id);
         $allProjectCostItems = $this->Task_cost_items_model->get_all_where(array("project_id" => $project_id, "deleted" => 0))->getResult();
 
+        $underlineStyle = [
+            'font' => [
+                'underline' => Font::UNDERLINE_SINGLE, // Set underline style
+            ],
+        ];
         // Add data to the first worksheet
         $sheet1 = $spreadsheet->getActiveSheet();
         $sheet1->setShowGridlines(false);
@@ -4543,10 +4548,15 @@ class Projects extends Security_Controller
         $sheet1->setCellValue('A21', 'Please note:');
         $sheet1->setCellValue('A28', 'Please note:');
         $sheet1->setCellValue('A30', 'Things to keep in mind:');
-        $sheet1->setCellValue('A31', '• Add additional lines (cost items) when necessary. If you do, copy the "Task ID" & "Dock list number" for the Task that you are adding an additional line for.');
+        
+        $richText = new RichText();
+        $richText->createText('•');
+        $richText->createText(' Add additional lines (cost items) when necessary. If you do, copy the "Task ID" & "Dock list number" for the Task that you are adding an additional line for.');
+        $sheet1->getCell('A31')->setValue($richText);
 
         $richText = new RichText();
-        $richText->createText('• Do ');
+        $richText->createText('•');
+        $richText->createText(' Do ');
         $notAllowed = $richText->createTextRun('not');
         $notAllowed->getFont()->setBold(true);
         $richText->createText(' merge any cells.');
@@ -4561,33 +4571,54 @@ class Projects extends Security_Controller
         $notAllowed->getFont()->setBold(true);
         $richText->createText(' add prices into the total after discount (unit prices and discounts are imported, the rest are calculated on PEERFLEET)');
         $sheet1->getCell('A33')->setValue($richText);
-        $sheet1->setCellValue('A34', "• For per-unit costs, add an estimated quantity (If it's an estimate, specify this in the remarks).");
-        $sheet1->setCellValue('A35', '• Add a unit price for all per unit cost items. For lump sum cost items, the unit price field is where you also add the lump sum price (for lump sum, the quantity is set to 1).');
-
 
         $richText = new RichText();
-        $richText->createText('• Do ');
+        $richText->createText('•');
+        $richText->createText(" For per-unit costs, add an estimated quantity (If it's an estimate, specify this in the remarks).");
+        $sheet1->getCell('A34')->setValue($richText);
+        $sheet1->setCellValue('A34', $richText);
+
+        $richText = new RichText();
+        $richText->createText('•');
+        $richText->createText(" Add a unit price for all per unit cost items. For lump sum cost items, the unit price field is where you also add the lump sum price (for lump sum, the quantity is set to 1).");
+        $sheet1->getCell('A35')->setValue($richText);
+
+        $richText = new RichText();
+        $richText->createText('•');
+        $richText->createText(' Do ');
         $notAllowed = $richText->createTextRun('not');
         $notAllowed->getFont()->setBold(true);
         $richText->createText(' add additional rows as headlines on the cost sheet. Only the top row is for column headers.');
         $sheet1->getCell('A36')->setValue($richText);
 
-        $sheet1->setCellValue('A37', "• Add as many additional sheets as you want, if you want to add more information about your shipyard. This does not interfere with the customer's ability to import the prices to Maindeck later.");
+        $richText = new RichText();
+        $richText->createText('•');
+        $richText->createText(" Add as many additional sheets as you want, if you want to add more information about your shipyard. This does not interfere with the customer's ability to import the prices to Maindeck later.");
+        $sheet1->getCell('A37')->setValue($richText);
+
         $sheet1->setCellValue('A39', "If you don't follow the simple guidelines, you might find yourself in a situation where the customer can't upload your quotation.");
         $sheet1->setCellValue('A41', 'Support');
 
         $sheet1->setCellValue('A42', "If you have any questions at all, please reach out to PEERFLEET's support team directly.(ctrl + click to view)");
         $sheet1->getCell('A42')->getHyperlink()->setUrl('mailto:support@peerfeet.io');
+        $sheet1->getStyle('A42:R42')->applyFromArray($underlineStyle);
 
         $sheet1->setCellValue('B17', 'All cells that are colored yellow/orange can be filled in by the shipyard.');
         $sheet1->setCellValue('B18', 'All cells colored red should not be changed by the shipyard.');
-        $sheet1->setCellValue('B20', 'Per unit & Lump sump');
-        $sheet1->setCellValue('B21', 'If you change the quote type, you have to choose between "Per unit" or "Lump sump".');
+        $sheet1->setCellValue('B20', 'Per unit & Lump sum');
+        $sheet1->setCellValue('B21', 'If you change the quote type, you have to choose between "Per unit" or "Lump sum".');
         $sheet1->setCellValue('B22', 'The "Measurement unit" can then also be adjusted as well.');
         $sheet1->setCellValue('B23', 'The list with examples of measurement units can be found in the respective sheet of this Excel file. Please note that it is possible to enter custom measurement units as well.');
         $sheet1->setCellValue('B25', 'In order to ensure the comparability of the quotations it is recommended not to change the measurement units if no new Cost Item is added by the shipyard.');
         $sheet1->setCellValue('B26', 'Please provide an explanation in the Remark field if changes are made to the submitted Cost Item (Quote type or  Measurement unit).');
         $sheet1->setCellValue('B28', 'Quote sum & Discount sum are calculated automatically.');
+
+        $sheet1->getColumnDimension('A')->setWidth(20);
+        $sheet1->mergeCells("B17:H17");
+        $sheet1->mergeCells("B18:H18");
+        $sheet1->mergeCells("A42:J42");
+
+
 
         $headerStyle = [
             'font' => [
@@ -4631,8 +4662,8 @@ class Projects extends Security_Controller
         $sheet1->getStyle('A41:A41')->applyFromArray($subHeaderStyle);
         $sheet1->getStyle('A30:A30')->applyFromArray($boldStyle);
         $sheet1->getStyle('A39:A39')->applyFromArray($boldStyle);
-        $sheet1->getStyle('B17:B17')->applyFromArray($coloredStyle);
-        $sheet1->getStyle('B18:B18')->applyFromArray($coloredStyle2);
+        $sheet1->getStyle('B17:H17')->applyFromArray($coloredStyle);
+        $sheet1->getStyle('B18:H18')->applyFromArray($coloredStyle2);
 
         $sheet2 = $spreadsheet->createSheet();
         $sheet2->setTitle('Measurement unit');
@@ -4801,6 +4832,8 @@ class Projects extends Security_Controller
             $task_url = get_uri("task_view/view/") . $oneItem->task_id;
             $sheet->setCellValue('R' . $rowNumber, $task_url);
             $sheet->getCell('R' . $rowNumber)->getHyperlink()->setUrl($task_url);
+            $sheet->getStyle('R' . $rowNumber)->applyFromArray($underlineStyle);
+
 
             $sheet->getStyle('A' . $rowNumber . ':H' . $rowNumber)->applyFromArray($redContentStyle);
             $sheet->getStyle('I' . $rowNumber . ':L' . $rowNumber)->applyFromArray($orangeContentStyle);
