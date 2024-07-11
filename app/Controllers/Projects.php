@@ -3996,9 +3996,10 @@ class Projects extends Security_Controller
         $allProjectTasks = $this->Tasks_model->get_all_where(array('project_id' => $project_id, "deleted" => 0))->getResult();
 
         $allYards = $this->Project_yards_model->get_all_where(array("project_id" => $project_id))->getResult();
-        if ($project_info->status_id == 4 || $project_info->status_id == 5) {
-            $allYards = $this->Project_yards_model->get_all_where(array("project_id" => $project_id, "selected" => 1))->getResult();
-        }
+        // if ($project_info->status_id == 4 || $project_info->status_id == 5) {
+        //     $allYards = $this->Project_yards_model->get_all_where(array("project_id" => $project_id, "selected" => 1))->getResult();
+        // }
+
         // $selectedYards=array_filter($allYards,function($oneYard){
         //     return $oneYard->selected==1;
         // });
@@ -4548,7 +4549,7 @@ class Projects extends Security_Controller
         $sheet1->setCellValue('A21', 'Please note:');
         $sheet1->setCellValue('A28', 'Please note:');
         $sheet1->setCellValue('A30', 'Things to keep in mind:');
-        
+
         $richText = new RichText();
         $richText->createText('•');
         $richText->createText(' Add additional lines (cost items) when necessary. If you do, copy the "Task ID" & "Dock list number" for the Task that you are adding an additional line for.');
@@ -6094,14 +6095,15 @@ class Projects extends Security_Controller
             $data[] = $rowData;
         }
 
-        // $this->Shipyard_cost_items_model->delete_where(array("project_id" => $project_id));
+        $this->Shipyard_cost_items_model->delete_where(array("project_id" => $project_id));
         $this->Task_cost_items_model->delete_where(array("project_id" => $project_id));
 
         for ($count = 1; $count < count($data); $count++) {
-            $task_id = $data[$count][2];
-            $quantity = $data[$count][9];
-            $unit_price = $data[$count][11];
-            $discount = $data[$count][14];
+            $oneItem = $data[$count];
+            $task_id = $oneItem[2];
+            $quantity = $oneItem[9];
+            $unit_price = $oneItem[11];
+            $discount = $oneItem[14];
 
             // Check if quantity, unit price, and discount are numeric
             if (!is_numeric($task_id) || !is_numeric($quantity) || !is_numeric($unit_price) || !is_numeric($discount)) {
@@ -6112,18 +6114,36 @@ class Projects extends Security_Controller
             $saveCostItem = array(
                 "task_id" => $task_id,
                 "project_id" => $project_id,
-                "name" => $data[$count][6],
-                "description" => $data[$count][7] ? $data[$count][7] : "",
-                "quantity" => $quantity,
-                "measurement" => $data[$count][10],
-                "unit_price" => $unit_price,
-                "currency" => $data[$count][12],
-                "quote_type" => "Per unit",
-                "discount" => $discount,
-                "yard_remarks" => $data[$count][16],
+                "name" => $oneItem[6] ? $oneItem[6] : "",
+                "description" => $oneItem[7] ? $oneItem[7] : "",
+                "quantity" => $quantity ? $quantity : "",
+                "measurement" => $oneItem[10] ? $oneItem[10] : "",
+                "unit_price" => $unit_price ? $unit_price : "",
+                "currency" => $oneItem[12] ? $oneItem[12] : "",
+                "quote_type" => $oneItem[8] ? $oneItem[8] : "",
+                "discount" => $discount ? $discount : "",
+                "yard_remarks" => $oneItem[16] ? $oneItem[16] : "",
             );
 
             $this->Task_cost_items_model->ci_save($saveCostItem, null);
+
+            foreach ($allShipyards as $oneYard) {
+                $newYardCostItem = array(
+                    'task_id' => $task_id,
+                    "project_id" => $project_id,
+                    "shipyard_id" => $oneYard->id,
+                    "name" => $oneItem[6] ? $oneItem[6] : "",
+                    "description" => $oneItem[7] ? $oneItem[7] : "",
+                    "quantity" => $quantity ? $quantity : "",
+                    "quote_type" => $oneItem[8] ? $oneItem[8] : "",
+                    "measurement" => $oneItem[10] ? $oneItem[10] : "",
+                    "currency" => $oneItem[12] ? $oneItem[12] : "",
+                    "discount" => $discount ? $discount : "",
+                    "yard_remarks" => $oneItem[16] ? $oneItem[16] : "",
+                );
+                $this->Shipyard_cost_items_model->ci_save($newYardCostItem, null);
+            }
+
         }
 
         echo json_encode(array("success" => true));
