@@ -73,7 +73,6 @@ $show_project_info = false;
                     </div>
                 </div>
 
-
                 <ul id="vessel-tabs" data-bs-toggle="ajax-tab" class="nav nav-tabs scrollable-tabs" role="tablist">
                     <li><a role="presentation" data-bs-toggle="tab"
                             href="<?php echo_uri("clients/company_info_tab/" . $client_info->id); ?>"

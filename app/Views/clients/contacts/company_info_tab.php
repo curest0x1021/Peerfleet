@@ -5,7 +5,7 @@
             <h4> <?php echo app_lang('vessel_info'); ?></h4>
         </div>
         <div class="card-body">
-            <?php echo view("clients/client_form_fields"); ?>
+            <?php echo view("clients/vessel_form_fields"); ?>
         </div>
         <?php if ($can_edit_clients) { ?>
             <div class="card-footer rounded-bottom">

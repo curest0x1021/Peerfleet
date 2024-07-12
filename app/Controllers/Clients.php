@@ -62,7 +62,7 @@ class Clients extends Security_Controller
 
     /* load client add/edit modal */
 
-    function modal_form()
+    function vessel_modal_form()
     {
         $this->access_only_allowed_members();
         if (!$this->can_edit_clients()) {
@@ -71,9 +71,11 @@ class Clients extends Security_Controller
 
         $client_id = $this->request->getPost('id');
         $this->can_access_own_client($client_id);
-        $this->validate_submitted_data(array(
-            "id" => "numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric"
+            )
+        );
 
         $view_data['label_column'] = "col-md-3";
         $view_data['field_column'] = "col-md-9";
@@ -81,13 +83,37 @@ class Clients extends Security_Controller
         $view_data["view"] = $this->request->getPost('view'); //view='details' needed only when loading from the client's details view
         $view_data["ticket_id"] = $this->request->getPost('ticket_id'); //needed only when loading from the ticket's details view and created by unknown client
         $view_data['model_info'] = $this->Clients_model->get_one($client_id);
-        $view_data['owner_info']=$this->Users_model->get_one($view_data['model_info']->owner_id);
+        $view_data['owner_info'] = $this->Users_model->get_one($view_data['model_info']->owner_id);
         //prepare vessel types dropdown list
         $view_data['types_dropdown'] = $this->_get_vessel_types_dropdown_select2_data();
         $view_data["team_members_dropdown"] = $this->get_team_members_dropdown(true);
-        $view_data["all_clients"]=$this->Users_model->get_all_where(array("user_type"=>"client"))->getResult();
+        $view_data["all_clients"] = $this->Users_model->get_all_where(array("user_type" => "client"))->getResult();
 
         return $this->template->view('clients/modal_form', $view_data);
+    }
+
+    function client_general_modal_form()
+    {
+        $this->access_only_allowed_members();
+        if (!$this->can_edit_clients()) {
+            app_redirect("forbidden");
+        }
+
+        $client_id = $this->request->getGet('client_id');
+        $this->can_access_own_client($client_id);
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric"
+            )
+        );
+
+        $view_data['label_column'] = "col-md-3";
+        $view_data['field_column'] = "col-md-9";
+        $view_data['model_info'] = $this->Users_model->get_one(0);
+        $view_data['model_info']->client_id = $client_id;
+        $view_data['add_type'] = "multiple";
+
+        return $this->template->view('clients/contacts/modal_form', $view_data);
     }
 
     /* insert or update a client */
@@ -103,25 +129,27 @@ class Clients extends Security_Controller
 
         $this->access_only_allowed_members_or_client_contact($client_id);
 
-        $this->validate_submitted_data(array(
-            "id" => "numeric",
-            "charter_name" => "required",
-            "christian_name" => "required",
-            "owner_id" => "required",
-            "vessel_type" => "required",
-            "call_sign" => "required",
-            "offical_number" => "required",
-            "class_number" => "required",
-            "mmsi" => "required",
-            "build_number" => "required",
-            // "ice_class" => "required|max_length[5]",
-            "classification_society" => "required",
-            "build_yard" => "required",
-            "build_series" => "required",
-            // "sister" => "required|max_length[30]",
-            "flag_state" => "required",
-            "port_of_registry" => "required"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric",
+                "charter_name" => "required",
+                "christian_name" => "required",
+                // "owner_id" => "required",
+                "vessel_type" => "required",
+                "call_sign" => "required",
+                "offical_number" => "required",
+                "class_number" => "required",
+                "mmsi" => "required",
+                "build_number" => "required",
+                // "ice_class" => "required|max_length[5]",
+                "classification_society" => "required",
+                "build_yard" => "required",
+                "build_series" => "required",
+                // "sister" => "required|max_length[30]",
+                "flag_state" => "required",
+                "port_of_registry" => "required"
+            )
+        );
 
         $data = array(
             "charter_name" => $this->request->getPost('charter_name'),
@@ -209,7 +237,7 @@ class Clients extends Security_Controller
             "stern_thruster_type" => $this->request->getPost('stern_thruster_type'),
             "stern_thruster_power" => $this->request->getPost('stern_thruster_power'),
         );
-        
+
         //user has access to change created by
         $data["created_by"] = $this->login_user->id;
 
@@ -250,9 +278,11 @@ class Clients extends Security_Controller
             app_redirect("forbidden");
         }
 
-        $this->validate_submitted_data(array(
-            "id" => "required|numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "required|numeric"
+            )
+        );
 
         $id = $this->request->getPost('id');
         $this->can_access_own_client($id);
@@ -363,8 +393,8 @@ class Clients extends Security_Controller
                 $view_data["is_starred"] = strpos($client_info->starred_by, ":" . $this->login_user->id . ":") ? true : false;
                 $view_data["view_type"] = "";
                 $view_data["tab"] = clean_data($tab);
-                $view_data["owner_info"]=$this->Users_model->get_one($client_info->owner_id);
-                $view_data["all_clients"]=$this->Users_model->get_all_where(array("user_type"=>"client"))->getResult();
+                $view_data["owner_info"] = $this->Users_model->get_one($client_info->owner_id);
+                $view_data["all_clients"] = $this->Users_model->get_all_where(array("user_type" => "client"))->getResult();
                 //even it's hidden, admin can view all information of client
                 $view_data['hidden_menu'] = array("");
 
@@ -504,10 +534,12 @@ class Clients extends Security_Controller
     {
         $this->can_add_files();
 
-        $this->validate_submitted_data(array(
-            "id" => "numeric",
-            "client_id" => "required|numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric",
+                "client_id" => "required|numeric"
+            )
+        );
 
         $client_id = $this->request->getPost('client_id');
         $this->can_access_own_client($client_id);
@@ -837,7 +869,10 @@ class Clients extends Security_Controller
 
         $view_data['add_type'] = $this->request->getPost('add_type');
 
-        $this->can_access_own_client($view_data['model_info']->client_id);
+        if ($view_data['model_info']->client_id) {
+            $this->can_access_own_client($view_data['model_info']->client_id);
+        }
+
 
         return $this->template->view('clients/contacts/modal_form', $view_data);
     }
@@ -867,7 +902,7 @@ class Clients extends Security_Controller
         if ($client_id) {
             $this->access_only_allowed_members_or_client_contact($client_id);
             $this->can_access_own_client($client_id);
-            $client_info=$this->Clients_model->get_one($client_id);
+            $client_info = $this->Clients_model->get_one($client_id);
             $view_data['model_info'] = $client_info;
 
             $view_data['label_column'] = "col-md-2";
@@ -877,7 +912,7 @@ class Clients extends Security_Controller
             $view_data["team_members_dropdown"] = $this->get_team_members_dropdown(true);
             $view_data['types_dropdown'] = $this->_get_vessel_types_dropdown_select2_data();
             $view_data['owner_info'] = $this->Users_model->get_one($client_info->owner_id);
-            $view_data['all_clients'] = $this->Users_model->get_all_where(array("user_type"=>"client"))->getResult();
+            $view_data['all_clients'] = $this->Users_model->get_all_where(array("user_type" => "client"))->getResult();
 
             return $this->template->view('clients/contacts/company_info_tab', $view_data);
         }
@@ -905,14 +940,20 @@ class Clients extends Security_Controller
 
     function save_contact()
     {
+        $is_crew = $this->request->getPost('is_crew');
         $contact_id = $this->request->getPost('contact_id');
         $client_id = $this->request->getPost('client_id');
-        $this->can_access_own_client($client_id);
+
+        if ($client_id) {
+            $this->can_access_own_client($client_id);
+        }
         if (!$this->can_edit_clients()) {
             app_redirect("forbidden");
         }
 
-        $this->access_only_allowed_members_or_contact_personally($contact_id);
+        if ($contact_id) {
+            $this->access_only_allowed_members_or_contact_personally($contact_id);
+        }
 
         $user_data = array(
             "email" => $this->request->getPost("email"),
@@ -920,18 +961,53 @@ class Clients extends Security_Controller
             "phone" => $this->request->getPost('phone'),
             "mobile" => $this->request->getPost('mobile'),
         );
+        if ($is_crew) {
+            $this->validate_submitted_data(
+                array(
+                    "first_name" => "required",
+                    "last_name" => "required",
+                    "password" => "required"
+                )
+            );
+            $user_data["first_name"] = $this->request->getPost("first_name");
+            $user_data["last_name"] = $this->request->getPost("last_name");
+            $user_data["password"] = password_hash($this->request->getPost("password"), PASSWORD_DEFAULT);
 
-        $this->validate_submitted_data(array(
-            "client_id" => "required|numeric",
-            "email" => "required"
-        ));
+
+            $company_name = $this->request->getPost("company_name") ? $this->request->getPost("company_name") : $first_name . " " . $last_name; //save user name as company name if there is no company name entered
+
+            $client_data = array(
+                "company_name" => $company_name,
+                "charter_name" => $company_name,
+                "type" => $this->request->getPost("account_type"),
+                "created_by" => 1 //add default admin
+            );
+
+            $client_data = clean_data($client_data);
+
+            //check duplicate company name, if found then show an error message
+            if (get_setting("disallow_duplicate_client_company_name") == "1" && $this->Clients_model->is_duplicate_company_name($company_name)) {
+                echo json_encode(array("success" => false, 'message' => app_lang("account_already_exists_for_your_company_name") . " " . anchor(get_uri("signin"), app_lang('signin'), array("class" => "text-white text-off"))));
+                return false;
+            }
+
+        }
+
+        $this->validate_submitted_data(
+            array(
+                "client_id" => "required|numeric",
+                "email" => "required"
+            )
+        );
 
         if (!$contact_id) {
             //inserting new contact. client_id is required
 
-            $this->validate_submitted_data(array(
-                "email" => "required|valid_email",
-            ));
+            $this->validate_submitted_data(
+                array(
+                    "email" => "required|valid_email",
+                )
+            );
 
             //we'll save following fields only when creating a new contact from this form
             $user_data["client_id"] = $client_id;
@@ -1053,9 +1129,11 @@ class Clients extends Security_Controller
         $contact_info = $this->Users_model->get_one($user_id);
         $this->can_access_own_client($contact_info->client_id);
 
-        $this->validate_submitted_data(array(
-            "email" => "required|valid_email"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "email" => "required|valid_email"
+            )
+        );
 
         $email = $this->request->getPost('email');
         $password = $this->request->getPost("password");
@@ -1117,7 +1195,7 @@ class Clients extends Security_Controller
         }
 
         $client_info = $this->Clients_model->get_one($client_id);
-        
+
         //process the the file which has uploaded by dropzone
         $profile_image = str_replace("~", ":", $this->request->getPost("profile_image"));
 
@@ -1162,9 +1240,11 @@ class Clients extends Security_Controller
             app_redirect("forbidden");
         }
 
-        $this->validate_submitted_data(array(
-            "id" => "required|numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "required|numeric"
+            )
+        );
 
         $this->access_only_allowed_members();
 
@@ -1247,7 +1327,7 @@ class Clients extends Security_Controller
     {
         $image_url = get_avatar($data->image);
         $user_avatar = "<span class='avatar avatar-xs'><img src='$image_url' alt='...'></span>";
-        $full_name = $data->first_name ?  $data->first_name . " " . $data->last_name . " " : "_";
+        $full_name = $data->first_name ? $data->first_name . " " . $data->last_name . " " : "_";
         $primary_contact = "";
         if ($data->is_primary_contact == "1" && !$hide_primary_contact_label) {
             $primary_contact = "<span class='bg-info badge text-white'>" . app_lang('primary_contact') . "</span>";
@@ -1292,9 +1372,11 @@ class Clients extends Security_Controller
             app_redirect("forbidden");
         }
 
-        $this->validate_submitted_data(array(
-            "client_id" => "required|numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "client_id" => "required|numeric"
+            )
+        );
 
         $client_id = $this->request->getPost('client_id');
         $this->can_access_own_client($client_id);
@@ -1321,10 +1403,12 @@ class Clients extends Security_Controller
 
         $email = trim($this->request->getPost('email'));
 
-        $this->validate_submitted_data(array(
-            "client_id" => "required|numeric",
-            "email" => "required|valid_email|trim"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "client_id" => "required|numeric",
+                "email" => "required|valid_email|trim"
+            )
+        );
 
         $this->access_only_allowed_members_or_client_contact($client_id);
 
@@ -1338,12 +1422,14 @@ class Clients extends Security_Controller
         $verification_data = array(
             "type" => "invitation",
             "code" => make_random_string(),
-            "params" => serialize(array(
-                "email" => $email,
-                "type" => "client",
-                "client_id" => $client_id,
-                "expire_time" => time() + (24 * 60 * 60) //make the invitation url with 24hrs validity
-            ))
+            "params" => serialize(
+                array(
+                    "email" => $email,
+                    "type" => "client",
+                    "client_id" => $client_id,
+                    "expire_time" => time() + (24 * 60 * 60) //make the invitation url with 24hrs validity
+                )
+            )
         );
 
         $save_id = $this->Verification_model->ci_save($verification_data);
@@ -1440,7 +1526,7 @@ class Clients extends Security_Controller
         }
 
         $file_name = $this->request->getPost('file_name');
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
 
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
@@ -1454,7 +1540,7 @@ class Clients extends Security_Controller
             if ($key === 0) { //first line is headers, continue for the next loop
                 continue;
             }
-            
+
             $client_data_array = $this->_prepare_client_data($value, $allowed_headers);
             $client_data = get_array_value($client_data_array, "client_data");
             $contact_data = get_array_value($client_data_array, "contact_data");
@@ -1491,8 +1577,9 @@ class Clients extends Security_Controller
                 continue;
             }
             //////////////////
-            $similar_clients=$this->Clients_model->get_all_where(array("charter_name"=>$client_data["charter_name"]))->getResult();
-            if(count($similar_clients)>0) continue;
+            $similar_clients = $this->Clients_model->get_all_where(array("charter_name" => $client_data["charter_name"]))->getResult();
+            if (count($similar_clients) > 0)
+                continue;
             /////////////////
 
             //save client data
@@ -1607,7 +1694,7 @@ class Clients extends Security_Controller
 
         $file_name = $this->request->getPost("file_name");
 
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
 
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
@@ -1989,7 +2076,7 @@ class Clients extends Security_Controller
         }
 
         $file_name = $this->request->getPost('file_name');
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
 
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
@@ -2149,7 +2236,7 @@ class Clients extends Security_Controller
 
         $file_name = $this->request->getPost("file_name");
 
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
 
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
@@ -2263,16 +2350,18 @@ class Clients extends Security_Controller
         // if (!$this->can_edit_clients()) {
         //     app_redirect("forbidden");
         // }
-        $this->validate_submitted_data(array(
-            "id" => "numeric",
-            "name" => "required",
-            "norm" => "required",
-            "diameter_nominal" => "required",
-            "pressure_rating" => "required",
-            "length" => "required",
-            "height" => "required",
-            "diameter" => "required"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric",
+                "name" => "required",
+                "norm" => "required",
+                "diameter_nominal" => "required",
+                "pressure_rating" => "required",
+                "length" => "required",
+                "height" => "required",
+                "diameter" => "required"
+            )
+        );
 
         $id = $this->request->getPost("id");
 
@@ -2305,9 +2394,11 @@ class Clients extends Security_Controller
         //     app_redirect("forbidden");
         // }
 
-        $this->validate_submitted_data(array(
-            "id" => "required|numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "required|numeric"
+            )
+        );
 
         $this->access_only_allowed_members();
 
@@ -2388,11 +2479,13 @@ class Clients extends Security_Controller
 
     function save_warehouse()
     {
-        $this->validate_submitted_data(array(
-            "id" => "numeric",
-            "code" => "required",
-            "name" => "required",
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "numeric",
+                "code" => "required",
+                "name" => "required",
+            )
+        );
 
         $id = $this->request->getPost("id");
 
@@ -2416,9 +2509,11 @@ class Clients extends Security_Controller
 
     function delete_warehouse()
     {
-        $this->validate_submitted_data(array(
-            "id" => "required|numeric"
-        ));
+        $this->validate_submitted_data(
+            array(
+                "id" => "required|numeric"
+            )
+        );
 
         $id = $this->request->getPost('id');
 
@@ -2506,21 +2601,25 @@ class Clients extends Security_Controller
         return $final_headers;
     }
     //////////////////////////////////////////////////////
-    function tab_dimensions_capacities($client_id){
-        $client_info=$this->Clients_model->get_one($client_id);
-        return $this->template->view("clients/tabs/dimensions",["client_info"=>$client_info]);
+    function tab_dimensions_capacities($client_id)
+    {
+        $client_info = $this->Clients_model->get_one($client_id);
+        return $this->template->view("clients/tabs/dimensions", ["client_info" => $client_info]);
     }
-    function tab_propulsion($client_id){
-        $client_info=$this->Clients_model->get_one($client_id);
-        return $this->template->view("clients/tabs/propulsion",["client_info"=>$client_info]);
+    function tab_propulsion($client_id)
+    {
+        $client_info = $this->Clients_model->get_one($client_id);
+        return $this->template->view("clients/tabs/propulsion", ["client_info" => $client_info]);
     }
-    function export_propulsion($client_id){
+    function export_propulsion($client_id)
+    {
         // Create a new PhpWord object
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 
-        $client_info=$this->Clients_model->get_one($client_id);
-        if(!$client_info->id) return "Not valid client_id";
+        $client_info = $this->Clients_model->get_one($client_id);
+        if (!$client_info->id)
+            return "Not valid client_id";
         // $phpWord = new PhpWord();
 
         // // Add some content to the document
@@ -2528,7 +2627,7 @@ class Clients extends Security_Controller
 
         // $phpWord->addTitleStyle(2, array('bold' => true, 'size' => 16));
         // $section->addTitle('Main engine',2);
-        
+
         // $section->addText('Maker : '.$client_info->main_engine_maker);
         // $section->addText('Model : '.$client_info->main_engine_model);
         // $section->addText('Continuous output : '.$client_info->main_engine_continuous_output);
@@ -2538,7 +2637,7 @@ class Clients extends Security_Controller
         // $section->addText('Quantity : '.$client_info->main_engine_quantity);
 
         // $section->addTitle('Auxiliary engine',2);
-        
+
         // $section->addText('Maker : '.$client_info->auxiliary_engine_maker);
         // $section->addText('Model : '.$client_info->auxiliary_engine_model);
         // $section->addText('Serial No : '.$client_info->auxiliary_engine_serial_number);
@@ -2546,7 +2645,7 @@ class Clients extends Security_Controller
         // $section->addText('Quantity : '.$client_info->auxiliary_engine_quantity);
 
         // $section->addTitle('Emergency generator',2);
-        
+
         // $section->addText('Maker : '.$client_info->emergency_generator_maker);
         // $section->addText('Model : '.$client_info->emergency_generator_model);
         // $section->addText('Serial No : '.$client_info->emergency_generator_serial_number);
@@ -2554,7 +2653,7 @@ class Clients extends Security_Controller
         // $section->addText('Quantity : '.$client_info->emergency_generator_quantity);
 
         // $section->addTitle('Shaft generator',2);
-        
+
         // $section->addText('Maker : '.$client_info->shaft_generator_maker);
         // $section->addText('Model : '.$client_info->shaft_generator_model);
         // $section->addText('Serial No : '.$client_info->shaft_generator_serial_number);
@@ -2562,7 +2661,7 @@ class Clients extends Security_Controller
         // $section->addText('Quantity : '.$client_info->shaft_generator_quantity);
 
         // $section->addTitle('Propeller',2);
-        
+
         // $section->addText('Maker : '.$client_info->propeller_maker);
         // $section->addText('Type : '.$client_info->propeller_type);
         // $section->addText('Number of blades : '.$client_info->propeller_number_of_blades);
@@ -2573,7 +2672,7 @@ class Clients extends Security_Controller
         // $section->addText('Quantity : '.$client_info->propeller_quantity);
 
         // $section->addTitle('Side thruster',2);
-        
+
         // $section->addText('Number of bow thrusters : '.$client_info->bow_thruster_number);
         // $section->addText('Maker of bow thrusters : '.$client_info->bow_thruster_maker);
         // $section->addText('Type of bow thrusters : '.$client_info->bow_thruster_type);
@@ -2670,9 +2769,9 @@ class Clients extends Security_Controller
 
         $response = service('response');
 
-// Set response headers for file download
+        // Set response headers for file download
         $response->setHeader('Content-Type', 'application/msword');
-        $response->setHeader('Content-Disposition', 'attachment;filename="'.$client_info->charter_name.'-propulsion.xlsx"');
+        $response->setHeader('Content-Disposition', 'attachment;filename="' . $client_info->charter_name . '-propulsion.xlsx"');
         $response->setHeader('Cache-Control', 'max-age=0');
 
         // Write the Excel file content to the response body
@@ -2681,15 +2780,17 @@ class Clients extends Security_Controller
 
         // Return the response object
         return $response;
-    
+
     }
-    function export_dimensions($client_id){
+    function export_dimensions($client_id)
+    {
         // Create a new PhpWord object
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 
-        $client_info=$this->Clients_model->get_one($client_id);
-        if(!$client_info->id) return "Not valid client_id";
+        $client_info = $this->Clients_model->get_one($client_id);
+        if (!$client_info->id)
+            return "Not valid client_id";
         // $phpWord = new PhpWord();
 
         // // Add some content to the document
@@ -2697,7 +2798,7 @@ class Clients extends Security_Controller
 
         // $phpWord->addTitleStyle(2, array('bold' => true, 'size' => 16));
         // $section->addTitle('Dimensions',2);
-        
+
         // $section->addText('Gross tonnage : '.$client_info->gross_tonnage);
         // $section->addText('Net tonnage : '.$client_info->net_tonnage);
         // $section->addText('Lightweight : '.$client_info->lightweight);
@@ -2787,9 +2888,9 @@ class Clients extends Security_Controller
 
         $response = service('response');
 
-// Set response headers for file download
+        // Set response headers for file download
         $response->setHeader('Content-Type', 'application/msword');
-        $response->setHeader('Content-Disposition', 'attachment;filename="'.$client_info->charter_name.'-dimensions.xlsx"');
+        $response->setHeader('Content-Disposition', 'attachment;filename="' . $client_info->charter_name . '-dimensions.xlsx"');
         $response->setHeader('Cache-Control', 'max-age=0');
 
         // Write the Excel file content to the response body
@@ -2798,22 +2899,24 @@ class Clients extends Security_Controller
         // Return the response object
         return $response;
     }
-    function modal_import_dimensions($client_id){
-        return $this->template->view("clients/tabs/modal_import_dimensions",array("client_id"=>$client_id));
+    function modal_import_dimensions($client_id)
+    {
+        return $this->template->view("clients/tabs/modal_import_dimensions", array("client_id" => $client_id));
     }
-    function import_dimensions(){
+    function import_dimensions()
+    {
         upload_file_to_temp(true);
         $file = get_array_value($_FILES, "file");
-        $client_id=$this->request->getPost("client_id");
-        $client_info=$this->Clients_model->get_one($client_id);
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $client_id = $this->request->getPost("client_id");
+        $client_info = $this->Clients_model->get_one($client_id);
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $temp_file = get_array_value($file, "tmp_name");
         $file_name = get_array_value($file, "name");
         $file_size = get_array_value($file, "size");
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
         $excel_file->setActiveSheetIndex(0);
-        $worksheet=$excel_file->getActiveSheet();
+        $worksheet = $excel_file->getActiveSheet();
         $highestRow = $worksheet->getHighestRow(); // e.g., 10
         $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
 
@@ -2833,52 +2936,54 @@ class Clients extends Security_Controller
             $data[] = $rowData;
         }
         // return json_encode($data);
-        $client_info->gross_tonnage=$data[0][1];
-        $client_info->net_tonnage=$data[1][1];
-        $client_info->lightweight=$data[2][1];
-        $client_info->length_over_all=$data[3][1];
-        $client_info->length_between_perpendiculars=$data[4][1];
-        $client_info->length_of_waterline=$data[5][1];
-        $client_info->breadth_moulded=$data[6][1];
-        $client_info->depth_moulded=$data[7][1];
-        $client_info->draught_design=$data[8][1];
-        $client_info->draught_scantling=$data[9][1];
-        $client_info->hull_design=$data[10][1];
-        $client_info->top_sides=$data[11][1];
-        $client_info->bottom_sides=$data[12][1];
-        $client_info->flat_bottom=$data[13][1];
-        $client_info->dwt_cargo=$data[14][1];
-        $client_info->dwt_scantling=$data[15][1];
-        $client_info->dwt_design=$data[16][1];
-        $client_info->heavy_fuel_oil=$data[17][1];
-        $client_info->marine_diesel_oil=$data[18][1];
-        $client_info->marine_gas_oil=$data[19][1];
-        $client_info->lng_capacity=$data[20][1];
-        $client_info->lub_oil=$data[21][1];
-        $client_info->ballast_water=$data[22][1];
-        $client_info->fresh_water=$data[23][1];
+        $client_info->gross_tonnage = $data[0][1];
+        $client_info->net_tonnage = $data[1][1];
+        $client_info->lightweight = $data[2][1];
+        $client_info->length_over_all = $data[3][1];
+        $client_info->length_between_perpendiculars = $data[4][1];
+        $client_info->length_of_waterline = $data[5][1];
+        $client_info->breadth_moulded = $data[6][1];
+        $client_info->depth_moulded = $data[7][1];
+        $client_info->draught_design = $data[8][1];
+        $client_info->draught_scantling = $data[9][1];
+        $client_info->hull_design = $data[10][1];
+        $client_info->top_sides = $data[11][1];
+        $client_info->bottom_sides = $data[12][1];
+        $client_info->flat_bottom = $data[13][1];
+        $client_info->dwt_cargo = $data[14][1];
+        $client_info->dwt_scantling = $data[15][1];
+        $client_info->dwt_design = $data[16][1];
+        $client_info->heavy_fuel_oil = $data[17][1];
+        $client_info->marine_diesel_oil = $data[18][1];
+        $client_info->marine_gas_oil = $data[19][1];
+        $client_info->lng_capacity = $data[20][1];
+        $client_info->lub_oil = $data[21][1];
+        $client_info->ballast_water = $data[22][1];
+        $client_info->fresh_water = $data[23][1];
 
-        $this->Clients_model->ci_save($client_info,$client_id);
+        $this->Clients_model->ci_save($client_info, $client_id);
 
-        return json_encode(array("success"=>true));
-        
+        return json_encode(array("success" => true));
+
     }
-    function modal_import_propulsion($client_id){
-        return $this->template->view("clients/tabs/modal_import_propulsion",array("client_id"=>$client_id));
+    function modal_import_propulsion($client_id)
+    {
+        return $this->template->view("clients/tabs/modal_import_propulsion", array("client_id" => $client_id));
     }
-    function import_propulsion(){
+    function import_propulsion()
+    {
         upload_file_to_temp(true);
         $file = get_array_value($_FILES, "file");
-        $client_id=$this->request->getPost("client_id");
-        $client_info=$this->Clients_model->get_one($client_id);
-        require_once(APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
+        $client_id = $this->request->getPost("client_id");
+        $client_info = $this->Clients_model->get_one($client_id);
+        require_once (APPPATH . "ThirdParty/PHPOffice-PhpSpreadsheet/vendor/autoload.php");
         $temp_file = get_array_value($file, "tmp_name");
         $file_name = get_array_value($file, "name");
         $file_size = get_array_value($file, "size");
         $temp_file_path = get_setting("temp_file_path");
         $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
         $excel_file->setActiveSheetIndex(0);
-        $worksheet=$excel_file->getActiveSheet();
+        $worksheet = $excel_file->getActiveSheet();
         $highestRow = $worksheet->getHighestRow(); // e.g., 10
         $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
 
@@ -2897,48 +3002,48 @@ class Clients extends Security_Controller
             }
             $data[] = $rowData;
         }
-        $client_info->main_engine_maker=$data[0][1];
-        $client_info->main_engine_model=$data[1][1];
-        $client_info->main_engine_continuous_output=$data[2][1];
-        $client_info->main_engine_bore=$data[3][1];
-        $client_info->main_engine_stroke=$data[4][1];
-        $client_info->main_engine_serial_number=$data[5][1];
-        $client_info->main_engine_quantity=$data[6][1];
-        $client_info->auxiliary_engine_maker=$data[7][1];
-        $client_info->auxiliary_engine_model=$data[8][1];
-        $client_info->auxiliary_engine_serial_number=$data[9][1];
-        $client_info->auxiliary_engine_output=$data[10][1];
-        $client_info->auxiliary_engine_quantity=$data[11][1];
-        $client_info->emergency_generator_maker=$data[12][1];
-        $client_info->emergency_generator_model=$data[13][1];
-        $client_info->emergency_generator_serial_number=$data[14][1];
-        $client_info->emergency_generator_output=$data[15][1];
-        $client_info->emergency_generator_quantity=$data[16][1];
-        $client_info->shaft_generator_maker=$data[17][1];
-        $client_info->shaft_generator_model=$data[18][1];
-        $client_info->shaft_generator_serial_number=$data[19][1];
-        $client_info->shaft_generator_output=$data[20][1];
-        $client_info->shaft_generator_quantity=$data[21][1];
-        $client_info->propeller_maker=$data[22][1];
-        $client_info->propeller_type=$data[23][1];
-        $client_info->propeller_number_of_blades=$data[24][1];
-        $client_info->propeller_diameter=$data[25][1];
-        $client_info->propeller_pitch=$data[26][1];
-        $client_info->propeller_material=$data[27][1];
-        $client_info->propeller_weight=$data[28][1];
-        $client_info->propeller_quantity=$data[29][1];
-        $client_info->bow_thruster_number=$data[30][1];
-        $client_info->bow_thruster_maker=$data[31][1];
-        $client_info->bow_thruster_type=$data[32][1];
-        $client_info->bow_thruster_power=$data[33][1];
-        $client_info->stern_thruster_number=$data[34][1];
-        $client_info->stern_thruster_maker=$data[35][1];
-        $client_info->stern_thruster_type=$data[36][1];
-        $client_info->stern_thruster_power=$data[37][1];
+        $client_info->main_engine_maker = $data[0][1];
+        $client_info->main_engine_model = $data[1][1];
+        $client_info->main_engine_continuous_output = $data[2][1];
+        $client_info->main_engine_bore = $data[3][1];
+        $client_info->main_engine_stroke = $data[4][1];
+        $client_info->main_engine_serial_number = $data[5][1];
+        $client_info->main_engine_quantity = $data[6][1];
+        $client_info->auxiliary_engine_maker = $data[7][1];
+        $client_info->auxiliary_engine_model = $data[8][1];
+        $client_info->auxiliary_engine_serial_number = $data[9][1];
+        $client_info->auxiliary_engine_output = $data[10][1];
+        $client_info->auxiliary_engine_quantity = $data[11][1];
+        $client_info->emergency_generator_maker = $data[12][1];
+        $client_info->emergency_generator_model = $data[13][1];
+        $client_info->emergency_generator_serial_number = $data[14][1];
+        $client_info->emergency_generator_output = $data[15][1];
+        $client_info->emergency_generator_quantity = $data[16][1];
+        $client_info->shaft_generator_maker = $data[17][1];
+        $client_info->shaft_generator_model = $data[18][1];
+        $client_info->shaft_generator_serial_number = $data[19][1];
+        $client_info->shaft_generator_output = $data[20][1];
+        $client_info->shaft_generator_quantity = $data[21][1];
+        $client_info->propeller_maker = $data[22][1];
+        $client_info->propeller_type = $data[23][1];
+        $client_info->propeller_number_of_blades = $data[24][1];
+        $client_info->propeller_diameter = $data[25][1];
+        $client_info->propeller_pitch = $data[26][1];
+        $client_info->propeller_material = $data[27][1];
+        $client_info->propeller_weight = $data[28][1];
+        $client_info->propeller_quantity = $data[29][1];
+        $client_info->bow_thruster_number = $data[30][1];
+        $client_info->bow_thruster_maker = $data[31][1];
+        $client_info->bow_thruster_type = $data[32][1];
+        $client_info->bow_thruster_power = $data[33][1];
+        $client_info->stern_thruster_number = $data[34][1];
+        $client_info->stern_thruster_maker = $data[35][1];
+        $client_info->stern_thruster_type = $data[36][1];
+        $client_info->stern_thruster_power = $data[37][1];
 
-        $this->Clients_model->ci_save($client_info,$client_id);
+        $this->Clients_model->ci_save($client_info, $client_id);
 
-        return json_encode(array("success"=>true));
+        return json_encode(array("success" => true));
     }
 }
 
