@@ -5,7 +5,7 @@
             <?php
             if ($login_user->is_admin || get_array_value($login_user->permissions, "can_add_or_invite_new_team_members")) {
                 // echo
-                echo modal_anchor(get_uri("clients/client_general_modal_form") . "?client_id=" . $client_id, "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_client'), array("class" => "btn btn-default", "title" => app_lang('add_client')));
+                echo modal_anchor(get_uri("clients/client_general_modal_form") . "?client_id=" . $client_id, "<i data-feather='plus-circle' class='icon-16'></i> " . app_lang('add_client'), array("class" => "btn btn-default", "title" => "Add crew"));
             }
             ?>
         </div>
