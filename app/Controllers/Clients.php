@@ -969,8 +969,10 @@ class Clients extends Security_Controller
                     "password" => "required"
                 )
             );
-            $user_data["first_name"] = $this->request->getPost("first_name");
-            $user_data["last_name"] = $this->request->getPost("last_name");
+            $first_name = $this->request->getPost("first_name");
+            $last_name = $this->request->getPost("last_name");
+            $user_data["first_name"] = $first_name;
+            $user_data["last_name"] = $last_name;
             $user_data["password"] = password_hash($this->request->getPost("password"), PASSWORD_DEFAULT);
 
 
