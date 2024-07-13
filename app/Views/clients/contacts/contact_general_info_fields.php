@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <input type="hidden" name="contact_id" value="<?php echo $model_info->id; ?>" />
     <input type="hidden" name="client_id" value="<?php echo $model_info->client_id; ?>" />
-    <input type="hidden" name="is_crew" value="<?php echo true; ?>" />
+    <input type="hidden" name="is_crew" value="<?php echo isset($is_crew) ? $is_crew : false; ?>" />
     <?php
     $label_column = isset($label_column) ? $label_column : "col-md-3";
     $field_column = isset($field_column) ? $field_column : "col-md-9";

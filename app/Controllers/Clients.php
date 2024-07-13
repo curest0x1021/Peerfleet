@@ -113,7 +113,7 @@ class Clients extends Security_Controller
         $view_data['model_info']->client_id = $client_id;
         $view_data['add_type'] = "multiple";
 
-        return $this->template->view('clients/contacts/modal_form', $view_data);
+        return $this->template->view('clients/contacts/client_modal_form', $view_data);
     }
 
     /* insert or update a client */
@@ -134,7 +134,7 @@ class Clients extends Security_Controller
                 "id" => "numeric",
                 "charter_name" => "required",
                 "christian_name" => "required",
-                // "owner_id" => "required",
+                "owner_id" => "required",
                 "vessel_type" => "required",
                 "call_sign" => "required",
                 "offical_number" => "required",
@@ -361,7 +361,7 @@ class Clients extends Security_Controller
             to_decimal_format($data->total_projects)
         );
 
-        $row_data[] = modal_anchor(get_uri("clients/modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_vessel'), "data-post-id" => $data->id))
+        $row_data[] = modal_anchor(get_uri("clients/vessel_modal_form"), "<i data-feather='edit' class='icon-16'></i>", array("class" => "edit", "title" => app_lang('edit_vessel'), "data-post-id" => $data->id))
             . js_anchor("<i data-feather='x' class='icon-16'></i>", array('title' => app_lang('delete_vessel'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("clients/delete"), "data-action" => "delete-confirmation"));
 
         return $row_data;
@@ -943,17 +943,13 @@ class Clients extends Security_Controller
         $is_crew = $this->request->getPost('is_crew');
         $contact_id = $this->request->getPost('contact_id');
         $client_id = $this->request->getPost('client_id');
-
-        if ($client_id) {
-            $this->can_access_own_client($client_id);
-        }
+        $this->can_access_own_client($client_id);
         if (!$this->can_edit_clients()) {
             app_redirect("forbidden");
         }
 
-        if ($contact_id) {
-            $this->access_only_allowed_members_or_contact_personally($contact_id);
-        }
+        $this->access_only_allowed_members_or_contact_personally($contact_id);
+
 
         $user_data = array(
             "email" => $this->request->getPost("email"),
@@ -961,6 +957,7 @@ class Clients extends Security_Controller
             "phone" => $this->request->getPost('phone'),
             "mobile" => $this->request->getPost('mobile'),
         );
+
         if ($is_crew) {
             $this->validate_submitted_data(
                 array(
@@ -993,14 +990,13 @@ class Clients extends Security_Controller
                 return false;
             }
 
+            $this->validate_submitted_data(
+                array(
+                    "client_id" => "required|numeric",
+                    "email" => "required"
+                )
+            );
         }
-
-        $this->validate_submitted_data(
-            array(
-                "client_id" => "required|numeric",
-                "email" => "required"
-            )
-        );
 
         if (!$contact_id) {
             //inserting new contact. client_id is required
@@ -2059,6 +2055,10 @@ class Clients extends Security_Controller
     function import_sea_valves_modal_form()
     {
         $this->access_only_allowed_members();
+
+        $view_data['label_column'] = "col-md-3";
+        $view_data['field_column'] = "col-md-9";
+        $view_data["model_info"] = $this->Sea_valves_model->get_one($this->request->getPost('id'));
 
         $client_id = $this->request->getPost('client_id') ? $this->request->getPost('client_id') : $view_data['model_info']->client_id;
         $this->can_access_own_client($client_id);

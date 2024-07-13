@@ -4611,7 +4611,7 @@ $lang["contract_template_inserting_instruction"] = "You'll lost all unsaved chan
 $lang["ticket_info"] = "Ticket info";
 
 $lang["recurring_tasks"] = "Recurring tasks";
-$lang["add_multiple_contacts"] = "Add multiple contacts";
+$lang["add_multiple_contacts"] = "Add multiple crews";
 
 $lang["total_invoiced"] = "Total invoiced";
 

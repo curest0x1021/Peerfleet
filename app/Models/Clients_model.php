@@ -215,7 +215,8 @@ class Clients_model extends Crud_model {
 
     function is_duplicate_charter_name($charter_name, $id = 0) {
 
-        $result = $this->get_all_where(array("charter_name" => $charter_name, "deleted" => 0));
+        // $result = $this->get_all_where(array("charter_name" => $charter_name, "deleted" => 0));
+        $result = $this->get_all_where(array("charter_name" => $charter_name));
         if (count($result->getResult()) && $result->getRow()->id != $id) {
             return $result->getRow();
         } else {
