@@ -4122,11 +4122,13 @@ class Projects extends Security_Controller
     }
     function modal_import_yard_xlsx($shipyard_id)
     {
-        return $this->template->view('projects/comparison/modal_import_shipyard_items', ['shipyard_id' => $shipyard_id]);
+        $project_id = $this->request->getGet("project_id");
+        return $this->template->view('projects/comparison/modal_import_shipyard_items', ['shipyard_id' => $shipyard_id, 'project_id' => $project_id]);
     }
     function import_yard_xlsx()
     {
         upload_file_to_temp(true);
+
         $file = get_array_value($_FILES, "file");
 
         // if (!$file) {
@@ -4137,14 +4139,19 @@ class Projects extends Security_Controller
         $file_name = get_array_value($file, "name");
         $file_size = get_array_value($file, "size");
         $temp_file_path = get_setting("temp_file_path");
-        $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
-        $excel_file->setActiveSheetIndex(1);
-        $worksheet = $excel_file->getActiveSheet();
-        $highestRow = $worksheet->getHighestRow(); // e.g., 10
-        $highestColumn = $worksheet->getHighestColumn(); // e.g., 'F'
 
-        // Convert the highest column letter to a numeric index (e.g., 'F' => 6)
-        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+        try {
+            $excel_file = \PhpOffice\PhpSpreadsheet\IOFactory::load($temp_file_path . $file_name);
+            $excel_file->setActiveSheetIndex(2);
+            $worksheet = $excel_file->getActiveSheet();
+            $highestRow = $worksheet->getHighestRow();
+            $highestColumn = $worksheet->getHighestColumn();
+            $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+        } catch (\Exception $e) {
+            // If any error occurs, return false
+            echo json_encode(array("success" => false, "message" => "Error processing the Excel file."));
+            return false;
+        }
 
         // Initialize an empty array to store the data
         $data = [];
@@ -4153,30 +4160,72 @@ class Projects extends Security_Controller
         for ($row = 1; $row <= $highestRow; ++$row) {
             $rowData = [];
             for ($col = 1; $col <= $highestColumnIndex; ++$col) {
-                $cellValue = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+                $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($col);
+                $cellValue = $worksheet->getCell($colLetter . $row)->getValue();
                 $rowData[] = $cellValue;
             }
             $data[] = $rowData;
         }
+
+        $project_id = $this->request->getPost("project_id");
         $shipyard_id = $this->request->getPost('shipyard_id');
-        $shipyard_info = $this->Project_yards_model->get_one($shipyard_id);
+        $this->Task_cost_items_model->delete_where(array("project_id" => $project_id));
         $this->Shipyard_cost_items_model->delete_where(array("shipyard_id" => $shipyard_id));
         for ($count = 1; $count < count($data); $count++) {
-            $task_info = $this->Tasks_model->get_all_where(array("title" => $data[$count][1]))->getResult()[0];
-            $saveData = array(
-                "shipyard_id" => $shipyard_id,
+            $oneItem = $data[$count];
+            $task_id = $oneItem[2];
+            $quantity = $oneItem[9];
+            $unit_price = $oneItem[11];
+            $discount = $oneItem[14];
+
+            // Check if quantity, unit price, and discount are numeric
+            if (!is_numeric($task_id) || !is_numeric($quantity) || !is_numeric($unit_price) || !is_numeric($discount)) {
+                echo json_encode(array("success" => false, "message" => "Invalid data format in row " . ($count + 1)));
+                return false;
+            }
+
+            $discount = floatval($discount) * 100;
+
+            $task_info = $this->Tasks_model->get_all_where(array("id" => $task_id))->getResult();
+            if (empty($task_info)) {
+                continue;
+            }
+            $task_info = $task_info[0];
+
+            $saveCostItem = array(
                 "task_id" => $task_info->id,
-                "project_id" => $shipyard_info->project_id,
-                "name" => $data[$count][3],
-                "description" => $data[$count][4],
-                "quantity" => $data[$count][6],
-                "measurement" => $data[$count][7],
-                "unit_price" => $data[$count][8],
-                "currency" => $data[$count][9],
-                "discount" => $data[$count][11],
-                "yard_remarks" => $data[$count][13],
+                "project_id" => $project_id,
+                "name" => $oneItem[6] ? $oneItem[6] : "",
+                "description" => $oneItem[7] ? $oneItem[7] : "",
+                "quantity" => $quantity ? $quantity : "",
+                "measurement" => $oneItem[10] ? $oneItem[10] : "",
+                "unit_price" => $unit_price ? $unit_price : 0,
+                "currency" => $oneItem[12] ? $oneItem[12] : "",
+                "quote_type" => $oneItem[8] ? $oneItem[8] : "",
+                "discount" => $discount ? $discount : "",
+                "yard_remarks" => $oneItem[16] ? $oneItem[16] : "",
             );
-            $this->Shipyard_cost_items_model->ci_save($saveData, null);
+
+            $this->Task_cost_items_model->ci_save($saveCostItem, null);
+
+            // foreach ($allShipyards as $oneYard) {
+            $newYardCostItem = array(
+                'task_id' => $task_info->id,
+                "project_id" => $project_id,
+                "shipyard_id" => $shipyard_id,
+                "name" => $oneItem[6] ? $oneItem[6] : "",
+                "description" => $oneItem[7] ? $oneItem[7] : "",
+                "quantity" => $quantity ? $quantity : "",
+                "quote_type" => $oneItem[8] ? $oneItem[8] : "",
+                "measurement" => $oneItem[10] ? $oneItem[10] : "",
+                "unit_price" => $unit_price ? $unit_price : 0,
+                "currency" => $oneItem[12] ? $oneItem[12] : "",
+                "discount" => $discount ? $discount : "",
+                "yard_remarks" => $oneItem[16] ? $oneItem[16] : "",
+            );
+            $this->Shipyard_cost_items_model->ci_save($newYardCostItem, null);
+            // }
+
         }
         echo json_encode(array("success" => true));
     }
@@ -4248,7 +4297,8 @@ class Projects extends Security_Controller
     function modal_import_task_cost_items($shipyard_id)
     {
         $shipyard_info = $this->Project_yards_model->get_one($shipyard_id);
-        return $this->template->view("projects/comparison/modal_import_task_cost_items", ["shipyard_id" => $shipyard_id, "shipyard_info" => $shipyard_info]);
+        $project_id = $this->request->getGet("project_id");
+        return $this->template->view("projects/comparison/modal_import_task_cost_items", ["project_id"->$project_id, "shipyard_id" => $shipyard_id, "shipyard_info" => $shipyard_info]);
 
     }
     function import_task_cost_items()
@@ -6137,6 +6187,7 @@ class Projects extends Security_Controller
                     "quantity" => $quantity ? $quantity : "",
                     "quote_type" => $oneItem[8] ? $oneItem[8] : "",
                     "measurement" => $oneItem[10] ? $oneItem[10] : "",
+                    "unit_price" => $unit_price ? $unit_price : "",
                     "currency" => $oneItem[12] ? $oneItem[12] : "",
                     "discount" => $discount ? $discount : "",
                     "yard_remarks" => $oneItem[16] ? $oneItem[16] : "",

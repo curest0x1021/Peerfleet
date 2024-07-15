@@ -48,9 +48,11 @@ foreach ($allProjectYards as $oneYard) {
                                     </td>
                                     <td><?php echo $oneItem->discount; ?> %</td>
                                     <td><?php echo $oneItem->currency . " " . (double) $oneItem->total_cost; ?> </td>
-                                    <td><input hidden value='<?php echo $oneItem->id; ?>' /><button
-                                            class="btn btn-sm delete-cost-item"><i data-feather="trash"
-                                                class="icon-16"></i></button></td>
+                                    <td>
+                                        <input hidden value='<?php echo $oneItem->id; ?>' />
+                                        <button class="btn btn-sm delete-cost-item"><i data-feather="trash"
+                                                class="icon-16"></i></button>
+                                    </td>
                                 </tr>
                                 <?php
                             }
@@ -70,7 +72,7 @@ foreach ($allProjectYards as $oneYard) {
                         <div class="form-group">
                             <label>Description:</label>
                             <textarea id="description" name="description" class="form-control">
-                                                </textarea>
+                                                        </textarea>
                         </div>
                         <div class="row">
                             <div class="col-md-3">
@@ -217,9 +219,9 @@ foreach ($allProjectYards as $oneYard) {
                     var newRow = $(`
                 <tr>
                 <td>${editPanelEl.find("#name")[0].value}</td>
-                <td>${editPanelEl.find("#quantity")[0].value} ${editPanelEl.find("#measurement")[0].value} X<?php echo " " . $oneItem->currency . " "; ?> ${editPanelEl.find("#unit_price")[0].value} (per unit)</td>
+                <td>${editPanelEl.find("#quantity")[0].value} ${editPanelEl.find("#measurement")[0].value} X<?php echo " " . $project_info->currency . " "; ?> ${editPanelEl.find("#unit_price")[0].value} (per unit)</td>
                 <td>${editPanelEl.find("#discount")[0].value} %</td>
-                <td><?php echo " " . $oneItem->currency . " "; ?>${parseFloat(editPanelEl.find("#quantity")[0].value) * parseFloat(editPanelEl.find("#unit_price")[0].value) * (100 - parseFloat(editPanelEl.find("#discount")[0].value)) / 100}</td>
+                <td><?php echo " " . $project_info->currency . " "; ?>${parseFloat(editPanelEl.find("#quantity")[0].value) * parseFloat(editPanelEl.find("#unit_price")[0].value) * (100 - parseFloat(editPanelEl.find("#discount")[0].value)) / 100}</td>
                 <td><input hidden value="" /><button onclick="delete_cost_item(event)" class="btn btn-sm delete-cost-item" ><i data-feather="trash" class="icon-16"></i></button></td>
                 </tr>`);
                     tbodyEl.append(newRow);
